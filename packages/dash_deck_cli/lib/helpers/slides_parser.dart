@@ -91,25 +91,35 @@ List<SlideBuildData> findNextFrontMatterSlide(
   );
 }
 
-List<int> getFocusValueFromDelimiter(String value) {
-  // Get the index that starts with "//@focus:"
+String? _getLineKeywordContent(String value, String keyword) {
+  final delimiter = '//@$keyword:';
+  const lineBreak = '\n';
+
+  final text = value.trimLeft();
+  final hasKeyword = text.startsWith(delimiter);
+  if (!hasKeyword) {
+    return null;
+  }
+
+  return text.substring(delimiter.length, text.indexOf(lineBreak));
+}
+
+List<int> keywordLineParser(String value, String keyword) {
+  // Get the index that starts with "keyword"
   // Get the line numbers that should focus after comma separated
   // 1,2,3 will return a a list of [1,2,3]
   // 1,2:5 will return a list of [1,2,3,4,5]
   // 1:5 will return a list of [1,2,3,4,5]
   // 1 will return a list of [1]
-  const delimiter = '//@focus:';
-  const lineBreak = '\n';
 
-  final text = value.trimLeft();
-  final hasFocus = text.startsWith(delimiter);
-  if (!hasFocus) {
+  final focusValue = _getLineKeywordContent(value, keyword);
+
+  if (focusValue == null) {
     return [];
   }
 
-  final focusValue = text.substring(delimiter.length, text.indexOf(lineBreak));
-  final focusValues = focusValue.split(',');
-  final focusList = focusValues
+  final values = focusValue.split(',');
+  final focusList = values
       .map((text) {
         if (text.contains(':')) {
           final split = text.split(':');
@@ -128,17 +138,10 @@ List<int> getFocusValueFromDelimiter(String value) {
 }
 
 String? getFileContentFromImportTag(String value) {
-  const importDelimiter = '//@import:';
-
-  const lineBreakDelimiter = '\n';
-
-  final importIndex = value.indexOf(importDelimiter);
-  if (importIndex == -1) {
+  final importValue = _getLineKeywordContent(value, 'import');
+  if (importValue == null) {
     return null;
   }
-
-  final importValue = value.substring(
-      importIndex + importDelimiter.length, value.indexOf(lineBreakDelimiter));
   final imports = importValue.split('/');
   final importJoin = imports.reduce((value, element) => join(value, element));
   final codeContent = File(join(kDashDeckDirectory.projectLibPath, importJoin))

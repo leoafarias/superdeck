@@ -26,11 +26,11 @@ void main() {
        v //@focus:1,2,3
     ''';
 
-    expect(getFocusValueFromDelimiter(codeSample), [1, 2]);
-    expect(getFocusValueFromDelimiter(codeSample2), [1, 2, 3, 4, 5]);
-    expect(getFocusValueFromDelimiter(codeSample3), [1, 2, 3, 4, 5]);
-    expect(getFocusValueFromDelimiter(codeSample4), [1]);
-    expect(getFocusValueFromDelimiter(codeSample5), [1, 2, 3]);
-    expect(getFocusValueFromDelimiter(codeSample6), []);
+    expect(keywordLineParser(codeSample, 'focus'), [1, 2]);
+    expect(keywordLineParser(codeSample2, 'focus'), [1, 2, 3, 4, 5]);
+    expect(keywordLineParser(codeSample3, 'focus'), [1, 2, 3, 4, 5]);
+    expect(keywordLineParser(codeSample4, 'focus'), [1]);
+    expect(keywordLineParser(codeSample5, 'focus'), [1, 2, 3]);
+    expect(keywordLineParser(codeSample6, 'focus'), []);
   });
 }

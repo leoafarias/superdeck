@@ -1,8 +1,8 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:dash_deck_cli/dto/code_snippet.dto.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 
-Class statelessWidgetBuilder(CodeSnippet snippet) {
+Class statelessWidgetBuilder(Snippet snippet) {
   var widget = Class(
     (b) => b
       ..name = snippet.widgetName

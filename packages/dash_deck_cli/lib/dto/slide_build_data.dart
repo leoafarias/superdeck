@@ -1,6 +1,5 @@
-import 'package:dash_deck_cli/dto/code_snippet.dto.dart';
-import 'package:dash_deck_core/models/slide.model.dart';
-import 'package:dash_deck_core/models/slide_options.model.dart';
+import 'package:dash_deck_cli/helpers/slides_parser.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 
 class SlideBuildData {
   const SlideBuildData(this.data);
@@ -11,15 +10,15 @@ class SlideBuildData {
   SlideOptions get options => data.options;
   String? get content => data.content;
 
-  List<CodeSnippet> get snippets {
-    final codeSnippets = <CodeSnippet>[];
+  List<Snippet> get snippets {
+    final codeSnippets = <Snippet>[];
     for (var i = 0, len = data.snippets.length; i < len; i++) {
       final source = data.snippets[i];
 
-      codeSnippets.add(CodeSnippet(
-        name: data.id,
-        index: i,
+      codeSnippets.add(Snippet(
         source: source,
+        focusLines: keywordLineParser(source, 'focus'),
+        showLines: keywordLineParser(source, 'only'),
       ));
     }
 
