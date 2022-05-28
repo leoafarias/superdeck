@@ -98,7 +98,7 @@ Future<void> buildSlideData(List<SlideBuildData> slides) async {
     }
   });
 
-  final slidesFile = kShowtimeDirectory.slidesFile;
+  final slidesFile = kDashDeckDirectory.slidesFile;
 
   await runCodeEmitter(library, slidesFile);
 }

@@ -10,7 +10,7 @@ class Constants {
   static const String stylesFileName = 'styles.dart';
 }
 
-DashDeckDirectory kShowtimeDirectory = DashDeckDirectory();
+DashDeckDirectory kDashDeckDirectory = DashDeckDirectory();
 
 class DashDeckDirectory {
   late Directory _rootDir;

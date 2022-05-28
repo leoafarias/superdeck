@@ -3,8 +3,8 @@ import 'package:dash_deck_cli/helpers/slides_parser.dart';
 import 'package:dash_deck_core/constants.dart';
 
 Future<void> loadSlide() async {
-  final presentationFile = kShowtimeDirectory.presentationFile;
-  final stylesFile = kShowtimeDirectory.stylesFile;
+  final presentationFile = kDashDeckDirectory.presentationFile;
+  final stylesFile = kDashDeckDirectory.stylesFile;
 
   if (!presentationFile.existsSync()) {
     print('No slides.md file found. One will be created for you!');

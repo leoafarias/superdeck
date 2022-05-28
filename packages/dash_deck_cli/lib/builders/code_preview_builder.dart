@@ -6,7 +6,7 @@ import 'package:dash_deck_cli/dto/slide_build_data.dart';
 import 'package:dash_deck_core/constants.dart';
 
 // Future<void> _createPreviewWidget(CodeSnippet snippet) async {
-//   final codeGenDirectory = kShowtimeDirectory.codeGenDirectory;
+//   final codeGenDirectory = kDashDeckDirectory.codeGenDirectory;
 //   final widgetFile = File(
 //     join(codeGenDirectory.path, snippet.fileNameWithExt),
 //   );
@@ -16,7 +16,7 @@ List<Class> widgets = [];
 //   await widgetFile.writeAsString(snippet.source);
 // }
 
-// final codeGenDirectory = kShowtimeDirectory.codeGenDirectory;
+// final codeGenDirectory = kDashDeckDirectory.codeGenDirectory;
 // if (await codeGenDirectory.exists()) {
 //   await codeGenDirectory.delete(recursive: true);
 // }
@@ -38,7 +38,7 @@ Future<void> buildCodePreviewBuilder(List<SlideBuildData> slides) async {
     ],
   );
 
-  final codePreviewFile = kShowtimeDirectory.codePreviewFile;
+  final codePreviewFile = kDashDeckDirectory.codePreviewFile;
 
   await runCodeEmitter(library, codePreviewFile);
 }

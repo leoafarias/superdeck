@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:dash_deck_cli/dto/slide_build_data.dart';
+import 'package:dash_deck_core/constants.dart';
 import 'package:dash_deck_core/models/slide.model.dart';
 import 'package:dash_deck_core/models/slide_options.model.dart';
+import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
 const delimiter = '---';
@@ -87,48 +91,89 @@ List<SlideBuildData> findNextFrontMatterSlide(
   );
 }
 
-List<String> snippetParser(String text, [List<String>? snippets]) {
-  const delimiter = '```dart';
-  const delimeterEnd = '```';
+List<int> getFocusValueFromDelimiter(String value) {
+  // Get the index that starts with "//@focus:"
+  // Get the line numbers that should focus after comma separated
+  // 1,2,3 will return a a list of [1,2,3]
+  // 1,2:5 will return a list of [1,2,3,4,5]
+  // 1:5 will return a list of [1,2,3,4,5]
+  // 1 will return a list of [1]
+  const delimiter = '//@focus:';
+  const lineBreak = '\n';
 
+  final text = value.trimLeft();
+  final hasFocus = text.startsWith(delimiter);
+  if (!hasFocus) {
+    return [];
+  }
+
+  final focusValue = text.substring(delimiter.length, text.indexOf(lineBreak));
+  final focusValues = focusValue.split(',');
+  final focusList = focusValues
+      .map((text) {
+        if (text.contains(':')) {
+          final split = text.split(':');
+          return List<int>.generate(
+            int.parse(split[1]) - int.parse(split[0]) + 1,
+            (index) => int.parse(split[0]) + index,
+          );
+        } else {
+          return [int.parse(text)];
+        }
+      })
+      .expand((text) => text)
+      .toList();
+
+  return focusList;
+}
+
+String? getFileContentFromImportTag(String value) {
   const importDelimiter = '//@import:';
 
   const lineBreakDelimiter = '\n';
 
+  final importIndex = value.indexOf(importDelimiter);
+  if (importIndex == -1) {
+    return null;
+  }
+
+  final importValue = value.substring(
+      importIndex + importDelimiter.length, value.indexOf(lineBreakDelimiter));
+  final imports = importValue.split('/');
+  final importJoin = imports.reduce((value, element) => join(value, element));
+  final codeContent = File(join(kDashDeckDirectory.projectLibPath, importJoin))
+      .readAsStringSync();
+
+  return codeContent;
+}
+
+List<String> snippetParser(String text, [List<String>? snippets]) {
+  const langDelimiter = '```dart';
+  const langDelimiterEnd = '```';
+
   snippets ??= <String>[];
   final value = text.trimLeft();
 
-  final startIndex = value.indexOf(delimiter);
+  final startIndex = value.indexOf(langDelimiter);
 
   if (startIndex == -1) {
     return snippets;
   }
 
-  final closeIndex = value.indexOf(delimeterEnd, startIndex + delimiter.length);
+  final closeIndex =
+      value.indexOf(langDelimiterEnd, startIndex + langDelimiter.length);
 
   if (closeIndex == -1) {
     return snippets;
   }
 
   final snippet =
-      value.substring(startIndex + delimiter.length, closeIndex).trimLeft();
-  print(snippet);
-  // if (snippet.startsWith(importDelimiter)) {
-  //   final importPath = snippet.substring(
-  //       importDelimiter.length, snippet.indexOf(lineBreakDelimiter));
-  //   final imports = importPath.split('/');
-  //   final importJoin = imports.reduce((value, element) => join(value, element));
-  //   final codeContent =
-  //       File(join(kShowtimeDirectory.projectLibPath, importJoin))
-  //           .readAsStringSync();
-  //   snippets.add(codeContent);
-  // } else {
-  //   snippets.add(snippet);
-  // }
+      value.substring(startIndex + langDelimiter.length, closeIndex).trimLeft();
+
   snippets.add(snippet);
 
   return snippetParser(
-    value.substring(closeIndex + delimeterEnd.length),
+    value.substring(closeIndex + langDelimiterEnd.length),
     snippets,
   );
 }
