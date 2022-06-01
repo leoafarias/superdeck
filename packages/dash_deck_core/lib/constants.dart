@@ -8,35 +8,68 @@ class Constants {
   static const String codePreviewFileName = 'code_preview.g.dart';
   static const String slidesFileName = 'slides.g.dart';
   static const String stylesFileName = 'styles.dart';
+  static const String configFileName = 'dash_deck.yml';
+  static const String dashDeckDirName = 'dash_deck';
 }
 
 DashDeckDirectory kDashDeckDirectory = DashDeckDirectory();
 
 class DashDeckDirectory {
-  late Directory _rootDir;
+  late Directory _root;
+  late Directory _dashDeckDir;
 
   DashDeckDirectory({String? customDirectory}) {
-    final path = customDirectory ?? join('lib', 'dash_deck');
-    _rootDir = Directory(join(Constants.workingDirectory, path));
+    final path =
+        customDirectory ?? join(libDir.path, Constants.dashDeckDirName);
+    _dashDeckDir = Directory(path);
+    _root = Directory(join(Constants.workingDirectory));
   }
 
-  String get rootPath => _rootDir.path;
-  String get projectLibPath =>
-      Directory(join(Constants.workingDirectory, 'lib')).path;
+  File get configFile {
+    return File(join(_root.path, Constants.configFileName));
+  }
 
-  File get presentationFile {
-    return File(join(rootPath, Constants.presentationFileName));
+  Directory get libDir {
+    return Directory(join(Constants.workingDirectory, 'lib'));
+  }
+
+  Directory get dashDeckDir => _dashDeckDir;
+
+  File get slidesMarkdown {
+    return File(
+      join(
+        _dashDeckDir.path,
+        Constants.presentationFileName,
+      ),
+    );
   }
 
   File get stylesFile {
-    return File(join(rootPath, Constants.stylesFileName));
+    return File(
+      join(
+        _dashDeckDir.path,
+        Constants.stylesFileName,
+      ),
+    );
   }
 
   File get codePreviewFile {
-    return File(join(rootPath, 'generated', Constants.codePreviewFileName));
+    return File(
+      join(
+        _dashDeckDir.path,
+        'generated',
+        Constants.codePreviewFileName,
+      ),
+    );
   }
 
   File get slidesFile {
-    return File(join(rootPath, 'generated', Constants.slidesFileName));
+    return File(
+      join(
+        _dashDeckDir.path,
+        'generated',
+        Constants.slidesFileName,
+      ),
+    );
   }
 }

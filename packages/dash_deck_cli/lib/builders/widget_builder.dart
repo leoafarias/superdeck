@@ -2,10 +2,10 @@ import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 
-Class statelessWidgetBuilder(Snippet snippet) {
+Class statelessWidgetBuilder(String widgetName, Snippet snippet) {
   var widget = Class(
     (b) => b
-      ..name = snippet.widgetName
+      ..name = widgetName
       ..extend = refer('StatelessWidget')
       ..constructors.add(
         Constructor(
@@ -44,7 +44,7 @@ Class statelessWidgetBuilder(Snippet snippet) {
     DartFormatter().format('${widget.accept(emitter)}');
   } catch (e) {
     throw Exception(
-      'Error generating snippet for slide ${snippet.name}\n ${e.toString()}',
+      'Error generating snippet for slide $widgetName\n ${e.toString()}',
     );
   }
 

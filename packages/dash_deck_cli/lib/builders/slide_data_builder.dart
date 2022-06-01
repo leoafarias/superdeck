@@ -1,7 +1,9 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:dash_deck_cli/builders/code_preview_builder.dart';
 import 'package:dash_deck_cli/builders/emitter.dart';
+import 'package:dash_deck_cli/builders/library_builder.dart';
+import 'package:dash_deck_cli/builders/widget_builder.dart';
 import 'package:dash_deck_cli/dto/slide_build_data.dart';
+import 'package:dash_deck_cli/helpers/snippet_helpers.dart';
 import 'package:dash_deck_core/constants.dart';
 
 Future<void> buildSlideData(List<SlideBuildData> slides) async {
@@ -12,12 +14,20 @@ Future<void> buildSlideData(List<SlideBuildData> slides) async {
   final previewWidgets = <String, Expression>{};
   final slideMixes = <String, Expression>{};
 
+  List<Class> previewWidgetClasses = [];
+
   // Build Code snippet references
   for (var slide in slides) {
+    int snippetIndex = 0;
     for (var snippet in slide.snippets) {
       if (slide.options.codePreview) {
+        final nameOfWidget = widgetName(slide.id, snippetIndex);
+        snippetIndex++;
         hasCodePreview = true;
-        previewWidgets[slide.id] = refer(snippet.widgetName).newInstance([]);
+        previewWidgets[slide.id] = refer(nameOfWidget).newInstance([]);
+
+        final widget = statelessWidgetBuilder(nameOfWidget, snippet);
+        previewWidgetClasses.add(widget);
       }
     }
 
@@ -27,11 +37,18 @@ Future<void> buildSlideData(List<SlideBuildData> slides) async {
       slideMixes[slide.id] = CodeExpression(
         Code(slide.options.mix.toString()),
       );
-      // slideMixes[slide.id];
     }
   }
 
-  await buildCodePreviewBuilder(slides);
+  final previewWidgetLibrary = libraryBuilder(
+    previewWidgetClasses,
+    directives: [
+      Directive.import('package:flutter/material.dart'),
+    ],
+  );
+
+  await runCodeEmitter(
+      previewWidgetLibrary, kDashDeckDirectory.codePreviewFile);
 
   final literalSlideList = literalList(slides.map((slide) {
     final options = slide.options;
@@ -84,7 +101,7 @@ Future<void> buildSlideData(List<SlideBuildData> slides) async {
 
   final finalData = varData.assignFinal('dashDeckData').statement;
 
-  final library = Library((b) {
+  final slidesReferenceLibrary = Library((b) {
     final builder = b
       ..body.addAll([varSlides, varWidgets, varMixes, finalData])
       ..directives.addAll([
@@ -98,7 +115,5 @@ Future<void> buildSlideData(List<SlideBuildData> slides) async {
     }
   });
 
-  final slidesFile = kDashDeckDirectory.slidesFile;
-
-  await runCodeEmitter(library, slidesFile);
+  await runCodeEmitter(slidesReferenceLibrary, kDashDeckDirectory.slidesFile);
 }

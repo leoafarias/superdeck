@@ -144,8 +144,8 @@ String? getFileContentFromImportTag(String value) {
   }
   final imports = importValue.split('/');
   final importJoin = imports.reduce((value, element) => join(value, element));
-  final codeContent = File(join(kDashDeckDirectory.projectLibPath, importJoin))
-      .readAsStringSync();
+  final codeContent =
+      File(join(kDashDeckDirectory.libDir.path, importJoin)).readAsStringSync();
 
   return codeContent;
 }

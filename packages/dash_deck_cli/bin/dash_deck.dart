@@ -3,7 +3,7 @@ import 'package:dash_deck_core/constants.dart';
 import 'package:watcher/watcher.dart';
 
 void main(List<String> arguments) async {
-  var watcher = DirectoryWatcher(kDashDeckDirectory.rootPath);
+  var watcher = DirectoryWatcher(kDashDeckDirectory.dashDeckDir.path);
 
   print('loading slides');
 

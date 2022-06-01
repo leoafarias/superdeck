@@ -3,12 +3,12 @@ import 'package:dash_deck_cli/helpers/slides_parser.dart';
 import 'package:dash_deck_core/constants.dart';
 
 Future<void> loadSlide() async {
-  final presentationFile = kDashDeckDirectory.presentationFile;
+  final slidesMarkdown = kDashDeckDirectory.slidesMarkdown;
   final stylesFile = kDashDeckDirectory.stylesFile;
 
-  if (!presentationFile.existsSync()) {
+  if (!slidesMarkdown.existsSync()) {
     print('No slides.md file found. One will be created for you!');
-    await presentationFile.create(recursive: true);
+    await slidesMarkdown.create(recursive: true);
   }
 
   if (!stylesFile.existsSync()) {
@@ -16,7 +16,7 @@ Future<void> loadSlide() async {
     await stylesFile.create(recursive: true);
   }
 
-  final presentationContent = await presentationFile.readAsString();
+  final presentationContent = await slidesMarkdown.readAsString();
   final slideContents = slideMarkdownParser(presentationContent);
 
   await buildSlideData(slideContents);
