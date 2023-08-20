@@ -1,0 +1,4 @@
+include: package:lints/recommended.yaml
+analyzer:
+  errors:
+    invalid_annotation_target: ignore

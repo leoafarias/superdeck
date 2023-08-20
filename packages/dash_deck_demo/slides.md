@@ -4,7 +4,8 @@ contentAlignment: center
 image: https://source.unsplash.com/random/900×700/?flutter
 ---
 
-# Introduction to Dlutter
+# Introduction to Flutter
+
 Author: Google Expert Developer
 
 ---
@@ -14,6 +15,7 @@ image: https://source.unsplash.com/random/900×700/?programming
 ---
 
 ## What is Flutter?
+
 - **Open-Source:** Created by Google
 - **UI Toolkit:** Build natively compiled applications
 - **Cross-Platform:** One codebase for Android and iOS

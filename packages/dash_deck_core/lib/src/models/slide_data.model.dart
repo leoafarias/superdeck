@@ -1,4 +1,4 @@
-import 'package:dash_deck/models/code_block.model.dart';
+import 'package:dash_deck_core/src/models/code_block.model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import './slide_options.model.dart';

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_builder.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_loader.dart';
 import 'package:dash_deck_cli/src/constants.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
 import 'package:watcher/watcher.dart';

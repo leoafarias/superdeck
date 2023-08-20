@@ -50,6 +50,23 @@ class DashDeckDirectory {
     );
   }
 
+  File _getAssetDirectory([
+    String? path1,
+    String? path2,
+    String? path3,
+  ]) {
+    return File(
+      join(
+        rootDir.path,
+        'assets',
+        'dash_deck',
+        path1,
+        path2,
+        path3,
+      ),
+    );
+  }
+
   File _getLocalDashDeckFile(
     String path1, [
     String? path2,
@@ -80,5 +97,9 @@ class DashDeckDirectory {
       );
   File get generatedSlidesFile => _getGeneratedFile(
         kGeneratedSlidesFileName,
+      );
+
+  File get generatedSlidesJsonFile => _getAssetDirectory(
+        'slides.json',
       );
 }

@@ -11,7 +11,7 @@ dependencies:
   cli_completion: ^0.3.0
   code_builder: ^4.5.0
   dart_style: ^2.3.2
-  dash_deck: ^0.0.1
+  dash_deck_core: ^0.0.1
   mason_logger: ^0.2.5
   path: ^1.8.1
   pub_updater: ^0.3.0

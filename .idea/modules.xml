@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/packages/dash_deck/melos_dash_deck.iml" filepath="$PROJECT_DIR$/packages/dash_deck/melos_dash_deck.iml" />
       <module fileurl="file://$PROJECT_DIR$/packages/dash_deck_cli/melos_dash_deck_cli.iml" filepath="$PROJECT_DIR$/packages/dash_deck_cli/melos_dash_deck_cli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/dash_deck_core/melos_dash_deck_core.iml" filepath="$PROJECT_DIR$/packages/dash_deck_core/melos_dash_deck_core.iml" />
       <module fileurl="file://$PROJECT_DIR$/packages/dash_deck_demo/melos_dash_deck_demo.iml" filepath="$PROJECT_DIR$/packages/dash_deck_demo/melos_dash_deck_demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/melos_dashdeck.iml" filepath="$PROJECT_DIR$/melos_dashdeck.iml" />
     </modules>

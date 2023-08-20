@@ -1,7 +1,9 @@
 import 'package:dash_deck/components/atoms/slide_wrapper.dart';
 import 'package:dash_deck/components/molecules/slide_view.dart';
 import 'package:dash_deck/helpers/local_storage.dart';
-import 'package:dash_deck/models/dash_deck_data_model.dart';
+import 'package:dash_deck/providers/dash_deck.provider.dart';
+import 'package:dash_deck/theme.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,21 +37,28 @@ class DashDeck {
 
     await LocalStorage.initialize();
   }
+
+  static Widget runApp() {
+    return ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        home: const DashDeckListenerApp(),
+      ),
+    );
+  }
 }
 
-class DashDeckApp extends StatelessWidget {
-  const DashDeckApp({
-    required this.data,
-    Key? key,
-  }) : super(key: key);
-
-  final DashDeckData data;
+class DashDeckListenerApp extends ConsumerWidget {
+  const DashDeckListenerApp({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      child: DashDeckShell(data: data),
-    );
+  Widget build(context, ref) {
+    final data = ref.watch(slidesProvider);
+    return DashDeckShell(data: DashDeckData(slides: data));
   }
 }
 
@@ -73,8 +82,7 @@ class _DashDeckShellState extends State<DashDeckShell> {
   void initState() {
     super.initState();
 
-    final lastPage = LocalStorage.getLastPage() ?? _initialPage;
-    controller = PageController(initialPage: lastPage);
+    controller = PageController(initialPage: _initialPage);
   }
 
   @override
@@ -89,7 +97,6 @@ class _DashDeckShellState extends State<DashDeckShell> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-    LocalStorage.setLastPage(page);
   }
 
   void _handleStepSlide(int slide) {
@@ -151,12 +158,7 @@ class _DashDeckShellState extends State<DashDeckShell> {
           body: SlideWrapper(
             child: PageView(
               controller: controller,
-              onPageChanged: _handleGoToSlide,
-              children: widget.data.slides
-                  .map(
-                    (slide) => SlideView(slide),
-                  )
-                  .toList(),
+              children: widget.data.slides.map(SlideView.new).toList(),
             ),
           ),
         ),

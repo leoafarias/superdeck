@@ -6,3 +6,7 @@ packages:
 scripts:
   analyze:
     exec: dart analyze .
+  build_runner:
+    exec: dart run build_runner build --delete-conflicting-outputs
+    packageFilters:
+      dependsOn: [build_runner]

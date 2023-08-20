@@ -167,6 +167,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  dash_deck_core:
+    dependency: "direct overridden"
+    description:
+      path: "../dash_deck_core"
+      relative: true
+    source: path
+    version: "0.1.0+1"
   equatable:
     dependency: transitive
     description:
@@ -286,6 +293,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  google_fonts:
+    dependency: transitive
+    description:
+      name: google_fonts
+      sha256: e20ff62b158b96f392bfc8afe29dee1503c94fbea2cbe8186fd59b756b8ae982
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   highlight:
     dependency: transitive
     description:

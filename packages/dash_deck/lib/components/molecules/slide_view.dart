@@ -2,9 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dash_deck/components/atoms/markdown_viewer.dart';
 import 'package:dash_deck/helpers/enum_mappers.dart';
 import 'package:dash_deck/helpers/scale.dart';
-import 'package:dash_deck/models/slide_data.model.dart';
-import 'package:dash_deck/models/slide_options.model.dart';
-import 'package:dash_deck/providers/slide_data.provider.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
@@ -96,9 +94,6 @@ class SlideView extends StatelessWidget {
       );
     }
 
-    return SlideDataProvider(
-      data: slideData,
-      child: current,
-    );
+    return current;
   }
 }

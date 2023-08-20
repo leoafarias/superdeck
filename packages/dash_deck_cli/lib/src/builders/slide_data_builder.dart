@@ -1,7 +1,8 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_cli/src/builders/builder_helpers.dart';
 import 'package:dash_deck_cli/src/constants.dart';
+import 'package:dash_deck_cli/src/helper/pretty_json.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 
 Future<void> slideDataBuilder(List<SlideData> slides) async {
   var hasStyles = false;
@@ -118,7 +119,7 @@ Future<void> slideDataBuilder(List<SlideData> slides) async {
   final dashDeckApp = Class((b) {
     final builder = b
       ..name = 'DashDeckApp'
-      ..extend = refer('DashDeck')
+      ..extend = refer('DashDeckShell')
       ..constructors.add(
         Constructor(
           (b) => b
@@ -160,4 +161,14 @@ Future<void> slideDataBuilder(List<SlideData> slides) async {
     slidesReferenceLibrary,
     kDashDeckDirectory.generatedSlidesFile,
   );
+
+  final slidesJson = kDashDeckDirectory.generatedSlidesJsonFile;
+
+  if (!slidesJson.existsSync()) {
+    await slidesJson.create(recursive: true);
+  }
+
+  // Write a json file with a list of slides
+  await slidesJson.writeAsString(
+      prettyJson(slides.map((slide) => slide.toJson()).toList()));
 }

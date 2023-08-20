@@ -14,12 +14,15 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+DashDeckData _$DashDeckDataFromJson(Map<String, dynamic> json) {
+  return _DashDeckData.fromJson(json);
+}
+
 /// @nodoc
 mixin _$DashDeckData {
   List<SlideData> get slides => throw _privateConstructorUsedError;
-  Map<String, Widget> get previewWidgets => throw _privateConstructorUsedError;
-  Map<String, StyleMix> get styles => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $DashDeckDataCopyWith<DashDeckData> get copyWith =>
       throw _privateConstructorUsedError;
@@ -31,10 +34,7 @@ abstract class $DashDeckDataCopyWith<$Res> {
           DashDeckData value, $Res Function(DashDeckData) then) =
       _$DashDeckDataCopyWithImpl<$Res, DashDeckData>;
   @useResult
-  $Res call(
-      {List<SlideData> slides,
-      Map<String, Widget> previewWidgets,
-      Map<String, StyleMix> styles});
+  $Res call({List<SlideData> slides});
 }
 
 /// @nodoc
@@ -51,22 +51,12 @@ class _$DashDeckDataCopyWithImpl<$Res, $Val extends DashDeckData>
   @override
   $Res call({
     Object? slides = null,
-    Object? previewWidgets = null,
-    Object? styles = null,
   }) {
     return _then(_value.copyWith(
       slides: null == slides
           ? _value.slides
           : slides // ignore: cast_nullable_to_non_nullable
               as List<SlideData>,
-      previewWidgets: null == previewWidgets
-          ? _value.previewWidgets
-          : previewWidgets // ignore: cast_nullable_to_non_nullable
-              as Map<String, Widget>,
-      styles: null == styles
-          ? _value.styles
-          : styles // ignore: cast_nullable_to_non_nullable
-              as Map<String, StyleMix>,
     ) as $Val);
   }
 }
@@ -79,10 +69,7 @@ abstract class _$$_DashDeckDataCopyWith<$Res>
       __$$_DashDeckDataCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<SlideData> slides,
-      Map<String, Widget> previewWidgets,
-      Map<String, StyleMix> styles});
+  $Res call({List<SlideData> slides});
 }
 
 /// @nodoc
@@ -97,36 +84,23 @@ class __$$_DashDeckDataCopyWithImpl<$Res>
   @override
   $Res call({
     Object? slides = null,
-    Object? previewWidgets = null,
-    Object? styles = null,
   }) {
     return _then(_$_DashDeckData(
       slides: null == slides
           ? _value._slides
           : slides // ignore: cast_nullable_to_non_nullable
               as List<SlideData>,
-      previewWidgets: null == previewWidgets
-          ? _value._previewWidgets
-          : previewWidgets // ignore: cast_nullable_to_non_nullable
-              as Map<String, Widget>,
-      styles: null == styles
-          ? _value._styles
-          : styles // ignore: cast_nullable_to_non_nullable
-              as Map<String, StyleMix>,
     ));
   }
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_DashDeckData implements _DashDeckData {
-  _$_DashDeckData(
-      {required final List<SlideData> slides,
-      final Map<String, Widget> previewWidgets = const {},
-      final Map<String, StyleMix> styles = const {}})
-      : _slides = slides,
-        _previewWidgets = previewWidgets,
-        _styles = styles;
+  _$_DashDeckData({required final List<SlideData> slides}) : _slides = slides;
+
+  factory _$_DashDeckData.fromJson(Map<String, dynamic> json) =>
+      _$$_DashDeckDataFromJson(json);
 
   final List<SlideData> _slides;
   @override
@@ -136,27 +110,9 @@ class _$_DashDeckData implements _DashDeckData {
     return EqualUnmodifiableListView(_slides);
   }
 
-  final Map<String, Widget> _previewWidgets;
-  @override
-  @JsonKey()
-  Map<String, Widget> get previewWidgets {
-    if (_previewWidgets is EqualUnmodifiableMapView) return _previewWidgets;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_previewWidgets);
-  }
-
-  final Map<String, StyleMix> _styles;
-  @override
-  @JsonKey()
-  Map<String, StyleMix> get styles {
-    if (_styles is EqualUnmodifiableMapView) return _styles;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_styles);
-  }
-
   @override
   String toString() {
-    return 'DashDeckData(slides: $slides, previewWidgets: $previewWidgets, styles: $styles)';
+    return 'DashDeckData(slides: $slides)';
   }
 
   @override
@@ -164,38 +120,37 @@ class _$_DashDeckData implements _DashDeckData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DashDeckData &&
-            const DeepCollectionEquality().equals(other._slides, _slides) &&
-            const DeepCollectionEquality()
-                .equals(other._previewWidgets, _previewWidgets) &&
-            const DeepCollectionEquality().equals(other._styles, _styles));
+            const DeepCollectionEquality().equals(other._slides, _slides));
   }
 
+  @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_slides),
-      const DeepCollectionEquality().hash(_previewWidgets),
-      const DeepCollectionEquality().hash(_styles));
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_slides));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$_DashDeckDataCopyWith<_$_DashDeckData> get copyWith =>
       __$$_DashDeckDataCopyWithImpl<_$_DashDeckData>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_DashDeckDataToJson(
+      this,
+    );
+  }
 }
 
 abstract class _DashDeckData implements DashDeckData {
-  factory _DashDeckData(
-      {required final List<SlideData> slides,
-      final Map<String, Widget> previewWidgets,
-      final Map<String, StyleMix> styles}) = _$_DashDeckData;
+  factory _DashDeckData({required final List<SlideData> slides}) =
+      _$_DashDeckData;
+
+  factory _DashDeckData.fromJson(Map<String, dynamic> json) =
+      _$_DashDeckData.fromJson;
 
   @override
   List<SlideData> get slides;
-  @override
-  Map<String, Widget> get previewWidgets;
-  @override
-  Map<String, StyleMix> get styles;
   @override
   @JsonKey(ignore: true)
   _$$_DashDeckDataCopyWith<_$_DashDeckData> get copyWith =>

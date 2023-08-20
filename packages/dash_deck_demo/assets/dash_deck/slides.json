@@ -1,0 +1,93 @@
+[
+  {
+    "id": "slide_1",
+    "content": "# Introduction to Flutter\n\nAuthor: Google Expert Developer",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "cover",
+      "image": "https://source.unsplash.com/random/900×700/?flutter",
+      "imageFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "slide_1",
+    "content": "## What is Flutter?\n\n- **Open-Source:** Created by Google\n- **UI Toolkit:** Build natively compiled applications\n- **Cross-Platform:** One codebase for Android and iOS\n\n### Key Features\n- Fast Development\n- Expressive and Flexible UI\n- Native Performance",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "contentLeft",
+      "image": "https://source.unsplash.com/random/900×700/?programming",
+      "imageFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "slide_1",
+    "content": "## Flutter Architecture\n- **Widgets:** Building blocks of Flutter UI\n- **Dart Platform:** Strongly typed language by Google\n- **Skia Engine:** 2D rendering engine\n\n### Main Components\n- Framework\n- Engine\n- Embedder",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "contentRight",
+      "image": "https://source.unsplash.com/random/900×700/?coding",
+      "imageFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "slide_1",
+    "content": "## Development with Flutter\n- **Hot Reload:** Instant updates\n- **Rich Libraries:** Extensive set of pre-designed widgets\n- **Integration with Firebase:** Backend services\n\n### Popular Packages\n- HTTP\n- Provider\n- SQFLite",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "contentLeft",
+      "image": "https://source.unsplash.com/random/900×700/?mobile-development",
+      "imageFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "slide_1",
+    "content": "## Design Principles\n- **Material Design:** Comprehensive guide\n- **Cupertino Widgets:** iOS-style components\n- **Customization:** Extensive styling options\n\n### Responsive Design\n- Adapt to different screen sizes\n- Maintain layout integrity",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "contentRight",
+      "image": "https://source.unsplash.com/random/900×700/?app-design",
+      "imageFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "slide_1",
+    "content": "## Innovation and Community\n- **State Management:** Various approaches\n- **Accessibility:** Focus on inclusive design\n- **Community Contributions:** Plugins, packages, conferences\n\n### Collaboration\n- Open to contributions\n- Active developer forums",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "contentLeft",
+      "image": "https://source.unsplash.com/random/900×700/?technology-innovation",
+      "imageFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "slide_1",
+    "content": "## Conclusion\n- **Revolutionizing Development:** Cross-platform efficiency\n- **Ongoing Growth:** Constant updates, community-driven\n- **Bright Future:** Continued innovation, industry adoption",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "cover",
+      "image": "https://source.unsplash.com/random/900×700/?future-technology",
+      "imageFit": "cover",
+      "contentAlignment": "bottomCenter",
+      "styles": null
+    }
+  }
+]

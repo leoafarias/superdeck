@@ -17,7 +17,7 @@ class DashDeckApp extends DashDeckShell {
 List<SlideData> get slides => [
       SlideData(
         id: 'slide_1',
-        content: '# Introduction to Dlutter\nAuthor: Google Expert Developer',
+        content: '# Introduction to Flutter\n\nAuthor: Google Expert Developer',
         options: SlideOptions(
           scrollable: false,
           layout: SlideLayout.cover,
@@ -30,7 +30,7 @@ List<SlideData> get slides => [
       SlideData(
         id: 'slide_1',
         content:
-            '## What is Flutter\?\n- \*\*Open-Source:\*\* Created by Google\n- \*\*UI Toolkit:\*\* Build natively compiled applications\n- \*\*Cross-Platform:\*\* One codebase for Android and iOS\n\n### Key Features\n- Fast Development\n- Expressive and Flexible UI\n- Native Performance',
+            '## What is Flutter\?\n\n- \*\*Open-Source:\*\* Created by Google\n- \*\*UI Toolkit:\*\* Build natively compiled applications\n- \*\*Cross-Platform:\*\* One codebase for Android and iOS\n\n### Key Features\n- Fast Development\n- Expressive and Flexible UI\n- Native Performance',
         options: SlideOptions(
           scrollable: false,
           layout: SlideLayout.contentLeft,
@@ -63,7 +63,7 @@ List<SlideData> get slides => [
           image:
               'https://source.unsplash.com/random/900×700/?mobile-development',
           imageFit: ImageFit.cover,
-          contentAlignment: ContentAlignment.topLeft,
+          contentAlignment: ContentAlignment.center,
           styles: null,
         ),
       ),

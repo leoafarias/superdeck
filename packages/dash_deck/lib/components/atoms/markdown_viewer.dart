@@ -7,7 +7,7 @@ import 'package:markdown/markdown.dart' as md;
 MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
   final theme = Theme.of(context);
   final tt = theme.textTheme;
-  final ss = MarkdownStyleSheet.fromTheme(theme);
+  final ss = MarkdownStyleSheet.largeFromTheme(theme);
 
   EdgeInsets scaleEdgeInsets(EdgeInsets edgeInsets) {
     return EdgeInsets.only(
@@ -31,17 +31,17 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
       height: 1.6,
     ),
     h1: tt.displayLarge,
-    h1Padding: scaleEdgeInsets(ss.h1Padding!),
+    h1Padding: scaleEdgeInsets(ss.h1Padding!.copyWith(top: 25)),
     h2: tt.displayMedium,
-    h2Padding: scaleEdgeInsets(ss.h2Padding!),
+    h2Padding: scaleEdgeInsets(ss.h2Padding!.copyWith(top: 25)),
     h3: tt.displaySmall,
-    h3Padding: scaleEdgeInsets(ss.h3Padding!),
+    h3Padding: scaleEdgeInsets(ss.h3Padding!.copyWith(top: 25)),
     h4: tt.headlineLarge,
-    h4Padding: scaleEdgeInsets(ss.h4Padding!),
+    h4Padding: scaleEdgeInsets(ss.h4Padding!.copyWith(top: 25)),
     h5: tt.headlineMedium,
-    h5Padding: scaleEdgeInsets(ss.h5Padding!),
+    h5Padding: scaleEdgeInsets(ss.h5Padding!.copyWith(top: 25)),
     h6: tt.headlineSmall,
-    h6Padding: scaleEdgeInsets(ss.h6Padding!),
+    h6Padding: scaleEdgeInsets(ss.h6Padding!.copyWith(top: 25)),
     p: tt.bodyLarge,
     pPadding: scaleEdgeInsets(ss.pPadding!),
     blockquote: tt.bodyLarge,
