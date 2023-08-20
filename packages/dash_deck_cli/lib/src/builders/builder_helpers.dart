@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:dash_deck_core/dash_deck_core.dart';
+import 'package:dash_deck/dash_deck.dart';
 import 'package:recase/recase.dart';
 
 String widgetName(String slideName, int snippetIndex) {
   return ReCase('${slideName}_snippet_${snippetIndex}_widget').pascalCase;
 }
 
-Class widgetBuildMethodBuilder(String widgetName, CodeBlock snippet) {
+Class widgetBuildMethodBuilder(String widgetName, CodeBlock codeBlock) {
   final widget = Class(
     (b) => b
       ..name = widgetName
@@ -41,7 +41,7 @@ Class widgetBuildMethodBuilder(String widgetName, CodeBlock snippet) {
                   ..type = refer('BuildContext'),
               ),
             )
-            ..body = Code(snippet.source)
+            ..body = Code(codeBlock.source)
             ..returns = refer('Widget'),
         ),
       ),

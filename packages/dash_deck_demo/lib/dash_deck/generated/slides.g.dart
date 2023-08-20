@@ -1,10 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:dash_deck/dash_deck.dart';
 import 'package:flutter/material.dart';
 
 const _snippets = {};
 final _styles = {};
 
-class DashDeckApp extends DashDeck {
+class DashDeckApp extends DashDeckShell {
   DashDeckApp({Key? key})
       : super(
           data: DashDeckData(slides: slides),

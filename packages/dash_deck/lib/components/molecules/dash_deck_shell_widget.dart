@@ -1,20 +1,14 @@
 import 'package:dash_deck/components/atoms/slide_wrapper.dart';
 import 'package:dash_deck/components/molecules/slide_view.dart';
 import 'package:dash_deck/helpers/local_storage.dart';
-import 'package:dash_deck/models/dash_deck_data.dart';
+import 'package:dash_deck/models/dash_deck_data_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
-class DashDeck extends StatefulWidget {
-  const DashDeck({
-    required this.data,
-    Key? key,
-  }) : super(key: key);
-
-  final DashDeckData data;
-
+class DashDeck {
   static Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -41,12 +35,37 @@ class DashDeck extends StatefulWidget {
 
     await LocalStorage.initialize();
   }
-
-  @override
-  State<DashDeck> createState() => _DashDeckState();
 }
 
-class _DashDeckState extends State<DashDeck> {
+class DashDeckApp extends StatelessWidget {
+  const DashDeckApp({
+    required this.data,
+    Key? key,
+  }) : super(key: key);
+
+  final DashDeckData data;
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: DashDeckShell(data: data),
+    );
+  }
+}
+
+class DashDeckShell extends StatefulWidget {
+  const DashDeckShell({
+    required this.data,
+    Key? key,
+  }) : super(key: key);
+
+  final DashDeckData data;
+
+  @override
+  State<DashDeckShell> createState() => _DashDeckShellState();
+}
+
+class _DashDeckShellState extends State<DashDeckShell> {
   final int _initialPage = 0;
   PageController? controller;
 

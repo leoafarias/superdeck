@@ -1,7 +1,7 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_cli/src/builders/builder_helpers.dart';
 import 'package:dash_deck_cli/src/constants.dart';
-import 'package:dash_deck_core/dash_deck_core.dart';
 
 Future<void> slideDataBuilder(List<SlideData> slides) async {
   var hasStyles = false;
@@ -140,6 +140,7 @@ Future<void> slideDataBuilder(List<SlideData> slides) async {
 
   final slidesReferenceLibrary = Library((b) {
     final builder = b
+      ..comments.add('ignore_for_file: prefer_const_constructors')
       ..body.addAll([varWidgets, varMixes, dashDeckApp, getterSlides])
       ..directives.addAll([
         Directive.import('package:dash_deck/dash_deck.dart'),
@@ -151,6 +152,8 @@ Future<void> slideDataBuilder(List<SlideData> slides) async {
     if (hasStyles) {
       builder.directives.add(Directive.import('../styles.dart'));
     }
+
+    // Add the following comment on top of the file // ignore_for_file: prefer_const_constructors
   });
 
   await runCodeEmitter(

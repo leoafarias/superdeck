@@ -1,4 +1,4 @@
-import 'package:dash_deck_core/dash_deck_core.dart';
+import 'package:dash_deck/models/slide_data.model.dart';
 import 'package:flutter/material.dart';
 
 class SlideDataProvider extends InheritedWidget {

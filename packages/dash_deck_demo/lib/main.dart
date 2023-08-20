@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   await DashDeck.initialize();
-  runApp(const MyApp());
+  runApp(const DashDeckApp());
 }
 
 class MyApp extends StatelessWidget {

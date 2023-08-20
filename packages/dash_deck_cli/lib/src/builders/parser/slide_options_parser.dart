@@ -1,4 +1,4 @@
-import 'package:dash_deck_core/dash_deck_core.dart';
+import 'package:dash_deck/dash_deck.dart';
 import 'package:yaml/yaml.dart';
 
 class SlideOptionsParser {
@@ -22,7 +22,7 @@ Available Options: ${SlideOptions.availableOptions.join(', ')}
       }
     }
 
-    return SlideOptions.fromMap(map);
+    return SlideOptions.fromJson(map);
   }
 }
 

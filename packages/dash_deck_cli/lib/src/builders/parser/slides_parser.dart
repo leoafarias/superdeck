@@ -1,8 +1,8 @@
+import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_cli/src/builders/parser/code_block_parser.dart';
 import 'package:dash_deck_cli/src/builders/parser/slide_content_parser.dart';
 import 'package:dash_deck_cli/src/builders/parser/slide_data_parser.dart';
 import 'package:dash_deck_cli/src/builders/parser/slide_options_parser.dart';
-import 'package:dash_deck_core/dash_deck_core.dart';
 
 class SlidesParser {
   SlidesParser(this.text);

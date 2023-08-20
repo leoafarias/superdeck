@@ -1,6 +1,4 @@
 library dash_deck;
 
-export 'package:dash_deck/components/molecules/dash_deck_widget.dart';
-export 'package:dash_deck/components/molecules/reload_on_change_widget.dart';
-export 'package:dash_deck/models/dash_deck_data.dart';
-export 'package:dash_deck_core/dash_deck_core.dart';
+export 'package:dash_deck/components/export.dart';
+export 'package:dash_deck/models/export.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_cli/src/constants.dart';
-import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:path/path.dart';
 
 class CodeBlockParser {
