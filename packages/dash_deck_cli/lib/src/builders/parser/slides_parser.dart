@@ -23,7 +23,6 @@ class SlidesParser {
         id: 'slide_$index',
         options: slideOptions,
         content: slide.content,
-        codeBlocks: [],
       );
     }).toList();
   }

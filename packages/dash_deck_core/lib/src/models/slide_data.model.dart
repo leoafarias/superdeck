@@ -1,4 +1,3 @@
-import 'package:dash_deck_core/src/models/code_block.model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import './slide_options.model.dart';
@@ -12,7 +11,6 @@ class SlideData with _$SlideData {
   const factory SlideData({
     required String id,
     String? content,
-    @Default([]) List<CodeBlock> codeBlocks,
     @Default(SlideOptions()) SlideOptions options,
   }) = _SlideData;
 

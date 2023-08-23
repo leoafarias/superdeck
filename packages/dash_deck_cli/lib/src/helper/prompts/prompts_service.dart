@@ -42,7 +42,10 @@ class PromptsService {
     // Create a guid
     final id = '${DateTime.now().millisecondsSinceEpoch}';
 
-    return SlideData(id: id, content: firstCandidate.output, codeBlocks: []);
+    return SlideData(
+      id: id,
+      content: firstCandidate.output,
+    );
   }
 
   static Future<PromptPresentationOutlineResponse> createPresentationOutline(

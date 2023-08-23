@@ -22,7 +22,6 @@ SlideData _$SlideDataFromJson(Map<String, dynamic> json) {
 mixin _$SlideData {
   String get id => throw _privateConstructorUsedError;
   String? get content => throw _privateConstructorUsedError;
-  List<CodeBlock> get codeBlocks => throw _privateConstructorUsedError;
   SlideOptions get options => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -36,11 +35,7 @@ abstract class $SlideDataCopyWith<$Res> {
   factory $SlideDataCopyWith(SlideData value, $Res Function(SlideData) then) =
       _$SlideDataCopyWithImpl<$Res, SlideData>;
   @useResult
-  $Res call(
-      {String id,
-      String? content,
-      List<CodeBlock> codeBlocks,
-      SlideOptions options});
+  $Res call({String id, String? content, SlideOptions options});
 
   $SlideOptionsCopyWith<$Res> get options;
 }
@@ -60,7 +55,6 @@ class _$SlideDataCopyWithImpl<$Res, $Val extends SlideData>
   $Res call({
     Object? id = null,
     Object? content = freezed,
-    Object? codeBlocks = null,
     Object? options = null,
   }) {
     return _then(_value.copyWith(
@@ -72,10 +66,6 @@ class _$SlideDataCopyWithImpl<$Res, $Val extends SlideData>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String?,
-      codeBlocks: null == codeBlocks
-          ? _value.codeBlocks
-          : codeBlocks // ignore: cast_nullable_to_non_nullable
-              as List<CodeBlock>,
       options: null == options
           ? _value.options
           : options // ignore: cast_nullable_to_non_nullable
@@ -99,11 +89,7 @@ abstract class _$$_SlideDataCopyWith<$Res> implements $SlideDataCopyWith<$Res> {
       __$$_SlideDataCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String? content,
-      List<CodeBlock> codeBlocks,
-      SlideOptions options});
+  $Res call({String id, String? content, SlideOptions options});
 
   @override
   $SlideOptionsCopyWith<$Res> get options;
@@ -122,7 +108,6 @@ class __$$_SlideDataCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? content = freezed,
-    Object? codeBlocks = null,
     Object? options = null,
   }) {
     return _then(_$_SlideData(
@@ -134,10 +119,6 @@ class __$$_SlideDataCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String?,
-      codeBlocks: null == codeBlocks
-          ? _value._codeBlocks
-          : codeBlocks // ignore: cast_nullable_to_non_nullable
-              as List<CodeBlock>,
       options: null == options
           ? _value.options
           : options // ignore: cast_nullable_to_non_nullable
@@ -150,12 +131,8 @@ class __$$_SlideDataCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_SlideData extends _SlideData {
   const _$_SlideData(
-      {required this.id,
-      this.content,
-      final List<CodeBlock> codeBlocks = const [],
-      this.options = const SlideOptions()})
-      : _codeBlocks = codeBlocks,
-        super._();
+      {required this.id, this.content, this.options = const SlideOptions()})
+      : super._();
 
   factory _$_SlideData.fromJson(Map<String, dynamic> json) =>
       _$$_SlideDataFromJson(json);
@@ -164,22 +141,13 @@ class _$_SlideData extends _SlideData {
   final String id;
   @override
   final String? content;
-  final List<CodeBlock> _codeBlocks;
-  @override
-  @JsonKey()
-  List<CodeBlock> get codeBlocks {
-    if (_codeBlocks is EqualUnmodifiableListView) return _codeBlocks;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_codeBlocks);
-  }
-
   @override
   @JsonKey()
   final SlideOptions options;
 
   @override
   String toString() {
-    return 'SlideData(id: $id, content: $content, codeBlocks: $codeBlocks, options: $options)';
+    return 'SlideData(id: $id, content: $content, options: $options)';
   }
 
   @override
@@ -189,15 +157,12 @@ class _$_SlideData extends _SlideData {
             other is _$_SlideData &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.content, content) || other.content == content) &&
-            const DeepCollectionEquality()
-                .equals(other._codeBlocks, _codeBlocks) &&
             (identical(other.options, options) || other.options == options));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, content,
-      const DeepCollectionEquality().hash(_codeBlocks), options);
+  int get hashCode => Object.hash(runtimeType, id, content, options);
 
   @JsonKey(ignore: true)
   @override
@@ -217,7 +182,6 @@ abstract class _SlideData extends SlideData {
   const factory _SlideData(
       {required final String id,
       final String? content,
-      final List<CodeBlock> codeBlocks,
       final SlideOptions options}) = _$_SlideData;
   const _SlideData._() : super._();
 
@@ -228,8 +192,6 @@ abstract class _SlideData extends SlideData {
   String get id;
   @override
   String? get content;
-  @override
-  List<CodeBlock> get codeBlocks;
   @override
   SlideOptions get options;
   @override
