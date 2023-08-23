@@ -21,8 +21,7 @@ CodeBlock _$CodeBlockFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CodeBlock {
   String get source => throw _privateConstructorUsedError;
-  List<int> get focusLines => throw _privateConstructorUsedError;
-  List<int> get showLines => throw _privateConstructorUsedError;
+  List<int> get highlightLines => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +34,7 @@ abstract class $CodeBlockCopyWith<$Res> {
   factory $CodeBlockCopyWith(CodeBlock value, $Res Function(CodeBlock) then) =
       _$CodeBlockCopyWithImpl<$Res, CodeBlock>;
   @useResult
-  $Res call({String source, List<int> focusLines, List<int> showLines});
+  $Res call({String source, List<int> highlightLines});
 }
 
 /// @nodoc
@@ -52,21 +51,16 @@ class _$CodeBlockCopyWithImpl<$Res, $Val extends CodeBlock>
   @override
   $Res call({
     Object? source = null,
-    Object? focusLines = null,
-    Object? showLines = null,
+    Object? highlightLines = null,
   }) {
     return _then(_value.copyWith(
       source: null == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
               as String,
-      focusLines: null == focusLines
-          ? _value.focusLines
-          : focusLines // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      showLines: null == showLines
-          ? _value.showLines
-          : showLines // ignore: cast_nullable_to_non_nullable
+      highlightLines: null == highlightLines
+          ? _value.highlightLines
+          : highlightLines // ignore: cast_nullable_to_non_nullable
               as List<int>,
     ) as $Val);
   }
@@ -79,7 +73,7 @@ abstract class _$$_CodeBlockCopyWith<$Res> implements $CodeBlockCopyWith<$Res> {
       __$$_CodeBlockCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String source, List<int> focusLines, List<int> showLines});
+  $Res call({String source, List<int> highlightLines});
 }
 
 /// @nodoc
@@ -94,21 +88,16 @@ class __$$_CodeBlockCopyWithImpl<$Res>
   @override
   $Res call({
     Object? source = null,
-    Object? focusLines = null,
-    Object? showLines = null,
+    Object? highlightLines = null,
   }) {
     return _then(_$_CodeBlock(
       source: null == source
           ? _value.source
           : source // ignore: cast_nullable_to_non_nullable
               as String,
-      focusLines: null == focusLines
-          ? _value._focusLines
-          : focusLines // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      showLines: null == showLines
-          ? _value._showLines
-          : showLines // ignore: cast_nullable_to_non_nullable
+      highlightLines: null == highlightLines
+          ? _value._highlightLines
+          : highlightLines // ignore: cast_nullable_to_non_nullable
               as List<int>,
     ));
   }
@@ -118,11 +107,8 @@ class __$$_CodeBlockCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_CodeBlock extends _CodeBlock {
   const _$_CodeBlock(
-      {required this.source,
-      required final List<int> focusLines,
-      required final List<int> showLines})
-      : _focusLines = focusLines,
-        _showLines = showLines,
+      {required this.source, required final List<int> highlightLines})
+      : _highlightLines = highlightLines,
         super._();
 
   factory _$_CodeBlock.fromJson(Map<String, dynamic> json) =>
@@ -130,25 +116,17 @@ class _$_CodeBlock extends _CodeBlock {
 
   @override
   final String source;
-  final List<int> _focusLines;
+  final List<int> _highlightLines;
   @override
-  List<int> get focusLines {
-    if (_focusLines is EqualUnmodifiableListView) return _focusLines;
+  List<int> get highlightLines {
+    if (_highlightLines is EqualUnmodifiableListView) return _highlightLines;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_focusLines);
-  }
-
-  final List<int> _showLines;
-  @override
-  List<int> get showLines {
-    if (_showLines is EqualUnmodifiableListView) return _showLines;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_showLines);
+    return EqualUnmodifiableListView(_highlightLines);
   }
 
   @override
   String toString() {
-    return 'CodeBlock(source: $source, focusLines: $focusLines, showLines: $showLines)';
+    return 'CodeBlock(source: $source, highlightLines: $highlightLines)';
   }
 
   @override
@@ -158,18 +136,13 @@ class _$_CodeBlock extends _CodeBlock {
             other is _$_CodeBlock &&
             (identical(other.source, source) || other.source == source) &&
             const DeepCollectionEquality()
-                .equals(other._focusLines, _focusLines) &&
-            const DeepCollectionEquality()
-                .equals(other._showLines, _showLines));
+                .equals(other._highlightLines, _highlightLines));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      source,
-      const DeepCollectionEquality().hash(_focusLines),
-      const DeepCollectionEquality().hash(_showLines));
+  int get hashCode => Object.hash(runtimeType, source,
+      const DeepCollectionEquality().hash(_highlightLines));
 
   @JsonKey(ignore: true)
   @override
@@ -188,8 +161,7 @@ class _$_CodeBlock extends _CodeBlock {
 abstract class _CodeBlock extends CodeBlock {
   const factory _CodeBlock(
       {required final String source,
-      required final List<int> focusLines,
-      required final List<int> showLines}) = _$_CodeBlock;
+      required final List<int> highlightLines}) = _$_CodeBlock;
   const _CodeBlock._() : super._();
 
   factory _CodeBlock.fromJson(Map<String, dynamic> json) =
@@ -198,9 +170,7 @@ abstract class _CodeBlock extends CodeBlock {
   @override
   String get source;
   @override
-  List<int> get focusLines;
-  @override
-  List<int> get showLines;
+  List<int> get highlightLines;
   @override
   @JsonKey(ignore: true)
   _$$_CodeBlockCopyWith<_$_CodeBlock> get copyWith =>

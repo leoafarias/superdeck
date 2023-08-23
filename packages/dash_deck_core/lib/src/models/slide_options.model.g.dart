@@ -11,9 +11,10 @@ _$_SlideOptions _$$_SlideOptionsFromJson(Map<String, dynamic> json) =>
       scrollable: json['scrollable'] as bool? ?? false,
       layout: $enumDecodeNullable(_$SlideLayoutEnumMap, json['layout']) ??
           SlideLayout.none,
-      image: json['image'] as String?,
-      imageFit: $enumDecodeNullable(_$ImageFitEnumMap, json['imageFit']) ??
-          ImageFit.cover,
+      background: json['background'] as String?,
+      backgroundFit:
+          $enumDecodeNullable(_$ImageFitEnumMap, json['backgroundFit']) ??
+              ImageFit.cover,
       contentAlignment: $enumDecodeNullable(
               _$ContentAlignmentEnumMap, json['contentAlignment']) ??
           ContentAlignment.center,
@@ -24,8 +25,8 @@ Map<String, dynamic> _$$_SlideOptionsToJson(_$_SlideOptions instance) =>
     <String, dynamic>{
       'scrollable': instance.scrollable,
       'layout': _$SlideLayoutEnumMap[instance.layout]!,
-      'image': instance.image,
-      'imageFit': _$ImageFitEnumMap[instance.imageFit]!,
+      'background': instance.background,
+      'backgroundFit': _$ImageFitEnumMap[instance.backgroundFit]!,
       'contentAlignment': _$ContentAlignmentEnumMap[instance.contentAlignment]!,
       'styles': instance.styles,
     };

@@ -29,8 +29,8 @@ class SlideOptions with _$SlideOptions {
   const factory SlideOptions({
     @Default(false) bool scrollable,
     @Default(SlideLayout.none) SlideLayout layout,
-    String? image,
-    @Default(ImageFit.cover) ImageFit imageFit,
+    String? background,
+    @Default(ImageFit.cover) ImageFit backgroundFit,
     @Default(ContentAlignment.center) ContentAlignment contentAlignment,
     String? styles,
   }) = _SlideOptions;
@@ -41,8 +41,8 @@ class SlideOptions with _$SlideOptions {
   static List<String> get availableOptions => [
         'scrollable',
         'layout',
-        'image',
-        'imageFit',
+        'background',
+        'backgroundFit',
         'contentAlignment',
         'styles',
       ];

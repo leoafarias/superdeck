@@ -61,11 +61,11 @@ Future<void> slideDataBuilder(List<SlideData> slides) async {
         {
           'scrollable': literalBool(options.scrollable),
           'layout': CodeExpression(Code(options.layout.toString())),
-          'image': options.image == null
+          'background': options.background == null
               ? literalNull
-              : literalString(options.image!),
-          'imageFit': CodeExpression(
-            Code(options.imageFit.toString()),
+              : literalString(options.background!),
+          'backgroundFit': CodeExpression(
+            Code(options.backgroundFit.toString()),
           ),
           'contentAlignment': CodeExpression(
             Code(options.contentAlignment.toString()),

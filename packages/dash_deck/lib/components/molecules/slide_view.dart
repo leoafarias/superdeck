@@ -16,6 +16,12 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasBackground = slideData.options.background != null;
+    final options = slideData.options;
+    final alignment = ContentAlignmentData.fromContentAlignment(
+      slideData.options.contentAlignment,
+    );
+
     Widget current = LayoutBuilder(
       builder: (context, contraints) {
         return Box(
@@ -26,10 +32,6 @@ class SlideView extends StatelessWidget {
           child: MarkdownViewer(slideData.content ?? ""),
         );
       },
-    );
-
-    final alignment = ContentAlignmentData.fromContentAlignment(
-      slideData.options.contentAlignment,
     );
 
     current = Column(
@@ -46,27 +48,23 @@ class SlideView extends StatelessWidget {
       );
     }
 
-    if (slideData.options.layout == SlideLayout.none) {
-      return current;
-    }
-
-    Widget imageWidget = const SizedBox(
+    Widget? imageWidget = const SizedBox(
       height: 0,
       width: 0,
     );
 
-    if (slideData.options.image != null) {
+    if (hasBackground) {
       imageWidget = Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: CachedNetworkImageProvider(slideData.options.image!),
-            fit: mapImageToBoxFit(slideData.options.imageFit),
+            image: CachedNetworkImageProvider(options.background!),
+            fit: mapImageToBoxFit(options.backgroundFit),
           ),
         ),
       );
     }
 
-    if (slideData.options.layout == SlideLayout.cover) {
+    if (options.layout == SlideLayout.cover) {
       return Stack(
         fit: StackFit.expand,
         children: [
@@ -76,7 +74,7 @@ class SlideView extends StatelessWidget {
       );
     }
 
-    if (slideData.options.layout == SlideLayout.contentRight) {
+    if (options.layout == SlideLayout.contentRight) {
       return Row(
         children: [
           Expanded(child: imageWidget),
@@ -85,7 +83,7 @@ class SlideView extends StatelessWidget {
       );
     }
 
-    if (slideData.options.layout == SlideLayout.contentLeft) {
+    if (options.layout == SlideLayout.contentLeft) {
       return Row(
         children: [
           Expanded(child: current),
@@ -93,7 +91,14 @@ class SlideView extends StatelessWidget {
         ],
       );
     }
-
+    if (hasBackground) {
+      return Row(
+        children: [
+          Expanded(child: current),
+          Expanded(child: imageWidget),
+        ],
+      );
+    }
     return current;
   }
 }

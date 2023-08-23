@@ -1,21 +1,20 @@
 import 'package:dash_deck/helpers/scale.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/themes/dracula.dart';
+import 'package:flutter_highlighting/themes/dracula.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:highlight/highlight.dart';
+import 'package:highlighting/highlighting.dart';
 
-Map<String, TextStyle?> syntaxTheme() {
-  final theme = {
+Map<String, TextStyle?> get syntaxTheme {
+  return {
     ...draculaTheme,
     'number': draculaTheme['variable'],
     'class': draculaTheme['variable'],
     'built_in': draculaTheme['variable'],
   };
-  return theme;
 }
 
 TextStyle applyStyle(String? className) {
-  final classStyle = className == null ? null : syntaxTheme()[className];
+  final classStyle = className == null ? null : syntaxTheme[className];
 
   final baseStyle = TextStyle(
     fontSize: Scale.scaleFont(16),
@@ -37,27 +36,18 @@ TextStyle applyStyle(String? className) {
 class DartSyntaxBuilder extends SyntaxHighlighter {
   @override
   TextSpan format(String source) {
+    final parsedSyntax = parseSyntax(source);
     return TextSpan(
-      children: _convert(highlight
-          .parse(_convertDisplaySnippet(source), language: 'dart')
-          .nodes!),
+      children: _convert(
+        highlight
+            .parse(
+              parsedSyntax.updatedContent,
+              languageId: 'dart',
+            )
+            .nodes!,
+      ),
     );
   }
-}
-
-String _convertDisplaySnippet(String source) {
-  const delimiter = '//@gist:start';
-  const endDelimiter = '//@gist:end';
-
-  final startIndex = source.indexOf(delimiter);
-  final endIndex = source.indexOf(endDelimiter);
-
-  if (startIndex == -1 || endIndex == -1) {
-    return source;
-  }
-
-  final snippet = source.substring(startIndex + delimiter.length, endIndex);
-  return snippet;
 }
 
 List<TextSpan> _convert(List<Node> nodes) {
@@ -66,7 +56,6 @@ List<TextSpan> _convert(List<Node> nodes) {
   List<List<TextSpan>> stack = [];
 
   const delimiter = '\n';
-  var lineNumber = 1;
 
   traverse(Node node) {
     TextStyle? getTextStyle() {
@@ -96,7 +85,6 @@ List<TextSpan> _convert(List<Node> nodes) {
         ));
 
         // Jump a line number now
-        lineNumber++;
 
         currentSpans.add(
           TextSpan(
@@ -107,17 +95,17 @@ List<TextSpan> _convert(List<Node> nodes) {
       } else {
         currentSpans.add(TextSpan(text: node.value));
       }
-    } else if (node.children != null) {
+    } else {
       List<TextSpan> tmp = [];
       currentSpans.add(TextSpan(children: tmp, style: getTextStyle()));
       stack.add(currentSpans);
       currentSpans = tmp;
+    }
 
-      for (var n in node.children!) {
-        traverse(n);
-        if (n == node.children!.last) {
-          currentSpans = stack.isEmpty ? spans : stack.removeLast();
-        }
+    for (var n in node.children) {
+      traverse(n);
+      if (n == node.children.last) {
+        currentSpans = stack.isEmpty ? spans : stack.removeLast();
       }
     }
   }
@@ -127,4 +115,48 @@ List<TextSpan> _convert(List<Node> nodes) {
   }
 
   return spans;
+}
+
+class ParsedSyntax {
+  final String updatedContent;
+  final List<int> highlightedLines;
+
+  ParsedSyntax(this.updatedContent, this.highlightedLines);
+}
+
+ParsedSyntax parseSyntax(String content) {
+  final startIndex = content.indexOf('@ddsyntax');
+  final endIndex = content.indexOf('@endddsyntax');
+
+  if (startIndex == -1 || endIndex == -1 || startIndex >= endIndex) {
+    return ParsedSyntax(
+      content,
+      [],
+    ); // Return original content if tags are not found correctly
+  }
+
+  final highlightedLines =
+      content.substring(startIndex + '@ddsyntax'.length, endIndex).trim();
+  final updatedContent =
+      content.replaceRange(startIndex, endIndex + '@endddsyntax'.length, '');
+
+  return ParsedSyntax(
+      updatedContent, parseHighlightingOptions(highlightedLines));
+}
+
+List<int> parseHighlightingOptions(String options) {
+  var result = <int>[];
+  var parts = options.split(',');
+
+  for (var part in parts) {
+    if (part.contains(':')) {
+      var range = part.split(':').map((e) => int.parse(e.trim())).toList();
+      result.addAll(
+          List<int>.generate(range[1] - range[0] + 1, (i) => i + range[0]));
+    } else {
+      result.add(int.parse(part.trim()));
+    }
+  }
+
+  return result;
 }

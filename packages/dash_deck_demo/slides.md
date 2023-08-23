@@ -1,21 +1,26 @@
 ---
-layout: cover
-contentAlignment: center
-image: https://source.unsplash.com/random/900×700/?flutter
+background: https://media.giphy.com/media/gicYGfRxoJlFqYpwnE/giphy.gif
+imageFit: contain
 ---
 
 # Introduction to Flutter
-
 Author: Google Expert Developer
 
+```dart {2,3}
+class ParsedSyntax {
+  final String updatedContent;
+  final List<int> highlightedLines;
+
+  ParsedSyntax(this.updatedContent, this.highlightedLines);
+}
+
+```
+
+
 ---
-layout: contentLeft
-contentAlignment: center
-image: https://source.unsplash.com/random/900×700/?programming
 ---
 
 ## What is Flutter?
-
 - **Open-Source:** Created by Google
 - **UI Toolkit:** Build natively compiled applications
 - **Cross-Platform:** One codebase for Android and iOS
@@ -28,7 +33,7 @@ image: https://source.unsplash.com/random/900×700/?programming
 ---
 layout: contentRight
 contentAlignment: center
-image: https://source.unsplash.com/random/900×700/?coding
+background: https://source.unsplash.com/random/900×700/?coding
 ---
 
 ## Flutter Architecture
@@ -43,7 +48,7 @@ image: https://source.unsplash.com/random/900×700/?coding
 
 ---
 layout: contentLeft
-image: https://source.unsplash.com/random/900×700/?mobile-development
+background: https://source.unsplash.com/random/900×700/?mobile-development
 ---
 
 ## Development with Flutter
@@ -59,7 +64,7 @@ image: https://source.unsplash.com/random/900×700/?mobile-development
 ---
 layout: contentRight
 contentAlignment: center
-image: https://source.unsplash.com/random/900×700/?app-design
+background: https://source.unsplash.com/random/900×700/?app-design
 ---
 
 ## Design Principles
@@ -74,7 +79,7 @@ image: https://source.unsplash.com/random/900×700/?app-design
 ---
 layout: contentLeft
 contentAlignment: center
-image: https://source.unsplash.com/random/900×700/?technology-innovation
+background: https://source.unsplash.com/random/900×700/?technology-innovation
 ---
 
 ## Innovation and Community
@@ -88,7 +93,7 @@ image: https://source.unsplash.com/random/900×700/?technology-innovation
 
 ---
 layout: cover
-image: https://source.unsplash.com/random/900×700/?future-technology
+background: https://source.unsplash.com/random/900×700/?future-technology
 contentAlignment: bottomCenter
 ---
 
@@ -96,3 +101,26 @@ contentAlignment: bottomCenter
 - **Revolutionizing Development:** Cross-platform efficiency
 - **Ongoing Growth:** Constant updates, community-driven
 - **Bright Future:** Continued innovation, industry adoption
+
+---
+layout: contentRight
+contentAlignment: center
+background: https://source.unsplash.com/random/900×700/?flutter-platforms
+---
+
+## Platforms Supported by Flutter
+Flutter isn't just about iOS and Android; it's a multi-platform framework! Here are the platforms it supports:
+
+| Platform       | Description                           |
+|----------------|---------------------------------------|
+| **Android**    | For building Android apps             |
+| **iOS**        | For creating apps on Apple devices    |
+| **Web**        | Write web applications                |
+| **Windows**    | Desktop applications for Windows      |
+| **macOS**      | macOS desktop applications            |
+| **Linux**      | Desktop applications for Linux        |
+
+### Platform Agnostic
+- Same codebase for various platforms
+- Unified development experience
+- Increased development efficiency

@@ -15,9 +15,9 @@ dependencies:
   markdown: ^7.1.1
   flutter_markdown: ^0.6.17+1
   cached_network_image: ^3.2.3
-  flutter_highlight: ^0.7.0
+
   dash_deck_core: ^0.0.1
-  highlight: ^0.7.0
+
   window_manager: ^0.3.5
   watcher: ^1.1.0
   shared_preferences: ^2.2.0
@@ -25,6 +25,8 @@ dependencies:
   riverpod_annotation: ^2.1.2
   collection: ^1.17.2
   google_fonts: ^5.1.0
+  highlighting: ^0.9.0+11.8.0
+  flutter_highlighting: ^0.9.0+11.8.0
 
 dev_dependencies:
   flutter_test:

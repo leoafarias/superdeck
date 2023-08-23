@@ -8,8 +8,7 @@ class CodeBlock with _$CodeBlock {
   const CodeBlock._();
   const factory CodeBlock({
     required String source,
-    required List<int> focusLines,
-    required List<int> showLines,
+    required List<int> highlightLines,
   }) = _CodeBlock;
 
   factory CodeBlock.fromJson(Map<String, dynamic> json) =>

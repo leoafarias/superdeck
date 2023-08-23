@@ -8,15 +8,13 @@ part of 'code_block.model.dart';
 
 _$_CodeBlock _$$_CodeBlockFromJson(Map<String, dynamic> json) => _$_CodeBlock(
       source: json['source'] as String,
-      focusLines:
-          (json['focusLines'] as List<dynamic>).map((e) => e as int).toList(),
-      showLines:
-          (json['showLines'] as List<dynamic>).map((e) => e as int).toList(),
+      highlightLines: (json['highlightLines'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
     );
 
 Map<String, dynamic> _$$_CodeBlockToJson(_$_CodeBlock instance) =>
     <String, dynamic>{
       'source': instance.source,
-      'focusLines': instance.focusLines,
-      'showLines': instance.showLines,
+      'highlightLines': instance.highlightLines,
     };

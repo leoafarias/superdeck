@@ -8,3 +8,5 @@ build/
 
 # Pubspec overrides for melos
 pubspec_overrides.yaml
+.env
+env.g.dart

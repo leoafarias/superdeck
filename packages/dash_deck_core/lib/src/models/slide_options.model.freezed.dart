@@ -22,8 +22,8 @@ SlideOptions _$SlideOptionsFromJson(Map<String, dynamic> json) {
 mixin _$SlideOptions {
   bool get scrollable => throw _privateConstructorUsedError;
   SlideLayout get layout => throw _privateConstructorUsedError;
-  String? get image => throw _privateConstructorUsedError;
-  ImageFit get imageFit => throw _privateConstructorUsedError;
+  String? get background => throw _privateConstructorUsedError;
+  ImageFit get backgroundFit => throw _privateConstructorUsedError;
   ContentAlignment get contentAlignment => throw _privateConstructorUsedError;
   String? get styles => throw _privateConstructorUsedError;
 
@@ -42,8 +42,8 @@ abstract class $SlideOptionsCopyWith<$Res> {
   $Res call(
       {bool scrollable,
       SlideLayout layout,
-      String? image,
-      ImageFit imageFit,
+      String? background,
+      ImageFit backgroundFit,
       ContentAlignment contentAlignment,
       String? styles});
 }
@@ -63,8 +63,8 @@ class _$SlideOptionsCopyWithImpl<$Res, $Val extends SlideOptions>
   $Res call({
     Object? scrollable = null,
     Object? layout = null,
-    Object? image = freezed,
-    Object? imageFit = null,
+    Object? background = freezed,
+    Object? backgroundFit = null,
     Object? contentAlignment = null,
     Object? styles = freezed,
   }) {
@@ -77,13 +77,13 @@ class _$SlideOptionsCopyWithImpl<$Res, $Val extends SlideOptions>
           ? _value.layout
           : layout // ignore: cast_nullable_to_non_nullable
               as SlideLayout,
-      image: freezed == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
+      background: freezed == background
+          ? _value.background
+          : background // ignore: cast_nullable_to_non_nullable
               as String?,
-      imageFit: null == imageFit
-          ? _value.imageFit
-          : imageFit // ignore: cast_nullable_to_non_nullable
+      backgroundFit: null == backgroundFit
+          ? _value.backgroundFit
+          : backgroundFit // ignore: cast_nullable_to_non_nullable
               as ImageFit,
       contentAlignment: null == contentAlignment
           ? _value.contentAlignment
@@ -108,8 +108,8 @@ abstract class _$$_SlideOptionsCopyWith<$Res>
   $Res call(
       {bool scrollable,
       SlideLayout layout,
-      String? image,
-      ImageFit imageFit,
+      String? background,
+      ImageFit backgroundFit,
       ContentAlignment contentAlignment,
       String? styles});
 }
@@ -127,8 +127,8 @@ class __$$_SlideOptionsCopyWithImpl<$Res>
   $Res call({
     Object? scrollable = null,
     Object? layout = null,
-    Object? image = freezed,
-    Object? imageFit = null,
+    Object? background = freezed,
+    Object? backgroundFit = null,
     Object? contentAlignment = null,
     Object? styles = freezed,
   }) {
@@ -141,13 +141,13 @@ class __$$_SlideOptionsCopyWithImpl<$Res>
           ? _value.layout
           : layout // ignore: cast_nullable_to_non_nullable
               as SlideLayout,
-      image: freezed == image
-          ? _value.image
-          : image // ignore: cast_nullable_to_non_nullable
+      background: freezed == background
+          ? _value.background
+          : background // ignore: cast_nullable_to_non_nullable
               as String?,
-      imageFit: null == imageFit
-          ? _value.imageFit
-          : imageFit // ignore: cast_nullable_to_non_nullable
+      backgroundFit: null == backgroundFit
+          ? _value.backgroundFit
+          : backgroundFit // ignore: cast_nullable_to_non_nullable
               as ImageFit,
       contentAlignment: null == contentAlignment
           ? _value.contentAlignment
@@ -167,8 +167,8 @@ class _$_SlideOptions extends _SlideOptions {
   const _$_SlideOptions(
       {this.scrollable = false,
       this.layout = SlideLayout.none,
-      this.image,
-      this.imageFit = ImageFit.cover,
+      this.background,
+      this.backgroundFit = ImageFit.cover,
       this.contentAlignment = ContentAlignment.center,
       this.styles})
       : super._();
@@ -183,10 +183,10 @@ class _$_SlideOptions extends _SlideOptions {
   @JsonKey()
   final SlideLayout layout;
   @override
-  final String? image;
+  final String? background;
   @override
   @JsonKey()
-  final ImageFit imageFit;
+  final ImageFit backgroundFit;
   @override
   @JsonKey()
   final ContentAlignment contentAlignment;
@@ -195,7 +195,7 @@ class _$_SlideOptions extends _SlideOptions {
 
   @override
   String toString() {
-    return 'SlideOptions(scrollable: $scrollable, layout: $layout, image: $image, imageFit: $imageFit, contentAlignment: $contentAlignment, styles: $styles)';
+    return 'SlideOptions(scrollable: $scrollable, layout: $layout, background: $background, backgroundFit: $backgroundFit, contentAlignment: $contentAlignment, styles: $styles)';
   }
 
   @override
@@ -206,9 +206,10 @@ class _$_SlideOptions extends _SlideOptions {
             (identical(other.scrollable, scrollable) ||
                 other.scrollable == scrollable) &&
             (identical(other.layout, layout) || other.layout == layout) &&
-            (identical(other.image, image) || other.image == image) &&
-            (identical(other.imageFit, imageFit) ||
-                other.imageFit == imageFit) &&
+            (identical(other.background, background) ||
+                other.background == background) &&
+            (identical(other.backgroundFit, backgroundFit) ||
+                other.backgroundFit == backgroundFit) &&
             (identical(other.contentAlignment, contentAlignment) ||
                 other.contentAlignment == contentAlignment) &&
             (identical(other.styles, styles) || other.styles == styles));
@@ -216,8 +217,8 @@ class _$_SlideOptions extends _SlideOptions {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, scrollable, layout, image,
-      imageFit, contentAlignment, styles);
+  int get hashCode => Object.hash(runtimeType, scrollable, layout, background,
+      backgroundFit, contentAlignment, styles);
 
   @JsonKey(ignore: true)
   @override
@@ -237,8 +238,8 @@ abstract class _SlideOptions extends SlideOptions {
   const factory _SlideOptions(
       {final bool scrollable,
       final SlideLayout layout,
-      final String? image,
-      final ImageFit imageFit,
+      final String? background,
+      final ImageFit backgroundFit,
       final ContentAlignment contentAlignment,
       final String? styles}) = _$_SlideOptions;
   const _SlideOptions._() : super._();
@@ -251,9 +252,9 @@ abstract class _SlideOptions extends SlideOptions {
   @override
   SlideLayout get layout;
   @override
-  String? get image;
+  String? get background;
   @override
-  ImageFit get imageFit;
+  ImageFit get backgroundFit;
   @override
   ContentAlignment get contentAlignment;
   @override
