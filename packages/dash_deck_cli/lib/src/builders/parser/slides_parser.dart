@@ -1,4 +1,3 @@
-import 'package:dash_deck_cli/src/builders/parser/code_block_parser.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 
 class SlidesParser {
@@ -19,14 +18,12 @@ class SlidesParser {
       // Convert front matter to SlideOptions.
       final slideOptions = SlideOptions.fromJson(slide.frontMatter);
 
-      final codeBlocks = CodeBlockParser(slide.content).parse();
-
       // Return a SlideData object for each slide.
       return SlideData(
         id: 'slide_$index',
         options: slideOptions,
         content: slide.content,
-        codeBlocks: codeBlocks,
+        codeBlocks: [],
       );
     }).toList();
   }

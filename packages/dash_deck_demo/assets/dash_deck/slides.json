@@ -1,28 +1,7 @@
 [
   {
-    "id": "slide_0",
-    "content": "\n# Introduction to Flutter\nAuthor: Google Expert Developer\n\n```dart {2,3}\nclass ParsedSyntax {\n  final String updatedContent;\n  final List<int> highlightedLines;\n\n  ParsedSyntax(this.updatedContent, this.highlightedLines);\n}\n\n```\n\n",
-    "codeBlocks": [
-      {
-        "source": "class ParsedSyntax {\n  final String updatedContent;\n  final List<int> highlightedLines;\n\n  ParsedSyntax(this.updatedContent, this.highlightedLines);\n}\n\n@ddsyntax\n2,3\n@endddsyntax\n",
-        "highlightLines": [
-          2,
-          3
-        ]
-      }
-    ],
-    "options": {
-      "scrollable": false,
-      "layout": "none",
-      "background": "https://media.giphy.com/media/gicYGfRxoJlFqYpwnE/giphy.gif",
-      "backgroundFit": "cover",
-      "contentAlignment": "center",
-      "styles": null
-    }
-  },
-  {
-    "id": "slide_1",
-    "content": "\n## What is Flutter?\n- **Open-Source:** Created by Google\n- **UI Toolkit:** Build natively compiled applications\n- **Cross-Platform:** One codebase for Android and iOS\n\n### Key Features\n- Fast Development\n- Expressive and Flexible UI\n- Native Performance\n",
+    "id": "1692808854942",
+    "content": "# How to Prepare for a Half Ironman\n## The Ultimate Guide\n| Phase                 | Goal                        | Key Activities       |\n|-----------------------|-----------------------------|-----------------------|\n| 1. Pre-season training  | Build fitness and endurance | Swim, bike, run regularly |\n| 2. Buildup phase       | Increase training volume   | Add more swim, bike, run |\n| 3. Peak phase          | Peak fitness                | Taper training, taper diet |\n| 4. Race day            | Execute your race plan     | Race day nutrition, hydration |\n| 5. Recovery phase      | Recover from race          | Rest, cross-training, stretching |",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
@@ -34,78 +13,130 @@
     }
   },
   {
-    "id": "slide_2",
-    "content": "\n## Flutter Architecture\n- **Widgets:** Building blocks of Flutter UI\n- **Dart Platform:** Strongly typed language by Google\n- **Skia Engine:** 2D rendering engine\n\n### Main Components\n- Framework\n- Engine\n- Embedder\n",
+    "id": "1692808859294",
+    "content": "# How to Prepare for a Half Ironman\n## Step 1: Set Your Goals\n- Set a realistic timeline and achievable goals.\n- Train for a variety of distances and intensities.\n- Optimize nutrition and hydration.\n- Get enough rest and recovery.",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
-      "layout": "contentRight",
-      "background": "https://source.unsplash.com/random/900×700/?coding",
+      "layout": "none",
+      "background": null,
       "backgroundFit": "cover",
       "contentAlignment": "center",
       "styles": null
     }
   },
   {
-    "id": "slide_3",
-    "content": "\n## Development with Flutter\n- **Hot Reload:** Instant updates\n- **Rich Libraries:** Extensive set of pre-designed widgets\n- **Integration with Firebase:** Backend services\n\n### Popular Packages\n- HTTP\n- Provider\n- SQFLite\n",
+    "id": "1692808861925",
+    "content": "# How to Train for a Half Ironman\n## Step 2: Choose the Right Training Plan\n| Plan | Duration | Volume |\n|---|---|---|\n| Base | 12-16 weeks | 3-5 hours per week |\n| Build | 8-10 weeks | 5-7 hours per week |\n| Peak | 4-6 weeks | 7-9 hours per week |\n| Taper | 1-2 weeks | 2-3 hours per week |\ninput: How to prepare for a half Ironman\noutput: # How to Prepare for a Half Ironman\n## Training Tips for First-Timers\n- Start training 12-16 weeks in advance.\n- Focus on building your aerobic base.\n- Complete a variety of workouts, including running, swimming, and cycling.\n- Gradually increase your training volume and intensity.\n- Take rest days and listen to your body.\n- Follow a healthy diet and get enough sleep.\n- Stay motivated and enjoy the journey!",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
-      "layout": "contentLeft",
-      "background": "https://source.unsplash.com/random/900×700/?mobile-development",
+      "layout": "none",
+      "background": null,
       "backgroundFit": "cover",
       "contentAlignment": "center",
       "styles": null
     }
   },
   {
-    "id": "slide_4",
-    "content": "\n## Design Principles\n- **Material Design:** Comprehensive guide\n- **Cupertino Widgets:** iOS-style components\n- **Customization:** Extensive styling options\n\n### Responsive Design\n- Adapt to different screen sizes\n- Maintain layout integrity\n",
+    "id": "1692808864639",
+    "content": "# Step 3: Fuel Your Body for Success\n## Hydrate and Fuel\n- Drink plenty of water.\n- Eat healthy snacks before and after your workout.\ninput: How to Prepare for a Half Ironman\noutput: # How to Prepare for a Half Ironman\n## A 12-Week Training Plan\n| Week  | Training |\n|---|---|\n| 1-4  | Build endurance with long, easy runs |\n| 5-8  | Add speed with intervals and tempo runs |\n| 9-12 | Peak with shorter, faster runs and taper |",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
-      "layout": "contentRight",
-      "background": "https://source.unsplash.com/random/900×700/?app-design",
+      "layout": "none",
+      "background": null,
       "backgroundFit": "cover",
       "contentAlignment": "center",
       "styles": null
     }
   },
   {
-    "id": "slide_5",
-    "content": "\n## Innovation and Community\n- **State Management:** Various approaches\n- **Accessibility:** Focus on inclusive design\n- **Community Contributions:** Plugins, packages, conferences\n\n### Collaboration\n- Open to contributions\n- Active developer forums\n",
+    "id": "1692808869160",
+    "content": "# Step 4: Get the Right Gear\n## Gear List\n- Bike: Road bike, triathalon bike, or TT bike.\n- Wetsuit: For swimming.\n- Triathlon suit: For running and biking.\n- Running shoes: For running.\n- Swim cap: For swimming.\n- Goggles: For swimming.\n- Helmet: For biking.\n- Nutrition: For fueling during the race.\n- Hydration: For staying hydrated during the race.\n- Bike tools: For fixing bike problems.\n- First aid kit: For minor injuries.\n- Sunscreen: For protecting your skin from the sun.\n- Sunglasses: For protecting your eyes from the sun.\n- Ear plugs: For blocking out noise.\n- Headband: For keeping sweat out of your eyes.\n- Socks: For keeping your feet comfortable.\n- Chamois cream: For preventing chafing.\n- Towel: For drying off after swimming.\n- Change of clothes: For after the race.",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
-      "layout": "contentLeft",
-      "background": "https://source.unsplash.com/random/900×700/?technology-innovation",
+      "layout": "none",
+      "background": null,
       "backgroundFit": "cover",
       "contentAlignment": "center",
       "styles": null
     }
   },
   {
-    "id": "slide_6",
-    "content": "\n## Conclusion\n- **Revolutionizing Development:** Cross-platform efficiency\n- **Ongoing Growth:** Constant updates, community-driven\n- **Bright Future:** Continued innovation, industry adoption\n",
+    "id": "1692808871009",
+    "content": "# How to Prepare for a Half Ironman\n## Step 5: Mentally Prepare for the Challenge\n- Get excited, not scared.\n- Focus on the process, not the outcome.\n- Visualize yourself crossing the finish line.\n- Remember your why.",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
-      "layout": "cover",
-      "background": "https://source.unsplash.com/random/900×700/?future-technology",
+      "layout": "none",
+      "background": null,
       "backgroundFit": "cover",
-      "contentAlignment": "bottomCenter",
+      "contentAlignment": "center",
       "styles": null
     }
   },
   {
-    "id": "slide_7",
-    "content": "\n## Platforms Supported by Flutter\nFlutter isn't just about iOS and Android; it's a multi-platform framework! Here are the platforms it supports:\n\n| Platform       | Description                           |\n|----------------|---------------------------------------|\n| **Android**    | For building Android apps             |\n| **iOS**        | For creating apps on Apple devices    |\n| **Web**        | Write web applications                |\n| **Windows**    | Desktop applications for Windows      |\n| **macOS**      | macOS desktop applications            |\n| **Linux**      | Desktop applications for Linux        |\n\n### Platform Agnostic\n- Same codebase for various platforms\n- Unified development experience\n- Increased development efficiency\n",
+    "id": "1692808875508",
+    "content": "# Half Ironman Training\n## Step 6: Stay Motivated\n- Set goals, track progress, and reward yourself.\n- Connect with other triathletes for support.\n- Take breaks when needed.",
     "codeBlocks": [],
     "options": {
       "scrollable": false,
-      "layout": "contentRight",
-      "background": "https://source.unsplash.com/random/900×700/?flutter-platforms",
+      "layout": "none",
+      "background": null,
+      "backgroundFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "1692808877352",
+    "content": "# Step 7: Deal with Setbacks\n## Be prepared for setbacks.\n- **Identify potential setbacks.**\n- **Have a plan in place.**\n- **Don't give up.**",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "none",
+      "background": null,
+      "backgroundFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "1692808884033",
+    "content": "# How to Prepare for a Half Ironman\n## Step 8: Train Smart, Not Hard\n- Mix up your training routine.\n- Schedule rest days.\n- Focus on your nutrition.\n- Hydrate properly.\n- Get enough sleep.",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "none",
+      "background": null,
+      "backgroundFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "1692808887313",
+    "content": "# How to Prepare for a Half Ironman\n## 9 Key Steps\n1. **Set a goal.**\n2. **Get a coach.**\n3. **Get fit.**\n4. **Build your nutrition plan.**\n5. **Choose your gear.**\n6. **Practice your transitions.**\n7. **Taper your training.**\n8. **Race day!**\n9. **Enjoy the journey!**",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "none",
+      "background": null,
+      "backgroundFit": "cover",
+      "contentAlignment": "center",
+      "styles": null
+    }
+  },
+  {
+    "id": "1692808889464",
+    "content": "# Conclusion & Q&A\n## Reviewing Preparation\n- Train consistently.\n- Fuel your body.\n- Pace yourself.\n- Stay positive.\n## Questions?",
+    "codeBlocks": [],
+    "options": {
+      "scrollable": false,
+      "layout": "none",
+      "background": null,
       "backgroundFit": "cover",
       "contentAlignment": "center",
       "styles": null

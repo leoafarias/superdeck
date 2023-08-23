@@ -174,6 +174,14 @@ packages:
       relative: true
     source: path
     version: "0.1.0+1"
+  envied:
+    dependency: transitive
+    description:
+      name: envied
+      sha256: "60d3f5606c7b35bc6ef493e650d916b34351d8af2e58b7ac45881ba59dfcf039"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0+3"
   equatable:
     dependency: transitive
     description:
@@ -235,14 +243,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
-  flutter_highlight:
+  flutter_highlighting:
     dependency: transitive
     description:
-      name: flutter_highlight
-      sha256: "7b96333867aa07e122e245c033b8ad622e4e3a42a1a2372cbb098a2541d8782c"
+      name: flutter_highlighting
+      sha256: "426770b1453e8302f8cc58455ebcaad33e3049e73ca18f9d3c83554552bf3baf"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.9.0+11.8.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -301,14 +309,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  highlight:
+  highlighting:
     dependency: transitive
     description:
-      name: highlight
-      sha256: "5353a83ffe3e3eca7df0abfb72dcf3fa66cc56b953728e7113ad4ad88497cf21"
+      name: highlighting
+      sha256: "196005ed9c98ee559939fcecd466fa941b9e99b3a93394691b86780ad4da50f3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.9.0+11.8.0"
   http:
     dependency: transitive
     description:
@@ -404,6 +412,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  palm_api:
+    dependency: transitive
+    description:
+      path: "../../../palm_api_dart"
+      relative: true
+    source: path
+    version: "0.0.1"
   path:
     dependency: transitive
     description:
@@ -665,14 +680,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
-  syntax_highlight:
-    dependency: transitive
-    description:
-      name: syntax_highlight
-      sha256: "4d3f1302ff1e4ada15404c63891806aaf6d8a6bae7c83b335443f7c25786f98d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   term_glyph:
     dependency: transitive
     description:
@@ -689,6 +696,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:

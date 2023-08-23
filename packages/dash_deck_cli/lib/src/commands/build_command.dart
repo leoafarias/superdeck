@@ -4,6 +4,7 @@ import 'package:args/command_runner.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_builder.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_loader.dart';
 import 'package:dash_deck_cli/src/constants.dart';
+import 'package:dash_deck_cli/src/helper/prompts/prompts_service.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
@@ -48,41 +49,23 @@ class BuildCommand extends Command<int> {
     );
 
     Future<void> runBuildProcess() async {
-      var progress = _logger.progress(
-        'Loading slides',
-      );
+      final progress = _logger.progress('Updating slides');
       List<SlideData> slidesData;
       try {
         slidesData = await slideDataLoader();
-
-        progress.complete(
-          'Slides loaded',
+        final response = await _generateSlideDataFromPrompt(
+          'How to prepare for a half IronMan!',
         );
+
+        await storeSlideData(response);
       } catch (e, stackTrace) {
         progress.fail(
-          'Failed to load slides',
+          'Failed to update slides',
         );
         _logger
           ..err(e.toString())
           ..detail(stackTrace.toString());
 
-        return;
-      }
-
-      progress = _logger.progress(
-        'Building slides',
-      );
-
-      try {
-        await slideDataBuilder(slidesData);
-        progress.complete(
-          'Build complete',
-        );
-      } catch (e) {
-        progress.fail(
-          'Failed to build slides',
-        );
-        _logger.err(e.toString());
         return;
       }
     }
@@ -121,4 +104,23 @@ class BuildCommand extends Command<int> {
     }
     return ExitCode.success.code;
   }
+}
+
+Future<List<SlideData>> _generateSlideDataFromPrompt(String topic) async {
+  final response = await PromptsService.createPresentationOutline(topic);
+
+  final slideData = <SlideData>[];
+
+  // loop thrugh response.slides and call PromptServices.createSlide for each one and wait for the response
+  // then add the response to the slideData
+  // then return the slideData
+
+  // Loop but with the index
+  for (var i = 0; i < response.slides.length; i++) {
+    final slide = response.slides[i];
+    final slideResponse = await PromptsService.createSlide(response, slide);
+    slideData.add(slideResponse);
+  }
+
+  return slideData;
 }

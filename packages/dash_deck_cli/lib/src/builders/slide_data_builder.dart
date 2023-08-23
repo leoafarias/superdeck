@@ -4,7 +4,7 @@ import 'package:dash_deck_cli/src/constants.dart';
 import 'package:dash_deck_cli/src/helper/pretty_json.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 
-Future<void> slideDataBuilder(List<SlideData> slides) async {
+Future<void> storeSlideData(List<SlideData> slides) async {
   var hasStyles = false;
   // final hasCodePreview = false;
 
@@ -170,5 +170,8 @@ Future<void> slideDataBuilder(List<SlideData> slides) async {
 
   // Write a json file with a list of slides
   await slidesJson.writeAsString(
-      prettyJson(slides.map((slide) => slide.toJson()).toList()));
+    prettyJson(
+      slides.map((slide) => slide.toJson()).toList(),
+    ),
+  );
 }
