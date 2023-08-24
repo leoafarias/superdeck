@@ -69,7 +69,20 @@ class SlideView extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           imageWidget,
-          current,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 40.0.sh),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0),
+                  Colors.black.withOpacity(0.8),
+                ],
+              ),
+            ),
+            child: current,
+          ),
         ],
       );
     }

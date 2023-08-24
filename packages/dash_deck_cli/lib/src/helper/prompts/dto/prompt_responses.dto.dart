@@ -2,6 +2,36 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 
+class OutlineSlide {
+  final String content;
+  final String type;
+  final String layout;
+  final String background;
+
+  OutlineSlide({
+    required this.content,
+    required this.type,
+    required this.layout,
+    required this.background,
+  });
+
+  // Convert the object into a JSON representation
+  Map<String, dynamic> toJson() => {
+        'content': content,
+        'type': type,
+        'layout': layout,
+        'background': background,
+      };
+
+  // Create an object from a JSON representation
+  factory OutlineSlide.fromJson(Map<String, dynamic> json) => OutlineSlide(
+        content: json['content'],
+        type: json['type'],
+        layout: json['layout'],
+        background: json['background'],
+      );
+}
+
 class PromptPresentationOutlineResponse {
   final String topic;
   final List<String> slides;

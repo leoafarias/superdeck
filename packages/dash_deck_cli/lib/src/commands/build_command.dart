@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_builder.dart';
-import 'package:dash_deck_cli/src/builders/slide_data_loader.dart';
 import 'package:dash_deck_cli/src/constants.dart';
 import 'package:dash_deck_cli/src/helper/prompts/prompts_service.dart';
-import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
 import 'package:watcher/watcher.dart';
@@ -50,10 +48,9 @@ class BuildCommand extends Command<int> {
 
     Future<void> runBuildProcess() async {
       final progress = _logger.progress('Updating slides');
-      List<SlideData> slidesData;
+
       try {
-        slidesData = await slideDataLoader();
-        final response = await _generateSlideDataFromPrompt(
+        final response = await PromptsService.createOutline(
           'How to prepare for a half IronMan!',
         );
 
@@ -104,23 +101,4 @@ class BuildCommand extends Command<int> {
     }
     return ExitCode.success.code;
   }
-}
-
-Future<List<SlideData>> _generateSlideDataFromPrompt(String topic) async {
-  final response = await PromptsService.createPresentationOutline(topic);
-
-  final slideData = <SlideData>[];
-
-  // loop thrugh response.slides and call PromptServices.createSlide for each one and wait for the response
-  // then add the response to the slideData
-  // then return the slideData
-
-  // Loop but with the index
-  for (var i = 0; i < response.slides.length; i++) {
-    final slide = response.slides[i];
-    final slideResponse = await PromptsService.createSlide(response, slide);
-    slideData.add(slideResponse);
-  }
-
-  return slideData;
 }

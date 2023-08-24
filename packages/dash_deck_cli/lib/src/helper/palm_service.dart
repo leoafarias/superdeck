@@ -5,17 +5,6 @@ import 'package:palm_api/palm_api.dart';
 final _palm = TextService(apiKey: Env.palmApiKey);
 
 class PalmService {
-  // Future<String?> _generateText(String text) async {
-  //   final prompt = TextPrompt(text: text);
-
-  //   final response = await _palm.generateText(
-  //     _modelName,
-  //     _generateSlideContent(prompt),
-  //   );
-
-  //   return response.candidates?.first.output;
-  // }
-
   Future<GenerateTextResponse?> generateTextWithPrompt(PromptData data) async {
     return _palm.generateText(
       data.modelName,
