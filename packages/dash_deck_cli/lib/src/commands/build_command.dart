@@ -25,6 +25,11 @@ class BuildCommand extends Command<int> {
         abbr: 'p',
         help: 'The path to dashdeck directory',
         negatable: false,
+      )
+      ..addOption(
+        'topic',
+        abbr: 't',
+        help: 'The topic to generate slides for',
       );
   }
 
@@ -39,6 +44,7 @@ class BuildCommand extends Command<int> {
   @override
   Future<int> run() async {
     final watch = argResults?['watch'] as bool;
+    final topic = argResults?['topic'] as String?;
 
     kDashDeckDirectory.rootDir = Directory(
       join(
@@ -51,7 +57,7 @@ class BuildCommand extends Command<int> {
 
       try {
         final response = await PromptsService.createOutline(
-          'How to prepare for a half IronMan!',
+          topic!,
         );
         print(response);
         await storeSlideData(response);
