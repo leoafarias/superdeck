@@ -53,7 +53,7 @@ class BuildCommand extends Command<int> {
         final response = await PromptsService.createOutline(
           'How to prepare for a half IronMan!',
         );
-
+        print(response);
         await storeSlideData(response);
       } catch (e, stackTrace) {
         progress.fail(
