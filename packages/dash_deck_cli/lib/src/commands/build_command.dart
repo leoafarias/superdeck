@@ -59,8 +59,9 @@ class BuildCommand extends Command<int> {
         final response = await PromptsService.createOutline(
           topic!,
         );
-        print(response);
+
         await storeSlideData(response);
+        progress.complete('Slides updated');
       } catch (e, stackTrace) {
         progress.fail(
           'Failed to update slides',

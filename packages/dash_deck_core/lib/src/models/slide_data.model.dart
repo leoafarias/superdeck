@@ -9,7 +9,6 @@ part 'slide_data.model.g.dart';
 class SlideData with _$SlideData {
   const SlideData._();
   const factory SlideData({
-    required String id,
     String? content,
     @Default(SlideOptions()) SlideOptions options,
   }) = _SlideData;

@@ -7,7 +7,6 @@ part of 'slide_data.model.dart';
 // **************************************************************************
 
 _$_SlideData _$$_SlideDataFromJson(Map<String, dynamic> json) => _$_SlideData(
-      id: json['id'] as String,
       content: json['content'] as String?,
       options: json['options'] == null
           ? const SlideOptions()
@@ -16,7 +15,6 @@ _$_SlideData _$$_SlideDataFromJson(Map<String, dynamic> json) => _$_SlideData(
 
 Map<String, dynamic> _$$_SlideDataToJson(_$_SlideData instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'content': instance.content,
       'options': instance.options,
     };

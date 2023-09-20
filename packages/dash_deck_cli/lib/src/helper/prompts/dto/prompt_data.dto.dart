@@ -1,19 +1,30 @@
 import 'package:palm_api/palm_api.dart';
 
-//   {"category": "HARM_CATEGORY_DEROGATORY", "threshold": "4"},
-//   {"category": "HARM_CATEGORY_TOXICITY", "threshold": "4"},
-//   {"category": "HARM_CATEGORY_VIOLENCE", "threshold": "4"},
-//   {"category": "HARM_CATEGORY_SEXUAL", "threshold": "4"},
-//   {"category": "HARM_CATEGORY_MEDICAL", "threshold": "4"},
-//   {"category": "HARM_CATEGORY_DANGEROUS", "threshold": "4"}
-
-const _defaultSafetySettings = [
-  SafetySetting(category: "HARM_CATEGORY_DEROGATORY", threshold: "4"),
-  SafetySetting(category: "HARM_CATEGORY_TOXICITY", threshold: "4"),
-  SafetySetting(category: "HARM_CATEGORY_VIOLENCE", threshold: "4"),
-  SafetySetting(category: "HARM_CATEGORY_SEXUAL", threshold: "4"),
-  SafetySetting(category: "HARM_CATEGORY_MEDICAL", threshold: "4"),
-  SafetySetting(category: "HARM_CATEGORY_DANGEROUS", threshold: "4"),
+const defaultSafetySettings = [
+  SafetySetting(
+    category: HarmCategory.derogatory,
+    threshold: HarmBlockThreshold.blockOnlyHigh,
+  ),
+  SafetySetting(
+    category: HarmCategory.toxicity,
+    threshold: HarmBlockThreshold.blockOnlyHigh,
+  ),
+  SafetySetting(
+    category: HarmCategory.violence,
+    threshold: HarmBlockThreshold.blockOnlyHigh,
+  ),
+  SafetySetting(
+    category: HarmCategory.sexual,
+    threshold: HarmBlockThreshold.blockOnlyHigh,
+  ),
+  SafetySetting(
+    category: HarmCategory.medical,
+    threshold: HarmBlockThreshold.blockOnlyHigh,
+  ),
+  SafetySetting(
+    category: HarmCategory.dangerous,
+    threshold: HarmBlockThreshold.blockOnlyHigh,
+  ),
 ];
 
 class PromptData {
@@ -36,7 +47,7 @@ class PromptData {
     required this.topP,
     required this.maxOutputTokens,
     required this.stopSequences,
-    this.safetySettings = _defaultSafetySettings,
+    this.safetySettings = defaultSafetySettings,
   });
 
   Map<String, dynamic> toJson() => {
@@ -44,11 +55,11 @@ class PromptData {
         'model_name': modelName,
         'temperature': temperature,
         'candidate_count': candidateCount,
-        'top_k': topK,
-        'top_p': topP,
-        'max_output_tokens': maxOutputTokens,
-        'stop_sequences': stopSequences,
-        'safety_settings': safetySettings.map((e) => e.toMap()).toList(),
+        'topK': topK,
+        'topP': topP,
+        'maxOutputTokens': maxOutputTokens,
+        'stopSequences': stopSequences,
+        'safetySettings': safetySettings.map((e) => e.toMap()).toList(),
       };
 
   factory PromptData.fromJson(Map<String, dynamic> json) => PromptData(

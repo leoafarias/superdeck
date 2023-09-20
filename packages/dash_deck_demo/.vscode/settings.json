@@ -1,0 +1,12 @@
+{
+  "search.exclude": {
+    "**/.fvm/versions": true
+  },
+  "files.watcherExclude": {
+    "**/.fvm/versions": true
+  },
+  "files.exclude": {
+    "**/.fvm/versions": true
+  },
+  "dart.flutterSdkPath": ".fvm/versions/stable"
+}

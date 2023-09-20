@@ -1,82 +1,66 @@
 [
   {
-    "id": "1692833309562",
-    "content": "# Embarcando na Jornada do Sofá até os 5km",
+    "id": "1692833420582",
+    "content": "# How to Organize a Conference",
     "options": {
       "layout": "cover",
-      "background": "https://source.unsplash.com/random/900×700?runner"
+      "background": "https://source.unsplash.com/random/900×700/?conference"
     }
   },
   {
-    "id": "1692833309563",
-    "content": "## A Visão\n- Entendendo o objetivo dos 5km\n- Os benefícios da corrida\n- Transformando de sedentário para ativo",
+    "id": "1692833420583",
+    "content": "## The Planning Phase\n- Choose a topic\n- Define your goals\n- Set a budget\n- Select a venue",
     "options": {
       "layout": "contentLeft",
-      "background": "https://source.unsplash.com/random/900×700/?jogging"
+      "background": "https://source.unsplash.com/random/900×700/?calendar"
     }
   },
   {
-    "id": "1692833309564",
-    "content": "## Desmistificando Mitos\n- 'Eu não sou um corredor'\n- '5km é muito para iniciantes'\n- 'Eu não tenho tempo'",
+    "id": "1692833420584",
+    "content": "## The Marketing Phase\n- Create a marketing plan\n- Promote your event\n- Build an audience",
     "options": {
       "layout": "contentRight",
-      "background": "https://source.unsplash.com/random/900×700/?procrastinate"
+      "background": "https://source.unsplash.com/random/900×700/?social-media"
     }
   },
   {
-    "id": "1692833309565",
-    "content": "> 'Toda jornada começa com um único passo.' - Lao Tzu",
-    "options": {
-      "layout": "cover",
-      "background": "https://source.unsplash.com/random/900×700/?journey"
-    }
-  },
-  {
-    "id": "1692833309566",
-    "content": "## Primeiros Passos\n- Começando com caminhada\n- Introduzir intervalos de corrida curta\n- Progressão gradual",
+    "id": "1692833420585",
+    "content": "## The Execution Phase\n- Secure speakers\n- Book vendors\n- Create a schedule\n- Manage logistics",
     "options": {
       "layout": "contentLeft",
-      "background": "https://source.unsplash.com/random/900×700/?runner,beginner"
+      "background": "https://source.unsplash.com/random/900×700/?speaker"
     }
   },
   {
-    "id": "1692833309567",
-    "content": "## Acompanhando o Progresso\n- Importância de registrar marcos\n- Usando aplicativos e tecnologia vestível\n- Celebrando pequenas vitórias",
+    "id": "1692833420586",
+    "content": "## The Post-Conference Phase\n- Evaluate your success\n- Collect feedback\n- Thank your attendees",
     "options": {
       "layout": "contentRight",
-      "background": "https://source.unsplash.com/random/900×700/?exercise,journal"
+      "background": "https://source.unsplash.com/random/900×700/?applause"
     }
   },
   {
-    "id": "1692833309568",
-    "content": "## Superando Desafios\n- Barreiras mentais\n- Obstáculos físicos\n- Consistência é a chave",
+    "id": "1692833420587",
+    "content": "## 'A conference is a place where people come together to share ideas and experiences, and to learn from each other.' \nAnonymous",
+    "options": {
+      "layout": "cover",
+      "background": "https://source.unsplash.com/random/900×700/?people,meeting"
+    }
+  },
+  {
+    "id": "1692833420588",
+    "content": "## Bonus Tips\n- Get sponsors\n- Partner with other organizations\n- Leverage technology\n- Create a lasting impact",
     "options": {
       "layout": "contentLeft",
-      "background": "https://source.unsplash.com/random/900×700/?obstacle,runner"
+      "background": "https://source.unsplash.com/random/900×700/?technology"
     }
   },
   {
-    "id": "1692833309569",
-    "content": "> 'A linha de chegada é apenas o começo de uma nova corrida.'",
+    "id": "1692833420589",
+    "content": "## 'The most important thing about a conference is not the content, but the people.' \nSeth Godin",
     "options": {
       "layout": "cover",
-      "background": "https://source.unsplash.com/random/900×700/?finish,runner"
-    }
-  },
-  {
-    "id": "1692833309570",
-    "content": "## Preparando-se para o Dia da Corrida\n- Escolhendo o evento certo\n- O que esperar\n- Estratégias para completar seus primeiros 5km",
-    "options": {
-      "layout": "contentRight",
-      "background": "https://source.unsplash.com/random/900×700/?runner,race"
-    }
-  },
-  {
-    "id": "1692833309571",
-    "content": "# Celebrando Sua Conquista do Sofá até os 5km",
-    "options": {
-      "layout": "cover",
-      "background": "https://source.unsplash.com/random/900×700/?celebration"
+      "background": "https://source.unsplash.com/random/900×700/?people,gathering"
     }
   }
 ]

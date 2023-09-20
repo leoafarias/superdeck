@@ -13,14 +13,12 @@ class SlidesParser {
     // Map the parsed slides to SlideData objects and return as a list.
     return slidesContents.asMap().entries.map((entry) {
       final slide = entry.value;
-      final index = entry.key;
 
       // Convert front matter to SlideOptions.
       final slideOptions = SlideOptions.fromJson(slide.frontMatter);
 
       // Return a SlideData object for each slide.
       return SlideData(
-        id: 'slide_$index',
         options: slideOptions,
         content: slide.content,
       );

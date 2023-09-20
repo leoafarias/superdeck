@@ -20,7 +20,6 @@ SlideData _$SlideDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SlideData {
-  String get id => throw _privateConstructorUsedError;
   String? get content => throw _privateConstructorUsedError;
   SlideOptions get options => throw _privateConstructorUsedError;
 
@@ -35,7 +34,7 @@ abstract class $SlideDataCopyWith<$Res> {
   factory $SlideDataCopyWith(SlideData value, $Res Function(SlideData) then) =
       _$SlideDataCopyWithImpl<$Res, SlideData>;
   @useResult
-  $Res call({String id, String? content, SlideOptions options});
+  $Res call({String? content, SlideOptions options});
 
   $SlideOptionsCopyWith<$Res> get options;
 }
@@ -53,15 +52,10 @@ class _$SlideDataCopyWithImpl<$Res, $Val extends SlideData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? content = freezed,
     Object? options = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       content: freezed == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
@@ -89,7 +83,7 @@ abstract class _$$_SlideDataCopyWith<$Res> implements $SlideDataCopyWith<$Res> {
       __$$_SlideDataCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String? content, SlideOptions options});
+  $Res call({String? content, SlideOptions options});
 
   @override
   $SlideOptionsCopyWith<$Res> get options;
@@ -106,15 +100,10 @@ class __$$_SlideDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
     Object? content = freezed,
     Object? options = null,
   }) {
     return _then(_$_SlideData(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       content: freezed == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
@@ -130,15 +119,12 @@ class __$$_SlideDataCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_SlideData extends _SlideData {
-  const _$_SlideData(
-      {required this.id, this.content, this.options = const SlideOptions()})
+  const _$_SlideData({this.content, this.options = const SlideOptions()})
       : super._();
 
   factory _$_SlideData.fromJson(Map<String, dynamic> json) =>
       _$$_SlideDataFromJson(json);
 
-  @override
-  final String id;
   @override
   final String? content;
   @override
@@ -147,7 +133,7 @@ class _$_SlideData extends _SlideData {
 
   @override
   String toString() {
-    return 'SlideData(id: $id, content: $content, options: $options)';
+    return 'SlideData(content: $content, options: $options)';
   }
 
   @override
@@ -155,14 +141,13 @@ class _$_SlideData extends _SlideData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SlideData &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.options, options) || other.options == options));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, content, options);
+  int get hashCode => Object.hash(runtimeType, content, options);
 
   @JsonKey(ignore: true)
   @override
@@ -180,16 +165,12 @@ class _$_SlideData extends _SlideData {
 
 abstract class _SlideData extends SlideData {
   const factory _SlideData(
-      {required final String id,
-      final String? content,
-      final SlideOptions options}) = _$_SlideData;
+      {final String? content, final SlideOptions options}) = _$_SlideData;
   const _SlideData._() : super._();
 
   factory _SlideData.fromJson(Map<String, dynamic> json) =
       _$_SlideData.fromJson;
 
-  @override
-  String get id;
   @override
   String? get content;
   @override
