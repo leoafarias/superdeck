@@ -17,6 +17,9 @@ title: "Slide 4: Quotes"
 
 ---
 title: "Slide 1: Headings"
+image:
+    fit: contain
+    src: https://source.unsplash.com/random/900×700/?landscape
 ---
 
 # Heading 1

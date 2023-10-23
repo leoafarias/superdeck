@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dash_deck_cli/src/constants.dart';
 
 Future<String> replaceMermaidContent(String content) async {
-  RegExp mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+  final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
 
   Iterable<Match> matches = mermaidBlockRegex.allMatches(content);
   for (Match match in matches) {

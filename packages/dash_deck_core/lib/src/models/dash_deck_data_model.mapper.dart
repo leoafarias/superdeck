@@ -13,7 +13,7 @@ class DashDeckDataMapper extends ClassMapperBase<DashDeckData> {
   static DashDeckDataMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DashDeckDataMapper._());
-      SlideDataMapper.ensureInitialized();
+      SlideMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -21,8 +21,8 @@ class DashDeckDataMapper extends ClassMapperBase<DashDeckData> {
   @override
   final String id = 'DashDeckData';
 
-  static List<SlideData> _$slides(DashDeckData v) => v.slides;
-  static const Field<DashDeckData, List<SlideData>> _f$slides =
+  static List<Slide> _$slides(DashDeckData v) => v.slides;
+  static const Field<DashDeckData, List<Slide>> _f$slides =
       Field('slides', _$slides, opt: true, def: const []);
 
   @override
@@ -88,9 +88,8 @@ extension DashDeckDataValueCopy<$R, $Out>
 
 abstract class DashDeckDataCopyWith<$R, $In extends DashDeckData, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<$R, SlideData, SlideDataCopyWith<$R, SlideData, SlideData>>
-      get slides;
-  $R call({List<SlideData>? slides});
+  ListCopyWith<$R, Slide, SlideCopyWith<$R, Slide, Slide>> get slides;
+  $R call({List<Slide>? slides});
   DashDeckDataCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -103,11 +102,11 @@ class _DashDeckDataCopyWithImpl<$R, $Out>
   late final ClassMapperBase<DashDeckData> $mapper =
       DashDeckDataMapper.ensureInitialized();
   @override
-  ListCopyWith<$R, SlideData, SlideDataCopyWith<$R, SlideData, SlideData>>
-      get slides => ListCopyWith($value.slides, (v, t) => v.copyWith.$chain(t),
+  ListCopyWith<$R, Slide, SlideCopyWith<$R, Slide, Slide>> get slides =>
+      ListCopyWith($value.slides, (v, t) => v.copyWith.$chain(t),
           (v) => call(slides: v));
   @override
-  $R call({List<SlideData>? slides}) =>
+  $R call({List<Slide>? slides}) =>
       $apply(FieldCopyWithData({if (slides != null) #slides: slides}));
   @override
   DashDeckData $make(CopyWithData data) =>

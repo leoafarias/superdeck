@@ -37,6 +37,7 @@ class ParsedSyntax {
 layout: contentRight
 contentAlignment: center
 background: https://source.unsplash.com/random/900×700/?coding
+
 ---
 
 ## Flutter Architecture
@@ -52,7 +53,6 @@ background: https://source.unsplash.com/random/900×700/?coding
 - Embedder
 
 ---
-
 layout: contentLeft
 background: https://source.unsplash.com/random/900×700/?mobile-development
 ---

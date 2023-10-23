@@ -1,4 +1,5 @@
 import 'package:dash_deck_core/dash_deck_core.dart';
+import 'package:yaml/yaml.dart';
 
 class SlidesParser {
   // Constructor that accepts the text input for parsing.
@@ -6,80 +7,68 @@ class SlidesParser {
   final String text;
 
   // Public method that parses the text and returns a list of SlideData.
-  List<SlideData> parse() {
+  List<Slide> parse() {
     // Parse slides from the input text.
-    final slidesContents = parseSlides(text);
+    final slidesContents = parseSlideContents(text);
 
     // Map the parsed slides to SlideData objects and return as a list.
-    return slidesContents.asMap().entries.map((entry) {
-      final slide = entry.value;
-
-      // Convert front matter to SlideOptions.
-      final slideOptions = SlideOptions.fromMap(slide.frontMatter);
-
-      // Return a SlideData object for each slide.
-      return SlideData(
-        options: slideOptions,
-        content: slide.content.trim(),
-      );
-    }).toList();
+    return slidesContents.map(Slide.parse).toList();
   }
 }
 
-// Private class to represent parsed slide data.
-class _SlideParserData {
-  final Map<String, String> frontMatter;
-  final String content;
+final frontMatterParser = RegExp(r'---([\s\S]*?)---');
+// Function to parse slides from the content string.
+List<JSON> parseSlideContents(String content) {
+  final slideContent = extractSlides(content);
 
-  _SlideParserData(this.frontMatter, this.content);
+  // Map the front matter and content to a list of _SlideParserData objects.
+  return slideContent.map((slide) {
+    final frontMatter =
+        frontMatterParser.allMatches(slide).first.group(1) ?? '';
 
-  @override
-  String toString() => 'FrontMatter: $frontMatter, Content: $content';
+    // Parse the front matter into a map.
+    final frontMatterMap = loadYaml(frontMatter) as YamlMap;
+
+    // Remove all the matching front matter from the slide content.
+    content = slide
+        .substring(frontMatterParser.matchAsPrefix(slide)?.end ?? 0)
+        .trim();
+
+    final map = Map<String, dynamic>.from(frontMatterMap);
+
+    map['content'] = content;
+    // Return a _SlideParserData object for each slide.
+    return map;
+  }).toList();
 }
 
-// Function to parse slides from the content string.
-List<_SlideParserData> parseSlides(String content) {
-  final slides = <_SlideParserData>[];
+List<String> extractSlides(String content) {
   final lines = content.split('\n');
+  final slides = <String>[];
+  final buffer = StringBuffer();
+  bool inSlide = false;
 
-  // Flags and temporary variables to keep track of parsing state.
-  var inFrontMatter = false;
-  var frontMatter = <String, String>{};
-
-  var slideContent = <String>[];
-
-  // Iterate through each line, parsing front matter and content.
-  for (final line in lines) {
-    if (line == '---') {
-      // Toggle front matter parsing state.
-      if (inFrontMatter) {
-        inFrontMatter = false;
-      } else {
-        // If exiting a slide, add the parsed slide and reset temporary variables.
-        if (slideContent.isNotEmpty || frontMatter.isNotEmpty) {
-          slides.add(_SlideParserData(frontMatter, slideContent.join('\n')));
-          frontMatter = {};
-          slideContent = [];
+  for (var line in lines) {
+    if (line.trim() == '---') {
+      if (buffer.isNotEmpty) {
+        if (inSlide) {
+          // Add the slide content to the list of slides
+          slides.add(buffer.toString().trim());
+          inSlide = false;
+          buffer.clear();
+        } else {
+          inSlide = true;
         }
-        inFrontMatter = true;
       }
-    } else if (inFrontMatter) {
-      // Inside front matter: parse key-value pairs.
-      final index = line.indexOf(':');
-      if (index != -1) {
-        final key = line.substring(0, index).trim();
-        final value = line.substring(index + 1).trim();
-        frontMatter[key] = value;
-      }
+      buffer.writeln(line);
     } else {
-      // Outside front matter: accumulate slide content.
-      slideContent.add(line);
+      buffer.writeln(line);
     }
   }
 
-  // Handle the last slide, if any content or front matter remains.
-  if (slideContent.isNotEmpty || frontMatter.isNotEmpty) {
-    slides.add(_SlideParserData(frontMatter, slideContent.join('\n')));
+  // Capture any remaining content as a slide
+  if (buffer.isNotEmpty) {
+    slides.add(buffer.toString().trim());
   }
 
   return slides;

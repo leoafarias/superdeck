@@ -1,5 +1,5 @@
 ---
-title: "Slide 4: Quotes"
+title: Slide 4 Quotes
 ---
 
 > This is a blockquote.
@@ -16,7 +16,7 @@ title: "Slide 4: Quotes"
 > - Another item
 
 ---
-title: "Slide 1: Headings"
+title: Slide 1 Headings
 ---
 
 # Heading 1
@@ -27,7 +27,7 @@ title: "Slide 1: Headings"
 ###### Heading 6
 
 ---
-title: "Slide 2: Text Styling"
+title: Slide 2 Text Styling
 ---
 
 **Bold Text**
@@ -41,14 +41,19 @@ title: "Slide 2: Text Styling"
 [Link](https://github.com)
 
 ---
-title: "Slide 3: Links and Images"
+title: Slide 3 Links and Images
 ---
 
 ![Unsplash Image](https://source.unsplash.com/random/900×700/?landscape)
 
 ---
-title: "Slide 5: Code Blocks"
+title: Slide 5 Code Blocks
+layout: twoColumn
 ---
+
+Hello
+
+::right::
 
 ```dart
 int factorial(int n) {
@@ -61,7 +66,7 @@ int factorial(int n) {
 ```
 
 ---
-title: "Slide 6: Lists"
+title: Slide 6 Lists
 ---
 
 1. Ordered list item 1
@@ -71,7 +76,7 @@ title: "Slide 6: Lists"
 - Unordered list item 2
 
 ---
-title: "Slide 7: Tables"
+title: Slide 7 Tables
 ---
 
 | Header 1 | Header 2 |
@@ -80,7 +85,7 @@ title: "Slide 7: Tables"
 | Cell 2A  | Cell 2B  |
 
 ---
-title: "Mermaid example"
+title: Mermaid example
 ---
 
 ```mermaid
@@ -95,7 +100,7 @@ flowchart TD
 
 
 ---
-title: "Slide 8: Task Lists"
+title: Slide 8 Task Lists
 ---
 
 - [ ] Task List Item 1

@@ -1,8 +1,8 @@
 import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:flutter/material.dart';
 
-class ContentAlignmentData {
-  const ContentAlignmentData({
+class FlexAlignment {
+  const FlexAlignment({
     required this.mainAxisAlignment,
     required this.crossAxisAlignment,
   });
@@ -10,9 +10,8 @@ class ContentAlignmentData {
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
 
-  factory ContentAlignmentData.fromContentAlignment(
-      ContentAlignment alignment) {
-    return ContentAlignmentData(
+  factory FlexAlignment.fromContentAlignment(ContentAlignment alignment) {
+    return FlexAlignment(
       mainAxisAlignment: _mainAxisFromContentAlignment(alignment),
       crossAxisAlignment: _crossAxisFromContentAlignment(alignment),
     );

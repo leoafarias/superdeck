@@ -2,7 +2,7 @@ import 'package:dash_deck_cli/src/builders/parser/slides_parser.dart';
 import 'package:dash_deck_cli/src/constants.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 
-Future<List<SlideData>> slideDataLoader() async {
+Future<List<Slide>> slideDataLoader() async {
   final slidesMarkdown = kDashDeckDirectory.markdownFile;
   final stylesFile = kDashDeckDirectory.stylesFile;
 

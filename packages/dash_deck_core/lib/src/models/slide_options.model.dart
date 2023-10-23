@@ -2,11 +2,21 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 part 'slide_options.model.mapper.dart';
 
-@MappableEnum()
-enum SlideLayout { none, cover, contentLeft, contentRight }
+class BuiltinLayout {
+  BuiltinLayout._();
+  static const none = 'none';
+  static const cover = 'cover';
+  static const image = 'image';
+  static const full = 'full';
+  static const twoColumn = 'twoColumn';
+  static const twoColumnHeader = 'twoColumnHeader';
+}
 
 @MappableEnum()
 enum ImageFit { cover, contain, fill, fitHeight, fitWidth, none, scaleDown }
+
+@MappableEnum()
+enum ImagePosition { left, right }
 
 @MappableEnum()
 enum VerticalAlignment { top, center, bottom }
@@ -26,34 +36,3 @@ enum ContentAlignment {
 
 @MappableEnum()
 enum HorizontalAlignment { left, center, right }
-
-@MappableClass()
-class SlideOptions with SlideOptionsMappable {
-  final bool scrollable;
-  final SlideLayout layout;
-  final String? background;
-  final ImageFit backgroundFit;
-  final ContentAlignment contentAlignment;
-  final String? styles;
-
-  const SlideOptions({
-    this.scrollable = false,
-    this.layout = SlideLayout.none,
-    this.background,
-    this.backgroundFit = ImageFit.cover,
-    this.contentAlignment = ContentAlignment.center,
-    this.styles,
-  });
-
-  static final fromMap = SlideOptionsMapper.fromMap;
-  static final fromJson = SlideOptionsMapper.fromJson;
-
-  static List<String> get availableOptions => [
-        'scrollable',
-        'layout',
-        'background',
-        'backgroundFit',
-        'contentAlignment',
-        'styles',
-      ];
-}

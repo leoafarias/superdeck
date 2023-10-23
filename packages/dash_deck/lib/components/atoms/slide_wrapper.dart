@@ -1,3 +1,4 @@
+import 'package:dash_deck/helpers/constants.dart';
 import 'package:dash_deck/helpers/scale.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +11,15 @@ class SlideWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: AspectRatio(
-        aspectRatio: 16 / 9,
+        aspectRatio: kAspectRatio,
         child: LayoutBuilder(builder: (context, constraints) {
           final width = constraints.maxWidth;
           final height = constraints.maxHeight;
 
-          Scale.setupWith(Size(width, height), const Size(1280, 720));
+          Scale.setupWith(Size(width, height), const Size(kWidth, kHeight));
 
-          double maxWidth = Scale.scaleWidth(1280);
-          double maxHeight = Scale.scaleHeight(720);
+          final maxWidth = Scale.scaleWidth(kWidth);
+          final maxHeight = Scale.scaleHeight(kHeight);
 
           return Theme(
             data: scaleTheme(context),
