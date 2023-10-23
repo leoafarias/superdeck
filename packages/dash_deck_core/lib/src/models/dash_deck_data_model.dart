@@ -1,15 +1,23 @@
+import 'dart:convert';
+
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'dash_deck_data_model.freezed.dart';
-part 'dash_deck_data_model.g.dart';
+part 'dash_deck_data_model.mapper.dart';
 
-@freezed
-class DashDeckData with _$DashDeckData {
-  factory DashDeckData({
-    required List<SlideData> slides,
-  }) = _DashDeckData;
+@MappableClass()
+class DashDeckData with DashDeckDataMappable {
+  final List<SlideData> slides;
+  const DashDeckData({
+    this.slides = const [],
+  });
 
-  factory DashDeckData.fromJson(Map<String, dynamic> json) =>
-      _$DashDeckDataFromJson(json);
+  static final fromMap = DashDeckDataMapper.fromMap;
+  static final fromJson = DashDeckDataMapper.fromJson;
+
+  static fromSlidesJson(String slidesJson) {
+    final slides =
+        jsonDecode(slidesJson).map((e) => SlideData.fromMap(e)).toList();
+    return DashDeckData(slides: List<SlideData>.from(slides));
+  }
 }

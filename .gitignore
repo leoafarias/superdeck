@@ -11,3 +11,6 @@ pubspec_overrides.yaml
 .env
 env.g.dart
 node_modules
+
+# FVM Version Cache
+.fvm

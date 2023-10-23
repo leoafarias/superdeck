@@ -1,6 +1,10 @@
+import 'package:dash_deck_cli/src/builders/mermaid_builder.dart';
 import 'package:dash_deck_cli/src/constants.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 
-Future<void> storeSlideData(String content) async {
+Future<void> storeSlideData(DashDeckData deck) async {
+  String content = deck.toJson();
+  content = await replaceMermaidContent(content);
   final slidesJson = kDashDeckDirectory.generatedSlidesJsonFile;
 
   if (!slidesJson.existsSync()) {

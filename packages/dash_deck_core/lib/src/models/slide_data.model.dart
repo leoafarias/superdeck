@@ -1,18 +1,19 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
 import './slide_options.model.dart';
 
-part 'slide_data.model.freezed.dart';
-part 'slide_data.model.g.dart';
+part 'slide_data.model.mapper.dart';
 
-@freezed
-class SlideData with _$SlideData {
-  const SlideData._();
-  const factory SlideData({
-    String? content,
-    @Default(SlideOptions()) SlideOptions options,
-  }) = _SlideData;
+@MappableClass()
+class SlideData with SlideDataMappable {
+  final String? content;
+  final SlideOptions options;
 
-  factory SlideData.fromJson(Map<String, dynamic> json) =>
-      _$SlideDataFromJson(json);
+  const SlideData({
+    this.content,
+    this.options = const SlideOptions(),
+  });
+
+  static final fromMap = SlideDataMapper.fromMap;
+  static final fromJson = SlideDataMapper.fromJson;
 }

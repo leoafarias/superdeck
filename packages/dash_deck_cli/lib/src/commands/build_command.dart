@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_builder.dart';
+import 'package:dash_deck_cli/src/builders/slide_data_loader.dart';
 import 'package:dash_deck_cli/src/constants.dart';
-import 'package:dash_deck_cli/src/helper/prompts/prompts_service.dart';
+import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
 import 'package:watcher/watcher.dart';
@@ -56,11 +57,14 @@ class BuildCommand extends Command<int> {
       final progress = _logger.progress('Updating slides');
 
       try {
-        final response = await PromptsService.createOutline(
-          topic!,
-        );
+        // final response = await PromptsService.createOutline(
+        //   topic!,
+        // );
 
-        await storeSlideData(response);
+        // await storeSlideData(response);
+        final slides = await slideDataLoader();
+        final deckData = DashDeckData(slides: slides);
+        await storeSlideData(deckData);
         progress.complete('Slides updated');
       } catch (e, stackTrace) {
         progress.fail(

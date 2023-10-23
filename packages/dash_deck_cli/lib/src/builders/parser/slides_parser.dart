@@ -15,12 +15,12 @@ class SlidesParser {
       final slide = entry.value;
 
       // Convert front matter to SlideOptions.
-      final slideOptions = SlideOptions.fromJson(slide.frontMatter);
+      final slideOptions = SlideOptions.fromMap(slide.frontMatter);
 
       // Return a SlideData object for each slide.
       return SlideData(
         options: slideOptions,
-        content: slide.content,
+        content: slide.content.trim(),
       );
     }).toList();
   }

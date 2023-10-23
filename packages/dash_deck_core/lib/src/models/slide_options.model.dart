@@ -1,14 +1,17 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-part 'slide_options.model.freezed.dart';
-part 'slide_options.model.g.dart';
+part 'slide_options.model.mapper.dart';
 
+@MappableEnum()
 enum SlideLayout { none, cover, contentLeft, contentRight }
 
+@MappableEnum()
 enum ImageFit { cover, contain, fill, fitHeight, fitWidth, none, scaleDown }
 
+@MappableEnum()
 enum VerticalAlignment { top, center, bottom }
 
+@MappableEnum()
 enum ContentAlignment {
   topLeft,
   topCenter,
@@ -21,22 +24,29 @@ enum ContentAlignment {
   bottomRight
 }
 
+@MappableEnum()
 enum HorizontalAlignment { left, center, right }
 
-@freezed
-class SlideOptions with _$SlideOptions {
-  const SlideOptions._();
-  const factory SlideOptions({
-    @Default(false) bool scrollable,
-    @Default(SlideLayout.none) SlideLayout layout,
-    String? background,
-    @Default(ImageFit.cover) ImageFit backgroundFit,
-    @Default(ContentAlignment.center) ContentAlignment contentAlignment,
-    String? styles,
-  }) = _SlideOptions;
+@MappableClass()
+class SlideOptions with SlideOptionsMappable {
+  final bool scrollable;
+  final SlideLayout layout;
+  final String? background;
+  final ImageFit backgroundFit;
+  final ContentAlignment contentAlignment;
+  final String? styles;
 
-  factory SlideOptions.fromJson(Map<String, dynamic> json) =>
-      _$SlideOptionsFromJson(json);
+  const SlideOptions({
+    this.scrollable = false,
+    this.layout = SlideLayout.none,
+    this.background,
+    this.backgroundFit = ImageFit.cover,
+    this.contentAlignment = ContentAlignment.center,
+    this.styles,
+  });
+
+  static final fromMap = SlideOptionsMapper.fromMap;
+  static final fromJson = SlideOptionsMapper.fromJson;
 
   static List<String> get availableOptions => [
         'scrollable',

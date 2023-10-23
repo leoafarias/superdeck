@@ -1,6 +1,7 @@
 import 'package:dash_deck/components/atoms/slide_wrapper.dart';
 import 'package:dash_deck/components/molecules/slide_view.dart';
 import 'package:dash_deck/helpers/local_storage.dart';
+import 'package:dash_deck/helpers/syntax_highlighter.dart';
 import 'package:dash_deck/providers/dash_deck.provider.dart';
 import 'package:dash_deck/theme.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
@@ -36,6 +37,7 @@ class DashDeck {
     await windowManager.setAspectRatio(16 / 9);
 
     await LocalStorage.initialize();
+    await DDSyntaxHighlight.initialize();
   }
 
   static Widget runApp() {
@@ -57,8 +59,18 @@ class DashDeckListenerApp extends ConsumerWidget {
 
   @override
   Widget build(context, ref) {
-    final data = ref.watch(slidesProvider);
-    return DashDeckShell(data: DashDeckData(slides: data));
+    final deck = ref.watch(deckControllerProvider);
+    return deck.when(
+      data: (data) {
+        return DashDeckShell(data: data);
+      },
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Center(
+        child: Text(error.toString()),
+      ),
+    );
   }
 }
 

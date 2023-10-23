@@ -99,7 +99,11 @@ class DashDeckDirectory {
         kGeneratedSlidesFileName,
       );
 
+  File imageFileName(String fileName) {
+    return _getAssetDirectory('images', fileName);
+  }
+
   File get generatedSlidesJsonFile => _getAssetDirectory(
-        'slides.json',
+        'deck.json',
       );
 }

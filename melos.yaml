@@ -10,3 +10,7 @@ scripts:
     exec: dart run build_runner build --delete-conflicting-outputs
     packageFilters:
       dependsOn: [build_runner]
+  build_runner_watch:
+    exec: dart run build_runner watch --delete-conflicting-outputs
+    packageFilters:
+      dependsOn: [build_runner] 

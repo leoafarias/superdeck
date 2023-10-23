@@ -7,7 +7,7 @@ import 'package:markdown/markdown.dart' as md;
 MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
   final theme = Theme.of(context);
   final tt = theme.textTheme;
-  final ss = MarkdownStyleSheet.largeFromTheme(theme);
+  var ss = MarkdownStyleSheet.largeFromTheme(theme);
 
   EdgeInsets scaleEdgeInsets(EdgeInsets edgeInsets) {
     return EdgeInsets.only(
@@ -23,13 +23,15 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
       vertical: 20.0.sv,
       horizontal: 20.0.sh,
     ),
-    codeblockDecoration: const BoxDecoration(
+    codeblockDecoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        color: Colors.grey[900]!,
+        width: 1,
+      ),
       color: Colors.black,
     ),
-    code: ss.code?.copyWith(
-      fontSize: Scale.scaleFont(14),
-      height: 1.6,
-    ),
+
     h1: tt.displayLarge,
     h1Padding: scaleEdgeInsets(ss.h1Padding!.copyWith(top: 25)),
     h2: tt.displayMedium,
@@ -42,16 +44,26 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
     h5Padding: scaleEdgeInsets(ss.h5Padding!.copyWith(top: 25)),
     h6: tt.headlineSmall,
     h6Padding: scaleEdgeInsets(ss.h6Padding!.copyWith(top: 25)),
-    p: tt.bodyLarge,
+    // Content Elements
+    p: tt.bodyMedium,
     pPadding: scaleEdgeInsets(ss.pPadding!),
-    blockquote: tt.bodyLarge,
-    blockSpacing: Scale.scaleHeight(ss.blockSpacing),
-    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!),
-    blockquoteDecoration: const BoxDecoration(color: Colors.transparent),
-    listBullet: tt.bodyLarge,
+    code: tt.bodyMedium?.copyWith(
+      backgroundColor: Colors.grey[900],
+    ),
+    listBullet: tt.bodyMedium,
     listBulletPadding: scaleEdgeInsets(ss.listBulletPadding!),
     tableCellsPadding: scaleEdgeInsets(ss.tableCellsPadding!),
+    tableHead: tt.bodyMedium,
+    tableBody: tt.bodySmall,
     listIndent: Scale.scaleWidth(ss.listIndent),
+    // QUOTES
+    blockquoteDecoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      color: Colors.purple[100],
+    ),
+    blockquote: tt.bodySmall,
+
+    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!),
   );
 }
 
@@ -66,11 +78,39 @@ class MarkdownViewer extends StatelessWidget {
       data: data,
       styleSheet: markdownStyleSheet(context),
       selectable: false,
+      imageBuilder: (uri, title, alt) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            Widget image;
+            if (uri.scheme == 'resource') {
+              // Load from asset
+              String assetPath = uri.path;
+              image = Image.asset(
+                assetPath,
+                fit: BoxFit.contain, // Maintain aspect ratio
+              );
+            } else {
+              // Default behavior for network images
+              image = Image.network(
+                uri.toString(),
+                fit: BoxFit.contain, // Maintain aspect ratio
+              );
+            }
+            return Container(
+              padding: const EdgeInsets.all(20.0),
+              width: constraints.maxWidth,
+              height: constraints.maxWidth *
+                  (9 / 16), // Assuming a 16:9 aspect ratio
+              child: image,
+            );
+          },
+        );
+      },
       extensionSet: md.ExtensionSet(
         md.ExtensionSet.gitHubWeb.blockSyntaxes,
         [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
       ),
-      syntaxHighlighter: DartSyntaxBuilder(),
+      syntaxHighlighter: DartSyntaxBuilder(context),
     );
   }
 }

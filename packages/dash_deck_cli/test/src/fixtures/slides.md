@@ -1,69 +1,103 @@
 ---
-image: https://sampleimage.com/link.png
-layout: cover
-verticalAlignment: bottom
-mix: gradientMix
+title: "Slide 4: Quotes"
 ---
 
-# Introduction to Dart
-<!-- show -->
-Author: Dart Developer
+> This is a blockquote.
 
---- 
-codePreview: true
-layout: contentLeft
-verticalAlignment: center
+> > This is a nested blockquote.
+
+> This is the first line of a blockquote.
+>
+> This is the second paragraph within the same blockquote.
+
+> #### This is a Header inside a Blockquote
+>
+> - This is a list inside a blockquote
+> - Another item
+
+---
+title: "Slide 1: Headings"
 ---
 
-## Dart Variables
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
+
+---
+title: "Slide 2: Text Styling"
+---
+
+**Bold Text**
+
+*Italic Text*
+
+~~Strikethrough~~
+
+`Inline Code`
+
+---
+title: "Slide 3: Links and Images"
+---
+
+[Link](https://github.com)
+
+![Unsplash Image](https://source.unsplash.com/random/900×700/?landscape)
+
+---
+title: "Slide 5: Code Blocks"
+---
 
 ```dart
-
-//@focus=1,2,3
-//@show=1:10
-int x = 5;
-double y = 6.0;
-String z = "Sample String";
-bool a = true;
-List<int> myList = [1, 2, 3];
-Map<String, int> myDict = {"apple": 1, "banana": 2};
-
-```
-
----
-codePreview: true
-layout: contentRight
-verticalAlignment: center
-image: https://sampleimage.com/link2.png
----
-
-## Dart Data Structures
-
-```dart
-//@snippet
-final myList = [1, 2, 3, 4];
-final mySet = {5, 6, 7, 8};
-final myDict = {"apple": 1, "banana": 2};
-```
-
----
-layout: contentRight
-image: https://sampleimage.com/link3.png
----
-
-## Dart Functions
-
-```dart
-//@snippet
-int add(int x, int y) {
-  return x + y;
+int factorial(int n) {
+  if (n == 0) {
+    return 1;
+  } else {
+    return n * factorial(n - 1);
+  }
 }
 ```
 
 ---
-image: https://sampleimage.com/link4.png
-layout: cover
-verticalAlignment: bottom
+title: "Slide 6: Lists"
 ---
 
-## Conclusion
+1. Ordered list item 1
+2. Ordered list item 2
+
+- Unordered list item 1
+- Unordered list item 2
+
+---
+title: "Slide 7: Tables"
+---
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1A  | Cell 1B  |
+| Cell 2A  | Cell 2B  |
+
+---
+title: "Mermaid example"
+---
+
+```mermaid
+flowchart TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+  
+```
+
+
+---
+title: "Slide 8: Task Lists"
+---
+
+- [ ] Task List Item 1
+- [x] Task List Item 2
+
