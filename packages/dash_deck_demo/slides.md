@@ -1,108 +1,133 @@
 ---
-title: Slide 4 Quotes
+title: Introduction to Flutter
+layout: cover
+background: "https://source.unsplash.com/random/900x700/?flutter"
 ---
 
-> This is a blockquote.
-
-> > This is a nested blockquote.
-
-> This is the first line of a blockquote.
->
-> This is the second paragraph within the same blockquote.
-
-> #### This is a Header inside a Blockquote
->
-> - This is a list inside a blockquote
-> - Another item
+# Introduction to Flutter
 
 ---
-title: Slide 1 Headings
+layout: cover
 ---
+# What is Flutter?
 
-# Heading 1
-## Heading 2
-### Heading 3
-#### Heading 4
-##### Heading 5
-###### Heading 6
+Flutter is Google's UI toolkit for building beautiful, natively compiled applications for mobile, web, desktop, and embedded devices from a single codebase.
+
+Flutter is free and open source, and its creation has been driven by the fact that developers have long desired an uncompromising UI that allows for creative expression, but is also easy to create and has great developer and tooling experience.
 
 ---
-title: Slide 2 Text Styling
----
-
-**Bold Text**
-
-*Italic Text*
-
-~~Strikethrough~~
-
-`Inline Code`
-
-[Link](https://github.com)
-
----
-title: Slide 3 Links and Images
----
-
-![Unsplash Image](https://source.unsplash.com/random/900×700/?landscape)
-
----
-title: Slide 5 Code Blocks
 layout: twoColumn
 ---
-
-Hello
+## Installing Flutter
+Follow the instructions [here](https://flutter.dev/docs/get-started/install) to install Flutter on your system.
 
 ::right::
 
 ```dart
-int factorial(int n) {
-  if (n == 0) {
-    return 1;
-  } else {
-    return n * factorial(n - 1);
-  }
+// check Flutter installation
+flutter doctor
+```
+
+---
+layout: image
+image: https://source.unsplash.com/random/900x700/?coding
+---
+
+## Your first Flutter app
+
+1. Create a new project:
+
+```dart
+flutter create my_app
+```
+
+2. Navigate into the newly created project:
+
+```dart
+cd my_app
+```
+
+3. Run your app:
+
+```dart
+flutter run
+```
+
+---
+
+layout: twoColumnHeader
+---
+
+## Flutter's Hot Reload
+
+Hot Reload lets you experiment, build UIs, add features, and fix bugs faster.
+
+
+::left::
+
+1. Change your code.
+2. Hit 'Save' in your IDE.
+3. Observe the change in your simulator.
+
+::right::
+
+Right content goes here
+
+---
+layout: twoColumn
+---
+
+## The Dart language
+
+Flutter apps are written in the Dart language. Dart shares features with many languages like Java, JavaScript, C, C++, Kotlin, etc.
+
+::right::
+
+```dart
+void main() {
+  print('Hello, World!');
 }
 ```
 
 ---
-title: Slide 6 Lists
+layout: twoColumn
 ---
 
-1. Ordered list item 1
-2. Ordered list item 2
+## Flutter Widgets
 
-- Unordered list item 1
-- Unordered list item 2
+Everything in Flutter is a widget.
 
----
-title: Slide 7 Tables
----
+Widgets describe what their view should look like given their current configuration and state.
 
-| Header 1 | Header 2 |
-|----------|----------|
-| Cell 1A  | Cell 1B  |
-| Cell 2A  | Cell 2B  |
+::right::
 
----
-title: Mermaid example
----
-
-```mermaid
-flowchart TD
-    A[Christmas] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
-    C -->|One| D[Laptop]
-    C -->|Two| E[iPhone]
-    C -->|Three| F[fa:fa-car Car]
-  
+```dart
+Center(
+ child: Text(
+   "Hello Flutter!",
+   style: TextStyle(fontSize: 32),
+ ),
+);
 ```
 
+---
+layout: cover
+background: https://source.unsplash.com/random/900x700/?landscape
+---
+
+Let's see a live demo!
 
 ---
-title: Slide 8 Task Lists
+layout: twoColumn
 ---
 
-- [ ] Task List Item 1
-- [x] Task List Item 2
+# Summary and Q&A
 
+- We installed Flutter.
+- We created our first Flutter app.
+- We learned about Hot Reload and Dart.
+- We talked about Widgets.
+
+::right::
+
+Any Questions?

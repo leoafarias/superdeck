@@ -51,8 +51,8 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
       backgroundColor: Colors.grey[900],
     ),
     listBullet: tt.bodyMedium,
-    listBulletPadding: scaleEdgeInsets(ss.listBulletPadding!),
-    tableCellsPadding: scaleEdgeInsets(ss.tableCellsPadding!),
+    listBulletPadding: scaleEdgeInsets(ss.listBulletPadding!.copyWith(top: 25)),
+    tableCellsPadding: scaleEdgeInsets(ss.tableCellsPadding!.copyWith(top: 25)),
     tableHead: tt.bodyMedium,
     tableBody: tt.bodySmall,
     listIndent: Scale.scaleWidth(ss.listIndent),
@@ -63,8 +63,30 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
     ),
     blockquote: tt.bodySmall,
 
-    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!),
+    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!.copyWith(top: 25)),
   );
+}
+
+class _ContentPadding extends StatelessWidget {
+  const _ContentPadding({
+    required this.child,
+    Key? key,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final padding = EdgeInsets.symmetric(
+      horizontal: 40.0.sh,
+      vertical: 40.0.sh,
+    );
+
+    return Padding(
+      padding: padding,
+      child: child,
+    );
+  }
 }
 
 class MarkdownViewer extends StatelessWidget {
@@ -74,43 +96,45 @@ class MarkdownViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MarkdownBody(
-      data: data,
-      styleSheet: markdownStyleSheet(context),
-      selectable: false,
-      imageBuilder: (uri, title, alt) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            Widget image;
-            if (uri.scheme == 'resource') {
-              // Load from asset
-              String assetPath = uri.path;
-              image = Image.asset(
-                assetPath,
-                fit: BoxFit.contain, // Maintain aspect ratio
+    return _ContentPadding(
+      child: MarkdownBody(
+        data: data,
+        styleSheet: markdownStyleSheet(context),
+        selectable: false,
+        imageBuilder: (uri, title, alt) {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              Widget image;
+              if (uri.scheme == 'resource') {
+                // Load from asset
+                String assetPath = uri.path;
+                image = Image.asset(
+                  assetPath,
+                  fit: BoxFit.contain, // Maintain aspect ratio
+                );
+              } else {
+                // Default behavior for network images
+                image = Image.network(
+                  uri.toString(),
+                  fit: BoxFit.contain, // Maintain aspect ratio
+                );
+              }
+              return Container(
+                padding: const EdgeInsets.all(20.0),
+                width: constraints.maxWidth,
+                height: constraints.maxWidth *
+                    (9 / 16), // Assuming a 16:9 aspect ratio
+                child: image,
               );
-            } else {
-              // Default behavior for network images
-              image = Image.network(
-                uri.toString(),
-                fit: BoxFit.contain, // Maintain aspect ratio
-              );
-            }
-            return Container(
-              padding: const EdgeInsets.all(20.0),
-              width: constraints.maxWidth,
-              height: constraints.maxWidth *
-                  (9 / 16), // Assuming a 16:9 aspect ratio
-              child: image,
-            );
-          },
-        );
-      },
-      extensionSet: md.ExtensionSet(
-        md.ExtensionSet.gitHubWeb.blockSyntaxes,
-        [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
+            },
+          );
+        },
+        extensionSet: md.ExtensionSet(
+          md.ExtensionSet.gitHubWeb.blockSyntaxes,
+          [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
+        ),
+        syntaxHighlighter: DartSyntaxBuilder(context),
       ),
-      syntaxHighlighter: DartSyntaxBuilder(context),
     );
   }
 }

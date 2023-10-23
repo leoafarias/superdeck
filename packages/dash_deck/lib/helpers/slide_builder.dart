@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dash_deck/components/atoms/markdown_viewer.dart';
 import 'package:dash_deck/helpers/enum_mappers.dart';
-import 'package:dash_deck/helpers/scale.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,7 @@ class ImageSlideWidget extends SlideLayoutBuilder<ImageSlide> {
   Widget build(BuildContext context) {
     final imageUri = slide.image;
     final imageFit = slide.imageFit == null
-        ? BoxFit.contain
+        ? BoxFit.cover
         : mapImageToBoxFit(slide.imageFit!);
 
     Widget imageWidget = const SizedBox(
@@ -114,7 +113,6 @@ class CoverSlideWidget extends SlideLayoutBuilder<CoverSlide> {
       children: [
         backgroundWidget,
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 40.0.sh),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -183,14 +181,14 @@ class TwoColumnHeaderSlideWidget
       children: [
         Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MarkdownViewer(slide.topContent),
-            )
+            MarkdownViewer(slide.topContent),
           ],
         ),
-        Row(
-          children: children,
+        const Divider(),
+        Expanded(
+          child: Row(
+            children: children,
+          ),
         ),
       ],
     );
