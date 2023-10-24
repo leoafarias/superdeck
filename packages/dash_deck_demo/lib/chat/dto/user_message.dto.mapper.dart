@@ -6,37 +6,42 @@
 
 part of 'user_message.dto.dart';
 
-class UserChatMessageMapper extends SubClassMapperBase<UserChatMessage> {
-  UserChatMessageMapper._();
+class UserMessageMapper extends SubClassMapperBase<UserMessage> {
+  UserMessageMapper._();
 
-  static UserChatMessageMapper? _instance;
-  static UserChatMessageMapper ensureInitialized() {
+  static UserMessageMapper? _instance;
+  static UserMessageMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = UserChatMessageMapper._());
+      MapperContainer.globals.use(_instance = UserMessageMapper._());
       ChatMessageMapper.ensureInitialized().addSubMapper(_instance!);
+      MessageStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'UserChatMessage';
+  final String id = 'UserMessage';
 
-  static String _$content(UserChatMessage v) => v.content;
-  static const Field<UserChatMessage, String> _f$content =
+  static String _$content(UserMessage v) => v.content;
+  static const Field<UserMessage, String> _f$content =
       Field('content', _$content);
-  static DateTime _$createdAt(UserChatMessage v) => v.createdAt;
-  static const Field<UserChatMessage, DateTime> _f$createdAt =
-      Field('createdAt', _$createdAt);
-  static bool _$hidden(UserChatMessage v) => v.hidden;
-  static const Field<UserChatMessage, bool> _f$hidden =
+  static MessageStatus _$status(UserMessage v) => v.status;
+  static const Field<UserMessage, MessageStatus> _f$status =
+      Field('status', _$status, opt: true, def: MessageStatus.done);
+  static DateTime? _$createdAt(UserMessage v) => v.createdAt;
+  static const Field<UserMessage, DateTime> _f$createdAt =
+      Field('createdAt', _$createdAt, opt: true);
+  static bool _$hidden(UserMessage v) => v.hidden;
+  static const Field<UserMessage, bool> _f$hidden =
       Field('hidden', _$hidden, opt: true, def: false);
-  static MessageRole _$role(UserChatMessage v) => v.role;
-  static const Field<UserChatMessage, MessageRole> _f$role =
+  static MessageRole _$role(UserMessage v) => v.role;
+  static const Field<UserMessage, MessageRole> _f$role =
       Field('role', _$role, mode: FieldMode.member);
 
   @override
-  final Map<Symbol, Field<UserChatMessage, dynamic>> fields = const {
+  final Map<Symbol, Field<UserMessage, dynamic>> fields = const {
     #content: _f$content,
+    #status: _f$status,
     #createdAt: _f$createdAt,
     #hidden: _f$hidden,
     #role: _f$role,
@@ -45,14 +50,15 @@ class UserChatMessageMapper extends SubClassMapperBase<UserChatMessage> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'UserChatMessage';
+  final dynamic discriminatorValue = 'UserMessage';
   @override
   late final ClassMapperBase superMapper =
       ChatMessageMapper.ensureInitialized();
 
-  static UserChatMessage _instantiate(DecodingData data) {
-    return UserChatMessage(
+  static UserMessage _instantiate(DecodingData data) {
+    return UserMessage(
         content: data.dec(_f$content),
+        status: data.dec(_f$status),
         createdAt: data.dec(_f$createdAt),
         hidden: data.dec(_f$hidden));
   }
@@ -60,87 +66,94 @@ class UserChatMessageMapper extends SubClassMapperBase<UserChatMessage> {
   @override
   final Function instantiate = _instantiate;
 
-  static UserChatMessage fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<UserChatMessage>(map);
+  static UserMessage fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<UserMessage>(map);
   }
 
-  static UserChatMessage fromJson(String json) {
-    return ensureInitialized().decodeJson<UserChatMessage>(json);
+  static UserMessage fromJson(String json) {
+    return ensureInitialized().decodeJson<UserMessage>(json);
   }
 }
 
-mixin UserChatMessageMappable {
+mixin UserMessageMappable {
   String toJson() {
-    return UserChatMessageMapper.ensureInitialized()
-        .encodeJson<UserChatMessage>(this as UserChatMessage);
+    return UserMessageMapper.ensureInitialized()
+        .encodeJson<UserMessage>(this as UserMessage);
   }
 
   Map<String, dynamic> toMap() {
-    return UserChatMessageMapper.ensureInitialized()
-        .encodeMap<UserChatMessage>(this as UserChatMessage);
+    return UserMessageMapper.ensureInitialized()
+        .encodeMap<UserMessage>(this as UserMessage);
   }
 
-  UserChatMessageCopyWith<UserChatMessage, UserChatMessage, UserChatMessage>
-      get copyWith => _UserChatMessageCopyWithImpl(
-          this as UserChatMessage, $identity, $identity);
+  UserMessageCopyWith<UserMessage, UserMessage, UserMessage> get copyWith =>
+      _UserMessageCopyWithImpl(this as UserMessage, $identity, $identity);
   @override
   String toString() {
-    return UserChatMessageMapper.ensureInitialized()
-        .stringifyValue(this as UserChatMessage);
+    return UserMessageMapper.ensureInitialized()
+        .stringifyValue(this as UserMessage);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            UserChatMessageMapper.ensureInitialized()
-                .isValueEqual(this as UserChatMessage, other));
+            UserMessageMapper.ensureInitialized()
+                .isValueEqual(this as UserMessage, other));
   }
 
   @override
   int get hashCode {
-    return UserChatMessageMapper.ensureInitialized()
-        .hashValue(this as UserChatMessage);
+    return UserMessageMapper.ensureInitialized().hashValue(this as UserMessage);
   }
 }
 
-extension UserChatMessageValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, UserChatMessage, $Out> {
-  UserChatMessageCopyWith<$R, UserChatMessage, $Out> get $asUserChatMessage =>
-      $base.as((v, t, t2) => _UserChatMessageCopyWithImpl(v, t, t2));
+extension UserMessageValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UserMessage, $Out> {
+  UserMessageCopyWith<$R, UserMessage, $Out> get $asUserMessage =>
+      $base.as((v, t, t2) => _UserMessageCopyWithImpl(v, t, t2));
 }
 
-abstract class UserChatMessageCopyWith<$R, $In extends UserChatMessage, $Out>
+abstract class UserMessageCopyWith<$R, $In extends UserMessage, $Out>
     implements ChatMessageCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? content, DateTime? createdAt, bool? hidden});
-  UserChatMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+  $R call(
+      {String? content,
+      MessageStatus? status,
+      DateTime? createdAt,
+      bool? hidden});
+  UserMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _UserChatMessageCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, UserChatMessage, $Out>
-    implements UserChatMessageCopyWith<$R, UserChatMessage, $Out> {
-  _UserChatMessageCopyWithImpl(super.value, super.then, super.then2);
+class _UserMessageCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UserMessage, $Out>
+    implements UserMessageCopyWith<$R, UserMessage, $Out> {
+  _UserMessageCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<UserChatMessage> $mapper =
-      UserChatMessageMapper.ensureInitialized();
+  late final ClassMapperBase<UserMessage> $mapper =
+      UserMessageMapper.ensureInitialized();
   @override
-  $R call({String? content, DateTime? createdAt, bool? hidden}) =>
+  $R call(
+          {String? content,
+          MessageStatus? status,
+          Object? createdAt = $none,
+          bool? hidden}) =>
       $apply(FieldCopyWithData({
         if (content != null) #content: content,
-        if (createdAt != null) #createdAt: createdAt,
+        if (status != null) #status: status,
+        if (createdAt != $none) #createdAt: createdAt,
         if (hidden != null) #hidden: hidden
       }));
   @override
-  UserChatMessage $make(CopyWithData data) => UserChatMessage(
+  UserMessage $make(CopyWithData data) => UserMessage(
       content: data.get(#content, or: $value.content),
+      status: data.get(#status, or: $value.status),
       createdAt: data.get(#createdAt, or: $value.createdAt),
       hidden: data.get(#hidden, or: $value.hidden));
 
   @override
-  UserChatMessageCopyWith<$R2, UserChatMessage, $Out2> $chain<$R2, $Out2>(
+  UserMessageCopyWith<$R2, UserMessage, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _UserChatMessageCopyWithImpl($value, $cast, t);
+      _UserMessageCopyWithImpl($value, $cast, t);
 }

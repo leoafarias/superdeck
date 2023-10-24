@@ -5,6 +5,12 @@ import 'package:dash_deck_demo/chat/enum/chat_roles.enum.dart';
 
 part 'chat_message.dto.mapper.dart';
 
+@MappableEnum()
+enum MessageStatus {
+  typing,
+  done,
+}
+
 class MessageRoleMapper extends SimpleMapper<MessageRole> {
   const MessageRoleMapper();
 
@@ -22,44 +28,55 @@ class MessageRoleMapper extends SimpleMapper<MessageRole> {
 }
 
 @MappableClass(discriminatorKey: 'type', includeSubClasses: [
-  UserChatMessage,
-  AssistantChatMessage,
+  UserMessage,
+  AssistantMessage,
 ], includeCustomMappers: [
   MessageRoleMapper()
 ])
-class ChatMessage with ChatMessageMappable {
+abstract class ChatMessage with ChatMessageMappable {
   final MessageRole role;
 
   /// Hide the message from the UI
   final bool hidden;
   final String content;
-  final DateTime createdAt;
+  final DateTime? createdAt;
+
+  final MessageStatus status;
 
   const ChatMessage({
     required this.role,
     required this.content,
-    required this.createdAt,
+    this.createdAt,
     this.hidden = false,
+    this.status = MessageStatus.done,
   });
 
   static ChatMessage from({
     required MessageRole role,
     required String content,
-    required DateTime createAt,
+    MessageStatus status = MessageStatus.done,
+    DateTime? createAt,
     bool hidden = false,
   }) {
     if (role == MessageRole.assistant) {
-      return AssistantChatMessage(
+      return AssistantMessage(
         content: content,
         createdAt: createAt,
         hidden: hidden,
+        status: status,
       );
     } else {
-      return UserChatMessage(
+      return UserMessage(
         content: content,
         createdAt: createAt,
         hidden: hidden,
+        status: status,
       );
     }
   }
+}
+
+extension ChatMessageExt on ChatMessage {
+  bool get isUser => role == MessageRole.user;
+  bool get isAssistant => role == MessageRole.assistant;
 }

@@ -6,13 +6,14 @@ import 'chat_message.dto.dart';
 part 'user_message.dto.mapper.dart';
 
 @MappableClass()
-class UserChatMessage extends ChatMessage with UserChatMessageMappable {
-  UserChatMessage({
+class UserMessage extends ChatMessage with UserMessageMappable {
+  const UserMessage({
     required super.content,
-    required super.createdAt,
-    super.hidden = false,
+    super.status,
+    super.createdAt,
+    super.hidden,
   }) : super(role: MessageRole.user);
 
-  static const fromMap = UserChatMessageMapper.fromMap;
-  static const fromJson = UserChatMessageMapper.fromJson;
+  static const fromMap = UserMessageMapper.fromMap;
+  static const fromJson = UserMessageMapper.fromJson;
 }

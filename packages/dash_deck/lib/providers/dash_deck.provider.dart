@@ -62,6 +62,16 @@ class DeckController extends _$DeckController {
     });
   }
 
+  Future<void> changeSlideContent(Slide slide, String content) {
+    final deck = state.data!.copyWith(
+      slides: [
+        ...state.data!.slides.where((element) => element.id != slide.id),
+        slide,
+      ],
+    );
+    state = AsyncValue.data(deck);
+  }
+
   Future<DashDeckData> _fetchFromLocal() async {
     final slidesJson = await _deckJsonFile.readAsString();
 

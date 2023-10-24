@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dash_deck_demo/chat/dto/assistant_message.dto.dart';
 import 'package:dash_deck_demo/chat/dto/chat_message.dto.dart';
 import 'package:dash_deck_demo/chat/dto/configuration.dto.dart';
 import 'package:dash_deck_demo/chat/dto/example.dto.dart';
+import 'package:dash_deck_demo/chat/dto/user_message.dto.dart';
 import 'package:dash_deck_demo/chat/enum/chat_roles.enum.dart';
 import 'package:dash_deck_demo/chat/helpers/localstorage.dart';
 import 'package:dash_deck_demo/env/env.dart';
@@ -77,113 +79,13 @@ class ChatController extends _$ChatController {
   }
 
   Future<void> _load() async {
-    // final projectContext = await loadContextFiles(
-    //   Directory('/Users/leofarias/Projects/mix'),
-    // );
-    // final prompt = queryAnalysisPrompt(projectContext);
-
-    // final contextMessage = ChatMessage(
-    //   content: prompt,
-    //   role: MessageRole.user,
-    //   hidden: true,
-    //   createdAt: DateTime.now(),
-    // );
     await Future.delayed(const Duration(milliseconds: 100));
-    final welcomeMessage = ChatMessage(
+    const welcomeMessage = AssistantMessage(
       content: 'Hi, I am your Flutter coding assistant. How can I help you?',
-      role: MessageRole.assistant,
-      createdAt: DateTime.now().add(const Duration(seconds: 4)),
     );
 
     _addMessage(welcomeMessage);
   }
-
-  // Future<String> _getQueryAnalysis(
-  //   ChatMessage message,
-  // ) async {
-  //   _addMessage(
-  //     AssistantChatMessage(
-  //       content: 'Analyzing project context...',
-  //       createdAt: DateTime.now(),
-  //     ),
-  //   );
-  //   final currentProject = ref.read(projectControllerProvider).currentProject;
-
-  //   if (currentProject == null) {
-  //     throw Exception('No project selected');
-  //   }
-
-  //   final prompt = TextPrompt(
-  //     text: queryAnalysisPrompt(
-
-  //       message.content,
-  //     ),
-  //   );
-  //   try {
-  //     final response = await _text.generateText(
-  //       model: PalmModel.textBison001.name,
-  //       prompt: prompt,
-  //     );
-
-  //     // _addMessage(ChatMessage(
-  //     //   content: response.candidates.first.output,
-  //     //   role: MessageRole.assistant,
-  //     //   createdAt: DateTime.now(),
-  //     // ));
-
-  //     return response.candidates.first.output;
-  //   } on Exception {
-  //     return '';
-  //   } finally {
-  //     _updateLastMessage(
-  //       AssistantChatMessage(
-  //         content: 'Context analyzed',
-  //         createdAt: DateTime.now(),
-  //         hidden: true,
-  //       ),
-  //     );
-  //   }
-  // }
-
-  // Future<String> _getFurtherContext(
-  //   String queryAnalysis,
-  // ) async {
-  //   _addMessage(
-  //     AssistantChatMessage(
-  //       content: 'Choosing files',
-  //       createdAt: DateTime.now(),
-  //     ),
-  //   );
-  //   final prompt = TextPrompt(
-  //     text: projectReferenceConverterPrompt(queryAnalysis),
-  //   );
-
-  //   final response = await _text.generateText(
-  //     prompt: prompt,
-  //     model: PalmModel.textBison001.name,
-  //   );
-
-  //   final currentProject = ref.read(projectControllerProvider).currentProject;
-
-  //   try {
-  //     final reference =
-  //         ProjectReferenceContext.fromJson(response.candidates.first.output);
-
-  //     _updateLastMessage(
-  //       AssistantChatMessage(
-  //         content:
-  //             'Important files selected ${reference.paths.length} files \n\n ${reference.paths.join('\n\n')}',
-  //         createdAt: DateTime.now(),
-  //       ),
-  //     );
-
-  //     final fileContents =
-  //         await loadFileContents(currentProject!.dir, reference.paths);
-  //     return fileContents;
-  //   } on Exception {
-  //     return '';
-  //   }
-  // }
 
   void _addMessage(ChatMessage message) {
     state = ChatState(
@@ -215,12 +117,50 @@ class ChatController extends _$ChatController {
     );
   }
 
+  Future<String> sendPrompt({
+    required String name,
+    required String content,
+  }) async {
+    final prompt = TextPrompt(text: content);
+
+    final assistantMessage = AssistantMessage(
+      content: name,
+      status: MessageStatus.typing,
+    );
+
+    _addMessage(assistantMessage);
+
+    try {
+      final response = await _text.generateText(
+        prompt: prompt,
+        model: PalmModel.textBison001.name,
+      );
+
+      _updateLastMessage(
+        assistantMessage.copyWith(
+          content: response.candidates.first.output,
+          status: MessageStatus.done,
+        ),
+      );
+    } catch (e) {
+      // Remove the last message
+      final updatedMessages = List<ChatMessage>.from(state.chatMessages)
+        ..removeLast();
+      state = ChatState(
+        chatMessages: updatedMessages,
+        waitingResponse: false,
+      );
+      rethrow;
+    } finally {}
+  }
+
   // Add message
   Future<void> sendMessage(
-    ChatMessage message, {
+    String content, {
     Configuration? configuration,
     bool currentSlide = false,
   }) async {
+    final message = UserMessage(content: content);
     _addMessage(message);
     _waitingResponse(true);
 
@@ -232,17 +172,13 @@ class ChatController extends _$ChatController {
         model: PalmModel.textBison001.name,
       );
 
-      final messageResponse = ChatMessage(
+      final messageResponse = AssistantMessage(
         content: response.candidates.first.output,
-        role: MessageRole.assistant,
-        createdAt: DateTime.now(),
       );
 
-      state = ChatState(
+      state = state.copyWith(
         chatMessages: [...state.chatMessages, messageResponse],
         waitingResponse: false,
-        context: state.context,
-        examples: state.examples,
       );
     } catch (e) {
       // Remove the last message
@@ -251,13 +187,9 @@ class ChatController extends _$ChatController {
       state = ChatState(
         chatMessages: updatedMessages,
         waitingResponse: false,
-        context: state.context,
-        examples: state.examples,
       );
       rethrow;
-    } finally {
-      // await state.save();
-    }
+    } finally {}
   }
 
   void clearState() {

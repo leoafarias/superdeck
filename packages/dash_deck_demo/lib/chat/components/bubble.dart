@@ -1,25 +1,24 @@
 import 'package:dash_deck/components/atoms/markdown_viewer.dart';
 import 'package:dash_deck_demo/chat/components/copy_to_clipboard_button.dart';
+import 'package:dash_deck_demo/chat/dto/chat_message.dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class MessageBubble extends HookWidget {
-  final String message;
-  final bool isMe;
-  final bool isTyping;
+  final ChatMessage message;
 
   const MessageBubble(
     this.message, {
-    required this.isMe,
-    this.isTyping = false,
     super.key,
   });
+
+  bool get _isMe => message.isUser;
 
   Widget _buildIcon(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 16),
       child: Icon(
-        isMe ? Icons.person : Icons.bolt,
+        _isMe ? Icons.person : Icons.bolt,
         size: 20,
         color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
@@ -34,7 +33,7 @@ class MessageBubble extends HookWidget {
         top: 16,
         bottom: 16,
       ),
-      child: MarkdownView(message),
+      child: MarkdownView(message.content),
     );
   }
 
@@ -45,7 +44,7 @@ class MessageBubble extends HookWidget {
       child: Container(
         margin: const EdgeInsets.only(left: 8),
         child: CopyToClipboardButton(
-          content: message,
+          content: message.content,
         ),
       ),
     );
@@ -70,7 +69,7 @@ class MessageBubble extends HookWidget {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: isMe ? Colors.black12 : Colors.black26,
+                    color: _isMe ? Colors.black12 : Colors.black26,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

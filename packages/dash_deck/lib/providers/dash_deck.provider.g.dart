@@ -34,7 +34,7 @@ final slidePageProvider = AutoDisposeNotifierProvider<SlidePage, int>.internal(
 );
 
 typedef _$SlidePage = AutoDisposeNotifier<int>;
-String _$deckControllerHash() => r'b0867a2e3aa2dcbb62351ff7190c7a4739e92c2b';
+String _$deckControllerHash() => r'976d160cee43e92bda79d58ea1866625328921b3';
 
 /// See also [DeckController].
 @ProviderFor(DeckController)

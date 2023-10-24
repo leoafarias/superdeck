@@ -6,6 +6,52 @@
 
 part of 'chat_message.dto.dart';
 
+class MessageStatusMapper extends EnumMapper<MessageStatus> {
+  MessageStatusMapper._();
+
+  static MessageStatusMapper? _instance;
+  static MessageStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = MessageStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static MessageStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  MessageStatus decode(dynamic value) {
+    switch (value) {
+      case 'typing':
+        return MessageStatus.typing;
+      case 'done':
+        return MessageStatus.done;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(MessageStatus self) {
+    switch (self) {
+      case MessageStatus.typing:
+        return 'typing';
+      case MessageStatus.done:
+        return 'done';
+    }
+  }
+}
+
+extension MessageStatusMapperExtension on MessageStatus {
+  String toValue() {
+    MessageStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<MessageStatus>(this) as String;
+  }
+}
+
 class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
   ChatMessageMapper._();
 
@@ -14,8 +60,9 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ChatMessageMapper._());
       MapperContainer.globals.useAll([MessageRoleMapper()]);
-      UserChatMessageMapper.ensureInitialized();
-      AssistantChatMessageMapper.ensureInitialized();
+      UserMessageMapper.ensureInitialized();
+      AssistantMessageMapper.ensureInitialized();
+      MessageStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -28,12 +75,15 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
   static String _$content(ChatMessage v) => v.content;
   static const Field<ChatMessage, String> _f$content =
       Field('content', _$content);
-  static DateTime _$createdAt(ChatMessage v) => v.createdAt;
+  static DateTime? _$createdAt(ChatMessage v) => v.createdAt;
   static const Field<ChatMessage, DateTime> _f$createdAt =
-      Field('createdAt', _$createdAt);
+      Field('createdAt', _$createdAt, opt: true);
   static bool _$hidden(ChatMessage v) => v.hidden;
   static const Field<ChatMessage, bool> _f$hidden =
       Field('hidden', _$hidden, opt: true, def: false);
+  static MessageStatus _$status(ChatMessage v) => v.status;
+  static const Field<ChatMessage, MessageStatus> _f$status =
+      Field('status', _$status, opt: true, def: MessageStatus.done);
 
   @override
   final Map<Symbol, Field<ChatMessage, dynamic>> fields = const {
@@ -41,14 +91,12 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
     #content: _f$content,
     #createdAt: _f$createdAt,
     #hidden: _f$hidden,
+    #status: _f$status,
   };
 
   static ChatMessage _instantiate(DecodingData data) {
-    return ChatMessage(
-        role: data.dec(_f$role),
-        content: data.dec(_f$content),
-        createdAt: data.dec(_f$createdAt),
-        hidden: data.dec(_f$hidden));
+    throw MapperException.missingSubclass(
+        'ChatMessage', 'type', '${data.value['type']}');
   }
 
   @override
@@ -64,74 +112,17 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
 }
 
 mixin ChatMessageMappable {
-  String toJson() {
-    return ChatMessageMapper.ensureInitialized()
-        .encodeJson<ChatMessage>(this as ChatMessage);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ChatMessageMapper.ensureInitialized()
-        .encodeMap<ChatMessage>(this as ChatMessage);
-  }
-
-  ChatMessageCopyWith<ChatMessage, ChatMessage, ChatMessage> get copyWith =>
-      _ChatMessageCopyWithImpl(this as ChatMessage, $identity, $identity);
-  @override
-  String toString() {
-    return ChatMessageMapper.ensureInitialized()
-        .stringifyValue(this as ChatMessage);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ChatMessageMapper.ensureInitialized()
-                .isValueEqual(this as ChatMessage, other));
-  }
-
-  @override
-  int get hashCode {
-    return ChatMessageMapper.ensureInitialized().hashValue(this as ChatMessage);
-  }
-}
-
-extension ChatMessageValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ChatMessage, $Out> {
-  ChatMessageCopyWith<$R, ChatMessage, $Out> get $asChatMessage =>
-      $base.as((v, t, t2) => _ChatMessageCopyWithImpl(v, t, t2));
+  String toJson();
+  Map<String, dynamic> toMap();
+  ChatMessageCopyWith<ChatMessage, ChatMessage, ChatMessage> get copyWith;
 }
 
 abstract class ChatMessageCopyWith<$R, $In extends ChatMessage, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? content, DateTime? createdAt, bool? hidden});
+  $R call(
+      {String? content,
+      DateTime? createdAt,
+      bool? hidden,
+      MessageStatus? status});
   ChatMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ChatMessageCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ChatMessage, $Out>
-    implements ChatMessageCopyWith<$R, ChatMessage, $Out> {
-  _ChatMessageCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<ChatMessage> $mapper =
-      ChatMessageMapper.ensureInitialized();
-  @override
-  $R call({String? content, DateTime? createdAt, bool? hidden}) =>
-      $apply(FieldCopyWithData({
-        if (content != null) #content: content,
-        if (createdAt != null) #createdAt: createdAt,
-        if (hidden != null) #hidden: hidden
-      }));
-  @override
-  ChatMessage $make(CopyWithData data) => ChatMessage(
-      role: data.get(#role, or: $value.role),
-      content: data.get(#content, or: $value.content),
-      createdAt: data.get(#createdAt, or: $value.createdAt),
-      hidden: data.get(#hidden, or: $value.hidden));
-
-  @override
-  ChatMessageCopyWith<$R2, ChatMessage, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ChatMessageCopyWithImpl($value, $cast, t);
 }

@@ -55,12 +55,10 @@ class Slide with SlideMappable {
 @MappableClass()
 class CoverSlide extends Slide with CoverSlideMappable {
   final String? background;
-  @override
-  final ContentAlignment contentAlignment;
 
   const CoverSlide({
     this.background,
-    this.contentAlignment = ContentAlignment.center,
+    super.contentAlignment,
     super.content,
     super.layout,
   });
