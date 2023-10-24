@@ -9,7 +9,6 @@ part 'user_message.dto.mapper.dart';
 class UserMessage extends ChatMessage with UserMessageMappable {
   const UserMessage({
     required super.content,
-    super.status,
     super.createdAt,
     super.hidden,
   }) : super(role: MessageRole.user);

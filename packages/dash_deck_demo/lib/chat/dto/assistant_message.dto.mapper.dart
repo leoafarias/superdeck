@@ -6,6 +6,52 @@
 
 part of 'assistant_message.dto.dart';
 
+class ResponseStatusMapper extends EnumMapper<ResponseStatus> {
+  ResponseStatusMapper._();
+
+  static ResponseStatusMapper? _instance;
+  static ResponseStatusMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ResponseStatusMapper._());
+    }
+    return _instance!;
+  }
+
+  static ResponseStatus fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  ResponseStatus decode(dynamic value) {
+    switch (value) {
+      case 'waitingResponse':
+        return ResponseStatus.waitingResponse;
+      case 'done':
+        return ResponseStatus.done;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(ResponseStatus self) {
+    switch (self) {
+      case ResponseStatus.waitingResponse:
+        return 'waitingResponse';
+      case ResponseStatus.done:
+        return 'done';
+    }
+  }
+}
+
+extension ResponseStatusMapperExtension on ResponseStatus {
+  String toValue() {
+    ResponseStatusMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<ResponseStatus>(this) as String;
+  }
+}
+
 class AssistantMessageMapper extends SubClassMapperBase<AssistantMessage> {
   AssistantMessageMapper._();
 
@@ -14,8 +60,7 @@ class AssistantMessageMapper extends SubClassMapperBase<AssistantMessage> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AssistantMessageMapper._());
       ChatMessageMapper.ensureInitialized().addSubMapper(_instance!);
-      PromptMessageMapper.ensureInitialized();
-      MessageStatusMapper.ensureInitialized();
+      ResponseStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -26,15 +71,18 @@ class AssistantMessageMapper extends SubClassMapperBase<AssistantMessage> {
   static String _$content(AssistantMessage v) => v.content;
   static const Field<AssistantMessage, String> _f$content =
       Field('content', _$content);
-  static MessageStatus _$status(AssistantMessage v) => v.status;
-  static const Field<AssistantMessage, MessageStatus> _f$status =
-      Field('status', _$status, opt: true, def: MessageStatus.done);
   static DateTime? _$createdAt(AssistantMessage v) => v.createdAt;
   static const Field<AssistantMessage, DateTime> _f$createdAt =
       Field('createdAt', _$createdAt, opt: true);
   static bool _$hidden(AssistantMessage v) => v.hidden;
   static const Field<AssistantMessage, bool> _f$hidden =
       Field('hidden', _$hidden, opt: true, def: false);
+  static String? _$response(AssistantMessage v) => v.response;
+  static const Field<AssistantMessage, String> _f$response =
+      Field('response', _$response, opt: true);
+  static ResponseStatus _$_status(AssistantMessage v) => v._status;
+  static const Field<AssistantMessage, ResponseStatus> _f$_status =
+      Field('_status', _$_status, key: 'status', opt: true);
   static MessageRole _$role(AssistantMessage v) => v.role;
   static const Field<AssistantMessage, MessageRole> _f$role =
       Field('role', _$role, mode: FieldMode.member);
@@ -42,9 +90,10 @@ class AssistantMessageMapper extends SubClassMapperBase<AssistantMessage> {
   @override
   final Map<Symbol, Field<AssistantMessage, dynamic>> fields = const {
     #content: _f$content,
-    #status: _f$status,
     #createdAt: _f$createdAt,
     #hidden: _f$hidden,
+    #response: _f$response,
+    #_status: _f$_status,
     #role: _f$role,
   };
 
@@ -59,9 +108,10 @@ class AssistantMessageMapper extends SubClassMapperBase<AssistantMessage> {
   static AssistantMessage _instantiate(DecodingData data) {
     return AssistantMessage(
         content: data.dec(_f$content),
-        status: data.dec(_f$status),
         createdAt: data.dec(_f$createdAt),
-        hidden: data.dec(_f$hidden));
+        hidden: data.dec(_f$hidden),
+        response: data.dec(_f$response),
+        status: data.dec(_f$_status));
   }
 
   @override
@@ -121,7 +171,12 @@ extension AssistantMessageValueCopy<$R, $Out>
 abstract class AssistantMessageCopyWith<$R, $In extends AssistantMessage, $Out>
     implements ChatMessageCopyWith<$R, $In, $Out> {
   @override
-  $R call();
+  $R call(
+      {String? content,
+      DateTime? createdAt,
+      bool? hidden,
+      String? response,
+      ResponseStatus? status});
   AssistantMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -135,151 +190,29 @@ class _AssistantMessageCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AssistantMessage> $mapper =
       AssistantMessageMapper.ensureInitialized();
   @override
-  $R call() => $apply(FieldCopyWithData({}));
+  $R call(
+          {String? content,
+          Object? createdAt = $none,
+          bool? hidden,
+          Object? response = $none,
+          Object? status = $none}) =>
+      $apply(FieldCopyWithData({
+        if (content != null) #content: content,
+        if (createdAt != $none) #createdAt: createdAt,
+        if (hidden != null) #hidden: hidden,
+        if (response != $none) #response: response,
+        if (status != $none) #status: status
+      }));
   @override
   AssistantMessage $make(CopyWithData data) => AssistantMessage(
       content: data.get(#content, or: $value.content),
-      status: data.get(#status, or: $value.status),
       createdAt: data.get(#createdAt, or: $value.createdAt),
-      hidden: data.get(#hidden, or: $value.hidden));
+      hidden: data.get(#hidden, or: $value.hidden),
+      response: data.get(#response, or: $value.response),
+      status: data.get(#status, or: $value._status));
 
   @override
   AssistantMessageCopyWith<$R2, AssistantMessage, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _AssistantMessageCopyWithImpl($value, $cast, t);
-}
-
-class PromptMessageMapper extends SubClassMapperBase<PromptMessage> {
-  PromptMessageMapper._();
-
-  static PromptMessageMapper? _instance;
-  static PromptMessageMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = PromptMessageMapper._());
-      AssistantMessageMapper.ensureInitialized().addSubMapper(_instance!);
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'PromptMessage';
-
-  static MessageRole _$role(PromptMessage v) => v.role;
-  static const Field<PromptMessage, MessageRole> _f$role =
-      Field('role', _$role, mode: FieldMode.member);
-  static bool _$hidden(PromptMessage v) => v.hidden;
-  static const Field<PromptMessage, bool> _f$hidden =
-      Field('hidden', _$hidden, mode: FieldMode.member);
-  static String _$content(PromptMessage v) => v.content;
-  static const Field<PromptMessage, String> _f$content =
-      Field('content', _$content, mode: FieldMode.member);
-  static DateTime? _$createdAt(PromptMessage v) => v.createdAt;
-  static const Field<PromptMessage, DateTime> _f$createdAt =
-      Field('createdAt', _$createdAt, mode: FieldMode.member);
-  static MessageStatus _$status(PromptMessage v) => v.status;
-  static const Field<PromptMessage, MessageStatus> _f$status =
-      Field('status', _$status, mode: FieldMode.member);
-  static String _$response(PromptMessage v) => v.response;
-  static const Field<PromptMessage, String> _f$response =
-      Field('response', _$response, mode: FieldMode.member);
-
-  @override
-  final Map<Symbol, Field<PromptMessage, dynamic>> fields = const {
-    #role: _f$role,
-    #hidden: _f$hidden,
-    #content: _f$content,
-    #createdAt: _f$createdAt,
-    #status: _f$status,
-    #response: _f$response,
-  };
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'PromptMessage';
-  @override
-  late final ClassMapperBase superMapper =
-      AssistantMessageMapper.ensureInitialized();
-
-  static PromptMessage _instantiate(DecodingData data) {
-    return PromptMessage();
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static PromptMessage fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<PromptMessage>(map);
-  }
-
-  static PromptMessage fromJson(String json) {
-    return ensureInitialized().decodeJson<PromptMessage>(json);
-  }
-}
-
-mixin PromptMessageMappable {
-  String toJson() {
-    return PromptMessageMapper.ensureInitialized()
-        .encodeJson<PromptMessage>(this as PromptMessage);
-  }
-
-  Map<String, dynamic> toMap() {
-    return PromptMessageMapper.ensureInitialized()
-        .encodeMap<PromptMessage>(this as PromptMessage);
-  }
-
-  PromptMessageCopyWith<PromptMessage, PromptMessage, PromptMessage>
-      get copyWith => _PromptMessageCopyWithImpl(
-          this as PromptMessage, $identity, $identity);
-  @override
-  String toString() {
-    return PromptMessageMapper.ensureInitialized()
-        .stringifyValue(this as PromptMessage);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PromptMessageMapper.ensureInitialized()
-                .isValueEqual(this as PromptMessage, other));
-  }
-
-  @override
-  int get hashCode {
-    return PromptMessageMapper.ensureInitialized()
-        .hashValue(this as PromptMessage);
-  }
-}
-
-extension PromptMessageValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, PromptMessage, $Out> {
-  PromptMessageCopyWith<$R, PromptMessage, $Out> get $asPromptMessage =>
-      $base.as((v, t, t2) => _PromptMessageCopyWithImpl(v, t, t2));
-}
-
-abstract class PromptMessageCopyWith<$R, $In extends PromptMessage, $Out>
-    implements AssistantMessageCopyWith<$R, $In, $Out> {
-  @override
-  $R call();
-  PromptMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _PromptMessageCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, PromptMessage, $Out>
-    implements PromptMessageCopyWith<$R, PromptMessage, $Out> {
-  _PromptMessageCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<PromptMessage> $mapper =
-      PromptMessageMapper.ensureInitialized();
-  @override
-  $R call() => $apply(FieldCopyWithData({}));
-  @override
-  PromptMessage $make(CopyWithData data) => PromptMessage();
-
-  @override
-  PromptMessageCopyWith<$R2, PromptMessage, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PromptMessageCopyWithImpl($value, $cast, t);
 }

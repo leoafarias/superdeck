@@ -62,14 +62,17 @@ class DeckController extends _$DeckController {
     });
   }
 
-  Future<void> changeSlideContent(Slide slide, String content) {
-    final deck = state.data!.copyWith(
-      slides: [
-        ...state.data!.slides.where((element) => element.id != slide.id),
-        slide,
-      ],
-    );
-    state = AsyncValue.data(deck);
+  void updateSlideContent(Slide slide, String content) {
+    final previousState = state.asData!.value;
+
+    final slidesToUpdate = [...previousState.slides];
+    // Change item at index for id
+    final index =
+        slidesToUpdate.indexWhere((element) => element.id == slide.id);
+
+    slidesToUpdate[index] = slide.copyWith(content: content);
+
+    state = AsyncValue.data(previousState.copyWith(slides: slidesToUpdate));
   }
 
   Future<DashDeckData> _fetchFromLocal() async {

@@ -125,23 +125,26 @@ class ChatController extends _$ChatController {
 
     final assistantMessage = AssistantMessage(
       content: name,
-      status: MessageStatus.typing,
+      status: ResponseStatus.waitingResponse,
     );
 
     _addMessage(assistantMessage);
 
     try {
-      final response = await _text.generateText(
+      final textResponse = await _text.generateText(
         prompt: prompt,
         model: PalmModel.textBison001.name,
       );
 
+      final response = textResponse.candidates.first.output;
+
       _updateLastMessage(
         assistantMessage.copyWith(
-          content: response.candidates.first.output,
-          status: MessageStatus.done,
+          response: response,
+          status: ResponseStatus.done,
         ),
       );
+      return response;
     } catch (e) {
       // Remove the last message
       final updatedMessages = List<ChatMessage>.from(state.chatMessages)

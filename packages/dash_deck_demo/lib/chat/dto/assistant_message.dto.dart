@@ -5,21 +5,33 @@ import 'chat_message.dto.dart';
 
 part 'assistant_message.dto.mapper.dart';
 
+@MappableEnum()
+enum ResponseStatus {
+  waitingResponse,
+  done,
+}
+
 @MappableClass()
 class AssistantMessage extends ChatMessage with AssistantMessageMappable {
+  final ResponseStatus _status;
+  final String? response;
   const AssistantMessage({
     required super.content,
-    super.status,
     super.createdAt,
     super.hidden,
-  }) : super(role: MessageRole.assistant);
+    this.response,
+    ResponseStatus? status,
+  })  : _status = status ?? ResponseStatus.done,
+        super(role: MessageRole.assistant);
+
+  ResponseStatus get status => _status;
 
   // Returns a new instance of ChatMessage that
   AssistantMessage copyWithDelta({
     String? deltaContent,
     DateTime? createdAt,
     bool? hidden,
-    MessageStatus? status,
+    ResponseStatus? status,
   }) {
     return AssistantMessage(
       content: content + (deltaContent ?? ''),
@@ -31,9 +43,4 @@ class AssistantMessage extends ChatMessage with AssistantMessageMappable {
 
   static const fromMap = AssistantMessageMapper.fromMap;
   static const fromJson = AssistantMessageMapper.fromJson;
-}
-
-@MappableClass()
-class PromptMessage extends AssistantMessage with PromptMessageMappable {
-  final String response;
 }

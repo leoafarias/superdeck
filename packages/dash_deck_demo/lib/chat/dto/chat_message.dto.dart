@@ -5,12 +5,6 @@ import 'package:dash_deck_demo/chat/enum/chat_roles.enum.dart';
 
 part 'chat_message.dto.mapper.dart';
 
-@MappableEnum()
-enum MessageStatus {
-  typing,
-  done,
-}
-
 class MessageRoleMapper extends SimpleMapper<MessageRole> {
   const MessageRoleMapper();
 
@@ -41,22 +35,19 @@ abstract class ChatMessage with ChatMessageMappable {
   final String content;
   final DateTime? createdAt;
 
-  final MessageStatus status;
-
   const ChatMessage({
     required this.role,
     required this.content,
     this.createdAt,
     this.hidden = false,
-    this.status = MessageStatus.done,
   });
 
   static ChatMessage from({
     required MessageRole role,
     required String content,
-    MessageStatus status = MessageStatus.done,
     DateTime? createAt,
     bool hidden = false,
+    ResponseStatus? status,
   }) {
     if (role == MessageRole.assistant) {
       return AssistantMessage(
@@ -70,7 +61,6 @@ abstract class ChatMessage with ChatMessageMappable {
         content: content,
         createdAt: createAt,
         hidden: hidden,
-        status: status,
       );
     }
   }

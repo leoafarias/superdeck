@@ -14,7 +14,6 @@ class UserMessageMapper extends SubClassMapperBase<UserMessage> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = UserMessageMapper._());
       ChatMessageMapper.ensureInitialized().addSubMapper(_instance!);
-      MessageStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -25,9 +24,6 @@ class UserMessageMapper extends SubClassMapperBase<UserMessage> {
   static String _$content(UserMessage v) => v.content;
   static const Field<UserMessage, String> _f$content =
       Field('content', _$content);
-  static MessageStatus _$status(UserMessage v) => v.status;
-  static const Field<UserMessage, MessageStatus> _f$status =
-      Field('status', _$status, opt: true, def: MessageStatus.done);
   static DateTime? _$createdAt(UserMessage v) => v.createdAt;
   static const Field<UserMessage, DateTime> _f$createdAt =
       Field('createdAt', _$createdAt, opt: true);
@@ -41,7 +37,6 @@ class UserMessageMapper extends SubClassMapperBase<UserMessage> {
   @override
   final Map<Symbol, Field<UserMessage, dynamic>> fields = const {
     #content: _f$content,
-    #status: _f$status,
     #createdAt: _f$createdAt,
     #hidden: _f$hidden,
     #role: _f$role,
@@ -58,7 +53,6 @@ class UserMessageMapper extends SubClassMapperBase<UserMessage> {
   static UserMessage _instantiate(DecodingData data) {
     return UserMessage(
         content: data.dec(_f$content),
-        status: data.dec(_f$status),
         createdAt: data.dec(_f$createdAt),
         hidden: data.dec(_f$hidden));
   }
@@ -117,11 +111,7 @@ extension UserMessageValueCopy<$R, $Out>
 abstract class UserMessageCopyWith<$R, $In extends UserMessage, $Out>
     implements ChatMessageCopyWith<$R, $In, $Out> {
   @override
-  $R call(
-      {String? content,
-      MessageStatus? status,
-      DateTime? createdAt,
-      bool? hidden});
+  $R call({String? content, DateTime? createdAt, bool? hidden});
   UserMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -134,21 +124,15 @@ class _UserMessageCopyWithImpl<$R, $Out>
   late final ClassMapperBase<UserMessage> $mapper =
       UserMessageMapper.ensureInitialized();
   @override
-  $R call(
-          {String? content,
-          MessageStatus? status,
-          Object? createdAt = $none,
-          bool? hidden}) =>
+  $R call({String? content, Object? createdAt = $none, bool? hidden}) =>
       $apply(FieldCopyWithData({
         if (content != null) #content: content,
-        if (status != null) #status: status,
         if (createdAt != $none) #createdAt: createdAt,
         if (hidden != null) #hidden: hidden
       }));
   @override
   UserMessage $make(CopyWithData data) => UserMessage(
       content: data.get(#content, or: $value.content),
-      status: data.get(#status, or: $value.status),
       createdAt: data.get(#createdAt, or: $value.createdAt),
       hidden: data.get(#hidden, or: $value.hidden));
 

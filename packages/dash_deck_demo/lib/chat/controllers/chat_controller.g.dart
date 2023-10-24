@@ -35,7 +35,7 @@ final messagesProvider = AutoDisposeProvider<List<ChatMessage>>.internal(
 );
 
 typedef MessagesRef = AutoDisposeProviderRef<List<ChatMessage>>;
-String _$chatControllerHash() => r'2a759da7be1601045d48221cc1da67653d66858a';
+String _$chatControllerHash() => r'59efc85a34e3d46ba8bfcbd0f5a8edc199f9e3b8';
 
 /// See also [ChatController].
 @ProviderFor(ChatController)

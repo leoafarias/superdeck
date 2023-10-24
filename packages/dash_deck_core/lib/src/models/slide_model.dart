@@ -30,10 +30,12 @@ Slide _slideBuilder(JSON data) {
 
 @MappableClass()
 class Slide with SlideMappable {
+  final String id;
   final String layout;
   final String content;
   final ContentAlignment contentAlignment;
   const Slide({
+    required this.id,
     this.layout = BuiltinLayout.none,
     this.contentAlignment = ContentAlignment.center,
     this.content = '',
@@ -44,7 +46,7 @@ class Slide with SlideMappable {
   }
 
   factory Slide.parseJson(String data) {
-    return _slideBuilder(jsonDecode(data));
+    return Slide.parse(jsonDecode(data));
   }
 
   static final fromMap = SlideMapper.fromMap;
@@ -61,6 +63,7 @@ class CoverSlide extends Slide with CoverSlideMappable {
     super.contentAlignment,
     super.content,
     super.layout,
+    required super.id,
   });
 
   static final fromMap = CoverSlideMapper.fromMap;
@@ -79,6 +82,7 @@ class ImageSlide extends Slide with ImageSlideMappable {
     this.imagePosition = ImagePosition.left,
     super.content,
     super.layout,
+    required super.id,
   });
 
   static final fromMap = ImageSlideMapper.fromMap;
@@ -90,6 +94,7 @@ class FullSlide extends Slide with FullSlideMappable {
   const FullSlide({
     super.content,
     super.layout,
+    required super.id,
   });
 
   static final fromMap = FullSlideMapper.fromMap;
@@ -102,6 +107,7 @@ class TwoColumnSlide extends Slide with TwoColumnSlideMappable {
   TwoColumnSlide({
     super.content,
     super.layout,
+    required super.id,
   }) {
     _tags = parseContentWithTags(content, [SyntaxTags.left, SyntaxTags.right]);
   }
@@ -132,6 +138,7 @@ class TwoColumnHeaderSlide extends Slide with TwoColumnHeaderSlideMappable {
   TwoColumnHeaderSlide({
     super.content,
     super.layout,
+    required super.id,
   }) {
     _tags = parseContentWithTags(content, [SyntaxTags.left, SyntaxTags.right]);
   }

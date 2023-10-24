@@ -1,4 +1,5 @@
 // text_input_widget.dart
+import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_demo/chat/components/horizontal_pill_list.dart';
 import 'package:dash_deck_demo/chat/components/typing_indicator.dart';
 import 'package:dash_deck_demo/chat/controllers/chat_controller.dart';
@@ -31,6 +32,19 @@ class MessageInput extends HookConsumerWidget {
       controller.sendMessage(message);
 
       textController.clear();
+    });
+
+    final updateSlideContent = useCallback(() async {
+      final currentSlide = ref.read(currentSlideProvider);
+      final response =
+          await ref.read(chatControllerProvider.notifier).sendPrompt(
+                name: 'Updating Content',
+                content:
+                    'Change the tone of this content: \n ${currentSlide?.content}',
+              );
+      ref
+          .read(deckControllerProvider.notifier)
+          .updateSlideContent(currentSlide!, response);
     });
 
     final focusNode = useFocusNode(
@@ -93,16 +107,20 @@ class MessageInput extends HookConsumerWidget {
     return Column(
       children: [
         showPrompts.value
-            ? HorizontalPillList(items: const [
-                'Firsrt',
-                'Second',
-                'Firsrt',
-                'Second',
-                'Firsrt',
-                'Second',
-                'Firsrt',
-                'Second'
-              ], onSelectedPill: (value) {})
+            ? HorizontalPillList(
+                items: const [
+                    'Firsrt',
+                    'Second',
+                    'Firsrt',
+                    'Second',
+                    'Firsrt',
+                    'Second',
+                    'Firsrt',
+                    'Second'
+                  ],
+                onSelectedPill: (value) {
+                  updateSlideContent();
+                })
             : const SizedBox(),
         Padding(
           padding: const EdgeInsets.all(12.0),

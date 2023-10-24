@@ -47,7 +47,7 @@ class App extends HookWidget {
             AnimatedContainer(
               duration: duration,
               width: bodyWidth,
-              child: DashDeck.runApp(),
+              child: const DashDeckListenerApp(),
             ),
             AnimatedPositioned(
               duration: duration,

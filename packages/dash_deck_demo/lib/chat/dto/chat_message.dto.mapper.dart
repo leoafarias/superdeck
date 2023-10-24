@@ -6,52 +6,6 @@
 
 part of 'chat_message.dto.dart';
 
-class MessageStatusMapper extends EnumMapper<MessageStatus> {
-  MessageStatusMapper._();
-
-  static MessageStatusMapper? _instance;
-  static MessageStatusMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = MessageStatusMapper._());
-    }
-    return _instance!;
-  }
-
-  static MessageStatus fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  MessageStatus decode(dynamic value) {
-    switch (value) {
-      case 'typing':
-        return MessageStatus.typing;
-      case 'done':
-        return MessageStatus.done;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(MessageStatus self) {
-    switch (self) {
-      case MessageStatus.typing:
-        return 'typing';
-      case MessageStatus.done:
-        return 'done';
-    }
-  }
-}
-
-extension MessageStatusMapperExtension on MessageStatus {
-  String toValue() {
-    MessageStatusMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<MessageStatus>(this) as String;
-  }
-}
-
 class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
   ChatMessageMapper._();
 
@@ -62,7 +16,6 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
       MapperContainer.globals.useAll([MessageRoleMapper()]);
       UserMessageMapper.ensureInitialized();
       AssistantMessageMapper.ensureInitialized();
-      MessageStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -81,9 +34,6 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
   static bool _$hidden(ChatMessage v) => v.hidden;
   static const Field<ChatMessage, bool> _f$hidden =
       Field('hidden', _$hidden, opt: true, def: false);
-  static MessageStatus _$status(ChatMessage v) => v.status;
-  static const Field<ChatMessage, MessageStatus> _f$status =
-      Field('status', _$status, opt: true, def: MessageStatus.done);
 
   @override
   final Map<Symbol, Field<ChatMessage, dynamic>> fields = const {
@@ -91,7 +41,6 @@ class ChatMessageMapper extends ClassMapperBase<ChatMessage> {
     #content: _f$content,
     #createdAt: _f$createdAt,
     #hidden: _f$hidden,
-    #status: _f$status,
   };
 
   static ChatMessage _instantiate(DecodingData data) {
@@ -119,10 +68,6 @@ mixin ChatMessageMappable {
 
 abstract class ChatMessageCopyWith<$R, $In extends ChatMessage, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call(
-      {String? content,
-      DateTime? createdAt,
-      bool? hidden,
-      MessageStatus? status});
+  $R call({String? content, DateTime? createdAt, bool? hidden});
   ChatMessageCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }

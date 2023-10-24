@@ -1,4 +1,5 @@
 --- 
+id: slide-1
 layout: cover 
 background: 'https://source.unsplash.com/random/900×700/?water' 
 contentAlignment: center 
@@ -7,6 +8,7 @@ contentAlignment: center
 ## Tips and Tricks to Stay Hydrated 
  
 --- 
+id: slide-2
 layout: image 
 image: 'https://source.unsplash.com/random/900×700/?water-bottle' 
 imagePosition: left 
@@ -17,6 +19,7 @@ contentAlignment: centerLeft
 The easiest way to drink more water is to start by taking small sips throughout the day. This will help you gradually increase your water intake without feeling overwhelmed. 
  
 --- 
+id: slide-3
 layout: image 
 image: 'https://source.unsplash.com/random/900×700/?fitness,water' 
 imagePosition: right 
@@ -27,6 +30,7 @@ contentAlignment: centerRight
 Keeping a water bottle with you at all times will help you remember to drink more water. Try to refill your bottle throughout the day, and make sure to drink it all. 
  
 --- 
+id: slide-4
 layout: cover 
 background: 'https://source.unsplash.com/random/900×700/?water-fruit' 
 contentAlignment: center 
@@ -36,6 +40,7 @@ contentAlignment: center
 If you find plain water boring, try adding flavor to it. You can add slices of fruit, cucumber, or mint to your water to make it more refreshing. You can also try using flavored seltzer or sparkling water. 
  
 --- 
+id: slide-5
 layout: image 
 image: 'https://source.unsplash.com/random/900×700/?workout' 
 imagePosition: left 
@@ -46,6 +51,7 @@ contentAlignment: centerLeft
 It's important to stay hydrated when you're working out. Drink water before, during, and after your workout to help you perform your best. 
  
 --- 
+id: slide-6
 layout: image 
 image: 'https://source.unsplash.com/random/900×700/?water-sign' 
 imagePosition: right 
@@ -56,7 +62,8 @@ contentAlignment: centerRight
 If you're forgetful, set water reminders on your phone or watch to help you remember to drink more water. You can also use a water tracking app to track your water intake and stay on track. 
  
 --- 
-layout: cover 
+id: slide-7
+layout: cover
 background: 'https://source.unsplash.com/random/900×700/?health' 
 contentAlignment: center 
 --- 
@@ -73,6 +80,7 @@ Drinking more water has many benefits for your health, including:
 So if you're looking for a simple way to improve your health, drink more water! 
  
 --- 
+id: slide-8
 layout: cover 
 background: 'https://source.unsplash.com/random/900×700/?water-health' 
 contentAlignment: center 
