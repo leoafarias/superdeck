@@ -6,6 +6,34 @@ part of 'dash_deck.provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$currentSlideHash() => r'8d2aace41b27bf2ed8d1589ccde9cdd77f807490';
+
+/// See also [currentSlide].
+@ProviderFor(currentSlide)
+final currentSlideProvider = AutoDisposeProvider<Slide?>.internal(
+  currentSlide,
+  name: r'currentSlideProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$currentSlideHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CurrentSlideRef = AutoDisposeProviderRef<Slide?>;
+String _$slidePageHash() => r'3d3d10e8df4d2cbc242e66b9d0eddf952c0028b8';
+
+/// See also [SlidePage].
+@ProviderFor(SlidePage)
+final slidePageProvider = AutoDisposeNotifierProvider<SlidePage, int>.internal(
+  SlidePage.new,
+  name: r'slidePageProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$slidePageHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SlidePage = AutoDisposeNotifier<int>;
 String _$deckControllerHash() => r'b0867a2e3aa2dcbb62351ff7190c7a4739e92c2b';
 
 /// See also [DeckController].
@@ -23,4 +51,4 @@ final deckControllerProvider =
 
 typedef _$DeckController = AutoDisposeAsyncNotifier<DashDeckData>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

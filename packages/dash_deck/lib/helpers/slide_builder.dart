@@ -38,7 +38,7 @@ class ImageSlideWidget extends SlideLayoutBuilder<ImageSlide> {
 
     List<Widget> children = [
       Expanded(child: imageWidget),
-      Expanded(child: MarkdownViewer(slide.content)),
+      Expanded(child: SlideContent(slide.content)),
     ];
 
     if (slide.imagePosition == ImagePosition.right) {
@@ -57,7 +57,7 @@ class FullSlideWidget extends SlideLayoutBuilder<FullSlide> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: MarkdownViewer(slide.content),
+      child: SlideContent(slide.content),
     );
   }
 }
@@ -72,7 +72,7 @@ class SlideWidget extends SlideLayoutBuilder<Slide> {
     return Column(
       mainAxisAlignment: flexAlignment.mainAxisAlignment,
       crossAxisAlignment: flexAlignment.crossAxisAlignment,
-      children: [MarkdownViewer(slide.content)],
+      children: [SlideContent(slide.content)],
     );
   }
 }
@@ -105,7 +105,7 @@ class CoverSlideWidget extends SlideLayoutBuilder<CoverSlide> {
     final current = Column(
       mainAxisAlignment: flexAlignment.mainAxisAlignment,
       crossAxisAlignment: flexAlignment.crossAxisAlignment,
-      children: [MarkdownViewer(slide.content)],
+      children: [SlideContent(slide.content)],
     );
 
     return Stack(
@@ -139,13 +139,13 @@ class TwoColumnSlideWidget extends SlideLayoutBuilder<TwoColumnSlide> {
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MarkdownViewer(slide.leftContent),
+          child: SlideContent(slide.leftContent),
         ),
       ),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MarkdownViewer(slide.rightContent),
+          child: SlideContent(slide.rightContent),
         ),
       ),
     ];
@@ -166,13 +166,13 @@ class TwoColumnHeaderSlideWidget
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MarkdownViewer(slide.leftContent),
+          child: SlideContent(slide.leftContent),
         ),
       ),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MarkdownViewer(slide.rightContent),
+          child: SlideContent(slide.rightContent),
         ),
       ),
     ];
@@ -181,7 +181,7 @@ class TwoColumnHeaderSlideWidget
       children: [
         Row(
           children: [
-            MarkdownViewer(slide.topContent),
+            SlideContent(slide.topContent),
           ],
         ),
         const Divider(),

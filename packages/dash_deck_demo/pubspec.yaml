@@ -11,14 +11,31 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
   dash_deck: ^0.0.1
+  hooks_riverpod: ^2.4.4
+  flutter_hooks: ^0.20.3
+  riverpod_annotation: ^2.2.1
+  dart_mappable: ^4.0.1
+  localstorage: ^4.0.1+4
+  envied: ^0.3.0+3
+  palm_api:
+    path: ../../../palm_api_dart
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+   
+  build_version: ^2.1.1
+  flutter_lints: ^2.0.3
   dash_deck_cli: ^0.0.1
+  build_runner: ^2.4.6
+  custom_lint: ^0.5.4
+  riverpod_generator: ^2.3.3
+  riverpod_lint: ^2.1.1
+  dart_mappable_builder: ^4.0.0
+  
+  envied_generator: 0.3.0+3
 
 flutter:
   uses-material-design: true

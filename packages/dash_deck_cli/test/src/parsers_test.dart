@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:dash_deck_cli/src/builders/parser/slides_parser.dart';
-import 'package:dash_deck_cli/src/builders/slide_data_builder.dart';
+import 'package:dash_deck_cli/src/builders/slides_parser.dart';
+import 'package:dash_deck_cli/src/builders/store_deck_data.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
@@ -18,7 +18,7 @@ void main() {
 
     test('Mermaid', () async {
       final slides = SlidesParser(markdown).parse();
-      await storeSlideData(DashDeckData(slides: slides));
+      await storeDeckData(DashDeckData(slides: slides));
       expect(slides.length, 5);
     });
   });

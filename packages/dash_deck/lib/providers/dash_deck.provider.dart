@@ -12,6 +12,31 @@ part 'dash_deck.provider.g.dart';
 final _deckJsonFile = File(p.join('assets', 'dash_deck', 'deck.json'));
 
 @riverpod
+Slide? currentSlide(CurrentSlideRef ref) {
+  final page = ref.watch(slidePageProvider);
+  final deck = ref.watch(deckControllerProvider).when(data: (data) {
+    return data.slides[page];
+  }, loading: () {
+    return null;
+  }, error: (error, stack) {
+    return null;
+  });
+  return deck;
+}
+
+@riverpod
+class SlidePage extends _$SlidePage {
+  @override
+  int build() {
+    return 0;
+  }
+
+  void setActivePage(int page) {
+    state = page;
+  }
+}
+
+@riverpod
 class DeckController extends _$DeckController {
   @override
   Future<DashDeckData> build() {

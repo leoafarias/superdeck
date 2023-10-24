@@ -19,9 +19,6 @@ enum ImageFit { cover, contain, fill, fitHeight, fitWidth, none, scaleDown }
 enum ImagePosition { left, right }
 
 @MappableEnum()
-enum VerticalAlignment { top, center, bottom }
-
-@MappableEnum()
 enum ContentAlignment {
   topLeft,
   topCenter,
@@ -33,6 +30,9 @@ enum ContentAlignment {
   bottomCenter,
   bottomRight
 }
+
+@MappableEnum()
+enum VerticalAlignment { top, center, bottom }
 
 @MappableEnum()
 enum HorizontalAlignment { left, center, right }

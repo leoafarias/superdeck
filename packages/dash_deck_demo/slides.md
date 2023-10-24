@@ -1,7 +1,7 @@
 ---
 title: Introduction to Flutter
 layout: cover
-background: "https://source.unsplash.com/random/900x700/?flutter"
+background: https://media.giphy.com/media/WrP3awchXRagVvRDfS/giphy.gif
 ---
 
 # Introduction to Flutter
@@ -30,7 +30,7 @@ flutter doctor
 
 ---
 layout: image
-image: https://source.unsplash.com/random/900x700/?coding
+image: https://source.unsplash.com/random/900×700?runner
 ---
 
 ## Your first Flutter app
@@ -62,8 +62,6 @@ layout: twoColumnHeader
 
 Hot Reload lets you experiment, build UIs, add features, and fix bugs faster.
 
-
-::left::
 
 1. Change your code.
 2. Hit 'Save' in your IDE.

@@ -6,6 +6,7 @@ part 'dash_deck_data_model.mapper.dart';
 @MappableClass()
 class DashDeckData with DashDeckDataMappable {
   final List<Slide> slides;
+
   const DashDeckData({
     this.slides = const [],
   });

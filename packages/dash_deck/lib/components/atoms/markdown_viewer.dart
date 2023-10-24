@@ -89,52 +89,59 @@ class _ContentPadding extends StatelessWidget {
   }
 }
 
-class MarkdownViewer extends StatelessWidget {
-  const MarkdownViewer(this.data, {Key? key}) : super(key: key);
+class SlideContent extends StatelessWidget {
+  const SlideContent(this.data, {Key? key}) : super(key: key);
+  final String data;
+  @override
+  Widget build(BuildContext context) {
+    return _ContentPadding(child: MarkdownView(data));
+  }
+}
+
+class MarkdownView extends StatelessWidget {
+  const MarkdownView(this.data, {Key? key}) : super(key: key);
 
   final String data;
 
   @override
   Widget build(BuildContext context) {
-    return _ContentPadding(
-      child: MarkdownBody(
-        data: data,
-        styleSheet: markdownStyleSheet(context),
-        selectable: false,
-        imageBuilder: (uri, title, alt) {
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              Widget image;
-              if (uri.scheme == 'resource') {
-                // Load from asset
-                String assetPath = uri.path;
-                image = Image.asset(
-                  assetPath,
-                  fit: BoxFit.contain, // Maintain aspect ratio
-                );
-              } else {
-                // Default behavior for network images
-                image = Image.network(
-                  uri.toString(),
-                  fit: BoxFit.contain, // Maintain aspect ratio
-                );
-              }
-              return Container(
-                padding: const EdgeInsets.all(20.0),
-                width: constraints.maxWidth,
-                height: constraints.maxWidth *
-                    (9 / 16), // Assuming a 16:9 aspect ratio
-                child: image,
+    return MarkdownBody(
+      data: data,
+      styleSheet: markdownStyleSheet(context),
+      selectable: true,
+      imageBuilder: (uri, title, alt) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            Widget image;
+            if (uri.scheme == 'resource') {
+              // Load from asset
+              String assetPath = uri.path;
+              image = Image.asset(
+                assetPath,
+                fit: BoxFit.contain, // Maintain aspect ratio
               );
-            },
-          );
-        },
-        extensionSet: md.ExtensionSet(
-          md.ExtensionSet.gitHubWeb.blockSyntaxes,
-          [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
-        ),
-        syntaxHighlighter: DartSyntaxBuilder(context),
+            } else {
+              // Default behavior for network images
+              image = Image.network(
+                uri.toString(),
+                fit: BoxFit.contain, // Maintain aspect ratio
+              );
+            }
+            return Container(
+              padding: const EdgeInsets.all(20.0),
+              width: constraints.maxWidth,
+              height: constraints.maxWidth *
+                  (9 / 16), // Assuming a 16:9 aspect ratio
+              child: image,
+            );
+          },
+        );
+      },
+      extensionSet: md.ExtensionSet(
+        md.ExtensionSet.gitHubWeb.blockSyntaxes,
+        [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
       ),
+      syntaxHighlighter: DartSyntaxBuilder(context),
     );
   }
 }

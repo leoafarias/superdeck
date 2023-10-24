@@ -8,3 +8,5 @@
 /// dashdeck --help
 /// ```
 library dash_deck_cli;
+
+export 'src/export.dart';

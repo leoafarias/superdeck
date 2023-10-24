@@ -118,56 +118,6 @@ extension ImagePositionMapperExtension on ImagePosition {
   }
 }
 
-class VerticalAlignmentMapper extends EnumMapper<VerticalAlignment> {
-  VerticalAlignmentMapper._();
-
-  static VerticalAlignmentMapper? _instance;
-  static VerticalAlignmentMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = VerticalAlignmentMapper._());
-    }
-    return _instance!;
-  }
-
-  static VerticalAlignment fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  VerticalAlignment decode(dynamic value) {
-    switch (value) {
-      case 'top':
-        return VerticalAlignment.top;
-      case 'center':
-        return VerticalAlignment.center;
-      case 'bottom':
-        return VerticalAlignment.bottom;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(VerticalAlignment self) {
-    switch (self) {
-      case VerticalAlignment.top:
-        return 'top';
-      case VerticalAlignment.center:
-        return 'center';
-      case VerticalAlignment.bottom:
-        return 'bottom';
-    }
-  }
-}
-
-extension VerticalAlignmentMapperExtension on VerticalAlignment {
-  String toValue() {
-    VerticalAlignmentMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<VerticalAlignment>(this) as String;
-  }
-}
-
 class ContentAlignmentMapper extends EnumMapper<ContentAlignment> {
   ContentAlignmentMapper._();
 
@@ -239,6 +189,56 @@ extension ContentAlignmentMapperExtension on ContentAlignment {
   String toValue() {
     ContentAlignmentMapper.ensureInitialized();
     return MapperContainer.globals.toValue<ContentAlignment>(this) as String;
+  }
+}
+
+class VerticalAlignmentMapper extends EnumMapper<VerticalAlignment> {
+  VerticalAlignmentMapper._();
+
+  static VerticalAlignmentMapper? _instance;
+  static VerticalAlignmentMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = VerticalAlignmentMapper._());
+    }
+    return _instance!;
+  }
+
+  static VerticalAlignment fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  VerticalAlignment decode(dynamic value) {
+    switch (value) {
+      case 'top':
+        return VerticalAlignment.top;
+      case 'center':
+        return VerticalAlignment.center;
+      case 'bottom':
+        return VerticalAlignment.bottom;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(VerticalAlignment self) {
+    switch (self) {
+      case VerticalAlignment.top:
+        return 'top';
+      case VerticalAlignment.center:
+        return 'center';
+      case VerticalAlignment.bottom:
+        return 'bottom';
+    }
+  }
+}
+
+extension VerticalAlignmentMapperExtension on VerticalAlignment {
+  String toValue() {
+    VerticalAlignmentMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<VerticalAlignment>(this) as String;
   }
 }
 

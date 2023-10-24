@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:dash_deck_cli/src/builders/slide_data_builder.dart';
 import 'package:dash_deck_cli/src/builders/slide_data_loader.dart';
+import 'package:dash_deck_cli/src/builders/store_deck_data.dart';
 import 'package:dash_deck_cli/src/constants.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -62,9 +62,9 @@ class BuildCommand extends Command<int> {
         // );
 
         // await storeSlideData(response);
-        final slides = await slideDataLoader();
+        final slides = await slidesMarkdownLoader();
         final deckData = DashDeckData(slides: slides);
-        await storeSlideData(deckData);
+        await storeDeckData(deckData);
         progress.complete('Slides updated');
       } catch (e, stackTrace) {
         progress.fail(

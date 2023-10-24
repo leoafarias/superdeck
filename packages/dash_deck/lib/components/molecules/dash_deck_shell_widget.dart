@@ -8,7 +8,8 @@ import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 class DashDeck {
@@ -44,7 +45,6 @@ class DashDeck {
     return ProviderScope(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: lightTheme,
         darkTheme: darkTheme,
         home: const DashDeckListenerApp(),
       ),
@@ -74,7 +74,7 @@ class DashDeckListenerApp extends ConsumerWidget {
   }
 }
 
-class DashDeckShell extends StatefulWidget {
+class DashDeckShell extends HookConsumerWidget {
   const DashDeckShell({
     required this.data,
     Key? key,
@@ -83,86 +83,68 @@ class DashDeckShell extends StatefulWidget {
   final DashDeckData data;
 
   @override
-  State<DashDeckShell> createState() => _DashDeckShellState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = usePageController();
 
-class _DashDeckShellState extends State<DashDeckShell> {
-  final int _initialPage = 0;
-  PageController? controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = PageController(initialPage: _initialPage);
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
-  void _handleGoToSlide(int page) {
-    controller?.animateToPage(
-      page,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _handleStepSlide(int slide) {
-    final currentPage = controller?.page?.round() ?? 0;
-    final stepToPage = currentPage + slide;
-    if (stepToPage >= 0 && stepToPage < widget.data.slides.length) {
-      _handleGoToSlide(stepToPage);
-    } else if (stepToPage == -1) {
-      _handleGoToSlide(widget.data.slides.length);
-    } else {
-      _handleGoToSlide(0);
+    void handleGoToSlide(int page) {
+      ref.read(slidePageProvider.notifier).setActivePage(page);
+      controller.animateToPage(
+        page,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
-  }
 
-  void _handleNextSlide() {
-    _handleStepSlide(1);
-  }
+    void handleStepSlide(int slide) {
+      final currentPage = controller.page?.round() ?? 0;
+      final stepToPage = currentPage + slide;
+      if (stepToPage >= 0 && stepToPage < data.slides.length) {
+        handleGoToSlide(stepToPage);
+      } else if (stepToPage == -1) {
+        handleGoToSlide(data.slides.length);
+      } else {
+        handleGoToSlide(0);
+      }
+    }
 
-  void _handlePreviousSlide() {
-    _handleStepSlide(-1);
-  }
+    void handleNextSlide() {
+      handleStepSlide(1);
+    }
 
-  @override
-  Widget build(BuildContext context) {
+    void handlePreviousSlide() {
+      handleStepSlide(-1);
+    }
+
     return CallbackShortcuts(
       bindings: {
         const SingleActivator(
           LogicalKeyboardKey.arrowRight,
           includeRepeats: false,
-        ): _handleNextSlide,
+        ): handleNextSlide,
         const SingleActivator(
           LogicalKeyboardKey.arrowDown,
           includeRepeats: false,
-        ): _handleNextSlide,
+        ): handleNextSlide,
         const SingleActivator(
           LogicalKeyboardKey.space,
           includeRepeats: false,
-        ): _handleNextSlide,
+        ): handleNextSlide,
         const SingleActivator(
           LogicalKeyboardKey.enter,
           includeRepeats: false,
-        ): _handleNextSlide,
+        ): handleNextSlide,
         const SingleActivator(
           LogicalKeyboardKey.numpadEnter,
           includeRepeats: false,
-        ): _handleNextSlide,
+        ): handleNextSlide,
         const SingleActivator(
           LogicalKeyboardKey.arrowLeft,
           includeRepeats: false,
-        ): _handlePreviousSlide,
+        ): handlePreviousSlide,
         const SingleActivator(
           LogicalKeyboardKey.arrowUp,
           includeRepeats: false,
-        ): _handlePreviousSlide,
+        ): handlePreviousSlide,
       },
       child: Focus(
         autofocus: true,
@@ -170,7 +152,7 @@ class _DashDeckShellState extends State<DashDeckShell> {
           body: SlideWrapper(
             child: PageView(
               controller: controller,
-              children: widget.data.slides.map(SlideView.new).toList(),
+              children: data.slides.map(SlideView.new).toList(),
             ),
           ),
         ),
