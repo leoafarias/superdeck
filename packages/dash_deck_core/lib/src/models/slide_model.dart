@@ -89,11 +89,8 @@ class ImageSlide extends Slide with ImageSlideMappable {
 
 @MappableClass()
 class FullSlide extends Slide with FullSlideMappable {
-  final String? background;
-
   const FullSlide({
     super.content,
-    this.background,
     super.layout,
   });
 

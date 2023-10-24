@@ -443,9 +443,6 @@ class FullSlideMapper extends ClassMapperBase<FullSlide> {
   static String _$content(FullSlide v) => v.content;
   static const Field<FullSlide, String> _f$content =
       Field('content', _$content, opt: true, def: '');
-  static String? _$background(FullSlide v) => v.background;
-  static const Field<FullSlide, String> _f$background =
-      Field('background', _$background, opt: true);
   static String _$layout(FullSlide v) => v.layout;
   static const Field<FullSlide, String> _f$layout =
       Field('layout', _$layout, opt: true, def: BuiltinLayout.none);
@@ -456,16 +453,13 @@ class FullSlideMapper extends ClassMapperBase<FullSlide> {
   @override
   final Map<Symbol, Field<FullSlide, dynamic>> fields = const {
     #content: _f$content,
-    #background: _f$background,
     #layout: _f$layout,
     #contentAlignment: _f$contentAlignment,
   };
 
   static FullSlide _instantiate(DecodingData data) {
     return FullSlide(
-        content: data.dec(_f$content),
-        background: data.dec(_f$background),
-        layout: data.dec(_f$layout));
+        content: data.dec(_f$content), layout: data.dec(_f$layout));
   }
 
   @override
@@ -521,7 +515,7 @@ extension FullSlideValueCopy<$R, $Out> on ObjectCopyWith<$R, FullSlide, $Out> {
 abstract class FullSlideCopyWith<$R, $In extends FullSlide, $Out>
     implements SlideCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? content, String? background, String? layout});
+  $R call({String? content, String? layout});
   FullSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -534,16 +528,13 @@ class _FullSlideCopyWithImpl<$R, $Out>
   late final ClassMapperBase<FullSlide> $mapper =
       FullSlideMapper.ensureInitialized();
   @override
-  $R call({String? content, Object? background = $none, String? layout}) =>
-      $apply(FieldCopyWithData({
+  $R call({String? content, String? layout}) => $apply(FieldCopyWithData({
         if (content != null) #content: content,
-        if (background != $none) #background: background,
         if (layout != null) #layout: layout
       }));
   @override
   FullSlide $make(CopyWithData data) => FullSlide(
       content: data.get(#content, or: $value.content),
-      background: data.get(#background, or: $value.background),
       layout: data.get(#layout, or: $value.layout));
 
   @override

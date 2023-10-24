@@ -184,7 +184,6 @@ class TwoColumnHeaderSlideWidget
             SlideContent(slide.topContent),
           ],
         ),
-        const Divider(),
         Expanded(
           child: Row(
             children: children,

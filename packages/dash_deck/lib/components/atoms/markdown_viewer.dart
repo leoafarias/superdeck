@@ -33,17 +33,17 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
     ),
 
     h1: tt.displayLarge,
-    h1Padding: scaleEdgeInsets(ss.h1Padding!.copyWith(top: 25)),
+    h1Padding: scaleEdgeInsets(ss.h1Padding!.copyWith(top: 15, bottom: 10)),
     h2: tt.displayMedium,
-    h2Padding: scaleEdgeInsets(ss.h2Padding!.copyWith(top: 25)),
+    h2Padding: scaleEdgeInsets(ss.h2Padding!.copyWith(top: 15, bottom: 10)),
     h3: tt.displaySmall,
-    h3Padding: scaleEdgeInsets(ss.h3Padding!.copyWith(top: 25)),
+    h3Padding: scaleEdgeInsets(ss.h3Padding!.copyWith(top: 15, bottom: 10)),
     h4: tt.headlineLarge,
-    h4Padding: scaleEdgeInsets(ss.h4Padding!.copyWith(top: 25)),
+    h4Padding: scaleEdgeInsets(ss.h4Padding!.copyWith(top: 15, bottom: 10)),
     h5: tt.headlineMedium,
-    h5Padding: scaleEdgeInsets(ss.h5Padding!.copyWith(top: 25)),
+    h5Padding: scaleEdgeInsets(ss.h5Padding!.copyWith(top: 15, bottom: 10)),
     h6: tt.headlineSmall,
-    h6Padding: scaleEdgeInsets(ss.h6Padding!.copyWith(top: 25)),
+    h6Padding: scaleEdgeInsets(ss.h6Padding!.copyWith(top: 15, bottom: 10)),
     // Content Elements
     p: tt.bodyMedium,
     pPadding: scaleEdgeInsets(ss.pPadding!),
@@ -51,8 +51,8 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
       backgroundColor: Colors.grey[900],
     ),
     listBullet: tt.bodyMedium,
-    listBulletPadding: scaleEdgeInsets(ss.listBulletPadding!.copyWith(top: 25)),
-    tableCellsPadding: scaleEdgeInsets(ss.tableCellsPadding!.copyWith(top: 25)),
+    listBulletPadding: scaleEdgeInsets(ss.listBulletPadding!),
+    tableCellsPadding: scaleEdgeInsets(ss.tableCellsPadding!),
     tableHead: tt.bodyMedium,
     tableBody: tt.bodySmall,
     listIndent: Scale.scaleWidth(ss.listIndent),
@@ -63,7 +63,7 @@ MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
     ),
     blockquote: tt.bodySmall,
 
-    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!.copyWith(top: 25)),
+    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!),
   );
 }
 
