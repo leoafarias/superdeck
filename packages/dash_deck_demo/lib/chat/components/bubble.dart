@@ -1,5 +1,6 @@
 import 'package:dash_deck/components/atoms/markdown_viewer.dart';
 import 'package:dash_deck_demo/chat/components/copy_to_clipboard_button.dart';
+import 'package:dash_deck_demo/chat/dto/assistant_message.dto.dart';
 import 'package:dash_deck_demo/chat/dto/chat_message.dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,46 +10,10 @@ class MessageBubble extends HookWidget {
 
   const MessageBubble(
     this.message, {
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   bool get _isMe => message.isUser;
-
-  Widget _buildIcon(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20, left: 16),
-      child: Icon(
-        _isMe ? Icons.person : Icons.bolt,
-        size: 20,
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
-      ),
-    );
-  }
-
-  Widget _buildMessageContent() {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 8,
-        right: 16,
-        top: 16,
-        bottom: 16,
-      ),
-      child: MarkdownView(message.content),
-    );
-  }
-
-  Widget _buildCopyButton() {
-    return Positioned(
-      top: 0,
-      right: 0,
-      child: Container(
-        margin: const EdgeInsets.only(left: 8),
-        child: CopyToClipboardButton(
-          content: message.content,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,87 +22,116 @@ class MessageBubble extends HookWidget {
     return MouseRegion(
       onEnter: (event) => hover.value = true,
       onExit: (event) => hover.value = false,
-      child: Row(
-        children: [
-          Flexible(
-            child: Stack(
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: _isMe ? Colors.black12 : Colors.black26,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildIcon(context),
-                      Flexible(child: _buildMessageContent()),
-                    ],
-                  ),
-                ),
-                if (hover.value) _buildCopyButton(),
-              ],
-            ),
-          ),
-        ],
+      child: CommonBubbleStructure(
+        message: message,
+        hover: hover.value,
       ),
     );
   }
 }
 
 class CommonBubbleStructure extends StatelessWidget {
-  final List<Widget> children;
+  final bool hover;
 
-  const CommonBubbleStructure({Key? key, required this.children})
-      : super(key: key);
+  final ChatMessage message;
+  const CommonBubbleStructure({
+    super.key,
+    required this.message,
+    required this.hover,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.black12,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+  bool get _isMe => message.isUser;
+
+  Widget buildIcon(BuildContext context) {
+    final assistantMessage = message;
+    if (assistantMessage is AssistantMessage) {
+      if (assistantMessage.status == ResponseStatus.waitingResponse) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+        );
+      }
+
+      if (assistantMessage.status == ResponseStatus.done) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Icon(
+            Icons.check,
+            size: 20,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+        );
+      }
+    }
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Icon(
+        _isMe ? Icons.person : Icons.bolt,
+        size: 20,
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
     );
   }
-}
 
-class LoadingBubble extends StatelessWidget {
-  final String message;
-  final bool isMe;
-
-  const LoadingBubble(
-    this.message, {
-    required this.isMe,
-    Key? key,
-  }) : super(key: key);
+  Widget buildCopyButton() {
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: CopyToClipboardButton(content: message.content),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CommonBubbleStructure(
-      children: [
-        const CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+    final messageRef = message;
+    if (messageRef is AssistantMessage) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.black26,
         ),
-        Flexible(
-          child: Text(
-            message,
-            style: const TextStyle(color: Colors.white),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            buildIcon(context),
+            Flexible(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 16.0),
+                  child: Text(messageRef.content,
+                      style: Theme.of(context).textTheme.bodyMedium)),
+            ),
+            const SizedBox(width: 20)
+          ],
+        ),
+      );
+    }
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: _isMe ? Colors.black12 : Colors.black26,
+      ),
+      child: Stack(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              buildIcon(context),
+              Flexible(child: SlideContent(message.content)),
+              const SizedBox(width: 20)
+            ],
           ),
-        ),
-      ],
+          if (hover) buildCopyButton(),
+        ],
+      ),
     );
   }
 }

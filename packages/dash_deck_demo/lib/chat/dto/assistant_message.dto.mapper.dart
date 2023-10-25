@@ -25,6 +25,8 @@ class ResponseStatusMapper extends EnumMapper<ResponseStatus> {
   @override
   ResponseStatus decode(dynamic value) {
     switch (value) {
+      case 'none':
+        return ResponseStatus.none;
       case 'waitingResponse':
         return ResponseStatus.waitingResponse;
       case 'done':
@@ -37,6 +39,8 @@ class ResponseStatusMapper extends EnumMapper<ResponseStatus> {
   @override
   dynamic encode(ResponseStatus self) {
     switch (self) {
+      case ResponseStatus.none:
+        return 'none';
       case ResponseStatus.waitingResponse:
         return 'waitingResponse';
       case ResponseStatus.done:

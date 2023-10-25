@@ -4,10 +4,8 @@ part 'slide_options.model.mapper.dart';
 
 class BuiltinLayout {
   BuiltinLayout._();
-  static const none = 'none';
-  static const cover = 'cover';
+  static const basic = 'basic';
   static const image = 'image';
-  static const full = 'full';
   static const twoColumn = 'twoColumn';
   static const twoColumnHeader = 'twoColumnHeader';
 }

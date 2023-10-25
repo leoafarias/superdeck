@@ -9,16 +9,12 @@ part 'slide_model.mapper.dart';
 typedef JSON = Map<String, dynamic>;
 
 Slide _slideBuilder(JSON data) {
-  final layout = data['layout'] as String? ?? BuiltinLayout.none;
+  final layout = data['layout'] as String? ?? BuiltinLayout.basic;
   switch (layout) {
-    case BuiltinLayout.none:
+    case BuiltinLayout.basic:
       return Slide.fromMap(data);
-    case BuiltinLayout.cover:
-      return CoverSlide.fromMap(data);
     case BuiltinLayout.image:
       return ImageSlide.fromMap(data);
-    case BuiltinLayout.full:
-      return FullSlide.fromMap(data);
     case BuiltinLayout.twoColumn:
       return TwoColumnSlide.fromMap(data);
     case BuiltinLayout.twoColumnHeader:
@@ -34,10 +30,12 @@ class Slide with SlideMappable {
   final String layout;
   final String content;
   final ContentAlignment contentAlignment;
+  final String? background;
   const Slide({
     required this.id,
-    this.layout = BuiltinLayout.none,
-    this.contentAlignment = ContentAlignment.center,
+    this.layout = BuiltinLayout.basic,
+    this.contentAlignment = ContentAlignment.centerLeft,
+    this.background,
     this.content = '',
   });
 
@@ -55,22 +53,6 @@ class Slide with SlideMappable {
 }
 
 @MappableClass()
-class CoverSlide extends Slide with CoverSlideMappable {
-  final String? background;
-
-  const CoverSlide({
-    this.background,
-    super.contentAlignment,
-    super.content,
-    super.layout,
-    required super.id,
-  });
-
-  static final fromMap = CoverSlideMapper.fromMap;
-  static final fromJson = CoverSlideMapper.fromJson;
-}
-
-@MappableClass()
 class ImageSlide extends Slide with ImageSlideMappable {
   final ImageFit? imageFit;
   final String image;
@@ -80,6 +62,7 @@ class ImageSlide extends Slide with ImageSlideMappable {
     this.imageFit,
     this.image = '',
     this.imagePosition = ImagePosition.left,
+    super.background,
     super.content,
     super.layout,
     required super.id,
@@ -90,20 +73,9 @@ class ImageSlide extends Slide with ImageSlideMappable {
 }
 
 @MappableClass()
-class FullSlide extends Slide with FullSlideMappable {
-  const FullSlide({
-    super.content,
-    super.layout,
-    required super.id,
-  });
-
-  static final fromMap = FullSlideMapper.fromMap;
-  static final fromJson = FullSlideMapper.fromJson;
-}
-
-@MappableClass()
 class TwoColumnSlide extends Slide with TwoColumnSlideMappable {
   late Map<String, List<String>> _tags;
+
   TwoColumnSlide({
     super.content,
     super.layout,
@@ -113,19 +85,17 @@ class TwoColumnSlide extends Slide with TwoColumnSlideMappable {
   }
 
   String get leftContent {
-    final remainingContent = _tags[SyntaxTags.content] != null
-        ? _tags[SyntaxTags.content]!.join('\n')
-        : '';
-
-    return _tags[SyntaxTags.left] != null
-        ? _tags[SyntaxTags.left]!.join('\n')
-        : remainingContent;
+    return _getTagContent(
+        _tags,
+        SyntaxTags.left,
+        _getTagContent(
+          _tags,
+          SyntaxTags.content,
+        ));
   }
 
   String get rightContent {
-    return _tags[SyntaxTags.right] != null
-        ? _tags[SyntaxTags.right]!.join('\n')
-        : '';
+    return _getTagContent(_tags, SyntaxTags.right);
   }
 
   static final fromMap = TwoColumnSlideMapper.fromMap;
@@ -136,31 +106,35 @@ class TwoColumnSlide extends Slide with TwoColumnSlideMappable {
 class TwoColumnHeaderSlide extends Slide with TwoColumnHeaderSlideMappable {
   late Map<String, List<String>> _tags;
   TwoColumnHeaderSlide({
-    super.content,
     super.layout,
+    super.background,
+    super.contentAlignment,
+    super.content,
     required super.id,
   }) {
     _tags = parseContentWithTags(content, [SyntaxTags.left, SyntaxTags.right]);
   }
 
   String get topContent {
-    return _tags[SyntaxTags.content] != null
-        ? _tags[SyntaxTags.content]!.join('\n')
-        : '';
+    return _getTagContent(_tags, SyntaxTags.right);
   }
 
   String get leftContent {
-    return _tags[SyntaxTags.left] != null
-        ? _tags[SyntaxTags.left]!.join('\n')
-        : '';
+    return _getTagContent(_tags, SyntaxTags.left);
   }
 
   String get rightContent {
-    return _tags[SyntaxTags.right] != null
-        ? _tags[SyntaxTags.right]!.join('\n')
-        : '';
+    return _getTagContent(_tags, SyntaxTags.right);
   }
 
   static final fromMap = TwoColumnHeaderSlideMapper.fromMap;
   static final fromJson = TwoColumnHeaderSlideMapper.fromJson;
+}
+
+String _getTagContent(
+  Map<String, List<String>> tags,
+  String tag, [
+  String fallback = '',
+]) {
+  return tags[tag] != null ? tags[tag]!.join('\n') : fallback;
 }

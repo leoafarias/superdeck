@@ -81,18 +81,15 @@ class ChatController extends _$ChatController {
   Future<void> _load() async {
     await Future.delayed(const Duration(milliseconds: 100));
     const welcomeMessage = AssistantMessage(
-      content: 'Hi, I am your Flutter coding assistant. How can I help you?',
+      content: 'Let me know how you would like to improve the content',
     );
 
     _addMessage(welcomeMessage);
   }
 
   void _addMessage(ChatMessage message) {
-    state = ChatState(
+    state = state.copyWith(
       chatMessages: [...state.chatMessages, message],
-      waitingResponse: state.waitingResponse,
-      context: state.context,
-      examples: state.examples,
     );
   }
 
@@ -100,20 +97,14 @@ class ChatController extends _$ChatController {
     final updatedMessages = List<ChatMessage>.from(state.chatMessages)
       ..removeLast()
       ..add(message);
-    state = ChatState(
+    state = state.copyWith(
       chatMessages: updatedMessages,
-      waitingResponse: state.waitingResponse,
-      context: state.context,
-      examples: state.examples,
     );
   }
 
   void _waitingResponse(bool value) {
-    state = ChatState(
-      chatMessages: state.chatMessages,
+    state = state.copyWith(
       waitingResponse: value,
-      context: state.context,
-      examples: state.examples,
     );
   }
 
@@ -128,7 +119,9 @@ class ChatController extends _$ChatController {
       status: ResponseStatus.waitingResponse,
     );
 
-    _addMessage(assistantMessage);
+    state = state.copyWith(
+      chatMessages: [...state.chatMessages, assistantMessage],
+    );
 
     try {
       final textResponse = await _text.generateText(

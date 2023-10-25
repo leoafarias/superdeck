@@ -13,15 +13,8 @@ class ChatScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 40,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        titleTextStyle: Theme.of(context).textTheme.titleSmall,
-        centerTitle: false,
-        title: const Text('Assistant'),
-      ),
-      body: const Column(
+    return const Scaffold(
+      body: Column(
         // mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(

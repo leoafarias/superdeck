@@ -1,6 +1,21 @@
-import 'package:dash_deck_cli/src/builders/slides_parser.dart';
-import 'package:dash_deck_cli/src/constants.dart';
+import 'package:dash_deck_cli/dash_deck_cli.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
+
+Future<void> createPresentation(String topic) async {
+  final slidesMarkdown = kDashDeckDirectory.markdownFile;
+
+  final presentation = await PromptsService.createPresentation(topic);
+
+  if (!slidesMarkdown.existsSync()) {
+    slidesMarkdown.createSync(recursive: true);
+  }
+
+  // final parsedPresentation = SlidesParser(presentation).parse();
+
+  // final presentationString = DashDeckData(slides: parsedPresentation).toJson();
+
+  slidesMarkdown.writeAsStringSync(presentation);
+}
 
 Future<List<Slide>> slidesMarkdownLoader() async {
   final slidesMarkdown = kDashDeckDirectory.markdownFile;

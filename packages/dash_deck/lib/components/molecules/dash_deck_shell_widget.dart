@@ -41,13 +41,17 @@ class DashDeck {
     await DDSyntaxHighlight.initialize();
   }
 
+  static Widget runAppWithoutScope() {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      darkTheme: darkTheme,
+      home: const DashDeckListenerApp(),
+    );
+  }
+
   static Widget runApp() {
     return ProviderScope(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        darkTheme: darkTheme,
-        home: const DashDeckListenerApp(),
-      ),
+      child: runAppWithoutScope(),
     );
   }
 }
@@ -97,11 +101,12 @@ class DashDeckShell extends HookConsumerWidget {
 
     void handleStepSlide(int slide) {
       final currentPage = controller.page?.round() ?? 0;
-      final stepToPage = currentPage + slide;
+      int stepToPage = currentPage + slide;
+
       if (stepToPage >= 0 && stepToPage < data.slides.length) {
         handleGoToSlide(stepToPage);
       } else if (stepToPage == -1) {
-        handleGoToSlide(data.slides.length);
+        handleGoToSlide(data.slides.length - 1);
       } else {
         handleGoToSlide(0);
       }

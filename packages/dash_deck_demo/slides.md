@@ -1,89 +1,109 @@
---- 
+---
 id: slide-1
-layout: cover 
-background: 'https://source.unsplash.com/random/900×700/?water' 
-contentAlignment: center 
---- 
-# How to Drink More Water Fast: 
-## Tips and Tricks to Stay Hydrated 
- 
---- 
+background: 'https://source.unsplash.com/random/900×700/?runner'
+contentAlignment: center
+---
+# Couch to 5k
+## How to Prepare, Train, and Run Your First 5K Race
+
+---
 id: slide-2
-layout: image 
-image: 'https://source.unsplash.com/random/900×700/?water-bottle' 
-imagePosition: left 
-contentAlignment: centerLeft 
---- 
-## Start Small 
- 
-The easiest way to drink more water is to start by taking small sips throughout the day. This will help you gradually increase your water intake without feeling overwhelmed. 
- 
---- 
+layout: twoColumn
+---
+## Myths
+- "I'm not a runner"
+- "5k is too much for beginners"
+- "I don't have time"
+
+::right::
+
+## Debunked
+- Everyone can run, it's all about building up gradually.
+- With the right training, a beginner can prepare for 5k in 8-10 weeks.
+- It only requires 30 minutes of training, three times a week.
+
+---
 id: slide-3
-layout: image 
-image: 'https://source.unsplash.com/random/900×700/?fitness,water' 
-imagePosition: right 
-contentAlignment: centerRight 
---- 
-## Keep a Water Bottle Handy 
- 
-Keeping a water bottle with you at all times will help you remember to drink more water. Try to refill your bottle throughout the day, and make sure to drink it all. 
- 
---- 
+layout: image
+imageFit: contain
+image: 'https://source.unsplash.com/random/900×700/?inspiration,runner'
+imagePosition: right
+---
+## The Vision
+Understanding the 5k goal:
+- Improving cardiovascular health
+- Enhancing mental well-being
+- Boosting overall fitness
+
+Transforming from sedentary to active
+
+---
 id: slide-4
-layout: cover 
-background: 'https://source.unsplash.com/random/900×700/?water-fruit' 
-contentAlignment: center 
---- 
-## Add Flavor to Your Water 
- 
-If you find plain water boring, try adding flavor to it. You can add slices of fruit, cucumber, or mint to your water to make it more refreshing. You can also try using flavored seltzer or sparkling water. 
- 
---- 
+layout: twoColumn
+---
+## First Steps Training Plan
+| Week  | Activity             | Time   | Intervals            |
+|-------|----------------------|--------|----------------------|
+| 1     | Walk                 | 30 min | -                    |
+| 2     | Walk &amp; Run           | 30 min | 1 min run, 4 min walk |
+| 3     | Walk &amp; Run           | 30 min | 2 min run, 3 min walk |
+| 4     | Walk &amp; Run           | 30 min | 3 min run, 2 min walk |
+| 5     | Walk &amp; Run           | 30 min | 4 min run, 1 min walk |
+| 6     | Run                  | 30 min | -                    |
+
+::right::
+
+- **Start**: With walking
+- **Introduce Short Run Intervals**: Gradually increase running time
+- **Gradual Progression**: Each week, increase running and decrease walking time
+
+---
 id: slide-5
-layout: image 
-image: 'https://source.unsplash.com/random/900×700/?workout' 
-imagePosition: left 
-contentAlignment: centerLeft 
---- 
-## Drink Water Before, During, and After Exercise 
- 
-It's important to stay hydrated when you're working out. Drink water before, during, and after your workout to help you perform your best. 
- 
---- 
+layout: image
+imageFit: contain
+image: 'https://source.unsplash.com/random/900×700/?exercise,journal'
+imagePosition: right
+---
+## Tracking Progress
+- Importance of recording milestones
+- Using apps: Recommend Couch to 5k (by BBC) or Nike Run Club
+- Celebrating small victories: Each step forward is progress 
+
+---
 id: slide-6
-layout: image 
-image: 'https://source.unsplash.com/random/900×700/?water-sign' 
-imagePosition: right 
-contentAlignment: centerRight 
---- 
-## Set Water Reminders 
- 
-If you're forgetful, set water reminders on your phone or watch to help you remember to drink more water. You can also use a water tracking app to track your water intake and stay on track. 
- 
---- 
+layout: image
+imageFit: contain
+image: 'https://source.unsplash.com/random/900×700/?obstacle,runner'
+imagePosition: left
+---
+## Overcoming Challenges
+- Mental barriers: Set small, achievable goals
+- Physical obstacles: Regular stretching to prevent injuries
+- Consistency is key: Make running a habit
+
+---
 id: slide-7
-layout: cover
-background: 'https://source.unsplash.com/random/900×700/?health' 
-contentAlignment: center 
---- 
-## Drink More Water for Better Health 
- 
-Drinking more water has many benefits for your health, including: 
- 
-* **Improved hydration**. Drinking enough water helps to keep you hydrated, which is essential for your overall health. 
-* **Better sleep**. Drinking water before bed can help you fall asleep faster and improve the quality of your sleep. 
-* **Increased energy**. Drinking water can help to boost your energy levels, especially if you're feeling dehydrated. 
-* **Skin health**. Drinking water can help to improve your skin's appearance and reduce the appearance of wrinkles. 
-* **Weight loss**. Drinking water can help to boost your metabolism and promote weight loss. 
- 
-So if you're looking for a simple way to improve your health, drink more water! 
- 
---- 
+background: 'https://source.unsplash.com/random/900×700/?finish,runner'
+contentAlignment: center
+---
+# 'The finish line is just the beginning of a whole new race.'
+
+---
 id: slide-8
-layout: cover 
-background: 'https://source.unsplash.com/random/900×700/?water-health' 
-contentAlignment: center 
---- 
-# Conclusion 
-Drinking enough water is essential for your health. By following these tips, you can easily increase your water intake and stay hydrated. 
+layout: image
+imageFit: contain
+image: 'https://source.unsplash.com/random/900×700/?runner,race'
+imagePosition: right
+---
+## Preparing for Race Day
+- Picking the right event: Start with a fun run or a charity 5k
+- What to expect: Pre-race jitters are normal
+- Strategies: Start slow, keep a steady pace, and sprint in the last bit
+
+---
+id: slide-9
+background: 'https://source.unsplash.com/random/900×700/?celebration'
+contentAlignment: center
+---
+# Celebrating Your Couch to 5k Achievement
+Putting on your running shoes was the first step. Making it to this slide was another. Here's to many steps forward in your running journey!

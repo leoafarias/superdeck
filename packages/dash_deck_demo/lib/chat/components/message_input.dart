@@ -3,6 +3,7 @@ import 'package:dash_deck/dash_deck.dart';
 import 'package:dash_deck_demo/chat/components/horizontal_pill_list.dart';
 import 'package:dash_deck_demo/chat/components/typing_indicator.dart';
 import 'package:dash_deck_demo/chat/controllers/chat_controller.dart';
+import 'package:dash_deck_demo/chat/prompts/slide_presentation_improver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -17,35 +18,29 @@ class MessageInput extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final TextEditingController textController = useTextEditingController();
 
-    final showPrompts = useState(false);
+    final createPresentation = useState(false);
+    final currentSlide = ref.watch(currentSlideProvider);
 
     final waitingResponse = ref.watch(waitingResponseProvider);
 
-    final controller = ref.watch(chatControllerProvider.notifier);
     final handleSubmit = useCallback(() async {
       final message = textController.text;
 
       if (message.isEmpty) {
         return;
       }
-
-      controller.sendMessage(message);
-
       textController.clear();
-    });
 
-    final updateSlideContent = useCallback(() async {
-      final currentSlide = ref.read(currentSlideProvider);
       final response =
           await ref.read(chatControllerProvider.notifier).sendPrompt(
-                name: 'Updating Content',
-                content:
-                    'Change the tone of this content: \n ${currentSlide?.content}',
+                name: message,
+                content: improveContent(currentSlide?.content ?? '', message),
               );
+
       ref
           .read(deckControllerProvider.notifier)
           .updateSlideContent(currentSlide!, response);
-    });
+    }, [currentSlide, createPresentation.value]);
 
     final focusNode = useFocusNode(
       onKey: (
@@ -106,20 +101,14 @@ class MessageInput extends HookConsumerWidget {
 
     return Column(
       children: [
-        showPrompts.value
+        createPresentation.value
             ? HorizontalPillList(
                 items: const [
-                    'Firsrt',
-                    'Second',
-                    'Firsrt',
-                    'Second',
-                    'Firsrt',
-                    'Second',
-                    'Firsrt',
-                    'Second'
+                    'Punchier',
+                    'Super Punchier',
                   ],
                 onSelectedPill: (value) {
-                  updateSlideContent();
+                  // updateSlideContent();
                 })
             : const SizedBox(),
         Padding(
@@ -149,10 +138,10 @@ class MessageInput extends HookConsumerWidget {
                 message: 'About the deck',
                 child: IconButton(
                   icon: const Icon(Icons.slideshow),
-                  color: showPrompts.value ? Colors.blue : Colors.grey,
+                  color: createPresentation.value ? Colors.blue : Colors.grey,
                   iconSize: 18,
                   onPressed: () {
-                    showPrompts.value = !showPrompts.value;
+                    createPresentation.value = !createPresentation.value;
                   },
                 ),
               ),

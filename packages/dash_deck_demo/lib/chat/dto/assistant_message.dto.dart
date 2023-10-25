@@ -7,6 +7,7 @@ part 'assistant_message.dto.mapper.dart';
 
 @MappableEnum()
 enum ResponseStatus {
+  none,
   waitingResponse,
   done,
 }
@@ -21,7 +22,7 @@ class AssistantMessage extends ChatMessage with AssistantMessageMappable {
     super.hidden,
     this.response,
     ResponseStatus? status,
-  })  : _status = status ?? ResponseStatus.done,
+  })  : _status = status ?? ResponseStatus.none,
         super(role: MessageRole.assistant);
 
   ResponseStatus get status => _status;

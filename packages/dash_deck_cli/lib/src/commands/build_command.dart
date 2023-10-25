@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:dash_deck_cli/src/builders/slide_data_loader.dart';
-import 'package:dash_deck_cli/src/builders/store_deck_data.dart';
-import 'package:dash_deck_cli/src/constants.dart';
+import 'package:dash_deck_cli/dash_deck_cli.dart';
 import 'package:dash_deck_core/dash_deck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
@@ -46,6 +44,10 @@ class BuildCommand extends Command<int> {
   Future<int> run() async {
     final watch = argResults?['watch'] as bool;
     final topic = argResults?['topic'] as String?;
+
+    if (topic != null) {
+      await createPresentation(topic);
+    }
 
     kDashDeckDirectory.rootDir = Directory(
       join(

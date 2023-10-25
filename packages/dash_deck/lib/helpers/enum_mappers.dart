@@ -44,21 +44,23 @@ CrossAxisAlignment _crossAxisFromContentAlignment(ContentAlignment alignment) {
   return CrossAxisAlignment.center;
 }
 
-BoxFit mapImageToBoxFit(ImageFit fit) {
-  switch (fit) {
-    case ImageFit.cover:
-      return BoxFit.cover;
-    case ImageFit.contain:
-      return BoxFit.contain;
-    case ImageFit.fill:
-      return BoxFit.fill;
-    case ImageFit.fitHeight:
-      return BoxFit.fitHeight;
-    case ImageFit.fitWidth:
-      return BoxFit.fitWidth;
-    case ImageFit.none:
-      return BoxFit.none;
-    case ImageFit.scaleDown:
-      return BoxFit.scaleDown;
+extension ImageFitExt on ImageFit {
+  BoxFit get boxFit {
+    switch (this) {
+      case ImageFit.cover:
+        return BoxFit.cover;
+      case ImageFit.contain:
+        return BoxFit.contain;
+      case ImageFit.fill:
+        return BoxFit.fill;
+      case ImageFit.fitHeight:
+        return BoxFit.fitHeight;
+      case ImageFit.fitWidth:
+        return BoxFit.fitWidth;
+      case ImageFit.none:
+        return BoxFit.none;
+      case ImageFit.scaleDown:
+        return BoxFit.scaleDown;
+    }
   }
 }

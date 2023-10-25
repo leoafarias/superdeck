@@ -14,12 +14,8 @@ class SlideView extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget slideWidget;
 
-    if (slide is CoverSlide) {
-      slideWidget = CoverSlideWidget(slide as CoverSlide);
-    } else if (slide is ImageSlide) {
+    if (slide is ImageSlide) {
       slideWidget = ImageSlideWidget(slide as ImageSlide);
-    } else if (slide is FullSlide) {
-      slideWidget = FullSlideWidget(slide as FullSlide);
     } else if (slide is TwoColumnSlide) {
       slideWidget = TwoColumnSlideWidget(slide as TwoColumnSlide);
     } else if (slide is TwoColumnHeaderSlide) {
