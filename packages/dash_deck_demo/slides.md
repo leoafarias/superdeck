@@ -3,31 +3,15 @@ id: slide-1
 background: 'https://source.unsplash.com/random/900×700/?runner'
 contentAlignment: center
 ---
-# Couch to 5k
-## How to Prepare, Train, and Run Your First 5K Race
+# Run Your First 5K
+A step-by-step guide to running your first 5k race.
 
 ---
 id: slide-2
-layout: twoColumn
----
-## Myths
-- "I'm not a runner"
-- "5k is too much for beginners"
-- "I don't have time"
-
-::right::
-
-## Debunked
-- Everyone can run, it's all about building up gradually.
-- With the right training, a beginner can prepare for 5k in 8-10 weeks.
-- It only requires 30 minutes of training, three times a week.
-
----
-id: slide-3
 layout: image
 imageFit: contain
-image: 'https://source.unsplash.com/random/900×700/?inspiration,runner'
-imagePosition: right
+image: 'https://source.unsplash.com/random/900×700/?runner,finish'
+imagePosition: left
 ---
 ## The Vision
 Understanding the 5k goal:
@@ -38,7 +22,30 @@ Understanding the 5k goal:
 Transforming from sedentary to active
 
 ---
+id: slide-3
+layout: twoColumn
+---
+# Myths
+- "I'm not a runner"
+- "5k is too much for beginners"
+- "I don't have time"
+
+::right::
+
+# Debunked
+- Everyone can run, it's all about building up gradually.
+- With the right training, a beginner can prepare for 5k in 8-10 weeks.
+- It only requires 30 minutes of training, three times a week.
+
+---
 id: slide-4
+background: 'https://source.unsplash.com/random/900×700/?journey'
+contentAlignment: center
+---
+# Every journey begins with a single step. - Lao Tzu
+
+---
+id: slide-5
 layout: twoColumn
 ---
 ## First Steps Training Plan
@@ -58,7 +65,7 @@ layout: twoColumn
 - **Gradual Progression**: Each week, increase running and decrease walking time
 
 ---
-id: slide-5
+id: slide-6
 layout: image
 imageFit: contain
 image: 'https://source.unsplash.com/random/900×700/?exercise,journal'
@@ -70,7 +77,7 @@ imagePosition: right
 - Celebrating small victories: Each step forward is progress 
 
 ---
-id: slide-6
+id: slide-7
 layout: image
 imageFit: contain
 image: 'https://source.unsplash.com/random/900×700/?obstacle,runner'
@@ -82,14 +89,14 @@ imagePosition: left
 - Consistency is key: Make running a habit
 
 ---
-id: slide-7
+id: slide-8
 background: 'https://source.unsplash.com/random/900×700/?finish,runner'
 contentAlignment: center
 ---
 # 'The finish line is just the beginning of a whole new race.'
 
 ---
-id: slide-8
+id: slide-9
 layout: image
 imageFit: contain
 image: 'https://source.unsplash.com/random/900×700/?runner,race'
@@ -101,7 +108,7 @@ imagePosition: right
 - Strategies: Start slow, keep a steady pace, and sprint in the last bit
 
 ---
-id: slide-9
+id: slide-10
 background: 'https://source.unsplash.com/random/900×700/?celebration'
 contentAlignment: center
 ---

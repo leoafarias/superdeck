@@ -182,24 +182,6 @@ contentAlignment: center
 
 ---
 id: slide-9
-layout: image
-imageFit: contain
-image: 'https://source.unsplash.com/random/900×700/?runner,race'
-imagePosition: right
----
-## Preparing for Race Day
-- Picking the right event: Start with a fun run or a charity 5k
-- What to expect: Pre-race jitters are normal
-- Strategies: Start slow, keep a steady pace, and sprint in the last bit
-
----
-id: slide-10
-background: 'https://source.unsplash.com/random/900×700/?celebration'
-contentAlignment: center
----
-# Celebrating Your Couch to 5k Achievement
-Putting on your running shoes was the first step. Making it to this slide was another. Here's to many steps forward in your running journey!
-
 
 input: Improve your sleep
 output: ---
