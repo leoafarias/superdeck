@@ -1,116 +1,81 @@
 ---
 id: slide-1
-background: 'https://source.unsplash.com/random/900×700/?runner'
+background: 'https://source.unsplash.com/random/900×700/?computer,code'
 contentAlignment: center
 ---
-# Run Your First 5K
-A step-by-step guide to running your first 5k race.
+# How to Become a Better Developer
 
 ---
 id: slide-2
-layout: image
-imageFit: contain
-image: 'https://source.unsplash.com/random/900×700/?runner,finish'
-imagePosition: left
+layout: twoColumn
+contentAlignment: centerLeft
 ---
-## The Vision
-Understanding the 5k goal:
-- Improving cardiovascular health
-- Enhancing mental well-being
-- Boosting overall fitness
+## Be curious and always learning
+- Read articles, blog posts, and books about software development.
+- Follow developers on social media and learn from their experiences.
+- Attend conferences and meetups to stay up-to-date on the latest trends.
 
-Transforming from sedentary to active
+::right::
+
+## Practice, practice, practice
+- Write code every day, even if it's just for a few minutes.
+- Solve coding challenges and participate in hackathons.
+- Build and ship projects to gain real-world experience.
 
 ---
 id: slide-3
 layout: twoColumn
+contentAlignment: centerLeft
 ---
-# Myths
-- "I'm not a runner"
-- "5k is too much for beginners"
-- "I don't have time"
+## Get feedback on your work
+- Share your code with mentors, colleagues, and friends.
+- Ask for constructive criticism and take it to heart.
+- Use online code review tools to get feedback from the community.
 
 ::right::
 
-# Debunked
-- Everyone can run, it's all about building up gradually.
-- With the right training, a beginner can prepare for 5k in 8-10 weeks.
-- It only requires 30 minutes of training, three times a week.
+## Build a network of developers
+- Connect with other developers on social media and attend meetups.
+- Join online forums and chat groups to discuss technical topics.
+- Mentor other developers and give back to the community.
 
 ---
 id: slide-4
-background: 'https://source.unsplash.com/random/900×700/?journey'
-contentAlignment: center
+layout: twoColumn
+contentAlignment: centerLeft
 ---
-# Every journey begins with a single step. - Lao Tzu
+## Stay up-to-date on the latest technologies
+- Read tech blogs and articles to learn about new technologies.
+- Attend conferences and workshops to learn from experts.
+- Follow developers on social media to stay up-to-date on the latest trends.
+
+::right::
+
+## Take on challenging projects
+- Take on projects that are outside of your comfort zone.
+- Stretch your skills and learn new things.
+- Build projects that you're passionate about.
 
 ---
 id: slide-5
 layout: twoColumn
+contentAlignment: centerLeft
 ---
-## First Steps Training Plan
-| Week  | Activity             | Time   | Intervals            |
-|-------|----------------------|--------|----------------------|
-| 1     | Walk                 | 30 min | -                    |
-| 2     | Walk &amp; Run           | 30 min | 1 min run, 4 min walk |
-| 3     | Walk &amp; Run           | 30 min | 2 min run, 3 min walk |
-| 4     | Walk &amp; Run           | 30 min | 3 min run, 2 min walk |
-| 5     | Walk &amp; Run           | 30 min | 4 min run, 1 min walk |
-| 6     | Run                  | 30 min | -                    |
+## Build a portfolio of your work
+- Share your work on GitHub and other online platforms.
+- Create a website or blog to showcase your work.
+- Include your work in your resume and LinkedIn profile.
 
 ::right::
 
-- **Start**: With walking
-- **Introduce Short Run Intervals**: Gradually increase running time
-- **Gradual Progression**: Each week, increase running and decrease walking time
+## Be patient and persistent
+- It takes time to become a good developer.
+- Don't get discouraged if you make mistakes.
+- Keep learning and practicing and you will eventually reach your goals.
 
 ---
 id: slide-6
-layout: image
-imageFit: contain
-image: 'https://source.unsplash.com/random/900×700/?exercise,journal'
-imagePosition: right
----
-## Tracking Progress
-- Importance of recording milestones
-- Using apps: Recommend Couch to 5k (by BBC) or Nike Run Club
-- Celebrating small victories: Each step forward is progress 
-
----
-id: slide-7
-layout: image
-imageFit: contain
-image: 'https://source.unsplash.com/random/900×700/?obstacle,runner'
-imagePosition: left
----
-## Overcoming Challenges
-- Mental barriers: Set small, achievable goals
-- Physical obstacles: Regular stretching to prevent injuries
-- Consistency is key: Make running a habit
-
----
-id: slide-8
-background: 'https://source.unsplash.com/random/900×700/?finish,runner'
+background: 'https://source.unsplash.com/random/900×700/?code,success'
 contentAlignment: center
 ---
-# 'The finish line is just the beginning of a whole new race.'
-
----
-id: slide-9
-layout: image
-imageFit: contain
-image: 'https://source.unsplash.com/random/900×700/?runner,race'
-imagePosition: right
----
-## Preparing for Race Day
-- Picking the right event: Start with a fun run or a charity 5k
-- What to expect: Pre-race jitters are normal
-- Strategies: Start slow, keep a steady pace, and sprint in the last bit
-
----
-id: slide-10
-background: 'https://source.unsplash.com/random/900×700/?celebration'
-contentAlignment: center
----
-# Celebrating Your Couch to 5k Achievement
-Putting on your running shoes was the first step. Making it to this slide was another. Here's to many steps forward in your running journey!
+# Becoming a better developer takes time, effort, and dedication. But if you're passionate about software development, it's an incredibly rewarding journey.
