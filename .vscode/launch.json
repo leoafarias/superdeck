@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "dash_deck",
+      "name": "superdeck",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "dash_deck (profile mode)",
+      "name": "superdeck (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "dash_deck (release mode)",
+      "name": "superdeck (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

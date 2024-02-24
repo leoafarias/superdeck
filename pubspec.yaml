@@ -1,4 +1,4 @@
-name: dash_deck_workspace
+name: superdeck_workspace
 
 environment:
   sdk: ">=2.19.0 <4.0.0"

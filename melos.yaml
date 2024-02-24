@@ -1,7 +1,6 @@
-name: DashDeck
+name: superdeck
 
 packages:
-  - .
   - packages/*
 
 sdkPath: .fvm/flutter_sdk

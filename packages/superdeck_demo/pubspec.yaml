@@ -1,0 +1,40 @@
+name: superdeck_demo
+description: A new Flutter project.
+
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  superdeck: ^0.0.1
+  hooks_riverpod: ^2.4.4
+  flutter_hooks: ^0.20.3
+  riverpod_annotation: ^2.2.1
+  dart_mappable: ^4.0.1
+  localstorage: ^4.0.1+4
+  envied: ^0.3.0+3
+  palm_api:
+    path: ../../../palm_api_dart
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_version: ^2.1.1
+  flutter_lints: ^2.0.3
+  superdeck_cli: ^0.0.1
+  build_runner: ^2.4.6
+  dart_mappable_builder: ^4.0.0
+  
+  envied_generator: 0.3.0+3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/superdeck/
+    - assets/superdeck/images/

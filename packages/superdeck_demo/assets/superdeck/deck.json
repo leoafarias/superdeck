@@ -1,0 +1,75 @@
+{
+  "slides": [
+    {
+      "id": "slide-1",
+      "layout": "basic",
+      "contentAlignment": "bottomLeft",
+      "background": "https://source.unsplash.com/random/900×700/?runner",
+      "content": "# How to Run a 5K\nA comprehensive guide to help you train for and complete your first 5K race."
+    },
+    {
+      "id": "slide-2",
+      "layout": "basic",
+      "contentAlignment": "centerLeft",
+      "background": "https://source.unsplash.com/random/900×700/?running,start",
+      "content": "## Setting Your Goals\n- What is your motivation for running a 5K?\n- What is your current fitness level?\n- What is your ideal finish time?"
+    },
+    {
+      "content": "## Training Plan\n\nA typical 5K training plan will include:\n\n::right::\n\n### Weekly Training Schedule\n| Day | Activity |\n| --- | -------- |\n| Day 1 | Interval Training |\n| Day 2 | Rest or Cross-Train |\n| Day 3 | Tempo Run |\n| Day 4 | Easy Run |\n| Day 5 | Rest Day |\n| Day 6 | Long Run |\n| Day 7 | Recovery Run |",
+      "layout": "twoColumn",
+      "id": "slide-3",
+      "__type": "TwoColumnSlide"
+    },
+    {
+      "imageFit": "cover",
+      "image": "https://source.unsplash.com/random/900×700/?water,hydration",
+      "imagePosition": "right",
+      "background": null,
+      "content": "# Importance of Hydration\nProper hydration is crucial for safe and effective training.",
+      "layout": "image",
+      "id": "slide-4",
+      "__type": "ImageSlide"
+    },
+    {
+      "id": "slide-5",
+      "layout": "basic",
+      "contentAlignment": "bottomLeft",
+      "background": "https://source.unsplash.com/random/900×700/?food,healthy",
+      "content": "# Nutrition for Runners\nLearn how to fuel your body for endurance and recovery."
+    },
+    {
+      "id": "slide-6",
+      "layout": "basic",
+      "contentAlignment": "centerLeft",
+      "background": "https://source.unsplash.com/random/900×700/?running shoes",
+      "content": "# Choosing the Right Gear\n- The importance of proper footwear\n- Comfortable clothing for different weathers\n- Essential accessories"
+    },
+    {
+      "id": "slide-7",
+      "layout": "basic",
+      "contentAlignment": "bottomCenter",
+      "background": "https://source.unsplash.com/random/900×700/?inspiration",
+      "content": "# \"The miracle isn't that I finished. The miracle is that I had the courage to start.\"  \n- John Bingham"
+    },
+    {
+      "content": "## Common Challenges & Solutions\n::left::\n### Overcoming Mental Barriers\n- Setting realistic expectations\n- Positive self-talk\n- Visualizing success\n\n::right::\n### Physical Challenges\n- Pre-run warm-up\n- Post-run cool down\n- Listening to your body's signals",
+      "layout": "twoColumn",
+      "id": "slide-8",
+      "__type": "TwoColumnSlide"
+    },
+    {
+      "id": "slide-9",
+      "layout": "basic",
+      "contentAlignment": "center",
+      "background": "https://source.unsplash.com/random/900×700/?run,competition",
+      "content": "# Race Day Preparation\nTips and strategies for a successful and enjoyable race day."
+    },
+    {
+      "id": "slide-10",
+      "layout": "basic",
+      "contentAlignment": "center",
+      "background": "https://source.unsplash.com/random/900×700/?celebrate",
+      "content": "# You're Ready! Celebrate Your Training Journey\nAs you approach your first 5K, remember how far you've come and look forward to the finish line."
+    }
+  ]
+}
