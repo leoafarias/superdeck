@@ -1,4 +1,4 @@
-import 'package:superdeck/helpers/scale.dart';
+import '../../helpers/scale.dart';
 import 'package:flutter/material.dart';
 
 class CodePreview extends StatelessWidget {

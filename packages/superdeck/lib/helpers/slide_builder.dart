@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:superdeck/components/atoms/markdown_viewer.dart';
-import 'package:superdeck/helpers/enum_mappers.dart';
+import '../components/atoms/markdown_viewer.dart';
+import 'enum_mappers.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:flutter/material.dart';
 

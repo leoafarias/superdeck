@@ -1,5 +1,5 @@
-import 'package:superdeck_cli/src/builders/mermaid_builder.dart';
-import 'package:superdeck_cli/src/constants.dart';
+import 'mermaid_builder.dart';
+import '../constants.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 Future<void> storeDeckData(DashDeckData deck) async {

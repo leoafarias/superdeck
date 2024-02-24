@@ -1,5 +1,5 @@
-import 'package:superdeck_cli/src/builders/presentation_creator_prompt.dart';
-import 'package:superdeck_cli/src/helper/palm_service.dart';
+import '../../builders/presentation_creator_prompt.dart';
+import '../palm_service.dart';
 import 'package:palm_api/palm_api.dart';
 
 class PromptsService {

@@ -3,8 +3,8 @@ import 'package:args/command_runner.dart';
 import 'package:cli_completion/cli_completion.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:pub_updater/pub_updater.dart';
-import 'package:superdeck_cli/src/commands/commands.dart';
-import 'package:superdeck_cli/src/version.dart';
+import 'commands/commands.dart';
+import 'version.dart';
 
 const executableName = 'superdeck';
 const packageName = 'superdeck_cli';

@@ -1,4 +1,4 @@
-import 'package:superdeck_cli/superdeck_cli.dart';
+import '../../superdeck_cli.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 Future<void> createPresentation(String topic) async {

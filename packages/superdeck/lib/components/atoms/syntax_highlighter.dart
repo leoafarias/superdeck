@@ -1,5 +1,5 @@
-import 'package:superdeck/helpers/scale.dart';
-import 'package:superdeck/helpers/syntax_highlighter.dart';
+import '../../helpers/scale.dart';
+import '../../helpers/syntax_highlighter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';

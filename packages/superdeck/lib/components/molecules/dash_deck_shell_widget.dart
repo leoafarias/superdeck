@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:superdeck/components/atoms/slide_wrapper.dart';
-import 'package:superdeck/components/molecules/slide_view.dart';
-import 'package:superdeck/helpers/local_storage.dart';
-import 'package:superdeck/helpers/syntax_highlighter.dart';
-import 'package:superdeck/providers/superdeck_provider.dart';
-import 'package:superdeck/theme.dart';
+import '../atoms/slide_wrapper.dart';
+import 'slide_view.dart';
+import '../../helpers/local_storage.dart';
+import '../../helpers/syntax_highlighter.dart';
+import '../../providers/superdeck_provider.dart';
+import '../../theme.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:window_manager/window_manager.dart';
 

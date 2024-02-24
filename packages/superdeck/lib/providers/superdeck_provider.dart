@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:superdeck_core/superdeck_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 import 'package:watcher/watcher.dart';
 
-part 'dash_deck.provider.g.dart';
+part 'superdeck_provider.g.dart';
 
 final _deckJsonFile = File(p.join('assets', 'dash_deck', 'deck.json'));
 

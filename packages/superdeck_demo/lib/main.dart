@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:superdeck/components/atoms/slide_wrapper.dart';
 import 'package:superdeck/superdeck.dart';
-import 'package:superdeck_demo/chat/chat.screen.dart';
 
 void main() async {
   await DashDeck.initialize();
@@ -32,34 +31,10 @@ class App extends HookWidget {
   Widget build(BuildContext context) {
     final isDrawerOpen = useState<bool>(false);
 
-    final width = MediaQuery.of(context).size.width;
-
-    final bodyWidth = isDrawerOpen.value ? width * 0.75 : width;
-
-    final chatWidth = width * 0.25;
-    const duration = Duration(milliseconds: 300);
-
     return Scaffold(
       key: scaffoldKey,
       body: SlideWrapper(
-        child: Stack(
-          children: [
-            AnimatedContainer(
-              duration: duration,
-              width: bodyWidth,
-              child: DashDeck.runAppWithoutScope(),
-            ),
-            AnimatedPositioned(
-              duration: duration,
-              curve: Curves.easeInOut,
-              right: isDrawerOpen.value ? 0 : -chatWidth,
-              top: 0,
-              bottom: 0,
-              width: chatWidth,
-              child: const ChatScreen(),
-            ),
-          ],
-        ),
+        child: DashDeck.runApp(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
       floatingActionButton: Padding(

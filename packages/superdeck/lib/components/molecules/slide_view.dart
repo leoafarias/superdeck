@@ -1,4 +1,4 @@
-import 'package:superdeck/helpers/slide_builder.dart';
+import '../../helpers/slide_builder.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:flutter/material.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:superdeck_cli/src/constants.dart';
+import '../constants.dart';
 
 Future<String> replaceMermaidContent(String content) async {
   final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
@@ -42,7 +42,7 @@ Future<void> _processMermaidSyntax(String mermaidSyntax) async {
 
   final imageSizeParams = '--scale 2'.split(' ');
   final params =
-      '-t dark -b transparent -i ${tempFilePath} -o ${outputFile.path} '
+      '-t dark -b transparent -i $tempFilePath -o ${outputFile.path} '
           .split(' ');
 
   final result = await Process.run('mmdc', [...params, ...imageSizeParams]);

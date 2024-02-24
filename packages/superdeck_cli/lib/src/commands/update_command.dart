@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:superdeck_cli/src/command_runner.dart';
-import 'package:superdeck_cli/src/version.dart';
+import '../command_runner.dart';
+import '../version.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:pub_updater/pub_updater.dart';
 

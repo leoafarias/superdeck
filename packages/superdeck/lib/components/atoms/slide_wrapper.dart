@@ -1,5 +1,5 @@
-import 'package:superdeck/helpers/constants.dart';
-import 'package:superdeck/helpers/scale.dart';
+import '../../helpers/constants.dart';
+import '../../helpers/scale.dart';
 import 'package:flutter/material.dart';
 
 class SlideWrapper extends StatelessWidget {

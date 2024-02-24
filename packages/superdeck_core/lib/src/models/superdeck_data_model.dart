@@ -1,5 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:superdeck_core/superdeck_core.dart';
+import '../../superdeck_core.dart';
 
 part 'superdeck_data_model.mapper.dart';
 

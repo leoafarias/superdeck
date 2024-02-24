@@ -1,5 +1,5 @@
-import 'package:superdeck_cli/env/env.dart';
-import 'package:superdeck_cli/src/helper/prompts/dto/prompt_data.dto.dart';
+import '../../env/env.dart';
+import 'prompts/dto/prompt_data.dto.dart';
 import 'package:palm_api/palm_api.dart';
 
 final palm = TextService(apiKey: Env.palmApiKey);

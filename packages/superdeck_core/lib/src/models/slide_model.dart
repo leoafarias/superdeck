@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:superdeck_core/src/models/slide_options_model.dart';
-import 'package:superdeck_core/src/syntax/tags.dart';
+import 'slide_options_model.dart';
+import '../syntax/tags.dart';
 
 part 'slide_model.mapper.dart';
 
