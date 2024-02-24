@@ -1,101 +1,170 @@
 const promptString =
-    '''As a revered curriculum designer, your mission encompasses crafting well-structured and cohesively flowing slide presentation outlines. The evaluative criteria for each slide include:
+    '''As a speaker, create a slide presentation for a specific topic.
 
-- Relevance: Each slide needs to directly pertain to the topic being discussed, ensuring pertinence and continuity.
-- Progression: Your slides should form a comprehensive and comprehensible narrative chain that progressively develops through the presentation.
-- Detailing: To add a layer of depth to your slides, be sure to provide potential sub-topics or bullet points formatted in Markdown. 
+## Presentation content 
 
-Remember, your ultimate goal is to create a slide deck that is optimized for instructive purposes and audience engagement. Utilizing the Markdown syntax and properly structuring your headings will create informational clarity. 
+- Presentation should have 9 slides total
+- Content should be relevant and engaging on the topic
 
-## Image Sourcing
+## Slide
 
-Use abstract or emotive keywords for image sourcing: `{background: https://source.unsplash.com/random/900×700/?KEYWORD,OTHERKEYWORD}`. For example, `inspiration`, `innovation`.
+### Properties 
 
-## Content
-- Content is standard markdown syntax. Because it's a slide, keep use of headings to a minimum to highlight hierarchy.
-- If needed use markdown tables to better represent data
-- Create mermaid syntax for flow charts, if you think it will help illustrate a slide.
-
-## Slide Types
-
-- **basic**: Basic layout (default)
-- **image**: Display an image beside the text.
-- **twoColumn**: Two equal columns.
-- **twoColumnHeader**: Two columns with a header.
-
- Properties on all slides:
 - '`id`: Id string of the slide
-- `layout`: Type of layout.
+- `layout`: Type of layout
+- `background`: Background image (optional) -  A string containing the URL for the Unsplash background image
+- `contentAlignment`: Alignment of the content (optional) -  Specifies the positioning of content. Options include topLeft, topCenter, topRight, centerLeft, center, centerRight, bottomLeft, bottomCenter, bottomRight.
 
 ### Layouts
 
-#### **basic**
-- `background`: Background image URL from unsplash.
-- `contentAlignment`: Content alignment. Options:  topLeft | topCenter | topRight | centerLeft | center | centerRight | bottomLeft | bottomCenter | bottomRight
+1. **basic**: This is the default layout, featuring a simple content display with options to customize the background image and content alignment. Additional properties include:
+  
+2. **image**: Intended for slides that feature an image alongside the text content, with controls for the image's fit and position. Additional properties include:
+    - `image`: A string containing the Unsplash URL for the image to be used.
+    - `imageFit`: Dictates how the image should be resized to fit its container. Options include "contain," "cover," "fill," "none," "scale-down."
+    - `imagePosition`: Determines the image's placement on the slide relative to the text. Options include "left" or "right."
 
-Usage:
-No need to define layout because its the default.
+3. **twoColumn**: Splits the slide into two equal columns for presenting different content types side-by-side. It doesn't have specific extra properties. Instead, it uses a text directive (`::right::`) to separate the content for the left and right columns.
 
-```markdown
----
-backgroud: 'https://source.unsplash.com/random/400×300/'
-contentAlignment: center
----
-## Image Slide
-<!-- Markdown content goes here -->
-```
+4. **twoColumnHeader**: Similar to "TwoColumn" layout, but it includes an additional option for a header spanning across both columns. No additional properties specified in the original prompt, but it likely follows the same directives for content separation as the "TwoColumn" layout.
 
- #### **image**
-- `imageUrl`: image url string from unsplash
-- `imageFit`: Image fit style. Options are: contain | cover | fill | none | scale-down
-- `imagePosition`: Image placement. Options: left | right
+## Image Sourcing
 
-Usage:
+You can use images for `background` and `image` properties. The images are sourced from Unsplash.
 
-```markdown
----
-layout: image
-imageFit: contain
-image: 'https://source.unsplash.com/random/400×300/?KEYWORD'
-imagePosition: left 
----
-## Image Slide
-<!-- Markdown content goes here -->
-```
+Use abstract or emotive keywords for image sourcing: 
+For example, use keywords like `inspiration`, `innovation`. As this is from Unsplash, it can become difficult to get images for very specific keywords, like "flutter", "Apple Watch" and so on. Therefore, keep the keywords more as a complement of emotion, or conceptual, unless for very common actions like "running". Also, when focusing more on coding or a specific technology, we should avoid imagery, unless you want to use abstract, decorative imagery.
+Try not to repeat keywords.
 
-#### **twoColumn**
-Separates the page content in two columns. Does support extra properties
+Url format: https://source.unsplash.com/random/900×700/?KEYWORD,OTHERKEYWORD
 
-Usage
-```markdown
----
-layout: twoColumn
----
 
-# Left
+Let's start:
 
-This shows on the left
-
-::right::
-
-# Right
-
-This shows on the right
-```
-
-input: Improve your sleep
-output: ---
+input: 5k for beginners
+output:---
 id: slide-1
-background: 'https://source.unsplash.com/random/900×700/?rest'
+background: https://source.unsplash.com/random/900×700/?start
 contentAlignment: bottomLeft
 ---
-# Improving your sleep:
-## A Comprehensive Guide
-In this presentation, we will cover various facets of sleep and dive into understanding its importance, the natural sleep cycle, and strategies to enhance your sleep quality.
+# Welcome to 5K Trainingf For Beginners
+Start your running journey with confidence and a clear plan.
 
 ---
 id: slide-2
-background: 'https://source.unsplash.com/random/900×700/?sleep-importance'
+background: https://source.unsplash.com/random/900×700/?running,practice
+contentAlignment: centerLeft
+---
+# Setting Your Goals
+- Understand your motivation
+- Define achievable milestones
+- Create a timeline for training
+
+---
+id: slide-3
+layout: twoColumn
+background: https://source.unsplash.com/random/900×700/?planner
+---
+## Training Basics
+
+Understand the fundamentals of a 5K training program.
+
+::right::
+
+### Weekly Training Breakdown
+| Day | Activity |
+| --- | -------- |
+| Day 1 | Interval Training |
+| Day 2 | Rest or Cross-Train |
+| Day 3 | Tempo Run |
+| Day 4 | Easy Run |
+| Day 5 | Rest Day |
+| Day 6 | Long Run |
+| Day 7 | Recovery Run |
+
+---
+id: slide-4
+layout: image
+imageFit: cover
+image: https://source.unsplash.com/random/900×700/?water,hydration
+imagePosition: right
+contentAlignment: centerRight
+---
+# Importance of Hydration
+Proper hydration is crucial for safe and effective training.
+
+---
+id: slide-5
+background: https://source.unsplash.com/random/900×700/?food,healthy
+contentAlignment: bottomLeft
+---
+# Nutrition for Runners
+Learn how to fuel your body for endurance and recovery.
+
+---
+id: slide-6
+background: https://source.unsplash.com/random/900×700/?running shoes
+contentAlignment: centerLeft
+---
+# Choosing the Right Gear
+- The importance of proper footwear
+- Comfortable clothing for different weathers
+- Essential accessories
+
+---
+id: slide-7
+background: https://source.unsplash.com/random/900×700/?inspiration
+contentAlignment: bottomCenter
+---
+# "The miracle isn't that I finished. The miracle is that I had the courage to start."  
+- John Bingham
+
+---
+id: slide-8
+layout: twoColumn
+background: https://source.unsplash.com/random/900×700/?challenge
+---
+## Common Challenges & Solutions
+::left::
+### Overcoming Mental Barriers
+- Setting realistic expectations
+- Positive self-talk
+- Visualizing success
+
+::right::
+### Physical Challenges
+- Pre-run warm-up
+- Post-run cool down
+- Listening to your body's signals
+
+---
+id: slide-9
+background: https://source.unsplash.com/random/900×700/?run,competition
+contentAlignment: center
+---
+# Race Day Preparation
+Tips and strategies for a successful and enjoyable race day.
+
+---
+id: slide-10
+background: https://source.unsplash.com/random/900×700/?celebrate
+contentAlignment: center
+---
+# You're Ready! Celebrate Your Training Journey
+As you approach your first 5K, remember how far you've come and look forward to the finish line.
+
+input: Improve your sleep
+output:---
+id: slide-1
+background: https://source.unsplash.com/random/900×700/?sleeping
+contentAlignment: bottomLeft
+---
+# Improving your sleep:
+Understanding the importance of sleep and how to improve sleep quality.
+
+---
+id: slide-2
+background: https://source.unsplash.com/random/900×700/?peaceful
 contentAlignment: centerLeft
 ---
 # Importance of Quality Sleep
@@ -106,7 +175,7 @@ contentAlignment: centerLeft
 ---
 id: slide-3
 layout: twoColumn
-background: 'https://source.unsplash.com/random/900×700/?sleep-cycle'
+background: https://source.unsplash.com/random/900×700/?night-sky
 ---
 ## Understanding Sleep Cycle
 
@@ -114,21 +183,20 @@ Understanding the natural cycle of sleep can significantly help in optimizing sl
 
 ::right::
 
-```mermaid
-graph TB
-A[Stage 1: Light Sleep] --&gt; B[Stage 2: Onset of Sleep]
-B --&gt; C[Stage 3: Deep, Restorative Sleep]
-C --&gt; D[REM: Brain Energy Replenishing]
-```
+### Stages of Sleep
+- Stage 1: Light sleep, muscle activity slows down, and occasional muscle twitching.
+- Stage 2: Breathing pattern and heart rate slows down.
+- Stage 3: Deep sleep, difficult to wake up, no eye movement or muscle activity.
 
 ---
 id: slide-4
 layout: twoColumn
+background: https://source.unsplash.com/random/900×700/?bedroom
 ---
 ::left::
 
 ### Physical Factors That Improve Sleep
-- Optimal sleep environment: Calm, quiet and dark room.
+- Optimal sleep environment: Calm, quiet, and dark room.
 - Comfortable bedroom temperature: Around 18-22°C (65-72°F).
 - Adequate ventilation.
 - Noise and light control.
@@ -137,18 +205,19 @@ layout: twoColumn
 
 ### Role of Diet
 
-| Food Type  | Aids Sleep | Avoid Before Sleep | Remarks                  |
-|------------|------------|--------------------|--------------------------|
-| Dairy      | Yes        | No                 | Rich in tryptophan       |
-| Caffeine   | No         | Yes                | Disrupts sleep cycle     |
-| Fatty Foods| No         | Yes                | Can cause discomfort     |
+A balanced diet can affect sleep quality. Here's how:
 
+| Food Type    | Aids Sleep | Avoid Before Sleep | Remarks                  |
+|--------------|------------|--------------------|--------------------------|
+| Dairy        | Yes        | No                 | Contains tryptophan      |
+| Caffeine     | No         | Yes                | Stimulant                |
+| Fatty Foods  | No         | Yes                | Heavy to digest          |
 
 ---
 id: slide-5
 layout: image
 imageFit: cover
-image: 'https://source.unsplash.com/random/400×300/?exercise'
+image: https://source.unsplash.com/random/900×700/?workout
 imagePosition: right
 contentAlignment: centerRight
 ---
@@ -157,7 +226,7 @@ Regular physical exercise can significantly improve the quality of your sleep an
 
 ---
 id: slide-6
-background: 'https://source.unsplash.com/random/900×700/?bed,pillow'
+background: https://source.unsplash.com/random/900×700/?bedtime
 contentAlignment: centerLeft
 ---
 # Sleep Hygiene
@@ -168,7 +237,7 @@ Good sleep hygiene leads to better sleep quality.
 
 ---
 id: slide-7
-background: 'https://source.unsplash.com/random/900×700/?stress'
+background: https://source.unsplash.com/random/900×700/?relaxation
 contentAlignment: centerRight
 ---
 # Stress and Sleep Quality
@@ -180,159 +249,36 @@ Promoting a relaxed state of mind before sleep can significantly improve sleep q
 ---
 id: slide-8
 layout: twoColumn
+background: https://source.unsplash.com/random/900×700/?alarm-clock
 ---
 ## Sleep Aids, Consultation, and Sleep Schedule
 ::left::
 #### Role of Sleep Aids and Consultation
-- 💊 Over-the-counter sleep aids: Useful occasionally, but it's important not to rely on them and to be aware of potential side effects.
-- 👩‍⚕️ When to consult with a healthcare provider: If having continuous troubles with sleep despite trying various strategies.
+- Over-the-counter sleep aids can be helpful occasionally, but they should not be relied upon.
+- Consult with a healthcare provider if sleep troubles persist despite trying various strategies.
 
 ::right::
 #### Creating a Sleep Schedule
-- 😴 Prioritizing sleep: Making sleep a priority in your daily schedule.
-- 🔄 Consistency in sleep and wake times: Try to sleep and wake at the same time every day.
-- ⏳ Ensuring adequate sleep duration: Aim for 7-9 hours per night.
+- Make sleep a priority in your daily schedule.
+- Aim for consistency in sleep and wake times.
+- Ensure adequate sleep duration: Aim for 7-9 hours per night.
 
 ---
 id: slide-9
-background: 'https://source.unsplash.com/random/900×700/?question'
+background: https://source.unsplash.com/random/900×700/?questions
 contentAlignment: center
 ---
-# Conclusion and Q&amp;A
+# Conclusion and Q&A
 We've now covered a comprehensive guide to improving your sleep quality. 
 - Let's review the key points. 
-- Open for Q&amp;A
-
-input: How to learn spanish
-output: ---
-id: slide-1
-background: 'https://source.unsplash.com/random/900×700/?journey,learning'
-contentAlignment: center
----
-# Embark on Your Spanish Learning Journey
-Explore the why and how of mastering Spanish.
-
----
-
-id: slide-2
-layout: image
-image: 'https://source.unsplash.com/random/900×700/?communication,culture'
-imageFit: cover
-imagePosition: left
-contentAlignment: centerLeft
----
-## Why Learn Spanish?
-- Global communication
-- Rich culture
-- Cognitive boost
-- Career prospects
-
----
-
-id: slide-3
-layout: image
-image: 'https://source.unsplash.com/random/900×700/?motivation,language'
-imageFit: cover
-imagePosition: right
-contentAlignment: centerRight
----
-## Setting Goals &amp; Building Vocabulary
-- Define your 'why'
-- Set time-bound goals
-- Use flashcards and themes for vocabulary
-
----
-
-id: slide-4
-layout: image
-image: 'https://source.unsplash.com/random/900×700/?grammar,context'
-imageFit: cover
-imagePosition: left
-contentAlignment: centerLeft
----
-## Grammar &amp; Pronunciation Essentials
-- Basics: "Ser," present tense
-- Practice in context
-- Importance of accent marks
-
----
-
-id: slide-5
-background: 'https://source.unsplash.com/random/900×700/?fluency,pronunciation'
-contentAlignment: center
----
-# Techniques for Fluency
-Master pronunciation and immersive learning.
-
----
-
-id: slide-6
-layout: image
-image: 'https://source.unsplash.com/random/900×700/?chatting'
-imageFit: cover
-imagePosition: right
-contentAlignment: centerRight
----
-## Perfecting Pronunciation
-- Practice specific sounds
-- Use recording and playback
-
----
-
-id: slide-7
-layout: image
-image: 'https://source.unsplash.com/random/900×700/?immersion,movies'
-imageFit: cover
-imagePosition: left
-contentAlignment: centerLeft
----
-## Immersive Learning
-- Movies, songs, podcasts
-- Language exchanges
-
----
-
-id: slide-8
-background: 'https://source.unsplash.com/random/900×700/?plan,resources'
-contentAlignment: center
----
-# Crafting a Study Plan &amp; Utilizing Resources
-
----
-id: slide-9
-layout: twoColumn
----
-## Effective Study Plan
-- Consistent time
-- Variety in routine
-- Regular assessments
-
-::right::
-
-### Sample Weekly Study Plan
-| Day       | Activity              | Time       | Resource      |
-|-----------|-----------------------|------------|---------------|
-| Monday    | Vocabulary Practice   | 30 minutes | Flashcards    |
-| Tuesday   | Listening Comprehension| 45 minutes | Podcast       |
-| Wednesday | Grammar Drills        | 30 minutes | Workbook      |
-| Thursday  | Conversation Practice | 1 hour     | Language Exchange |
-| Friday    | Review &amp; Assessment   | 1 hour     | Self-made quiz|
-
----
-
-id: slide-10
-background: 'https://source.unsplash.com/random/900×700/?celebration,achievement'
-contentAlignment: center
----
-# Celebrating Your Journey
-Be patient, practice consistently, and you will learn Spanish!
+- Open for Q&A
 
 
-input: {{topic}}
+input: {{input}}
 output:''';
 
 const stopSequences = <String>[];
 
 String presentationCreator(String topic) {
-  return promptString.replaceAll('{{topic}}', topic);
+  return promptString.replaceAll('{{input}}', topic);
 }

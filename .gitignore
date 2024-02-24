@@ -13,4 +13,4 @@ env.g.dart
 node_modules
 
 # FVM Version Cache
-.fvm
+.fvm/

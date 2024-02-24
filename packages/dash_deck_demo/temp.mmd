@@ -1,9 +1,5 @@
 
 graph TB
-A[Widget is created]
-B[Widget is updated]
-C[Widget is deactivated]
-D[Widget is disposed]
-A-->B
-B-->C
-C-->D
+A[Light Sleep] --&gt; B[Deep Sleep]
+B --&gt; C[REM Sleep]
+C --&gt; A

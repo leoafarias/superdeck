@@ -9,12 +9,13 @@ class PromptsService {
     String topic,
   ) async {
     final prompt = TextPrompt(text: presentationCreator(topic));
+    print(topic);
     // final response = await _palmService.generateTextWithPrompt(prompt);
     final response = await palm.generateText(
       model: PalmModel.textBison001.name,
       prompt: prompt,
       temperature: 0.7,
-      maxOutputTokens: 1024,
+      maxOutputTokens: 2000,
       topP: 0.95,
       topK: 40,
       safetySettings: [],

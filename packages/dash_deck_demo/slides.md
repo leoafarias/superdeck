@@ -1,81 +1,110 @@
 ---
 id: slide-1
-background: 'https://source.unsplash.com/random/900×700/?computer,code'
-contentAlignment: center
+background: https://source.unsplash.com/random/900×700/?runner
+contentAlignment: bottomLeft
 ---
-# How to Become a Better Developer
+# How to Run a 5K
+A comprehensive guide to help you train for and complete your first 5K race.
 
 ---
 id: slide-2
-layout: twoColumn
+background: https://source.unsplash.com/random/900×700/?running,start
 contentAlignment: centerLeft
 ---
-## Be curious and always learning
-- Read articles, blog posts, and books about software development.
-- Follow developers on social media and learn from their experiences.
-- Attend conferences and meetups to stay up-to-date on the latest trends.
-
-::right::
-
-## Practice, practice, practice
-- Write code every day, even if it's just for a few minutes.
-- Solve coding challenges and participate in hackathons.
-- Build and ship projects to gain real-world experience.
+## Setting Your Goals
+- What is your motivation for running a 5K?
+- What is your current fitness level?
+- What is your ideal finish time?
 
 ---
 id: slide-3
 layout: twoColumn
-contentAlignment: centerLeft
+background: https://source.unsplash.com/random/900×700/?planner
 ---
-## Get feedback on your work
-- Share your code with mentors, colleagues, and friends.
-- Ask for constructive criticism and take it to heart.
-- Use online code review tools to get feedback from the community.
+## Training Plan
+
+A typical 5K training plan will include:
 
 ::right::
 
-## Build a network of developers
-- Connect with other developers on social media and attend meetups.
-- Join online forums and chat groups to discuss technical topics.
-- Mentor other developers and give back to the community.
+### Weekly Training Schedule
+| Day | Activity |
+| --- | -------- |
+| Day 1 | Interval Training |
+| Day 2 | Rest or Cross-Train |
+| Day 3 | Tempo Run |
+| Day 4 | Easy Run |
+| Day 5 | Rest Day |
+| Day 6 | Long Run |
+| Day 7 | Recovery Run |
 
 ---
 id: slide-4
-layout: twoColumn
-contentAlignment: centerLeft
+layout: image
+imageFit: cover
+image: https://source.unsplash.com/random/900×700/?water,hydration
+imagePosition: right
+contentAlignment: centerRight
 ---
-## Stay up-to-date on the latest technologies
-- Read tech blogs and articles to learn about new technologies.
-- Attend conferences and workshops to learn from experts.
-- Follow developers on social media to stay up-to-date on the latest trends.
-
-::right::
-
-## Take on challenging projects
-- Take on projects that are outside of your comfort zone.
-- Stretch your skills and learn new things.
-- Build projects that you're passionate about.
+# Importance of Hydration
+Proper hydration is crucial for safe and effective training.
 
 ---
 id: slide-5
-layout: twoColumn
-contentAlignment: centerLeft
+background: https://source.unsplash.com/random/900×700/?food,healthy
+contentAlignment: bottomLeft
 ---
-## Build a portfolio of your work
-- Share your work on GitHub and other online platforms.
-- Create a website or blog to showcase your work.
-- Include your work in your resume and LinkedIn profile.
-
-::right::
-
-## Be patient and persistent
-- It takes time to become a good developer.
-- Don't get discouraged if you make mistakes.
-- Keep learning and practicing and you will eventually reach your goals.
+# Nutrition for Runners
+Learn how to fuel your body for endurance and recovery.
 
 ---
 id: slide-6
-background: 'https://source.unsplash.com/random/900×700/?code,success'
+background: https://source.unsplash.com/random/900×700/?running shoes
+contentAlignment: centerLeft
+---
+# Choosing the Right Gear
+- The importance of proper footwear
+- Comfortable clothing for different weathers
+- Essential accessories
+
+---
+id: slide-7
+background: https://source.unsplash.com/random/900×700/?inspiration
+contentAlignment: bottomCenter
+---
+# "The miracle isn't that I finished. The miracle is that I had the courage to start."  
+- John Bingham
+
+---
+id: slide-8
+layout: twoColumn
+background: https://source.unsplash.com/random/900×700/?challenge
+---
+## Common Challenges & Solutions
+::left::
+### Overcoming Mental Barriers
+- Setting realistic expectations
+- Positive self-talk
+- Visualizing success
+
+::right::
+### Physical Challenges
+- Pre-run warm-up
+- Post-run cool down
+- Listening to your body's signals
+
+---
+id: slide-9
+background: https://source.unsplash.com/random/900×700/?run,competition
 contentAlignment: center
 ---
-# Becoming a better developer takes time, effort, and dedication. But if you're passionate about software development, it's an incredibly rewarding journey.
+# Race Day Preparation
+Tips and strategies for a successful and enjoyable race day.
+
+---
+id: slide-10
+background: https://source.unsplash.com/random/900×700/?celebrate
+contentAlignment: center
+---
+# You're Ready! Celebrate Your Training Journey
+As you approach your first 5K, remember how far you've come and look forward to the finish line.

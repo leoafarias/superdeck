@@ -1,7 +1,18 @@
 name: DashDeck
 
 packages:
+  - .
   - packages/*
+
+sdkPath: .fvm/flutter_sdk
+
+command:
+  clean:
+    hooks:
+      post: melos exec --flutter -- "flutter clean"
+  bootstrap:
+    runPubGetInParallel: false
+    usePubspecOverrides: true
 
 scripts:
   analyze:
@@ -14,3 +25,5 @@ scripts:
     exec: dart run build_runner watch --delete-conflicting-outputs
     packageFilters:
       dependsOn: [build_runner] 
+  version:
+    exec: flutter --version
