@@ -58,5 +58,9 @@
     "background": "https://source.unsplash.com/random/900×700/?celebrate",
     "contentAlignment": "center",
     "content": "# Blockquotes\n\n> Blockquotes are very handy in email to emulate reply text.\n> This line is part of the same quote.\n\nQuote break.\n\n> This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote."
+  },
+  {
+    "id": "slide-11",
+    "content": "# Mermaid\n\n```mermaid\ngraph TD;\n  A-->B;\n  A-->C;\n  B-->D;\n  C-->D;\n```"
   }
 ]

@@ -1,19 +1,32 @@
-import '../../superdeck_cli.dart';
-import '../constants.dart';
+import 'dart:convert';
 
-Future<List<Map<String, dynamic>>> slidesMarkdownLoader() async {
-  final slidesMarkdown = kSuperDeckConfig.markdownFile;
-  final stylesFile = kSuperDeckConfig.stylesFile;
+import '../../superdeck_cli.dart';
+import '../context.dart';
+import '../helper/helper.dart';
+
+void loadSlideMarkdown() {
+  final slidesMarkdown = ctx.slidesMarkdownFile;
 
   if (!slidesMarkdown.existsSync()) {
-    await slidesMarkdown.create(recursive: true);
+    throw Exception('Slides markdown file not found');
   }
 
-  if (!stylesFile.existsSync()) {
-    await stylesFile.create(recursive: true);
+  final presentationContent = slidesMarkdown.readAsStringSync();
+
+  final slides = SlidesParser(presentationContent).parse();
+
+  _saveSlideJson(slides);
+}
+
+void _saveSlideJson(List<Map<String, dynamic>> contents) {
+  String content = json.encode(contents);
+  content = replaceMermaidContent(content);
+  final slidesJson = ctx.slidesJsonFile;
+
+  if (!slidesJson.existsSync()) {
+    slidesJson.createSync(recursive: true);
   }
 
-  final presentationContent = await slidesMarkdown.readAsString();
-
-  return SlidesParser(presentationContent).parse();
+  // Write a json file with a list of slides
+  slidesJson.writeAsStringSync(prettyJson(contents));
 }

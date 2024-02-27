@@ -6,6 +6,8 @@ part of 'runner.dart';
 // CliRunnerGenerator
 // **************************************************************************
 
+/// A CLI for creating and managing superdeck presentations
+///
 /// A class for invoking [Command]s based on raw command-line arguments.
 ///
 /// The type argument `T` represents the type returned by [Command.run] and
@@ -15,7 +17,7 @@ class _$SuperDeckRunner<T extends dynamic> extends CommandRunner<int> {
   _$SuperDeckRunner()
       : super(
           'superdeck',
-          '',
+          'A CLI for creating and managing superdeck presentations',
         ) {
     final upcastedType = (this as SuperDeckRunner);
     addCommand(BuildCommand(upcastedType.build));
@@ -37,7 +39,7 @@ class BuildCommand extends Command<int> {
     argParser.addFlag(
       'watch',
       abbr: 'w',
-      help: 'Watch for changes',
+      help: 'Watch for changes to the slides.md file',
       defaultsTo: false,
       negatable: false,
     );

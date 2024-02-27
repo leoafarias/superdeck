@@ -2,10 +2,18 @@
 
 import 'dart:io';
 
+import 'package:scope/scope.dart';
+import 'package:superdeck_cli/src/context.dart';
 import 'package:superdeck_cli/src/runner.dart';
 
 Future<void> main(List<String> args) async {
-  await _flushThenExit(await SuperDeckRunner().run(args) ?? exitCode);
+  final scope = Scope()..value(contextKey, CliContext.main);
+
+  await _flushThenExit(
+    await scope.run(
+      () async => await SuperDeckRunner().run((args)) ?? exitCode,
+    ),
+  );
 }
 
 /// Flushes the stdout and stderr streams, then exits the program with the given

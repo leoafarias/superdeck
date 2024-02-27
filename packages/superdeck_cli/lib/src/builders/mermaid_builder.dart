@@ -1,9 +1,14 @@
 import 'dart:io';
 
-import '../constants.dart';
+import 'package:path/path.dart';
 
-Future<String> replaceMermaidContent(String content) async {
+import '../context.dart';
+import '../helper/extension_io.dart';
+
+String replaceMermaidContent(String content) {
   final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+
+  String updatedMarkdownContent = content;
 
   Iterable<Match> matches = mermaidBlockRegex.allMatches(content);
   for (Match match in matches) {
@@ -12,43 +17,56 @@ Future<String> replaceMermaidContent(String content) async {
       continue;
     }
     // Process the mermaid syntax
-    await _processMermaidSyntax(mermaidSyntax);
-  }
+    final imageFile = _processMermaidSyntax(mermaidSyntax);
 
-  String updatedMarkdownContent = content;
-  for (Match match in matches) {
-    String mermaidSyntaxBlock = match.group(0) ?? '';
+    final syntaxBlock = match.group(0) ?? '';
+
+    final relativePath =
+        relative(imageFile.path, from: ctx.slidesJsonFile.parent.path);
+
     // Assuming all images are saved as 'output.png' for simplicity
-    String imagePath = 'resource:assets/superdeck/images/output.png';
+    String imagePath = 'resource:$relativePath';
     updatedMarkdownContent = updatedMarkdownContent.replaceFirst(
-        mermaidSyntaxBlock, '![Mermaid Diagram]($imagePath)');
+        syntaxBlock, '![Mermaid Diagram]($imagePath)');
   }
 
   return updatedMarkdownContent;
 }
 
-Future<void> _processMermaidSyntax(String mermaidSyntax) async {
+File _processMermaidSyntax(String mermaidSyntax) {
   String tempFilePath = 'temp.mmd';
+  final tempFile = File(tempFilePath);
 
-  mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
+  try {
+    mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
 
-  await File(tempFilePath).writeAsString(mermaidSyntax);
+    // has the mermaidSyntax string
+    final fileHash = mermaidSyntax.hashCode;
 
-  final outputFile = kSuperDeckConfig.imageFileName('output.png');
+    tempFile.write(mermaidSyntax);
 
-  if (!outputFile.parent.existsSync()) {
-    outputFile.parent.createSync(recursive: true);
-  }
+    final outputFile = ctx.getImageFile('$fileHash.png');
 
-  final imageSizeParams = '--scale 2'.split(' ');
-  final params =
-      '-t dark -b transparent -i $tempFilePath -o ${outputFile.path} '
-          .split(' ');
+    if (!outputFile.parent.existsSync()) {
+      outputFile.parent.createSync(recursive: true);
+    }
 
-  final result = await Process.run('mmdc', [...params, ...imageSizeParams]);
+    final imageSizeParams = '--scale 2'.split(' ');
+    final params =
+        '-t dark -b transparent -i $tempFilePath -o ${outputFile.path} '
+            .split(' ');
 
-  if (result.exitCode != 0) {
-    print('Error while processing mermaid syntax');
-    print(result.stderr);
+    final result = Process.runSync('mmdc', [...params, ...imageSizeParams]);
+
+    if (result.exitCode != 0) {
+      print('Error while processing mermaid syntax');
+      print(result.stderr);
+    }
+
+    return outputFile;
+  } catch (e) {
+    throw Exception('Error while processing mermaid syntax');
+  } finally {
+    tempFile.deleteIfExists();
   }
 }

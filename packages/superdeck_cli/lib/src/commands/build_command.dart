@@ -1,45 +1,29 @@
-import 'dart:io';
-
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
 import 'package:watcher/watcher.dart';
 
 import '../../superdeck_cli.dart';
-import '../constants.dart';
+import '../context.dart';
 
 final _logger = Logger();
 
 Future<int> buildCommandRunner({
   required bool watch,
 }) async {
-  kSuperDeckConfig.rootDir = Directory(
-    join(
-      kWorkingDirectory.path,
-    ),
-  );
-
   Future<void> runBuildProcess() async {
     final progress = _logger.progress('Updating slides');
 
     try {
-      // final response = await PromptsService.createOutline(
-      //   topic!,
-      // );
+      loadSlideMarkdown();
 
-      // await storeSlideData(response);
-      final slides = await slidesMarkdownLoader();
-
-      await storeDeckData(slides);
       progress.complete('Slides updated');
     } catch (e, stackTrace) {
-      progress.fail(
-        'Failed to update slides',
-      );
+      progress.fail('Failed to update slides');
       _logger
         ..err(e.toString())
         ..detail(stackTrace.toString());
 
-      return;
+      throw Exception('Failed to update slides, $e');
     }
   }
 
@@ -47,33 +31,30 @@ Future<int> buildCommandRunner({
   await runBuildProcess();
 
   if (watch) {
-    _logger.info('Watching for changes...');
+    await _watchForChanges(runBuildProcess);
+  }
+  return ExitCode.success.code;
+}
 
-    final filesToWatch = [
-      kSuperDeckConfig.markdownFile.path,
-      kSuperDeckConfig.stylesFile.path,
-    ];
-    for (final filePath in filesToWatch) {
-      final fileWatcher = FileWatcher(filePath);
+Future<void> _watchForChanges(Future<void> Function() callback) async {
+  _logger.info('Watching for changes...');
 
-      await for (final WatchEvent event in fileWatcher.events) {
-        // Get name of file that changed
-        final filePath = event.path;
+  final filesToWatch = [ctx.slidesMarkdownFile.path];
+  for (final filePath in filesToWatch) {
+    final fileWatcher = FileWatcher(filePath);
 
-        final fileName = basename(filePath);
+    await for (final WatchEvent event in fileWatcher.events) {
+      // Get name of file that changed
+      final filePath = event.path;
 
-        switch (event.type) {
-          case ChangeType.MODIFY:
-            _logger.info(
-              'Changes detected in $fileName',
-            );
+      final fileName = basename(filePath);
 
-            // Call your function to rebuild the slides
-            // You can handle other change types as needed
-            await runBuildProcess();
-        }
+      switch (event.type) {
+        case ChangeType.MODIFY:
+          _logger.info('Changes detected in $fileName');
+
+          await callback();
       }
     }
   }
-  return ExitCode.success.code;
 }
