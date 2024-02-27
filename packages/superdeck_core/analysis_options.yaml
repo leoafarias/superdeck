@@ -1,8 +1,0 @@
-include: package:lints/recommended.yaml
-analyzer:
-  errors:
-    invalid_annotation_target: ignore
-linter:
-  rules:
-    public_member_api_docs: false
-    prefer_relative_imports: true

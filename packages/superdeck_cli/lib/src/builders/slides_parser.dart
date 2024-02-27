@@ -1,4 +1,4 @@
-import 'package:superdeck_core/superdeck_core.dart';
+
 import 'package:yaml/yaml.dart';
 
 class SlidesParser {
@@ -7,18 +7,12 @@ class SlidesParser {
   final String text;
 
   // Public method that parses the text and returns a list of SlideData.
-  List<Slide> parse() {
-    // Parse slides from the input text.
-    final slidesContents = parseSlideContents(text);
-
-    // Map the parsed slides to SlideData objects and return as a list.
-    return slidesContents.map(Slide.parse).toList();
-  }
+  List<Map<String, dynamic>> parse() => _parseSlideContents(text);
 }
 
 final frontMatterParser = RegExp(r'---([\s\S]*?)---');
 // Function to parse slides from the content string.
-List<JSON> parseSlideContents(String content) {
+List<Map<String,dynamic>> _parseSlideContents(String content) {
   final slideContent = extractSlides(content);
 
   // Map the front matter and content to a list of _SlideParserData objects.

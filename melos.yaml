@@ -10,8 +10,18 @@ command:
     hooks:
       post: melos exec --flutter -- "flutter clean"
   bootstrap:
-    runPubGetInParallel: false
-    usePubspecOverrides: true
+    environment:
+        sdk: ">=3.0.0 <4.0.0"
+        flutter: ">=3.0.0 <4.0.0"
+    runPubGetInParallel: true
+    runPubGetOffline: true
+    dev_dependencies:
+      build_runner: ^2.4.6
+      collection: ^1.17.2
+      path: ^1.9.0
+      flutter_lints: ^2.0.3
+    hooks:
+      post: melos build_runner
 
 scripts:
   analyze:

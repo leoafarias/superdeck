@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
-const String kDashDeckDirName = 'dash_deck';
+const String kSuperDeckDirName = 'superdeck';
 const String kMarkdownFileName = 'slides.md';
 const String kStylesFileName = 'styles.dart';
 const String kConfigFileName = 'config.yml';
@@ -11,10 +11,10 @@ const String kGeneratedSlidesFileName = 'slides.g.dart';
 
 final kWorkingDirectory = Directory.current;
 
-DashDeckDirectory kDashDeckDirectory = DashDeckDirectory();
+SuperDeckConfig kSuperDeckConfig = SuperDeckConfig();
 
-class DashDeckDirectory {
-  DashDeckDirectory() : rootDir = kWorkingDirectory;
+class SuperDeckConfig {
+  SuperDeckConfig() : rootDir = kWorkingDirectory;
 
   Directory rootDir;
 
@@ -67,20 +67,20 @@ class DashDeckDirectory {
     );
   }
 
-  File _getLocalDashDeckFile(
+  File _getLocalSuperDeckFile(
     String path1, [
     String? path2,
   ]) {
     return _getFile(
       'lib',
-      kDashDeckDirName,
+      kSuperDeckDirName,
       path1,
       path2,
     );
   }
 
   File _getGeneratedFile(String fileName) {
-    return _getLocalDashDeckFile(
+    return _getLocalSuperDeckFile(
       'generated',
       fileName,
     );
@@ -88,7 +88,7 @@ class DashDeckDirectory {
 
   File get configFile => _getFile(kConfigFileName);
   File get markdownFile => _getFile(kMarkdownFileName);
-  File get stylesFile => _getLocalDashDeckFile(kStylesFileName);
+  File get stylesFile => _getLocalSuperDeckFile(kStylesFileName);
 
   Directory get appLibDir => _getDirectory('lib');
 
@@ -104,6 +104,6 @@ class DashDeckDirectory {
   }
 
   File get generatedSlidesJsonFile => _getAssetDirectory(
-        'deck.json',
+        'slides.json',
       );
 }

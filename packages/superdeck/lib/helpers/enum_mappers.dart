@@ -1,5 +1,6 @@
-import 'package:superdeck_core/superdeck_core.dart';
 import 'package:flutter/material.dart';
+
+import '../models/slide_options_model.dart';
 
 class FlexAlignment {
   const FlexAlignment({
@@ -42,25 +43,4 @@ CrossAxisAlignment _crossAxisFromContentAlignment(ContentAlignment alignment) {
   }
 
   return CrossAxisAlignment.center;
-}
-
-extension ImageFitExt on ImageFit {
-  BoxFit get boxFit {
-    switch (this) {
-      case ImageFit.cover:
-        return BoxFit.cover;
-      case ImageFit.contain:
-        return BoxFit.contain;
-      case ImageFit.fill:
-        return BoxFit.fill;
-      case ImageFit.fitHeight:
-        return BoxFit.fitHeight;
-      case ImageFit.fitWidth:
-        return BoxFit.fitWidth;
-      case ImageFit.none:
-        return BoxFit.none;
-      case ImageFit.scaleDown:
-        return BoxFit.scaleDown;
-    }
-  }
 }

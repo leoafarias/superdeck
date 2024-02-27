@@ -1,6 +1,7 @@
-import '../../builders/presentation_creator_prompt.dart';
-import '../palm_service.dart';
 import 'package:palm_api/palm_api.dart';
+
+import '../../builders/presentation_creator_prompt.dart';
+import 'palm_service.dart';
 
 class PromptsService {
   PromptsService._();

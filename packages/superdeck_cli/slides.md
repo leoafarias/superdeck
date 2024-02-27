@@ -1,4 +1,41 @@
 ---
+title: "Slide 1: Headings"
+image:
+    fit: contain
+    src: https://source.unsplash.com/random/900×700/?landscape
+---
+
+# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
+
+
+---
+title: "Slide 2: Text Styling"
+---
+
+**Bold Text**
+
+*Italic Text*
+
+~~Strikethrough~~
+
+`Inline Code`
+
+
+---
+title: "Slide 3: Links and Images"
+---
+
+[Link](https://github.com)
+
+![Unsplash Image](https://source.unsplash.com/random/900×700/?landscape)
+
+
+---
 title: "Slide 4: Quotes"
 ---
 
@@ -15,39 +52,8 @@ title: "Slide 4: Quotes"
 > - This is a list inside a blockquote
 > - Another item
 
----
-title: "Slide 1: Headings"
-image:
-    fit: contain
-    src: https://source.unsplash.com/random/900×700/?landscape
----
 
-# Heading 1
-## Heading 2
-### Heading 3
-#### Heading 4
-##### Heading 5
-###### Heading 6
 
----
-title: "Slide 2: Text Styling"
----
-
-**Bold Text**
-
-*Italic Text*
-
-~~Strikethrough~~
-
-`Inline Code`
-
----
-title: "Slide 3: Links and Images"
----
-
-[Link](https://github.com)
-
-![Unsplash Image](https://source.unsplash.com/random/900×700/?landscape)
 
 ---
 title: "Slide 5: Code Blocks"

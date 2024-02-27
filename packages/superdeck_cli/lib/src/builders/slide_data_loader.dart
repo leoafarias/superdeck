@@ -1,25 +1,9 @@
 import '../../superdeck_cli.dart';
-import 'package:superdeck_core/superdeck_core.dart';
+import '../constants.dart';
 
-Future<void> createPresentation(String topic) async {
-  final slidesMarkdown = kDashDeckDirectory.markdownFile;
-
-  final presentation = await PromptsService.createPresentation(topic);
-
-  if (!slidesMarkdown.existsSync()) {
-    slidesMarkdown.createSync(recursive: true);
-  }
-
-  // final parsedPresentation = SlidesParser(presentation).parse();
-
-  // final presentationString = DashDeckData(slides: parsedPresentation).toJson();
-
-  slidesMarkdown.writeAsStringSync(presentation);
-}
-
-Future<List<Slide>> slidesMarkdownLoader() async {
-  final slidesMarkdown = kDashDeckDirectory.markdownFile;
-  final stylesFile = kDashDeckDirectory.stylesFile;
+Future<List<Map<String, dynamic>>> slidesMarkdownLoader() async {
+  final slidesMarkdown = kSuperDeckConfig.markdownFile;
+  final stylesFile = kSuperDeckConfig.stylesFile;
 
   if (!slidesMarkdown.existsSync()) {
     await slidesMarkdown.create(recursive: true);

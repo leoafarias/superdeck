@@ -1,16 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 import 'package:watcher/watcher.dart';
 
 import '../helpers/service_locator.dart';
+import '../models/deck_data_model.dart';
+import '../models/slide_model.dart';
 
-final _deckJsonFile = File(p.join('assets', 'superdeck', 'deck.json'));
+final _slidesJsonFile = File(p.join('assets', 'superdeck', 'slides.json'));
 
 final sdeck = getIt<SuperDeckController>();
 
@@ -32,7 +34,9 @@ class SuperDeckController {
   final _subscriptions = <StreamSubscription>[];
 
   void goToPage(int page) => currentPage.value = page;
+
   void nextPage() => currentPage.value++;
+
   void previousPage() {
     if (currentPage() > 0) {
       currentPage.value--;
@@ -52,13 +56,28 @@ class SuperDeckController {
   }
 
   StreamSubscription _localListener() {
-    final watcher = FileWatcher(_deckJsonFile.path);
+    final watcher = FileWatcher(_slidesJsonFile.path);
     return watcher.events.listen((event) async {
       if (event.type == ChangeType.MODIFY) {
-        final contents = await _deckJsonFile.readAsString();
-        data.value = DeckData.fromJson(contents);
+        final contents = await _slidesJsonFile.readAsString();
+        data.value = DeckData(slides: _parseSlides(contents));
       }
     });
+  }
+
+  List<SlideConfig> _parseSlides(String contents) {
+    final slides = jsonDecode(contents) as List<dynamic>;
+    return slides.map((e) {
+      final templateId = e['layout'];
+
+      return switch (templateId) {
+        'image' => ImageSlideConfig.fromMap(e),
+        'two-column' => TwoColumnSlideConfig.fromMap(e),
+        'two-column-header' => TwoColumnHeaderSlideConfig.fromMap(e),
+        'simple' => SimpleSlideConfig.fromMap(e),
+        _ => SimpleSlideConfig.fromMap(e),
+      };
+    }).toList();
   }
 
   void dispose() {
@@ -67,7 +86,7 @@ class SuperDeckController {
     }
   }
 
-  void updateSlideContent(Slide slide, String content) {
+  void updateSlideContent(SlideConfig slide, String content) {
     final previousData = data.value;
 
     final slidesToUpdate = [...previousData.slides];
@@ -75,20 +94,22 @@ class SuperDeckController {
     final index =
         slidesToUpdate.indexWhere((element) => element.id == slide.id);
 
-    slidesToUpdate[index] = slide.copyWith(content: content);
+    slidesToUpdate[index] = slide.copyWith(
+      content: content,
+    );
 
     data.value = previousData.copyWith(slides: slidesToUpdate);
   }
 
   Future<DeckData> _fetchFromLocal() async {
-    final slidesJson = await _deckJsonFile.readAsString();
+    final slidesJson = await _slidesJsonFile.readAsString();
 
-    return DeckData.fromJson(slidesJson);
+    return DeckData(slides: _parseSlides(slidesJson));
   }
 
   Future<DeckData> _fetchDeckData() async {
-    final content = await rootBundle.loadString(_deckJsonFile.path);
+    final content = await rootBundle.loadString(_slidesJsonFile.path);
 
-    return DeckData.fromJson(content);
+    return DeckData(slides: _parseSlides(content));
   }
 }

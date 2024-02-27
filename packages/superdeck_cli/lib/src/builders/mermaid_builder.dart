@@ -19,7 +19,7 @@ Future<String> replaceMermaidContent(String content) async {
   for (Match match in matches) {
     String mermaidSyntaxBlock = match.group(0) ?? '';
     // Assuming all images are saved as 'output.png' for simplicity
-    String imagePath = 'resource:assets/dash_deck/images/output.png';
+    String imagePath = 'resource:assets/superdeck/images/output.png';
     updatedMarkdownContent = updatedMarkdownContent.replaceFirst(
         mermaidSyntaxBlock, '![Mermaid Diagram]($imagePath)');
   }
@@ -34,7 +34,7 @@ Future<void> _processMermaidSyntax(String mermaidSyntax) async {
 
   await File(tempFilePath).writeAsString(mermaidSyntax);
 
-  final outputFile = kDashDeckDirectory.imageFileName('output.png');
+  final outputFile = kSuperDeckConfig.imageFileName('output.png');
 
   if (!outputFile.parent.existsSync()) {
     outputFile.parent.createSync(recursive: true);

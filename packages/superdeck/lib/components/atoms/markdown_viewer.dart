@@ -1,73 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart' as fm;
 import 'package:markdown_widget/markdown_widget.dart';
 
 import '../../helpers/scale.dart';
 import '../../helpers/syntax_highlighter.dart';
 import 'markdown_configs.dart';
-
-fm.MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
-  final theme = Theme.of(context);
-  final tt = theme.textTheme;
-  var ss = fm.MarkdownStyleSheet.largeFromTheme(theme);
-
-  EdgeInsets scaleEdgeInsets(EdgeInsets edgeInsets) {
-    return EdgeInsets.only(
-      top: edgeInsets.top.sh,
-      bottom: edgeInsets.bottom.sh,
-      left: edgeInsets.left.sv,
-      right: edgeInsets.right.sv,
-    );
-  }
-
-  return ss.copyWith(
-    codeblockPadding: EdgeInsets.symmetric(
-      vertical: 20.0.sv,
-      horizontal: 20.0.sh,
-    ),
-    codeblockDecoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        color: Colors.grey[900]!,
-        width: 1,
-      ),
-      color: Colors.black,
-    ),
-
-    h1: tt.displayLarge,
-    h1Padding: scaleEdgeInsets(ss.h1Padding!.copyWith(top: 15, bottom: 10)),
-    h2: tt.displayMedium,
-    h2Padding: scaleEdgeInsets(ss.h2Padding!.copyWith(top: 15, bottom: 10)),
-    h3: tt.displaySmall,
-    h3Padding: scaleEdgeInsets(ss.h3Padding!.copyWith(top: 15, bottom: 10)),
-    h4: tt.headlineLarge,
-    h4Padding: scaleEdgeInsets(ss.h4Padding!.copyWith(top: 15, bottom: 10)),
-    h5: tt.headlineMedium,
-    h5Padding: scaleEdgeInsets(ss.h5Padding!.copyWith(top: 15, bottom: 10)),
-    h6: tt.headlineSmall,
-    h6Padding: scaleEdgeInsets(ss.h6Padding!.copyWith(top: 15, bottom: 10)),
-    // Content Elements
-    p: tt.bodyMedium,
-    pPadding: scaleEdgeInsets(ss.pPadding!),
-    code: tt.bodyMedium?.copyWith(
-      backgroundColor: Colors.grey[900],
-    ),
-    listBullet: tt.bodyMedium,
-    listBulletPadding: scaleEdgeInsets(ss.listBulletPadding!),
-    tableCellsPadding: scaleEdgeInsets(ss.tableCellsPadding!),
-    tableHead: tt.bodyMedium,
-    tableBody: tt.bodySmall,
-    listIndent: Scale.scaleWidth(ss.listIndent),
-    // QUOTES
-    blockquoteDecoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      color: Colors.purple[100],
-    ),
-    blockquote: tt.bodySmall,
-
-    blockquotePadding: scaleEdgeInsets(ss.blockquotePadding!),
-  );
-}
 
 class _ContentPadding extends StatelessWidget {
   const _ContentPadding({
@@ -118,15 +54,56 @@ class MarkdownView extends StatelessWidget {
     return MarkdownWidget(
       data: data,
       shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      markdownGenerator: MarkdownGenerator(
+        linesMargin: EdgeInsets.symmetric(vertical: 10.0.sh),
+      ),
       config: config.copy(
         configs: [
-          CustomH1Config(),
-          CustomH2Config(),
-          CustomH3Config(),
-          CustomH4Config(),
-          CustomH5Config(),
-          CustomH6Config(),
-          PreConfig(builder: _codeBuilder),
+          CustomH1Config(
+            style: TextStyle(
+              fontSize: Scale.scaleFont(72),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          CustomH2Config(
+            style: TextStyle(
+              fontSize: Scale.scaleFont(48),
+            ),
+          ),
+          CustomH3Config(
+            style: TextStyle(
+              fontSize: Scale.scaleFont(36),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          CustomH4Config(
+            style: TextStyle(
+              fontSize: Scale.scaleFont(30),
+            ),
+          ),
+          CustomH5Config(
+            style: TextStyle(
+              fontSize: Scale.scaleFont(24),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          CustomH6Config(
+            style: TextStyle(
+              fontSize: Scale.scaleFont(20),
+            ),
+          ),
+          PreConfig(
+            builder: _codeBuilder,
+            textStyle: TextStyle(
+              fontSize: Scale.scaleFont(16),
+            ),
+          ),
+          PConfig(
+            textStyle: TextStyle(
+              fontSize: Scale.scaleFont(16),
+            ),
+          ),
           const ListConfig(),
           const TableConfig(),
           const ImgConfig(),
@@ -143,50 +120,4 @@ class MarkdownView extends StatelessWidget {
     final textSpan = SyntaxHighlight.render(language, value);
     return Text.rich(textSpan);
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Markdown(
-  //     data: data,
-  //     builders: {
-  //       'h1': CustomH1Builder(),
-  //       'h2': CustomH2Builder(),
-  //     },
-  //     styleSheet: markdownStyleSheet(context),
-  //     selectable: true,
-  //     imageBuilder: (uri, title, alt) {
-  //       return LayoutBuilder(
-  //         builder: (context, constraints) {
-  //           Widget image;
-  //           if (uri.scheme == 'resource') {
-  //             // Load from asset
-  //             String assetPath = uri.path;
-  //             image = Image.asset(
-  //               assetPath,
-  //               fit: BoxFit.contain, // Maintain aspect ratio
-  //             );
-  //           } else {
-  //             // Default behavior for network images
-  //             image = Image.network(
-  //               uri.toString(),
-  //               fit: BoxFit.contain, // Maintain aspect ratio
-  //             );
-  //           }
-  //           return Container(
-  //             padding: const EdgeInsets.all(20.0),
-  //             width: constraints.maxWidth,
-  //             height: constraints.maxWidth *
-  //                 (9 / 16), // Assuming a 16:9 aspect ratio
-  //             child: image,
-  //           );
-  //         },
-  //       );
-  //     },
-  //     extensionSet: md.ExtensionSet(
-  //       md.ExtensionSet.gitHubWeb.blockSyntaxes,
-  //       [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
-  //     ),
-  //     syntaxHighlighter: DartSyntaxBuilder(context),
-  //   );
-  // }
 }

@@ -1,17 +1,18 @@
-import 'package:superdeck_core/superdeck_core.dart';
+import 'dart:convert';
 
+import '../../superdeck_cli.dart';
 import '../constants.dart';
-import 'mermaid_builder.dart';
+import '../helper/helper.dart';
 
-Future<void> storeDeckData(DeckData deck) async {
-  String content = deck.toJson();
+Future<void> storeDeckData(List<Map<String, dynamic>> contents) async {
+  String content = json.encode(contents);
   content = await replaceMermaidContent(content);
-  final slidesJson = kDashDeckDirectory.generatedSlidesJsonFile;
+  final slidesJson = kSuperDeckConfig.generatedSlidesJsonFile;
 
   if (!slidesJson.existsSync()) {
     await slidesJson.create(recursive: true);
   }
 
   // Write a json file with a list of slides
-  await slidesJson.writeAsString(content);
+  await slidesJson.writeAsString(prettyJson(contents));
 }

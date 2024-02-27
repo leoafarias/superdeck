@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/packages/superdeck/melos_superdeck.iml" filepath="$PROJECT_DIR$/packages/superdeck/melos_superdeck.iml" />
       <module fileurl="file://$PROJECT_DIR$/packages/superdeck_cli/melos_superdeck_cli.iml" filepath="$PROJECT_DIR$/packages/superdeck_cli/melos_superdeck_cli.iml" />
-      <module fileurl="file://$PROJECT_DIR$/packages/superdeck_core/melos_superdeck_core.iml" filepath="$PROJECT_DIR$/packages/superdeck_core/melos_superdeck_core.iml" />
       <module fileurl="file://$PROJECT_DIR$/packages/superdeck_demo/melos_superdeck_demo.iml" filepath="$PROJECT_DIR$/packages/superdeck_demo/melos_superdeck_demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/melos_superdeck.iml" filepath="$PROJECT_DIR$/melos_superdeck.iml" />
     </modules>

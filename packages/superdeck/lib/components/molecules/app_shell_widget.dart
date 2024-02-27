@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../helpers/local_storage.dart';
 import '../../helpers/service_locator.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/use_signals.dart';
+import '../../models/deck_data_model.dart';
 import '../../providers/superdeck_provider.dart';
 import '../../theme.dart';
 import '../atoms/slide_wrapper.dart';

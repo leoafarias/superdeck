@@ -1,6 +1,7 @@
-import '../../helpers/slide_builder.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 import 'package:flutter/material.dart';
+
+import '../../helpers/template_builder.dart';
+import '../../models/slide_model.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
@@ -8,22 +9,25 @@ class SlideView extends StatelessWidget {
     super.key,
   });
 
-  final Slide slide;
+  final SlideConfig slide;
 
   @override
   Widget build(BuildContext context) {
-    Widget slideWidget;
+    final config = slide;
+    TemplateBuilder builder;
 
-    if (slide is ImageSlide) {
-      slideWidget = ImageSlideWidget(slide as ImageSlide);
-    } else if (slide is TwoColumnSlide) {
-      slideWidget = TwoColumnSlideWidget(slide as TwoColumnSlide);
-    } else if (slide is TwoColumnHeaderSlide) {
-      slideWidget = TwoColumnHeaderSlideWidget(slide as TwoColumnHeaderSlide);
+    if (config is ImageSlideConfig) {
+      builder = ImageSlideBuilder(config);
+    } else if (config is TwoColumnSlideConfig) {
+      builder = TwoColumnSlideBuilder(config);
+    } else if (config is TwoColumnHeaderSlideConfig) {
+      builder = TwoColumnHeaderSlideConfigBuilder(config);
+    } else if (config is SimpleSlideConfig) {
+      builder = SimpleSlideBuilder(config);
     } else {
-      slideWidget = SlideWidget(slide);
+      throw UnimplementedError('Slide config not implemented');
     }
 
-    return slideWidget;
+    return builder.build(context);
   }
 }
