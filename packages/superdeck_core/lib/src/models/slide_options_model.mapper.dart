@@ -6,6 +6,60 @@
 
 part of 'slide_options_model.dart';
 
+class SlideLayoutMapper extends EnumMapper<SlideLayout> {
+  SlideLayoutMapper._();
+
+  static SlideLayoutMapper? _instance;
+  static SlideLayoutMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SlideLayoutMapper._());
+    }
+    return _instance!;
+  }
+
+  static SlideLayout fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  SlideLayout decode(dynamic value) {
+    switch (value) {
+      case 'basic':
+        return SlideLayout.basic;
+      case 'image':
+        return SlideLayout.image;
+      case 'two-column':
+        return SlideLayout.twoColumn;
+      case 'two-column-header':
+        return SlideLayout.twoColumnHeader;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(SlideLayout self) {
+    switch (self) {
+      case SlideLayout.basic:
+        return 'basic';
+      case SlideLayout.image:
+        return 'image';
+      case SlideLayout.twoColumn:
+        return 'two-column';
+      case SlideLayout.twoColumnHeader:
+        return 'two-column-header';
+    }
+  }
+}
+
+extension SlideLayoutMapperExtension on SlideLayout {
+  String toValue() {
+    SlideLayoutMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<SlideLayout>(this) as String;
+  }
+}
+
 class ImageFitMapper extends EnumMapper<ImageFit> {
   ImageFitMapper._();
 

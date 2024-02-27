@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import '../../superdeck_cli.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 import 'package:watcher/watcher.dart';
+
+import '../../superdeck_cli.dart';
 
 class BuildCommand extends Command<int> {
   BuildCommand({
@@ -65,7 +66,7 @@ class BuildCommand extends Command<int> {
 
         // await storeSlideData(response);
         final slides = await slidesMarkdownLoader();
-        final deckData = DashDeckData(slides: slides);
+        final deckData = DeckData(slides: slides);
         await storeDeckData(deckData);
         progress.complete('Slides updated');
       } catch (e, stackTrace) {

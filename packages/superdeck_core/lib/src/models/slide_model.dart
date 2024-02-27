@@ -39,9 +39,7 @@ class Slide with SlideMappable {
     this.content = '',
   });
 
-  factory Slide.parse(JSON data) {
-    return _slideBuilder(data);
-  }
+  factory Slide.parse(JSON data) => _slideBuilder(data);
 
   factory Slide.parseJson(String data) {
     return Slide.parse(jsonDecode(data));
@@ -53,7 +51,22 @@ class Slide with SlideMappable {
 }
 
 @MappableClass()
-class ImageSlide extends Slide with ImageSlideMappable {
+abstract class SlideTemplate extends Slide with SlideTemplateMappable {
+  const SlideTemplate({
+    require super.id,
+    super.layout = BuiltinLayout.basic,
+    super.contentAlignment = ContentAlignment.centerLeft,
+    super.background,
+    super.content = '',
+  });
+  
+
+  @override
+  Widget build(BuildContext context);
+}
+
+@MappableClass()
+class ImageSlide extends SlideTemplate with ImageSlideMappable {
   final ImageFit? imageFit;
   final String image;
   final ImagePosition imagePosition;
@@ -70,6 +83,40 @@ class ImageSlide extends Slide with ImageSlideMappable {
 
   static final fromMap = ImageSlideMapper.fromMap;
   static final fromJson = ImageSlideMapper.fromJson;
+
+  @override
+  Widget build(BuildContext context) {
+   final imageUrl = slide.image;
+    final imageFit = slide.imageFit;
+    final boxFit = imageFit == null ? BoxFit.cover : imageFit.boxFit;
+
+    Widget imageWidget = const SizedBox(
+      height: 0,
+      width: 0,
+    );
+
+    imageWidget = Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: CachedNetworkImageProvider(imageUrl),
+          fit: boxFit,
+        ),
+      ),
+    );
+
+    List<Widget> children = [
+      Expanded(child: imageWidget),
+      Expanded(child: SlideContent(slide.content)),
+    ];
+
+    if (slide.imagePosition == ImagePosition.right) {
+      children = children.reversed.toList();
+    }
+
+    return Row(
+      children: children
+    );
+  }
 }
 
 @MappableClass()

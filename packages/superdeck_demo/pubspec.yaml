@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   superdeck: ^0.0.1
   hooks_riverpod: ^2.4.4
-  flutter_hooks: ^0.20.3
+  
   riverpod_annotation: ^2.2.1
   dart_mappable: ^4.0.1
   localstorage: ^4.0.1+4

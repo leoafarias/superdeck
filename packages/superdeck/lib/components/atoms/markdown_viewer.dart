@@ -1,13 +1,15 @@
-import 'syntax_highlighter.dart';
-import '../../helpers/scale.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
+import 'package:flutter_markdown/flutter_markdown.dart' as fm;
+import 'package:markdown_widget/markdown_widget.dart';
 
-MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
+import '../../helpers/scale.dart';
+import '../../helpers/syntax_highlighter.dart';
+import 'markdown_configs.dart';
+
+fm.MarkdownStyleSheet markdownStyleSheet(BuildContext context) {
   final theme = Theme.of(context);
   final tt = theme.textTheme;
-  var ss = MarkdownStyleSheet.largeFromTheme(theme);
+  var ss = fm.MarkdownStyleSheet.largeFromTheme(theme);
 
   EdgeInsets scaleEdgeInsets(EdgeInsets edgeInsets) {
     return EdgeInsets.only(
@@ -104,44 +106,87 @@ class MarkdownView extends StatelessWidget {
   final String data;
 
   @override
-  Widget build(BuildContext context) {
-    return MarkdownBody(
+  Widget build(context) {
+    return buildMarkdown(context);
+  }
+
+  Widget buildMarkdown(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final config =
+        isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+
+    return MarkdownWidget(
       data: data,
-      styleSheet: markdownStyleSheet(context),
-      selectable: true,
-      imageBuilder: (uri, title, alt) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            Widget image;
-            if (uri.scheme == 'resource') {
-              // Load from asset
-              String assetPath = uri.path;
-              image = Image.asset(
-                assetPath,
-                fit: BoxFit.contain, // Maintain aspect ratio
-              );
-            } else {
-              // Default behavior for network images
-              image = Image.network(
-                uri.toString(),
-                fit: BoxFit.contain, // Maintain aspect ratio
-              );
-            }
-            return Container(
-              padding: const EdgeInsets.all(20.0),
-              width: constraints.maxWidth,
-              height: constraints.maxWidth *
-                  (9 / 16), // Assuming a 16:9 aspect ratio
-              child: image,
-            );
-          },
-        );
-      },
-      extensionSet: md.ExtensionSet(
-        md.ExtensionSet.gitHubWeb.blockSyntaxes,
-        [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
+      shrinkWrap: true,
+      config: config.copy(
+        configs: [
+          CustomH1Config(),
+          CustomH2Config(),
+          CustomH3Config(),
+          CustomH4Config(),
+          CustomH5Config(),
+          CustomH6Config(),
+          PreConfig(builder: _codeBuilder),
+          const ListConfig(),
+          const TableConfig(),
+          const ImgConfig(),
+          const CodeConfig(style: TextStyle(backgroundColor: Colors.red)),
+          const HrConfig(),
+          const LinkConfig(),
+          const BlockquoteConfig(),
+        ],
       ),
-      syntaxHighlighter: DartSyntaxBuilder(context),
     );
   }
+
+  Widget _codeBuilder(String language, String value) {
+    final textSpan = SyntaxHighlight.render(language, value);
+    return Text.rich(textSpan);
+  }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Markdown(
+  //     data: data,
+  //     builders: {
+  //       'h1': CustomH1Builder(),
+  //       'h2': CustomH2Builder(),
+  //     },
+  //     styleSheet: markdownStyleSheet(context),
+  //     selectable: true,
+  //     imageBuilder: (uri, title, alt) {
+  //       return LayoutBuilder(
+  //         builder: (context, constraints) {
+  //           Widget image;
+  //           if (uri.scheme == 'resource') {
+  //             // Load from asset
+  //             String assetPath = uri.path;
+  //             image = Image.asset(
+  //               assetPath,
+  //               fit: BoxFit.contain, // Maintain aspect ratio
+  //             );
+  //           } else {
+  //             // Default behavior for network images
+  //             image = Image.network(
+  //               uri.toString(),
+  //               fit: BoxFit.contain, // Maintain aspect ratio
+  //             );
+  //           }
+  //           return Container(
+  //             padding: const EdgeInsets.all(20.0),
+  //             width: constraints.maxWidth,
+  //             height: constraints.maxWidth *
+  //                 (9 / 16), // Assuming a 16:9 aspect ratio
+  //             child: image,
+  //           );
+  //         },
+  //       );
+  //     },
+  //     extensionSet: md.ExtensionSet(
+  //       md.ExtensionSet.gitHubWeb.blockSyntaxes,
+  //       [md.EmojiSyntax(), ...md.ExtensionSet.gitHubWeb.inlineSyntaxes],
+  //     ),
+  //     syntaxHighlighter: DartSyntaxBuilder(context),
+  //   );
+  // }
 }

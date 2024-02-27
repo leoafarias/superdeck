@@ -1,8 +1,9 @@
-import 'mermaid_builder.dart';
-import '../constants.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-Future<void> storeDeckData(DashDeckData deck) async {
+import '../constants.dart';
+import 'mermaid_builder.dart';
+
+Future<void> storeDeckData(DeckData deck) async {
   String content = deck.toJson();
   content = await replaceMermaidContent(content);
   final slidesJson = kDashDeckDirectory.generatedSlidesJsonFile;

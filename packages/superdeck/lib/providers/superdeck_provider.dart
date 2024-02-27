@@ -1,91 +1,94 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:watcher/watcher.dart';
 
-part 'superdeck_provider.g.dart';
+import '../helpers/service_locator.dart';
 
-final _deckJsonFile = File(p.join('assets', 'dash_deck', 'deck.json'));
+final _deckJsonFile = File(p.join('assets', 'superdeck', 'deck.json'));
 
-@riverpod
-Slide? currentSlide(CurrentSlideRef ref) {
-  final page = ref.watch(slidePageProvider);
-  final deck = ref.watch(deckControllerProvider).when(data: (data) {
-    return data.slides[page];
-  }, loading: () {
-    return null;
-  }, error: (error, stack) {
-    return null;
-  });
-  return deck;
-}
+final sdeck = getIt<SuperDeckController>();
 
-@riverpod
-class SlidePage extends _$SlidePage {
-  @override
-  int build() {
-    return 0;
+class SuperDeckController {
+  final data =
+      signal<DeckData>(const DeckData(), debugLabel: 'Controller: data');
+  final currentPage = signal<int>(0, debugLabel: 'Controller: currentPage');
+  late final currentSlide = computed(() => data().slides[currentPage()],
+      debugLabel: "Controller: currentSlide");
+  final isLoading = signal<bool>(true, debugLabel: 'Controller: isLoading');
+
+  SuperDeckController() {
+    _loadData().then((value) {
+      data.value = value;
+      isLoading.value = false;
+    });
   }
 
-  void setActivePage(int page) {
-    state = page;
-  }
-}
+  final _subscriptions = <StreamSubscription>[];
 
-@riverpod
-class DeckController extends _$DeckController {
-  @override
-  Future<DashDeckData> build() {
-    return _loadData();
+  void goToPage(int page) => currentPage.value = page;
+  void nextPage() => currentPage.value++;
+  void previousPage() {
+    if (currentPage() > 0) {
+      currentPage.value--;
+    } else {
+      // Go to the last page
+      currentPage.value = data().slides.length - 1;
+    }
   }
 
-  Future<DashDeckData> _loadData() {
+  Future<DeckData> _loadData() {
     if (kDebugMode) {
-      _localListener();
+      _subscriptions.add(_localListener());
       return _fetchFromLocal();
     } else {
       return _fetchDeckData();
     }
   }
 
-  void _localListener() {
+  StreamSubscription _localListener() {
     final watcher = FileWatcher(_deckJsonFile.path);
-    watcher.events.listen((event) async {
+    return watcher.events.listen((event) async {
       if (event.type == ChangeType.MODIFY) {
         final contents = await _deckJsonFile.readAsString();
-        state = AsyncValue.data(DashDeckData.fromJson(contents));
+        data.value = DeckData.fromJson(contents);
       }
     });
   }
 
-  void updateSlideContent(Slide slide, String content) {
-    final previousState = state.asData!.value;
+  void dispose() {
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+  }
 
-    final slidesToUpdate = [...previousState.slides];
+  void updateSlideContent(Slide slide, String content) {
+    final previousData = data.value;
+
+    final slidesToUpdate = [...previousData.slides];
     // Change item at index for id
     final index =
         slidesToUpdate.indexWhere((element) => element.id == slide.id);
 
     slidesToUpdate[index] = slide.copyWith(content: content);
 
-    state = AsyncValue.data(previousState.copyWith(slides: slidesToUpdate));
+    data.value = previousData.copyWith(slides: slidesToUpdate);
   }
 
-  Future<DashDeckData> _fetchFromLocal() async {
+  Future<DeckData> _fetchFromLocal() async {
     final slidesJson = await _deckJsonFile.readAsString();
 
-    return DashDeckData.fromJson(slidesJson);
+    return DeckData.fromJson(slidesJson);
   }
 
-  Future<DashDeckData> _fetchDeckData() async {
-    final content = await rootBundle.loadString(
-      _deckJsonFile.path,
-    );
+  Future<DeckData> _fetchDeckData() async {
+    final content = await rootBundle.loadString(_deckJsonFile.path);
 
-    return DashDeckData.fromJson(content);
+    return DeckData.fromJson(content);
   }
 }

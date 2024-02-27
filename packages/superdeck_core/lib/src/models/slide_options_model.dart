@@ -10,6 +10,9 @@ class BuiltinLayout {
   static const twoColumnHeader = 'twoColumnHeader';
 }
 
+@MappableEnum(caseStyle: CaseStyle.paramCase)
+enum SlideLayout { basic, image, twoColumn, twoColumnHeader }
+
 @MappableEnum()
 enum ImageFit { cover, contain, fill, fitHeight, fitWidth, none, scaleDown }
 

@@ -1,9 +1,10 @@
-import '../../helpers/constants.dart';
-import '../../helpers/scale.dart';
 import 'package:flutter/material.dart';
 
+import '../../helpers/constants.dart';
+import '../../helpers/scale.dart';
+
 class SlideWrapper extends StatelessWidget {
-  const SlideWrapper({this.child, Key? key}) : super(key: key);
+  const SlideWrapper({this.child, super.key});
 
   final Widget? child;
 

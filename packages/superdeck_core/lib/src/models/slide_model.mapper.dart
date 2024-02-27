@@ -13,7 +13,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
   static SlideMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideMapper._());
-      ImageSlideMapper.ensureInitialized();
+      SlideTemplateMapper.ensureInitialized();
       TwoColumnSlideMapper.ensureInitialized();
       TwoColumnHeaderSlideMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
@@ -137,6 +137,82 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
       _SlideCopyWithImpl($value, $cast, t);
 }
 
+class SlideTemplateMapper extends ClassMapperBase<SlideTemplate> {
+  SlideTemplateMapper._();
+
+  static SlideTemplateMapper? _instance;
+  static SlideTemplateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SlideTemplateMapper._());
+      SlideMapper.ensureInitialized();
+      ImageSlideMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'SlideTemplate';
+
+  static String _$id(SlideTemplate v) => v.id;
+  static dynamic _arg$id(f) => f<String>();
+  static const Field<SlideTemplate, InvalidType> _f$id =
+      Field('id', _$id, opt: true, arg: _arg$id);
+  static String _$layout(SlideTemplate v) => v.layout;
+  static const Field<SlideTemplate, String> _f$layout =
+      Field('layout', _$layout, opt: true, def: BuiltinLayout.basic);
+  static ContentAlignment _$contentAlignment(SlideTemplate v) =>
+      v.contentAlignment;
+  static const Field<SlideTemplate, ContentAlignment> _f$contentAlignment =
+      Field('contentAlignment', _$contentAlignment,
+          opt: true, def: ContentAlignment.centerLeft);
+  static String? _$background(SlideTemplate v) => v.background;
+  static const Field<SlideTemplate, String> _f$background =
+      Field('background', _$background, opt: true);
+  static String _$content(SlideTemplate v) => v.content;
+  static const Field<SlideTemplate, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+
+  @override
+  final MappableFields<SlideTemplate> fields = const {
+    #id: _f$id,
+    #layout: _f$layout,
+    #contentAlignment: _f$contentAlignment,
+    #background: _f$background,
+    #content: _f$content,
+  };
+
+  static SlideTemplate _instantiate(DecodingData data) {
+    throw MapperException.missingConstructor('SlideTemplate');
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static SlideTemplate fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SlideTemplate>(map);
+  }
+
+  static SlideTemplate fromJson(String json) {
+    return ensureInitialized().decodeJson<SlideTemplate>(json);
+  }
+}
+
+mixin SlideTemplateMappable {
+  String toJson();
+  Map<String, dynamic> toMap();
+  SlideTemplateCopyWith<SlideTemplate, SlideTemplate, SlideTemplate>
+      get copyWith;
+}
+
+abstract class SlideTemplateCopyWith<$R, $In extends SlideTemplate, $Out>
+    implements SlideCopyWith<$R, $In, $Out> {
+  @override
+  $R call(
+      {InvalidType? id, String? layout, String? background, String? content});
+  SlideTemplateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
 class ImageSlideMapper extends ClassMapperBase<ImageSlide> {
   ImageSlideMapper._();
 
@@ -144,7 +220,7 @@ class ImageSlideMapper extends ClassMapperBase<ImageSlide> {
   static ImageSlideMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ImageSlideMapper._());
-      SlideMapper.ensureInitialized();
+      SlideTemplateMapper.ensureInitialized();
       ImageFitMapper.ensureInitialized();
       ImagePositionMapper.ensureInitialized();
     }
@@ -174,7 +250,9 @@ class ImageSlideMapper extends ClassMapperBase<ImageSlide> {
   static const Field<ImageSlide, String> _f$layout =
       Field('layout', _$layout, opt: true, def: BuiltinLayout.basic);
   static String _$id(ImageSlide v) => v.id;
-  static const Field<ImageSlide, String> _f$id = Field('id', _$id);
+  static dynamic _arg$id(f) => f<String>();
+  static const Field<ImageSlide, InvalidType> _f$id =
+      Field('id', _$id, arg: _arg$id);
   static ContentAlignment _$contentAlignment(ImageSlide v) =>
       v.contentAlignment;
   static const Field<ImageSlide, ContentAlignment> _f$contentAlignment =
@@ -255,7 +333,7 @@ extension ImageSlideValueCopy<$R, $Out>
 }
 
 abstract class ImageSlideCopyWith<$R, $In extends ImageSlide, $Out>
-    implements SlideCopyWith<$R, $In, $Out> {
+    implements SlideTemplateCopyWith<$R, $In, $Out> {
   @override
   $R call(
       {ImageFit? imageFit,
@@ -264,7 +342,7 @@ abstract class ImageSlideCopyWith<$R, $In extends ImageSlide, $Out>
       String? background,
       String? content,
       String? layout,
-      String? id});
+      InvalidType? id});
   ImageSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -284,7 +362,7 @@ class _ImageSlideCopyWithImpl<$R, $Out>
           Object? background = $none,
           String? content,
           String? layout,
-          String? id}) =>
+          InvalidType? id}) =>
       $apply(FieldCopyWithData({
         if (imageFit != $none) #imageFit: imageFit,
         if (image != null) #image: image,
