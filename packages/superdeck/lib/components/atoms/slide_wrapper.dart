@@ -13,30 +13,45 @@ class SlideWrapper extends StatelessWidget {
     return Center(
       child: AspectRatio(
         aspectRatio: kAspectRatio,
-        child: LayoutBuilder(builder: (context, constraints) {
-          final width = constraints.maxWidth;
-          final height = constraints.maxHeight;
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final height = constraints.maxHeight;
 
-          Scale.setupWith(Size(width, height), const Size(kWidth, kHeight));
+            Scale.setupWith(Size(width, height), const Size(kWidth, kHeight));
 
-          final maxWidth = Scale.scaleWidth(kWidth);
-          final maxHeight = Scale.scaleHeight(kHeight);
-
-          return Theme(
-            data: scaleTheme(context),
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              constraints: BoxConstraints(
-                maxWidth: maxWidth,
-                minWidth: maxWidth,
-                maxHeight: maxHeight,
-                minHeight: maxHeight,
-              ).normalize(),
-              child: child,
-            ),
-          );
-        }),
+            return SlideConstraints(
+              constraints: constraints,
+              child: Theme(
+                data: scaleTheme(context),
+                child: Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: child,
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
+  }
+}
+
+class SlideConstraints extends InheritedWidget {
+  const SlideConstraints({
+    required this.constraints,
+    required super.child,
+    super.key,
+  });
+
+  final BoxConstraints constraints;
+
+  static SlideConstraints? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SlideConstraints>();
+  }
+
+  @override
+  bool updateShouldNotify(SlideConstraints oldWidget) {
+    return oldWidget.constraints != constraints;
   }
 }

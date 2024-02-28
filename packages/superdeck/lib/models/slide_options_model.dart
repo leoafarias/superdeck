@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 part 'slide_options_model.mapper.dart';
 
-@MappableEnum(caseStyle: CaseStyle.paramCase)
+@MappableEnum()
 enum ImageFit {
   // cover, contain, fill, fitHeight, fitWidth, none, scaleDown
   cover(),
@@ -36,10 +36,10 @@ enum ImageFit {
   }
 }
 
-@MappableEnum(caseStyle: CaseStyle.paramCase)
+@MappableEnum()
 enum ImagePosition { left, right }
 
-@MappableEnum(caseStyle: CaseStyle.paramCase)
+@MappableEnum()
 enum ContentAlignment {
   topLeft,
   topCenter,
@@ -52,8 +52,8 @@ enum ContentAlignment {
   bottomRight
 }
 
-@MappableEnum(caseStyle: CaseStyle.paramCase)
+@MappableEnum()
 enum VerticalAlignment { top, center, bottom }
 
-@MappableEnum(caseStyle: CaseStyle.paramCase)
+@MappableEnum()
 enum HorizontalAlignment { left, center, right }

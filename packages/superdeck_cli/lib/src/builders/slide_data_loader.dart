@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../../superdeck_cli.dart';
 import '../context.dart';
 import '../helper/helper.dart';
@@ -13,14 +11,14 @@ void loadSlideMarkdown() {
 
   final presentationContent = slidesMarkdown.readAsStringSync();
 
-  final slides = SlidesParser(presentationContent).parse();
+  final replacedContent = replaceMermaidContent(presentationContent);
+
+  final slides = SlidesParser(replacedContent).parse();
 
   _saveSlideJson(slides);
 }
 
 void _saveSlideJson(List<Map<String, dynamic>> contents) {
-  String content = json.encode(contents);
-  content = replaceMermaidContent(content);
   final slidesJson = ctx.slidesJsonFile;
 
   if (!slidesJson.existsSync()) {

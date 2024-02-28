@@ -4,35 +4,14 @@ import 'package:markdown_widget/markdown_widget.dart';
 import '../../helpers/scale.dart';
 import '../../helpers/syntax_highlighter.dart';
 import 'markdown_configs.dart';
-
-class _ContentPadding extends StatelessWidget {
-  const _ContentPadding({
-    required this.child,
-    Key? key,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final padding = EdgeInsets.symmetric(
-      horizontal: 40.0.sh,
-      vertical: 40.0.sh,
-    );
-
-    return Padding(
-      padding: padding,
-      child: child,
-    );
-  }
-}
+import 'slide_wrapper.dart';
 
 class SlideContent extends StatelessWidget {
   const SlideContent(this.data, {Key? key}) : super(key: key);
   final String data;
   @override
   Widget build(BuildContext context) {
-    return _ContentPadding(child: MarkdownView(data));
+    return MarkdownView(data);
   }
 }
 
@@ -56,7 +35,8 @@ class MarkdownView extends StatelessWidget {
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       markdownGenerator: MarkdownGenerator(
-        linesMargin: EdgeInsets.symmetric(vertical: 10.0.sh),
+        linesMargin: EdgeInsets.symmetric(vertical: 10.0.sv),
+        generators: 
       ),
       config: config.copy(
         configs: [
@@ -104,20 +84,80 @@ class MarkdownView extends StatelessWidget {
               fontSize: Scale.scaleFont(16),
             ),
           ),
-          const ListConfig(),
-          const TableConfig(),
-          const ImgConfig(),
           const CodeConfig(style: TextStyle(backgroundColor: Colors.red)),
-          const HrConfig(),
-          const LinkConfig(),
+          const ListConfig(marker: _markerBuilder),
+          // const TableConfig(),
+          const ImgConfig(builder: _imageBuilder),
+          // const HrConfig(),
+          // const LinkConfig(),
           const BlockquoteConfig(),
         ],
       ),
     );
   }
+}
 
-  Widget _codeBuilder(String language, String value) {
-    final textSpan = SyntaxHighlight.render(language, value);
-    return Text.rich(textSpan);
+Widget _codeBuilder(String language, String value) {
+  final textSpan = SyntaxHighlight.render(language, value);
+  return Text.rich(
+    textSpan,
+    style: TextStyle(fontSize: 24.0.sf),
+  );
+}
+
+Widget _markerBuilder(bool hasMarker, int index, int depth) {
+  return const Text('•');
+}
+
+
+
+Widget _imageBuilder(String src, Map<String, String> attributes) {
+  double? width;
+  double? height;
+  if (attributes['width'] != null) width = double.parse(attributes['width']!);
+  if (attributes['height'] != null) {
+    height = double.parse(attributes['height']!);
   }
+  final imageUrl = attributes['src'] ?? '';
+  final alt = attributes['alt'] ?? '';
+  final isNetImage = imageUrl.startsWith('http');
+
+  return Builder(builder: (BuildContext context) {
+    final constraints = SlideConstraints.of(context)!.constraints;
+    final imgWidget = isNetImage
+        ? Image.network(imageUrl,
+            width: width,
+            height: height,
+            fit: BoxFit.scaleDown, errorBuilder: (ctx, error, stacktrace) {
+            return buildErrorImage(imageUrl, alt, error);
+          })
+        : Image.asset(imageUrl,
+            width: width,
+            height: height,
+            fit: BoxFit.scaleDown, errorBuilder: (ctx, error, stacktrace) {
+            return buildErrorImage(imageUrl, alt, error);
+          });
+    // Max constraints passed down to the child
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: constraints.maxWidth,
+        maxHeight: constraints.maxHeight,
+      ),
+      child: imgWidget,
+    );
+  });
+}
+
+Widget buildErrorImage(String url, String alt, Object? error) {
+  return ProxyRichText(
+    TextSpan(children: [
+      const WidgetSpan(
+        child: Icon(
+          Icons.broken_image,
+          color: Colors.redAccent,
+        ),
+      ),
+      TextSpan(text: alt),
+    ]),
+  );
 }

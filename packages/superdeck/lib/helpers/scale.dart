@@ -37,14 +37,12 @@ class Scale {
   }
 
   /// Get the number scaled horizontally.
-  static double scaleWidth(double? size) {
-    if (size == null) return 12;
+  static double scaleWidth(double size) {
     return size * _horizontallyScaleFactor;
   }
 
   /// Get the number scaled vertically.
-  static double scaleHeight(double? size) {
-    if (size == null) return 12;
+  static double scaleHeight(double size) {
     return size * _verticallyScaleFactor;
   }
 

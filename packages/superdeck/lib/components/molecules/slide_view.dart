@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../helpers/scale.dart';
 import '../../helpers/template_builder.dart';
 import '../../models/slide_model.dart';
+import '../atoms/slide_wrapper.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
@@ -27,7 +29,17 @@ class SlideView extends StatelessWidget {
     } else {
       throw UnimplementedError('Slide config not implemented');
     }
+    final constraints = SlideConstraints.of(context)!.constraints;
+    final paddingSize = EdgeInsets.all(40.0.sh);
 
-    return builder.build(context);
+    final constraintsWithPadding = constraints.deflate(paddingSize).normalize();
+
+    return SlideConstraints(
+      constraints: constraintsWithPadding,
+      child: Padding(
+        padding: paddingSize,
+        child: builder.build(context),
+      ),
+    );
   }
 }

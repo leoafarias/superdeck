@@ -12,7 +12,7 @@ import '../helpers/service_locator.dart';
 import '../models/deck_data_model.dart';
 import '../models/slide_model.dart';
 
-final _slidesJsonFile = File(p.join('assets', 'superdeck', 'slides.json'));
+final _slidesJsonFile = File(p.join('assets', 'slides.json'));
 
 final sdeck = getIt<SuperDeckController>();
 
@@ -92,7 +92,7 @@ class SuperDeckController {
     final slidesToUpdate = [...previousData.slides];
     // Change item at index for id
     final index =
-        slidesToUpdate.indexWhere((element) => element.id == slide.id);
+        slidesToUpdate.indexWhere((element) => element.title == slide.title);
 
     slidesToUpdate[index] = slide.copyWith(
       content: content,

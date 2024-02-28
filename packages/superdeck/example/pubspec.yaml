@@ -11,20 +11,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  superdeck: ^0.0.1
-  
-  palm_api:
-    path: ../../../palm_api_dart
-  
+  superdeck:
+    path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_lints: ^3.0.1
+  flutter_lints: ^2.0.3
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/superdeck/
-    - assets/superdeck/images/
+    - assets/
+    - assets/images/

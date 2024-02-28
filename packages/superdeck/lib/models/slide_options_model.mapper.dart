@@ -31,13 +31,13 @@ class ImageFitMapper extends EnumMapper<ImageFit> {
         return ImageFit.contain;
       case 'fill':
         return ImageFit.fill;
-      case 'fit-height':
+      case 'fitHeight':
         return ImageFit.fitHeight;
-      case 'fit-width':
+      case 'fitWidth':
         return ImageFit.fitWidth;
       case 'none':
         return ImageFit.none;
-      case 'scale-down':
+      case 'scaleDown':
         return ImageFit.scaleDown;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -54,13 +54,13 @@ class ImageFitMapper extends EnumMapper<ImageFit> {
       case ImageFit.fill:
         return 'fill';
       case ImageFit.fitHeight:
-        return 'fit-height';
+        return 'fitHeight';
       case ImageFit.fitWidth:
-        return 'fit-width';
+        return 'fitWidth';
       case ImageFit.none:
         return 'none';
       case ImageFit.scaleDown:
-        return 'scale-down';
+        return 'scaleDown';
     }
   }
 }
@@ -137,23 +137,23 @@ class ContentAlignmentMapper extends EnumMapper<ContentAlignment> {
   @override
   ContentAlignment decode(dynamic value) {
     switch (value) {
-      case 'top-left':
+      case 'topLeft':
         return ContentAlignment.topLeft;
-      case 'top-center':
+      case 'topCenter':
         return ContentAlignment.topCenter;
-      case 'top-right':
+      case 'topRight':
         return ContentAlignment.topRight;
-      case 'center-left':
+      case 'centerLeft':
         return ContentAlignment.centerLeft;
       case 'center':
         return ContentAlignment.center;
-      case 'center-right':
+      case 'centerRight':
         return ContentAlignment.centerRight;
-      case 'bottom-left':
+      case 'bottomLeft':
         return ContentAlignment.bottomLeft;
-      case 'bottom-center':
+      case 'bottomCenter':
         return ContentAlignment.bottomCenter;
-      case 'bottom-right':
+      case 'bottomRight':
         return ContentAlignment.bottomRight;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -164,23 +164,23 @@ class ContentAlignmentMapper extends EnumMapper<ContentAlignment> {
   dynamic encode(ContentAlignment self) {
     switch (self) {
       case ContentAlignment.topLeft:
-        return 'top-left';
+        return 'topLeft';
       case ContentAlignment.topCenter:
-        return 'top-center';
+        return 'topCenter';
       case ContentAlignment.topRight:
-        return 'top-right';
+        return 'topRight';
       case ContentAlignment.centerLeft:
-        return 'center-left';
+        return 'centerLeft';
       case ContentAlignment.center:
         return 'center';
       case ContentAlignment.centerRight:
-        return 'center-right';
+        return 'centerRight';
       case ContentAlignment.bottomLeft:
-        return 'bottom-left';
+        return 'bottomLeft';
       case ContentAlignment.bottomCenter:
-        return 'bottom-center';
+        return 'bottomCenter';
       case ContentAlignment.bottomRight:
-        return 'bottom-right';
+        return 'bottomRight';
     }
   }
 }

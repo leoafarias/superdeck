@@ -6,31 +6,42 @@ import '../context.dart';
 import '../helper/extension_io.dart';
 
 String replaceMermaidContent(String content) {
-  final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+  final RegExp mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+  final List<Map<String, dynamic>> replacements = [];
 
-  String updatedMarkdownContent = content;
+  final Iterable<Match> matches = mermaidBlockRegex.allMatches(content);
+  for (final Match match in matches) {
+    final String? mermaidSyntax = match.group(1);
+    if (mermaidSyntax == null) continue;
 
-  Iterable<Match> matches = mermaidBlockRegex.allMatches(content);
-  for (Match match in matches) {
-    var mermaidSyntax = match.group(1);
-    if (mermaidSyntax == null) {
-      continue;
-    }
-    // Process the mermaid syntax
-    final imageFile = _processMermaidSyntax(mermaidSyntax);
+    // Process the mermaid syntax to generate an image file
+    final String imagePath = _processMermaidSyntax(mermaidSyntax).path;
 
-    final syntaxBlock = match.group(0) ?? '';
+    final relativePath = relative(imagePath, from: ctx.assetsDir.parent.path);
 
-    final relativePath =
-        relative(imageFile.path, from: ctx.slidesJsonFile.parent.path);
+    final String imageMarkdown = '![Mermaid Diagram]($relativePath)';
 
-    // Assuming all images are saved as 'output.png' for simplicity
-    String imagePath = 'resource:$relativePath';
-    updatedMarkdownContent = updatedMarkdownContent.replaceFirst(
-        syntaxBlock, '![Mermaid Diagram]($imagePath)');
+    print(replacements);
+
+    // Collect replacement information
+    replacements.add({
+      'start': match.start,
+      'end': match.end,
+      'replacement': imageMarkdown,
+    });
   }
 
-  return updatedMarkdownContent;
+  // Apply replacements in reverse order
+  for (var replacement in replacements.reversed) {
+    final int start = replacement['start'];
+    final int end = replacement['end'];
+    final String replacementText = replacement['replacement'];
+
+    content =
+        content.substring(0, start) + replacementText + content.substring(end);
+  }
+
+  return content;
 }
 
 File _processMermaidSyntax(String mermaidSyntax) {

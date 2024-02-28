@@ -9,13 +9,13 @@ typedef JSON = Map<String, dynamic>;
 
 @MappableClass()
 abstract class SlideConfig with SlideConfigMappable {
-  final String id;
+  final String? title;
   final String? background;
   final ContentAlignment contentAlignment;
   final String content;
 
   const SlideConfig({
-    required this.id,
+    required this.title,
     this.background,
     this.content = '',
     this.contentAlignment = ContentAlignment.centerLeft,
@@ -29,7 +29,7 @@ abstract class SlideConfig with SlideConfigMappable {
 @MappableClass()
 class SimpleSlideConfig extends SlideConfig with SimpleSlideConfigMappable {
   const SimpleSlideConfig({
-    required super.id,
+    super.title,
     super.background,
     super.contentAlignment,
     super.content,
@@ -49,7 +49,7 @@ class ImageSlideConfig extends SlideConfig with ImageSlideConfigMappable {
   final ImagePosition imagePosition;
 
   const ImageSlideConfig({
-    required super.id,
+    super.title,
     this.imageFit = ImageFit.cover,
     this.image = '',
     this.imagePosition = ImagePosition.left,
@@ -70,7 +70,7 @@ class TwoColumnSlideConfig extends SlideConfig
   late Map<String, List<String>> _tags;
 
   TwoColumnSlideConfig({
-    required super.id,
+    super.title,
     super.background,
     super.contentAlignment,
     super.content,
@@ -104,7 +104,7 @@ class TwoColumnHeaderSlideConfig extends SlideConfig
     with TwoColumnHeaderSlideConfigMappable {
   late Map<String, List<String>> _tags;
   TwoColumnHeaderSlideConfig({
-    required super.id,
+    super.title,
     super.background,
     super.contentAlignment,
     super.content = '',
