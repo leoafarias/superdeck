@@ -1,12 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_highlighting/themes/github.dart';
-import 'package:highlighting/highlighting.dart';
-import 'package:highlighting/languages/dart.dart';
-import 'package:highlighting/languages/javascript.dart';
-import 'package:highlighting/languages/json.dart';
-import 'package:highlighting/languages/python.dart';
-import 'package:highlighting/languages/typescript.dart';
-import 'package:highlighting/languages/yaml.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 
 class SyntaxHighlight {
@@ -21,57 +13,55 @@ class SyntaxHighlight {
     ]);
 
     _theme = await HighlighterTheme.loadForBrightness(Brightness.dark);
-
-    highlight.registerLanguage(dart);
-    highlight.registerLanguage(json);
-    highlight.registerLanguage(yaml);
-    highlight.registerLanguage(python);
-    // typescript
-    // javascript
-    highlight.registerLanguage(typescript);
-    highlight.registerLanguage(javascript);
   }
 
   static TextSpan render(String source, String language) {
-    if (language == 'dart') {
-      return Highlighter(language: language, theme: _theme).highlight(source);
-    } else {
-      final value = highlight.parse(source, languageId: language).nodes ?? [];
-      return TextSpan(children: _convert(value));
-    }
+    return Highlighter(language: language, theme: _theme).highlight(source);
   }
 }
 
-const _theme = githubTheme;
+List<int> parseLineNumbers(String input) {
+  // Regular expression to find the content within the curly braces
+  final regExp = RegExp(r'\{(.*?)\}');
+  final match = regExp.firstMatch(input);
 
-List<TextSpan> _convert(List<Node> nodes) {
-  List<TextSpan> spans = [];
-  var currentSpans = spans;
-  List<List<TextSpan>> stack = [];
+  // If there's no match, return an empty list
+  if (match == null) return [];
 
-  traverse(Node node) {
-    if (node.value != null) {
-      currentSpans.add(node.className == null
-          ? TextSpan(text: node.value)
-          : TextSpan(text: node.value, style: _theme[node.className]));
-    } else {
-      List<TextSpan> tmp = [];
-      currentSpans.add(TextSpan(children: tmp, style: _theme[node.className]));
-      stack.add(currentSpans);
-      currentSpans = tmp;
+  // Extract the content within the curly braces
+  var content = match.group(1) ?? '';
 
-      for (var n in node.children) {
-        traverse(n);
-        if (n == node.children.last) {
-          currentSpans = stack.isEmpty ? spans : stack.removeLast();
-        }
+  // Initialize an empty set to hold the line numbers (avoids duplicates)
+  var lineNumbers = <int>{};
+
+  // Split the content by comma to separate the elements
+  var elements = content.split(',');
+
+  // Iterate over each element to process single numbers and ranges
+  for (var element in elements) {
+    element = element.trim(); // Trim whitespace
+    if (element.isEmpty) {
+      continue; // Skip empty elements (e.g., when there are spaces after commas
+    }
+
+    if (element.contains('-')) {
+      // It's a range, split into start and end
+      var rangeParts = element.split('-');
+      var start = int.parse(rangeParts[0].trim());
+      var end = int.parse(rangeParts[1].trim());
+
+      // Add all numbers in the range to the set
+      for (var i = start; i <= end; i++) {
+        lineNumbers.add(i);
       }
+    } else {
+      // It's a single number, add it to the set
+      lineNumbers.add(int.parse(element));
     }
   }
 
-  for (var node in nodes) {
-    traverse(node);
-  }
-
-  return spans;
+  // Convert the set to a list, sort it, and return
+  var lineNumberList = lineNumbers.toList();
+  lineNumberList.sort();
+  return lineNumberList;
 }

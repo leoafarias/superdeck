@@ -13,6 +13,7 @@ import '../models/deck_data_model.dart';
 import '../models/slide_model.dart';
 
 final _slidesJsonFile = File(p.join('assets', 'slides.json'));
+final _assetsJsonFile = File(p.join('assets', 'assets.json'));
 
 final sdeck = getIt<SuperDeckController>();
 
@@ -49,18 +50,31 @@ class SuperDeckController {
   Future<DeckData> _loadData() {
     if (kDebugMode) {
       _subscriptions.add(_localListener());
+      _subscriptions.add(_listenAssetsJson());
       return _fetchFromLocal();
     } else {
       return _fetchDeckData();
     }
   }
 
+  StreamSubscription _listenAssetsJson() {
+    final watcher = FileWatcher(_assetsJsonFile.path);
+    return watcher.events.listen((event) async {
+      if (event.type == ChangeType.MODIFY) {
+        final contents = await _assetsJsonFile.readAsString();
+
+        data.value = data.value.copyWith(assets: _parseAssets(contents));
+      }
+    });
+  }
+
   StreamSubscription _localListener() {
     final watcher = FileWatcher(_slidesJsonFile.path);
+
     return watcher.events.listen((event) async {
       if (event.type == ChangeType.MODIFY) {
         final contents = await _slidesJsonFile.readAsString();
-        data.value = DeckData(slides: _parseSlides(contents));
+        data.value = data.value.copyWith(slides: _parseSlides(contents));
       }
     });
   }
@@ -78,6 +92,11 @@ class SuperDeckController {
         _ => SimpleSlideConfig.fromMap(e),
       };
     }).toList();
+  }
+
+  List<SlideAsset> _parseAssets(String contents) {
+    final assets = jsonDecode(contents) as List<dynamic>;
+    return assets.map((e) => SlideAsset.fromMap(e)).toList();
   }
 
   void dispose() {
@@ -103,13 +122,19 @@ class SuperDeckController {
 
   Future<DeckData> _fetchFromLocal() async {
     final slidesJson = await _slidesJsonFile.readAsString();
+    final assetsJson = await _assetsJsonFile.readAsString();
 
-    return DeckData(slides: _parseSlides(slidesJson));
+    return DeckData(
+      slides: _parseSlides(slidesJson),
+      assets: _parseAssets(assetsJson),
+    );
   }
 
   Future<DeckData> _fetchDeckData() async {
     final content = await rootBundle.loadString(_slidesJsonFile.path);
+    final assets = await rootBundle.loadString(_assetsJsonFile.path);
 
-    return DeckData(slides: _parseSlides(content));
+    return DeckData(
+        slides: _parseSlides(content), assets: _parseAssets(assets));
   }
 }

@@ -65,6 +65,8 @@ class CliContext {
 
   File get slidesJsonFile => File(join(assetsDir.path, 'slides.json'));
 
+  File get assetsJsonFile => File(join(assetsDir.path, 'assets.json'));
+
   Directory get assetsImageDir => Directory(join(assetsDir.path, 'images'));
 
   File getImageFile(String name) => File(join(assetsImageDir.path, name));

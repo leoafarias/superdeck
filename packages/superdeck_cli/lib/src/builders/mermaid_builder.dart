@@ -15,9 +15,10 @@ String replaceMermaidContent(String content) {
     if (mermaidSyntax == null) continue;
 
     // Process the mermaid syntax to generate an image file
-    final String imagePath = _processMermaidSyntax(mermaidSyntax).path;
+    final imageFile = _processMermaidSyntax(mermaidSyntax);
 
-    final relativePath = relative(imagePath, from: ctx.assetsDir.parent.path);
+    final relativePath =
+        relative(imageFile.path, from: ctx.assetsDir.parent.path);
 
     final String imageMarkdown = '![Mermaid Diagram]($relativePath)';
 

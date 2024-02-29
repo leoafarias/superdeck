@@ -31,7 +31,9 @@ title: "Slide 3: Links and Images"
 
 [Link](https://github.com)
 
-![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)
+![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape#500x250)
+
+
 
 ---
 title: "Slide 4: Quotes"
@@ -49,7 +51,7 @@ title: "Slide 4: Quotes"
 title: "Slide 5: Code Blocks"
 ---
 
-```dart
+```dart {1, 3-8}
 int factorial(int n) {
   if (n == 0) {
     return 1;
@@ -84,7 +86,7 @@ title: "Mermaid example"
 
 ```mermaid
 flowchart TD
-    A[Christmas] -->|Get money| B(Go shopping)
+    A[This is crazy] -->|Get money| B(Go shopping)
     B --> C{Let me think}
     C -->|One| D[Laptop]
     C -->|Two| E[iPhone]
@@ -95,8 +97,77 @@ flowchart TD
 
 ---
 title: "Slide 8: Task Lists"
+layout: two-column
 ---
+
+::left::
 
 - [ ] Task List Item 1
 - [x] Task List Item 2
 
+::right::
+
+#### Subtask
+
+- [x] foo
+  - [ ] bar
+  - [x] baz
+- [ ] bim
+
+---
+title: Dividers
+---
+
+_____
+Dividers
+____
+
+---
+title: Code rendering performance
+---
+
+```dart
+class SyntaxTags {
+  const SyntaxTags._();
+  static final left = '::left::';
+  static final right = '::right::';
+  static final content = '::content::';
+}
+
+Map<String, List<String>> parseContentWithTags(
+    String input, List<String> tags) {
+  final Map<String, List<String>> parsedContent = {};
+  int lastTagEndIndex = 0;
+  String currentTag = SyntaxTags.content;
+
+  for (int i = 0; i < input.length; i++) {
+    for (String tag in tags) {
+      if (input.substring(i).startsWith(tag)) {
+        // Add the content before this tag to the list
+        final content = input.substring(lastTagEndIndex, i).trim();
+        if (content.isNotEmpty) {
+          parsedContent.putIfAbsent(currentTag, () => []).add(content);
+        }
+
+        // Update the current tag and last tag end index
+        currentTag = tag;
+        lastTagEndIndex = i + tag.length;
+
+        // Skip the characters of this tag
+        i += tag.length - 1;
+        break;
+      }
+    }
+  }
+
+  // Add remaining content if any
+  if (lastTagEndIndex < input.length) {
+    final content = input.substring(lastTagEndIndex).trim();
+    if (content.isNotEmpty) {
+      parsedContent.putIfAbsent(currentTag, () => []).add(content);
+    }
+  }
+
+  return parsedContent;
+}
+```

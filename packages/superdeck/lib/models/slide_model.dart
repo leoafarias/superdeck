@@ -67,7 +67,7 @@ class ImageSlideConfig extends SlideConfig with ImageSlideConfigMappable {
 @MappableClass()
 class TwoColumnSlideConfig extends SlideConfig
     with TwoColumnSlideConfigMappable {
-  late Map<String, List<String>> _tags;
+  late Map<String, String> _tags;
 
   TwoColumnSlideConfig({
     super.title,
@@ -102,7 +102,7 @@ class TwoColumnSlideConfig extends SlideConfig
 @MappableClass()
 class TwoColumnHeaderSlideConfig extends SlideConfig
     with TwoColumnHeaderSlideConfigMappable {
-  late Map<String, List<String>> _tags;
+  late Map<String, String> _tags;
   TwoColumnHeaderSlideConfig({
     super.title,
     super.background,
@@ -132,9 +132,10 @@ class TwoColumnHeaderSlideConfig extends SlideConfig
 }
 
 String _getTagContent(
-  Map<String, List<String>> tags,
-  SyntaxTag tag, [
+  Map<String, String> tags,
+  String tag, [
   String fallback = '',
 ]) {
-  return tags[tag] != null ? tags[tag.name]!.join('\n') : fallback;
+  final tagContent = tags[tag];
+  return tagContent ?? fallback;
 }

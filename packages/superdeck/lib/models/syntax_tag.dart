@@ -1,50 +1,45 @@
-import 'package:dart_mappable/dart_mappable.dart';
-
-part 'syntax_tag.mapper.dart';
-
-@MappableEnum()
-enum SyntaxTag {
-  @MappableValue('::left::')
-  left,
-  @MappableValue('::right::')
-  right,
-  @MappableValue('::content::')
-  content;
+class SyntaxTag {
+  const SyntaxTag._();
+  static const left = '::left::';
+  static const right = '::right::';
+  static const content = '::content::';
 }
 
-Map<String, List<String>> parseContentWithTags(
-    String input, List<SyntaxTag> tags) {
-  final Map<String, List<String>> parsedContent = {};
-  int lastTagEndIndex = 0;
-  SyntaxTag currentTag = SyntaxTag.content;
+Map<String, String> parseContentWithTags(
+  String input,
+  List<String> tags,
+) {
+  final result = <String, String>{};
+  final lines = input.split('\n');
+  var currentTag = SyntaxTag.content;
+  var currentContent = '';
 
-  for (int i = 0; i < input.length; i++) {
-    for (SyntaxTag tag in tags) {
-      if (input.substring(i).startsWith(tag.name)) {
-        // Add the content before this tag to the list
-        final content = input.substring(lastTagEndIndex, i).trim();
-        if (content.isNotEmpty) {
-          parsedContent.putIfAbsent(currentTag.name, () => []).add(content);
-        }
+  // For loop with index
+  for (var idx = 0; idx < lines.length; idx++) {
+    final line = lines[idx];
+    if (tags.contains(line.trim())) {
+      final tagName = line.trim();
+      if (result.containsKey(tagName) || currentTag == tagName) {
+        throw Exception('Tag $tagName already exists');
+      }
 
-        // Update the current tag and last tag end index
-        currentTag = tag;
-        lastTagEndIndex = i + tag.name.length;
+      if (currentContent.isNotEmpty) {
+        result[currentTag] = currentContent;
+      }
 
-        // Skip the characters of this tag
-        i += tag.name.length - 1;
-        break;
+      currentContent = '';
+      currentTag = tagName;
+    } else {
+      // check if its last line
+      if (idx == lines.length - 1) {
+        currentContent += line;
+      } else {
+        currentContent += '$line\n';
       }
     }
   }
-
-  // Add remaining content if any
-  if (lastTagEndIndex < input.length) {
-    final content = input.substring(lastTagEndIndex).trim();
-    if (content.isNotEmpty) {
-      parsedContent.putIfAbsent(currentTag.name, () => []).add(content);
-    }
+  if (currentContent.isNotEmpty) {
+    result[currentTag] = currentContent;
   }
-
-  return parsedContent;
+  return result;
 }

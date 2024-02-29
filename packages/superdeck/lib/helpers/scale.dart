@@ -71,6 +71,23 @@ extension DoubleExtension on double {
   }
 }
 
+extension IntExtension on int {
+  /// Get the number scaled horizontally.
+  double get sh {
+    return Scale.scaleWidth(toDouble());
+  }
+
+  /// Get the number scaled vertically.
+  double get sv {
+    return Scale.scaleHeight(toDouble());
+  }
+
+  /// Get the font scaled vertically.
+  double get sf {
+    return Scale.scaleFont(toDouble());
+  }
+}
+
 ThemeData scaleTheme(BuildContext context) {
   final theme = Theme.of(context);
   final textTheme = theme.textTheme;
