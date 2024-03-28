@@ -1,7 +1,7 @@
 // service_locator.dart
 import 'package:get_it/get_it.dart';
 
-import '../providers/superdeck_provider.dart';
+import '../controllers/deck_controller.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -10,4 +10,5 @@ void setupLocator() {
     SuperDeckController(),
     dispose: (controller) => controller.dispose(),
   );
+  getIt.registerSingleton<StyleController>(StyleController());
 }

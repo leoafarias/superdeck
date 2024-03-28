@@ -4,14 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../helpers/constants.dart';
 import '../../helpers/local_storage.dart';
 import '../../helpers/service_locator.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/use_signals.dart';
 import '../../models/deck_data_model.dart';
-import '../../providers/superdeck_provider.dart';
+import '../../superdeck.dart';
 import '../../theme.dart';
-import '../atoms/slide_wrapper.dart';
+import 'scaled_app.dart';
 import 'slide_view.dart';
 
 class SuperDeck {
@@ -19,13 +20,16 @@ class SuperDeck {
     WidgetsFlutterBinding.ensureInitialized();
     setupLocator();
 
+    await LocalStorage.initialize();
+    await SyntaxHighlight.initialize();
+
     // Return if its web
     if (kIsWeb) return;
     // Must add this line.
     await windowManager.ensureInitialized();
 
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(1280, 720),
+      size: kResolution,
       center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
@@ -38,48 +42,43 @@ class SuperDeck {
       await windowManager.focus();
     });
 
-    await windowManager.setAspectRatio(16 / 9);
-
-    await LocalStorage.initialize();
-    await SyntaxHighlight.initialize();
+    await windowManager.setAspectRatio(kAspectRatio);
   }
 
-  static Widget runApp() {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      darkTheme: darkTheme,
-      home: const SuperDeckListenerApp(),
-    );
-  }
-}
+  static Future<void> run({SlideStyle? style}) async {
+    SuperDeck.initialize();
+    styles.load(style);
 
-class SuperDeckListenerApp extends StatelessWidget {
-  const SuperDeckListenerApp({super.key});
+    return runApp(ScaledApp(
+      builder: (context, scale) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          darkTheme: darkTheme,
+          home: Watch((context) {
+            if (deckController.isLoading()) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-  @override
-  Widget build(context) {
-    return Watch((context) {
-      if (sdeck.isLoading()) {
-        return const Center(
-          child: CircularProgressIndicator(),
+            return AppShell(data: deckController.data());
+          }),
         );
-      }
-
-      return SuperDeckShell(data: sdeck.data());
-    });
+      },
+    ));
   }
 }
 
-class SuperDeckShell extends StatefulWidget {
-  const SuperDeckShell({required this.data, super.key});
+class AppShell extends StatefulWidget {
+  const AppShell({required this.data, super.key});
 
   final DeckData data;
 
   @override
-  State<SuperDeckShell> createState() => _SuperDeckShellState();
+  State<AppShell> createState() => _AppShellState();
 }
 
-class _SuperDeckShellState extends State<SuperDeckShell> {
+class _AppShellState extends State<AppShell> {
   final _pageController = createPageController();
 
   @override
@@ -92,7 +91,7 @@ class _SuperDeckShellState extends State<SuperDeckShell> {
   Widget build(BuildContext context) {
     return Watch((context) {
       void handleGoToSlide(int page) {
-        sdeck.goToPage(page);
+        deckController.goToPage(page);
         _pageController().animateToPage(
           page,
           duration: const Duration(milliseconds: 300),
@@ -120,6 +119,8 @@ class _SuperDeckShellState extends State<SuperDeckShell> {
       void handlePreviousSlide() {
         handleStepSlide(-1);
       }
+
+      final style = styles.get(null);
 
       return CallbackShortcuts(
         bindings: {
@@ -152,15 +153,16 @@ class _SuperDeckShellState extends State<SuperDeckShell> {
             includeRepeats: false,
           ): handlePreviousSlide,
         },
-        child: Focus(
-          autofocus: true,
-          child: Scaffold(
-            body: SlideWrapper(
-              child: PageView(
-                controller: _pageController.value,
-                children: widget.data.slides.map(SlideView.new).toList(),
-              ),
-            ),
+        child: PressableBox(
+          style: style.outerContainer.animate(),
+          child: PageView(
+            controller: _pageController.value,
+            children: widget.data.slides.map((config) {
+              return PressableBox(
+                style: style.innerContainer.animate(),
+                child: SlideView(config),
+              );
+            }).toList(),
           ),
         ),
       );

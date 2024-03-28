@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../helpers/scale.dart';
+import '../../helpers/constants.dart';
 import '../../helpers/template_builder.dart';
 import '../../models/slide_model.dart';
-import '../atoms/slide_wrapper.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
@@ -16,30 +15,62 @@ class SlideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final config = slide;
-    TemplateBuilder builder;
 
     if (config is ImageSlideConfig) {
-      builder = ImageSlideBuilder(config);
+      return ImageSlide(config);
     } else if (config is TwoColumnSlideConfig) {
-      builder = TwoColumnSlideBuilder(config);
+      return TwoColumnSlide(config);
     } else if (config is TwoColumnHeaderSlideConfig) {
-      builder = TwoColumnHeaderSlideConfigBuilder(config);
+      return TwoColumnHeaderSlide(config);
     } else if (config is SimpleSlideConfig) {
-      builder = SimpleSlideBuilder(config);
+      return SimpleSlide(config);
     } else {
       throw UnimplementedError('Slide config not implemented');
     }
-    final constraints = SlideConstraints.of(context)!.constraints;
-    final paddingSize = EdgeInsets.all(40.0.sh);
+  }
+}
 
-    final constraintsWithPadding = constraints.deflate(paddingSize).normalize();
+class SlideWrapper extends StatelessWidget {
+  const SlideWrapper({required this.child, super.key});
 
-    return SlideConstraints(
-      constraints: constraintsWithPadding,
-      child: Padding(
-        padding: paddingSize,
-        child: builder.build(context),
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      autofocus: true,
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: kAspectRatio,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SlideConstraints(
+                constraints: constraints,
+                child: child,
+              );
+            },
+          ),
+        ),
       ),
     );
+  }
+}
+
+class SlideConstraints extends InheritedWidget {
+  const SlideConstraints({
+    required this.constraints,
+    required super.child,
+    super.key,
+  });
+
+  final BoxConstraints constraints;
+
+  static SlideConstraints? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SlideConstraints>();
+  }
+
+  @override
+  bool updateShouldNotify(SlideConstraints oldWidget) {
+    return oldWidget.constraints != constraints;
   }
 }

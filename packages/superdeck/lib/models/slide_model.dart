@@ -13,11 +13,13 @@ abstract class SlideConfig with SlideConfigMappable {
   final String? background;
   final ContentAlignment contentAlignment;
   final String content;
+  final String? variant;
 
   const SlideConfig({
     required this.title,
     this.background,
     this.content = '',
+    this.variant,
     this.contentAlignment = ContentAlignment.centerLeft,
   });
   String get templateId;
@@ -33,6 +35,7 @@ class SimpleSlideConfig extends SlideConfig with SimpleSlideConfigMappable {
     super.background,
     super.contentAlignment,
     super.content,
+    super.variant,
   });
 
   @override
@@ -53,6 +56,7 @@ class ImageSlideConfig extends SlideConfig with ImageSlideConfigMappable {
     this.imageFit = ImageFit.cover,
     this.image = '',
     this.imagePosition = ImagePosition.left,
+    super.variant,
     super.background,
     super.content,
   });
@@ -74,6 +78,7 @@ class TwoColumnSlideConfig extends SlideConfig
     super.background,
     super.contentAlignment,
     super.content,
+    super.variant,
   }) {
     _tags = parseContentWithTags(content, [SyntaxTag.left, SyntaxTag.right]);
   }
@@ -108,6 +113,7 @@ class TwoColumnHeaderSlideConfig extends SlideConfig
     super.background,
     super.contentAlignment,
     super.content = '',
+    super.variant,
   }) {
     _tags = parseContentWithTags(content, [SyntaxTag.left, SyntaxTag.right]);
   }
@@ -115,17 +121,11 @@ class TwoColumnHeaderSlideConfig extends SlideConfig
   @override
   String get templateId => 'two-column-header';
 
-  String get topContent {
-    return _getTagContent(_tags, SyntaxTag.right);
-  }
+  String get topContent => _getTagContent(_tags, SyntaxTag.right);
 
-  String get leftContent {
-    return _getTagContent(_tags, SyntaxTag.left);
-  }
+  String get leftContent => _getTagContent(_tags, SyntaxTag.left);
 
-  String get rightContent {
-    return _getTagContent(_tags, SyntaxTag.right);
-  }
+  String get rightContent => _getTagContent(_tags, SyntaxTag.right);
 
   static const fromMap = TwoColumnHeaderSlideConfigMapper.fromMap;
   static const fromJson = TwoColumnHeaderSlideConfigMapper.fromJson;

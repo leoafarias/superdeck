@@ -33,6 +33,9 @@ class SlideConfigMapper extends ClassMapperBase<SlideConfig> {
   static String _$content(SlideConfig v) => v.content;
   static const Field<SlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static String? _$variant(SlideConfig v) => v.variant;
+  static const Field<SlideConfig, String> _f$variant =
+      Field('variant', _$variant, opt: true);
   static ContentAlignment _$contentAlignment(SlideConfig v) =>
       v.contentAlignment;
   static const Field<SlideConfig, ContentAlignment> _f$contentAlignment = Field(
@@ -44,6 +47,7 @@ class SlideConfigMapper extends ClassMapperBase<SlideConfig> {
     #title: _f$title,
     #background: _f$background,
     #content: _f$content,
+    #variant: _f$variant,
     #contentAlignment: _f$contentAlignment,
   };
 
@@ -71,7 +75,8 @@ mixin SlideConfigMappable {
 
 abstract class SlideConfigCopyWith<$R, $In extends SlideConfig, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? title, String? background, String? content});
+  $R call(
+      {String? title, String? background, String? content, String? variant});
   SlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -105,6 +110,9 @@ class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
   static String _$content(SimpleSlideConfig v) => v.content;
   static const Field<SimpleSlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static String? _$variant(SimpleSlideConfig v) => v.variant;
+  static const Field<SimpleSlideConfig, String> _f$variant =
+      Field('variant', _$variant, opt: true);
 
   @override
   final MappableFields<SimpleSlideConfig> fields = const {
@@ -112,6 +120,7 @@ class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
     #background: _f$background,
     #contentAlignment: _f$contentAlignment,
     #content: _f$content,
+    #variant: _f$variant,
   };
 
   static SimpleSlideConfig _instantiate(DecodingData data) {
@@ -119,7 +128,8 @@ class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
         title: data.dec(_f$title),
         background: data.dec(_f$background),
         contentAlignment: data.dec(_f$contentAlignment),
-        content: data.dec(_f$content));
+        content: data.dec(_f$content),
+        variant: data.dec(_f$variant));
   }
 
   @override
@@ -184,7 +194,8 @@ abstract class SimpleSlideConfigCopyWith<$R, $In extends SimpleSlideConfig,
       {String? title,
       String? background,
       ContentAlignment? contentAlignment,
-      String? content});
+      String? content,
+      String? variant});
   SimpleSlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -202,12 +213,14 @@ class _SimpleSlideConfigCopyWithImpl<$R, $Out>
           {Object? title = $none,
           Object? background = $none,
           ContentAlignment? contentAlignment,
-          String? content}) =>
+          String? content,
+          Object? variant = $none}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
         if (contentAlignment != null) #contentAlignment: contentAlignment,
-        if (content != null) #content: content
+        if (content != null) #content: content,
+        if (variant != $none) #variant: variant
       }));
   @override
   SimpleSlideConfig $make(CopyWithData data) => SimpleSlideConfig(
@@ -215,7 +228,8 @@ class _SimpleSlideConfigCopyWithImpl<$R, $Out>
       background: data.get(#background, or: $value.background),
       contentAlignment:
           data.get(#contentAlignment, or: $value.contentAlignment),
-      content: data.get(#content, or: $value.content));
+      content: data.get(#content, or: $value.content),
+      variant: data.get(#variant, or: $value.variant));
 
   @override
   SimpleSlideConfigCopyWith<$R2, SimpleSlideConfig, $Out2> $chain<$R2, $Out2>(
@@ -253,6 +267,9 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
   static const Field<ImageSlideConfig, ImagePosition> _f$imagePosition = Field(
       'imagePosition', _$imagePosition,
       opt: true, def: ImagePosition.left);
+  static String? _$variant(ImageSlideConfig v) => v.variant;
+  static const Field<ImageSlideConfig, String> _f$variant =
+      Field('variant', _$variant, opt: true);
   static String? _$background(ImageSlideConfig v) => v.background;
   static const Field<ImageSlideConfig, String> _f$background =
       Field('background', _$background, opt: true);
@@ -270,6 +287,7 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
     #imageFit: _f$imageFit,
     #image: _f$image,
     #imagePosition: _f$imagePosition,
+    #variant: _f$variant,
     #background: _f$background,
     #content: _f$content,
     #contentAlignment: _f$contentAlignment,
@@ -281,6 +299,7 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
         imageFit: data.dec(_f$imageFit),
         image: data.dec(_f$image),
         imagePosition: data.dec(_f$imagePosition),
+        variant: data.dec(_f$variant),
         background: data.dec(_f$background),
         content: data.dec(_f$content));
   }
@@ -347,6 +366,7 @@ abstract class ImageSlideConfigCopyWith<$R, $In extends ImageSlideConfig, $Out>
       ImageFit? imageFit,
       String? image,
       ImagePosition? imagePosition,
+      String? variant,
       String? background,
       String? content});
   ImageSlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -367,6 +387,7 @@ class _ImageSlideConfigCopyWithImpl<$R, $Out>
           ImageFit? imageFit,
           String? image,
           ImagePosition? imagePosition,
+          Object? variant = $none,
           Object? background = $none,
           String? content}) =>
       $apply(FieldCopyWithData({
@@ -374,6 +395,7 @@ class _ImageSlideConfigCopyWithImpl<$R, $Out>
         if (imageFit != null) #imageFit: imageFit,
         if (image != null) #image: image,
         if (imagePosition != null) #imagePosition: imagePosition,
+        if (variant != $none) #variant: variant,
         if (background != $none) #background: background,
         if (content != null) #content: content
       }));
@@ -383,6 +405,7 @@ class _ImageSlideConfigCopyWithImpl<$R, $Out>
       imageFit: data.get(#imageFit, or: $value.imageFit),
       image: data.get(#image, or: $value.image),
       imagePosition: data.get(#imagePosition, or: $value.imagePosition),
+      variant: data.get(#variant, or: $value.variant),
       background: data.get(#background, or: $value.background),
       content: data.get(#content, or: $value.content));
 
@@ -422,6 +445,9 @@ class TwoColumnSlideConfigMapper extends ClassMapperBase<TwoColumnSlideConfig> {
   static String _$content(TwoColumnSlideConfig v) => v.content;
   static const Field<TwoColumnSlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static String? _$variant(TwoColumnSlideConfig v) => v.variant;
+  static const Field<TwoColumnSlideConfig, String> _f$variant =
+      Field('variant', _$variant, opt: true);
 
   @override
   final MappableFields<TwoColumnSlideConfig> fields = const {
@@ -429,6 +455,7 @@ class TwoColumnSlideConfigMapper extends ClassMapperBase<TwoColumnSlideConfig> {
     #background: _f$background,
     #contentAlignment: _f$contentAlignment,
     #content: _f$content,
+    #variant: _f$variant,
   };
 
   static TwoColumnSlideConfig _instantiate(DecodingData data) {
@@ -436,7 +463,8 @@ class TwoColumnSlideConfigMapper extends ClassMapperBase<TwoColumnSlideConfig> {
         title: data.dec(_f$title),
         background: data.dec(_f$background),
         contentAlignment: data.dec(_f$contentAlignment),
-        content: data.dec(_f$content));
+        content: data.dec(_f$content),
+        variant: data.dec(_f$variant));
   }
 
   @override
@@ -503,7 +531,8 @@ abstract class TwoColumnSlideConfigCopyWith<
       {String? title,
       String? background,
       ContentAlignment? contentAlignment,
-      String? content});
+      String? content,
+      String? variant});
   TwoColumnSlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -521,12 +550,14 @@ class _TwoColumnSlideConfigCopyWithImpl<$R, $Out>
           {Object? title = $none,
           Object? background = $none,
           ContentAlignment? contentAlignment,
-          String? content}) =>
+          String? content,
+          Object? variant = $none}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
         if (contentAlignment != null) #contentAlignment: contentAlignment,
-        if (content != null) #content: content
+        if (content != null) #content: content,
+        if (variant != $none) #variant: variant
       }));
   @override
   TwoColumnSlideConfig $make(CopyWithData data) => TwoColumnSlideConfig(
@@ -534,7 +565,8 @@ class _TwoColumnSlideConfigCopyWithImpl<$R, $Out>
       background: data.get(#background, or: $value.background),
       contentAlignment:
           data.get(#contentAlignment, or: $value.contentAlignment),
-      content: data.get(#content, or: $value.content));
+      content: data.get(#content, or: $value.content),
+      variant: data.get(#variant, or: $value.variant));
 
   @override
   TwoColumnSlideConfigCopyWith<$R2, TwoColumnSlideConfig, $Out2>
@@ -574,6 +606,9 @@ class TwoColumnHeaderSlideConfigMapper
   static String _$content(TwoColumnHeaderSlideConfig v) => v.content;
   static const Field<TwoColumnHeaderSlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static String? _$variant(TwoColumnHeaderSlideConfig v) => v.variant;
+  static const Field<TwoColumnHeaderSlideConfig, String> _f$variant =
+      Field('variant', _$variant, opt: true);
 
   @override
   final MappableFields<TwoColumnHeaderSlideConfig> fields = const {
@@ -581,6 +616,7 @@ class TwoColumnHeaderSlideConfigMapper
     #background: _f$background,
     #contentAlignment: _f$contentAlignment,
     #content: _f$content,
+    #variant: _f$variant,
   };
 
   static TwoColumnHeaderSlideConfig _instantiate(DecodingData data) {
@@ -588,7 +624,8 @@ class TwoColumnHeaderSlideConfigMapper
         title: data.dec(_f$title),
         background: data.dec(_f$background),
         contentAlignment: data.dec(_f$contentAlignment),
-        content: data.dec(_f$content));
+        content: data.dec(_f$content),
+        variant: data.dec(_f$variant));
   }
 
   @override
@@ -657,7 +694,8 @@ abstract class TwoColumnHeaderSlideConfigCopyWith<
       {String? title,
       String? background,
       ContentAlignment? contentAlignment,
-      String? content});
+      String? content,
+      String? variant});
   TwoColumnHeaderSlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -677,12 +715,14 @@ class _TwoColumnHeaderSlideConfigCopyWithImpl<$R, $Out>
           {Object? title = $none,
           Object? background = $none,
           ContentAlignment? contentAlignment,
-          String? content}) =>
+          String? content,
+          Object? variant = $none}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
         if (contentAlignment != null) #contentAlignment: contentAlignment,
-        if (content != null) #content: content
+        if (content != null) #content: content,
+        if (variant != $none) #variant: variant
       }));
   @override
   TwoColumnHeaderSlideConfig $make(
@@ -692,7 +732,8 @@ class _TwoColumnHeaderSlideConfigCopyWithImpl<$R, $Out>
           background: data.get(#background, or: $value.background),
           contentAlignment:
               data.get(#contentAlignment, or: $value.contentAlignment),
-          content: data.get(#content, or: $value.content));
+          content: data.get(#content, or: $value.content),
+          variant: data.get(#variant, or: $value.variant));
 
   @override
   TwoColumnHeaderSlideConfigCopyWith<$R2, TwoColumnHeaderSlideConfig, $Out2>

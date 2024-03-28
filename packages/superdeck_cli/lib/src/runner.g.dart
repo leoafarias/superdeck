@@ -31,6 +31,7 @@ class _$SuperDeckRunner<T extends dynamic> extends CommandRunner<int> {
       stdout.writeln('${e.message}\n');
       stdout.writeln(e.usage);
     }
+    return null;
   }
 }
 

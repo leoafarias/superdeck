@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:mix/mix.dart';
 import 'package:path/path.dart' as p;
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:watcher/watcher.dart';
@@ -11,19 +12,39 @@ import 'package:watcher/watcher.dart';
 import '../helpers/service_locator.dart';
 import '../models/deck_data_model.dart';
 import '../models/slide_model.dart';
+import '../styles/style_util.dart';
 
 final _slidesJsonFile = File(p.join('assets', 'slides.json'));
 final _assetsJsonFile = File(p.join('assets', 'assets.json'));
 
-final sdeck = getIt<SuperDeckController>();
+final deckController = getIt<SuperDeckController>();
+final styles = getIt<StyleController>();
+
+class StyleController {
+  final _data = signal(SlideStyle.base());
+
+  void load(SlideStyle? style) {
+    _data.value = _data.value.merge(style);
+  }
+
+  SlideStyle get(String? variant) {
+    return variant == null
+        ? _data()
+        : _data().applyVariants([Variant(variant)]);
+  }
+}
 
 class SuperDeckController {
-  final data =
-      signal<DeckData>(const DeckData(), debugLabel: 'Controller: data');
-  final currentPage = signal<int>(0, debugLabel: 'Controller: currentPage');
-  late final currentSlide = computed(() => data().slides[currentPage()],
-      debugLabel: "Controller: currentSlide");
-  final isLoading = signal<bool>(true, debugLabel: 'Controller: isLoading');
+  final data = signal(
+    const DeckData(),
+  );
+  final currentPage = signal(
+    0,
+  );
+  late final currentSlide = computed(
+    () => data().slides[currentPage()],
+  );
+  final isLoading = signal<bool>(true);
 
   SuperDeckController() {
     _loadData().then((value) {
@@ -135,6 +156,8 @@ class SuperDeckController {
     final assets = await rootBundle.loadString(_assetsJsonFile.path);
 
     return DeckData(
-        slides: _parseSlides(content), assets: _parseAssets(assets));
+      slides: _parseSlides(content),
+      assets: _parseAssets(assets),
+    );
   }
 }

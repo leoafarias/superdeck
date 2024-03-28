@@ -1,4 +1,3 @@
-import '../../helpers/scale.dart';
 import 'package:flutter/material.dart';
 
 class CodePreview extends StatelessWidget {
@@ -29,12 +28,7 @@ class CodePreviewScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor:
           brightness == Brightness.dark ? Colors.black12 : Colors.grey,
-      body: Center(
-        child: Transform.scale(
-          scale: 1.0.sv,
-          child: child,
-        ),
-      ),
+      body: Center(child: child),
     );
   }
 }

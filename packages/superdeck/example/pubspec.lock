@@ -85,10 +85,10 @@ packages:
     dependency: transitive
     description:
       name: dart_mappable
-      sha256: "7b6d38ae95f1ae8ffa65df9a5464f14b56c2de94699a035202ca4cd3a0ba249e"
+      sha256: f9f272f2af6c11adf4abc22574eb946df110251052a0d00c03519ecf2442defc
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "4.2.1"
   dart_markdown:
     dependency: transitive
     description:
@@ -125,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: file
-      sha256: "1b92bec4fc2a72f59a8e15af5f52cd441e4a7860b49499d69dfa817af20e925d"
+      sha256: "5fc22d7c25582e38ad9a8515372cd9a93834027aacf1801cf01164dac0ffa08c"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.4"
+    version: "7.0.0"
   fixnum:
     dependency: transitive
     description:
@@ -188,10 +188,10 @@ packages:
     dependency: transitive
     description:
       name: google_fonts
-      sha256: f0b8d115a13ecf827013ec9fc883390ccc0e87a96ed5347a3114cac177ef18e8
+      sha256: b1ac0fe2832c9cc95e5e88b57d627c5e68c223b9657f4b96e1487aa9098c7b82
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.0"
+    version: "6.2.1"
   http:
     dependency: transitive
     description:
@@ -276,10 +276,10 @@ packages:
     dependency: transitive
     description:
       name: mix
-      sha256: "3750414449fd20fb2b89620a5ab3e1a1ace4ed92aa50b0e04818bd16bc8d2e5e"
+      sha256: dca38916a87893587b0d09e6098780ba3f2e929f1720d748f3f055769f7ea361
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0-beta.8"
+    version: "1.0.0-beta.11"
   octo_image:
     dependency: transitive
     description:
@@ -436,18 +436,18 @@ packages:
     dependency: transitive
     description:
       name: signals_core
-      sha256: "7455e0cfb70801c7f1e6872e65282f5194688d211b80281868932fd2dbe22667"
+      sha256: "29258212f4e89297e7a6abbc0a000fda934bfa6d8b5634c30ce31ec1033bf9e4"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "4.5.0"
   signals_flutter:
     dependency: transitive
     description:
       name: signals_flutter
-      sha256: "4872f8c4d104464fe487f4b1964f352178f7cfb5d76e4119b0a7dcd4df9a08a0"
+      sha256: dd4971b2a0165d1ef8de1a45d59e89cdcdd5fc1c8f7fa180d55e6d049be89e92
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "4.5.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -528,10 +528,10 @@ packages:
     dependency: transitive
     description:
       name: syntax_highlight
-      sha256: "47debc1cbd9d3297c4dbef6f3019cc60862d9957b02879377042bf4ea6a033ef"
+      sha256: ee33b6aa82cc722bb9b40152a792181dee222353b486c0255fde666a3e3a4997
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "0.4.0"
   term_glyph:
     dependency: transitive
     description:
@@ -630,4 +630,4 @@ packages:
     version: "1.0.4"
 sdks:
   dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.19.0"
+  flutter: ">=3.19.2"

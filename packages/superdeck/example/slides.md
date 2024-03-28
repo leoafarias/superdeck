@@ -3,6 +3,7 @@ title: "Slide 1: Headings"
 image:
     fit: contain
     src: https://source.unsplash.com/random/900×700/?landscape
+variant: simple
 ---
 
 # Heading 1
@@ -11,6 +12,10 @@ image:
 #### Heading 4
 ##### Heading 5
 ###### Heading 6
+
+**Paragraph**
+
+Here is a paragraph with some text.
 
 
 ---

@@ -1,34 +1,45 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:superdeck/superdeck.dart';
 
-void main() async {
-  await SuperDeck.initialize();
-  runApp(SuperDeck.runApp());
+SlideStyle style() {
+  return SlideStyle(
+    outerContainer: Style(
+      padding.all(20),
+      // backgroundColor.red(),
+    ),
+    innerContainer: Style(
+      padding.all(20),
+
+      // backgroundColor.green(),
+      borderRadius.all(10),
+    ),
+    content: Style(
+      $.h1.textStyle.color.purple(),
+      const Variant('simple')(
+        $.paragraph.textStyle.color.red(),
+      ),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'SuperDeck',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      home: const App(),
-    );
-  }
+void main() {
+  SuperDeck.run(style: style());
 }
 
-final scaffoldKey = GlobalKey<ScaffoldState>();
+double _calculateDistance(Alignment alignment) {
+  final distance =
+      -math.sqrt(alignment.x * alignment.x + alignment.y * alignment.y) / 1.5;
 
-class App extends StatelessWidget {
-  const App({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      body: SuperDeck.runApp(),
-    );
-  }
+  return 1 - math.min(distance.abs(), 1);
+}
+
+Matrix4 _transformMatrix(Alignment alignment) {
+  final double rotateX = alignment.y * 0.2;
+  final double rotateY = -alignment.x * 0.2;
+  return Matrix4.identity()
+    ..rotateX(rotateX)
+    ..rotateY(rotateY)
+    ..translate(0.0, 0.0, 100.0);
 }

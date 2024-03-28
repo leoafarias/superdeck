@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 import '../components/atoms/markdown_viewer.dart';
+import '../components/molecules/slide_view.dart';
 import '../models/slide_model.dart';
 import '../models/slide_options_model.dart';
+import '../superdeck.dart';
 import 'enum_mappers.dart';
 
 enum BackgroundType { color, uri, none }
@@ -33,25 +36,32 @@ enum BackgroundType { color, uri, none }
 //   }
 // }
 
-abstract class TemplateBuilder<C extends SlideConfig> extends StatelessWidget {
-  final C config;
+abstract class SlideRenderer<Config extends SlideConfig>
+    extends StatelessWidget {
+  final Config config;
 
-  const TemplateBuilder(this.config, {super.key});
+  const SlideRenderer(this.config, {super.key});
 
-  Widget builder(C config, BuildContext context);
+  Widget render(Config config, BuildContext context);
 
   @override
-  Widget build(BuildContext context) => builder(config, context);
+  Widget build(BuildContext context) {
+    return SlideWrapper(
+      child: render(config, context),
+    );
+  }
 }
 
-class ImageSlideBuilder extends TemplateBuilder<ImageSlideConfig> {
-  const ImageSlideBuilder(super.config, {super.key});
+class ImageSlide extends SlideRenderer<ImageSlideConfig> {
+  const ImageSlide(super.config, {super.key});
 
   @override
-  Widget builder(ImageSlideConfig config, BuildContext context) {
+  Widget render(ImageSlideConfig config, BuildContext context) {
     final imageUrl = config.image;
     final imageFit = config.imageFit;
     final boxFit = imageFit.toBoxFit();
+
+    final style = styles.get(config.variant);
 
     Widget imageWidget = const SizedBox(
       height: 0,
@@ -69,7 +79,7 @@ class ImageSlideBuilder extends TemplateBuilder<ImageSlideConfig> {
 
     List<Widget> children = [
       Expanded(child: imageWidget),
-      Expanded(child: SlideContent(config.content)),
+      Expanded(child: SlideContent(config.content, style: style)),
     ];
 
     if (config.imagePosition == ImagePosition.right) {
@@ -82,78 +92,84 @@ class ImageSlideBuilder extends TemplateBuilder<ImageSlideConfig> {
   }
 }
 
-class SimpleSlideBuilder extends TemplateBuilder<SimpleSlideConfig> {
-  const SimpleSlideBuilder(super.config, {super.key});
+class SimpleSlide extends SlideRenderer<SimpleSlideConfig> {
+  const SimpleSlide(super.config, {super.key});
 
   @override
-  Widget builder(SimpleSlideConfig config, BuildContext context) {
-    final flexAlignment =
-        FlexAlignment.fromContentAlignment(config.contentAlignment);
-
-    final background = config.background;
-
-    Widget current = Column(
-      mainAxisAlignment: flexAlignment.mainAxisAlignment,
-      crossAxisAlignment: flexAlignment.crossAxisAlignment,
-      children: [SlideContent(config.content)],
-    );
-
-    BoxDecoration decoration;
-    if (background != null) {
-      decoration = BoxDecoration(
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(background),
-          fit: BoxFit.cover,
-        ),
+  Widget render(SimpleSlideConfig config, BuildContext context) {
+    return Watch((context) {
+      final flexAlignment = FlexAlignment.fromContentAlignment(
+        config.contentAlignment,
       );
-    } else {
-      return current;
-    }
 
-    // has background
-    final backgroundWidget = Container(
-      decoration: decoration,
-      child: current,
-    );
+      final style = styles.get(config.variant);
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        backgroundWidget,
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0),
-                Colors.black.withOpacity(0.8),
-              ],
-            ),
+      final background = config.background;
+
+      Widget current = Column(
+        mainAxisAlignment: flexAlignment.mainAxisAlignment,
+        crossAxisAlignment: flexAlignment.crossAxisAlignment,
+        children: [SlideContent(style: style, config.content)],
+      );
+
+      BoxDecoration decoration;
+      if (background != null) {
+        decoration = BoxDecoration(
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(background),
+            fit: BoxFit.cover,
           ),
-          child: current,
-        ),
-      ],
-    );
+        );
+      } else {
+        return current;
+      }
+
+      // has background
+      final backgroundWidget = Container(
+        decoration: decoration,
+        child: current,
+      );
+
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          backgroundWidget,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0),
+                  Colors.black.withOpacity(0.8),
+                ],
+              ),
+            ),
+            child: current,
+          ),
+        ],
+      );
+    });
   }
 }
 
-class TwoColumnSlideBuilder extends TemplateBuilder<TwoColumnSlideConfig> {
-  const TwoColumnSlideBuilder(super.config, {super.key});
+class TwoColumnSlide extends SlideRenderer<TwoColumnSlideConfig> {
+  const TwoColumnSlide(super.config, {super.key});
 
   @override
-  Widget builder(TwoColumnSlideConfig config, BuildContext context) {
+  Widget render(TwoColumnSlideConfig config, BuildContext context) {
+    final style = styles.get(config.variant);
     final children = [
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.leftContent),
+          child: SlideContent(config.leftContent, style: style),
         ),
       ),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.rightContent),
+          child: SlideContent(config.rightContent, style: style),
         ),
       ),
     ];
@@ -164,23 +180,23 @@ class TwoColumnSlideBuilder extends TemplateBuilder<TwoColumnSlideConfig> {
   }
 }
 
-class TwoColumnHeaderSlideConfigBuilder
-    extends TemplateBuilder<TwoColumnHeaderSlideConfig> {
-  const TwoColumnHeaderSlideConfigBuilder(super.config, {super.key});
+class TwoColumnHeaderSlide extends SlideRenderer<TwoColumnHeaderSlideConfig> {
+  const TwoColumnHeaderSlide(super.config, {super.key});
 
   @override
-  Widget builder(TwoColumnHeaderSlideConfig config, BuildContext context) {
+  Widget render(TwoColumnHeaderSlideConfig config, BuildContext context) {
+    final style = styles.get(config.variant);
     final children = [
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.leftContent),
+          child: SlideContent(style: style, config.leftContent),
         ),
       ),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.rightContent),
+          child: SlideContent(config.rightContent, style: style),
         ),
       ),
     ];
@@ -189,7 +205,7 @@ class TwoColumnHeaderSlideConfigBuilder
       children: [
         Row(
           children: [
-            SlideContent(config.topContent),
+            SlideContent(config.topContent, style: style),
           ],
         ),
         Expanded(
@@ -201,24 +217,3 @@ class TwoColumnHeaderSlideConfigBuilder
     );
   }
 }
-
-final Map<String, Color> colorMap = {
-  'red': Colors.red,
-  'green': Colors.green,
-  'blue': Colors.blue,
-  'yellow': Colors.yellow,
-  'orange': Colors.orange,
-  'purple': Colors.purple,
-  'pink': Colors.pink,
-  'brown': Colors.brown,
-  'grey': Colors.grey,
-  'cyan': Colors.cyan,
-  'indigo': Colors.indigo,
-  'lime': Colors.lime,
-  'teal': Colors.teal,
-  'amber': Colors.amber,
-  'black': Colors.black,
-  'white': Colors.white,
-  'transparent': Colors.transparent,
-  // Add more mappings as needed
-};
