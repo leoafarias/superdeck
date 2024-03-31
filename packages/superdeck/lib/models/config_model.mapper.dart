@@ -4,7 +4,7 @@
 // ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
-part of 'slide_model.dart';
+part of 'config_model.dart';
 
 class SlideConfigMapper extends ClassMapperBase<SlideConfig> {
   SlideConfigMapper._();
@@ -13,7 +13,7 @@ class SlideConfigMapper extends ClassMapperBase<SlideConfig> {
   static SlideConfigMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideConfigMapper._());
-      SimpleSlideConfigMapper.ensureInitialized();
+      BaseSlideConfigMapper.ensureInitialized();
       ImageSlideConfigMapper.ensureInitialized();
       TwoColumnSlideConfigMapper.ensureInitialized();
       TwoColumnHeaderSlideConfigMapper.ensureInitialized();
@@ -40,7 +40,7 @@ class SlideConfigMapper extends ClassMapperBase<SlideConfig> {
       v.contentAlignment;
   static const Field<SlideConfig, ContentAlignment> _f$contentAlignment = Field(
       'contentAlignment', _$contentAlignment,
-      opt: true, def: ContentAlignment.centerLeft);
+      key: 'content_alignment', opt: true, def: ContentAlignment.centerLeft);
 
   @override
   final MappableFields<SlideConfig> fields = const {
@@ -80,13 +80,13 @@ abstract class SlideConfigCopyWith<$R, $In extends SlideConfig, $Out>
   SlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
-  SimpleSlideConfigMapper._();
+class BaseSlideConfigMapper extends ClassMapperBase<BaseSlideConfig> {
+  BaseSlideConfigMapper._();
 
-  static SimpleSlideConfigMapper? _instance;
-  static SimpleSlideConfigMapper ensureInitialized() {
+  static BaseSlideConfigMapper? _instance;
+  static BaseSlideConfigMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SimpleSlideConfigMapper._());
+      MapperContainer.globals.use(_instance = BaseSlideConfigMapper._());
       SlideConfigMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
     }
@@ -94,28 +94,30 @@ class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
   }
 
   @override
-  final String id = 'SimpleSlideConfig';
+  final String id = 'BaseSlideConfig';
 
-  static String? _$title(SimpleSlideConfig v) => v.title;
-  static const Field<SimpleSlideConfig, String> _f$title =
+  static String? _$title(BaseSlideConfig v) => v.title;
+  static const Field<BaseSlideConfig, String> _f$title =
       Field('title', _$title, opt: true);
-  static String? _$background(SimpleSlideConfig v) => v.background;
-  static const Field<SimpleSlideConfig, String> _f$background =
+  static String? _$background(BaseSlideConfig v) => v.background;
+  static const Field<BaseSlideConfig, String> _f$background =
       Field('background', _$background, opt: true);
-  static ContentAlignment _$contentAlignment(SimpleSlideConfig v) =>
+  static ContentAlignment _$contentAlignment(BaseSlideConfig v) =>
       v.contentAlignment;
-  static const Field<SimpleSlideConfig, ContentAlignment> _f$contentAlignment =
+  static const Field<BaseSlideConfig, ContentAlignment> _f$contentAlignment =
       Field('contentAlignment', _$contentAlignment,
-          opt: true, def: ContentAlignment.centerLeft);
-  static String _$content(SimpleSlideConfig v) => v.content;
-  static const Field<SimpleSlideConfig, String> _f$content =
+          key: 'content_alignment',
+          opt: true,
+          def: ContentAlignment.centerLeft);
+  static String _$content(BaseSlideConfig v) => v.content;
+  static const Field<BaseSlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');
-  static String? _$variant(SimpleSlideConfig v) => v.variant;
-  static const Field<SimpleSlideConfig, String> _f$variant =
+  static String? _$variant(BaseSlideConfig v) => v.variant;
+  static const Field<BaseSlideConfig, String> _f$variant =
       Field('variant', _$variant, opt: true);
 
   @override
-  final MappableFields<SimpleSlideConfig> fields = const {
+  final MappableFields<BaseSlideConfig> fields = const {
     #title: _f$title,
     #background: _f$background,
     #contentAlignment: _f$contentAlignment,
@@ -123,8 +125,8 @@ class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
     #variant: _f$variant,
   };
 
-  static SimpleSlideConfig _instantiate(DecodingData data) {
-    return SimpleSlideConfig(
+  static BaseSlideConfig _instantiate(DecodingData data) {
+    return BaseSlideConfig(
         title: data.dec(_f$title),
         background: data.dec(_f$background),
         contentAlignment: data.dec(_f$contentAlignment),
@@ -135,60 +137,58 @@ class SimpleSlideConfigMapper extends ClassMapperBase<SimpleSlideConfig> {
   @override
   final Function instantiate = _instantiate;
 
-  static SimpleSlideConfig fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SimpleSlideConfig>(map);
+  static BaseSlideConfig fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<BaseSlideConfig>(map);
   }
 
-  static SimpleSlideConfig fromJson(String json) {
-    return ensureInitialized().decodeJson<SimpleSlideConfig>(json);
+  static BaseSlideConfig fromJson(String json) {
+    return ensureInitialized().decodeJson<BaseSlideConfig>(json);
   }
 }
 
-mixin SimpleSlideConfigMappable {
+mixin BaseSlideConfigMappable {
   String toJson() {
-    return SimpleSlideConfigMapper.ensureInitialized()
-        .encodeJson<SimpleSlideConfig>(this as SimpleSlideConfig);
+    return BaseSlideConfigMapper.ensureInitialized()
+        .encodeJson<BaseSlideConfig>(this as BaseSlideConfig);
   }
 
   Map<String, dynamic> toMap() {
-    return SimpleSlideConfigMapper.ensureInitialized()
-        .encodeMap<SimpleSlideConfig>(this as SimpleSlideConfig);
+    return BaseSlideConfigMapper.ensureInitialized()
+        .encodeMap<BaseSlideConfig>(this as BaseSlideConfig);
   }
 
-  SimpleSlideConfigCopyWith<SimpleSlideConfig, SimpleSlideConfig,
-          SimpleSlideConfig>
-      get copyWith => _SimpleSlideConfigCopyWithImpl(
-          this as SimpleSlideConfig, $identity, $identity);
+  BaseSlideConfigCopyWith<BaseSlideConfig, BaseSlideConfig, BaseSlideConfig>
+      get copyWith => _BaseSlideConfigCopyWithImpl(
+          this as BaseSlideConfig, $identity, $identity);
   @override
   String toString() {
-    return SimpleSlideConfigMapper.ensureInitialized()
-        .stringifyValue(this as SimpleSlideConfig);
+    return BaseSlideConfigMapper.ensureInitialized()
+        .stringifyValue(this as BaseSlideConfig);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            SimpleSlideConfigMapper.ensureInitialized()
-                .isValueEqual(this as SimpleSlideConfig, other));
+            BaseSlideConfigMapper.ensureInitialized()
+                .isValueEqual(this as BaseSlideConfig, other));
   }
 
   @override
   int get hashCode {
-    return SimpleSlideConfigMapper.ensureInitialized()
-        .hashValue(this as SimpleSlideConfig);
+    return BaseSlideConfigMapper.ensureInitialized()
+        .hashValue(this as BaseSlideConfig);
   }
 }
 
-extension SimpleSlideConfigValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, SimpleSlideConfig, $Out> {
-  SimpleSlideConfigCopyWith<$R, SimpleSlideConfig, $Out>
-      get $asSimpleSlideConfig =>
-          $base.as((v, t, t2) => _SimpleSlideConfigCopyWithImpl(v, t, t2));
+extension BaseSlideConfigValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, BaseSlideConfig, $Out> {
+  BaseSlideConfigCopyWith<$R, BaseSlideConfig, $Out> get $asBaseSlideConfig =>
+      $base.as((v, t, t2) => _BaseSlideConfigCopyWithImpl(v, t, t2));
 }
 
-abstract class SimpleSlideConfigCopyWith<$R, $In extends SimpleSlideConfig,
-    $Out> implements SlideConfigCopyWith<$R, $In, $Out> {
+abstract class BaseSlideConfigCopyWith<$R, $In extends BaseSlideConfig, $Out>
+    implements SlideConfigCopyWith<$R, $In, $Out> {
   @override
   $R call(
       {String? title,
@@ -196,18 +196,18 @@ abstract class SimpleSlideConfigCopyWith<$R, $In extends SimpleSlideConfig,
       ContentAlignment? contentAlignment,
       String? content,
       String? variant});
-  SimpleSlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+  BaseSlideConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
 
-class _SimpleSlideConfigCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SimpleSlideConfig, $Out>
-    implements SimpleSlideConfigCopyWith<$R, SimpleSlideConfig, $Out> {
-  _SimpleSlideConfigCopyWithImpl(super.value, super.then, super.then2);
+class _BaseSlideConfigCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, BaseSlideConfig, $Out>
+    implements BaseSlideConfigCopyWith<$R, BaseSlideConfig, $Out> {
+  _BaseSlideConfigCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<SimpleSlideConfig> $mapper =
-      SimpleSlideConfigMapper.ensureInitialized();
+  late final ClassMapperBase<BaseSlideConfig> $mapper =
+      BaseSlideConfigMapper.ensureInitialized();
   @override
   $R call(
           {Object? title = $none,
@@ -223,7 +223,7 @@ class _SimpleSlideConfigCopyWithImpl<$R, $Out>
         if (variant != $none) #variant: variant
       }));
   @override
-  SimpleSlideConfig $make(CopyWithData data) => SimpleSlideConfig(
+  BaseSlideConfig $make(CopyWithData data) => BaseSlideConfig(
       title: data.get(#title, or: $value.title),
       background: data.get(#background, or: $value.background),
       contentAlignment:
@@ -232,9 +232,9 @@ class _SimpleSlideConfigCopyWithImpl<$R, $Out>
       variant: data.get(#variant, or: $value.variant));
 
   @override
-  SimpleSlideConfigCopyWith<$R2, SimpleSlideConfig, $Out2> $chain<$R2, $Out2>(
+  BaseSlideConfigCopyWith<$R2, BaseSlideConfig, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _SimpleSlideConfigCopyWithImpl($value, $cast, t);
+      _BaseSlideConfigCopyWithImpl($value, $cast, t);
 }
 
 class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
@@ -245,8 +245,7 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ImageSlideConfigMapper._());
       SlideConfigMapper.ensureInitialized();
-      ImageFitMapper.ensureInitialized();
-      ImagePositionMapper.ensureInitialized();
+      ImageConfigMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -257,16 +256,9 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
   static String? _$title(ImageSlideConfig v) => v.title;
   static const Field<ImageSlideConfig, String> _f$title =
       Field('title', _$title, opt: true);
-  static ImageFit _$imageFit(ImageSlideConfig v) => v.imageFit;
-  static const Field<ImageSlideConfig, ImageFit> _f$imageFit =
-      Field('imageFit', _$imageFit, opt: true, def: ImageFit.cover);
-  static String _$image(ImageSlideConfig v) => v.image;
-  static const Field<ImageSlideConfig, String> _f$image =
-      Field('image', _$image, opt: true, def: '');
-  static ImagePosition _$imagePosition(ImageSlideConfig v) => v.imagePosition;
-  static const Field<ImageSlideConfig, ImagePosition> _f$imagePosition = Field(
-      'imagePosition', _$imagePosition,
-      opt: true, def: ImagePosition.left);
+  static ImageConfig _$image(ImageSlideConfig v) => v.image;
+  static const Field<ImageSlideConfig, ImageConfig> _f$image =
+      Field('image', _$image);
   static String? _$variant(ImageSlideConfig v) => v.variant;
   static const Field<ImageSlideConfig, String> _f$variant =
       Field('variant', _$variant, opt: true);
@@ -279,14 +271,13 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
   static ContentAlignment _$contentAlignment(ImageSlideConfig v) =>
       v.contentAlignment;
   static const Field<ImageSlideConfig, ContentAlignment> _f$contentAlignment =
-      Field('contentAlignment', _$contentAlignment, mode: FieldMode.member);
+      Field('contentAlignment', _$contentAlignment,
+          key: 'content_alignment', mode: FieldMode.member);
 
   @override
   final MappableFields<ImageSlideConfig> fields = const {
     #title: _f$title,
-    #imageFit: _f$imageFit,
     #image: _f$image,
-    #imagePosition: _f$imagePosition,
     #variant: _f$variant,
     #background: _f$background,
     #content: _f$content,
@@ -296,9 +287,7 @@ class ImageSlideConfigMapper extends ClassMapperBase<ImageSlideConfig> {
   static ImageSlideConfig _instantiate(DecodingData data) {
     return ImageSlideConfig(
         title: data.dec(_f$title),
-        imageFit: data.dec(_f$imageFit),
         image: data.dec(_f$image),
-        imagePosition: data.dec(_f$imagePosition),
         variant: data.dec(_f$variant),
         background: data.dec(_f$background),
         content: data.dec(_f$content));
@@ -360,12 +349,11 @@ extension ImageSlideConfigValueCopy<$R, $Out>
 
 abstract class ImageSlideConfigCopyWith<$R, $In extends ImageSlideConfig, $Out>
     implements SlideConfigCopyWith<$R, $In, $Out> {
+  ImageConfigCopyWith<$R, ImageConfig, ImageConfig> get image;
   @override
   $R call(
       {String? title,
-      ImageFit? imageFit,
-      String? image,
-      ImagePosition? imagePosition,
+      ImageConfig? image,
       String? variant,
       String? background,
       String? content});
@@ -382,19 +370,18 @@ class _ImageSlideConfigCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ImageSlideConfig> $mapper =
       ImageSlideConfigMapper.ensureInitialized();
   @override
+  ImageConfigCopyWith<$R, ImageConfig, ImageConfig> get image =>
+      $value.image.copyWith.$chain((v) => call(image: v));
+  @override
   $R call(
           {Object? title = $none,
-          ImageFit? imageFit,
-          String? image,
-          ImagePosition? imagePosition,
+          ImageConfig? image,
           Object? variant = $none,
           Object? background = $none,
           String? content}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
-        if (imageFit != null) #imageFit: imageFit,
         if (image != null) #image: image,
-        if (imagePosition != null) #imagePosition: imagePosition,
         if (variant != $none) #variant: variant,
         if (background != $none) #background: background,
         if (content != null) #content: content
@@ -402,9 +389,7 @@ class _ImageSlideConfigCopyWithImpl<$R, $Out>
   @override
   ImageSlideConfig $make(CopyWithData data) => ImageSlideConfig(
       title: data.get(#title, or: $value.title),
-      imageFit: data.get(#imageFit, or: $value.imageFit),
       image: data.get(#image, or: $value.image),
-      imagePosition: data.get(#imagePosition, or: $value.imagePosition),
       variant: data.get(#variant, or: $value.variant),
       background: data.get(#background, or: $value.background),
       content: data.get(#content, or: $value.content));
@@ -441,7 +426,9 @@ class TwoColumnSlideConfigMapper extends ClassMapperBase<TwoColumnSlideConfig> {
       v.contentAlignment;
   static const Field<TwoColumnSlideConfig, ContentAlignment>
       _f$contentAlignment = Field('contentAlignment', _$contentAlignment,
-          opt: true, def: ContentAlignment.centerLeft);
+          key: 'content_alignment',
+          opt: true,
+          def: ContentAlignment.centerLeft);
   static String _$content(TwoColumnSlideConfig v) => v.content;
   static const Field<TwoColumnSlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');
@@ -602,7 +589,9 @@ class TwoColumnHeaderSlideConfigMapper
       v.contentAlignment;
   static const Field<TwoColumnHeaderSlideConfig, ContentAlignment>
       _f$contentAlignment = Field('contentAlignment', _$contentAlignment,
-          opt: true, def: ContentAlignment.centerLeft);
+          key: 'content_alignment',
+          opt: true,
+          def: ContentAlignment.centerLeft);
   static String _$content(TwoColumnHeaderSlideConfig v) => v.content;
   static const Field<TwoColumnHeaderSlideConfig, String> _f$content =
       Field('content', _$content, opt: true, def: '');

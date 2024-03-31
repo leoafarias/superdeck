@@ -1,89 +1,59 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 import '../components/atoms/markdown_viewer.dart';
-import '../components/molecules/slide_view.dart';
-import '../models/slide_model.dart';
+import '../models/config_model.dart';
 import '../models/slide_options_model.dart';
-import '../superdeck.dart';
-import 'enum_mappers.dart';
 
 enum BackgroundType { color, uri, none }
 
-// BackgroundType checkBackgroundType(String? input) {
-//   if (input == null) return BackgroundType.none;
-//   // Regular expression to check if the string is a hex color.
-//   final hexPattern = RegExp(r'^[A-Fa-f0-9]{6}$');
-
-//   // Regular expression to check if the string is a URI.
-//   final uriPattern =
-//       RegExp(r'^(https?:\/\/)?[\da-z\.-]+\.[a-z\.]{2,6}([\/\w \.-]*)*\/?$');
-
-//   // List of valid color names
-//   final List<String> colorNames = [
-//     'red',
-//     'green',
-//     'blue'
-//   ]; // add more color names as needed
-
-//   if (hexPattern.hasMatch(input) || colorNames.contains(input)) {
-//     return BackgroundType.color;
-//   } else if (uriPattern.hasMatch(input)) {
-//     return BackgroundType.uri;
-//   } else {
-//     return BackgroundType.none;
-//   }
-// }
-
-abstract class SlideRenderer<Config extends SlideConfig>
-    extends StatelessWidget {
+abstract class SlideWidget<Config extends SlideConfig> extends StatelessWidget {
   final Config config;
 
-  const SlideRenderer(this.config, {super.key});
+  const SlideWidget({required this.config, super.key});
 
-  Widget render(Config config, BuildContext context);
+  SlideContent buildContent() {
+    return SlideContent(
+      content: config.content,
+      alignment: config.contentAlignment,
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return SlideWrapper(
-      child: render(config, context),
+  SlideContent buildContentSection(String content) {
+    return SlideContent(
+      content: content,
+      alignment: config.contentAlignment,
     );
   }
 }
 
-class ImageSlide extends SlideRenderer<ImageSlideConfig> {
-  const ImageSlide(super.config, {super.key});
+class ImageSlide extends SlideWidget<ImageSlideConfig> {
+  const ImageSlide({required super.config, super.key});
 
   @override
-  Widget render(ImageSlideConfig config, BuildContext context) {
-    final imageUrl = config.image;
-    final imageFit = config.imageFit;
-    final boxFit = imageFit.toBoxFit();
+  Widget build(BuildContext context) {
+    final image = config.image;
 
-    final style = styles.get(config.variant);
-
-    Widget imageWidget = const SizedBox(
-      height: 0,
-      width: 0,
-    );
-
-    imageWidget = Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(imageUrl),
-          fit: boxFit,
+    final imageWidget = Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(image.src),
+            fit: image.fit.toBoxFit(),
+          ),
         ),
       ),
     );
 
     List<Widget> children = [
-      Expanded(child: imageWidget),
-      Expanded(child: SlideContent(config.content, style: style)),
+      Expanded(child: buildContent()),
     ];
 
-    if (config.imagePosition == ImagePosition.right) {
-      children = children.reversed.toList();
+    if (image.position == ImagePosition.left) {
+      children.insert(0, imageWidget);
+    } else {
+      children.add(imageWidget);
     }
 
     return Row(
@@ -92,125 +62,53 @@ class ImageSlide extends SlideRenderer<ImageSlideConfig> {
   }
 }
 
-class SimpleSlide extends SlideRenderer<SimpleSlideConfig> {
-  const SimpleSlide(super.config, {super.key});
+class BaseSlide extends SlideWidget<BaseSlideConfig> {
+  const BaseSlide({required super.config, super.key});
 
   @override
-  Widget render(SimpleSlideConfig config, BuildContext context) {
-    return Watch((context) {
-      final flexAlignment = FlexAlignment.fromContentAlignment(
-        config.contentAlignment,
-      );
-
-      final style = styles.get(config.variant);
-
-      final background = config.background;
-
-      Widget current = Column(
-        mainAxisAlignment: flexAlignment.mainAxisAlignment,
-        crossAxisAlignment: flexAlignment.crossAxisAlignment,
-        children: [SlideContent(style: style, config.content)],
-      );
-
-      BoxDecoration decoration;
-      if (background != null) {
-        decoration = BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(background),
-            fit: BoxFit.cover,
-          ),
-        );
-      } else {
-        return current;
-      }
-
-      // has background
-      final backgroundWidget = Container(
-        decoration: decoration,
-        child: current,
-      );
-
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          backgroundWidget,
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black.withOpacity(0),
-                  Colors.black.withOpacity(0.8),
-                ],
-              ),
-            ),
-            child: current,
-          ),
-        ],
-      );
-    });
+  Widget build(BuildContext context) {
+    return buildContent();
   }
 }
 
-class TwoColumnSlide extends SlideRenderer<TwoColumnSlideConfig> {
-  const TwoColumnSlide(super.config, {super.key});
+class TwoColumnSlide extends SlideWidget<TwoColumnSlideConfig> {
+  const TwoColumnSlide({required super.config, super.key});
 
   @override
-  Widget render(TwoColumnSlideConfig config, BuildContext context) {
-    final style = styles.get(config.variant);
-    final children = [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.leftContent, style: style),
-        ),
-      ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.rightContent, style: style),
-        ),
-      ),
-    ];
-
+  Widget build(BuildContext context) {
     return Row(
-      children: children,
+      children: [
+        Expanded(
+          child: buildContentSection(config.leftContent),
+        ),
+        Expanded(
+          child: buildContentSection(config.rightContent),
+        ),
+      ],
     );
   }
 }
 
-class TwoColumnHeaderSlide extends SlideRenderer<TwoColumnHeaderSlideConfig> {
-  const TwoColumnHeaderSlide(super.config, {super.key});
+class TwoColumnHeaderSlide extends SlideWidget<TwoColumnHeaderSlideConfig> {
+  const TwoColumnHeaderSlide({required super.config, super.key});
 
   @override
-  Widget render(TwoColumnHeaderSlideConfig config, BuildContext context) {
-    final style = styles.get(config.variant);
-    final children = [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SlideContent(style: style, config.leftContent),
-        ),
-      ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SlideContent(config.rightContent, style: style),
-        ),
-      ),
-    ];
-
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            SlideContent(config.topContent, style: style),
-          ],
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(child: buildContentSection(config.topContent)),
+            ],
+          ),
         ),
         Expanded(
           child: Row(
-            children: children,
+            children: [
+              Expanded(child: buildContentSection(config.leftContent)),
+              Expanded(child: buildContentSection(config.rightContent)),
+            ],
           ),
         ),
       ],

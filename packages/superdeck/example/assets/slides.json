@@ -1,12 +1,15 @@
 [
   {
     "title": "Slide 1: Headings",
+    "layout": "two_column_header",
     "image": {
-      "fit": "contain",
+      "fit": "cover",
       "src": "https://source.unsplash.com/random/900×700/?landscape"
     },
+    "background": "https://source.unsplash.com/random/900×700/?landscape",
     "variant": "simple",
-    "content": "# Heading 1\n## Heading 2\n### Heading 3\n#### Heading 4\n##### Heading 5\n###### Heading 6\n\n**Paragraph**\n\nHere is a paragraph with some text."
+    "content_alignment": "top_left",
+    "content": "# Heading 1\n## Heading 2\n### Heading 3\n::left::\n#### Heading 4\n##### Heading 5\n###### Heading 6\n::right::\n**Paragraph**\n\nHere is a paragraph with some text."
   },
   {
     "title": "Slide 2: Text Styling",

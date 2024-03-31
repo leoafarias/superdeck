@@ -3,36 +3,44 @@ import 'package:flutter/material.dart';
 
 part 'slide_options_model.mapper.dart';
 
+@MappableClass()
+class ImageConfig with ImageConfigMappable {
+  final String src;
+  final ImageFit fit;
+  final ImagePosition position;
+
+  const ImageConfig({
+    required this.src,
+    this.fit = ImageFit.cover,
+    this.position = ImagePosition.left,
+  });
+
+  static const fromMap = ImageConfigMapper.fromMap;
+  static const fromJson = ImageConfigMapper.fromJson;
+}
+
 @MappableEnum()
 enum ImageFit {
-  // cover, contain, fill, fitHeight, fitWidth, none, scaleDown
-  cover(),
-  contain(),
-  fill(),
-  fitHeight(),
-  fitWidth(),
-  none(),
-  scaleDown();
+  fill,
+  contain,
+  cover,
+  fitWidth,
+  fitHeight,
+  none,
+  scaleDown;
 
   const ImageFit();
 
   BoxFit toBoxFit() {
-    switch (this) {
-      case ImageFit.cover:
-        return BoxFit.cover;
-      case ImageFit.contain:
-        return BoxFit.contain;
-      case ImageFit.fill:
-        return BoxFit.fill;
-      case ImageFit.fitHeight:
-        return BoxFit.fitHeight;
-      case ImageFit.fitWidth:
-        return BoxFit.fitWidth;
-      case ImageFit.none:
-        return BoxFit.none;
-      case ImageFit.scaleDown:
-        return BoxFit.scaleDown;
-    }
+    return switch (this) {
+      ImageFit.fill => BoxFit.fill,
+      ImageFit.contain => BoxFit.contain,
+      ImageFit.cover => BoxFit.cover,
+      ImageFit.fitWidth => BoxFit.fitWidth,
+      ImageFit.fitHeight => BoxFit.fitHeight,
+      ImageFit.none => BoxFit.none,
+      ImageFit.scaleDown => BoxFit.scaleDown,
+    };
   }
 }
 
@@ -49,11 +57,46 @@ enum ContentAlignment {
   centerRight,
   bottomLeft,
   bottomCenter,
-  bottomRight
+  bottomRight;
+
+  const ContentAlignment();
+
+  CrossAxisAlignment toCrossAxisAlignment() {
+    switch (this) {
+      // If the alignment is left align start
+      case ContentAlignment.topLeft:
+      case ContentAlignment.centerLeft:
+      case ContentAlignment.bottomLeft:
+        return CrossAxisAlignment.start;
+
+      // If the alignment is right align end
+      case ContentAlignment.topRight:
+      case ContentAlignment.centerRight:
+      case ContentAlignment.bottomRight:
+        return CrossAxisAlignment.end;
+      // If the alignment is center align center
+      default:
+        return CrossAxisAlignment.center;
+    }
+  }
+
+  MainAxisAlignment toMainAxisAlignment() {
+    switch (this) {
+      // If the alignment is top align start
+      case ContentAlignment.topLeft:
+      case ContentAlignment.topCenter:
+      case ContentAlignment.topRight:
+        return MainAxisAlignment.start;
+
+      // If the alignment is bottom align end
+      case ContentAlignment.bottomLeft:
+      case ContentAlignment.bottomCenter:
+      case ContentAlignment.bottomRight:
+        return MainAxisAlignment.end;
+
+      // If the alignment is center align center
+      default:
+        return MainAxisAlignment.center;
+    }
+  }
 }
-
-@MappableEnum()
-enum VerticalAlignment { top, center, bottom }
-
-@MappableEnum()
-enum HorizontalAlignment { left, center, right }

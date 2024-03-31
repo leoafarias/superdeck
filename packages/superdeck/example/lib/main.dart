@@ -3,29 +3,30 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:superdeck/superdeck.dart';
 
-SlideStyle style() {
-  return SlideStyle(
-    outerContainer: Style(
-      padding.all(20),
-      // backgroundColor.red(),
+Style style() {
+  return Style(
+    $.outerContainer.padding.all(0),
+    $.outerContainer.color.red(),
+    // $.innerContainer.margin.all(20),
+    $.contentContainer.padding.all(10),
+    $.innerContainer.color.grey(),
+    $.innerContainer.gradient.linear(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Colors.red.withOpacity(0.5), Colors.blue.withOpacity(0.5)],
     ),
-    innerContainer: Style(
-      padding.all(20),
-
-      // backgroundColor.green(),
-      borderRadius.all(10),
-    ),
-    content: Style(
-      $.h1.textStyle.color.purple(),
-      const Variant('simple')(
-        $.paragraph.textStyle.color.red(),
-      ),
+    $.contentContainer.color.black(),
+    $.innerContainer.borderRadius.all(10),
+    $.h1.textStyle.color.purple(),
+    const Variant('simple')(
+      $.paragraph.textStyle.color.red(),
     ),
   );
 }
 
-void main() {
-  SuperDeck.run(style: style());
+void main() async {
+  await SuperDeck.initialize();
+  runApp(const SuperDeck(styleBuilder: style));
 }
 
 double _calculateDistance(Alignment alignment) {

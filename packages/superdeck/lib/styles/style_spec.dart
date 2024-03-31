@@ -337,8 +337,9 @@ class SlideSpec extends Spec<SlideSpec> {
   final MdList? list;
   final MdTable? table;
   final MdCode? code;
-  final BoxSpec? innerContainer;
-  final BoxSpec? outerContainer;
+  final BoxSpec? _innerContainer;
+  final BoxSpec? _outerContainer;
+  final BoxSpec? _contentContainer;
 
   const SlideSpec({
     required this.textStyle,
@@ -356,9 +357,12 @@ class SlideSpec extends Spec<SlideSpec> {
     required this.list,
     required this.table,
     required this.code,
-    required this.innerContainer,
-    required this.outerContainer,
-  });
+    required BoxSpec? innerContainer,
+    required BoxSpec? outerContainer,
+    required BoxSpec? contentContainer,
+  })  : _outerContainer = outerContainer,
+        _innerContainer = innerContainer,
+        _contentContainer = contentContainer;
 
   const SlideSpec.empty()
       : textStyle = null,
@@ -376,13 +380,20 @@ class SlideSpec extends Spec<SlideSpec> {
         list = null,
         table = null,
         code = null,
-        innerContainer = null,
-        outerContainer = null;
+        _innerContainer = null,
+        _outerContainer = null,
+        _contentContainer = null;
 
   static SlideSpec of(MixData mix) {
     return mix.resolvableOf<SlideSpec, SlideSpecAttribute>() ??
         const SlideSpec.empty();
   }
+
+  BoxSpec get innerContainer => _innerContainer ?? const BoxSpec.empty();
+
+  BoxSpec get outerContainer => _outerContainer ?? const BoxSpec.empty();
+
+  BoxSpec get contentContainer => _contentContainer ?? const BoxSpec.empty();
 
   @override
   SlideSpec lerp(
@@ -407,8 +418,9 @@ class SlideSpec extends Spec<SlideSpec> {
       blockquote: blockquote?.lerp(other.blockquote, t),
       table: table?.lerp(other.table, t),
       code: code?.lerp(other.code, t),
-      innerContainer: innerContainer?.lerp(other.innerContainer, t),
-      outerContainer: outerContainer?.lerp(other.outerContainer, t),
+      innerContainer: _innerContainer?.lerp(other._innerContainer, t),
+      outerContainer: _outerContainer?.lerp(other._outerContainer, t),
+      contentContainer: _contentContainer?.lerp(other._contentContainer, t),
     );
   }
 
@@ -478,6 +490,7 @@ class SlideSpec extends Spec<SlideSpec> {
     MdCode? code,
     BoxSpec? innerContainer,
     BoxSpec? outerContainer,
+    BoxSpec? contentContainer,
   }) {
     return SlideSpec(
       textStyle: textStyle ?? this.textStyle,
@@ -495,8 +508,9 @@ class SlideSpec extends Spec<SlideSpec> {
       blockquote: blockquote ?? this.blockquote,
       table: table ?? this.table,
       code: code ?? this.code,
-      innerContainer: innerContainer ?? this.innerContainer,
-      outerContainer: outerContainer ?? this.outerContainer,
+      innerContainer: innerContainer ?? _innerContainer,
+      outerContainer: outerContainer ?? _outerContainer,
+      contentContainer: contentContainer ?? _contentContainer,
     );
   }
 
@@ -517,7 +531,8 @@ class SlideSpec extends Spec<SlideSpec> {
         blockquote,
         table,
         code,
-        innerContainer,
-        outerContainer,
+        _innerContainer,
+        _outerContainer,
+        _contentContainer,
       ];
 }

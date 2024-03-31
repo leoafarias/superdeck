@@ -13,64 +13,7 @@ class SlideVariant extends Variant {
   static const image = SlideVariant('image');
 }
 
-class SlideStyle extends StyleRecipe<SlideStyle> {
-  final Style innerContainer;
-  final Style outerContainer;
-  final Style content;
-
-  const SlideStyle({
-    this.innerContainer = const Style.empty(),
-    this.outerContainer = const Style.empty(),
-    this.content = const Style.empty(),
-  });
-
-  @override
-  SlideStyle copyWith({
-    Style? innerContainer,
-    Style? outerContainer,
-    Style? content,
-  }) {
-    return SlideStyle(
-      innerContainer: innerContainer ?? this.innerContainer,
-      outerContainer: outerContainer ?? this.outerContainer,
-      content: content ?? this.content,
-    );
-  }
-
-  @override
-  SlideStyle applyVariants(List<StyleVariant> variants) {
-    return SlideStyle(
-      innerContainer: innerContainer.applyVariants(variants),
-      outerContainer: outerContainer.applyVariants(variants),
-      content: content.applyVariants(variants),
-    );
-  }
-
-  factory SlideStyle.base() {
-    return SlideStyle(
-      content: Style(
-        apply(_defaultContentStyle),
-      ),
-      outerContainer: Style(
-        padding(40),
-        backgroundColor.black(),
-      ),
-      innerContainer: Style(),
-    );
-  }
-
-  @override
-  SlideStyle merge(SlideStyle? other) {
-    if (other == null) return this;
-    return SlideStyle(
-      innerContainer: innerContainer.merge(other.innerContainer),
-      outerContainer: outerContainer.merge(other.outerContainer),
-      content: content.merge(other.content),
-    );
-  }
-}
-
-Style get _defaultContentStyle {
+Style get defaultStyle {
   final baseTextStyle = GoogleFonts.inter().copyWith(fontSize: 22);
   final jetBrainsTextStyle = GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
 
@@ -169,20 +112,6 @@ Style get _defaultContentStyle {
 
 const $ = SlideStyleUtility(selfBuilder);
 
-final h1 = $.h1;
-final h2 = $.h2;
-final h3 = $.h3;
-final h4 = $.h4;
-final h5 = $.h5;
-final h6 = $.h6;
-final paragraph = $.paragraph;
-final link = $.link;
-final list = $.list;
-final table = $.table;
-final code = $.code;
-final blockquote = $.blockquote;
-final blockSpacing = $.blockSpacing;
-
 class SlideStyleUtility<T extends SpecAttribute>
     extends SpecUtility<T, SlideSpecAttribute> {
   const SlideStyleUtility(super.builder);
@@ -208,6 +137,12 @@ class SlideStyleUtility<T extends SpecAttribute>
   BoxSpecUtility<T> get outerContainer {
     return BoxSpecUtility(
       (value) => only(outerContainer: value),
+    );
+  }
+
+  BoxSpecUtility<T> get contentContainer {
+    return BoxSpecUtility(
+      (value) => only(contentContainer: value),
     );
   }
 
@@ -299,6 +234,7 @@ class SlideStyleUtility<T extends SpecAttribute>
     MdBlockQuoteDto? blockquote,
     BoxSpecAttribute? innerContainer,
     BoxSpecAttribute? outerContainer,
+    BoxSpecAttribute? contentContainer,
   }) {
     return builder(
       SlideSpecAttribute(
@@ -318,6 +254,7 @@ class SlideStyleUtility<T extends SpecAttribute>
         blockquote: blockquote,
         innerContainer: innerContainer,
         outerContainer: outerContainer,
+        contentContainer: contentContainer,
       ),
     );
   }

@@ -22,6 +22,7 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
   final MdBlockQuoteDto? blockquote;
   final BoxSpecAttribute? innerContainer;
   final BoxSpecAttribute? outerContainer;
+  final BoxSpecAttribute? contentContainer;
 
   const SlideSpecAttribute({
     this.textStyle,
@@ -41,30 +42,33 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
     this.blockquote,
     this.innerContainer,
     this.outerContainer,
+    this.contentContainer,
   });
 
   @override
   SlideSpecAttribute merge(SlideSpecAttribute? other) {
     return SlideSpecAttribute(
-      textStyle: textStyle?.merge(other?.textStyle) ?? textStyle,
-      headline1: headline1?.merge(other?.headline1) ?? headline1,
-      headline2: headline2?.merge(other?.headline2) ?? headline2,
-      headline3: headline3?.merge(other?.headline3) ?? headline3,
-      headline4: headline4?.merge(other?.headline4) ?? headline4,
-      headline5: headline5?.merge(other?.headline5) ?? headline5,
-      headline6: headline6?.merge(other?.headline6) ?? headline6,
-      paragraph: paragraph?.merge(other?.paragraph) ?? paragraph,
-      link: link?.merge(other?.link) ?? link,
+      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
+      headline1: headline1?.merge(other?.headline1) ?? other?.headline1,
+      headline2: headline2?.merge(other?.headline2) ?? other?.headline2,
+      headline3: headline3?.merge(other?.headline3) ?? other?.headline3,
+      headline4: headline4?.merge(other?.headline4) ?? other?.headline4,
+      headline5: headline5?.merge(other?.headline5) ?? other?.headline5,
+      headline6: headline6?.merge(other?.headline6) ?? other?.headline6,
+      paragraph: paragraph?.merge(other?.paragraph) ?? other?.paragraph,
+      link: link?.merge(other?.link) ?? other?.link,
       blockSpacing: blockSpacing ?? other?.blockSpacing,
-      divider: divider?.merge(other?.divider) ?? divider,
-      list: list?.merge(other?.list) ?? list,
-      table: table?.merge(other?.table) ?? table,
-      code: code?.merge(other?.code) ?? code,
-      blockquote: blockquote?.merge(other?.blockquote) ?? blockquote,
+      divider: divider?.merge(other?.divider) ?? other?.divider,
+      list: list?.merge(other?.list) ?? other?.list,
+      table: table?.merge(other?.table) ?? other?.table,
+      code: code?.merge(other?.code) ?? other?.code,
+      blockquote: blockquote?.merge(other?.blockquote) ?? other?.blockquote,
       innerContainer:
-          innerContainer?.merge(other?.innerContainer) ?? innerContainer,
+          innerContainer?.merge(other?.innerContainer) ?? other?.innerContainer,
       outerContainer:
-          outerContainer?.merge(other?.outerContainer) ?? outerContainer,
+          outerContainer?.merge(other?.outerContainer) ?? other?.outerContainer,
+      contentContainer: contentContainer?.merge(other?.contentContainer) ??
+          other?.contentContainer,
     );
   }
 
@@ -88,6 +92,7 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
       blockquote: blockquote?.resolve(mix),
       innerContainer: innerContainer?.resolve(mix),
       outerContainer: outerContainer?.resolve(mix),
+      contentContainer: contentContainer?.resolve(mix),
     );
   }
 
@@ -110,5 +115,6 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
         blockquote,
         innerContainer,
         outerContainer,
+        contentContainer,
       ];
 }

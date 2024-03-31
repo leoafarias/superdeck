@@ -1,18 +1,22 @@
 ---
 title: "Slide 1: Headings"
+layout: two_column_header
 image:
-    fit: contain
-    src: https://source.unsplash.com/random/900×700/?landscape
+  fit: cover
+  src: https://source.unsplash.com/random/900×700/?landscape
+background: https://source.unsplash.com/random/900×700/?landscape
 variant: simple
+content_alignment: top_left  
 ---
 
 # Heading 1
 ## Heading 2
 ### Heading 3
+::left::
 #### Heading 4
 ##### Heading 5
 ###### Heading 6
-
+::right::
 **Paragraph**
 
 Here is a paragraph with some text.

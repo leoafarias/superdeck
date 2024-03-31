@@ -10,5 +10,4 @@ void setupLocator() {
     SuperDeckController(),
     dispose: (controller) => controller.dispose(),
   );
-  getIt.registerSingleton<StyleController>(StyleController());
 }

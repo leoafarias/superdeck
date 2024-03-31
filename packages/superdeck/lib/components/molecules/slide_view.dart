@@ -1,58 +1,67 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../helpers/constants.dart';
 import '../../helpers/template_builder.dart';
-import '../../models/slide_model.dart';
+import '../../models/config_model.dart';
+import '../../superdeck.dart';
+import '../../theme.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
-    this.slide, {
+    this.config, {
     super.key,
   });
 
-  final SlideConfig slide;
+  final SlideConfig config;
 
   @override
   Widget build(BuildContext context) {
-    final config = slide;
+    final config = this.config;
 
-    if (config is ImageSlideConfig) {
-      return ImageSlide(config);
-    } else if (config is TwoColumnSlideConfig) {
-      return TwoColumnSlide(config);
-    } else if (config is TwoColumnHeaderSlideConfig) {
-      return TwoColumnHeaderSlide(config);
-    } else if (config is SimpleSlideConfig) {
-      return SimpleSlide(config);
-    } else {
-      throw UnimplementedError('Slide config not implemented');
-    }
-  }
-}
+    Style style = DeckStyle.of(context);
 
-class SlideWrapper extends StatelessWidget {
-  const SlideWrapper({required this.child, super.key});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-      autofocus: true,
-      child: Center(
-        child: AspectRatio(
-          aspectRatio: kAspectRatio,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SlideConstraints(
-                constraints: constraints,
-                child: child,
-              );
-            },
+    return LayoutBuilder(builder: (context, constraints) {
+      return Stack(
+        children: [
+          Container(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            decoration: _backgroundDecoration(config.background),
           ),
-        ),
-      ),
-    );
+          SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            child: StyledWidgetBuilder(
+                style: style.animate(),
+                builder: (mix) {
+                  final spec = SlideSpec.of(mix);
+                  return BoxSpecWidget(
+                    spec: spec.innerContainer,
+                    child: LayoutBuilder(builder: (_, constraints) {
+                      return SlideConstraints(
+                        constraints: constraints,
+                        child: Builder(builder: (_) {
+                          if (config is ImageSlideConfig) {
+                            return ImageSlide(config: config);
+                          } else if (config is TwoColumnSlideConfig) {
+                            return TwoColumnSlide(config: config);
+                          } else if (config is TwoColumnHeaderSlideConfig) {
+                            return TwoColumnHeaderSlide(config: config);
+                          } else if (config is BaseSlideConfig) {
+                            return BaseSlide(config: config);
+                          } else {
+                            throw UnimplementedError(
+                                'Slide config not implemented');
+                          }
+                        }),
+                      );
+                    }),
+                  );
+                }),
+          ),
+        ],
+      );
+    });
   }
 }
 
@@ -65,12 +74,37 @@ class SlideConstraints extends InheritedWidget {
 
   final BoxConstraints constraints;
 
-  static SlideConstraints? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SlideConstraints>();
+  static BoxConstraints of(BuildContext context) {
+    final slideConstraints =
+        context.dependOnInheritedWidgetOfExactType<SlideConstraints>();
+    if (slideConstraints == null) {
+      throw Exception('SlideConstraints not found in context');
+    }
+    return slideConstraints.constraints;
   }
 
   @override
   bool updateShouldNotify(SlideConstraints oldWidget) {
     return oldWidget.constraints != constraints;
   }
+}
+
+BoxDecoration? _backgroundDecoration(String? background) {
+  ImageProvider imageProvider;
+
+  if (background == null) {
+    return null;
+  }
+
+  if (background.startsWith('http')) {
+    imageProvider = CachedNetworkImageProvider(background);
+  } else {
+    imageProvider = AssetImage(background);
+  }
+  return BoxDecoration(
+    image: DecorationImage(
+      image: imageProvider,
+      fit: BoxFit.cover,
+    ),
+  );
 }

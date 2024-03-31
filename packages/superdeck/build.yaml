@@ -1,6 +1,12 @@
 targets:
   $default:
     builders:
-      dart_mappable_builder:
-        generate_for:
-          - lib/models/*.dart
+      # dart_mappable_builder:
+        # generate_for:
+        #   - lib/models/*.dart
+
+global_options:
+  dart_mappable_builder:
+    options:
+      caseStyle: snakeCase
+      enumCaseStyle: snakeCase

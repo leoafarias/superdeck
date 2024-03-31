@@ -1,4 +1,3 @@
-
 import 'package:yaml/yaml.dart';
 
 class SlidesParser {
@@ -12,7 +11,7 @@ class SlidesParser {
 
 final frontMatterParser = RegExp(r'---([\s\S]*?)---');
 // Function to parse slides from the content string.
-List<Map<String,dynamic>> _parseSlideContents(String content) {
+List<Map<String, dynamic>> _parseSlideContents(String content) {
   final slideContent = extractSlides(content);
 
   // Map the front matter and content to a list of _SlideParserData objects.
@@ -31,6 +30,7 @@ List<Map<String,dynamic>> _parseSlideContents(String content) {
     final map = Map<String, dynamic>.from(frontMatterMap);
 
     map['content'] = content;
+
     // Return a _SlideParserData object for each slide.
     return map;
   }).toList();

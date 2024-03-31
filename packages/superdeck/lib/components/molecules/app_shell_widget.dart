@@ -8,14 +8,16 @@ import '../../helpers/constants.dart';
 import '../../helpers/local_storage.dart';
 import '../../helpers/service_locator.dart';
 import '../../helpers/syntax_highlighter.dart';
-import '../../helpers/use_signals.dart';
-import '../../models/deck_data_model.dart';
 import '../../superdeck.dart';
 import '../../theme.dart';
 import 'scaled_app.dart';
 import 'slide_view.dart';
 
-class SuperDeck {
+class SuperDeck extends StatelessWidget {
+  const SuperDeck({super.key, this.styleBuilder});
+
+  final Style Function()? styleBuilder;
+
   static Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
     setupLocator();
@@ -45,41 +47,36 @@ class SuperDeck {
     await windowManager.setAspectRatio(kAspectRatio);
   }
 
-  static Future<void> run({SlideStyle? style}) async {
-    SuperDeck.initialize();
-    styles.load(style);
-
-    return runApp(ScaledApp(
+  @override
+  Widget build(BuildContext context) {
+    return ScaledApp(
       builder: (context, scale) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           darkTheme: darkTheme,
-          home: Watch((context) {
-            if (deckController.isLoading()) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            return AppShell(data: deckController.data());
-          }),
+          home: DeckStyle(
+            style: defaultStyle.merge(styleBuilder?.call()),
+            child: Watch((context) {
+              return superdeck.isLoading()
+                  ? const Center(child: CircularProgressIndicator())
+                  : const AppShell();
+            }),
+          ),
         );
       },
-    ));
+    );
   }
 }
 
 class AppShell extends StatefulWidget {
-  const AppShell({required this.data, super.key});
-
-  final DeckData data;
+  const AppShell({super.key});
 
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  final _pageController = createPageController();
+  final _pageController = PageController();
 
   @override
   void dispose() {
@@ -89,83 +86,54 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch((context) {
-      void handleGoToSlide(int page) {
-        deckController.goToPage(page);
-        _pageController().animateToPage(
-          page,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-
-      void handleStepSlide(int slide) {
-        final currentPage = _pageController.value.page?.round() ?? 0;
-        int stepToPage = currentPage + slide;
-
-        if (stepToPage >= 0 && stepToPage < widget.data.slides.length) {
-          handleGoToSlide(stepToPage);
-        } else if (stepToPage == -1) {
-          handleGoToSlide(widget.data.slides.length - 1);
-        } else {
-          handleGoToSlide(0);
-        }
-      }
-
-      void handleNextSlide() {
-        handleStepSlide(1);
-      }
-
-      void handlePreviousSlide() {
-        handleStepSlide(-1);
-      }
-
-      final style = styles.get(null);
-
-      return CallbackShortcuts(
-        bindings: {
-          const SingleActivator(
-            LogicalKeyboardKey.arrowRight,
-            includeRepeats: false,
-          ): handleNextSlide,
-          const SingleActivator(
-            LogicalKeyboardKey.arrowDown,
-            includeRepeats: false,
-          ): handleNextSlide,
-          const SingleActivator(
-            LogicalKeyboardKey.space,
-            includeRepeats: false,
-          ): handleNextSlide,
-          const SingleActivator(
-            LogicalKeyboardKey.enter,
-            includeRepeats: false,
-          ): handleNextSlide,
-          const SingleActivator(
-            LogicalKeyboardKey.numpadEnter,
-            includeRepeats: false,
-          ): handleNextSlide,
-          const SingleActivator(
-            LogicalKeyboardKey.arrowLeft,
-            includeRepeats: false,
-          ): handlePreviousSlide,
-          const SingleActivator(
-            LogicalKeyboardKey.arrowUp,
-            includeRepeats: false,
-          ): handlePreviousSlide,
-        },
-        child: PressableBox(
-          style: style.outerContainer.animate(),
-          child: PageView(
-            controller: _pageController.value,
-            children: widget.data.slides.map((config) {
-              return PressableBox(
-                style: style.innerContainer.animate(),
-                child: SlideView(config),
-              );
-            }).toList(),
-          ),
-        ),
+    superdeck.currentPage.listen(context, () {
+      _pageController.animateToPage(
+        superdeck.currentPage(),
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeInOut,
       );
     });
+
+    final slides = superdeck.slides.watch(context);
+
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(
+          LogicalKeyboardKey.arrowRight,
+        ): superdeck.nextPage,
+        const SingleActivator(
+          LogicalKeyboardKey.arrowDown,
+        ): superdeck.nextPage,
+        const SingleActivator(
+          LogicalKeyboardKey.space,
+        ): superdeck.nextPage,
+        const SingleActivator(
+          LogicalKeyboardKey.arrowLeft,
+        ): superdeck.previousPage,
+        const SingleActivator(
+          LogicalKeyboardKey.arrowUp,
+        ): superdeck.previousPage,
+      },
+      child: Watch((context) {
+        final style = DeckStyle.of(context);
+
+        return Pressable(
+          onPress: () {},
+          child: StyledWidgetBuilder(
+              style: style.animate(),
+              builder: (mix) {
+                final spec = SlideSpec.of(mix);
+
+                return BoxSpecWidget(
+                  spec: spec.outerContainer,
+                  child: PageView(
+                    controller: _pageController,
+                    children: slides.map(SlideView.new).toList(),
+                  ),
+                );
+              }),
+        );
+      }),
+    );
   }
 }

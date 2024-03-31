@@ -25,19 +25,19 @@ class ImageFitMapper extends EnumMapper<ImageFit> {
   @override
   ImageFit decode(dynamic value) {
     switch (value) {
-      case 'cover':
-        return ImageFit.cover;
-      case 'contain':
-        return ImageFit.contain;
       case 'fill':
         return ImageFit.fill;
-      case 'fitHeight':
-        return ImageFit.fitHeight;
-      case 'fitWidth':
+      case 'contain':
+        return ImageFit.contain;
+      case 'cover':
+        return ImageFit.cover;
+      case 'fit_width':
         return ImageFit.fitWidth;
+      case 'fit_height':
+        return ImageFit.fitHeight;
       case 'none':
         return ImageFit.none;
-      case 'scaleDown':
+      case 'scale_down':
         return ImageFit.scaleDown;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -47,20 +47,20 @@ class ImageFitMapper extends EnumMapper<ImageFit> {
   @override
   dynamic encode(ImageFit self) {
     switch (self) {
-      case ImageFit.cover:
-        return 'cover';
-      case ImageFit.contain:
-        return 'contain';
       case ImageFit.fill:
         return 'fill';
-      case ImageFit.fitHeight:
-        return 'fitHeight';
+      case ImageFit.contain:
+        return 'contain';
+      case ImageFit.cover:
+        return 'cover';
       case ImageFit.fitWidth:
-        return 'fitWidth';
+        return 'fit_width';
+      case ImageFit.fitHeight:
+        return 'fit_height';
       case ImageFit.none:
         return 'none';
       case ImageFit.scaleDown:
-        return 'scaleDown';
+        return 'scale_down';
     }
   }
 }
@@ -137,23 +137,23 @@ class ContentAlignmentMapper extends EnumMapper<ContentAlignment> {
   @override
   ContentAlignment decode(dynamic value) {
     switch (value) {
-      case 'topLeft':
+      case 'top_left':
         return ContentAlignment.topLeft;
-      case 'topCenter':
+      case 'top_center':
         return ContentAlignment.topCenter;
-      case 'topRight':
+      case 'top_right':
         return ContentAlignment.topRight;
-      case 'centerLeft':
+      case 'center_left':
         return ContentAlignment.centerLeft;
       case 'center':
         return ContentAlignment.center;
-      case 'centerRight':
+      case 'center_right':
         return ContentAlignment.centerRight;
-      case 'bottomLeft':
+      case 'bottom_left':
         return ContentAlignment.bottomLeft;
-      case 'bottomCenter':
+      case 'bottom_center':
         return ContentAlignment.bottomCenter;
-      case 'bottomRight':
+      case 'bottom_right':
         return ContentAlignment.bottomRight;
       default:
         throw MapperException.unknownEnumValue(value);
@@ -164,23 +164,23 @@ class ContentAlignmentMapper extends EnumMapper<ContentAlignment> {
   dynamic encode(ContentAlignment self) {
     switch (self) {
       case ContentAlignment.topLeft:
-        return 'topLeft';
+        return 'top_left';
       case ContentAlignment.topCenter:
-        return 'topCenter';
+        return 'top_center';
       case ContentAlignment.topRight:
-        return 'topRight';
+        return 'top_right';
       case ContentAlignment.centerLeft:
-        return 'centerLeft';
+        return 'center_left';
       case ContentAlignment.center:
         return 'center';
       case ContentAlignment.centerRight:
-        return 'centerRight';
+        return 'center_right';
       case ContentAlignment.bottomLeft:
-        return 'bottomLeft';
+        return 'bottom_left';
       case ContentAlignment.bottomCenter:
-        return 'bottomCenter';
+        return 'bottom_center';
       case ContentAlignment.bottomRight:
-        return 'bottomRight';
+        return 'bottom_right';
     }
   }
 }
@@ -192,102 +192,125 @@ extension ContentAlignmentMapperExtension on ContentAlignment {
   }
 }
 
-class VerticalAlignmentMapper extends EnumMapper<VerticalAlignment> {
-  VerticalAlignmentMapper._();
+class ImageConfigMapper extends ClassMapperBase<ImageConfig> {
+  ImageConfigMapper._();
 
-  static VerticalAlignmentMapper? _instance;
-  static VerticalAlignmentMapper ensureInitialized() {
+  static ImageConfigMapper? _instance;
+  static ImageConfigMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = VerticalAlignmentMapper._());
+      MapperContainer.globals.use(_instance = ImageConfigMapper._());
+      ImageFitMapper.ensureInitialized();
+      ImagePositionMapper.ensureInitialized();
     }
     return _instance!;
   }
 
-  static VerticalAlignment fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
+  @override
+  final String id = 'ImageConfig';
+
+  static String _$src(ImageConfig v) => v.src;
+  static const Field<ImageConfig, String> _f$src = Field('src', _$src);
+  static ImageFit _$fit(ImageConfig v) => v.fit;
+  static const Field<ImageConfig, ImageFit> _f$fit =
+      Field('fit', _$fit, opt: true, def: ImageFit.cover);
+  static ImagePosition _$position(ImageConfig v) => v.position;
+  static const Field<ImageConfig, ImagePosition> _f$position =
+      Field('position', _$position, opt: true, def: ImagePosition.left);
+
+  @override
+  final MappableFields<ImageConfig> fields = const {
+    #src: _f$src,
+    #fit: _f$fit,
+    #position: _f$position,
+  };
+
+  static ImageConfig _instantiate(DecodingData data) {
+    return ImageConfig(
+        src: data.dec(_f$src),
+        fit: data.dec(_f$fit),
+        position: data.dec(_f$position));
   }
 
   @override
-  VerticalAlignment decode(dynamic value) {
-    switch (value) {
-      case 'top':
-        return VerticalAlignment.top;
-      case 'center':
-        return VerticalAlignment.center;
-      case 'bottom':
-        return VerticalAlignment.bottom;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
+  final Function instantiate = _instantiate;
+
+  static ImageConfig fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ImageConfig>(map);
   }
 
-  @override
-  dynamic encode(VerticalAlignment self) {
-    switch (self) {
-      case VerticalAlignment.top:
-        return 'top';
-      case VerticalAlignment.center:
-        return 'center';
-      case VerticalAlignment.bottom:
-        return 'bottom';
-    }
+  static ImageConfig fromJson(String json) {
+    return ensureInitialized().decodeJson<ImageConfig>(json);
   }
 }
 
-extension VerticalAlignmentMapperExtension on VerticalAlignment {
-  String toValue() {
-    VerticalAlignmentMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<VerticalAlignment>(this) as String;
-  }
-}
-
-class HorizontalAlignmentMapper extends EnumMapper<HorizontalAlignment> {
-  HorizontalAlignmentMapper._();
-
-  static HorizontalAlignmentMapper? _instance;
-  static HorizontalAlignmentMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = HorizontalAlignmentMapper._());
-    }
-    return _instance!;
+mixin ImageConfigMappable {
+  String toJson() {
+    return ImageConfigMapper.ensureInitialized()
+        .encodeJson<ImageConfig>(this as ImageConfig);
   }
 
-  static HorizontalAlignment fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
+  Map<String, dynamic> toMap() {
+    return ImageConfigMapper.ensureInitialized()
+        .encodeMap<ImageConfig>(this as ImageConfig);
+  }
+
+  ImageConfigCopyWith<ImageConfig, ImageConfig, ImageConfig> get copyWith =>
+      _ImageConfigCopyWithImpl(this as ImageConfig, $identity, $identity);
+  @override
+  String toString() {
+    return ImageConfigMapper.ensureInitialized()
+        .stringifyValue(this as ImageConfig);
   }
 
   @override
-  HorizontalAlignment decode(dynamic value) {
-    switch (value) {
-      case 'left':
-        return HorizontalAlignment.left;
-      case 'center':
-        return HorizontalAlignment.center;
-      case 'right':
-        return HorizontalAlignment.right;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ImageConfigMapper.ensureInitialized()
+                .isValueEqual(this as ImageConfig, other));
   }
 
   @override
-  dynamic encode(HorizontalAlignment self) {
-    switch (self) {
-      case HorizontalAlignment.left:
-        return 'left';
-      case HorizontalAlignment.center:
-        return 'center';
-      case HorizontalAlignment.right:
-        return 'right';
-    }
+  int get hashCode {
+    return ImageConfigMapper.ensureInitialized().hashValue(this as ImageConfig);
   }
 }
 
-extension HorizontalAlignmentMapperExtension on HorizontalAlignment {
-  String toValue() {
-    HorizontalAlignmentMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<HorizontalAlignment>(this) as String;
-  }
+extension ImageConfigValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ImageConfig, $Out> {
+  ImageConfigCopyWith<$R, ImageConfig, $Out> get $asImageConfig =>
+      $base.as((v, t, t2) => _ImageConfigCopyWithImpl(v, t, t2));
+}
+
+abstract class ImageConfigCopyWith<$R, $In extends ImageConfig, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String? src, ImageFit? fit, ImagePosition? position});
+  ImageConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ImageConfigCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ImageConfig, $Out>
+    implements ImageConfigCopyWith<$R, ImageConfig, $Out> {
+  _ImageConfigCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ImageConfig> $mapper =
+      ImageConfigMapper.ensureInitialized();
+  @override
+  $R call({String? src, ImageFit? fit, ImagePosition? position}) =>
+      $apply(FieldCopyWithData({
+        if (src != null) #src: src,
+        if (fit != null) #fit: fit,
+        if (position != null) #position: position
+      }));
+  @override
+  ImageConfig $make(CopyWithData data) => ImageConfig(
+      src: data.get(#src, or: $value.src),
+      fit: data.get(#fit, or: $value.fit),
+      position: data.get(#position, or: $value.position));
+
+  @override
+  ImageConfigCopyWith<$R2, ImageConfig, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _ImageConfigCopyWithImpl($value, $cast, t);
 }

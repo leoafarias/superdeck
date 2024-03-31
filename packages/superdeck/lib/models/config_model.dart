@@ -3,9 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'slide_options_model.dart';
 import 'syntax_tag.dart';
 
-part 'slide_model.mapper.dart';
-
-typedef JSON = Map<String, dynamic>;
+part 'config_model.mapper.dart';
 
 @MappableClass()
 abstract class SlideConfig with SlideConfigMappable {
@@ -22,6 +20,7 @@ abstract class SlideConfig with SlideConfigMappable {
     this.variant,
     this.contentAlignment = ContentAlignment.centerLeft,
   });
+
   String get templateId;
 
   static const fromMap = SlideConfigMapper.fromMap;
@@ -29,8 +28,8 @@ abstract class SlideConfig with SlideConfigMappable {
 }
 
 @MappableClass()
-class SimpleSlideConfig extends SlideConfig with SimpleSlideConfigMappable {
-  const SimpleSlideConfig({
+class BaseSlideConfig extends SlideConfig with BaseSlideConfigMappable {
+  const BaseSlideConfig({
     super.title,
     super.background,
     super.contentAlignment,
@@ -39,23 +38,21 @@ class SimpleSlideConfig extends SlideConfig with SimpleSlideConfigMappable {
   });
 
   @override
-  String get templateId => 'simple';
+  String get templateId => template;
 
-  static const fromMap = SimpleSlideConfigMapper.fromMap;
-  static const fromJson = SimpleSlideConfigMapper.fromJson;
+  static const template = 'base';
+
+  static const fromMap = BaseSlideConfigMapper.fromMap;
+  static const fromJson = BaseSlideConfigMapper.fromJson;
 }
 
 @MappableClass()
 class ImageSlideConfig extends SlideConfig with ImageSlideConfigMappable {
-  final ImageFit imageFit;
-  final String image;
-  final ImagePosition imagePosition;
+  final ImageConfig image;
 
   const ImageSlideConfig({
     super.title,
-    this.imageFit = ImageFit.cover,
-    this.image = '',
-    this.imagePosition = ImagePosition.left,
+    required this.image,
     super.variant,
     super.background,
     super.content,
@@ -65,7 +62,9 @@ class ImageSlideConfig extends SlideConfig with ImageSlideConfigMappable {
   static const fromJson = ImageSlideConfigMapper.fromJson;
 
   @override
-  String get templateId => 'image';
+  String get templateId => template;
+
+  static const template = 'image';
 }
 
 @MappableClass()
@@ -84,7 +83,9 @@ class TwoColumnSlideConfig extends SlideConfig
   }
 
   @override
-  String get templateId => 'two-column';
+  String get templateId => template;
+
+  static const template = 'two_column';
 
   String get leftContent {
     return _getTagContent(
@@ -119,9 +120,11 @@ class TwoColumnHeaderSlideConfig extends SlideConfig
   }
 
   @override
-  String get templateId => 'two-column-header';
+  String get templateId => template;
 
-  String get topContent => _getTagContent(_tags, SyntaxTag.right);
+  static const template = 'two_column_header';
+
+  String get topContent => _getTagContent(_tags, SyntaxTag.content);
 
   String get leftContent => _getTagContent(_tags, SyntaxTag.left);
 

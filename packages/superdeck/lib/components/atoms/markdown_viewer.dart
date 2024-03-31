@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_prism/flutter_prism.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
@@ -7,105 +8,130 @@ import 'package:mix/mix.dart';
 
 import '../../controllers/deck_controller.dart';
 import '../../helpers/syntax_highlighter.dart';
+import '../../models/slide_options_model.dart';
 import '../../styles/style_spec.dart';
-import '../../styles/style_util.dart';
 import '../molecules/slide_view.dart';
 
 class SlideContent extends StatelessWidget {
-  const SlideContent(this.data, {required this.style, super.key});
+  const SlideContent({
+    required this.content,
+    required this.alignment,
+    super.key,
+  });
 
-  final String data;
-  final SlideStyle style;
+  final String content;
+
+  final ContentAlignment alignment;
 
   @override
   Widget build(context) {
-    final slideConstraints = SlideConstraints.of(context)?.constraints;
+    final mix = MixProvider.of(context);
+    final spec = SlideSpec.of(mix);
+    final constraints = SlideConstraints.of(context);
 
-    return StyledWidgetBuilder(
-        style: style.content,
-        builder: (mix) {
-          final spec = SlideSpec.of(mix);
+    final p = spec.contentContainer.padding ?? const EdgeInsets.all(0.0);
+    final m = spec.contentContainer.margin ?? const EdgeInsets.all(0.0);
 
-          return MarkdownViewer(
-            data,
-            enableTaskList: true,
-            enableSuperscript: false,
-            enableSubscript: false,
-            enableFootnote: false,
-            enableImageSize: true,
-            enableKbd: false,
-            syntaxExtensions: const [],
-            elementBuilders: const [],
-            imageBuilder: (Uri uri, MarkdownImageInfo info) {
+    final maxWidth = constraints.maxWidth - p.horizontal + m.horizontal;
+    final maxHeight = constraints.maxHeight - p.vertical + m.vertical;
+
+    return BoxSpecWidget(
+      spec: spec.contentContainer,
+      child: SlideConstraints(
+        constraints: BoxConstraints(
+          maxWidth: maxWidth,
+          maxHeight: maxHeight,
+        ),
+        child: Column(
+          mainAxisAlignment: alignment.toMainAxisAlignment(),
+          crossAxisAlignment: alignment.toCrossAxisAlignment(),
+          children: [
+            Builder(builder: (context) {
               return ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: slideConstraints?.maxWidth ??
-                      info.width ??
-                      double.infinity,
-                  maxHeight: slideConstraints?.maxHeight ??
-                      info.height ??
-                      double.infinity,
+                  maxWidth: maxWidth,
+                  maxHeight: maxHeight,
                 ),
-                child: _imageBuilder(uri, info),
-              );
-            },
-            onTapLink: (href, title) {
-              print({href, title});
-            },
-            highlightBuilder: (text, language, infoString) {
-              // return [SyntaxHighlight.render(text, language ?? 'plain')];
-              return _buildHighlight(context, text, language, infoString);
-            },
-            copyIconBuilder: (bool copied) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Icon(
-                  copied ? Icons.check : Icons.copy,
-                  color: spec.code?.copyIconColor ?? Colors.grey,
-                  size: 28,
+                child: SingleChildScrollView(
+                  child: MarkdownViewer(
+                    content,
+                    enableTaskList: true,
+                    enableSuperscript: false,
+                    enableSubscript: false,
+                    enableFootnote: false,
+                    enableImageSize: true,
+                    enableKbd: false,
+                    syntaxExtensions: const [],
+                    elementBuilders: const [],
+                    imageBuilder: _imageBuilder(context),
+                    onTapLink: (href, title) {
+                      print({href, title});
+                    },
+                    highlightBuilder: _highlightBuilder(context),
+                    copyIconBuilder: (bool copied) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Icon(
+                          copied ? Icons.check : Icons.copy,
+                          color: spec.code?.copyIconColor ?? Colors.grey,
+                          size: 28,
+                        ),
+                      );
+                    },
+                    styleSheet: spec.toStyle(),
+                  ),
                 ),
               );
-            },
-            styleSheet: spec.toStyle(),
-          );
-        });
+            }),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-Widget _imageBuilder(Uri uri, MarkdownImageInfo info) {
-  const boxFit = BoxFit.contain;
+Widget Function(Uri, MarkdownImageInfo) _imageBuilder(BuildContext context) {
+  return (Uri uri, MarkdownImageInfo info) {
+    const boxFit = BoxFit.contain;
 
-  //  check if its a local path or a network path
-  if (uri.scheme == 'http' || uri.scheme == 'https') {
-    return Image.network(
-      uri.toString(),
-      fit: boxFit,
-      width: info.width,
-      height: info.height,
-    );
-  }
+    final constraints = SlideConstraints.of(context);
 
-  final assets = deckController.data().assets;
+    Widget current;
 
-  final asset = assets.firstWhereOrNull(
-    (element) => element.name == uri.toString(),
-  );
+    //  check if its a local path or a network path
+    if (uri.scheme == 'http' || uri.scheme == 'https') {
+      current = CachedNetworkImage(
+        imageUrl: uri.toString(),
+        fit: boxFit,
+        width: info.width,
+        height: info.height,
+      );
+    } else {
+      final assets = superdeck.assets;
 
-  if (asset?.base64 != null) {
-    return Image.memory(
-      base64Decode(asset!.base64),
-      fit: boxFit,
-      width: info.width,
-      height: info.height,
-    );
-  }
+      final asset = assets.value.firstWhereOrNull(
+        (element) => element.name == uri.toString(),
+      );
 
-  return Image.asset(
-    uri.toString(),
-    fit: boxFit,
-    width: info.width,
-    height: info.height,
-  );
+      if (asset?.base64 != null) {
+        current = Image.memory(
+          base64Decode(asset!.base64),
+          fit: boxFit,
+          width: info.width,
+          height: info.height,
+        );
+      } else {
+        current = Image.asset(
+          uri.toString(),
+          fit: boxFit,
+          width: info.width,
+          height: info.height,
+        );
+      }
+    }
+
+    return ConstrainedBox(constraints: constraints, child: current);
+  };
 }
 
 List<TextSpan> updateTextColor(
@@ -159,20 +185,23 @@ List<TextSpan> updateTextColor(
   return updatedSpans;
 }
 
-List<TextSpan> _buildHighlight(
+List<TextSpan> Function(String, String?, String?) _highlightBuilder(
   BuildContext context,
-  String text,
-  String? language,
-  String? infoString,
 ) {
-  final prism = Prism(
-    mouseCursor: SystemMouseCursors.text,
-    style: Theme.of(context).brightness == Brightness.dark
-        ? const PrismStyle.dark()
-        : const PrismStyle(),
-  );
+  return (
+    String text,
+    String? language,
+    String? infoString,
+  ) {
+    final prism = Prism(
+      mouseCursor: SystemMouseCursors.text,
+      style: Theme.of(context).brightness == Brightness.dark
+          ? const PrismStyle.dark()
+          : const PrismStyle(),
+    );
 
-  final spans = prism.render(text, language ?? 'plain');
-  return updateTextColor(
-      spans, parseLineNumbers(infoString ?? ''), Colors.white.withOpacity(0.1));
+    final spans = prism.render(text, language ?? 'plain');
+    return updateTextColor(spans, parseLineNumbers(infoString ?? ''),
+        Colors.white.withOpacity(0.1));
+  };
 }
