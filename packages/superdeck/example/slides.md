@@ -3,6 +3,7 @@ title: "Slide 1: Headings"
 layout: image
 image:
   fit: cover
+  position: bottom
   src: https://source.unsplash.com/random/900×700/?landscape
 content_alignment: center
 ---

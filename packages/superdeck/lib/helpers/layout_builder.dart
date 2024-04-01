@@ -44,6 +44,7 @@ class ImageSlide extends SlideWidget<ImageSlideOptions> {
   @override
   Widget build(BuildContext context) {
     final image = config.image;
+    final position = image.position;
 
     Widget buildImage() {
       return Container(
@@ -61,11 +62,13 @@ class ImageSlide extends SlideWidget<ImageSlideOptions> {
       Expanded(child: buildImage())
     ];
 
-    if (image.position == ImagePosition.left) {
+    if (position == ImagePosition.left || position == ImagePosition.top) {
       children = children.reversed.toList();
     }
 
-    return Row(children: children);
+    return position == ImagePosition.top || position == ImagePosition.bottom
+        ? Column(children: children)
+        : Row(children: children);
   }
 }
 

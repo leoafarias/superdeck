@@ -95,6 +95,10 @@ class ImagePositionMapper extends EnumMapper<ImagePosition> {
         return ImagePosition.left;
       case 'right':
         return ImagePosition.right;
+      case 'top':
+        return ImagePosition.top;
+      case 'bottom':
+        return ImagePosition.bottom;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -107,6 +111,10 @@ class ImagePositionMapper extends EnumMapper<ImagePosition> {
         return 'left';
       case ImagePosition.right:
         return 'right';
+      case ImagePosition.top:
+        return 'top';
+      case ImagePosition.bottom:
+        return 'bottom';
     }
   }
 }

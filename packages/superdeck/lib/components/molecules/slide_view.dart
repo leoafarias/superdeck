@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../helpers/template_builder.dart';
+import '../../helpers/layout_builder.dart';
 import '../../models/config_model.dart';
 import '../../superdeck.dart';
 import '../../theme.dart';

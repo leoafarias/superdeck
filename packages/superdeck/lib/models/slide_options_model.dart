@@ -45,7 +45,7 @@ enum ImageFit {
 }
 
 @MappableEnum()
-enum ImagePosition { left, right }
+enum ImagePosition { left, right, top, bottom }
 
 @MappableEnum()
 enum ContentAlignment {

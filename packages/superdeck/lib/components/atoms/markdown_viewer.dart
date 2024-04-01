@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_prism/flutter_prism.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:mix/mix.dart';
 
@@ -29,37 +28,8 @@ class SlideContent extends StatelessWidget {
     final mix = MixProvider.of(context);
     final spec = SlideSpec.of(mix);
     final container = spec.contentContainer;
-    final padding = container.padding ?? const EdgeInsets.all(0);
-    final margin = container.margin ?? const EdgeInsets.all(0);
-
-    //  if container.decoration is a BoxDecoration then get the border horizontal and vertical spacing
-    double horizontalBorderSize = 0.0;
-    double verticalBorderSize = 0.0;
-
-    if (container.decoration is BoxDecoration) {
-      final decoration = container.decoration as BoxDecoration;
-      final border = decoration.border;
-
-      if (border != null) {
-        // Check if is Border or BorderDirectional and get the horizontal and vertical spacing
-        if (border is Border) {
-          horizontalBorderSize = border.left.width + border.right.width;
-          verticalBorderSize = border.top.width + border.bottom.width;
-        } else if (border is BorderDirectional) {
-          horizontalBorderSize = border.start.width + border.end.width;
-          verticalBorderSize = border.top.width + border.bottom.width;
-        }
-      }
-    }
-
-    final widthSpacing =
-        padding.horizontal + margin.horizontal + horizontalBorderSize;
-    final heightSpacing =
-        padding.vertical + margin.vertical + verticalBorderSize;
 
     return SlideConstraintBuilder(builder: (context, size) {
-      final maxHeight = size.height - heightSpacing;
-      final maxWidth = size.width - widthSpacing;
       return Column(
         mainAxisAlignment: alignment.toMainAxisAlignment(),
         crossAxisAlignment: alignment.toCrossAxisAlignment(),
@@ -73,10 +43,7 @@ class SlideContent extends StatelessWidget {
               child: BoxSpecWidget(
                 spec: spec.contentContainer,
                 child: SlideConstraints(
-                  constraints: BoxConstraints(
-                    maxHeight: maxHeight,
-                    maxWidth: maxWidth,
-                  ),
+                  constraints: _calculateConstraints(size, container),
                   child: Builder(builder: (context) {
                     return MarkdownViewer(
                       content,
@@ -219,15 +186,31 @@ List<TextSpan> Function(String, String?, String?) _highlightBuilder(
     String? language,
     String? infoString,
   ) {
-    final prism = Prism(
-      mouseCursor: SystemMouseCursors.text,
-      style: Theme.of(context).brightness == Brightness.dark
-          ? const PrismStyle.dark()
-          : const PrismStyle(),
-    );
-
-    final spans = prism.render(text, language ?? 'plain');
-    return updateTextColor(spans, parseLineNumbers(infoString ?? ''),
-        Colors.white.withOpacity(0.1));
+    return [SyntaxHighlight.render(text, language ?? 'dart')];
   };
+}
+
+BoxConstraints _calculateConstraints(Size size, BoxSpec spec) {
+  final padding = spec.padding ?? EdgeInsets.zero;
+  final margin = spec.margin ?? EdgeInsets.zero;
+
+  double horizontalBorder = 0.0;
+  double verticalBorder = 0.0;
+
+  if (spec.decoration is BoxDecoration) {
+    final border = (spec.decoration as BoxDecoration).border;
+    if (border != null) {
+      horizontalBorder = border.dimensions.horizontal;
+      verticalBorder = border.dimensions.vertical;
+    }
+  }
+
+  final horizontalSpacing =
+      padding.horizontal + margin.horizontal + horizontalBorder;
+  final verticalSpacing = padding.vertical + margin.vertical + verticalBorder;
+
+  return BoxConstraints(
+    maxHeight: size.height - verticalSpacing,
+    maxWidth: size.width - horizontalSpacing,
+  );
 }

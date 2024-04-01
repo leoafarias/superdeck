@@ -22,7 +22,7 @@ dependencies:
   signals_flutter: ^4.5.1
   dart_mappable: ^4.2.1
   dart_markdown: ^3.1.7
-  flutter_prism: ^0.2.2
+
   markdown_viewer: ^0.6.2
   
 dev_dependencies:
