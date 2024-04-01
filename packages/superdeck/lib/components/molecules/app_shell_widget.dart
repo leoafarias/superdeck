@@ -14,9 +14,9 @@ import 'scaled_app.dart';
 import 'slide_view.dart';
 
 class SuperDeck extends StatelessWidget {
-  const SuperDeck({super.key, this.styleBuilder});
+  const SuperDeck({super.key, this.style});
 
-  final Style Function()? styleBuilder;
+  final Style Function()? style;
 
   static Future<void> initialize() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +55,7 @@ class SuperDeck extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           darkTheme: darkTheme,
           home: DeckStyle(
-            style: defaultStyle.merge(styleBuilder?.call()),
+            style: defaultStyle.merge(style?.call()),
             child: Watch((context) {
               return superdeck.isLoading()
                   ? const Center(child: CircularProgressIndicator())

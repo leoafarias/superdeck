@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 part 'slide_options_model.mapper.dart';
 
 @MappableClass()
-class ImageConfig with ImageConfigMappable {
+class ImageOptions with ImageOptionsMappable {
   final String src;
   final ImageFit fit;
   final ImagePosition position;
 
-  const ImageConfig({
+  const ImageOptions({
     required this.src,
     this.fit = ImageFit.cover,
     this.position = ImagePosition.left,
   });
 
-  static const fromMap = ImageConfigMapper.fromMap;
-  static const fromJson = ImageConfigMapper.fromJson;
+  static const fromMap = ImageOptionsMapper.fromMap;
+  static const fromJson = ImageOptionsMapper.fromJson;
 }
 
 @MappableEnum()

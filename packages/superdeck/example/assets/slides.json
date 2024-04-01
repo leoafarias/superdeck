@@ -1,15 +1,27 @@
 [
   {
     "title": "Slide 1: Headings",
-    "layout": "two_column_header",
+    "layout": "image",
     "image": {
       "fit": "cover",
       "src": "https://source.unsplash.com/random/900×700/?landscape"
     },
-    "background": "https://source.unsplash.com/random/900×700/?landscape",
-    "variant": "simple",
-    "content_alignment": "top_left",
-    "content": "# Heading 1\n## Heading 2\n### Heading 3\n::left::\n#### Heading 4\n##### Heading 5\n###### Heading 6\n::right::\n**Paragraph**\n\nHere is a paragraph with some text."
+    "content_alignment": "center",
+    "content": "# Heading 1\n::left::\n## Heading 2\n::right::\n### Heading 3\n#### Heading 4"
+  },
+  {
+    "layout": "two_column_header",
+    "content_alignment": "center_left",
+    "content": "# Two Column Header\n\nThis is your main header, providing a context or introducing the core concept covered in this slide.\n\n::left::\n```dart\nclass Slide {\n  final String title;\n  final String content;\n  final String layout;\n  final String image;\n}\n```\n\n### Left Heading\n- Point A\n- Point B\n- Point C\n### Left Heading\n- Point A\n- Point B\n- Point C\n### Left Heading\n- Point A\n- Point B\n- Point C\n\n::right::\n### Right Heading\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z"
+  },
+  {
+    "layout": "image",
+    "image": {
+      "src": "https://source.unsplash.com/random/900×700/?nature",
+      "fit": "cover",
+      "position": "left"
+    },
+    "content": "# Key Features\n\n- Innovative design\n- User-friendly\n- Energy-efficient"
   },
   {
     "title": "Slide 2: Text Styling",
@@ -37,11 +49,12 @@
   },
   {
     "title": "Mermaid example",
-    "content": "![Mermaid Diagram](assets/images/523883852.png)"
+    "layout": "two_column",
+    "content": "::left::\n![Mermaid Diagram](assets/images/523883852.png)\n::right::\n## Mermaid Example"
   },
   {
     "title": "Slide 8: Task Lists",
-    "layout": "two-column",
+    "layout": "two_column",
     "content": "::left::\n\n- [ ] Task List Item 1\n- [x] Task List Item 2\n\n::right::\n\n#### Subtask\n\n- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim"
   },
   {

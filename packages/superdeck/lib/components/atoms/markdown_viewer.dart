@@ -7,6 +7,7 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:mix/mix.dart';
 
 import '../../controllers/deck_controller.dart';
+import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../models/slide_options_model.dart';
 import '../../styles/style_spec.dart';
@@ -27,66 +28,91 @@ class SlideContent extends StatelessWidget {
   Widget build(context) {
     final mix = MixProvider.of(context);
     final spec = SlideSpec.of(mix);
-    final constraints = SlideConstraints.of(context);
+    final container = spec.contentContainer;
+    final padding = container.padding ?? const EdgeInsets.all(0);
+    final margin = container.margin ?? const EdgeInsets.all(0);
 
-    final p = spec.contentContainer.padding ?? const EdgeInsets.all(0.0);
-    final m = spec.contentContainer.margin ?? const EdgeInsets.all(0.0);
+    //  if container.decoration is a BoxDecoration then get the border horizontal and vertical spacing
+    double horizontalBorderSize = 0.0;
+    double verticalBorderSize = 0.0;
 
-    final maxWidth = constraints.maxWidth - p.horizontal + m.horizontal;
-    final maxHeight = constraints.maxHeight - p.vertical + m.vertical;
+    if (container.decoration is BoxDecoration) {
+      final decoration = container.decoration as BoxDecoration;
+      final border = decoration.border;
 
-    return BoxSpecWidget(
-      spec: spec.contentContainer,
-      child: SlideConstraints(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth,
-          maxHeight: maxHeight,
-        ),
-        child: Column(
-          mainAxisAlignment: alignment.toMainAxisAlignment(),
-          crossAxisAlignment: alignment.toCrossAxisAlignment(),
-          children: [
-            Builder(builder: (context) {
-              return ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: maxWidth,
-                  maxHeight: maxHeight,
-                ),
-                child: SingleChildScrollView(
-                  child: MarkdownViewer(
-                    content,
-                    enableTaskList: true,
-                    enableSuperscript: false,
-                    enableSubscript: false,
-                    enableFootnote: false,
-                    enableImageSize: true,
-                    enableKbd: false,
-                    syntaxExtensions: const [],
-                    elementBuilders: const [],
-                    imageBuilder: _imageBuilder(context),
-                    onTapLink: (href, title) {
-                      print({href, title});
-                    },
-                    highlightBuilder: _highlightBuilder(context),
-                    copyIconBuilder: (bool copied) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Icon(
-                          copied ? Icons.check : Icons.copy,
-                          color: spec.code?.copyIconColor ?? Colors.grey,
-                          size: 28,
-                        ),
-                      );
-                    },
-                    styleSheet: spec.toStyle(),
+      if (border != null) {
+        // Check if is Border or BorderDirectional and get the horizontal and vertical spacing
+        if (border is Border) {
+          horizontalBorderSize = border.left.width + border.right.width;
+          verticalBorderSize = border.top.width + border.bottom.width;
+        } else if (border is BorderDirectional) {
+          horizontalBorderSize = border.start.width + border.end.width;
+          verticalBorderSize = border.top.width + border.bottom.width;
+        }
+      }
+    }
+
+    final widthSpacing =
+        padding.horizontal + margin.horizontal + horizontalBorderSize;
+    final heightSpacing =
+        padding.vertical + margin.vertical + verticalBorderSize;
+
+    return SlideConstraintBuilder(builder: (context, size) {
+      final maxHeight = size.height - heightSpacing;
+      final maxWidth = size.width - widthSpacing;
+      return Column(
+        mainAxisAlignment: alignment.toMainAxisAlignment(),
+        crossAxisAlignment: alignment.toCrossAxisAlignment(),
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: size.height,
+              maxWidth: size.width,
+            ),
+            child: SingleChildScrollView(
+              child: BoxSpecWidget(
+                spec: spec.contentContainer,
+                child: SlideConstraints(
+                  constraints: BoxConstraints(
+                    maxHeight: maxHeight,
+                    maxWidth: maxWidth,
                   ),
+                  child: Builder(builder: (context) {
+                    return MarkdownViewer(
+                      content,
+                      enableTaskList: true,
+                      enableSuperscript: false,
+                      enableSubscript: false,
+                      enableFootnote: false,
+                      enableImageSize: true,
+                      enableKbd: false,
+                      syntaxExtensions: const [],
+                      elementBuilders: const [],
+                      imageBuilder: _imageBuilder(context),
+                      onTapLink: (href, title) {
+                        print({href, title});
+                      },
+                      highlightBuilder: _highlightBuilder(context),
+                      copyIconBuilder: (bool copied) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Icon(
+                            copied ? Icons.check : Icons.copy,
+                            color: spec.code?.copyIconColor ?? Colors.grey,
+                            size: 28,
+                          ),
+                        );
+                      },
+                      styleSheet: spec.toStyle(),
+                    );
+                  }),
                 ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
+              ),
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 

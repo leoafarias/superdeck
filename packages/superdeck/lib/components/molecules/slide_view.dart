@@ -12,7 +12,7 @@ class SlideView extends StatelessWidget {
     super.key,
   });
 
-  final SlideConfig config;
+  final SlideOptions config;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +41,13 @@ class SlideView extends StatelessWidget {
                       return SlideConstraints(
                         constraints: constraints,
                         child: Builder(builder: (_) {
-                          if (config is ImageSlideConfig) {
+                          if (config is ImageSlideOptions) {
                             return ImageSlide(config: config);
-                          } else if (config is TwoColumnSlideConfig) {
+                          } else if (config is TwoColumnSlideOptions) {
                             return TwoColumnSlide(config: config);
-                          } else if (config is TwoColumnHeaderSlideConfig) {
+                          } else if (config is TwoColumnHeaderSlideOptions) {
                             return TwoColumnHeaderSlide(config: config);
-                          } else if (config is BaseSlideConfig) {
+                          } else if (config is BaseSlideOptions) {
                             return BaseSlide(config: config);
                           } else {
                             throw UnimplementedError(

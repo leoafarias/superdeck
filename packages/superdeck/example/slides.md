@@ -1,26 +1,82 @@
 ---
 title: "Slide 1: Headings"
-layout: two_column_header
+layout: image
 image:
   fit: cover
   src: https://source.unsplash.com/random/900×700/?landscape
-background: https://source.unsplash.com/random/900×700/?landscape
-variant: simple
-content_alignment: top_left  
+content_alignment: center
 ---
 
 # Heading 1
-## Heading 2
-### Heading 3
 ::left::
-#### Heading 4
-##### Heading 5
-###### Heading 6
+## Heading 2
 ::right::
-**Paragraph**
+### Heading 3
+#### Heading 4
 
-Here is a paragraph with some text.
+---
+layout: two_column_header
+content_alignment: center_left
+---
 
+# Two Column Header
+
+This is your main header, providing a context or introducing the core concept covered in this slide.
+
+::left::
+```dart
+class Slide {
+  final String title;
+  final String content;
+  final String layout;
+  final String image;
+}
+```
+
+### Left Heading
+- Point A
+- Point B
+- Point C
+### Left Heading
+- Point A
+- Point B
+- Point C
+### Left Heading
+- Point A
+- Point B
+- Point C
+
+::right::
+### Right Heading
+- Point X
+- Point Y
+- Point Z
+- Point X
+- Point Y
+- Point Z
+- Point X
+- Point Y
+- Point Z
+- Point X
+- Point Y
+- Point Z
+- Point X
+- Point Y
+- Point Z
+
+---
+layout: image
+image:
+  src: https://source.unsplash.com/random/900×700/?nature
+  fit: cover
+  position: left
+---
+
+# Key Features
+
+- Innovative design
+- User-friendly
+- Energy-efficient
 
 ---
 title: "Slide 2: Text Styling"
@@ -91,8 +147,10 @@ title: "Slide 7: Tables"
 
 ---
 title: "Mermaid example"
+layout: two_column
 ---
 
+::left::
 ```mermaid
 flowchart TD
     A[This is crazy] -->|Get money| B(Go shopping)
@@ -102,11 +160,12 @@ flowchart TD
     C -->|Three| F[fa:fa-car Car]
   
 ```
-
+::right::
+## Mermaid Example
 
 ---
 title: "Slide 8: Task Lists"
-layout: two-column
+layout: two_column
 ---
 
 ::left::

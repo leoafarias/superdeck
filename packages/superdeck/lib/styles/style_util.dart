@@ -4,21 +4,35 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 
 import '../superdeck.dart';
 
-class SlideVariant extends Variant {
-  const SlideVariant(super.name);
-
-  static const simple = SlideVariant('simple');
-  static const leftContent = SlideVariant('leftContent');
-  static const rightContent = SlideVariant('rightContent');
-  static const image = SlideVariant('image');
-}
-
 Style get defaultStyle {
   final baseTextStyle = GoogleFonts.inter().copyWith(fontSize: 22);
   final jetBrainsTextStyle = GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
 
   return Style(
     SlideSpecAttribute(
+      outerContainer: const BoxSpecAttribute(
+          // padding: SpacingDto.from(const EdgeInsets.all(20)),
+          ),
+      // innerContainer: BoxSpecAttribute(
+      //   decoration: BoxDecorationDto(
+      //     color: const ColorDto(Colors.grey),
+      //     borderRadius: BorderRadiusGeometryDto.from(
+      //       BorderRadius.circular(20),
+      //     ),
+      //   ),
+      // ),
+      contentContainer: BoxSpecAttribute(
+        padding: SpacingDto.from(const EdgeInsets.all(40)),
+        decoration: BoxDecorationDto(
+          color: const ColorDto(Colors.transparent),
+          border: BoxBorderDto.from(
+            Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+        ),
+      ),
       textStyle: TextStyleDto.as(baseTextStyle),
       headline1: MdTextStyleDto(
         textStyle: TextStyleDto.as(baseTextStyle.copyWith(fontSize: 72)),

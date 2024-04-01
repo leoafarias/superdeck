@@ -192,13 +192,13 @@ extension ContentAlignmentMapperExtension on ContentAlignment {
   }
 }
 
-class ImageConfigMapper extends ClassMapperBase<ImageConfig> {
-  ImageConfigMapper._();
+class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
+  ImageOptionsMapper._();
 
-  static ImageConfigMapper? _instance;
-  static ImageConfigMapper ensureInitialized() {
+  static ImageOptionsMapper? _instance;
+  static ImageOptionsMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = ImageConfigMapper._());
+      MapperContainer.globals.use(_instance = ImageOptionsMapper._());
       ImageFitMapper.ensureInitialized();
       ImagePositionMapper.ensureInitialized();
     }
@@ -206,26 +206,26 @@ class ImageConfigMapper extends ClassMapperBase<ImageConfig> {
   }
 
   @override
-  final String id = 'ImageConfig';
+  final String id = 'ImageOptions';
 
-  static String _$src(ImageConfig v) => v.src;
-  static const Field<ImageConfig, String> _f$src = Field('src', _$src);
-  static ImageFit _$fit(ImageConfig v) => v.fit;
-  static const Field<ImageConfig, ImageFit> _f$fit =
+  static String _$src(ImageOptions v) => v.src;
+  static const Field<ImageOptions, String> _f$src = Field('src', _$src);
+  static ImageFit _$fit(ImageOptions v) => v.fit;
+  static const Field<ImageOptions, ImageFit> _f$fit =
       Field('fit', _$fit, opt: true, def: ImageFit.cover);
-  static ImagePosition _$position(ImageConfig v) => v.position;
-  static const Field<ImageConfig, ImagePosition> _f$position =
+  static ImagePosition _$position(ImageOptions v) => v.position;
+  static const Field<ImageOptions, ImagePosition> _f$position =
       Field('position', _$position, opt: true, def: ImagePosition.left);
 
   @override
-  final MappableFields<ImageConfig> fields = const {
+  final MappableFields<ImageOptions> fields = const {
     #src: _f$src,
     #fit: _f$fit,
     #position: _f$position,
   };
 
-  static ImageConfig _instantiate(DecodingData data) {
-    return ImageConfig(
+  static ImageOptions _instantiate(DecodingData data) {
+    return ImageOptions(
         src: data.dec(_f$src),
         fit: data.dec(_f$fit),
         position: data.dec(_f$position));
@@ -234,68 +234,69 @@ class ImageConfigMapper extends ClassMapperBase<ImageConfig> {
   @override
   final Function instantiate = _instantiate;
 
-  static ImageConfig fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ImageConfig>(map);
+  static ImageOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ImageOptions>(map);
   }
 
-  static ImageConfig fromJson(String json) {
-    return ensureInitialized().decodeJson<ImageConfig>(json);
+  static ImageOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<ImageOptions>(json);
   }
 }
 
-mixin ImageConfigMappable {
+mixin ImageOptionsMappable {
   String toJson() {
-    return ImageConfigMapper.ensureInitialized()
-        .encodeJson<ImageConfig>(this as ImageConfig);
+    return ImageOptionsMapper.ensureInitialized()
+        .encodeJson<ImageOptions>(this as ImageOptions);
   }
 
   Map<String, dynamic> toMap() {
-    return ImageConfigMapper.ensureInitialized()
-        .encodeMap<ImageConfig>(this as ImageConfig);
+    return ImageOptionsMapper.ensureInitialized()
+        .encodeMap<ImageOptions>(this as ImageOptions);
   }
 
-  ImageConfigCopyWith<ImageConfig, ImageConfig, ImageConfig> get copyWith =>
-      _ImageConfigCopyWithImpl(this as ImageConfig, $identity, $identity);
+  ImageOptionsCopyWith<ImageOptions, ImageOptions, ImageOptions> get copyWith =>
+      _ImageOptionsCopyWithImpl(this as ImageOptions, $identity, $identity);
   @override
   String toString() {
-    return ImageConfigMapper.ensureInitialized()
-        .stringifyValue(this as ImageConfig);
+    return ImageOptionsMapper.ensureInitialized()
+        .stringifyValue(this as ImageOptions);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            ImageConfigMapper.ensureInitialized()
-                .isValueEqual(this as ImageConfig, other));
+            ImageOptionsMapper.ensureInitialized()
+                .isValueEqual(this as ImageOptions, other));
   }
 
   @override
   int get hashCode {
-    return ImageConfigMapper.ensureInitialized().hashValue(this as ImageConfig);
+    return ImageOptionsMapper.ensureInitialized()
+        .hashValue(this as ImageOptions);
   }
 }
 
-extension ImageConfigValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ImageConfig, $Out> {
-  ImageConfigCopyWith<$R, ImageConfig, $Out> get $asImageConfig =>
-      $base.as((v, t, t2) => _ImageConfigCopyWithImpl(v, t, t2));
+extension ImageOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ImageOptions, $Out> {
+  ImageOptionsCopyWith<$R, ImageOptions, $Out> get $asImageOptions =>
+      $base.as((v, t, t2) => _ImageOptionsCopyWithImpl(v, t, t2));
 }
 
-abstract class ImageConfigCopyWith<$R, $In extends ImageConfig, $Out>
+abstract class ImageOptionsCopyWith<$R, $In extends ImageOptions, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({String? src, ImageFit? fit, ImagePosition? position});
-  ImageConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  ImageOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ImageConfigCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ImageConfig, $Out>
-    implements ImageConfigCopyWith<$R, ImageConfig, $Out> {
-  _ImageConfigCopyWithImpl(super.value, super.then, super.then2);
+class _ImageOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ImageOptions, $Out>
+    implements ImageOptionsCopyWith<$R, ImageOptions, $Out> {
+  _ImageOptionsCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<ImageConfig> $mapper =
-      ImageConfigMapper.ensureInitialized();
+  late final ClassMapperBase<ImageOptions> $mapper =
+      ImageOptionsMapper.ensureInitialized();
   @override
   $R call({String? src, ImageFit? fit, ImagePosition? position}) =>
       $apply(FieldCopyWithData({
@@ -304,13 +305,13 @@ class _ImageConfigCopyWithImpl<$R, $Out>
         if (position != null) #position: position
       }));
   @override
-  ImageConfig $make(CopyWithData data) => ImageConfig(
+  ImageOptions $make(CopyWithData data) => ImageOptions(
       src: data.get(#src, or: $value.src),
       fit: data.get(#fit, or: $value.fit),
       position: data.get(#position, or: $value.position));
 
   @override
-  ImageConfigCopyWith<$R2, ImageConfig, $Out2> $chain<$R2, $Out2>(
+  ImageOptionsCopyWith<$R2, ImageOptions, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ImageConfigCopyWithImpl($value, $cast, t);
+      _ImageOptionsCopyWithImpl($value, $cast, t);
 }

@@ -19,7 +19,7 @@ final _assetsJsonFile = File(p.join(_assetsDirectory, 'assets.json'));
 final superdeck = getIt<SuperDeckController>();
 
 class SuperDeckController {
-  final slides = listSignal<SlideConfig>([]);
+  final slides = listSignal<SlideOptions>([]);
   final assets = listSignal<SlideAsset>([]);
 
   final currentPage = signal(0);
@@ -82,21 +82,21 @@ class SuperDeckController {
     _subscriptions.addAll([slidesSub, assetsSub]);
   }
 
-  List<SlideConfig> _parseSlides(String contents) {
+  List<SlideOptions> _parseSlides(String contents) {
     final slides = json.decode(contents) as List<dynamic>;
     return slides.map((e) {
       switch (e['layout']) {
         case null:
-        case BaseSlideConfig.template:
-          return BaseSlideConfig.fromMap(e);
-        case ImageSlideConfig.template:
-          return ImageSlideConfig.fromMap(e);
-        case TwoColumnSlideConfig.template:
-          return TwoColumnSlideConfig.fromMap(e);
-        case TwoColumnHeaderSlideConfig.template:
-          return TwoColumnHeaderSlideConfig.fromMap(e);
+        case BaseSlideOptions.template:
+          return BaseSlideOptions.fromMap(e);
+        case ImageSlideOptions.template:
+          return ImageSlideOptions.fromMap(e);
+        case TwoColumnSlideOptions.template:
+          return TwoColumnSlideOptions.fromMap(e);
+        case TwoColumnHeaderSlideOptions.template:
+          return TwoColumnHeaderSlideOptions.fromMap(e);
         default:
-          return BaseSlideConfig.fromMap(e);
+          return BaseSlideOptions.fromMap(e);
       }
     }).toList();
   }

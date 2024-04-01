@@ -8,7 +8,8 @@ import '../models/slide_options_model.dart';
 
 enum BackgroundType { color, uri, none }
 
-abstract class SlideWidget<Config extends SlideConfig> extends StatelessWidget {
+abstract class SlideWidget<Config extends SlideOptions>
+    extends StatelessWidget {
   final Config config;
 
   const SlideWidget({required this.config, super.key});
@@ -28,41 +29,7 @@ abstract class SlideWidget<Config extends SlideConfig> extends StatelessWidget {
   }
 }
 
-class ImageSlide extends SlideWidget<ImageSlideConfig> {
-  const ImageSlide({required super.config, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final image = config.image;
-
-    final imageWidget = Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(image.src),
-            fit: image.fit.toBoxFit(),
-          ),
-        ),
-      ),
-    );
-
-    List<Widget> children = [
-      Expanded(child: buildContent()),
-    ];
-
-    if (image.position == ImagePosition.left) {
-      children.insert(0, imageWidget);
-    } else {
-      children.add(imageWidget);
-    }
-
-    return Row(
-      children: children,
-    );
-  }
-}
-
-class BaseSlide extends SlideWidget<BaseSlideConfig> {
+class BaseSlide extends SlideWidget<BaseSlideOptions> {
   const BaseSlide({required super.config, super.key});
 
   @override
@@ -71,7 +38,38 @@ class BaseSlide extends SlideWidget<BaseSlideConfig> {
   }
 }
 
-class TwoColumnSlide extends SlideWidget<TwoColumnSlideConfig> {
+class ImageSlide extends SlideWidget<ImageSlideOptions> {
+  const ImageSlide({required super.config, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final image = config.image;
+
+    Widget buildImage() {
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(image.src),
+            fit: image.fit.toBoxFit(),
+          ),
+        ),
+      );
+    }
+
+    List<Widget> children = [
+      Expanded(child: buildContent()),
+      Expanded(child: buildImage())
+    ];
+
+    if (image.position == ImagePosition.left) {
+      children = children.reversed.toList();
+    }
+
+    return Row(children: children);
+  }
+}
+
+class TwoColumnSlide extends SlideWidget<TwoColumnSlideOptions> {
   const TwoColumnSlide({required super.config, super.key});
 
   @override
@@ -89,19 +87,17 @@ class TwoColumnSlide extends SlideWidget<TwoColumnSlideConfig> {
   }
 }
 
-class TwoColumnHeaderSlide extends SlideWidget<TwoColumnHeaderSlideConfig> {
+class TwoColumnHeaderSlide extends SlideWidget<TwoColumnHeaderSlideOptions> {
   const TwoColumnHeaderSlide({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(child: buildContentSection(config.topContent)),
-            ],
-          ),
+        Row(
+          children: [
+            Expanded(child: buildContentSection(config.topContent)),
+          ],
         ),
         Expanded(
           child: Row(
