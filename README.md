@@ -1,6 +1,7 @@
 # SuperDeck
 
-SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown. Markdown's plain text formatting syntax is easy to learn and familiar to many developers, making it an ideal choice for creating presentations. Tailor every aspect of your slides with comprehensive customization options, and leverage a variety of templates to bring your content to life.
+SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown. Tailor every aspect of your slides with comprehensive customization options, and leverage a variety of templates to bring your content to life.
+
 
 ## Getting Started
 
