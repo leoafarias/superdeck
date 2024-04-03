@@ -7,16 +7,32 @@ part 'slide_options_model.mapper.dart';
 class ImageOptions with ImageOptionsMappable {
   final String src;
   final ImageFit fit;
-  final ImagePosition position;
+  final LayoutPosition position;
 
   const ImageOptions({
     required this.src,
     this.fit = ImageFit.cover,
-    this.position = ImagePosition.left,
+    this.position = LayoutPosition.left,
   });
 
   static const fromMap = ImageOptionsMapper.fromMap;
   static const fromJson = ImageOptionsMapper.fromJson;
+}
+
+@MappableClass()
+class PreviewOptions with PreviewOptionsMappable {
+  final String name;
+  final Map<String, dynamic> args;
+  final LayoutPosition position;
+
+  const PreviewOptions({
+    required this.name,
+    this.args = const {},
+    this.position = LayoutPosition.left,
+  });
+
+  static const fromMap = PreviewOptionsMapper.fromMap;
+  static const fromJson = PreviewOptionsMapper.fromJson;
 }
 
 @MappableEnum()
@@ -45,7 +61,7 @@ enum ImageFit {
 }
 
 @MappableEnum()
-enum ImagePosition { left, right, top, bottom }
+enum LayoutPosition { left, right, top, bottom }
 
 @MappableEnum()
 enum ContentAlignment {

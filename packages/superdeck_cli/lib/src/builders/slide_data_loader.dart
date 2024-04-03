@@ -4,18 +4,33 @@ import 'dart:io';
 import 'package:path/path.dart';
 
 import '../../superdeck_cli.dart';
-import '../context.dart';
 import '../helper/helper.dart';
 
+final config = SuperDeckConfig();
+
+class SuperDeckConfig {
+  SuperDeckConfig();
+
+  String get _assetsDirName => 'assets';
+
+  String get _slidesMarkdownName => 'slides.md';
+
+  File get slidesMarkdownFile => File(_slidesMarkdownName);
+  Directory get assetsDir => Directory(_assetsDirName);
+  Directory get assetsImageDir => Directory(join(_assetsDirName, 'images'));
+  File get slidesJsonFile => File(join(_assetsDirName, 'slides.json'));
+  File get assetsJsonFile => File(join(_assetsDirName, 'assets.json'));
+}
+
 void loadSlideMarkdown() {
-  final slidesMarkdown = ctx.slidesMarkdownFile;
+  final slidesMarkdown = config.slidesMarkdownFile;
 
   if (!slidesMarkdown.existsSync()) {
     throw Exception('Slides markdown file not found');
   }
 
   // Clean up assets folder
-  ctx.assetsImageDir.listSync().forEach((element) {
+  config.assetsImageDir.listSync().forEach((element) {
     if (element is File) {
       element.deleteSync(recursive: true);
     }
@@ -31,8 +46,8 @@ void loadSlideMarkdown() {
 }
 
 void _saveSlideJson(List<Map<String, dynamic>> contents) {
-  final slidesJson = ctx.slidesJsonFile;
-  final assetsJson = ctx.assetsJsonFile;
+  final slidesJson = config.slidesJsonFile;
+  final assetsJson = config.assetsJsonFile;
 
   if (!slidesJson.existsSync()) {
     slidesJson.createSync(recursive: true);
@@ -45,7 +60,7 @@ void _saveSlideJson(List<Map<String, dynamic>> contents) {
   slidesJson.writeAsStringSync(prettyJson(contents));
   // Map<String,String> assets = {};
   // The key will be the file name and the value will be a base64 encoded string
-  final files = ctx.assetsImageDir.listSync();
+  final files = config.assetsImageDir.listSync();
   var assetMap = {};
 
   for (var file in files) {
@@ -53,7 +68,8 @@ void _saveSlideJson(List<Map<String, dynamic>> contents) {
       final bytes = file.readAsBytesSync();
       final base64 = base64Encode(bytes);
       // assets[file.path] = base64;
-      final relativePath = relative(file.path, from: ctx.assetsDir.parent.path);
+      final relativePath =
+          relative(file.path, from: config.assetsDir.parent.path);
 
       assetMap[relativePath] = base64;
     }

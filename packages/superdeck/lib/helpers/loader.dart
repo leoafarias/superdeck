@@ -4,15 +4,82 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-class SlidesParser {
+class SlidesLoader {
   // Constructor that accepts the text input for parsing.
-  SlidesParser(this.text);
-  final String text;
+  SlidesLoader();
+
+  Future<void> load() async {
+    final slidesMarkdown = config.slidesMarkdownFile;
+
+    if (!await slidesMarkdown.exists()) {
+      throw Exception('Slides markdown file not found');
+    }
+
+    final presentationContent = await slidesMarkdown.readAsString();
+
+    final (contents, imageFiles) =
+        await replaceMermaidContent(presentationContent);
+
+    await _saveSlideJson(contents);
+
+    await _generateAssetsJson();
+
+    // Delete any file within assetsDir that is not imageFiles
+    await config.assetsImageDir.list().forEach((f) async {
+      if (f is File) {
+        if (!imageFiles.any((element) => element.path == f.path)) {
+          await f.delete();
+        }
+      }
+    });
+  }
+
+  Future<void> _saveSlideJson(String contents) async {
+    final slidesJson = config.slidesJsonFile;
+
+    if (!await slidesJson.exists()) {
+      await slidesJson.create(recursive: true);
+    }
+
+    // Write a json file with a list of slides
+    await slidesJson.writeAsString(prettyJson(_parse(contents)));
+    // Map<String,String> assets = {};
+    // The key will be the file name and the value will be a base64 encoded string
+  }
+
+  Future<void> _generateAssetsJson() async {
+    final assetMap = {};
+    final assetsJson = config.assetsJsonFile;
+
+    if (!await assetsJson.exists()) {
+      await assetsJson.create(recursive: true);
+    }
+
+    final files =
+        await config.assetsImageDir.list().where((f) => f is File).toList();
+
+    await Future.wait(files.map((f) async {
+      final bytes = await (f as File).readAsBytes();
+      final base64 = base64Encode(bytes);
+      final relativePath = relative(
+        f.path,
+        from: config.assetsDir.parent.path,
+      );
+
+      assetMap[relativePath] = base64;
+    }));
+
+    //  convert a map to a an array of objects with key and value
+    final listOfAssets = assetMap.entries
+        .map((e) => {'name': e.key, 'base64': e.value})
+        .toList();
+    await assetsJson.writeAsString(prettyJson(listOfAssets));
+  }
 
   final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
 
   // Public method that parses the text and returns a list of SlideData.
-  List<Map<String, dynamic>> parse() {
+  List<Map<String, dynamic>> _parse(String text) {
     // Map the front matter and content to a list of _SlideParserData objects.
     return _extractSlides(text).map((slide) {
       final frontMatter = _extractFrontMatter(slide);
@@ -25,7 +92,7 @@ class SlidesParser {
     }).toList();
   }
 
-    String _extractFrontMatter(String slide) {
+  String _extractFrontMatter(String slide) {
     return _frontMatterRegex.firstMatch(slide)?.group(1) ?? '';
   }
 
@@ -35,8 +102,8 @@ class SlidesParser {
 
   String _removeMatchingFrontMatter(String slide, String frontMatter) {
     return slide
-          .substring(_frontMatterRegex.matchAsPrefix(slide)?.end ?? 0)
-          .trim();
+        .substring(_frontMatterRegex.matchAsPrefix(slide)?.end ?? 0)
+        .trim();
   }
 
   List<String> _extractSlides(String content) {
@@ -72,9 +139,10 @@ class SlidesParser {
   }
 }
 
-String replaceMermaidContent(String content) {
+Future<(String, List<File>)> replaceMermaidContent(String content) async {
   final RegExp mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
   final List<Map<String, dynamic>> replacements = [];
+  final List<File> imageFiles = [];
 
   final Iterable<Match> matches = mermaidBlockRegex.allMatches(content);
   for (final Match match in matches) {
@@ -82,14 +150,12 @@ String replaceMermaidContent(String content) {
     if (mermaidSyntax == null) continue;
 
     // Process the mermaid syntax to generate an image file
-    final imageFile = _processMermaidSyntax(mermaidSyntax);
+    final imageFile = await _processMermaidSyntax(mermaidSyntax);
 
     final relativePath =
         relative(imageFile.path, from: config.assetsDir.parent.path);
 
     final String imageMarkdown = '![Mermaid Diagram]($relativePath)';
-
-    print(replacements);
 
     // Collect replacement information
     replacements.add({
@@ -97,6 +163,8 @@ String replaceMermaidContent(String content) {
       'end': match.end,
       'replacement': imageMarkdown,
     });
+
+    imageFiles.add(imageFile);
   }
 
   // Apply replacements in reverse order
@@ -109,10 +177,10 @@ String replaceMermaidContent(String content) {
         content.substring(0, start) + replacementText + content.substring(end);
   }
 
-  return content;
+  return (content, imageFiles);
 }
 
-File _processMermaidSyntax(String mermaidSyntax) {
+Future<File> _processMermaidSyntax(String mermaidSyntax) async {
   String tempFilePath = 'temp.mmd';
   final tempFile = File(tempFilePath);
 
@@ -120,14 +188,19 @@ File _processMermaidSyntax(String mermaidSyntax) {
     mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
 
     // has the mermaidSyntax string
-    final fileHash = mermaidSyntax.hashCode;
+    final filePath = 'sd_mermaid_${mermaidSyntax.hashCode}.png';
+    final mermaidAssetFile = File(join(config.assetsImageDir.path, filePath));
 
-    tempFile.writeAsString(mermaidSyntax);
+    if (await mermaidAssetFile.exists()) {
+      return mermaidAssetFile;
+    }
 
-    final outputFile = File(join(config.assetsImageDir.path, '$fileHash.png'));
+    await tempFile.writeAsString(mermaidSyntax);
 
-    if (!outputFile.parent.existsSync()) {
-      outputFile.parent.createSync(recursive: true);
+    final outputFile = File(join(config.assetsImageDir.path, filePath));
+
+    if (!await outputFile.parent.exists()) {
+      await outputFile.parent.create(recursive: true);
     }
 
     final imageSizeParams = '--scale 2'.split(' ');
@@ -135,7 +208,7 @@ File _processMermaidSyntax(String mermaidSyntax) {
         '-t dark -b transparent -i $tempFilePath -o ${outputFile.path} '
             .split(' ');
 
-    final result = Process.runSync('mmdc', [...params, ...imageSizeParams]);
+    final result = await Process.run('mmdc', [...params, ...imageSizeParams]);
 
     if (result.exitCode != 0) {
       print('Error while processing mermaid syntax');
@@ -146,8 +219,8 @@ File _processMermaidSyntax(String mermaidSyntax) {
   } catch (e) {
     throw Exception('Error while processing mermaid syntax');
   } finally {
-    if (tempFile.existsSync()) {
-      tempFile.deleteSync();
+    if (await tempFile.exists()) {
+      await tempFile.delete();
     }
   }
 }
@@ -166,64 +239,6 @@ class SuperDeckConfig {
   Directory get assetsImageDir => Directory(join(_assetsDirName, 'images'));
   File get slidesJsonFile => File(join(_assetsDirName, 'slides.json'));
   File get assetsJsonFile => File(join(_assetsDirName, 'assets.json'));
-}
-
-void loadSlideMarkdown() {
-  final slidesMarkdown = config.slidesMarkdownFile;
-
-  if (!slidesMarkdown.existsSync()) {
-    throw Exception('Slides markdown file not found');
-  }
-
-  // Clean up assets folder
-  config.assetsImageDir.listSync().forEach((element) {
-    if (element is File) {
-      element.deleteSync(recursive: true);
-    }
-  });
-
-  final presentationContent = slidesMarkdown.readAsStringSync();
-
-  final replacedContent = replaceMermaidContent(presentationContent);
-
-  final slides = SlidesParser(replacedContent).parse();
-
-  _saveSlideJson(slides);
-}
-
-void _saveSlideJson(List<Map<String, dynamic>> contents) {
-  final slidesJson = config.slidesJsonFile;
-  final assetsJson = config.assetsJsonFile;
-
-  if (!slidesJson.existsSync()) {
-    slidesJson.createSync(recursive: true);
-  }
-
-  if (!assetsJson.existsSync()) {
-    assetsJson.createSync(recursive: true);
-  }
-  // Write a json file with a list of slides
-  slidesJson.writeAsStringSync(prettyJson(contents));
-  // Map<String,String> assets = {};
-  // The key will be the file name and the value will be a base64 encoded string
-  final files = config.assetsImageDir.listSync();
-  var assetMap = {};
-
-  for (var file in files) {
-    if (file is File) {
-      final bytes = file.readAsBytesSync();
-      final base64 = base64Encode(bytes);
-      // assets[file.path] = base64;
-      final relativePath =
-          relative(file.path, from: config.assetsDir.parent.path);
-
-      assetMap[relativePath] = base64;
-    }
-  }
-  //  conver a map to a an array of objects with key and value
-  final listOfAssets =
-      assetMap.entries.map((e) => {'name': e.key, 'base64': e.value}).toList();
-  assetsJson.writeAsStringSync(prettyJson(listOfAssets));
 }
 
 /// Formats [json]

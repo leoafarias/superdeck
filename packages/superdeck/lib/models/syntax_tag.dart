@@ -1,23 +1,23 @@
-class SyntaxTag {
-  const SyntaxTag._();
+class SectionTag {
+  const SectionTag._();
   static const left = '::left::';
   static const right = '::right::';
-  static const content = '::content::';
+  static const first = '::first::';
 }
 
-Map<String, String> parseContentWithTags(
-  String input,
-  List<String> tags,
-) {
+Map<String, String> parseContentSections(String input) {
   final result = <String, String>{};
   final lines = input.split('\n');
-  var currentTag = SyntaxTag.content;
+  var currentTag = SectionTag.first;
   var currentContent = '';
 
   // For loop with index
   for (var idx = 0; idx < lines.length; idx++) {
     final line = lines[idx];
-    if (tags.contains(line.trim())) {
+
+    final isTag = line.trim().startsWith('::') && line.trim().endsWith('::');
+
+    if (isTag) {
       final tagName = line.trim();
       if (result.containsKey(tagName) || currentTag == tagName) {
         throw Exception('Tag $tagName already exists');

@@ -27,8 +27,8 @@ class MdTextStyleDto extends Dto<MdTextStyle> with Mergeable<MdTextStyleDto> {
   @override
   MdTextStyleDto merge(MdTextStyleDto? other) {
     return MdTextStyleDto(
-      textStyle: textStyle?.merge(other?.textStyle) ?? textStyle,
-      padding: padding?.merge(other?.padding) ?? padding,
+      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
+      padding: padding?.merge(other?.padding) ?? other?.padding,
     );
   }
 
@@ -76,11 +76,11 @@ class MdListDto extends Dto<MdList> with Mergeable<MdListDto> {
   @override
   MdListDto merge(MdListDto? other) {
     return MdListDto(
-      list: list?.merge(other?.list) ?? list,
-      listItem: listItem?.merge(other?.listItem) ?? listItem,
+      list: list?.merge(other?.list) ?? other?.list,
+      listItem: listItem?.merge(other?.listItem) ?? other?.listItem,
       listItemMinIndent: other?.listItemMinIndent ?? listItemMinIndent,
       listItemMarker:
-          listItemMarker?.merge(other?.listItemMarker) ?? listItemMarker,
+          listItemMarker?.merge(other?.listItemMarker) ?? other?.listItemMarker,
       listItemMarkerTrailingSpace:
           other?.listItemMarkerTrailingSpace ?? listItemMarkerTrailingSpace,
     );
@@ -134,7 +134,8 @@ class MdDividerDto extends Dto<MdDivider> with Mergeable<MdDividerDto> {
   MdDividerDto merge(MdDividerDto? other) {
     return MdDividerDto(
       dividerHeight: other?.dividerHeight ?? dividerHeight,
-      dividerColor: dividerColor?.merge(other?.dividerColor) ?? dividerColor,
+      dividerColor:
+          dividerColor?.merge(other?.dividerColor) ?? other?.dividerColor,
       dividerThickness: other?.dividerThickness ?? dividerThickness,
     );
   }
@@ -184,15 +185,15 @@ class MdBlockQuoteDto extends Dto<MdBlockQuote>
   @override
   MdBlockQuoteDto merge(MdBlockQuoteDto? other) {
     return MdBlockQuoteDto(
-      blockquote: blockquote?.merge(other?.blockquote) ?? blockquote,
+      blockquote: blockquote?.merge(other?.blockquote) ?? other?.blockquote,
       blockquoteDecoration: blockquoteDecoration
               ?.merge(other?.blockquoteDecoration) as BoxDecorationDto? ??
-          blockquoteDecoration,
+          other?.blockquoteDecoration,
       blockquotePadding: blockquotePadding?.merge(other?.blockquotePadding) ??
-          blockquotePadding,
+          other?.blockquotePadding,
       blockquoteContentPadding:
           blockquoteContentPadding?.merge(other?.blockquoteContentPadding) ??
-              blockquoteContentPadding,
+              other?.blockquoteContentPadding,
     );
   }
 
@@ -257,17 +258,17 @@ class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
   @override
   MdTableDto merge(MdTableDto? other) {
     return MdTableDto(
-      table: table?.merge(other?.table) ?? table,
-      tableHead: tableHead?.merge(other?.tableHead) ?? tableHead,
-      tableBody: tableBody?.merge(other?.tableBody) ?? tableBody,
+      table: table?.merge(other?.table) ?? other?.table,
+      tableHead: tableHead?.merge(other?.tableHead) ?? other?.tableHead,
+      tableBody: tableBody?.merge(other?.tableBody) ?? other?.tableBody,
       tableBorder: other?.tableBorder ?? tableBorder,
       tableRowDecoration: tableRowDecoration?.merge(other?.tableRowDecoration)
               as BoxDecorationDto? ??
-          tableRowDecoration,
+          other?.tableRowDecoration,
       tableRowDecorationAlternating:
           other?.tableRowDecorationAlternating ?? tableRowDecorationAlternating,
-      tableCellPadding:
-          tableCellPadding?.merge(other?.tableCellPadding) ?? tableCellPadding,
+      tableCellPadding: tableCellPadding?.merge(other?.tableCellPadding) ??
+          other?.tableCellPadding,
       tableColumnWidth: other?.tableColumnWidth ?? tableColumnWidth,
     );
   }
@@ -330,14 +331,14 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
   @override
   MdCodeDto merge(MdCodeDto? other) {
     return MdCodeDto(
-      codeSpan: codeSpan?.merge(other?.codeSpan) ?? codeSpan,
-      codeblockPadding:
-          codeblockPadding?.merge(other?.codeblockPadding) ?? codeblockPadding,
+      codeSpan: codeSpan?.merge(other?.codeSpan) ?? other?.codeSpan,
+      codeblockPadding: codeblockPadding?.merge(other?.codeblockPadding) ??
+          other?.codeblockPadding,
       codeblockDecoration: codeblockDecoration
               ?.merge(other?.codeblockDecoration) as BoxDecorationDto? ??
-          codeblockDecoration,
+          other?.codeblockDecoration,
       copyIconColor:
-          copyIconColor?.merge(other?.copyIconColor) ?? copyIconColor,
+          copyIconColor?.merge(other?.copyIconColor) ?? other?.copyIconColor,
     );
   }
 
@@ -355,7 +356,7 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
   get props => [codeSpan, codeblockPadding, codeblockDecoration, copyIconColor];
 }
 
-class TableBorderDto extends Dto<TableBorder> {
+class TableBorderDto extends Dto<TableBorder> with Mergeable<TableBorderDto> {
   final BorderSideDto? top;
   final BorderSideDto? right;
   final BorderSideDto? bottom;
@@ -397,6 +398,7 @@ class TableBorderDto extends Dto<TableBorder> {
       borderRadius: BorderRadiusGeometryDto.from(borderRadius),
     );
   }
+
   static TableBorderDto? maybeFrom(TableBorder? border) {
     return border != null ? from(border) : null;
   }
@@ -410,6 +412,22 @@ class TableBorderDto extends Dto<TableBorder> {
     this.verticalInside,
     this.borderRadius,
   });
+
+  @override
+  TableBorderDto merge(TableBorderDto? other) {
+    return TableBorderDto(
+      top: top?.merge(other?.top) ?? other?.top,
+      right: right?.merge(other?.right) ?? other?.right,
+      bottom: bottom?.merge(other?.bottom) ?? other?.bottom,
+      left: left?.merge(other?.left) ?? other?.left,
+      horizontalInside: horizontalInside?.merge(other?.horizontalInside) ??
+          other?.horizontalInside,
+      verticalInside:
+          verticalInside?.merge(other?.verticalInside) ?? other?.verticalInside,
+      borderRadius:
+          borderRadius?.merge(other?.borderRadius) ?? other?.borderRadius,
+    );
+  }
 
   @override
   TableBorder resolve(MixData mix) {

@@ -464,6 +464,7 @@ class SlideSpec extends Spec<SlideSpec> {
       tableCellPadding: table?.tableCellPadding,
       tableColumnWidth: table?.tableColumnWidth,
       codeSpan: code?.codeSpan,
+      codeBlock: code?.codeSpan,
       codeblockPadding: code?.codeblockPadding,
       codeblockDecoration: code?.codeblockDecoration,
       blockSpacing: blockSpacing ?? 8,

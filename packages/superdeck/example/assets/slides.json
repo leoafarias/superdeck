@@ -1,19 +1,28 @@
 [
   {
-    "title": "Slide 1: Headings",
-    "layout": "image",
-    "image": {
-      "fit": "cover",
-      "position": "bottom",
-      "src": "https://source.unsplash.com/random/900×700/?landscape"
+    "background": "https://source.unsplash.com/random/900×700/?landscape",
+    "content_alignment": "bottom_left",
+    "style": "cover",
+    "content": "# SuperDeck\n\nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown."
+  },
+  {
+    "layout": "preview",
+    "widget": {
+      "name": "slide",
+      "position": "right",
+      "args": {
+        "title": "Awesome Widget",
+        "height": 200.0,
+        "width": 500.0,
+        "image": "https://source.unsplash.com/random/300x200/?landscape"
+      }
     },
-    "content_alignment": "center",
-    "content": "# Heading 1\n::left::\n## Heading 2\n::right::\n### Heading 3\n#### Heading 4"
+    "content": "This is an example of an awesome widget"
   },
   {
     "layout": "two_column_header",
     "content_alignment": "center_left",
-    "content": "# Two Column Header\n\nThis is your main header, providing a context or introducing the core concept covered in this slide.\n\n::left::\n```dart\nclass Slide {\n  final String title;\n  final String content;\n  final String layout;\n  final String image;\n}\n```\n\n### Left Heading\n- Point A\n- Point B\n- Point C\n### Left Heading\n- Point A\n- Point B\n- Point C\n### Left Heading\n- Point A\n- Point B\n- Point C\n\n::right::\n### Right Heading\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z\n- Point X\n- Point Y\n- Point Z"
+    "content": "# Two Column Header\n\nThis is your main header, providing a context or introducing the core concept covered in this slide.\n\n::left::\n\n### Left Heading\n- Point A\n- Point B\n- Point C\n\n::right::\n\n### Right Heading\n- Point X\n- Point Y\n- Point Z"
   },
   {
     "layout": "image",
@@ -33,11 +42,12 @@
     "content": "[Link](https://github.com)\n\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape#500x250)"
   },
   {
-    "title": "Slide 4: Quotes",
-    "content": "> This is a blockquote.\n\n> This is the first line of a blockquote.\n>\n>  This is the second paragraph within the same blockquote.\n\n> #### This is a Header inside a Blockquote"
+    "title": "Quotes",
+    "layout": "two_column",
+    "content_alignment": "center",
+    "content": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb\n\n::right::\n\n```markdown\n> If you want to go fast, go alone.\n> If you want to go far, go together.\n> ### African Proverb\n```"
   },
   {
-    "title": "Slide 5: Code Blocks",
     "content": "```dart {1, 3-8}\nint factorial(int n) {\n  if (n == 0) {\n    return 1;\n  } else {\n    return n * factorial(n - 1);\n  }\n}\n```"
   },
   {
@@ -51,7 +61,7 @@
   {
     "title": "Mermaid example",
     "layout": "two_column",
-    "content": "::left::\n![Mermaid Diagram](assets/images/523883852.png)\n::right::\n## Mermaid Example"
+    "content": "::left::\n\n![Mermaid Diagram](assets/images/sd_mermaid_523883852.png)\n::right::\n## Mermaid Example"
   },
   {
     "title": "Slide 8: Task Lists",

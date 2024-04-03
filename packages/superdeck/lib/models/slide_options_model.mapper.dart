@@ -72,57 +72,57 @@ extension ImageFitMapperExtension on ImageFit {
   }
 }
 
-class ImagePositionMapper extends EnumMapper<ImagePosition> {
-  ImagePositionMapper._();
+class LayoutPositionMapper extends EnumMapper<LayoutPosition> {
+  LayoutPositionMapper._();
 
-  static ImagePositionMapper? _instance;
-  static ImagePositionMapper ensureInitialized() {
+  static LayoutPositionMapper? _instance;
+  static LayoutPositionMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = ImagePositionMapper._());
+      MapperContainer.globals.use(_instance = LayoutPositionMapper._());
     }
     return _instance!;
   }
 
-  static ImagePosition fromValue(dynamic value) {
+  static LayoutPosition fromValue(dynamic value) {
     ensureInitialized();
     return MapperContainer.globals.fromValue(value);
   }
 
   @override
-  ImagePosition decode(dynamic value) {
+  LayoutPosition decode(dynamic value) {
     switch (value) {
       case 'left':
-        return ImagePosition.left;
+        return LayoutPosition.left;
       case 'right':
-        return ImagePosition.right;
+        return LayoutPosition.right;
       case 'top':
-        return ImagePosition.top;
+        return LayoutPosition.top;
       case 'bottom':
-        return ImagePosition.bottom;
+        return LayoutPosition.bottom;
       default:
         throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override
-  dynamic encode(ImagePosition self) {
+  dynamic encode(LayoutPosition self) {
     switch (self) {
-      case ImagePosition.left:
+      case LayoutPosition.left:
         return 'left';
-      case ImagePosition.right:
+      case LayoutPosition.right:
         return 'right';
-      case ImagePosition.top:
+      case LayoutPosition.top:
         return 'top';
-      case ImagePosition.bottom:
+      case LayoutPosition.bottom:
         return 'bottom';
     }
   }
 }
 
-extension ImagePositionMapperExtension on ImagePosition {
+extension LayoutPositionMapperExtension on LayoutPosition {
   String toValue() {
-    ImagePositionMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<ImagePosition>(this) as String;
+    LayoutPositionMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<LayoutPosition>(this) as String;
   }
 }
 
@@ -208,7 +208,7 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ImageOptionsMapper._());
       ImageFitMapper.ensureInitialized();
-      ImagePositionMapper.ensureInitialized();
+      LayoutPositionMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -221,9 +221,9 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
   static ImageFit _$fit(ImageOptions v) => v.fit;
   static const Field<ImageOptions, ImageFit> _f$fit =
       Field('fit', _$fit, opt: true, def: ImageFit.cover);
-  static ImagePosition _$position(ImageOptions v) => v.position;
-  static const Field<ImageOptions, ImagePosition> _f$position =
-      Field('position', _$position, opt: true, def: ImagePosition.left);
+  static LayoutPosition _$position(ImageOptions v) => v.position;
+  static const Field<ImageOptions, LayoutPosition> _f$position =
+      Field('position', _$position, opt: true, def: LayoutPosition.left);
 
   @override
   final MappableFields<ImageOptions> fields = const {
@@ -293,7 +293,7 @@ extension ImageOptionsValueCopy<$R, $Out>
 
 abstract class ImageOptionsCopyWith<$R, $In extends ImageOptions, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? src, ImageFit? fit, ImagePosition? position});
+  $R call({String? src, ImageFit? fit, LayoutPosition? position});
   ImageOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -306,7 +306,7 @@ class _ImageOptionsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ImageOptions> $mapper =
       ImageOptionsMapper.ensureInitialized();
   @override
-  $R call({String? src, ImageFit? fit, ImagePosition? position}) =>
+  $R call({String? src, ImageFit? fit, LayoutPosition? position}) =>
       $apply(FieldCopyWithData({
         if (src != null) #src: src,
         if (fit != null) #fit: fit,
@@ -322,4 +322,138 @@ class _ImageOptionsCopyWithImpl<$R, $Out>
   ImageOptionsCopyWith<$R2, ImageOptions, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _ImageOptionsCopyWithImpl($value, $cast, t);
+}
+
+class PreviewOptionsMapper extends ClassMapperBase<PreviewOptions> {
+  PreviewOptionsMapper._();
+
+  static PreviewOptionsMapper? _instance;
+  static PreviewOptionsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = PreviewOptionsMapper._());
+      LayoutPositionMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'PreviewOptions';
+
+  static String _$name(PreviewOptions v) => v.name;
+  static const Field<PreviewOptions, String> _f$name = Field('name', _$name);
+  static Map<String, dynamic> _$args(PreviewOptions v) => v.args;
+  static const Field<PreviewOptions, Map<String, dynamic>> _f$args =
+      Field('args', _$args, opt: true, def: const {});
+  static LayoutPosition _$position(PreviewOptions v) => v.position;
+  static const Field<PreviewOptions, LayoutPosition> _f$position =
+      Field('position', _$position, opt: true, def: LayoutPosition.left);
+
+  @override
+  final MappableFields<PreviewOptions> fields = const {
+    #name: _f$name,
+    #args: _f$args,
+    #position: _f$position,
+  };
+
+  static PreviewOptions _instantiate(DecodingData data) {
+    return PreviewOptions(
+        name: data.dec(_f$name),
+        args: data.dec(_f$args),
+        position: data.dec(_f$position));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static PreviewOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<PreviewOptions>(map);
+  }
+
+  static PreviewOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<PreviewOptions>(json);
+  }
+}
+
+mixin PreviewOptionsMappable {
+  String toJson() {
+    return PreviewOptionsMapper.ensureInitialized()
+        .encodeJson<PreviewOptions>(this as PreviewOptions);
+  }
+
+  Map<String, dynamic> toMap() {
+    return PreviewOptionsMapper.ensureInitialized()
+        .encodeMap<PreviewOptions>(this as PreviewOptions);
+  }
+
+  PreviewOptionsCopyWith<PreviewOptions, PreviewOptions, PreviewOptions>
+      get copyWith => _PreviewOptionsCopyWithImpl(
+          this as PreviewOptions, $identity, $identity);
+  @override
+  String toString() {
+    return PreviewOptionsMapper.ensureInitialized()
+        .stringifyValue(this as PreviewOptions);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PreviewOptionsMapper.ensureInitialized()
+                .isValueEqual(this as PreviewOptions, other));
+  }
+
+  @override
+  int get hashCode {
+    return PreviewOptionsMapper.ensureInitialized()
+        .hashValue(this as PreviewOptions);
+  }
+}
+
+extension PreviewOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, PreviewOptions, $Out> {
+  PreviewOptionsCopyWith<$R, PreviewOptions, $Out> get $asPreviewOptions =>
+      $base.as((v, t, t2) => _PreviewOptionsCopyWithImpl(v, t, t2));
+}
+
+abstract class PreviewOptionsCopyWith<$R, $In extends PreviewOptions, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+      get args;
+  $R call({String? name, Map<String, dynamic>? args, LayoutPosition? position});
+  PreviewOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _PreviewOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, PreviewOptions, $Out>
+    implements PreviewOptionsCopyWith<$R, PreviewOptions, $Out> {
+  _PreviewOptionsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<PreviewOptions> $mapper =
+      PreviewOptionsMapper.ensureInitialized();
+  @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
+      get args => MapCopyWith($value.args,
+          (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(args: v));
+  @override
+  $R call(
+          {String? name,
+          Map<String, dynamic>? args,
+          LayoutPosition? position}) =>
+      $apply(FieldCopyWithData({
+        if (name != null) #name: name,
+        if (args != null) #args: args,
+        if (position != null) #position: position
+      }));
+  @override
+  PreviewOptions $make(CopyWithData data) => PreviewOptions(
+      name: data.get(#name, or: $value.name),
+      args: data.get(#args, or: $value.args),
+      position: data.get(#position, or: $value.position));
+
+  @override
+  PreviewOptionsCopyWith<$R2, PreviewOptions, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _PreviewOptionsCopyWithImpl($value, $cast, t);
 }

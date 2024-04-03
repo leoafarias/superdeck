@@ -71,13 +71,13 @@ This option allows you to position the slide content within the slide area. For 
 
 #### `layout`
 
-Selects a slide layout template. Available options include: `base`, `two_column`, `two_column_header`, and `image`.
+Selects a slide layout template. Available options include: `simple`, `two_column`, `two_column_header`, and `image`.
 
 ## Templates
 
 SuperDeck provides a diverse collection of templates, each designed to meet different presentation needs. From simple text slides to complex layouts with images and columns, you can easily find the right template for your content.
 
-### Base Template (default)
+### Simple Template (default)
 
 A straightforward template for your presentations.
 

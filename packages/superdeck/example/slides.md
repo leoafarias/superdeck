@@ -1,19 +1,26 @@
 ---
-title: "Slide 1: Headings"
-layout: image
-image:
-  fit: cover
-  position: bottom
-  src: https://source.unsplash.com/random/900×700/?landscape
-content_alignment: center
+background: https://source.unsplash.com/random/900×700/?landscape
+content_alignment: bottom_left
+style: cover
 ---
 
-# Heading 1
-::left::
-## Heading 2
-::right::
-### Heading 3
-#### Heading 4
+# SuperDeck
+
+SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
+
+---
+layout: preview
+widget:
+  name: slide
+  position: right
+  args:
+    title: Awesome Widget
+    height: 200.0
+    width: 500.0
+    image: https://source.unsplash.com/random/300x200/?landscape
+---
+
+This is an example of an awesome widget
 
 ---
 layout: two_column_header
@@ -25,45 +32,20 @@ content_alignment: center_left
 This is your main header, providing a context or introducing the core concept covered in this slide.
 
 ::left::
-```dart
-class Slide {
-  final String title;
-  final String content;
-  final String layout;
-  final String image;
-}
-```
 
-### Left Heading
-- Point A
-- Point B
-- Point C
-### Left Heading
-- Point A
-- Point B
-- Point C
 ### Left Heading
 - Point A
 - Point B
 - Point C
 
 ::right::
+
 ### Right Heading
 - Point X
 - Point Y
 - Point Z
-- Point X
-- Point Y
-- Point Z
-- Point X
-- Point Y
-- Point Z
-- Point X
-- Point Y
-- Point Z
-- Point X
-- Point Y
-- Point Z
+
+
 
 ---
 layout: image
@@ -102,19 +84,23 @@ title: "Slide 3: Links and Images"
 
 
 ---
-title: "Slide 4: Quotes"
+title: Quotes
+layout: two_column
+content_alignment: center
 ---
 
-> This is a blockquote.
+> If you want to go fast, go alone. 
+> If you want to go far, go together.
+> ### African Proverb
 
-> This is the first line of a blockquote.
->
->  This is the second paragraph within the same blockquote.
+::right::
 
-> #### This is a Header inside a Blockquote
-
+```markdown
+> If you want to go fast, go alone.
+> If you want to go far, go together.
+> ### African Proverb
+```
 ---
-title: "Slide 5: Code Blocks"
 ---
 
 ```dart {1, 3-8}
@@ -152,6 +138,7 @@ layout: two_column
 ---
 
 ::left::
+
 ```mermaid
 flowchart TD
     A[This is crazy] -->|Get money| B(Go shopping)

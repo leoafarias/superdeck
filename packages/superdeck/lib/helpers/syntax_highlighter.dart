@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_prism/flutter_prism.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
 
 class SyntaxHighlight {
   SyntaxHighlight._();
 
+  static List<String> get supportedLanguages => ['dart', 'yaml', 'json'];
+
   static late HighlighterTheme _theme;
 
   static initialize() async {
-    await Highlighter.initialize([
-      'dart',
-      'yaml',
-    ]);
+    await Highlighter.initialize(supportedLanguages);
 
     _theme = await HighlighterTheme.loadForBrightness(Brightness.dark);
   }
 
-  static TextSpan render(String source, String language) {
-    return Highlighter(language: language, theme: _theme).highlight(source);
+  static List<TextSpan> render(String source, String language) {
+    if (supportedLanguages.contains(language)) {
+      return [Highlighter(language: language, theme: _theme).highlight(source)];
+    } else {
+      final prism = Prism();
+      return prism.render(source, language);
+    }
   }
 }
 

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
-import '../context.dart';
 import '../helper/extension_io.dart';
+import 'slide_data_loader.dart';
 
 String replaceMermaidContent(String content) {
   final RegExp mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
@@ -18,7 +18,7 @@ String replaceMermaidContent(String content) {
     final imageFile = _processMermaidSyntax(mermaidSyntax);
 
     final relativePath =
-        relative(imageFile.path, from: ctx.assetsDir.parent.path);
+        relative(imageFile.path, from: config.assetsDir.parent.path);
 
     final String imageMarkdown = '![Mermaid Diagram]($relativePath)';
 
@@ -57,7 +57,7 @@ File _processMermaidSyntax(String mermaidSyntax) {
 
     tempFile.write(mermaidSyntax);
 
-    final outputFile = ctx.getImageFile('$fileHash.png');
+    final outputFile = File(join(config.assetsImageDir.path, '$fileHash.png'));
 
     if (!outputFile.parent.existsSync()) {
       outputFile.parent.createSync(recursive: true);

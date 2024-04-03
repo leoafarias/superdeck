@@ -5,89 +5,100 @@ import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:mix/mix.dart';
 
-import '../../controllers/deck_controller.dart';
-import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
-import '../../models/slide_options_model.dart';
+import '../../models/slide_asset_model.dart';
 import '../../styles/style_spec.dart';
-import '../molecules/slide_view.dart';
 
-class SlideContent extends StatelessWidget {
-  const SlideContent({
-    required this.content,
-    required this.alignment,
+class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
+  final String content;
+  final SlideSpec spec;
+  final List<SlideAsset> assets;
+  final BoxConstraints constraints;
+
+  const AnimatedMarkdownViewer({
     super.key,
+    required this.content,
+    required this.spec,
+    required super.duration,
+    required this.assets,
+    required this.constraints,
+    super.curve = Curves.linear,
   });
 
-  final String content;
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
+      _AnimatedMarkdownViewerState();
+}
 
-  final ContentAlignment alignment;
+class _AnimatedMarkdownViewerState
+    extends AnimatedWidgetBaseState<AnimatedMarkdownViewer> {
+  SlideSpecTween? _styleTween;
 
   @override
-  Widget build(context) {
-    final mix = MixProvider.of(context);
-    final spec = SlideSpec.of(mix);
-    final container = spec.contentContainer;
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _styleTween = visitor(
+      _styleTween,
+      widget.spec,
+      (dynamic value) => SlideSpecTween(begin: value),
+    ) as SlideSpecTween?;
+  }
 
-    return SlideConstraintBuilder(builder: (context, size) {
-      return Column(
-        mainAxisAlignment: alignment.toMainAxisAlignment(),
-        crossAxisAlignment: alignment.toCrossAxisAlignment(),
-        children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: size.height,
-              maxWidth: size.width,
-            ),
-            child: SingleChildScrollView(
-              child: BoxSpecWidget(
-                spec: spec.contentContainer,
-                child: SlideConstraints(
-                  constraints: _calculateConstraints(size, container),
-                  child: Builder(builder: (context) {
-                    return MarkdownViewer(
-                      content,
-                      enableTaskList: true,
-                      enableSuperscript: false,
-                      enableSubscript: false,
-                      enableFootnote: false,
-                      enableImageSize: true,
-                      enableKbd: false,
-                      syntaxExtensions: const [],
-                      elementBuilders: const [],
-                      imageBuilder: _imageBuilder(context),
-                      onTapLink: (href, title) {
-                        print({href, title});
-                      },
-                      highlightBuilder: _highlightBuilder(context),
-                      copyIconBuilder: (bool copied) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Icon(
-                            copied ? Icons.check : Icons.copy,
-                            color: spec.code?.copyIconColor ?? Colors.grey,
-                            size: 28,
-                          ),
-                        );
-                      },
-                      styleSheet: spec.toStyle(),
-                    );
-                  }),
-                ),
-              ),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return MarkdownViewer(
+      widget.content,
+      enableTaskList: true,
+      enableSuperscript: false,
+      enableSubscript: false,
+      enableFootnote: false,
+      enableImageSize: true,
+      enableKbd: false,
+      syntaxExtensions: const [],
+      elementBuilders: const [],
+      imageBuilder: _imageBuilder(widget.assets, widget.constraints),
+      onTapLink: (href, title) {
+        print({href, title});
+      },
+      highlightBuilder: (text, language, infoString) {
+        return [
+          TextSpan(
+            style: _styleTween!.evaluate(animation).code?.codeSpan ??
+                const TextStyle(),
+            children: SyntaxHighlight.render(text, language ?? 'simple'),
           ),
-        ],
-      );
-    });
+        ];
+      },
+      copyIconBuilder: (bool copied) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Icon(
+            copied ? Icons.check : Icons.copy,
+            color: _styleTween!.evaluate(animation).code?.copyIconColor ??
+                Colors.grey,
+            size: 28,
+          ),
+        );
+      },
+      styleSheet: _styleTween!.evaluate(animation).toStyle(),
+    );
   }
 }
 
-Widget Function(Uri, MarkdownImageInfo) _imageBuilder(BuildContext context) {
-  return (Uri uri, MarkdownImageInfo info) {
-    const boxFit = BoxFit.contain;
+class SlideSpecTween extends Tween<SlideSpec> {
+  SlideSpecTween({super.begin, super.end});
+  @override
+  SlideSpec lerp(double t) {
+    return begin?.lerp(end!, t) ?? end ?? const SlideSpec.empty();
+  }
+}
 
-    final constraints = SlideConstraints.of(context);
+Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
+    List<SlideAsset> assets, BoxConstraints constraints) {
+  return (
+    Uri uri,
+    MarkdownImageInfo info,
+  ) {
+    const boxFit = BoxFit.contain;
 
     Widget current;
 
@@ -100,11 +111,8 @@ Widget Function(Uri, MarkdownImageInfo) _imageBuilder(BuildContext context) {
         height: info.height,
       );
     } else {
-      final assets = superdeck.assets;
-
-      final asset = assets.value.firstWhereOrNull(
-        (element) => element.name == uri.toString(),
-      );
+      final asset =
+          assets.firstWhereOrNull((element) => element.name == uri.toString());
 
       if (asset?.base64 != null) {
         current = Image.memory(
@@ -178,39 +186,38 @@ List<TextSpan> updateTextColor(
   return updatedSpans;
 }
 
-List<TextSpan> Function(String, String?, String?) _highlightBuilder(
-  BuildContext context,
-) {
-  return (
-    String text,
-    String? language,
-    String? infoString,
-  ) {
-    return [SyntaxHighlight.render(text, language ?? 'dart')];
-  };
-}
-
-BoxConstraints _calculateConstraints(Size size, BoxSpec spec) {
-  final padding = spec.padding ?? EdgeInsets.zero;
-  final margin = spec.margin ?? EdgeInsets.zero;
-
-  double horizontalBorder = 0.0;
-  double verticalBorder = 0.0;
-
-  if (spec.decoration is BoxDecoration) {
-    final border = (spec.decoration as BoxDecoration).border;
-    if (border != null) {
-      horizontalBorder = border.dimensions.horizontal;
-      verticalBorder = border.dimensions.vertical;
-    }
+/// Parses a block padding, including:
+///
+/// 1. Remove `top` when it is the first child.
+/// 2. Remove `bottom` when it is the last child.
+EdgeInsets? parseBlockPadding(EdgeInsets? padding, SiblingPosition position) {
+  if (padding == null || padding == EdgeInsets.zero) {
+    return null;
   }
 
-  final horizontalSpacing =
-      padding.horizontal + margin.horizontal + horizontalBorder;
-  final verticalSpacing = padding.vertical + margin.vertical + verticalBorder;
+  final isLast = position.index + 1 == position.total;
+  final isFirst = position.index == 0;
 
-  return BoxConstraints(
-    maxHeight: size.height - verticalSpacing,
-    maxWidth: size.width - horizontalSpacing,
+  if (!isLast && !isFirst) {
+    return padding;
+  }
+
+  var top = padding.top;
+  var bottom = padding.bottom;
+
+  if (isFirst && isLast) {
+    top = 0;
+    bottom = 0;
+  } else if (isFirst) {
+    top = 0;
+  } else if (isLast) {
+    bottom = 0;
+  }
+
+  return padding.copyWith(
+    top: top,
+    bottom: bottom,
+    left: padding.left,
+    right: padding.right,
   );
 }

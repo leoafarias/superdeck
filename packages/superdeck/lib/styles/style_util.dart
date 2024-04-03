@@ -4,127 +4,70 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 
 import '../superdeck.dart';
 
-Style get defaultStyle {
-  final baseTextStyle = GoogleFonts.inter().copyWith(fontSize: 22);
-  final jetBrainsTextStyle = GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
+class SlideVariant extends Variant {
+  const SlideVariant(super.name);
 
-  return Style(
-    SlideSpecAttribute(
-      outerContainer: const BoxSpecAttribute(
-          // padding: SpacingDto.from(const EdgeInsets.all(20)),
-          ),
-      // innerContainer: BoxSpecAttribute(
-      //   decoration: BoxDecorationDto(
-      //     color: const ColorDto(Colors.grey),
-      //     borderRadius: BorderRadiusGeometryDto.from(
-      //       BorderRadius.circular(20),
-      //     ),
-      //   ),
-      // ),
-      contentContainer: BoxSpecAttribute(
-        padding: SpacingDto.from(const EdgeInsets.all(40)),
-        decoration: BoxDecorationDto(
-          color: const ColorDto(Colors.transparent),
-          border: BoxBorderDto.from(
-            Border.all(
-              color: Colors.white.withOpacity(0.2),
-              width: 1,
-            ),
-          ),
-        ),
-      ),
-      textStyle: TextStyleDto.as(baseTextStyle),
-      headline1: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle.copyWith(fontSize: 72)),
-        padding: const SpacingDto.only(bottom: 12),
-      ),
-      headline2: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle.copyWith(fontSize: 48)),
-        padding: const SpacingDto.only(bottom: 9),
-      ),
-      headline3: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle.copyWith(fontSize: 36)),
-        padding: const SpacingDto.only(bottom: 6),
-      ),
-      headline4: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle.copyWith(fontSize: 30)),
-        padding: const SpacingDto.only(bottom: 4),
-      ),
-      headline5: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle.copyWith(fontSize: 24)),
-        padding: const SpacingDto.only(bottom: 3),
-      ),
-      headline6: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle),
-        padding: const SpacingDto.only(bottom: 3),
-      ),
-      paragraph: MdTextStyleDto(
-        textStyle: TextStyleDto.as(baseTextStyle),
-        padding: const SpacingDto.only(bottom: 12),
-      ),
-      link: TextStyleDto.as(baseTextStyle.copyWith(color: Colors.blue)),
-      list: MdListDto(
-        list: TextStyleDto.as(baseTextStyle),
-        listItem: TextStyleDto.as(baseTextStyle),
-        listItemMarker: TextStyleDto.as(baseTextStyle),
-        listItemMinIndent: 12,
-        listItemMarkerTrailingSpace: 12,
-      ),
-      table: MdTableDto(
-        table: TextStyleDto.as(baseTextStyle),
-        tableHead: TextStyleDto.as(
-          baseTextStyle.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        tableBody: TextStyleDto.as(baseTextStyle),
-        tableCellPadding: SpacingDto.from(const EdgeInsets.all(12)),
-        tableBorder: TableBorderDto.all(color: Colors.grey, width: 2),
-        tableRowDecoration: BoxDecorationDto(
-          color: ColorDto(
-            Colors.grey.withOpacity(0.1),
-          ),
-        ),
-      ),
-      code: MdCodeDto(
-        codeSpan: TextStyleDto.as(jetBrainsTextStyle),
-        codeblockPadding: SpacingDto.from(const EdgeInsets.all(24)),
-        codeblockDecoration: BoxDecorationDto(
-          color: const ColorDto(Colors.transparent),
-          border: BoxBorderDto.from(
-            Border.all(
-              color: Colors.grey,
-              width: 1,
-            ),
-          ),
-          borderRadius: BorderRadiusGeometryDto.from(
-            BorderRadius.circular(10),
-          ),
-        ),
-      ),
-      blockquote: MdBlockQuoteDto(
-        blockquote: TextStyleDto.as(baseTextStyle),
-        blockquotePadding: const SpacingDto.only(bottom: 12),
-        blockquoteContentPadding: const SpacingDto.only(left: 12),
-        blockquoteDecoration: BoxDecorationDto(
-          border: BoxBorderDto.from(
-            Border.all(
-              color: Colors.grey.withOpacity(0.5),
-              width: 2.0,
-            ),
-          ),
-        ),
-      ),
-      divider: MdDividerDto(
-        dividerHeight: 1,
-        dividerColor: const ColorDto(Colors.grey),
-        dividerThickness: 2,
-      ),
-    ),
-  );
+  static const cover = SlideVariant('cover');
+  static const quote = SlideVariant('quote');
+  static const none = SlideVariant('none');
 }
 
+final baseTextStyle = const TextStyle().copyWith(fontSize: 22);
+final monoTextStyle = GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
+final serifTextStyle = GoogleFonts.playfairDisplay().copyWith(fontSize: 50);
+
+Style get defaultStyle => Style.create([
+      $.outerContainer.only(),
+      $.innerContainer.only(),
+      $.contentContainer.padding.all(40),
+      $.textStyle.as(baseTextStyle),
+      $.h1.textStyle.fontSize(72),
+      $.h1.padding.bottom(12),
+      $.h2.textStyle.fontSize(48),
+      $.h2.padding.bottom(9),
+      $.h3.textStyle.fontSize(36),
+      $.h3.padding.bottom(6),
+      $.h4.textStyle.fontSize(30),
+      $.h4.padding.bottom(4),
+      $.h5.textStyle.fontSize(24),
+      $.h5.padding.bottom(3),
+      $.h6.textStyle.as(baseTextStyle),
+      $.h6.padding.bottom(3),
+      // $.paragraph.textStyle.as(baseTextStyle),
+      $.paragraph.padding.bottom(12),
+      $.link.color(Colors.blue),
+      $.list.list.as(baseTextStyle),
+      $.list.listItem.as(baseTextStyle),
+      $.list.listItemMarker.as(baseTextStyle),
+      $.list.listItemMarkerTrailingSpace(12),
+      $.list.listItemMinIndent(12),
+      $.table.table.as(baseTextStyle),
+      $.table.tableHead.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
+      $.table.tableBody.as(baseTextStyle),
+      $.table.tableCellPadding.all(12),
+      $.table.tableBorder.all(color: Colors.grey, width: 2),
+      $.table.tableRowDecoration.color(Colors.grey.withOpacity(0.1)),
+      $.code.textStyle.as(monoTextStyle),
+      $.code.codeblockPadding.all(24),
+      $.code.codeblockDecoration.color(Colors.transparent),
+      $.code.codeblockDecoration.border.color(Colors.grey),
+      $.code.codeblockDecoration.border.width(2),
+      $.code.codeblockDecoration.borderRadius.circular(10),
+      $.blockquote.blockquote.as(serifTextStyle),
+      $.blockquote.blockquotePadding.bottom(12),
+      $.blockquote.blockquoteContentPadding.left(12),
+      $.blockquote.blockquoteDecoration.border.left.color(Colors.grey),
+      $.blockquote.blockquoteDecoration.border.left.width(4),
+      $.divider.height(1),
+      $.divider.color(Colors.grey),
+      $.divider.thickness(2),
+    ]);
+
 const $ = SlideStyleUtility(selfBuilder);
+
+SlideStyleUtility styleSlide() {
+  return const SlideStyleUtility(selfBuilder);
+}
 
 class SlideStyleUtility<T extends SpecAttribute>
     extends SpecUtility<T, SlideSpecAttribute> {
@@ -133,6 +76,12 @@ class SlideStyleUtility<T extends SpecAttribute>
   TextStyleUtility<T> get textStyle {
     return TextStyleUtility(
       (value) => only(textStyle: value),
+    );
+  }
+
+  MdDividerUtil<T> get divider {
+    return MdDividerUtil(
+      (value) => only(divider: value),
     );
   }
 
@@ -249,6 +198,7 @@ class SlideStyleUtility<T extends SpecAttribute>
     BoxSpecAttribute? innerContainer,
     BoxSpecAttribute? outerContainer,
     BoxSpecAttribute? contentContainer,
+    MdDividerDto? divider,
   }) {
     return builder(
       SlideSpecAttribute(
@@ -269,6 +219,7 @@ class SlideStyleUtility<T extends SpecAttribute>
         innerContainer: innerContainer,
         outerContainer: outerContainer,
         contentContainer: contentContainer,
+        divider: divider,
       ),
     );
   }
@@ -297,6 +248,47 @@ class MdTextStyleUtil<T extends StyleAttribute>
       ),
     );
   }
+
+  T call({
+    TextStyle? textStyle,
+    EdgeInsets? padding,
+  }) {
+    return only(
+      textStyle: TextStyleDto.maybeAs(textStyle),
+      padding: SpacingDto.maybeFrom(padding),
+    );
+  }
+}
+
+class MdDividerUtil<T extends StyleAttribute>
+    extends DtoUtility<T, MdDividerDto, MdDivider> {
+  const MdDividerUtil(super.builder) : super(valueToDto: MdDividerDto.from);
+
+  DoubleUtility<T> get height {
+    return DoubleUtility<T>((value) => only(dividerHeight: value));
+  }
+
+  ColorUtility<T> get color {
+    return ColorUtility<T>((value) => only(dividerColor: value));
+  }
+
+  DoubleUtility<T> get thickness {
+    return DoubleUtility<T>((value) => only(dividerThickness: value));
+  }
+
+  T only({
+    double? dividerHeight,
+    ColorDto? dividerColor,
+    double? dividerThickness,
+  }) {
+    return builder(
+      MdDividerDto(
+        dividerHeight: dividerHeight,
+        dividerColor: dividerColor,
+        dividerThickness: dividerThickness,
+      ),
+    );
+  }
 }
 
 class MdListUtil<T extends StyleAttribute>
@@ -320,10 +312,15 @@ class MdListUtil<T extends StyleAttribute>
         (value) => only(listItemMarkerTrailingSpace: value));
   }
 
+  DoubleUtility<T> get listItemMinIndent {
+    return DoubleUtility<T>((value) => only(listItemMinIndent: value));
+  }
+
   T only({
     TextStyleDto? list,
     TextStyleDto? listItem,
     TextStyleDto? listItemMarker,
+    double? listItemMinIndent,
     double? listItemMarkerTrailingSpace,
   }) {
     return builder(
@@ -331,6 +328,7 @@ class MdListUtil<T extends StyleAttribute>
         list: list,
         listItem: listItem,
         listItemMarker: listItemMarker,
+        listItemMinIndent: listItemMinIndent,
         listItemMarkerTrailingSpace: listItemMarkerTrailingSpace,
       ),
     );
@@ -366,6 +364,17 @@ class TableBorderUtility<T extends StyleAttribute>
     return BorderSideUtility<T>((value) => only(verticalInside: value));
   }
 
+  BorderSideUtility<T> get all {
+    return BorderSideUtility<T>((value) => only(
+          top: value,
+          right: value,
+          bottom: value,
+          left: value,
+          horizontalInside: value,
+          verticalInside: value,
+        ));
+  }
+
   T only({
     BorderSideDto? top,
     BorderSideDto? right,
@@ -373,6 +382,7 @@ class TableBorderUtility<T extends StyleAttribute>
     BorderSideDto? left,
     BorderSideDto? horizontalInside,
     BorderSideDto? verticalInside,
+    BorderRadiusGeometryDto? borderRadius,
   }) {
     return builder(
       TableBorderDto(
@@ -382,6 +392,7 @@ class TableBorderUtility<T extends StyleAttribute>
         left: left,
         horizontalInside: horizontalInside,
         verticalInside: verticalInside,
+        borderRadius: borderRadius,
       ),
     );
   }
@@ -462,8 +473,8 @@ class MdCodeUtil<T extends StyleAttribute>
     extends DtoUtility<T, MdCodeDto, MdCode> {
   const MdCodeUtil(super.builder) : super(valueToDto: MdCodeDto.from);
 
-  TextStyleUtility<T> get codeSpan {
-    return TextStyleUtility<T>((value) => only(codeSpan: value));
+  TextStyleUtility<T> get textStyle {
+    return TextStyleUtility<T>((value) => only(textStyle: value));
   }
 
   SpacingUtility<T> get codeblockPadding {
@@ -479,7 +490,7 @@ class MdCodeUtil<T extends StyleAttribute>
   }
 
   T only({
-    TextStyleDto? codeSpan,
+    TextStyleDto? textStyle,
     SpacingDto? codeblockPadding,
     BoxDecorationDto? codeblockDecoration,
     double? blockSpacing,
@@ -487,7 +498,7 @@ class MdCodeUtil<T extends StyleAttribute>
   }) {
     return builder(
       MdCodeDto(
-        codeSpan: codeSpan,
+        codeSpan: textStyle,
         codeblockPadding: codeblockPadding,
         codeblockDecoration: codeblockDecoration,
         copyIconColor: copyIconColor,

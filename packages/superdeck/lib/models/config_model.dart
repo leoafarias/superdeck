@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../superdeck.dart';
 import 'slide_options_model.dart';
 import 'syntax_tag.dart';
 
@@ -11,39 +12,43 @@ abstract class SlideOptions with SlideOptionsMappable {
   final String? background;
   final ContentAlignment contentAlignment;
   final String content;
-  final String? variant;
+  final String? style;
 
   const SlideOptions({
     required this.title,
     this.background,
     this.content = '',
-    required this.variant,
+    required this.style,
     this.contentAlignment = ContentAlignment.centerLeft,
   });
 
-  String get templateId;
+  String get layoutId;
+
+  SlideVariant get styleVariant {
+    return style == null ? SlideVariant.none : SlideVariant(style!);
+  }
 
   static const fromMap = SlideOptionsMapper.fromMap;
   static const fromJson = SlideOptionsMapper.fromJson;
 }
 
 @MappableClass()
-class BaseSlideOptions extends SlideOptions with BaseSlideOptionsMappable {
-  const BaseSlideOptions({
+class SimpleSlideOptions extends SlideOptions with SimpleSlideOptionsMappable {
+  const SimpleSlideOptions({
     super.title,
     super.background,
     super.contentAlignment,
     super.content,
-    super.variant,
+    super.style,
   });
 
   @override
-  String get templateId => template;
+  String get layoutId => layout;
 
-  static const template = 'base';
+  static const layout = 'simple';
 
-  static const fromMap = BaseSlideOptionsMapper.fromMap;
-  static const fromJson = BaseSlideOptionsMapper.fromJson;
+  static const fromMap = SimpleSlideOptionsMapper.fromMap;
+  static const fromJson = SimpleSlideOptionsMapper.fromJson;
 }
 
 @MappableClass()
@@ -53,7 +58,7 @@ class ImageSlideOptions extends SlideOptions with ImageSlideOptionsMappable {
   const ImageSlideOptions({
     super.title,
     required this.image,
-    super.variant,
+    super.style,
     super.background,
     super.content,
     super.contentAlignment,
@@ -63,44 +68,58 @@ class ImageSlideOptions extends SlideOptions with ImageSlideOptionsMappable {
   static const fromJson = ImageSlideOptionsMapper.fromJson;
 
   @override
-  String get templateId => template;
+  String get layoutId => layout;
 
-  static const template = 'image';
+  static const layout = 'image';
+}
+
+@MappableClass()
+class PreviewSlideOptions extends SlideOptions
+    with PreviewSlideOptionsMappable {
+  final PreviewOptions widget;
+
+  const PreviewSlideOptions({
+    super.title,
+    required this.widget,
+    super.style,
+    super.background,
+    super.content,
+    super.contentAlignment,
+  });
+
+  static const fromMap = PreviewSlideOptionsMapper.fromMap;
+  static const fromJson = PreviewSlideOptionsMapper.fromJson;
+
+  @override
+  String get layoutId => layout;
+
+  static const layout = 'preview';
 }
 
 @MappableClass()
 class TwoColumnSlideOptions extends SlideOptions
     with TwoColumnSlideOptionsMappable {
-  late Map<String, String> _tags;
+  late Map<String, String> _sections;
 
   TwoColumnSlideOptions({
     super.title,
     super.background,
     super.contentAlignment,
     super.content,
-    super.variant,
+    super.style,
   }) {
-    _tags = parseContentWithTags(content, [SyntaxTag.left, SyntaxTag.right]);
+    _sections = parseContentSections(content);
   }
 
   @override
-  String get templateId => template;
+  String get layoutId => layout;
 
-  static const template = 'two_column';
+  static const layout = 'two_column';
 
-  String get leftContent {
-    return _getTagContent(
-        _tags,
-        SyntaxTag.left,
-        _getTagContent(
-          _tags,
-          SyntaxTag.content,
-        ));
-  }
+  String get leftContent =>
+      _sections[SectionTag.left] ?? _sections[SectionTag.first] ?? '';
 
-  String get rightContent {
-    return _getTagContent(_tags, SyntaxTag.right);
-  }
+  String get rightContent => _sections[SectionTag.right] ?? '';
 
   static const fromMap = TwoColumnSlideOptionsMapper.fromMap;
   static const fromJson = TwoColumnSlideOptionsMapper.fromJson;
@@ -109,37 +128,28 @@ class TwoColumnSlideOptions extends SlideOptions
 @MappableClass()
 class TwoColumnHeaderSlideOptions extends SlideOptions
     with TwoColumnHeaderSlideOptionsMappable {
-  late Map<String, String> _tags;
+  late Map<String, String> _sections;
   TwoColumnHeaderSlideOptions({
     super.title,
     super.background,
     super.contentAlignment,
     super.content = '',
-    super.variant,
+    super.style,
   }) {
-    _tags = parseContentWithTags(content, [SyntaxTag.left, SyntaxTag.right]);
+    _sections = parseContentSections(content);
   }
 
   @override
-  String get templateId => template;
+  String get layoutId => layout;
 
-  static const template = 'two_column_header';
+  static const layout = 'two_column_header';
 
-  String get topContent => _getTagContent(_tags, SyntaxTag.content);
+  String get topContent => _sections[SectionTag.first] ?? '';
 
-  String get leftContent => _getTagContent(_tags, SyntaxTag.left);
+  String get leftContent => _sections[SectionTag.left] ?? '';
 
-  String get rightContent => _getTagContent(_tags, SyntaxTag.right);
+  String get rightContent => _sections[SectionTag.right] ?? '';
 
   static const fromMap = TwoColumnHeaderSlideOptionsMapper.fromMap;
   static const fromJson = TwoColumnHeaderSlideOptionsMapper.fromJson;
-}
-
-String _getTagContent(
-  Map<String, String> tags,
-  String tag, [
-  String fallback = '',
-]) {
-  final tagContent = tags[tag];
-  return tagContent ?? fallback;
 }

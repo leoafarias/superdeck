@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'superdeck.dart';
-
 ThemeData darkTheme = _createTheme(Brightness.dark).copyWith(
   // backgroundColor: Colors.black,
   scaffoldBackgroundColor: Colors.black,
@@ -56,32 +54,4 @@ ThemeData _createTheme(Brightness brightness) {
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
-}
-
-class DeckStyle extends InheritedModel<Style> {
-  final Style style;
-
-  const DeckStyle({
-    required this.style,
-    required super.child,
-    super.key,
-  });
-
-  static Style of(BuildContext context) {
-    final DeckStyle? result =
-        context.dependOnInheritedWidgetOfExactType<DeckStyle>();
-    assert(result != null, 'No DeckTheme found in context');
-    return result!.style;
-  }
-
-  @override
-  bool updateShouldNotify(covariant DeckStyle oldWidget) {
-    return style != oldWidget.style;
-  }
-
-  @override
-  bool updateShouldNotifyDependent(
-      covariant DeckStyle oldWidget, Set<Style> dependencies) {
-    return style != oldWidget.style;
-  }
 }

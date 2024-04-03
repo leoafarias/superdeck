@@ -19,13 +19,13 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        SyntaxTag.left: '''
+        SectionTag.left: '''
 
 ## Content One
 Description of content
 
 ''',
-        SyntaxTag.right: '''
+        SectionTag.right: '''
 
 #### Content Two
 
@@ -35,7 +35,7 @@ Description of content
 '''
       };
       expect(
-        parseContentWithTags(input, [SyntaxTag.left, SyntaxTag.right]),
+        parseContentSections(input),
         expected,
       );
     });
@@ -46,13 +46,12 @@ Description of content
 Description of content
 ''';
       final expected = <String, String>{
-        SyntaxTag.content: '''
+        SectionTag.first: '''
 ## Content One
 Description of content
 '''
       };
-      expect(parseContentWithTags(input, [SyntaxTag.left, SyntaxTag.right]),
-          expected);
+      expect(parseContentSections(input), expected);
     });
 
     test('Detects right tag only with content', () {
@@ -69,12 +68,12 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        SyntaxTag.content: '''
+        SectionTag.first: '''
 ## Content One
 Description of content
 
 ''',
-        SyntaxTag.right: '''
+        SectionTag.right: '''
 
 #### Content Two
 
@@ -83,8 +82,7 @@ Description of content
 - Third bullet point
 '''
       };
-      expect(parseContentWithTags(input, [SyntaxTag.left, SyntaxTag.right]),
-          expected);
+      expect(parseContentSections(input), expected);
     });
 
     test('Detects misaligned left tag with content', () {
@@ -101,12 +99,12 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        SyntaxTag.content: '''
+        SectionTag.first: '''
 ## Content One
 Description of content
 
 ''',
-        SyntaxTag.left: '''
+        SectionTag.left: '''
 
 #### Content Two
 
@@ -115,8 +113,7 @@ Description of content
 - Third bullet point
 '''
       };
-      expect(parseContentWithTags(input, [SyntaxTag.left, SyntaxTag.right]),
-          expected);
+      expect(parseContentSections(input), expected);
     });
 
     test('Throws exception for duplicate tags', () {
@@ -135,7 +132,9 @@ Description of content
 - Third bullet point
 ''';
       expect(
-          () => parseContentWithTags(input, [SyntaxTag.left, SyntaxTag.right]),
+          () => parseContentSections(
+                input,
+              ),
           throwsException);
     });
 
@@ -147,7 +146,9 @@ Description of content
 Description of content
 ''';
       expect(
-          () => parseContentWithTags(input, [SyntaxTag.left, SyntaxTag.right]),
+          () => parseContentSections(
+                input,
+              ),
           throwsException);
     });
   });

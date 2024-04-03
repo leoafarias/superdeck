@@ -52,8 +52,13 @@ Future<void> _watchForChanges(Future<void> Function() callback) async {
       switch (event.type) {
         case ChangeType.MODIFY:
           _logger.info('Changes detected in $fileName');
-
-          await callback();
+          try {
+            await callback();
+          } catch (e, stackTrace) {
+            _logger
+              ..err(e.toString())
+              ..detail(stackTrace.toString());
+          }
       }
     }
   }
