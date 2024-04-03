@@ -16,23 +16,30 @@ abstract class SlideWidget<Config extends SlideOptions>
 
   SlideContent buildContent() {
     return SlideContent(
-      key: ValueKey(config),
       content: config.content,
-      alignment: config.contentAlignment,
+      alignment: config.alignment,
     );
   }
 
   SlideContent buildContentSection(String content) {
     return SlideContent(
-      key: ValueKey(content),
       content: content,
-      alignment: config.contentAlignment,
+      alignment: config.alignment,
     );
   }
 }
 
 class SimpleSlide extends SlideWidget<SimpleSlideOptions> {
   const SimpleSlide({required super.config, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return buildContent();
+  }
+}
+
+class InvalidSlide extends SlideWidget<InvalidSlideOptions> {
+  const InvalidSlide({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +178,8 @@ class TwoColumnSlide extends SlideWidget<TwoColumnSlideOptions> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: config.contentAlignment.toMainAxisAlignment(),
-      crossAxisAlignment: config.contentAlignment.toCrossAxisAlignment(),
+      mainAxisAlignment: config.alignment.toMainAxisAlignment(),
+      crossAxisAlignment: config.alignment.toCrossAxisAlignment(),
       children: [
         Expanded(
           child: Row(
@@ -197,8 +204,8 @@ class TwoColumnHeaderSlide extends SlideWidget<TwoColumnHeaderSlideOptions> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: config.contentAlignment.toMainAxisAlignment(),
-      crossAxisAlignment: config.contentAlignment.toCrossAxisAlignment(),
+      mainAxisAlignment: config.alignment.toMainAxisAlignment(),
+      crossAxisAlignment: config.alignment.toCrossAxisAlignment(),
       children: [
         Row(
           children: [

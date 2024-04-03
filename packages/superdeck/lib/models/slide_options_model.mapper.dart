@@ -6,6 +6,326 @@
 
 part of 'slide_options_model.dart';
 
+class TransitionTypeMapper extends EnumMapper<TransitionType> {
+  TransitionTypeMapper._();
+
+  static TransitionTypeMapper? _instance;
+  static TransitionTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = TransitionTypeMapper._());
+    }
+    return _instance!;
+  }
+
+  static TransitionType fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  TransitionType decode(dynamic value) {
+    switch (value) {
+      case 'fade_in':
+        return TransitionType.fadeIn;
+      case 'fade_in_down':
+        return TransitionType.fadeInDown;
+      case 'fade_in_down_big':
+        return TransitionType.fadeInDownBig;
+      case 'fade_in_up':
+        return TransitionType.fadeInUp;
+      case 'fade_in_up_big':
+        return TransitionType.fadeInUpBig;
+      case 'fade_in_left':
+        return TransitionType.fadeInLeft;
+      case 'fade_in_left_big':
+        return TransitionType.fadeInLeftBig;
+      case 'fade_in_right':
+        return TransitionType.fadeInRight;
+      case 'fade_in_right_big':
+        return TransitionType.fadeInRightBig;
+      case 'fade_out':
+        return TransitionType.fadeOut;
+      case 'fade_out_down':
+        return TransitionType.fadeOutDown;
+      case 'fade_out_down_big':
+        return TransitionType.fadeOutDownBig;
+      case 'fade_out_up':
+        return TransitionType.fadeOutUp;
+      case 'fade_out_up_big':
+        return TransitionType.fadeOutUpBig;
+      case 'fade_out_left':
+        return TransitionType.fadeOutLeft;
+      case 'fade_out_left_big':
+        return TransitionType.fadeOutLeftBig;
+      case 'fade_out_right':
+        return TransitionType.fadeOutRight;
+      case 'fade_out_right_big':
+        return TransitionType.fadeOutRightBig;
+      case 'bounce_in_down':
+        return TransitionType.bounceInDown;
+      case 'bounce_in_up':
+        return TransitionType.bounceInUp;
+      case 'bounce_in_left':
+        return TransitionType.bounceInLeft;
+      case 'bounce_in_right':
+        return TransitionType.bounceInRight;
+      case 'elastic_in':
+        return TransitionType.elasticIn;
+      case 'elastic_in_down':
+        return TransitionType.elasticInDown;
+      case 'elastic_in_up':
+        return TransitionType.elasticInUp;
+      case 'elastic_in_left':
+        return TransitionType.elasticInLeft;
+      case 'elastic_in_right':
+        return TransitionType.elasticInRight;
+      case 'slide_in_down':
+        return TransitionType.slideInDown;
+      case 'slide_in_up':
+        return TransitionType.slideInUp;
+      case 'slide_in_left':
+        return TransitionType.slideInLeft;
+      case 'slide_in_right':
+        return TransitionType.slideInRight;
+      case 'flip_in_x':
+        return TransitionType.flipInX;
+      case 'flip_in_y':
+        return TransitionType.flipInY;
+      case 'zoom_in':
+        return TransitionType.zoomIn;
+      case 'zoom_out':
+        return TransitionType.zoomOut;
+      case 'jello_in':
+        return TransitionType.jelloIn;
+      case 'bounce':
+        return TransitionType.bounce;
+      case 'dance':
+        return TransitionType.dance;
+      case 'flash':
+        return TransitionType.flash;
+      case 'pulse':
+        return TransitionType.pulse;
+      case 'roulette':
+        return TransitionType.roulette;
+      case 'shake_x':
+        return TransitionType.shakeX;
+      case 'shake_y':
+        return TransitionType.shakeY;
+      case 'spin':
+        return TransitionType.spin;
+      case 'spin_perfect':
+        return TransitionType.spinPerfect;
+      case 'swing':
+        return TransitionType.swing;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(TransitionType self) {
+    switch (self) {
+      case TransitionType.fadeIn:
+        return 'fade_in';
+      case TransitionType.fadeInDown:
+        return 'fade_in_down';
+      case TransitionType.fadeInDownBig:
+        return 'fade_in_down_big';
+      case TransitionType.fadeInUp:
+        return 'fade_in_up';
+      case TransitionType.fadeInUpBig:
+        return 'fade_in_up_big';
+      case TransitionType.fadeInLeft:
+        return 'fade_in_left';
+      case TransitionType.fadeInLeftBig:
+        return 'fade_in_left_big';
+      case TransitionType.fadeInRight:
+        return 'fade_in_right';
+      case TransitionType.fadeInRightBig:
+        return 'fade_in_right_big';
+      case TransitionType.fadeOut:
+        return 'fade_out';
+      case TransitionType.fadeOutDown:
+        return 'fade_out_down';
+      case TransitionType.fadeOutDownBig:
+        return 'fade_out_down_big';
+      case TransitionType.fadeOutUp:
+        return 'fade_out_up';
+      case TransitionType.fadeOutUpBig:
+        return 'fade_out_up_big';
+      case TransitionType.fadeOutLeft:
+        return 'fade_out_left';
+      case TransitionType.fadeOutLeftBig:
+        return 'fade_out_left_big';
+      case TransitionType.fadeOutRight:
+        return 'fade_out_right';
+      case TransitionType.fadeOutRightBig:
+        return 'fade_out_right_big';
+      case TransitionType.bounceInDown:
+        return 'bounce_in_down';
+      case TransitionType.bounceInUp:
+        return 'bounce_in_up';
+      case TransitionType.bounceInLeft:
+        return 'bounce_in_left';
+      case TransitionType.bounceInRight:
+        return 'bounce_in_right';
+      case TransitionType.elasticIn:
+        return 'elastic_in';
+      case TransitionType.elasticInDown:
+        return 'elastic_in_down';
+      case TransitionType.elasticInUp:
+        return 'elastic_in_up';
+      case TransitionType.elasticInLeft:
+        return 'elastic_in_left';
+      case TransitionType.elasticInRight:
+        return 'elastic_in_right';
+      case TransitionType.slideInDown:
+        return 'slide_in_down';
+      case TransitionType.slideInUp:
+        return 'slide_in_up';
+      case TransitionType.slideInLeft:
+        return 'slide_in_left';
+      case TransitionType.slideInRight:
+        return 'slide_in_right';
+      case TransitionType.flipInX:
+        return 'flip_in_x';
+      case TransitionType.flipInY:
+        return 'flip_in_y';
+      case TransitionType.zoomIn:
+        return 'zoom_in';
+      case TransitionType.zoomOut:
+        return 'zoom_out';
+      case TransitionType.jelloIn:
+        return 'jello_in';
+      case TransitionType.bounce:
+        return 'bounce';
+      case TransitionType.dance:
+        return 'dance';
+      case TransitionType.flash:
+        return 'flash';
+      case TransitionType.pulse:
+        return 'pulse';
+      case TransitionType.roulette:
+        return 'roulette';
+      case TransitionType.shakeX:
+        return 'shake_x';
+      case TransitionType.shakeY:
+        return 'shake_y';
+      case TransitionType.spin:
+        return 'spin';
+      case TransitionType.spinPerfect:
+        return 'spin_perfect';
+      case TransitionType.swing:
+        return 'swing';
+    }
+  }
+}
+
+extension TransitionTypeMapperExtension on TransitionType {
+  String toValue() {
+    TransitionTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<TransitionType>(this) as String;
+  }
+}
+
+class CurveTypeMapper extends EnumMapper<CurveType> {
+  CurveTypeMapper._();
+
+  static CurveTypeMapper? _instance;
+  static CurveTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CurveTypeMapper._());
+    }
+    return _instance!;
+  }
+
+  static CurveType fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  CurveType decode(dynamic value) {
+    switch (value) {
+      case 'ease':
+        return CurveType.ease;
+      case 'bounce_in':
+        return CurveType.bounceIn;
+      case 'bounce_out':
+        return CurveType.bounceOut;
+      case 'ease_in':
+        return CurveType.easeIn;
+      case 'ease_in_out':
+        return CurveType.easeInOut;
+      case 'ease_out':
+        return CurveType.easeOut;
+      case 'elastic_in':
+        return CurveType.elasticIn;
+      case 'elastic_in_out':
+        return CurveType.elasticInOut;
+      case 'elastic_out':
+        return CurveType.elasticOut;
+      case 'fast_linear_to_slow_ease_in':
+        return CurveType.fastLinearToSlowEaseIn;
+      case 'fast_out_slow_in':
+        return CurveType.fastOutSlowIn;
+      case 'linear':
+        return CurveType.linear;
+      case 'decelerate':
+        return CurveType.decelerate;
+      case 'slow_middle':
+        return CurveType.slowMiddle;
+      case 'linear_to_ease_out':
+        return CurveType.linearToEaseOut;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(CurveType self) {
+    switch (self) {
+      case CurveType.ease:
+        return 'ease';
+      case CurveType.bounceIn:
+        return 'bounce_in';
+      case CurveType.bounceOut:
+        return 'bounce_out';
+      case CurveType.easeIn:
+        return 'ease_in';
+      case CurveType.easeInOut:
+        return 'ease_in_out';
+      case CurveType.easeOut:
+        return 'ease_out';
+      case CurveType.elasticIn:
+        return 'elastic_in';
+      case CurveType.elasticInOut:
+        return 'elastic_in_out';
+      case CurveType.elasticOut:
+        return 'elastic_out';
+      case CurveType.fastLinearToSlowEaseIn:
+        return 'fast_linear_to_slow_ease_in';
+      case CurveType.fastOutSlowIn:
+        return 'fast_out_slow_in';
+      case CurveType.linear:
+        return 'linear';
+      case CurveType.decelerate:
+        return 'decelerate';
+      case CurveType.slowMiddle:
+        return 'slow_middle';
+      case CurveType.linearToEaseOut:
+        return 'linear_to_ease_out';
+    }
+  }
+}
+
+extension CurveTypeMapperExtension on CurveType {
+  String toValue() {
+    CurveTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<CurveType>(this) as String;
+  }
+}
+
 class ImageFitMapper extends EnumMapper<ImageFit> {
   ImageFitMapper._();
 
@@ -322,6 +642,153 @@ class _ImageOptionsCopyWithImpl<$R, $Out>
   ImageOptionsCopyWith<$R2, ImageOptions, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _ImageOptionsCopyWithImpl($value, $cast, t);
+}
+
+class TransitionOptionsMapper extends ClassMapperBase<TransitionOptions> {
+  TransitionOptionsMapper._();
+
+  static TransitionOptionsMapper? _instance;
+  static TransitionOptionsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = TransitionOptionsMapper._());
+      MapperContainer.globals.useAll([DurationMapper()]);
+      TransitionTypeMapper.ensureInitialized();
+      CurveTypeMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'TransitionOptions';
+
+  static TransitionType _$type(TransitionOptions v) => v.type;
+  static const Field<TransitionOptions, TransitionType> _f$type =
+      Field('type', _$type);
+  static Duration? _$duration(TransitionOptions v) => v.duration;
+  static const Field<TransitionOptions, Duration> _f$duration =
+      Field('duration', _$duration, opt: true);
+  static Duration? _$delay(TransitionOptions v) => v.delay;
+  static const Field<TransitionOptions, Duration> _f$delay =
+      Field('delay', _$delay, opt: true);
+  static CurveType? _$curve(TransitionOptions v) => v.curve;
+  static const Field<TransitionOptions, CurveType> _f$curve =
+      Field('curve', _$curve, opt: true);
+
+  @override
+  final MappableFields<TransitionOptions> fields = const {
+    #type: _f$type,
+    #duration: _f$duration,
+    #delay: _f$delay,
+    #curve: _f$curve,
+  };
+
+  @override
+  final MappingHook hook = const SingleOptionHook(fieldName: 'type');
+  static TransitionOptions _instantiate(DecodingData data) {
+    return TransitionOptions(
+        type: data.dec(_f$type),
+        duration: data.dec(_f$duration),
+        delay: data.dec(_f$delay),
+        curve: data.dec(_f$curve));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static TransitionOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<TransitionOptions>(map);
+  }
+
+  static TransitionOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<TransitionOptions>(json);
+  }
+}
+
+mixin TransitionOptionsMappable {
+  String toJson() {
+    return TransitionOptionsMapper.ensureInitialized()
+        .encodeJson<TransitionOptions>(this as TransitionOptions);
+  }
+
+  Map<String, dynamic> toMap() {
+    return TransitionOptionsMapper.ensureInitialized()
+        .encodeMap<TransitionOptions>(this as TransitionOptions);
+  }
+
+  TransitionOptionsCopyWith<TransitionOptions, TransitionOptions,
+          TransitionOptions>
+      get copyWith => _TransitionOptionsCopyWithImpl(
+          this as TransitionOptions, $identity, $identity);
+  @override
+  String toString() {
+    return TransitionOptionsMapper.ensureInitialized()
+        .stringifyValue(this as TransitionOptions);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            TransitionOptionsMapper.ensureInitialized()
+                .isValueEqual(this as TransitionOptions, other));
+  }
+
+  @override
+  int get hashCode {
+    return TransitionOptionsMapper.ensureInitialized()
+        .hashValue(this as TransitionOptions);
+  }
+}
+
+extension TransitionOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, TransitionOptions, $Out> {
+  TransitionOptionsCopyWith<$R, TransitionOptions, $Out>
+      get $asTransitionOptions =>
+          $base.as((v, t, t2) => _TransitionOptionsCopyWithImpl(v, t, t2));
+}
+
+abstract class TransitionOptionsCopyWith<$R, $In extends TransitionOptions,
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
+  $R call(
+      {TransitionType? type,
+      Duration? duration,
+      Duration? delay,
+      CurveType? curve});
+  TransitionOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _TransitionOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, TransitionOptions, $Out>
+    implements TransitionOptionsCopyWith<$R, TransitionOptions, $Out> {
+  _TransitionOptionsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<TransitionOptions> $mapper =
+      TransitionOptionsMapper.ensureInitialized();
+  @override
+  $R call(
+          {TransitionType? type,
+          Object? duration = $none,
+          Object? delay = $none,
+          Object? curve = $none}) =>
+      $apply(FieldCopyWithData({
+        if (type != null) #type: type,
+        if (duration != $none) #duration: duration,
+        if (delay != $none) #delay: delay,
+        if (curve != $none) #curve: curve
+      }));
+  @override
+  TransitionOptions $make(CopyWithData data) => TransitionOptions(
+      type: data.get(#type, or: $value.type),
+      duration: data.get(#duration, or: $value.duration),
+      delay: data.get(#delay, or: $value.delay),
+      curve: data.get(#curve, or: $value.curve));
+
+  @override
+  TransitionOptionsCopyWith<$R2, TransitionOptions, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _TransitionOptionsCopyWithImpl($value, $cast, t);
 }
 
 class PreviewOptionsMapper extends ClassMapperBase<PreviewOptions> {

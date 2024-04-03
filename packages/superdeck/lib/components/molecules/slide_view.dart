@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import '../../helpers/layout_builder.dart';
 import '../../models/config_model.dart';
 import '../../superdeck.dart';
+import '../atoms/slide_transition_widget.dart';
 
-class SlideView extends StatefulWidget {
+class SlideView extends StatelessWidget {
   const SlideView(
     this.config, {
     super.key,
@@ -14,62 +15,60 @@ class SlideView extends StatefulWidget {
   final SlideOptions config;
 
   @override
-  State<SlideView> createState() => _SlideViewState();
-}
-
-class _SlideViewState extends State<SlideView>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    final config = widget.config;
+    final config = this.config;
 
     final style = SuperDeck.styleOf(context).applyVariant(config.styleVariant);
-    return LayoutBuilder(builder: (context, constraints) {
-      return Stack(
-        children: [
-          Container(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            decoration: _backgroundDecoration(config.background),
-          ),
-          SizedBox(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            child: StyledWidgetBuilder(
-                style: style.animate(),
-                builder: (mix) {
-                  final spec = SlideSpec.of(mix);
-                  return AnimatedMixedBox(
-                    spec: spec.innerContainer,
-                    duration: const Duration(milliseconds: 300),
-                    child: LayoutBuilder(builder: (_, constraints) {
-                      return Builder(builder: (_) {
-                        if (config is SimpleSlideOptions) {
-                          return SimpleSlide(config: config);
-                        } else if (config is PreviewSlideOptions) {
-                          return PreviewSlide(config: config);
-                        } else if (config is ImageSlideOptions) {
-                          return ImageSlide(config: config);
-                        } else if (config is TwoColumnSlideOptions) {
-                          return TwoColumnSlide(config: config);
-                        } else if (config is TwoColumnHeaderSlideOptions) {
-                          return TwoColumnHeaderSlide(config: config);
-                        } else {
-                          throw UnimplementedError(
-                              'Slide config not implemented');
-                        }
-                      });
-                    }),
-                  );
-                }),
-          ),
-        ],
-      );
-    });
+
+    return SlideTransitionWidget(
+      transition: config.transition,
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Stack(
+          children: [
+            Container(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              decoration: _backgroundDecoration(config.background),
+            ),
+            SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: StyledWidgetBuilder(
+                  style: style.animate(),
+                  builder: (mix) {
+                    final spec = SlideSpec.of(mix);
+                    return AnimatedMixedBox(
+                      spec: spec.innerContainer,
+                      duration: const Duration(milliseconds: 300),
+                      child: LayoutBuilder(builder: (_, constraints) {
+                        return Builder(builder: (_) {
+                          if (config is SimpleSlideOptions) {
+                            return SimpleSlide(config: config);
+                          } else if (config is PreviewSlideOptions) {
+                            return PreviewSlide(config: config);
+                          } else if (config is ImageSlideOptions) {
+                            return ImageSlide(config: config);
+                          } else if (config is TwoColumnSlideOptions) {
+                            return TwoColumnSlide(config: config);
+                          } else if (config is TwoColumnHeaderSlideOptions) {
+                            return TwoColumnHeaderSlide(config: config);
+                          } else if (config is InvalidSlideOptions) {
+                            return InvalidSlide(config: config);
+                          } else {
+                            throw UnimplementedError(
+                              'Slide config not implemented',
+                            );
+                          }
+                        });
+                      }),
+                    );
+                  }),
+            ),
+          ],
+        );
+      }),
+    );
   }
 }
 

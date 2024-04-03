@@ -19,6 +19,141 @@ class ImageOptions with ImageOptionsMappable {
   static const fromJson = ImageOptionsMapper.fromJson;
 }
 
+@MappableEnum()
+enum TransitionType {
+  // FadeIn Animations
+  fadeIn,
+  fadeInDown,
+  fadeInDownBig,
+  fadeInUp,
+  fadeInUpBig,
+  fadeInLeft,
+  fadeInLeftBig,
+  fadeInRight,
+  fadeInRightBig,
+
+  // FadeOut Animations
+  fadeOut,
+  fadeOutDown,
+  fadeOutDownBig,
+  fadeOutUp,
+  fadeOutUpBig,
+  fadeOutLeft,
+  fadeOutLeftBig,
+  fadeOutRight,
+  fadeOutRightBig,
+
+  // BounceIn Animations
+  bounceInDown,
+  bounceInUp,
+  bounceInLeft,
+  bounceInRight,
+
+  // ElasticIn Animations
+  elasticIn,
+  elasticInDown,
+  elasticInUp,
+  elasticInLeft,
+  elasticInRight,
+
+  // SlideIns Animations
+  slideInDown,
+  slideInUp,
+  slideInLeft,
+  slideInRight,
+
+  // FlipIn Animations
+  flipInX,
+  flipInY,
+
+  // Zooms
+  zoomIn,
+  zoomOut,
+
+  // SpecialIn Animations
+  jelloIn,
+
+  // Attention Seeker
+  bounce,
+  dance,
+  flash,
+  pulse,
+  roulette,
+  shakeX,
+  shakeY,
+  spin,
+  spinPerfect,
+  swing,
+}
+
+@MappableEnum()
+enum CurveType {
+  ease,
+  bounceIn,
+  bounceOut,
+  easeIn,
+  easeInOut,
+  easeOut,
+  elasticIn,
+  elasticInOut,
+  elasticOut,
+  fastLinearToSlowEaseIn,
+  fastOutSlowIn,
+  linear,
+  decelerate,
+  slowMiddle,
+  linearToEaseOut,
+}
+
+@MappableClass(
+    hook: SingleOptionHook(fieldName: 'type'),
+    includeCustomMappers: [DurationMapper()])
+class TransitionOptions with TransitionOptionsMappable {
+  final TransitionType type;
+  final Duration? duration;
+  final Duration? delay;
+  final CurveType? curve;
+
+  const TransitionOptions({
+    required this.type,
+    this.duration,
+    this.delay,
+    this.curve,
+  });
+
+  static const fromMap = TransitionOptionsMapper.fromMap;
+
+  static const fromJson = TransitionOptionsMapper.fromJson;
+}
+
+class DurationMapper extends SimpleMapper<Duration> {
+  const DurationMapper();
+
+  @override
+  Duration decode(Object value) {
+    return Duration(milliseconds: value as int);
+  }
+
+  @override
+  int encode(Duration self) {
+    return self.inMilliseconds;
+  }
+}
+
+class SingleOptionHook extends MappingHook {
+  const SingleOptionHook({required this.fieldName});
+
+  final String fieldName;
+
+  @override
+  Object? beforeDecode(Object? value) {
+    if (value is String) {
+      return {fieldName: value};
+    }
+    return value;
+  }
+}
+
 @MappableClass()
 class PreviewOptions with PreviewOptionsMappable {
   final String name;

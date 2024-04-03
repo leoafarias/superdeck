@@ -26,7 +26,7 @@ Style get style {
     coverStyle,
 
     $.h1.textStyle.color.red(),
-    $.contentContainer.border(color: Colors.red),
+    $.contentContainer.border(color: Colors.blue),
   );
 }
 

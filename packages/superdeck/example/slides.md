@@ -1,17 +1,31 @@
 ---
+layout: widget
+widget:
+  name: slide
+  position: right
+  args:
+    title: Awesome Widget
+    height: 200.02
+    width: 500.02
+---
+
+This is an example of an awesome widget
+
+
+---
 background: https://source.unsplash.com/random/900×700/?landscape
-content_alignment: bottom_left
+alignment: bottom_left
 style: cover
+transition: fade_in
 ---
 
 # SuperDeck
-
+ 
 SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
 
 ---
 layout: preview
-widget:
-  name: slide
+options:
   position: right
   args:
     title: Awesome Widget
@@ -22,9 +36,10 @@ widget:
 
 This is an example of an awesome widget
 
+
 ---
 layout: two_column_header
-content_alignment: center_left
+alignment: center_left
 ---
 
 # Two Column Header
@@ -86,7 +101,7 @@ title: "Slide 3: Links and Images"
 ---
 title: Quotes
 layout: two_column
-content_alignment: center
+alignment: center
 ---
 
 > If you want to go fast, go alone. 

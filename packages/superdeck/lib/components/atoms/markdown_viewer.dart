@@ -115,11 +115,15 @@ Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
           assets.firstWhereOrNull((element) => element.name == uri.toString());
 
       if (asset?.base64 != null) {
-        current = Image.memory(
-          base64Decode(asset!.base64),
+        current = Image(
+          image: MemoryImage(
+            base64Decode(asset!.base64),
+          ),
           fit: boxFit,
           width: info.width,
           height: info.height,
+          key: ValueKey(asset.base64),
+          gaplessPlayback: true,
         );
       } else {
         current = Image.asset(

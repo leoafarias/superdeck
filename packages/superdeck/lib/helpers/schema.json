@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "definitions": {
+    "LayoutPosition": {
+      "type": "string",
+      "enum": ["left", "right", "top", "bottom"]
+    },
+    "ContentAlignment": {
+      "type": "string",
+      "enum": [
+        "top_left",
+        "top_center",
+        "top_right",
+        "center_left",
+        "center",
+        "center_right",
+        "bottom_left",
+        "bottom_center",
+        "bottom_right"
+      ]
+    },
+    "TransitionType": {
+      "type": "string",
+      "enum": [
+        "fade_in",
+        "fade_in_down",
+        "fade_in_down_big",
+        "fade_in_up",
+        "fade_in_up_big",
+        "fade_in_left",
+        "fade_in_left_big",
+        "fade_in_right",
+        "fade_in_right_big",
+        "fade_out",
+        "fade_out_down",
+        "fade_out_down_big",
+        "fade_out_up",
+        "fade_out_up_big",
+        "fade_out_left",
+        "fade_out_left_big",
+        "fade_out_right",
+        "fade_out_right_big",
+        "bounce_in_down",
+        "bounce_in_up",
+        "bounce_in_left",
+        "bounce_in_right",
+        "elastic_in",
+        "elastic_in_down",
+        "elastic_in_up",
+        "elastic_in_left",
+        "elastic_in_right",
+        "slide_in_down",
+        "slide_in_up",
+        "slide_in_left",
+        "slide_in_right",
+        "flip_in_x",
+        "flip_in_y",
+        "zoom_in",
+        "zoom_out",
+        "jello_in",
+        "bounce",
+        "dance",
+        "flash",
+        "pulse",
+        "roulette",
+        "shake_x",
+        "shake_y",
+        "spin",
+        "spin_perfect",
+        "swing"
+      ]
+    },
+    "CurveType": {
+      "type": "string",
+      "enum": [
+        "ease",
+        "bounce_in",
+        "bounce_out",
+        "ease_in",
+        "ease_in_out",
+        "ease_out",
+        "elastic_in",
+        "elastic_in_out",
+        "elastic_out",
+        "fast_linear_to_slow_ease_in",
+        "fast_out_slow_in",
+        "linear",
+        "decelerate",
+        "slow_middle",
+        "linear_to_ease_out"
+      ]
+    },
+    "ImageFit": {
+      "type": "string",
+      "enum": [
+        "fill",
+        "contain",
+        "cover",
+        "fit_width",
+        "fit_height",
+        "none",
+        "scale_down"
+      ]
+    },
+    "LayoutType": {
+      "type": "string",
+      "enum": [
+        "image",
+        "simple",
+        "preview",
+        "two_column",
+        "two_column_header",
+        "invalid"
+      ]
+    },
+    "TransitionOptions": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/TransitionType"
+        },
+        "duration": {
+          "type": "integer"
+        },
+        "delay": {
+          "type": "integer"
+        },
+        "curve": {
+          "$ref": "#/definitions/CurveType"
+        }
+      }
+    },
+    "ImageOptions": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string"
+        },
+        "fit": {
+          "$ref": "#/definitions/ImageFit"
+        },
+        "position": {
+          "$ref": "#/definitions/LayoutPosition"
+        }
+      },
+      "required": ["src"]
+    },
+    "WidgetOptions": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "args": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "position": {
+          "$ref": "#/definitions/LayoutPosition"
+        }
+      },
+      "required": ["name"]
+    }
+  },
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "layout": {
+      "$ref": "#/definitions/LayoutType"
+    },
+    "background": {
+      "type": "string"
+    },
+    "alignment": {
+      "$ref": "#/definitions/ContentAlignment"
+    },
+    "content": {
+      "type": "string"
+    },
+    "style": {
+      "type": "string"
+    },
+    "transition": {
+      "$ref": "#/definitions/TransitionOptions"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "layout": {
+            "const": "image"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "image": {
+            "$ref": "#/definitions/ImageOptions"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "layout": {
+            "const": "preview"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "widget": {
+            "$ref": "#/definitions/WidgetOptions"
+          }
+        }
+      }
+    }
+  ]
+}

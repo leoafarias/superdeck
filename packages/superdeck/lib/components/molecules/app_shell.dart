@@ -60,6 +60,24 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     super.dispose();
   }
 
+  void _setSlides(List<SlideOptions> slides) {
+    // only update state if slide optinos are different
+    if (!listEquals(slides, _slides)) {
+      setState(() {
+        _slides = slides;
+      });
+    }
+  }
+
+  void _setAssets(List<SlideAsset> assets) {
+    // only update state if assets are different
+    if (!listEquals(assets, _assets)) {
+      setState(() {
+        _assets = assets;
+      });
+    }
+  }
+
   Future<void> _loadData() async {
     try {
       await SuperDeckApp.initialize();
@@ -91,14 +109,10 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   List<StreamSubscription<WatchEvent>> _registerLocalListener() {
     return [
       _createFileListener(config.slidesJsonFile, (contents) {
-        setState(() {
-          _slides = parseSlides(contents);
-        });
+        _setSlides(parseSlides(contents));
       }),
       _createFileListener(config.assetsJsonFile, (contents) {
-        setState(() {
-          _assets = parseAssets(contents);
-        });
+        _setAssets(parseAssets(contents));
       }),
       _createFileListener(config.slidesMarkdownFile, (contents) async {
         print('Reloading slides');
@@ -160,16 +174,10 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   final _pageController = PageController();
-  int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page?.round() ?? 0;
-      });
-    });
   }
 
   @override
@@ -178,23 +186,27 @@ class _AppShellState extends State<AppShell> {
     super.dispose();
   }
 
+  Future<void> _isPaging = Future.value();
+
   @override
   Widget build(BuildContext context) {
     final slides = SuperDeck.slidesOf(context);
     final style = SuperDeck.styleOf(context);
 
-    void goToPage(int page) {
+    Future<void> goToPage(int page) async {
       if (page < 0 || page >= slides.length) return;
-      _pageController.animateToPage(
+      await _isPaging;
+
+      _isPaging = _pageController.animateToPage(
         page,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
 
-    void nextPage() => goToPage(_currentPage + 1);
+    void nextPage() => goToPage(_pageController.page!.toInt() + 1);
 
-    void previousPage() => goToPage(_currentPage - 1);
+    void previousPage() => goToPage(_pageController.page!.toInt() - 1);
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
@@ -226,6 +238,7 @@ class _AppShellState extends State<AppShell> {
                 duration: mix.animation?.duration ?? const Duration(),
                 spec: spec.outerContainer,
                 child: PageView(
+                  // scrollDirection: Axis.vertical,
                   controller: _pageController,
                   children: slides.map(SlideView.new).toList(),
                 ),
