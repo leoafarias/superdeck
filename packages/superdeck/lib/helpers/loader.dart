@@ -1,145 +1,161 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:json_schema/json_schema.dart';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
+import '../models/config_model.dart';
+import '../models/schema_error_model.dart';
+import '../models/slide_asset_model.dart';
+import 'validation.dart';
+
+typedef DeckData = (
+  List<SlideOptions> slides,
+  List<SlideAsset> assets,
+);
+
 class SlidesLoader {
   // Constructor that accepts the text input for parsing.
-  SlidesLoader();
+  const SlidesLoader._();
 
-  Future<void> load() async {
-    final slidesMarkdown = config.slidesMarkdownFile;
+  //  Sloppy I know, will clean it up later
 
-    if (!await slidesMarkdown.exists()) {
+  static Future<List<ValidationError>> validateProjectConfig() async {
+    final projectConfig = config.projectConfigFile;
+    final projectConfigContents = await projectConfig.readAsString();
+
+    return projectSchemeValidator
+        .validate(_loadYamlAsMap(projectConfigContents))
+        .errors;
+  }
+
+  static Future<ProjectOptions> loadProjectConfig() async {
+    final projectConfig = config.projectConfigFile;
+
+    if (!await projectConfig.exists()) {
+      return const ProjectOptions();
+    }
+
+    final projectConfigContents = await projectConfig.readAsString();
+
+    return ProjectOptions.fromMap(_loadYamlAsMap(projectConfigContents));
+  }
+
+  static Future<DeckData> load() async {
+    final slidesMd = config.slidesMarkdownFile;
+
+    if (!await slidesMd.exists()) {
       throw Exception('Slides markdown file not found');
     }
 
-    final presentationContent = await slidesMarkdown.readAsString();
+    final slidesMdContents = await slidesMd.readAsString();
 
     final (contents, imageFiles) =
-        await replaceMermaidContent(presentationContent);
+        await getMermaidContentAndAssets(slidesMdContents.trim());
 
-    await _saveSlideJson(contents);
+    final slides = _parseSlidesYaml(contents);
+    final assets = await _parseAssetsFromFiles(imageFiles);
 
-    await _generateAssetsJson();
+    await _saveSlideJson(slides);
+    await _saveAssetsJson(assets);
 
-    // Delete any file within assetsDir that is not imageFiles
-    await config.assetsImageDir.list().forEach((f) async {
-      if (f is File) {
-        if (!imageFiles.any((element) => element.path == f.path)) {
-          await f.delete();
-        }
-      }
-    });
+    return (slides, assets);
   }
 
-  Future<void> _saveSlideJson(String contents) async {
+  static Future<DeckData> loadFromStorage() async {
+    await load();
+    if (kDebugMode) {
+      return _loadFromLocalStorage();
+    } else {
+      return _loadFromRootBundle();
+    }
+  }
+
+  static Future<void> _saveSlideJson(List<SlideOptions> slides) async {
     final slidesJson = config.slidesJsonFile;
 
     if (!await slidesJson.exists()) {
       await slidesJson.create(recursive: true);
     }
 
-    // Write a json file with a list of slides
-    await slidesJson.writeAsString(prettyJson(_parse(contents)));
-    // Map<String,String> assets = {};
-    // The key will be the file name and the value will be a base64 encoded string
+    final map = slides.map((e) => e.toMap()).toList();
+
+    // Write a json file with a list of slide
+    await slidesJson.writeAsString(prettyJson(map));
   }
 
-  Future<void> _generateAssetsJson() async {
-    final assetMap = {};
+  static Future<void> _saveAssetsJson(List<SlideAsset> assets) async {
     final assetsJson = config.assetsJsonFile;
 
     if (!await assetsJson.exists()) {
       await assetsJson.create(recursive: true);
     }
+    final map = assets.map((e) => e.toMap()).toList();
+    // Write a json file with a list of assets
+    await assetsJson.writeAsString(prettyJson(map));
 
-    final files =
-        await config.assetsImageDir.list().where((f) => f is File).toList();
+    await config.assetsImageDir.list().forEach((f) async {
+      if (f is File) {
+        if (!assets.any((element) => element.path == f.path)) {
+          await f.delete();
+        }
+      }
+    });
+  }
+
+  static Future<List<SlideAsset>> _parseAssetsFromFiles(
+    List<File> files,
+  ) async {
+    final assets = <SlideAsset>[];
 
     await Future.wait(files.map((f) async {
-      final bytes = await (f as File).readAsBytes();
-      final base64 = base64Encode(bytes);
-      final relativePath = relative(
-        f.path,
-        from: config.assetsDir.parent.path,
-      );
-
-      assetMap[relativePath] = base64;
+      final asset = await _getImage(f.path);
+      assets.add(asset);
     }));
 
-    //  convert a map to a an array of objects with key and value
-    final listOfAssets = assetMap.entries
-        .map((e) => {'name': e.key, 'base64': e.value})
-        .toList();
-    await assetsJson.writeAsString(prettyJson(listOfAssets));
-  }
-
-  final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
-
-  // Public method that parses the text and returns a list of SlideData.
-  List<Map<String, dynamic>> _parse(String text) {
-    // Map the front matter and content to a list of _SlideParserData objects.
-    return _extractSlides(text).map((slide) {
-      final frontMatter = _extractFrontMatter(slide);
-      final options = _parseFrontMatter(frontMatter);
-      final content = _removeMatchingFrontMatter(slide, frontMatter);
-      return {
-        ...options,
-        'content': content,
-      }.cast<String, dynamic>();
-    }).toList();
-  }
-
-  String _extractFrontMatter(String slide) {
-    return _frontMatterRegex.firstMatch(slide)?.group(1) ?? '';
-  }
-
-  Map<dynamic, dynamic> _parseFrontMatter(String frontMatter) {
-    return loadYaml(frontMatter) as YamlMap? ?? {};
-  }
-
-  String _removeMatchingFrontMatter(String slide, String frontMatter) {
-    return slide
-        .substring(_frontMatterRegex.matchAsPrefix(slide)?.end ?? 0)
-        .trim();
-  }
-
-  List<String> _extractSlides(String content) {
-    final lines = content.split('\n');
-    final slides = <String>[];
-    final buffer = StringBuffer();
-    bool inSlide = false;
-
-    for (var line in lines) {
-      if (line.trim() == '---') {
-        if (buffer.isNotEmpty) {
-          if (inSlide) {
-            // Add the slide content to the list of slides
-            slides.add(buffer.toString().trim());
-            inSlide = false;
-            buffer.clear();
-          } else {
-            inSlide = true;
-          }
-        }
-        buffer.writeln(line);
-      } else {
-        buffer.writeln(line);
-      }
-    }
-
-    // Capture any remaining content as a slide
-    if (buffer.isNotEmpty) {
-      slides.add(buffer.toString().trim());
-    }
-
-    return slides;
+    return assets;
   }
 }
 
-Future<(String, List<File>)> replaceMermaidContent(String content) async {
+Future<SlideAsset> _getImage(String imagePath) async {
+  final File imageFile = File(imagePath);
+  final Uint8List bytes = await imageFile.readAsBytes();
+  final ui.Codec codec = await ui.instantiateImageCodec(bytes);
+  final ui.FrameInfo frame = await codec.getNextFrame();
+
+  return SlideAsset(
+    path: imagePath,
+    bytes: bytes,
+    width: frame.image.width.toDouble(),
+    height: frame.image.height.toDouble(),
+  );
+}
+
+Future<DeckData> _loadFromLocalStorage() async {
+  final slidesJson = await config.slidesJsonFile.readAsString();
+  final assetsJson = await config.assetsJsonFile.readAsString();
+
+  return (_parseSlides(slidesJson), _parseAssets(assetsJson));
+}
+
+Future<DeckData> _loadFromRootBundle() async {
+  final slidesJson = await rootBundle.loadString(config.slidesJsonFile.path);
+  final assetsJson = await rootBundle.loadString(config.assetsJsonFile.path);
+
+  return (_parseSlides(slidesJson), _parseAssets(assetsJson));
+}
+
+List<SlideAsset> _parseAssets(String assetsJson) {
+  final assets = jsonDecode(assetsJson) as List;
+  return assets.map((asset) => SlideAsset.fromMap(asset)).toList();
+}
+
+Future<(String, List<File>)> getMermaidContentAndAssets(String content) async {
   final RegExp mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
   final List<Map<String, dynamic>> replacements = [];
   final List<File> imageFiles = [];
@@ -225,6 +241,67 @@ Future<File> _processMermaidSyntax(String mermaidSyntax) async {
   }
 }
 
+Map<String, dynamic> _loadYamlAsMap(String yamlString) {
+  final yamlMap = loadYaml(yamlString) as YamlMap? ?? YamlMap();
+  return _convertYamlToMap(yamlMap);
+}
+
+final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
+
+String _extractFrontMatter(String slide) {
+  return _frontMatterRegex.firstMatch(slide)?.group(1) ?? '';
+}
+
+String _removeMatchingFrontMatter(String slide, String frontMatter) {
+  return slide
+      .substring(_frontMatterRegex.matchAsPrefix(slide)?.end ?? 0)
+      .trim();
+}
+
+dynamic _convertYamlToMap(dynamic yamlObject) {
+  if (yamlObject is YamlMap) {
+    Map<String, dynamic> dartMap = {};
+    yamlObject.forEach((key, value) {
+      dartMap[key.toString()] = _convertYamlToMap(value);
+    });
+    return dartMap;
+  } else {
+    return yamlObject;
+  }
+}
+
+List<String> _extractSlides(String content) {
+  final lines = content.split('\n');
+  final slides = <String>[];
+  final buffer = StringBuffer();
+  bool inSlide = false;
+
+  for (var line in lines) {
+    if (line.trim() == '---') {
+      if (buffer.isNotEmpty) {
+        if (inSlide) {
+          // Add the slide content to the list of slides
+          slides.add(buffer.toString().trim());
+          inSlide = false;
+          buffer.clear();
+        } else {
+          inSlide = true;
+        }
+      }
+      buffer.writeln(line);
+    } else {
+      buffer.writeln(line);
+    }
+  }
+
+  // Capture any remaining content as a slide
+  if (buffer.isNotEmpty) {
+    slides.add(buffer.toString().trim());
+  }
+
+  return slides;
+}
+
 final config = SuperDeckConfig();
 
 class SuperDeckConfig {
@@ -239,6 +316,7 @@ class SuperDeckConfig {
   Directory get assetsImageDir => Directory(join(_assetsDirName, 'images'));
   File get slidesJsonFile => File(join(_assetsDirName, 'slides.json'));
   File get assetsJsonFile => File(join(_assetsDirName, 'assets.json'));
+  File get projectConfigFile => File('superdeck.yaml');
 }
 
 /// Formats [json]
@@ -246,4 +324,51 @@ String prettyJson(dynamic json) {
   var spaces = ' ' * 2;
   var encoder = JsonEncoder.withIndent(spaces);
   return encoder.convert(json);
+}
+
+List<SlideOptions> _parseSlidesYaml(String slidesYaml) {
+  return _extractSlides(slidesYaml).map((String slideYaml) {
+    final frontMatter = _extractFrontMatter(slideYaml);
+    final options = _loadYamlAsMap(frontMatter);
+    final content = _removeMatchingFrontMatter(slideYaml, frontMatter);
+
+    final map = {
+      ...options,
+      'content': content,
+    }.cast<String, dynamic>();
+
+    return _validateAndParseSlide(map);
+  }).toList();
+}
+
+List<SlideOptions> _parseSlides(String slidesJson) {
+  final slides = jsonDecode(slidesJson) as List;
+  final slideMap = List.castFrom<dynamic, Map<String, dynamic>>(slides);
+  return slideMap.map(SlideOptions.fromMap).toList();
+}
+
+SlideOptions _validateAndParseSlide(Map<String, dynamic> slideContent) {
+  try {
+    final results = schemaValidator.validate(slideContent);
+    if (!results.isValid) {
+      final errors = results.errors.map(parseErrorObject).toList();
+      final hasUnknownError =
+          errors.any((element) => element.errorType == ErrorType.unknown);
+
+      // If there is an schema error lets handle the parsing to see the problem
+      if (!hasUnknownError) {
+        return SchemaErrorSlideOptions(
+          content: "# Schema Error",
+          errors: errors,
+        );
+      }
+    }
+    return SlideOptionsMapper.fromMap(slideContent);
+  } on MapperException catch (e) {
+    print(e);
+    return SchemaErrorSlideOptions(
+      content: '# Exception: \n ${e.message}',
+      errors: [],
+    );
+  }
 }

@@ -18,7 +18,6 @@ class SlideTransitionWidget extends StatelessWidget {
     if (transition?.type == null) return child;
 
     return Container(
-      key: ValueKey(transition),
       child: _getWidgetByType(transition!, child),
     );
   }

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
 import '../models/config_model.dart';
+import '../models/schema_error_model.dart';
 import '../models/slide_options_model.dart';
-import 'controller.dart';
+import '../superdeck.dart';
 import 'measure_size.dart';
 
 abstract class SlideWidget<Config extends SlideOptions>
@@ -38,12 +39,85 @@ class SimpleSlide extends SlideWidget<SimpleSlideOptions> {
   }
 }
 
+class SchemaErrorSlide extends SlideWidget<SchemaErrorSlideOptions> {
+  const SchemaErrorSlide({required super.config, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Style(
+      $.contentContainer.color(const Color.fromARGB(255, 166, 6, 6)),
+      $.contentContainer.padding.all(40.0),
+      $.contentContainer.borderRadius.all(20.0),
+      $.contentContainer.border.all(
+        color: const Color.fromARGB(255, 111, 4, 4),
+        width: 5,
+      ),
+      $.contentContainer.shadow(
+        color: const Color.fromARGB(255, 119, 1, 1),
+        blurRadius: 100,
+        spreadRadius: 20,
+      ),
+      $.textStyle.color(Colors.white),
+      $.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
+      $.h1.textStyle.fontSize(36.0),
+      $.h1.textStyle.bold(),
+      $.h2.padding.top(0),
+      $.h2.textStyle.bold(),
+      $.h2.textStyle.color(Colors.yellow),
+      $.code.codeSpan.color(Colors.yellow),
+      $.code.codeSpan.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
+    );
+
+    final errorMessages = config.errors.map((error) {
+      switch (error.errorType) {
+        case ErrorType.unallowedAdditionalProperty:
+          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`.";
+        case ErrorType.enumViolated:
+          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`.";
+        case ErrorType.requiredPropMissing:
+          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`.";
+        case ErrorType.invalidType:
+          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`";
+        default:
+          return 'Unknown error type.';
+      }
+    }).join('\n');
+
+    return StyledWidgetBuilder(
+        style: style,
+        builder: (context) {
+          //  Maybe there are no validation errors just return the content
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.black,
+              border: Border.all(
+                  color: const Color.fromARGB(255, 166, 6, 6), width: 20),
+            ),
+            child: SlideContent(
+              content: '${config.content} \n $errorMessages',
+              alignment: ContentAlignment.center,
+            ),
+          );
+        });
+  }
+}
+
 class InvalidSlide extends SlideWidget<InvalidSlideOptions> {
   const InvalidSlide({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return buildContent();
+    return Container(
+      color: const Color(0xffA11211),
+      padding: const EdgeInsets.all(40.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: const BoxDecoration(
+            color: Color(0xffD81919),
+            borderRadius: BorderRadius.all(Radius.circular(8.0))),
+        child: buildContent(),
+      ),
+    );
   }
 }
 
@@ -177,9 +251,10 @@ class TwoColumnSlide extends SlideWidget<TwoColumnSlideOptions> {
 
   @override
   Widget build(BuildContext context) {
+    final alignment = config.alignment ?? ContentAlignment.centerLeft;
     return Column(
-      mainAxisAlignment: config.alignment.toMainAxisAlignment(),
-      crossAxisAlignment: config.alignment.toCrossAxisAlignment(),
+      mainAxisAlignment: alignment.toMainAxisAlignment(),
+      crossAxisAlignment: alignment.toCrossAxisAlignment(),
       children: [
         Expanded(
           child: Row(
@@ -203,9 +278,10 @@ class TwoColumnHeaderSlide extends SlideWidget<TwoColumnHeaderSlideOptions> {
 
   @override
   Widget build(BuildContext context) {
+    final alignment = config.alignment ?? ContentAlignment.centerLeft;
     return Column(
-      mainAxisAlignment: config.alignment.toMainAxisAlignment(),
-      crossAxisAlignment: config.alignment.toCrossAxisAlignment(),
+      mainAxisAlignment: alignment.toMainAxisAlignment(),
+      crossAxisAlignment: alignment.toCrossAxisAlignment(),
       children: [
         Row(
           children: [

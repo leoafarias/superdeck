@@ -302,12 +302,14 @@ class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
 
 class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
   final TextStyleDto? codeSpan;
+  final TextStyleDto? codeBlock;
   final SpacingDto? codeblockPadding;
   final BoxDecorationDto? codeblockDecoration;
 
   final ColorDto? copyIconColor;
 
   MdCodeDto({
+    this.codeBlock,
     this.codeSpan,
     this.codeblockPadding,
     this.codeblockDecoration,
@@ -321,6 +323,7 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
       codeblockDecoration:
           BoxDecorationDto.maybeFrom(style.codeblockDecoration),
       copyIconColor: ColorDto.maybeFrom(style.copyIconColor),
+      codeBlock: TextStyleDto.maybeAs(style.codeBlock),
     );
   }
 
@@ -339,6 +342,7 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
           other?.codeblockDecoration,
       copyIconColor:
           copyIconColor?.merge(other?.copyIconColor) ?? other?.copyIconColor,
+      codeBlock: codeBlock?.merge(other?.codeBlock) ?? other?.codeBlock,
     );
   }
 
@@ -349,11 +353,18 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
       codeblockPadding: codeblockPadding?.resolve(mix) as EdgeInsets?,
       codeblockDecoration: codeblockDecoration?.resolve(mix),
       copyIconColor: copyIconColor?.resolve(mix),
+      codeBlock: codeBlock?.resolve(mix),
     );
   }
 
   @override
-  get props => [codeSpan, codeblockPadding, codeblockDecoration, copyIconColor];
+  get props => [
+        codeSpan,
+        codeblockPadding,
+        codeblockDecoration,
+        copyIconColor,
+        codeBlock
+      ];
 }
 
 class TableBorderDto extends Dto<TableBorder> with Mergeable<TableBorderDto> {

@@ -1,29 +1,104 @@
-import '../models/config_model.dart';
-import '../models/slide_options_model.dart';
+import 'package:json_schema/json_schema.dart';
 
-Map<String, dynamic> get jsonSchema => {
+import '../models/schema_error_model.dart';
+import 'deep_merge.dart';
+
+final projectSchemeValidator = JsonSchema.create(_jsonSchema(_baseConfig));
+final schemaValidator = JsonSchema.create(
+  _jsonSchema(deepMerge(_baseConfig, _slideOptions)),
+);
+
+SchemaError parseErrorObject(ValidationError error) {
+  final instancePath = error.instancePath ?? '';
+  final message = error.message;
+
+  var location = instancePath.replaceAll('/', '.');
+  final propertyName = location.split('.').last;
+
+  if (location.startsWith('.')) {
+    location = location.substring(1);
+  }
+
+  dynamic value;
+  ErrorType errorType = ErrorType.unknown;
+
+  if (message.startsWith('unallowed additional property')) {
+    errorType = ErrorType.unallowedAdditionalProperty;
+    value = message.replaceAll('unallowed additional property', '').trim();
+  } else if (message.startsWith('enum violated')) {
+    errorType = ErrorType.enumViolated;
+    // "enum violated rightf"
+    value = message.split('enum violated').last.trim();
+  } else if (message.startsWith('required prop missing:')) {
+    errorType = ErrorType.requiredPropMissing;
+    // "required prop missing: name from {position: rightf, argfs: {title: Awesome Widget, height: 200.02, width: 500.02}}"
+    value = message
+        .replaceAll('required prop missing:', '')
+        .split('from')
+        .first
+        .trim();
+  } else if (message.startsWith('type:')) {
+    errorType = ErrorType.invalidType;
+    // extract the type value from the message
+    // "type: wanted [string] got 5"
+
+    final type = message.split('[').last.split(']').first;
+    value = message.split('got').last.trim();
+
+    value = '$value, expected $type.';
+  }
+
+  return SchemaError(
+    location: location,
+    propertyName: propertyName,
+    value: value,
+    errorType: errorType,
+  );
+}
+
+String getCleanErrorMessage(SchemaError error) {
+  switch (error.errorType) {
+    case ErrorType.unallowedAdditionalProperty:
+      return "Location: ${error.location}. Unallowed additional property: ${error.value}.";
+    case ErrorType.enumViolated:
+      return "Location: ${error.location}. wrong value: ${error.value}.";
+    case ErrorType.requiredPropMissing:
+      return "Location: ${error.location}. Required property missing: ${error.value}.";
+    case ErrorType.invalidType:
+      return "Location: ${error.location}. Invalid type: ${error.value}.";
+    default:
+      return 'Unknown error type.';
+  }
+}
+
+String composeErrorMessage(List<SchemaError> errors) {
+  return errors.map(getCleanErrorMessage).join('\n');
+}
+
+Map<String, dynamic> get _baseConfig => {
+      "layout": {r"$ref": "#/definitions/LayoutType"},
+      "background": {"type": "string"},
+      "alignment": {r"$ref": "#/definitions/ContentAlignment"},
+      "style": {"type": "string"},
+      "transition": {r"$ref": "#/definitions/TransitionOptions"},
+    };
+
+Map<String, dynamic> get _slideOptions => {
+      "title": {"type": "string"},
+      "content": {"type": "string"},
+      "widget": {r"$ref": "#/definitions/WidgetOptions"},
+      "image": {r"$ref": "#/definitions/ImageOptions"},
+    };
+
+Map<String, dynamic> _jsonSchema(Map<String, dynamic> options) => {
       "type": "object",
       "additionalProperties": false,
-      "properties": {
-        "title": {"type": "string"},
-        "layout": {r"$ref": "#/definitions/LayoutType"},
-        "background": {"type": "string"},
-        "alignment": {r"$ref": "#/definitions/ContentAlignment"},
-        "content": {"type": "string"},
-        "style": {"type": "string"},
-        "widget": {r"$ref": "#/definitions/WidgetOptions"},
-        "image": {r"$ref": "#/definitions/ImageOptions"},
-        "transition": {
-          "oneOf": [
-            {r"$ref": "#/definitions/TransitionType"},
-            {r"$ref": "#/definitions/TransitionOptions"}
-          ]
-        },
-      },
+      "properties": options,
+      "required": [],
       "definitions": {
         "LayoutPosition": {
           "type": "string",
-          "enum": ["left", "right", "top", "bottom"]
+          "enum": ["left", "right", "top", "bottom"],
         },
         "ContentAlignment": {
           "type": "string",
@@ -135,6 +210,7 @@ Map<String, dynamic> get jsonSchema => {
         },
         "TransitionOptions": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "type": {r"$ref": "#/definitions/TransitionType"},
             "duration": {"type": "integer"},
@@ -145,6 +221,7 @@ Map<String, dynamic> get jsonSchema => {
         },
         "ImageOptions": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "src": {"type": "string"},
             "fit": {r"$ref": "#/definitions/ImageFit"},
@@ -154,6 +231,7 @@ Map<String, dynamic> get jsonSchema => {
         },
         "WidgetOptions": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "name": {"type": "string"},
             "args": {"type": "object", "additionalProperties": true},
@@ -163,93 +241,3 @@ Map<String, dynamic> get jsonSchema => {
         },
       },
     };
-
-class SlideValidator {
-  static const String _errorPrefix = '❌ Error: ';
-  static const String _successPrefix = '✅ Valid: ';
-
-  List<String> validate(List<Map<String, dynamic>> slides) {
-    List<String> validationMessages = [];
-    void errorMessage(String message, int index) {
-      validationMessages.add('$_errorPrefix Slide ${index + 1} $message');
-    }
-
-    for (int i = 0; i < slides.length; i++) {
-      Map<String, dynamic> slide = slides[i];
-
-      // Validate required fields
-      if (!slide.containsKey('content')) {
-        errorMessage('is missing required field "content".', i);
-      }
-
-      // Validate optional fields
-      if (slide.containsKey('layout')) {
-        final layout = slide['layout'];
-
-        if (LayoutTypes.values.contains(layout)) {
-          errorMessage('has an invalid "layout" value: $layout', i);
-        }
-      }
-
-      if (slide.containsKey('background')) {
-        final background = slide['background'];
-        if (background is! String) {
-          errorMessage('has an invalid "background" value: $background', i);
-        }
-      }
-
-      if (slide.containsKey('options')) {
-        Map<String, dynamic> options = slide['options'];
-        if (options.containsKey('position')) {
-          final value = options['position'];
-          if (!LayoutPosition.values.contains(value)) {
-            errorMessage('has an invalid "position" value: $value', i);
-          }
-        }
-        if (options.containsKey('args')) {
-          final value = options['args'];
-          if (value is! Map<String, dynamic>) {
-            errorMessage('has an invalid "args" value: $value', i);
-          }
-        }
-      }
-
-      if (slide.containsKey('alignment')) {
-        final value = slide['alignment'];
-        if (!ContentAlignment.values.contains(value)) {
-          errorMessage('has an invalid "alignment" value: $value', i);
-        }
-      }
-
-      if (slide.containsKey('style')) {
-        final value = slide['style'];
-        if (value! is String) {
-          errorMessage('has an invalid "style" value: $value', i);
-        }
-      }
-
-      if (slide.containsKey('transition')) {
-        final value = slide['transition'];
-        if (value is String) {
-          if (!TransitionType.values.contains(value)) {}
-        }
-      }
-
-      if (slide.containsKey('image')) {
-        Map<String, dynamic> image = slide['image'];
-        if (!image.containsKey('src') ||
-            !image.containsKey('fit') ||
-            !image.containsKey('position')) {
-          validationMessages.add(
-              '$_errorPrefix Slide ${i + 1} is missing required fields in "image".');
-        }
-      }
-    }
-
-    if (validationMessages.isEmpty) {
-      validationMessages.add('$_successPrefix All slides are valid.');
-    }
-
-    return validationMessages;
-  }
-}

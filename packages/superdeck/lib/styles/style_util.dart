@@ -47,11 +47,10 @@ Style get defaultStyle => Style.create([
       $.table.tableCellPadding.all(12),
       $.table.tableBorder.all(color: Colors.grey, width: 2),
       $.table.tableRowDecoration.color(Colors.grey.withOpacity(0.1)),
-      $.code.textStyle.as(monoTextStyle),
+      $.code.codeSpan.as(monoTextStyle),
       $.code.codeblockPadding.all(24),
-      $.code.codeblockDecoration.color(Colors.transparent),
-      $.code.codeblockDecoration.border.color(Colors.grey),
-      $.code.codeblockDecoration.border.width(2),
+      $.code.codeblockDecoration.color(const Color.fromARGB(255, 23, 23, 23)),
+
       $.code.codeblockDecoration.borderRadius.circular(10),
       $.blockquote.blockquote.as(serifTextStyle),
       $.blockquote.blockquotePadding.bottom(12),
@@ -106,6 +105,12 @@ class SlideStyleUtility<T extends SpecAttribute>
   BoxSpecUtility<T> get contentContainer {
     return BoxSpecUtility(
       (value) => only(contentContainer: value),
+    );
+  }
+
+  ImageUtility<T> get image {
+    return ImageUtility(
+      (value) => only(image: value),
     );
   }
 
@@ -199,6 +204,7 @@ class SlideStyleUtility<T extends SpecAttribute>
     BoxSpecAttribute? outerContainer,
     BoxSpecAttribute? contentContainer,
     MdDividerDto? divider,
+    ImageSpecAttribute? image,
   }) {
     return builder(
       SlideSpecAttribute(
@@ -220,6 +226,7 @@ class SlideStyleUtility<T extends SpecAttribute>
         outerContainer: outerContainer,
         contentContainer: contentContainer,
         divider: divider,
+        image: image,
       ),
     );
   }
@@ -473,8 +480,12 @@ class MdCodeUtil<T extends StyleAttribute>
     extends DtoUtility<T, MdCodeDto, MdCode> {
   const MdCodeUtil(super.builder) : super(valueToDto: MdCodeDto.from);
 
-  TextStyleUtility<T> get textStyle {
-    return TextStyleUtility<T>((value) => only(textStyle: value));
+  TextStyleUtility<T> get codeSpan {
+    return TextStyleUtility<T>((value) => only(codeSpan: value));
+  }
+
+  TextStyleUtility<T> get codeBlock {
+    return TextStyleUtility<T>((value) => only(codeBlock: value));
   }
 
   SpacingUtility<T> get codeblockPadding {
@@ -484,24 +495,27 @@ class MdCodeUtil<T extends StyleAttribute>
   BoxDecorationUtility<T> get codeblockDecoration {
     return BoxDecorationUtility<T>((value) => only(codeblockDecoration: value));
   }
+  // codeSpan
 
   ColorUtility<T> get copyIconColor {
     return ColorUtility<T>((value) => only(copyIconColor: value));
   }
 
   T only({
-    TextStyleDto? textStyle,
+    TextStyleDto? codeSpan,
     SpacingDto? codeblockPadding,
     BoxDecorationDto? codeblockDecoration,
     double? blockSpacing,
     ColorDto? copyIconColor,
+    TextStyleDto? codeBlock,
   }) {
     return builder(
       MdCodeDto(
-        codeSpan: textStyle,
+        codeSpan: codeSpan,
         codeblockPadding: codeblockPadding,
         codeblockDecoration: codeblockDecoration,
         copyIconColor: copyIconColor,
+        codeBlock: codeBlock,
       ),
     );
   }

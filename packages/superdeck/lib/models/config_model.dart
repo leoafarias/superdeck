@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../superdeck.dart';
+import 'schema_error_model.dart';
 import 'slide_options_model.dart';
 import 'syntax_tag.dart';
 
@@ -10,39 +11,75 @@ class LayoutTypes {
   LayoutTypes._();
   static const image = 'image';
   static const simple = 'simple';
-  static const preview = 'preview';
+  static const widget = 'widget';
   static const twoColumn = 'two_column';
   static const twoColumnHeader = 'two_column_header';
+  static const schemaError = 'schema_error';
   static const invalid = 'invalid';
 
   static const values = [
     image,
     simple,
-    preview,
+    widget,
     twoColumn,
     twoColumnHeader,
-    invalid,
+    schemaError,
   ];
 }
 
-@MappableClass(discriminatorKey: 'layout')
-abstract class SlideOptions with SlideOptionsMappable {
-  final String? title;
-  final String layout;
+abstract class BaseOptions {
   final String? background;
-  final ContentAlignment alignment;
-  final String content;
+  final ContentAlignment? alignment;
   final String? style;
   final TransitionOptions? transition;
+
+  const BaseOptions({
+    required this.background,
+    required this.alignment,
+    required this.style,
+    required this.transition,
+  });
+}
+
+@MappableClass()
+class ProjectOptions extends BaseOptions with ProjectOptionsMappable {
+  const ProjectOptions({
+    super.background,
+    super.alignment,
+    super.style,
+    super.transition,
+  });
+
+  static const fromMap = ProjectOptionsMapper.fromMap;
+  static const fromJson = ProjectOptionsMapper.fromJson;
+
+  const ProjectOptions.defaults()
+      : this(
+          background: '#fff',
+          alignment: ContentAlignment.center,
+          style: 'default',
+          transition: const TransitionOptions(
+            type: TransitionType.slideInRight,
+            duration: Duration(milliseconds: 150),
+          ),
+        );
+}
+
+@MappableClass(discriminatorKey: 'layout')
+abstract class SlideOptions extends BaseOptions with SlideOptionsMappable {
+  final String? title;
+  final String layout;
+
+  final String content;
 
   const SlideOptions({
     required this.layout,
     required this.title,
-    this.background,
+    required super.background,
     this.content = '',
-    required this.style,
-    this.alignment = ContentAlignment.centerLeft,
-    required this.transition,
+    required super.style,
+    required super.transition,
+    required super.alignment,
   });
 
   SlideVariant get styleVariant {
@@ -86,7 +123,7 @@ class ImageSlideOptions extends SlideOptions with ImageSlideOptionsMappable {
   static const fromJson = ImageSlideOptionsMapper.fromJson;
 }
 
-@MappableClass(discriminatorValue: LayoutTypes.preview)
+@MappableClass(discriminatorValue: LayoutTypes.widget)
 class PreviewSlideOptions extends SlideOptions
     with PreviewSlideOptionsMappable {
   final PreviewOptions widget;
@@ -99,7 +136,7 @@ class PreviewSlideOptions extends SlideOptions
     super.content,
     super.alignment,
     super.transition,
-  }) : super(layout: LayoutTypes.preview);
+  }) : super(layout: LayoutTypes.widget);
 
   static const fromMap = PreviewSlideOptionsMapper.fromMap;
   static const fromJson = PreviewSlideOptionsMapper.fromJson;
@@ -155,7 +192,25 @@ class TwoColumnHeaderSlideOptions extends SlideOptions
   static const fromJson = TwoColumnHeaderSlideOptionsMapper.fromJson;
 }
 
-@MappableClass(discriminatorValue: LayoutTypes.invalid)
+@MappableClass(discriminatorValue: LayoutTypes.schemaError)
+class SchemaErrorSlideOptions extends SlideOptions
+    with SchemaErrorSlideOptionsMappable {
+  final List<SchemaError> errors;
+  const SchemaErrorSlideOptions({
+    super.title,
+    super.background,
+    super.alignment,
+    super.content,
+    super.style,
+    super.transition,
+    required this.errors,
+  }) : super(layout: LayoutTypes.schemaError);
+
+  static const fromMap = SchemaErrorSlideOptionsMapper.fromMap;
+  static const fromJson = SchemaErrorSlideOptionsMapper.fromJson;
+}
+
+@MappableClass(discriminatorValue: LayoutTypes.schemaError)
 class InvalidSlideOptions extends SlideOptions
     with InvalidSlideOptionsMappable {
   const InvalidSlideOptions({

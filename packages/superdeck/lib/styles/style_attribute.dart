@@ -23,6 +23,7 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
   final BoxSpecAttribute? innerContainer;
   final BoxSpecAttribute? outerContainer;
   final BoxSpecAttribute? contentContainer;
+  final ImageSpecAttribute? image;
 
   const SlideSpecAttribute({
     this.textStyle,
@@ -43,6 +44,7 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
     this.innerContainer,
     this.outerContainer,
     this.contentContainer,
+    this.image,
   });
 
   @override
@@ -69,6 +71,7 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
           outerContainer?.merge(other?.outerContainer) ?? other?.outerContainer,
       contentContainer: contentContainer?.merge(other?.contentContainer) ??
           other?.contentContainer,
+      image: image?.merge(other?.image) ?? other?.image,
     );
   }
 
@@ -93,6 +96,7 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
       innerContainer: innerContainer?.resolve(mix),
       outerContainer: outerContainer?.resolve(mix),
       contentContainer: contentContainer?.resolve(mix),
+      image: image?.resolve(mix),
     );
   }
 
@@ -116,5 +120,6 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
         innerContainer,
         outerContainer,
         contentContainer,
+        image,
       ];
 }

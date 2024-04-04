@@ -10,13 +10,13 @@ import '../atoms/markdown_viewer.dart';
 class SlideContent extends StatelessWidget {
   const SlideContent({
     required this.content,
-    required this.alignment,
+    this.alignment,
     super.key,
   });
 
   final String content;
 
-  final ContentAlignment alignment;
+  final ContentAlignment? alignment;
 
   @override
   Widget build(context) {
@@ -25,6 +25,8 @@ class SlideContent extends StatelessWidget {
     final container = spec.contentContainer;
 
     final assets = SuperDeck.assetsOf(context);
+
+    final alignment = this.alignment ?? ContentAlignment.centerLeft;
 
     return SlideConstraintBuilder(
       builder: (context, size) {

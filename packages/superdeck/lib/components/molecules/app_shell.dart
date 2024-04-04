@@ -11,6 +11,7 @@ import '../../helpers/constants.dart';
 import '../../helpers/loader.dart';
 import '../../helpers/local_storage.dart';
 import '../../helpers/syntax_highlighter.dart';
+import '../../helpers/validation.dart';
 import '../../models/config_model.dart';
 import '../../models/slide_asset_model.dart';
 import '../../superdeck.dart';
@@ -40,6 +41,8 @@ class SuperDeckApp extends StatefulWidget {
 class _SuperDeckAppState extends State<SuperDeckApp> {
   late List<SlideOptions> _slides = [];
   late List<SlideAsset> _assets = [];
+  late ProjectOptions _projectOptions = const ProjectOptions();
+  SchemaErrorSlideOptions? _projectError;
   bool _loading = true;
 
   List<StreamSubscription<WatchEvent>> _subscriptions = [];
@@ -78,81 +81,97 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     }
   }
 
+  void _setProjectConfig(ProjectOptions projectOptions) {
+    // only update state if project options are different
+    if (projectOptions != _projectOptions) {
+      setState(() {
+        _projectOptions = projectOptions;
+      });
+    }
+  }
+
   Future<void> _loadData() async {
     try {
       await SuperDeckApp.initialize();
+
+      final project = await _loadProjectConfig();
+      final (slides, assets) = await SlidesLoader.loadFromStorage();
+
+      setState(() {
+        _slides = slides;
+        _assets = assets;
+        _projectOptions = project;
+      });
       if (kDebugMode) {
-        await SlidesLoader().load();
-        await _loadFromLocalStorage();
         _subscriptions = _registerLocalListener();
-      } else {
-        await _loadFromRootBundle();
       }
     } catch (e) {
-      print('Error loading data: $e');
+      print('Error loading slides: $e');
     } finally {
-      _loading = false;
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  Future<ProjectOptions> _loadProjectConfig() async {
+    try {
+      final project = await SlidesLoader.loadProjectConfig();
+      _projectError = null;
+      return project;
+    } on Exception catch (_) {
+      final errors = await SlidesLoader.validateProjectConfig();
+
+      _projectError = SchemaErrorSlideOptions(
+        content: '# Project configuration error',
+        errors: errors.map(parseErrorObject).toList(),
+      );
+
+      return const ProjectOptions();
     }
   }
 
   StreamSubscription<WatchEvent> _createFileListener(
     File file,
-    void Function(String) callback,
+    void Function() callback,
   ) {
     return FileWatcher(file.path).events.listen((event) async {
       if (event.type == ChangeType.MODIFY) {
-        callback(await file.readAsString());
+        callback();
       }
     });
   }
 
   List<StreamSubscription<WatchEvent>> _registerLocalListener() {
     return [
-      _createFileListener(config.slidesJsonFile, (contents) {
-        _setSlides(parseSlides(contents));
-      }),
-      _createFileListener(config.assetsJsonFile, (contents) {
-        _setAssets(parseAssets(contents));
-      }),
-      _createFileListener(config.slidesMarkdownFile, (contents) async {
+      _createFileListener(config.slidesMarkdownFile, () async {
         print('Reloading slides');
-        await SlidesLoader().load();
+        final (slides, assets) = await SlidesLoader.load();
+        _setSlides(slides);
+        _setAssets(assets);
+      }),
+      _createFileListener(config.projectConfigFile, () async {
+        print('Reloading project config');
+        _setProjectConfig(await _loadProjectConfig());
       })
     ];
   }
 
-  Future<void> _loadFromLocalStorage() async {
-    final slidesJson = await config.slidesJsonFile.readAsString();
-    final assetsJson = await config.assetsJsonFile.readAsString();
-
-    setState(() {
-      _slides = parseSlides(slidesJson);
-      _assets = parseAssets(assetsJson);
-    });
-  }
-
-  Future<void> _loadFromRootBundle() async {
-    final slidesJson = await rootBundle.loadString(config.slidesJsonFile.path);
-    final assetsJson = await rootBundle.loadString(config.assetsJsonFile.path);
-
-    setState(() {
-      _slides = parseSlides(slidesJson);
-      _assets = parseAssets(assetsJson);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final slides = _projectError != null ? [_projectError!] : _slides;
     return ScaledApp(builder: (context, _) {
       return MaterialApp(
         theme: darkTheme,
+        debugShowCheckedModeBanner: false,
         home: MixTheme(
           data: MixThemeData.withMaterial(),
           child: Scaffold(
             body: SuperDeck(
-              slides: _slides,
+              slides: slides,
               assets: _assets,
               style: defaultStyle.merge(widget.style),
+              projectOptions: _projectOptions,
               previewBuilders: widget.previewBuilders ?? {},
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
@@ -202,6 +221,8 @@ class _AppShellState extends State<AppShell> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+
+      // _pageController.jumpToPage(page);
     }
 
     void nextPage() => goToPage(_pageController.page!.toInt() + 1);

@@ -22,6 +22,7 @@ class SlideView extends StatelessWidget {
     final style = SuperDeck.styleOf(context).applyVariant(config.styleVariant);
 
     return SlideTransitionWidget(
+      key: ValueKey(config.transition),
       transition: config.transition,
       child: LayoutBuilder(builder: (context, constraints) {
         return Stack(
@@ -36,6 +37,7 @@ class SlideView extends StatelessWidget {
               height: constraints.maxHeight,
               child: StyledWidgetBuilder(
                   style: style.animate(),
+                  key: ValueKey(config),
                   builder: (mix) {
                     final spec = SlideSpec.of(mix);
                     return AnimatedMixedBox(
@@ -53,6 +55,8 @@ class SlideView extends StatelessWidget {
                             return TwoColumnSlide(config: config);
                           } else if (config is TwoColumnHeaderSlideOptions) {
                             return TwoColumnHeaderSlide(config: config);
+                          } else if (config is SchemaErrorSlideOptions) {
+                            return SchemaErrorSlide(config: config);
                           } else if (config is InvalidSlideOptions) {
                             return InvalidSlide(config: config);
                           } else {

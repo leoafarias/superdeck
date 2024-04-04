@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
@@ -55,7 +53,11 @@ class _AnimatedMarkdownViewerState
       enableKbd: false,
       syntaxExtensions: const [],
       elementBuilders: const [],
-      imageBuilder: _imageBuilder(widget.assets, widget.constraints),
+      imageBuilder: _imageBuilder(
+        widget.assets,
+        widget.constraints,
+        widget.spec.image,
+      ),
       onTapLink: (href, title) {
         print({href, title});
       },
@@ -69,15 +71,16 @@ class _AnimatedMarkdownViewerState
         ];
       },
       copyIconBuilder: (bool copied) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Icon(
-            copied ? Icons.check : Icons.copy,
-            color: _styleTween!.evaluate(animation).code?.copyIconColor ??
-                Colors.grey,
-            size: 28,
-          ),
-        );
+        return const SizedBox();
+        // return Padding(
+        //   padding: const EdgeInsets.all(16.0),
+        //   child: Icon(
+        //     copied ? Icons.check : Icons.copy,
+        //     color: _styleTween!.evaluate(animation).code?.copyIconColor ??
+        //         Colors.grey,
+        //     size: 24,
+        //   ),
+        // );
       },
       styleSheet: _styleTween!.evaluate(animation).toStyle(),
     );
@@ -93,49 +96,40 @@ class SlideSpecTween extends Tween<SlideSpec> {
 }
 
 Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
-    List<SlideAsset> assets, BoxConstraints constraints) {
+    List<SlideAsset> assets, BoxConstraints constraints, ImageSpec spec) {
   return (
     Uri uri,
     MarkdownImageInfo info,
   ) {
-    const boxFit = BoxFit.contain;
-
-    Widget current;
+    ImageProvider provider;
 
     //  check if its a local path or a network path
     if (uri.scheme == 'http' || uri.scheme == 'https') {
-      current = CachedNetworkImage(
-        imageUrl: uri.toString(),
-        fit: boxFit,
-        width: info.width,
-        height: info.height,
+      provider = CachedNetworkImageProvider(
+        uri.toString(),
       );
     } else {
       final asset =
-          assets.firstWhereOrNull((element) => element.name == uri.toString());
+          assets.firstWhereOrNull((element) => element.path == uri.toString());
 
-      if (asset?.base64 != null) {
-        current = Image(
-          image: MemoryImage(
-            base64Decode(asset!.base64),
-          ),
-          fit: boxFit,
-          width: info.width,
-          height: info.height,
-          key: ValueKey(asset.base64),
-          gaplessPlayback: true,
+      if (asset != null) {
+        provider = MemoryImage(
+          asset.bytes,
         );
       } else {
-        current = Image.asset(
+        provider = AssetImage(
           uri.toString(),
-          fit: boxFit,
-          width: info.width,
-          height: info.height,
         );
       }
     }
 
-    return ConstrainedBox(constraints: constraints, child: current);
+    return ConstrainedBox(
+      constraints: constraints,
+      child: MixedImage(
+        spec: spec,
+        image: provider,
+      ),
+    );
   };
 }
 

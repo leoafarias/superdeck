@@ -13,6 +13,7 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   static SlideAssetMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideAssetMapper._());
+      MapperContainer.globals.useAll([Uint8ListMapper()]);
     }
     return _instance!;
   }
@@ -20,19 +21,29 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   @override
   final String id = 'SlideAsset';
 
-  static String _$name(SlideAsset v) => v.name;
-  static const Field<SlideAsset, String> _f$name = Field('name', _$name);
-  static String _$base64(SlideAsset v) => v.base64;
-  static const Field<SlideAsset, String> _f$base64 = Field('base64', _$base64);
+  static Uint8List _$bytes(SlideAsset v) => v.bytes;
+  static const Field<SlideAsset, Uint8List> _f$bytes = Field('bytes', _$bytes);
+  static double _$width(SlideAsset v) => v.width;
+  static const Field<SlideAsset, double> _f$width = Field('width', _$width);
+  static double _$height(SlideAsset v) => v.height;
+  static const Field<SlideAsset, double> _f$height = Field('height', _$height);
+  static String _$path(SlideAsset v) => v.path;
+  static const Field<SlideAsset, String> _f$path = Field('path', _$path);
 
   @override
   final MappableFields<SlideAsset> fields = const {
-    #name: _f$name,
-    #base64: _f$base64,
+    #bytes: _f$bytes,
+    #width: _f$width,
+    #height: _f$height,
+    #path: _f$path,
   };
 
   static SlideAsset _instantiate(DecodingData data) {
-    return SlideAsset(name: data.dec(_f$name), base64: data.dec(_f$base64));
+    return SlideAsset(
+        bytes: data.dec(_f$bytes),
+        width: data.dec(_f$width),
+        height: data.dec(_f$height),
+        path: data.dec(_f$path));
   }
 
   @override
@@ -88,7 +99,7 @@ extension SlideAssetValueCopy<$R, $Out>
 
 abstract class SlideAssetCopyWith<$R, $In extends SlideAsset, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? name, String? base64});
+  $R call({Uint8List? bytes, double? width, double? height, String? path});
   SlideAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -101,12 +112,19 @@ class _SlideAssetCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SlideAsset> $mapper =
       SlideAssetMapper.ensureInitialized();
   @override
-  $R call({String? name, String? base64}) => $apply(FieldCopyWithData(
-      {if (name != null) #name: name, if (base64 != null) #base64: base64}));
+  $R call({Uint8List? bytes, double? width, double? height, String? path}) =>
+      $apply(FieldCopyWithData({
+        if (bytes != null) #bytes: bytes,
+        if (width != null) #width: width,
+        if (height != null) #height: height,
+        if (path != null) #path: path
+      }));
   @override
   SlideAsset $make(CopyWithData data) => SlideAsset(
-      name: data.get(#name, or: $value.name),
-      base64: data.get(#base64, or: $value.base64));
+      bytes: data.get(#bytes, or: $value.bytes),
+      width: data.get(#width, or: $value.width),
+      height: data.get(#height, or: $value.height),
+      path: data.get(#path, or: $value.path));
 
   @override
   SlideAssetCopyWith<$R2, SlideAsset, $Out2> $chain<$R2, $Out2>(

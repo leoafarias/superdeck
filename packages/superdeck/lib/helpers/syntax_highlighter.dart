@@ -19,7 +19,7 @@ class SyntaxHighlight {
     if (supportedLanguages.contains(language)) {
       return [Highlighter(language: language, theme: _theme).highlight(source)];
     } else {
-      final prism = Prism();
+      final prism = Prism(style: const PrismStyle.dark());
       return prism.render(source, language);
     }
   }

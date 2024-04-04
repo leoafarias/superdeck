@@ -277,6 +277,7 @@ class MdCode extends Spec<MdCode> {
   final TextStyle? codeSpan;
   final EdgeInsets? codeblockPadding;
   final BoxDecoration? codeblockDecoration;
+  final TextStyle? codeBlock;
 
   final Color? copyIconColor;
 
@@ -285,6 +286,7 @@ class MdCode extends Spec<MdCode> {
     required this.codeblockPadding,
     required this.codeblockDecoration,
     required this.copyIconColor,
+    required this.codeBlock,
   });
 
   @override
@@ -299,6 +301,7 @@ class MdCode extends Spec<MdCode> {
       codeblockDecoration: BoxDecoration.lerp(
           codeblockDecoration, other?.codeblockDecoration, t),
       copyIconColor: Color.lerp(copyIconColor, other?.copyIconColor, t),
+      codeBlock: TextStyle.lerp(codeBlock, other?.codeBlock, t),
     );
   }
 
@@ -308,17 +311,25 @@ class MdCode extends Spec<MdCode> {
     EdgeInsets? codeblockPadding,
     BoxDecoration? codeblockDecoration,
     Color? copyIconColor,
+    TextStyle? codeBlock,
   }) {
     return MdCode(
       codeSpan: codeSpan ?? this.codeSpan,
       codeblockPadding: codeblockPadding ?? this.codeblockPadding,
       codeblockDecoration: codeblockDecoration ?? this.codeblockDecoration,
       copyIconColor: copyIconColor ?? this.copyIconColor,
+      codeBlock: codeBlock ?? this.codeBlock,
     );
   }
 
   @override
-  get props => [codeSpan, codeblockPadding, codeblockDecoration, copyIconColor];
+  get props => [
+        codeSpan,
+        codeblockPadding,
+        codeblockDecoration,
+        copyIconColor,
+        codeBlock
+      ];
 }
 
 class SlideSpec extends Spec<SlideSpec> {
@@ -340,6 +351,7 @@ class SlideSpec extends Spec<SlideSpec> {
   final BoxSpec? _innerContainer;
   final BoxSpec? _outerContainer;
   final BoxSpec? _contentContainer;
+  final ImageSpec? _image;
 
   const SlideSpec({
     required this.textStyle,
@@ -360,9 +372,11 @@ class SlideSpec extends Spec<SlideSpec> {
     required BoxSpec? innerContainer,
     required BoxSpec? outerContainer,
     required BoxSpec? contentContainer,
+    required ImageSpec? image,
   })  : _outerContainer = outerContainer,
         _innerContainer = innerContainer,
-        _contentContainer = contentContainer;
+        _contentContainer = contentContainer,
+        _image = image;
 
   const SlideSpec.empty()
       : textStyle = null,
@@ -382,7 +396,8 @@ class SlideSpec extends Spec<SlideSpec> {
         code = null,
         _innerContainer = null,
         _outerContainer = null,
-        _contentContainer = null;
+        _contentContainer = null,
+        _image = null;
 
   static SlideSpec of(MixData mix) {
     return mix.resolvableOf<SlideSpec, SlideSpecAttribute>() ??
@@ -394,6 +409,8 @@ class SlideSpec extends Spec<SlideSpec> {
   BoxSpec get outerContainer => _outerContainer ?? const BoxSpec.empty();
 
   BoxSpec get contentContainer => _contentContainer ?? const BoxSpec.empty();
+
+  ImageSpec get image => _image ?? const ImageSpec.empty();
 
   @override
   SlideSpec lerp(
@@ -421,6 +438,7 @@ class SlideSpec extends Spec<SlideSpec> {
       innerContainer: _innerContainer?.lerp(other._innerContainer, t),
       outerContainer: _outerContainer?.lerp(other._outerContainer, t),
       contentContainer: _contentContainer?.lerp(other._contentContainer, t),
+      image: _image?.lerp(other._image, t),
     );
   }
 
@@ -492,6 +510,7 @@ class SlideSpec extends Spec<SlideSpec> {
     BoxSpec? innerContainer,
     BoxSpec? outerContainer,
     BoxSpec? contentContainer,
+    ImageSpec? image,
   }) {
     return SlideSpec(
       textStyle: textStyle ?? this.textStyle,
@@ -512,6 +531,7 @@ class SlideSpec extends Spec<SlideSpec> {
       innerContainer: innerContainer ?? _innerContainer,
       outerContainer: outerContainer ?? _outerContainer,
       contentContainer: contentContainer ?? _contentContainer,
+      image: image ?? _image,
     );
   }
 
@@ -535,5 +555,6 @@ class SlideSpec extends Spec<SlideSpec> {
         _innerContainer,
         _outerContainer,
         _contentContainer,
+        _image,
       ];
 }
