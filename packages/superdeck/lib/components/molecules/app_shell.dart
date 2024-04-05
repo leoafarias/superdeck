@@ -31,7 +31,7 @@ class SuperDeckApp extends StatefulWidget {
   }
 
   final Style? style;
-  final Map<String, PreviewWidgetBuilder>? previewBuilders;
+  final Map<String, WidgetDisplayBuilder>? previewBuilders;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -172,7 +172,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
               assets: _assets,
               style: defaultStyle.merge(widget.style),
               projectOptions: _projectOptions,
-              previewBuilders: widget.previewBuilders ?? {},
+              widgetBuilders: widget.previewBuilders ?? {},
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : const AppShell(),

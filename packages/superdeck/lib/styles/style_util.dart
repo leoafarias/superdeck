@@ -36,30 +36,33 @@ Style get defaultStyle => Style.create([
       // $.paragraph.textStyle.as(baseTextStyle),
       $.paragraph.padding.bottom(12),
       $.link.color(Colors.blue),
-      $.list.list.as(baseTextStyle),
-      $.list.listItem.as(baseTextStyle),
-      $.list.listItemMarker.as(baseTextStyle),
-      $.list.listItemMarkerTrailingSpace(12),
-      $.list.listItemMinIndent(12),
-      $.table.table.as(baseTextStyle),
-      $.table.tableHead.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
-      $.table.tableBody.as(baseTextStyle),
-      $.table.tableCellPadding.all(12),
-      $.table.tableBorder.all(color: Colors.grey, width: 2),
-      $.table.tableRowDecoration.color(Colors.grey.withOpacity(0.1)),
-      $.code.codeSpan.as(monoTextStyle),
-      $.code.codeblockPadding.all(24),
-      $.code.codeblockDecoration.color(const Color.fromARGB(255, 23, 23, 23)),
+      $.list.textStyle.as(baseTextStyle),
+      $.list.item.as(baseTextStyle),
+      $.list.itemMarker.as(baseTextStyle),
+      $.list.itemMarkerTrailingSpace(12),
+      $.list.itemMinIndent(12),
+      $.table.textStyle.as(baseTextStyle),
+      $.table.head.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
+      $.table.body.as(baseTextStyle),
+      $.table.cellPadding.all(12),
+      $.table.border.all(color: Colors.grey, width: 2),
+      $.table.rowDecoration.color(Colors.grey.withOpacity(0.1)),
+      $.code.span.as(monoTextStyle),
+      $.code.padding.all(24),
+      $.code.decoration.color(const Color.fromARGB(255, 23, 23, 23)),
 
-      $.code.codeblockDecoration.borderRadius.circular(10),
-      $.blockquote.blockquote.as(serifTextStyle),
-      $.blockquote.blockquotePadding.bottom(12),
-      $.blockquote.blockquoteContentPadding.left(12),
-      $.blockquote.blockquoteDecoration.border.left.color(Colors.grey),
-      $.blockquote.blockquoteDecoration.border.left.width(4),
+      $.code.decoration.borderRadius.circular(10),
+      $.blockquote.textStyle.as(serifTextStyle),
+      $.blockquote.textStyle.fontSize(26),
+      $.blockquote.padding.bottom(12),
+      $.blockquote.contentPadding.left(30),
+      $.blockquote.decoration.border.left.color(Colors.grey),
+      $.blockquote.decoration.border.left.width(4),
+
       $.divider.height(1),
       $.divider.color(Colors.grey),
       $.divider.thickness(2),
+      $.image.fit.contain(),
     ]);
 
 const $ = SlideStyleUtility(selfBuilder);
@@ -290,9 +293,9 @@ class MdDividerUtil<T extends StyleAttribute>
   }) {
     return builder(
       MdDividerDto(
-        dividerHeight: dividerHeight,
-        dividerColor: dividerColor,
-        dividerThickness: dividerThickness,
+        height: dividerHeight,
+        color: dividerColor,
+        thickness: dividerThickness,
       ),
     );
   }
@@ -302,41 +305,40 @@ class MdListUtil<T extends StyleAttribute>
     extends DtoUtility<T, MdListDto, MdList> {
   const MdListUtil(super.builder) : super(valueToDto: MdListDto.from);
 
-  TextStyleUtility<T> get list {
-    return TextStyleUtility<T>((value) => only(list: value));
+  TextStyleUtility<T> get textStyle {
+    return TextStyleUtility<T>((value) => only(textStyle: value));
   }
 
-  TextStyleUtility<T> get listItem {
-    return TextStyleUtility<T>((value) => only(listItem: value));
+  TextStyleUtility<T> get item {
+    return TextStyleUtility<T>((value) => only(item: value));
   }
 
-  TextStyleUtility<T> get listItemMarker {
-    return TextStyleUtility<T>((value) => only(listItemMarker: value));
+  TextStyleUtility<T> get itemMarker {
+    return TextStyleUtility<T>((value) => only(itemMarker: value));
   }
 
-  DoubleUtility<T> get listItemMarkerTrailingSpace {
-    return DoubleUtility<T>(
-        (value) => only(listItemMarkerTrailingSpace: value));
+  DoubleUtility<T> get itemMarkerTrailingSpace {
+    return DoubleUtility<T>((value) => only(itemMarkerTrailingSpace: value));
   }
 
-  DoubleUtility<T> get listItemMinIndent {
-    return DoubleUtility<T>((value) => only(listItemMinIndent: value));
+  DoubleUtility<T> get itemMinIndent {
+    return DoubleUtility<T>((value) => only(itemMinIndent: value));
   }
 
   T only({
-    TextStyleDto? list,
-    TextStyleDto? listItem,
-    TextStyleDto? listItemMarker,
-    double? listItemMinIndent,
-    double? listItemMarkerTrailingSpace,
+    TextStyleDto? textStyle,
+    TextStyleDto? item,
+    TextStyleDto? itemMarker,
+    double? itemMinIndent,
+    double? itemMarkerTrailingSpace,
   }) {
     return builder(
       MdListDto(
-        list: list,
-        listItem: listItem,
-        listItemMarker: listItemMarker,
-        listItemMinIndent: listItemMinIndent,
-        listItemMarkerTrailingSpace: listItemMarkerTrailingSpace,
+        textStyle: textStyle,
+        item: item,
+        itemMarker: itemMarker,
+        itemMinIndent: itemMinIndent,
+        itemMarkerTrailingSpace: itemMarkerTrailingSpace,
       ),
     );
   }
@@ -417,60 +419,60 @@ class MdTableUtil<T extends StyleAttribute>
     extends DtoUtility<T, MdTableDto, MdTable> {
   const MdTableUtil(super.builder) : super(valueToDto: MdTableDto.from);
 
-  TextStyleUtility<T> get table {
-    return TextStyleUtility<T>((value) => only(table: value));
+  TextStyleUtility<T> get textStyle {
+    return TextStyleUtility<T>((value) => only(textStyle: value));
   }
 
-  TextStyleUtility<T> get tableHead {
-    return TextStyleUtility<T>((value) => only(tableHead: value));
+  TextStyleUtility<T> get head {
+    return TextStyleUtility<T>((value) => only(head: value));
   }
 
-  TextStyleUtility<T> get tableBody {
-    return TextStyleUtility<T>((value) => only(tableBody: value));
+  TextStyleUtility<T> get body {
+    return TextStyleUtility<T>((value) => only(body: value));
   }
 
-  TableBorderUtility<T> get tableBorder {
-    return TableBorderUtility<T>((value) => only(tableBorder: value));
+  TableBorderUtility<T> get border {
+    return TableBorderUtility<T>((value) => only(border: value));
   }
 
-  BoxDecorationUtility<T> get tableRowDecoration {
-    return BoxDecorationUtility<T>((value) => only(tableRowDecoration: value));
+  BoxDecorationUtility<T> get rowDecoration {
+    return BoxDecorationUtility<T>((value) => only(rowDecoration: value));
   }
 
-  MarkdownAlternatingUtility<T> get tableRowDecorationAlternating {
+  MarkdownAlternatingUtility<T> get rowDecorationAlternating {
     return MarkdownAlternatingUtility<T>(
-      (value) => only(tableRowDecorationAlternating: value),
+      (value) => only(rowDecorationAlternating: value),
     );
   }
 
-  SpacingUtility<T> get tableCellPadding {
-    return SpacingUtility<T>((value) => only(tableCellPadding: value));
+  SpacingUtility<T> get cellPadding {
+    return SpacingUtility<T>((value) => only(cellPadding: value));
   }
 
   T tableColumnWidth(TableColumnWidth value) {
-    return only(tableColumnWidth: value);
+    return only(columnWidth: value);
   }
 
   T only({
-    TextStyleDto? table,
-    TextStyleDto? tableHead,
-    TextStyleDto? tableBody,
-    TableBorderDto? tableBorder,
-    BoxDecorationDto? tableRowDecoration,
-    MarkdownAlternating? tableRowDecorationAlternating,
-    SpacingDto? tableCellPadding,
-    TableColumnWidth? tableColumnWidth,
+    TextStyleDto? textStyle,
+    TextStyleDto? head,
+    TextStyleDto? body,
+    TableBorderDto? border,
+    BoxDecorationDto? rowDecoration,
+    MarkdownAlternating? rowDecorationAlternating,
+    SpacingDto? cellPadding,
+    TableColumnWidth? columnWidth,
   }) {
     return builder(
       MdTableDto(
-        table: table,
-        tableHead: tableHead,
-        tableBody: tableBody,
-        tableBorder: tableBorder,
-        tableRowDecoration: tableRowDecoration,
-        tableRowDecorationAlternating: tableRowDecorationAlternating,
-        tableCellPadding: tableCellPadding,
-        tableColumnWidth: tableColumnWidth,
+        textStyle: textStyle,
+        head: head,
+        body: body,
+        border: border,
+        rowDecoration: rowDecoration,
+        rowDecorationAlternating: rowDecorationAlternating,
+        cellPadding: cellPadding,
+        columnWidth: columnWidth,
       ),
     );
   }
@@ -480,20 +482,20 @@ class MdCodeUtil<T extends StyleAttribute>
     extends DtoUtility<T, MdCodeDto, MdCode> {
   const MdCodeUtil(super.builder) : super(valueToDto: MdCodeDto.from);
 
-  TextStyleUtility<T> get codeSpan {
-    return TextStyleUtility<T>((value) => only(codeSpan: value));
+  TextStyleUtility<T> get span {
+    return TextStyleUtility<T>((value) => only(span: value));
   }
 
-  TextStyleUtility<T> get codeBlock {
-    return TextStyleUtility<T>((value) => only(codeBlock: value));
+  TextStyleUtility<T> get textStyle {
+    return TextStyleUtility<T>((value) => only(textStyle: value));
   }
 
-  SpacingUtility<T> get codeblockPadding {
-    return SpacingUtility<T>((value) => only(codeblockPadding: value));
+  SpacingUtility<T> get padding {
+    return SpacingUtility<T>((value) => only(padding: value));
   }
 
-  BoxDecorationUtility<T> get codeblockDecoration {
-    return BoxDecorationUtility<T>((value) => only(codeblockDecoration: value));
+  BoxDecorationUtility<T> get decoration {
+    return BoxDecorationUtility<T>((value) => only(decoration: value));
   }
   // codeSpan
 
@@ -502,20 +504,19 @@ class MdCodeUtil<T extends StyleAttribute>
   }
 
   T only({
-    TextStyleDto? codeSpan,
-    SpacingDto? codeblockPadding,
-    BoxDecorationDto? codeblockDecoration,
-    double? blockSpacing,
+    TextStyleDto? span,
+    SpacingDto? padding,
+    BoxDecorationDto? decoration,
     ColorDto? copyIconColor,
-    TextStyleDto? codeBlock,
+    TextStyleDto? textStyle,
   }) {
     return builder(
       MdCodeDto(
-        codeSpan: codeSpan,
-        codeblockPadding: codeblockPadding,
-        codeblockDecoration: codeblockDecoration,
+        span: span,
+        padding: padding,
+        decoration: decoration,
         copyIconColor: copyIconColor,
-        codeBlock: codeBlock,
+        textStyle: textStyle,
       ),
     );
   }
@@ -526,35 +527,34 @@ class MdBlockQuoteUtil<T extends StyleAttribute>
   const MdBlockQuoteUtil(super.builder)
       : super(valueToDto: MdBlockQuoteDto.from);
 
-  TextStyleUtility<T> get blockquote {
-    return TextStyleUtility<T>((value) => only(blockquote: value));
+  TextStyleUtility<T> get textStyle {
+    return TextStyleUtility<T>((value) => only(textStyle: value));
   }
 
-  BoxDecorationUtility<T> get blockquoteDecoration {
-    return BoxDecorationUtility<T>(
-        (value) => only(blockquoteDecoration: value));
+  BoxDecorationUtility<T> get decoration {
+    return BoxDecorationUtility<T>((value) => only(decoration: value));
   }
 
-  SpacingUtility<T> get blockquotePadding {
-    return SpacingUtility<T>((value) => only(blockquotePadding: value));
+  SpacingUtility<T> get padding {
+    return SpacingUtility<T>((value) => only(padding: value));
   }
 
-  SpacingUtility<T> get blockquoteContentPadding {
-    return SpacingUtility<T>((value) => only(blockquoteContentPadding: value));
+  SpacingUtility<T> get contentPadding {
+    return SpacingUtility<T>((value) => only(contentPadding: value));
   }
 
   T only({
-    TextStyleDto? blockquote,
-    BoxDecorationDto? blockquoteDecoration,
-    SpacingDto? blockquotePadding,
-    SpacingDto? blockquoteContentPadding,
+    TextStyleDto? textStyle,
+    BoxDecorationDto? decoration,
+    SpacingDto? padding,
+    SpacingDto? contentPadding,
   }) {
     return builder(
       MdBlockQuoteDto(
-        blockquote: blockquote,
-        blockquoteDecoration: blockquoteDecoration,
-        blockquotePadding: blockquotePadding,
-        blockquoteContentPadding: blockquoteContentPadding,
+        textStyle: textStyle,
+        decoration: decoration,
+        padding: padding,
+        contentPadding: contentPadding,
       ),
     );
   }

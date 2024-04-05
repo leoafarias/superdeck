@@ -47,8 +47,8 @@ class SlideView extends StatelessWidget {
                         return Builder(builder: (_) {
                           if (config is SimpleSlideOptions) {
                             return SimpleSlide(config: config);
-                          } else if (config is PreviewSlideOptions) {
-                            return PreviewSlide(config: config);
+                          } else if (config is WidgetSlideOptions) {
+                            return WidgetSlide(config: config);
                           } else if (config is ImageSlideOptions) {
                             return ImageSlide(config: config);
                           } else if (config is TwoColumnSlideOptions) {

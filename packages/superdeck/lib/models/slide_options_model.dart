@@ -6,12 +6,14 @@ part 'slide_options_model.mapper.dart';
 @MappableClass()
 class ImageOptions with ImageOptionsMappable {
   final String src;
-  final ImageFit fit;
+  final ImageFit? fit;
   final LayoutPosition position;
+  final int flex;
 
   const ImageOptions({
     required this.src,
-    this.fit = ImageFit.cover,
+    this.fit,
+    this.flex = 1,
     this.position = LayoutPosition.left,
   });
 
@@ -155,19 +157,21 @@ class SingleOptionHook extends MappingHook {
 }
 
 @MappableClass()
-class PreviewOptions with PreviewOptionsMappable {
+class WidgetOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
   final LayoutPosition position;
+  final int flex;
 
-  const PreviewOptions({
+  const WidgetOptions({
     required this.name,
     this.args = const {},
+    this.flex = 1,
     this.position = LayoutPosition.left,
   });
 
-  static const fromMap = PreviewOptionsMapper.fromMap;
-  static const fromJson = PreviewOptionsMapper.fromJson;
+  static const fromMap = WidgetOptionsMapper.fromMap;
+  static const fromJson = WidgetOptionsMapper.fromJson;
 }
 
 @MappableEnum()

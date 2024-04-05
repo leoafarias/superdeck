@@ -64,8 +64,8 @@ class SchemaErrorSlide extends SlideWidget<SchemaErrorSlideOptions> {
       $.h2.padding.top(0),
       $.h2.textStyle.bold(),
       $.h2.textStyle.color(Colors.yellow),
-      $.code.codeSpan.color(Colors.yellow),
-      $.code.codeSpan.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
+      $.code.span.color(Colors.yellow),
+      $.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
     );
 
     final errorMessages = config.errors.map((error) {
@@ -121,41 +121,41 @@ class InvalidSlide extends SlideWidget<InvalidSlideOptions> {
   }
 }
 
-class PreviewOptionsProvider extends InheritedWidget {
-  final PreviewOptions options;
+class WidgetOptionsProvider extends InheritedWidget {
+  final WidgetOptions options;
 
-  const PreviewOptionsProvider({
+  const WidgetOptionsProvider({
     required this.options,
     required super.child,
     super.key,
   });
 
-  static PreviewOptionsProvider of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<PreviewOptionsProvider>()!;
+  static WidgetOptionsProvider of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<WidgetOptionsProvider>()!;
   }
 
   @override
-  bool updateShouldNotify(PreviewOptionsProvider oldWidget) {
+  bool updateShouldNotify(WidgetOptionsProvider oldWidget) {
     return options != oldWidget.options;
   }
 }
 
-class PreviewSlide extends SlideWidget<PreviewSlideOptions> {
-  const PreviewSlide({required super.config, super.key});
+class WidgetSlide extends SlideWidget<WidgetSlideOptions> {
+  const WidgetSlide({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
     final options = config.widget;
     final position = options.position;
 
-    final previewBuilders = SuperDeck.previewBuildersOf(context);
+    final previewBuilders = SuperDeck.widgetBuildersOf(context);
 
     final builder = previewBuilders[options.name]?.builder;
 
     List<Widget> children = [
       Expanded(child: buildContent()),
       Expanded(
+        flex: options.flex,
         child: SlideConstraintBuilder(builder: (context, size) {
           return MediaQuery(
             data: MediaQueryData(size: size),
@@ -164,7 +164,7 @@ class PreviewSlide extends SlideWidget<PreviewSlideOptions> {
                 maxWidth: size.width,
                 maxHeight: size.height,
               ),
-              child: PreviewOptionsProvider(
+              child: WidgetOptionsProvider(
                 options: options,
                 child: CodePreview(
                   child: builder?.call(context, options),
@@ -207,20 +207,42 @@ class ImageSlide extends SlideWidget<ImageSlideOptions> {
     final image = config.image;
     final position = image.position;
 
-    Widget buildImage() {
-      return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(image.src),
-            fit: image.fit.toBoxFit(),
-          ),
-        ),
-      );
-    }
+    final mix = MixProvider.of(context);
+    final spec = SlideSpec.of(mix);
 
+    ImageProvider provider;
+
+    if (image.src.startsWith('http') || image.src.startsWith('https')) {
+      provider = CachedNetworkImageProvider(image.src);
+    } else {
+      provider = AssetImage(image.src);
+    }
+    // final Color? color;
+    // final ImageRepeat? repeat;
+    // final BoxFit? fit;
+    // final AlignmentGeometry? alignment;
+    // final Rect? centerSlice;
+    // final FilterQuality? filterQuality;
+    // final BlendMode? colorBlendMode;
     List<Widget> children = [
       Expanded(child: buildContent()),
-      Expanded(child: buildImage())
+      Expanded(
+        flex: config.image.flex,
+        child: Container(
+          height: spec.image.height,
+          width: spec.image.width,
+          alignment: spec.image.alignment,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: provider,
+              centerSlice: spec.image.centerSlice,
+              repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
+              filterQuality: spec.image.filterQuality ?? FilterQuality.low,
+              fit: config.image.fit?.toBoxFit() ?? spec.image.fit,
+            ),
+          ),
+        ),
+      )
     ];
 
     if (position == LayoutPosition.left || position == LayoutPosition.top) {

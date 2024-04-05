@@ -45,27 +45,27 @@ class MdTextStyleDto extends Dto<MdTextStyle> with Mergeable<MdTextStyleDto> {
 }
 
 class MdListDto extends Dto<MdList> with Mergeable<MdListDto> {
-  final TextStyleDto? list;
-  final TextStyleDto? listItem;
-  final TextStyleDto? listItemMarker;
-  final double? listItemMarkerTrailingSpace;
-  final double? listItemMinIndent;
+  final TextStyleDto? textStyle;
+  final TextStyleDto? item;
+  final TextStyleDto? itemMarker;
+  final double? itemMarkerTrailingSpace;
+  final double? itemMinIndent;
 
   MdListDto({
-    this.list,
-    this.listItem,
-    this.listItemMarker,
-    this.listItemMinIndent,
-    this.listItemMarkerTrailingSpace,
+    this.textStyle,
+    this.item,
+    this.itemMarker,
+    this.itemMinIndent,
+    this.itemMarkerTrailingSpace,
   });
 
   static MdListDto from(MdList style) {
     return MdListDto(
-      list: TextStyleDto.maybeAs(style.list),
-      listItem: TextStyleDto.maybeAs(style.listItem),
-      listItemMinIndent: style.listItemMinIndent,
-      listItemMarker: TextStyleDto.maybeAs(style.listItemMarker),
-      listItemMarkerTrailingSpace: style.listItemMarkerTrailingSpace,
+      textStyle: TextStyleDto.maybeAs(style.list),
+      item: TextStyleDto.maybeAs(style.listItem),
+      itemMinIndent: style.listItemMinIndent,
+      itemMarker: TextStyleDto.maybeAs(style.listItemMarker),
+      itemMarkerTrailingSpace: style.listItemMarkerTrailingSpace,
     );
   }
 
@@ -76,53 +76,47 @@ class MdListDto extends Dto<MdList> with Mergeable<MdListDto> {
   @override
   MdListDto merge(MdListDto? other) {
     return MdListDto(
-      list: list?.merge(other?.list) ?? other?.list,
-      listItem: listItem?.merge(other?.listItem) ?? other?.listItem,
-      listItemMinIndent: other?.listItemMinIndent ?? listItemMinIndent,
-      listItemMarker:
-          listItemMarker?.merge(other?.listItemMarker) ?? other?.listItemMarker,
-      listItemMarkerTrailingSpace:
-          other?.listItemMarkerTrailingSpace ?? listItemMarkerTrailingSpace,
+      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
+      item: item?.merge(other?.item) ?? other?.item,
+      itemMinIndent: other?.itemMinIndent ?? itemMinIndent,
+      itemMarker: itemMarker?.merge(other?.itemMarker) ?? other?.itemMarker,
+      itemMarkerTrailingSpace:
+          other?.itemMarkerTrailingSpace ?? itemMarkerTrailingSpace,
     );
   }
 
   @override
   MdList resolve(MixData mix) {
     return MdList(
-      list: list?.resolve(mix),
-      listItem: listItem?.resolve(mix),
-      listItemMinIndent: listItemMinIndent,
-      listItemMarker: listItemMarker?.resolve(mix),
-      listItemMarkerTrailingSpace: listItemMarkerTrailingSpace,
+      list: textStyle?.resolve(mix),
+      listItem: item?.resolve(mix),
+      listItemMinIndent: itemMinIndent,
+      listItemMarker: itemMarker?.resolve(mix),
+      listItemMarkerTrailingSpace: itemMarkerTrailingSpace,
     );
   }
 
   @override
-  get props => [
-        list,
-        listItem,
-        listItemMarker,
-        listItemMarkerTrailingSpace,
-        listItemMinIndent
-      ];
+  get props =>
+      [textStyle, item, itemMarker, itemMarkerTrailingSpace, itemMinIndent];
 }
 
 class MdDividerDto extends Dto<MdDivider> with Mergeable<MdDividerDto> {
-  final double? dividerHeight;
-  final ColorDto? dividerColor;
-  final double? dividerThickness;
+  final double? height;
+  final ColorDto? color;
+  final double? thickness;
 
   MdDividerDto({
-    this.dividerHeight,
-    this.dividerColor,
-    this.dividerThickness,
+    this.height,
+    this.color,
+    this.thickness,
   });
 
   static MdDividerDto from(MdDivider style) {
     return MdDividerDto(
-      dividerHeight: style.dividerHeight,
-      dividerColor: ColorDto.maybeFrom(style.dividerColor),
-      dividerThickness: style.dividerThickness,
+      height: style.dividerHeight,
+      color: ColorDto.maybeFrom(style.dividerColor),
+      thickness: style.dividerThickness,
     );
   }
 
@@ -133,48 +127,45 @@ class MdDividerDto extends Dto<MdDivider> with Mergeable<MdDividerDto> {
   @override
   MdDividerDto merge(MdDividerDto? other) {
     return MdDividerDto(
-      dividerHeight: other?.dividerHeight ?? dividerHeight,
-      dividerColor:
-          dividerColor?.merge(other?.dividerColor) ?? other?.dividerColor,
-      dividerThickness: other?.dividerThickness ?? dividerThickness,
+      height: other?.height ?? height,
+      color: color?.merge(other?.color) ?? other?.color,
+      thickness: other?.thickness ?? thickness,
     );
   }
 
   @override
   MdDivider resolve(MixData mix) {
     return MdDivider(
-      dividerHeight: dividerHeight,
-      dividerColor: dividerColor?.resolve(mix),
-      dividerThickness: dividerThickness,
+      dividerHeight: height,
+      dividerColor: color?.resolve(mix),
+      dividerThickness: thickness,
     );
   }
 
   @override
-  get props => [dividerHeight, dividerColor, dividerThickness];
+  get props => [height, color, thickness];
 }
 
 class MdBlockQuoteDto extends Dto<MdBlockQuote>
     with Mergeable<MdBlockQuoteDto> {
-  final TextStyleDto? blockquote;
-  final BoxDecorationDto? blockquoteDecoration;
-  final SpacingDto? blockquotePadding;
-  final SpacingDto? blockquoteContentPadding;
+  final TextStyleDto? textStyle;
+  final BoxDecorationDto? decoration;
+  final SpacingDto? padding;
+  final SpacingDto? contentPadding;
 
   MdBlockQuoteDto({
-    this.blockquote,
-    this.blockquoteDecoration,
-    this.blockquotePadding,
-    this.blockquoteContentPadding,
+    this.textStyle,
+    this.decoration,
+    this.padding,
+    this.contentPadding,
   });
 
   static MdBlockQuoteDto from(MdBlockQuote style) {
     return MdBlockQuoteDto(
-      blockquote: TextStyleDto.maybeAs(style.blockquote),
-      blockquoteDecoration:
-          BoxDecorationDto.maybeFrom(style.blockquoteDecoration),
-      blockquotePadding: SpacingDto.maybeFrom(style.blockquotePadding),
-      blockquoteContentPadding:
-          SpacingDto.maybeFrom(style.blockquoteContentPadding),
+      textStyle: TextStyleDto.maybeAs(style.blockquote),
+      decoration: BoxDecorationDto.maybeFrom(style.blockquoteDecoration),
+      padding: SpacingDto.maybeFrom(style.blockquotePadding),
+      contentPadding: SpacingDto.maybeFrom(style.blockquoteContentPadding),
     );
   }
 
@@ -185,69 +176,60 @@ class MdBlockQuoteDto extends Dto<MdBlockQuote>
   @override
   MdBlockQuoteDto merge(MdBlockQuoteDto? other) {
     return MdBlockQuoteDto(
-      blockquote: blockquote?.merge(other?.blockquote) ?? other?.blockquote,
-      blockquoteDecoration: blockquoteDecoration
-              ?.merge(other?.blockquoteDecoration) as BoxDecorationDto? ??
-          other?.blockquoteDecoration,
-      blockquotePadding: blockquotePadding?.merge(other?.blockquotePadding) ??
-          other?.blockquotePadding,
-      blockquoteContentPadding:
-          blockquoteContentPadding?.merge(other?.blockquoteContentPadding) ??
-              other?.blockquoteContentPadding,
+      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
+      decoration: decoration?.merge(other?.decoration) as BoxDecorationDto? ??
+          other?.decoration,
+      padding: padding?.merge(other?.padding) ?? other?.padding,
+      contentPadding:
+          contentPadding?.merge(other?.contentPadding) ?? other?.contentPadding,
     );
   }
 
   @override
   MdBlockQuote resolve(MixData mix) {
     return MdBlockQuote(
-      blockquote: blockquote?.resolve(mix),
-      blockquoteDecoration: blockquoteDecoration?.resolve(mix),
-      blockquotePadding: blockquotePadding?.resolve(mix) as EdgeInsets?,
-      blockquoteContentPadding:
-          blockquoteContentPadding?.resolve(mix) as EdgeInsets?,
+      blockquote: textStyle?.resolve(mix),
+      blockquoteDecoration: decoration?.resolve(mix),
+      blockquotePadding: padding?.resolve(mix) as EdgeInsets?,
+      blockquoteContentPadding: contentPadding?.resolve(mix) as EdgeInsets?,
     );
   }
 
   @override
-  get props => [
-        blockquote,
-        blockquoteDecoration,
-        blockquotePadding,
-        blockquoteContentPadding
-      ];
+  get props => [textStyle, decoration, padding, contentPadding];
 }
 
 class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
-  final TextStyleDto? table;
-  final TextStyleDto? tableHead;
-  final TextStyleDto? tableBody;
-  final TableBorderDto? tableBorder;
-  final BoxDecorationDto? tableRowDecoration;
-  final MarkdownAlternating? tableRowDecorationAlternating;
-  final SpacingDto? tableCellPadding;
-  final TableColumnWidth? tableColumnWidth;
+  final TextStyleDto? textStyle;
+  final TextStyleDto? head;
+  final TextStyleDto? body;
+  final TableBorderDto? border;
+  final BoxDecorationDto? rowDecoration;
+  final MarkdownAlternating? rowDecorationAlternating;
+  final SpacingDto? cellPadding;
+  final TableColumnWidth? columnWidth;
 
   MdTableDto({
-    this.table,
-    this.tableHead,
-    this.tableBody,
-    this.tableBorder,
-    this.tableRowDecoration,
-    this.tableRowDecorationAlternating,
-    this.tableCellPadding,
-    this.tableColumnWidth,
+    this.textStyle,
+    this.head,
+    this.body,
+    this.border,
+    this.rowDecoration,
+    this.rowDecorationAlternating,
+    this.cellPadding,
+    this.columnWidth,
   });
 
   static MdTableDto from(MdTable style) {
     return MdTableDto(
-      table: TextStyleDto.maybeAs(style.table),
-      tableHead: TextStyleDto.maybeAs(style.tableHead),
-      tableBody: TextStyleDto.maybeAs(style.tableBody),
-      tableBorder: TableBorderDto.maybeFrom(style.tableBorder),
-      tableRowDecoration: BoxDecorationDto.maybeFrom(style.tableRowDecoration),
-      tableRowDecorationAlternating: style.tableRowDecorationAlternating,
-      tableCellPadding: SpacingDto.maybeFrom(style.tableCellPadding),
-      tableColumnWidth: style.tableColumnWidth,
+      textStyle: TextStyleDto.maybeAs(style.table),
+      head: TextStyleDto.maybeAs(style.tableHead),
+      body: TextStyleDto.maybeAs(style.tableBody),
+      border: TableBorderDto.maybeFrom(style.tableBorder),
+      rowDecoration: BoxDecorationDto.maybeFrom(style.tableRowDecoration),
+      rowDecorationAlternating: style.tableRowDecorationAlternating,
+      cellPadding: SpacingDto.maybeFrom(style.tableCellPadding),
+      columnWidth: style.tableColumnWidth,
     );
   }
 
@@ -258,72 +240,70 @@ class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
   @override
   MdTableDto merge(MdTableDto? other) {
     return MdTableDto(
-      table: table?.merge(other?.table) ?? other?.table,
-      tableHead: tableHead?.merge(other?.tableHead) ?? other?.tableHead,
-      tableBody: tableBody?.merge(other?.tableBody) ?? other?.tableBody,
-      tableBorder: other?.tableBorder ?? tableBorder,
-      tableRowDecoration: tableRowDecoration?.merge(other?.tableRowDecoration)
-              as BoxDecorationDto? ??
-          other?.tableRowDecoration,
-      tableRowDecorationAlternating:
-          other?.tableRowDecorationAlternating ?? tableRowDecorationAlternating,
-      tableCellPadding: tableCellPadding?.merge(other?.tableCellPadding) ??
-          other?.tableCellPadding,
-      tableColumnWidth: other?.tableColumnWidth ?? tableColumnWidth,
+      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
+      head: head?.merge(other?.head) ?? other?.head,
+      body: body?.merge(other?.body) ?? other?.body,
+      border: other?.border ?? border,
+      rowDecoration:
+          rowDecoration?.merge(other?.rowDecoration) as BoxDecorationDto? ??
+              other?.rowDecoration,
+      rowDecorationAlternating:
+          other?.rowDecorationAlternating ?? rowDecorationAlternating,
+      cellPadding: cellPadding?.merge(other?.cellPadding) ?? other?.cellPadding,
+      columnWidth: other?.columnWidth ?? columnWidth,
     );
   }
 
   @override
   MdTable resolve(MixData mix) {
     return MdTable(
-      table: table?.resolve(mix),
-      tableHead: tableHead?.resolve(mix),
-      tableBody: tableBody?.resolve(mix),
-      tableBorder: tableBorder?.resolve(mix),
-      tableRowDecoration: tableRowDecoration?.resolve(mix),
-      tableRowDecorationAlternating: tableRowDecorationAlternating,
-      tableCellPadding: tableCellPadding?.resolve(mix) as EdgeInsets?,
-      tableColumnWidth: tableColumnWidth,
+      table: textStyle?.resolve(mix),
+      tableHead: head?.resolve(mix),
+      tableBody: body?.resolve(mix),
+      tableBorder: border?.resolve(mix),
+      tableRowDecoration: rowDecoration?.resolve(mix),
+      tableRowDecorationAlternating: rowDecorationAlternating,
+      tableCellPadding: cellPadding?.resolve(mix) as EdgeInsets?,
+      tableColumnWidth: columnWidth,
     );
   }
 
   @override
   get props => [
-        table,
-        tableHead,
-        tableBody,
-        tableBorder,
-        tableRowDecoration,
-        tableRowDecorationAlternating,
-        tableCellPadding,
-        tableColumnWidth,
+        textStyle,
+        head,
+        body,
+        border,
+        rowDecoration,
+        rowDecorationAlternating,
+        cellPadding,
+        columnWidth,
       ];
 }
 
 class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
-  final TextStyleDto? codeSpan;
-  final TextStyleDto? codeBlock;
-  final SpacingDto? codeblockPadding;
-  final BoxDecorationDto? codeblockDecoration;
+  final TextStyleDto? span;
+  final TextStyleDto? textStyle;
+  final SpacingDto? padding;
+  final BoxDecorationDto? decoration;
 
   final ColorDto? copyIconColor;
 
   MdCodeDto({
-    this.codeBlock,
-    this.codeSpan,
-    this.codeblockPadding,
-    this.codeblockDecoration,
+    this.textStyle,
+    this.span,
+    this.padding,
+    this.decoration,
     this.copyIconColor,
   });
 
   static MdCodeDto from(MdCode style) {
     return MdCodeDto(
-      codeSpan: TextStyleDto.maybeAs(style.codeSpan),
-      codeblockPadding: SpacingDto.maybeFrom(style.codeblockPadding),
-      codeblockDecoration:
-          BoxDecorationDto.maybeFrom(style.codeblockDecoration),
+      span: TextStyleDto.maybeAs(style.codeSpan),
+      padding: SpacingDto.maybeFrom(style.codeblockPadding),
+      decoration: BoxDecorationDto.maybeFrom(style.codeblockDecoration),
       copyIconColor: ColorDto.maybeFrom(style.copyIconColor),
-      codeBlock: TextStyleDto.maybeAs(style.codeBlock),
+      textStyle: TextStyleDto.maybeAs(style.codeBlock),
     );
   }
 
@@ -334,37 +314,29 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
   @override
   MdCodeDto merge(MdCodeDto? other) {
     return MdCodeDto(
-      codeSpan: codeSpan?.merge(other?.codeSpan) ?? other?.codeSpan,
-      codeblockPadding: codeblockPadding?.merge(other?.codeblockPadding) ??
-          other?.codeblockPadding,
-      codeblockDecoration: codeblockDecoration
-              ?.merge(other?.codeblockDecoration) as BoxDecorationDto? ??
-          other?.codeblockDecoration,
+      span: span?.merge(other?.span) ?? other?.span,
+      padding: padding?.merge(other?.padding) ?? other?.padding,
+      decoration: decoration?.merge(other?.decoration) as BoxDecorationDto? ??
+          other?.decoration,
       copyIconColor:
           copyIconColor?.merge(other?.copyIconColor) ?? other?.copyIconColor,
-      codeBlock: codeBlock?.merge(other?.codeBlock) ?? other?.codeBlock,
+      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
     );
   }
 
   @override
   MdCode resolve(MixData mix) {
     return MdCode(
-      codeSpan: codeSpan?.resolve(mix),
-      codeblockPadding: codeblockPadding?.resolve(mix) as EdgeInsets?,
-      codeblockDecoration: codeblockDecoration?.resolve(mix),
+      codeSpan: span?.resolve(mix),
+      codeblockPadding: padding?.resolve(mix) as EdgeInsets?,
+      codeblockDecoration: decoration?.resolve(mix),
       copyIconColor: copyIconColor?.resolve(mix),
-      codeBlock: codeBlock?.resolve(mix),
+      codeBlock: textStyle?.resolve(mix),
     );
   }
 
   @override
-  get props => [
-        codeSpan,
-        codeblockPadding,
-        codeblockDecoration,
-        copyIconColor,
-        codeBlock
-      ];
+  get props => [span, padding, decoration, copyIconColor, textStyle];
 }
 
 class TableBorderDto extends Dto<TableBorder> with Mergeable<TableBorderDto> {

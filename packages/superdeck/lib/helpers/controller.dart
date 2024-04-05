@@ -11,17 +11,17 @@ typedef DeckData = (
   List<SlideAsset> assets,
 );
 
-class PreviewWidgetBuilder extends StatelessWidget {
-  const PreviewWidgetBuilder({
+class WidgetDisplayBuilder extends StatelessWidget {
+  const WidgetDisplayBuilder({
     required this.builder,
     super.key,
   });
 
-  final Widget Function(BuildContext, PreviewOptions) builder;
+  final Widget Function(BuildContext, WidgetOptions) builder;
 
   @override
   Widget build(BuildContext context) {
-    final options = PreviewOptionsProvider.of(context).options;
+    final options = WidgetOptionsProvider.of(context).options;
     return builder(context, options);
   }
 }
@@ -29,7 +29,7 @@ class PreviewWidgetBuilder extends StatelessWidget {
 enum SuperDeckAspect {
   slides,
   assets,
-  previewBuilders,
+  widgetBuilders,
   style,
   projectOptions,
 }
@@ -38,14 +38,14 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
   final List<SlideOptions> slides;
   final List<SlideAsset> assets;
   final ProjectOptions projectOptions;
-  final Map<String, PreviewWidgetBuilder> previewBuilders;
+  final Map<String, WidgetDisplayBuilder> widgetBuilders;
   final Style style;
 
   const SuperDeck({
     super.key,
     required this.slides,
     required this.assets,
-    required this.previewBuilders,
+    required this.widgetBuilders,
     required this.style,
     required this.projectOptions,
     required super.child,
@@ -79,11 +79,11 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
         .style;
   }
 
-  static Map<String, PreviewWidgetBuilder> previewBuildersOf(
+  static Map<String, WidgetDisplayBuilder> widgetBuildersOf(
       BuildContext context) {
     return InheritedModel.inheritFrom<SuperDeck>(context,
-            aspect: SuperDeckAspect.previewBuilders)!
-        .previewBuilders;
+            aspect: SuperDeckAspect.widgetBuilders)!
+        .widgetBuilders;
   }
 
   @override
@@ -91,7 +91,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
     return oldWidget.slides != slides ||
         oldWidget.assets != assets ||
         oldWidget.style != style ||
-        oldWidget.previewBuilders != previewBuilders;
+        oldWidget.widgetBuilders != widgetBuilders;
   }
 
   @override
@@ -105,8 +105,8 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
         oldWidget.assets != assets) {
       return true;
     }
-    if (dependencies.contains(SuperDeckAspect.previewBuilders) &&
-        oldWidget.previewBuilders != previewBuilders) {
+    if (dependencies.contains(SuperDeckAspect.widgetBuilders) &&
+        oldWidget.widgetBuilders != widgetBuilders) {
       return true;
     }
     if (dependencies.contains(SuperDeckAspect.style) &&

@@ -96,38 +96,39 @@ class SlideSpecTween extends Tween<SlideSpec> {
 }
 
 Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
-    List<SlideAsset> assets, BoxConstraints constraints, ImageSpec spec) {
+  List<SlideAsset> assets,
+  BoxConstraints constraints,
+  ImageSpec spec,
+) {
   return (
     Uri uri,
     MarkdownImageInfo info,
   ) {
     ImageProvider provider;
-
+    SlideAsset? asset;
     //  check if its a local path or a network path
     if (uri.scheme == 'http' || uri.scheme == 'https') {
-      provider = CachedNetworkImageProvider(
-        uri.toString(),
-      );
+      provider = CachedNetworkImageProvider(uri.toString());
     } else {
-      final asset =
-          assets.firstWhereOrNull((element) => element.path == uri.toString());
+      asset = assets.firstWhereOrNull(
+        (element) => element.path == uri.toString(),
+      );
 
       if (asset != null) {
-        provider = MemoryImage(
-          asset.bytes,
-        );
+        provider = MemoryImage(asset.bytes);
       } else {
-        provider = AssetImage(
-          uri.toString(),
-        );
+        provider = AssetImage(uri.toString());
       }
     }
 
     return ConstrainedBox(
       constraints: constraints,
       child: MixedImage(
-        spec: spec,
         image: provider,
+        spec: spec.copyWith(
+          width: info.width ?? spec.width,
+          height: info.height ?? spec.height,
+        ),
       ),
     );
   };

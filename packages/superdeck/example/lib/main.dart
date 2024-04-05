@@ -1,13 +1,15 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:superdeck/superdeck.dart';
 
 VariantAttribute get coverStyle {
   return SlideVariant.cover(
     $.h1.textStyle.fontSize(96),
     $.h1.textStyle.fontWeight.bold(),
-    $.paragraph.padding.right(300),
+
+    // $.paragraph.padding.right(300),
     $.paragraph.textStyle.fontSize(36),
     $.paragraph.textStyle.fontWeight.w100(),
     $.innerContainer.borderRadius.all(0),
@@ -19,19 +21,32 @@ VariantAttribute get coverStyle {
   );
 }
 
-Style get style {
-  return Style(
-    // $.textStyle.as(GoogleFonts.poppins()),
-    // $.code.textStyle.as(GoogleFonts.jetBrainsMono()),
-    coverStyle,
-
-    $.h1.textStyle.color.red(),
-    $.contentContainer.border(color: Colors.blue),
+VariantAttribute get quoteStyle {
+  return SlideVariant.quote(
+    $.blockquote.textStyle.as(GoogleFonts.notoSerif()),
+    $.blockquote.decoration.border.left(
+      width: 4,
+      color: Colors.red,
+    ),
+    $.h3.textStyle.as(GoogleFonts.notoSerif()),
+    $.h3.textStyle.fontSize(20),
   );
 }
 
-Map<String, PreviewWidgetBuilder> get previewBuilders => {
-      'slide': PreviewWidgetBuilder(
+Style get style {
+  return Style(
+    // $.textStyle.as(GoogleFonts.poppins()),
+    // $.code.codeSpan.as(GoogleFonts.jetBrainsMono()),
+    coverStyle,
+    quoteStyle,
+
+    // $.h1.textStyle.color.red(),
+    // $.contentContainer.border(color: Colors.blue),
+  );
+}
+
+Map<String, WidgetDisplayBuilder> get previewBuilders => {
+      'slide': WidgetDisplayBuilder(
         builder: (context, options) {
           final heightValue = options.args['height'] ?? 100.0;
           final widthValue = options.args['width'] ?? 100.0;
@@ -60,7 +75,7 @@ Map<String, PreviewWidgetBuilder> get previewBuilders => {
           );
         },
       ),
-      'markdown': PreviewWidgetBuilder(
+      'markdown': WidgetDisplayBuilder(
         builder: (context, options) {
           return Container(
             color: Colors.red,

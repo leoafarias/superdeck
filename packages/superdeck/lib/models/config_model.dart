@@ -124,11 +124,10 @@ class ImageSlideOptions extends SlideOptions with ImageSlideOptionsMappable {
 }
 
 @MappableClass(discriminatorValue: LayoutTypes.widget)
-class PreviewSlideOptions extends SlideOptions
-    with PreviewSlideOptionsMappable {
-  final PreviewOptions widget;
+class WidgetSlideOptions extends SlideOptions with WidgetSlideOptionsMappable {
+  final WidgetOptions widget;
 
-  const PreviewSlideOptions({
+  const WidgetSlideOptions({
     super.title,
     required this.widget,
     super.style,
@@ -138,8 +137,8 @@ class PreviewSlideOptions extends SlideOptions
     super.transition,
   }) : super(layout: LayoutTypes.widget);
 
-  static const fromMap = PreviewSlideOptionsMapper.fromMap;
-  static const fromJson = PreviewSlideOptionsMapper.fromJson;
+  static const fromMap = WidgetSlideOptionsMapper.fromMap;
+  static const fromJson = WidgetSlideOptionsMapper.fromJson;
 }
 
 @MappableClass(discriminatorValue: LayoutTypes.twoColumn)

@@ -163,7 +163,7 @@ class SlideOptionsMapper extends ClassMapperBase<SlideOptions> {
       MapperContainer.globals.use(_instance = SlideOptionsMapper._());
       SimpleSlideOptionsMapper.ensureInitialized();
       ImageSlideOptionsMapper.ensureInitialized();
-      PreviewSlideOptionsMapper.ensureInitialized();
+      WidgetSlideOptionsMapper.ensureInitialized();
       TwoColumnSlideOptionsMapper.ensureInitialized();
       TwoColumnHeaderSlideOptionsMapper.ensureInitialized();
       SchemaErrorSlideOptionsMapper.ensureInitialized();
@@ -625,16 +625,15 @@ class _ImageSlideOptionsCopyWithImpl<$R, $Out>
       _ImageSlideOptionsCopyWithImpl($value, $cast, t);
 }
 
-class PreviewSlideOptionsMapper
-    extends SubClassMapperBase<PreviewSlideOptions> {
-  PreviewSlideOptionsMapper._();
+class WidgetSlideOptionsMapper extends SubClassMapperBase<WidgetSlideOptions> {
+  WidgetSlideOptionsMapper._();
 
-  static PreviewSlideOptionsMapper? _instance;
-  static PreviewSlideOptionsMapper ensureInitialized() {
+  static WidgetSlideOptionsMapper? _instance;
+  static WidgetSlideOptionsMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = PreviewSlideOptionsMapper._());
+      MapperContainer.globals.use(_instance = WidgetSlideOptionsMapper._());
       SlideOptionsMapper.ensureInitialized().addSubMapper(_instance!);
-      PreviewOptionsMapper.ensureInitialized();
+      WidgetOptionsMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
     }
@@ -642,35 +641,35 @@ class PreviewSlideOptionsMapper
   }
 
   @override
-  final String id = 'PreviewSlideOptions';
+  final String id = 'WidgetSlideOptions';
 
-  static String? _$title(PreviewSlideOptions v) => v.title;
-  static const Field<PreviewSlideOptions, String> _f$title =
+  static String? _$title(WidgetSlideOptions v) => v.title;
+  static const Field<WidgetSlideOptions, String> _f$title =
       Field('title', _$title, opt: true);
-  static PreviewOptions _$widget(PreviewSlideOptions v) => v.widget;
-  static const Field<PreviewSlideOptions, PreviewOptions> _f$widget =
+  static WidgetOptions _$widget(WidgetSlideOptions v) => v.widget;
+  static const Field<WidgetSlideOptions, WidgetOptions> _f$widget =
       Field('widget', _$widget);
-  static String? _$style(PreviewSlideOptions v) => v.style;
-  static const Field<PreviewSlideOptions, String> _f$style =
+  static String? _$style(WidgetSlideOptions v) => v.style;
+  static const Field<WidgetSlideOptions, String> _f$style =
       Field('style', _$style, opt: true);
-  static String? _$background(PreviewSlideOptions v) => v.background;
-  static const Field<PreviewSlideOptions, String> _f$background =
+  static String? _$background(WidgetSlideOptions v) => v.background;
+  static const Field<WidgetSlideOptions, String> _f$background =
       Field('background', _$background, opt: true);
-  static String _$content(PreviewSlideOptions v) => v.content;
-  static const Field<PreviewSlideOptions, String> _f$content =
+  static String _$content(WidgetSlideOptions v) => v.content;
+  static const Field<WidgetSlideOptions, String> _f$content =
       Field('content', _$content, opt: true, def: '');
-  static ContentAlignment? _$alignment(PreviewSlideOptions v) => v.alignment;
-  static const Field<PreviewSlideOptions, ContentAlignment> _f$alignment =
+  static ContentAlignment? _$alignment(WidgetSlideOptions v) => v.alignment;
+  static const Field<WidgetSlideOptions, ContentAlignment> _f$alignment =
       Field('alignment', _$alignment, opt: true);
-  static TransitionOptions? _$transition(PreviewSlideOptions v) => v.transition;
-  static const Field<PreviewSlideOptions, TransitionOptions> _f$transition =
+  static TransitionOptions? _$transition(WidgetSlideOptions v) => v.transition;
+  static const Field<WidgetSlideOptions, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$layout(PreviewSlideOptions v) => v.layout;
-  static const Field<PreviewSlideOptions, String> _f$layout =
+  static String _$layout(WidgetSlideOptions v) => v.layout;
+  static const Field<WidgetSlideOptions, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
 
   @override
-  final MappableFields<PreviewSlideOptions> fields = const {
+  final MappableFields<WidgetSlideOptions> fields = const {
     #title: _f$title,
     #widget: _f$widget,
     #style: _f$style,
@@ -689,8 +688,8 @@ class PreviewSlideOptionsMapper
   late final ClassMapperBase superMapper =
       SlideOptionsMapper.ensureInitialized();
 
-  static PreviewSlideOptions _instantiate(DecodingData data) {
-    return PreviewSlideOptions(
+  static WidgetSlideOptions _instantiate(DecodingData data) {
+    return WidgetSlideOptions(
         title: data.dec(_f$title),
         widget: data.dec(_f$widget),
         style: data.dec(_f$style),
@@ -703,87 +702,87 @@ class PreviewSlideOptionsMapper
   @override
   final Function instantiate = _instantiate;
 
-  static PreviewSlideOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<PreviewSlideOptions>(map);
+  static WidgetSlideOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<WidgetSlideOptions>(map);
   }
 
-  static PreviewSlideOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<PreviewSlideOptions>(json);
+  static WidgetSlideOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<WidgetSlideOptions>(json);
   }
 }
 
-mixin PreviewSlideOptionsMappable {
+mixin WidgetSlideOptionsMappable {
   String toJson() {
-    return PreviewSlideOptionsMapper.ensureInitialized()
-        .encodeJson<PreviewSlideOptions>(this as PreviewSlideOptions);
+    return WidgetSlideOptionsMapper.ensureInitialized()
+        .encodeJson<WidgetSlideOptions>(this as WidgetSlideOptions);
   }
 
   Map<String, dynamic> toMap() {
-    return PreviewSlideOptionsMapper.ensureInitialized()
-        .encodeMap<PreviewSlideOptions>(this as PreviewSlideOptions);
+    return WidgetSlideOptionsMapper.ensureInitialized()
+        .encodeMap<WidgetSlideOptions>(this as WidgetSlideOptions);
   }
 
-  PreviewSlideOptionsCopyWith<PreviewSlideOptions, PreviewSlideOptions,
-          PreviewSlideOptions>
-      get copyWith => _PreviewSlideOptionsCopyWithImpl(
-          this as PreviewSlideOptions, $identity, $identity);
+  WidgetSlideOptionsCopyWith<WidgetSlideOptions, WidgetSlideOptions,
+          WidgetSlideOptions>
+      get copyWith => _WidgetSlideOptionsCopyWithImpl(
+          this as WidgetSlideOptions, $identity, $identity);
   @override
   String toString() {
-    return PreviewSlideOptionsMapper.ensureInitialized()
-        .stringifyValue(this as PreviewSlideOptions);
+    return WidgetSlideOptionsMapper.ensureInitialized()
+        .stringifyValue(this as WidgetSlideOptions);
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
-            PreviewSlideOptionsMapper.ensureInitialized()
-                .isValueEqual(this as PreviewSlideOptions, other));
+            WidgetSlideOptionsMapper.ensureInitialized()
+                .isValueEqual(this as WidgetSlideOptions, other));
   }
 
   @override
   int get hashCode {
-    return PreviewSlideOptionsMapper.ensureInitialized()
-        .hashValue(this as PreviewSlideOptions);
+    return WidgetSlideOptionsMapper.ensureInitialized()
+        .hashValue(this as WidgetSlideOptions);
   }
 }
 
-extension PreviewSlideOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, PreviewSlideOptions, $Out> {
-  PreviewSlideOptionsCopyWith<$R, PreviewSlideOptions, $Out>
-      get $asPreviewSlideOptions =>
-          $base.as((v, t, t2) => _PreviewSlideOptionsCopyWithImpl(v, t, t2));
+extension WidgetSlideOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, WidgetSlideOptions, $Out> {
+  WidgetSlideOptionsCopyWith<$R, WidgetSlideOptions, $Out>
+      get $asWidgetSlideOptions =>
+          $base.as((v, t, t2) => _WidgetSlideOptionsCopyWithImpl(v, t, t2));
 }
 
-abstract class PreviewSlideOptionsCopyWith<$R, $In extends PreviewSlideOptions,
+abstract class WidgetSlideOptionsCopyWith<$R, $In extends WidgetSlideOptions,
     $Out> implements SlideOptionsCopyWith<$R, $In, $Out> {
-  PreviewOptionsCopyWith<$R, PreviewOptions, PreviewOptions> get widget;
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get widget;
   @override
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition;
   @override
   $R call(
       {String? title,
-      PreviewOptions? widget,
+      WidgetOptions? widget,
       String? style,
       String? background,
       String? content,
       ContentAlignment? alignment,
       TransitionOptions? transition});
-  PreviewSlideOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+  WidgetSlideOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
 
-class _PreviewSlideOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, PreviewSlideOptions, $Out>
-    implements PreviewSlideOptionsCopyWith<$R, PreviewSlideOptions, $Out> {
-  _PreviewSlideOptionsCopyWithImpl(super.value, super.then, super.then2);
+class _WidgetSlideOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, WidgetSlideOptions, $Out>
+    implements WidgetSlideOptionsCopyWith<$R, WidgetSlideOptions, $Out> {
+  _WidgetSlideOptionsCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<PreviewSlideOptions> $mapper =
-      PreviewSlideOptionsMapper.ensureInitialized();
+  late final ClassMapperBase<WidgetSlideOptions> $mapper =
+      WidgetSlideOptionsMapper.ensureInitialized();
   @override
-  PreviewOptionsCopyWith<$R, PreviewOptions, PreviewOptions> get widget =>
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get widget =>
       $value.widget.copyWith.$chain((v) => call(widget: v));
   @override
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
@@ -792,7 +791,7 @@ class _PreviewSlideOptionsCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? title = $none,
-          PreviewOptions? widget,
+          WidgetOptions? widget,
           Object? style = $none,
           Object? background = $none,
           String? content,
@@ -808,7 +807,7 @@ class _PreviewSlideOptionsCopyWithImpl<$R, $Out>
         if (transition != $none) #transition: transition
       }));
   @override
-  PreviewSlideOptions $make(CopyWithData data) => PreviewSlideOptions(
+  WidgetSlideOptions $make(CopyWithData data) => WidgetSlideOptions(
       title: data.get(#title, or: $value.title),
       widget: data.get(#widget, or: $value.widget),
       style: data.get(#style, or: $value.style),
@@ -818,9 +817,9 @@ class _PreviewSlideOptionsCopyWithImpl<$R, $Out>
       transition: data.get(#transition, or: $value.transition));
 
   @override
-  PreviewSlideOptionsCopyWith<$R2, PreviewSlideOptions, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _PreviewSlideOptionsCopyWithImpl($value, $cast, t);
+  WidgetSlideOptionsCopyWith<$R2, WidgetSlideOptions, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _WidgetSlideOptionsCopyWithImpl($value, $cast, t);
 }
 
 class TwoColumnSlideOptionsMapper

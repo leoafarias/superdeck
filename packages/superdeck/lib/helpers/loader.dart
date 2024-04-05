@@ -296,7 +296,7 @@ List<String> _extractSlides(String content) {
 
   // Capture any remaining content as a slide
   if (buffer.isNotEmpty) {
-    slides.add(buffer.toString().trim());
+    slides.add(buffer.toString());
   }
 
   return slides;
