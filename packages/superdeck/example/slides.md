@@ -6,6 +6,9 @@ image:
   fit: cover
   position: right
   flex: 1
+content:
+  alignment: bottom_right
+  flex: 2
 ---
 
 

@@ -7,6 +7,10 @@
       "position": "right"
     },
     "style": "quote",
+    "content": {
+      "flex": 2,
+      "alignment": "bottom_right"
+    },
     "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
     "type": "Slide",
     "layout": "image"

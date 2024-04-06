@@ -14,7 +14,7 @@ abstract class SlideTemplate<Config extends Slide> extends StatelessWidget {
   const SlideTemplate({required this.config, super.key});
 
   Widget buildContent() {
-    return buildContentSection(
+    return _buildContent(
       config.data,
       config.contentOptions,
     );
@@ -115,7 +115,7 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
     final builder = previewBuilders[options.name]?.builder;
 
     List<Widget> children = [
-      Expanded(child: buildContent()),
+      buildContentSection(config.data, config.contentOptions),
       Expanded(
         flex: options.flex,
         child: SlideConstraintBuilder(builder: (context, size) {
@@ -181,7 +181,7 @@ class ImageSlideTemplate extends SlideTemplate<ImageSlide> {
     }
 
     List<Widget> children = [
-      buildContent(),
+      buildContentSection(config.data, config.contentOptions),
       Expanded(
         flex: config.image.flex,
         child: Container(
