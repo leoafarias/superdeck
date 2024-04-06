@@ -24,7 +24,7 @@ class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
     super.key,
     this.style,
-    this.previewBuilders,
+    this.widgetBuilders,
   });
 
   static Future<void> initialize() async {
@@ -32,7 +32,7 @@ class SuperDeckApp extends StatefulWidget {
   }
 
   final Style? style;
-  final Map<String, WidgetDisplayBuilder>? previewBuilders;
+  final Map<String, Widget Function(WidgetOptions)>? widgetBuilders;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -173,7 +173,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
               assets: _assets,
               style: defaultStyle.merge(widget.style),
               projectOptions: _config,
-              widgetBuilders: widget.previewBuilders ?? {},
+              widgetBuilders: widget.widgetBuilders ?? {},
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : const AppShell(),

@@ -112,7 +112,7 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
 
     final previewBuilders = SuperDeck.widgetBuildersOf(context);
 
-    final builder = previewBuilders[options.name]?.builder;
+    final builder = previewBuilders[options.name];
 
     List<Widget> children = [
       buildContentSection(config.data, config.contentOptions),
@@ -129,7 +129,7 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
               child: WidgetOptionsProvider(
                 options: options,
                 child: CodePreview(
-                  child: builder?.call(context, options),
+                  child: builder?.call(options),
                 ),
               ),
             ),

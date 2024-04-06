@@ -142,6 +142,8 @@ class DurationMapper extends SimpleMapper<Duration> {
   }
 }
 
+typedef WidgetBuilderOptions = Widget Function(WidgetOptions);
+
 @MappableClass()
 class WidgetOptions with WidgetOptionsMappable {
   final String name;

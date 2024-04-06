@@ -15,7 +15,7 @@ class SlideVariant extends Variant {
 TextStyle get baseTextStyle =>
     const TextStyle().copyWith(fontSize: 22, height: 1.6);
 TextStyle get monoTextStyle =>
-    GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
+    GoogleFonts.jetBrainsMono().copyWith(fontSize: 16);
 TextStyle get serifTextStyle =>
     GoogleFonts.playfairDisplay().copyWith(fontSize: 50);
 

@@ -4,27 +4,26 @@ import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import '../superdeck.dart';
-import 'layout_builder.dart';
 
 typedef DeckData = (
   List<Slide> slides,
   List<SlideAsset> assets,
 );
 
-class WidgetDisplayBuilder extends StatelessWidget {
-  const WidgetDisplayBuilder({
-    required this.builder,
-    super.key,
-  });
+// class WidgetDisplayBuilder extends StatelessWidget {
+//   const WidgetDisplayBuilder({
+//     required this.builder,
+//     super.key,
+//   });
 
-  final Widget Function(BuildContext, WidgetOptions) builder;
+//   final Widget Function(BuildContext, WidgetOptions) builder;
 
-  @override
-  Widget build(BuildContext context) {
-    final options = WidgetOptionsProvider.of(context).options;
-    return builder(context, options);
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final options = WidgetOptionsProvider.of(context).options;
+//     return builder(context, options);
+//   }
+// }
 
 enum SuperDeckAspect {
   slides,
@@ -38,7 +37,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
   final List<Slide> slides;
   final List<SlideAsset> assets;
   final Config projectOptions;
-  final Map<String, WidgetDisplayBuilder> widgetBuilders;
+  final Map<String, Widget Function(WidgetOptions)> widgetBuilders;
   final Style style;
 
   const SuperDeck({
@@ -79,7 +78,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
         .style;
   }
 
-  static Map<String, WidgetDisplayBuilder> widgetBuildersOf(
+  static Map<String, WidgetBuilderOptions> widgetBuildersOf(
       BuildContext context) {
     return InheritedModel.inheritFrom<SuperDeck>(context,
             aspect: SuperDeckAspect.widgetBuilders)!

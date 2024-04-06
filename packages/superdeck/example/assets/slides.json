@@ -1,5 +1,22 @@
 [
   {
+    "widget": {
+      "name": "mix",
+      "args": {
+        "title": "Awesome Widget",
+        "height": 200.0,
+        "width": 500.0,
+        "image": "https://source.unsplash.com/random/300x200/?landscape"
+      },
+      "flex": 1,
+      "position": "right"
+    },
+    "style": "demo",
+    "data": "# Present your widgets\n\nSuperDeck allows you to present your widgets in a beautiful way.\n\n```dart\nWidget buildWidget(WidgetOptions options) {\n  return Container(\n    height: options.height,\n    width: options.width,\n    child: Image.network(options.image),\n  \n  )\n}\n```",
+    "type": "Slide",
+    "layout": "widget"
+  },
+  {
     "image": {
       "src": "https://source.unsplash.com/random/900×700/?inspiration",
       "fit": "cover",
