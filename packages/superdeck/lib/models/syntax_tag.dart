@@ -11,11 +11,21 @@ Map<String, String> parseContentSections(String input) {
   var currentTag = SectionTag.first;
   var currentContent = '';
 
+  // If ::tag:: is inside a ``` block, it should be ignored
+  var isCodeBlock = false;
+
   // For loop with index
   for (var idx = 0; idx < lines.length; idx++) {
     final line = lines[idx];
 
-    final isTag = line.trim().startsWith('::') && line.trim().endsWith('::');
+    // Check if line is codeblock
+    if (line.trim().startsWith('```')) {
+      isCodeBlock = !isCodeBlock;
+    }
+
+    final isTag = line.trim().startsWith('::') &&
+        line.trim().endsWith('::') &&
+        !isCodeBlock;
 
     if (isTag) {
       final tagName = line.trim();

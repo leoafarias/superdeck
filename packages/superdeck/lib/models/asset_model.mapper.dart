@@ -4,7 +4,7 @@
 // ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
-part of 'slide_asset_model.dart';
+part of 'asset_model.dart';
 
 class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   SlideAssetMapper._();
@@ -37,6 +37,8 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
     #height: _f$height,
     #path: _f$path,
   };
+  @override
+  final bool ignoreNull = true;
 
   static SlideAsset _instantiate(DecodingData data) {
     return SlideAsset(

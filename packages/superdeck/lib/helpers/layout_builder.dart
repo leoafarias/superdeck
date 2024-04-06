@@ -3,35 +3,45 @@ import 'package:flutter/material.dart';
 
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
-import '../models/config_model.dart';
-import '../models/schema_error_model.dart';
-import '../models/slide_options_model.dart';
+import '../models/options_model.dart';
+import '../models/slide_model.dart';
 import '../superdeck.dart';
 import 'measure_size.dart';
 
-abstract class SlideWidget<Config extends SlideOptions>
-    extends StatelessWidget {
+abstract class SlideTemplate<Config extends Slide> extends StatelessWidget {
   final Config config;
 
-  const SlideWidget({required this.config, super.key});
+  const SlideTemplate({required this.config, super.key});
 
-  SlideContent buildContent() {
-    return SlideContent(
-      content: config.content,
-      alignment: config.alignment,
+  Widget buildContent() {
+    return buildContentSection(
+      config.data,
+      config.contentOptions,
     );
   }
 
-  SlideContent buildContentSection(String content) {
-    return SlideContent(
-      content: content,
-      alignment: config.alignment,
+  @protected
+  Widget _buildContent(String content, ContentOptions? options) {
+    final alignment = options?.alignment ?? ContentAlignment.center;
+    return Column(
+      mainAxisAlignment: alignment.toMainAxisAlignment(),
+      crossAxisAlignment: alignment.toCrossAxisAlignment(),
+      children: [
+        SlideContent(data: content),
+      ],
+    );
+  }
+
+  Widget buildContentSection(String content, ContentOptions? options) {
+    return Expanded(
+      flex: options?.flex ?? 1,
+      child: _buildContent(content, options),
     );
   }
 }
 
-class SimpleSlide extends SlideWidget<SimpleSlideOptions> {
-  const SimpleSlide({required super.config, super.key});
+class SimpleSlideTemplate extends SlideTemplate<SimpleSlide> {
+  const SimpleSlideTemplate({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,24 +49,14 @@ class SimpleSlide extends SlideWidget<SimpleSlideOptions> {
   }
 }
 
-class SchemaErrorSlide extends SlideWidget<SchemaErrorSlideOptions> {
-  const SchemaErrorSlide({required super.config, super.key});
+class InvalidSlideTemplate extends SlideTemplate<InvalidSlide> {
+  const InvalidSlideTemplate({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
+    const red = Color.fromARGB(255, 166, 6, 6);
+
     final style = Style(
-      $.contentContainer.color(const Color.fromARGB(255, 166, 6, 6)),
-      $.contentContainer.padding.all(40.0),
-      $.contentContainer.borderRadius.all(20.0),
-      $.contentContainer.border.all(
-        color: const Color.fromARGB(255, 111, 4, 4),
-        width: 5,
-      ),
-      $.contentContainer.shadow(
-        color: const Color.fromARGB(255, 119, 1, 1),
-        blurRadius: 100,
-        spreadRadius: 20,
-      ),
       $.textStyle.color(Colors.white),
       $.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
       $.h1.textStyle.fontSize(36.0),
@@ -68,56 +68,18 @@ class SchemaErrorSlide extends SlideWidget<SchemaErrorSlideOptions> {
       $.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
     );
 
-    final errorMessages = config.errors.map((error) {
-      switch (error.errorType) {
-        case ErrorType.unallowedAdditionalProperty:
-          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`.";
-        case ErrorType.enumViolated:
-          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`.";
-        case ErrorType.requiredPropMissing:
-          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`.";
-        case ErrorType.invalidType:
-          return "## ${error.location} \n ${error.errorType.message}: `${error.value}`";
-        default:
-          return 'Unknown error type.';
-      }
-    }).join('\n');
-
     return StyledWidgetBuilder(
         style: style,
         builder: (context) {
           //  Maybe there are no validation errors just return the content
           return Container(
             decoration: BoxDecoration(
-              color: Colors.black,
-              border: Border.all(
-                  color: const Color.fromARGB(255, 166, 6, 6), width: 20),
+              color: red,
+              border: Border.all(color: red, width: 20),
             ),
-            child: SlideContent(
-              content: '${config.content} \n $errorMessages',
-              alignment: ContentAlignment.center,
-            ),
+            child: buildContent(),
           );
         });
-  }
-}
-
-class InvalidSlide extends SlideWidget<InvalidSlideOptions> {
-  const InvalidSlide({required super.config, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xffA11211),
-      padding: const EdgeInsets.all(40.0),
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: const BoxDecoration(
-            color: Color(0xffD81919),
-            borderRadius: BorderRadius.all(Radius.circular(8.0))),
-        child: buildContent(),
-      ),
-    );
   }
 }
 
@@ -140,8 +102,8 @@ class WidgetOptionsProvider extends InheritedWidget {
   }
 }
 
-class WidgetSlide extends SlideWidget<WidgetSlideOptions> {
-  const WidgetSlide({required super.config, super.key});
+class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
+  const WidgetSlideTemplate({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -199,8 +161,8 @@ class WidgetSlide extends SlideWidget<WidgetSlideOptions> {
   }
 }
 
-class ImageSlide extends SlideWidget<ImageSlideOptions> {
-  const ImageSlide({required super.config, super.key});
+class ImageSlideTemplate extends SlideTemplate<ImageSlide> {
+  const ImageSlideTemplate({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -217,15 +179,9 @@ class ImageSlide extends SlideWidget<ImageSlideOptions> {
     } else {
       provider = AssetImage(image.src);
     }
-    // final Color? color;
-    // final ImageRepeat? repeat;
-    // final BoxFit? fit;
-    // final AlignmentGeometry? alignment;
-    // final Rect? centerSlice;
-    // final FilterQuality? filterQuality;
-    // final BlendMode? colorBlendMode;
+
     List<Widget> children = [
-      Expanded(child: buildContent()),
+      buildContent(),
       Expanded(
         flex: config.image.flex,
         child: Container(
@@ -268,12 +224,16 @@ class ImageSlide extends SlideWidget<ImageSlideOptions> {
   }
 }
 
-class TwoColumnSlide extends SlideWidget<TwoColumnSlideOptions> {
-  const TwoColumnSlide({required super.config, super.key});
+class TwoColumnSlideTemplate extends SlideTemplate<TwoColumnSlide> {
+  const TwoColumnSlideTemplate({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final alignment = config.alignment ?? ContentAlignment.centerLeft;
+    final options = config.contentOptions ?? const ContentOptions();
+    final alignment = options.alignment ?? ContentAlignment.centerLeft;
+
+    final leftOptions = options.merge(config.leftOptions);
+    final rightOptions = options.merge(config.rightOptions);
     return Column(
       mainAxisAlignment: alignment.toMainAxisAlignment(),
       crossAxisAlignment: alignment.toCrossAxisAlignment(),
@@ -281,11 +241,13 @@ class TwoColumnSlide extends SlideWidget<TwoColumnSlideOptions> {
         Expanded(
           child: Row(
             children: [
-              Expanded(
-                child: buildContentSection(config.leftContent),
+              buildContentSection(
+                config.leftContent,
+                leftOptions,
               ),
-              Expanded(
-                child: buildContentSection(config.rightContent),
+              buildContentSection(
+                config.rightContent,
+                rightOptions,
               ),
             ],
           ),
@@ -295,26 +257,51 @@ class TwoColumnSlide extends SlideWidget<TwoColumnSlideOptions> {
   }
 }
 
-class TwoColumnHeaderSlide extends SlideWidget<TwoColumnHeaderSlideOptions> {
-  const TwoColumnHeaderSlide({required super.config, super.key});
+class TwoColumnHeaderSlideTemplate extends SlideTemplate<TwoColumnHeaderSlide> {
+  const TwoColumnHeaderSlideTemplate({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final alignment = config.alignment ?? ContentAlignment.centerLeft;
+    final options = config.contentOptions ?? const ContentOptions();
+    final alignment = options.alignment ?? ContentAlignment.centerLeft;
+    final flex = options.flex ?? 1;
     return Column(
-      mainAxisAlignment: alignment.toMainAxisAlignment(),
-      crossAxisAlignment: alignment.toCrossAxisAlignment(),
       children: [
-        Row(
-          children: [
-            Expanded(child: buildContentSection(config.topContent)),
-          ],
+        Expanded(
+          flex: config.headerOptions?.flex ?? flex,
+          child: Row(
+            children: [
+              buildContentSection(
+                config.headerContent,
+                options.merge(config.headerOptions),
+              ),
+            ],
+          ),
         ),
-        Row(
-          children: [
-            Expanded(child: buildContentSection(config.leftContent)),
-            Expanded(child: buildContentSection(config.rightContent)),
-          ],
+        Expanded(
+          flex: flex,
+          child: Column(
+            mainAxisAlignment: alignment.toMainAxisAlignment(),
+            crossAxisAlignment: alignment.toCrossAxisAlignment(),
+            children: [
+              Row(
+                children: [
+                  buildContentSection(
+                    config.leftContent,
+                    options.merge(
+                      config.leftOptions,
+                    ),
+                  ),
+                  buildContentSection(
+                    config.rightContent,
+                    options.merge(
+                      config.rightOptions,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );

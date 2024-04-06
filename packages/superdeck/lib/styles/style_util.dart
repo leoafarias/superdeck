@@ -12,15 +12,21 @@ class SlideVariant extends Variant {
   static const none = SlideVariant('none');
 }
 
-final baseTextStyle = const TextStyle().copyWith(fontSize: 22);
-final monoTextStyle = GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
-final serifTextStyle = GoogleFonts.playfairDisplay().copyWith(fontSize: 50);
+TextStyle get baseTextStyle =>
+    const TextStyle().copyWith(fontSize: 22, height: 1.6);
+TextStyle get monoTextStyle =>
+    GoogleFonts.jetBrainsMono().copyWith(fontSize: 22);
+TextStyle get serifTextStyle =>
+    GoogleFonts.playfairDisplay().copyWith(fontSize: 50);
+
+TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
 
 Style get defaultStyle => Style.create([
       $.outerContainer.only(),
       $.innerContainer.only(),
       $.contentContainer.padding.all(40),
       $.textStyle.as(baseTextStyle),
+      $.headings.textStyle.as(headingTextStyle),
       $.h1.textStyle.fontSize(72),
       $.h1.padding.bottom(12),
       $.h2.textStyle.fontSize(48),
@@ -33,7 +39,7 @@ Style get defaultStyle => Style.create([
       $.h5.padding.bottom(3),
       $.h6.textStyle.as(baseTextStyle),
       $.h6.padding.bottom(3),
-      // $.paragraph.textStyle.as(baseTextStyle),
+      $.paragraph.textStyle.as(baseTextStyle),
       $.paragraph.padding.bottom(12),
       $.link.color(Colors.blue),
       $.list.textStyle.as(baseTextStyle),
@@ -50,15 +56,13 @@ Style get defaultStyle => Style.create([
       $.code.span.as(monoTextStyle),
       $.code.padding.all(24),
       $.code.decoration.color(const Color.fromARGB(255, 23, 23, 23)),
-
       $.code.decoration.borderRadius.circular(10),
       $.blockquote.textStyle.as(serifTextStyle),
-      $.blockquote.textStyle.fontSize(26),
+      $.blockquote.textStyle.fontSize(32),
       $.blockquote.padding.bottom(12),
       $.blockquote.contentPadding.left(30),
       $.blockquote.decoration.border.left.color(Colors.grey),
       $.blockquote.decoration.border.left.width(4),
-
       $.divider.height(1),
       $.divider.color(Colors.grey),
       $.divider.thickness(2),
@@ -77,7 +81,32 @@ class SlideStyleUtility<T extends SpecAttribute>
 
   TextStyleUtility<T> get textStyle {
     return TextStyleUtility(
-      (value) => only(textStyle: value),
+      (value) => only(
+        paragraph: MdTextStyleDto(textStyle: value),
+        headline1: MdTextStyleDto(textStyle: value),
+        headline2: MdTextStyleDto(textStyle: value),
+        headline3: MdTextStyleDto(textStyle: value),
+        headline4: MdTextStyleDto(textStyle: value),
+        headline5: MdTextStyleDto(textStyle: value),
+        headline6: MdTextStyleDto(textStyle: value),
+        list: MdListDto(textStyle: value),
+        table: MdTableDto(textStyle: value),
+        code: MdCodeDto(textStyle: value),
+        blockquote: MdBlockQuoteDto(textStyle: value),
+      ),
+    );
+  }
+
+  MdTextStyleUtil<T> get headings {
+    return MdTextStyleUtil(
+      (value) => only(
+        headline1: value,
+        headline2: value,
+        headline3: value,
+        headline4: value,
+        headline5: value,
+        headline6: value,
+      ),
     );
   }
 
@@ -189,7 +218,6 @@ class SlideStyleUtility<T extends SpecAttribute>
 
   @override
   T only({
-    TextStyleDto? textStyle,
     MdTextStyleDto? headline1,
     MdTextStyleDto? headline2,
     MdTextStyleDto? headline3,
@@ -211,7 +239,6 @@ class SlideStyleUtility<T extends SpecAttribute>
   }) {
     return builder(
       SlideSpecAttribute(
-        textStyle: textStyle,
         headline1: headline1,
         headline2: headline2,
         headline3: headline3,

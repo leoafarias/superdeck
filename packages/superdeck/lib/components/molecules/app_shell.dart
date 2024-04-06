@@ -8,12 +8,13 @@ import 'package:watcher/watcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../helpers/constants.dart';
+import '../../helpers/json_schema.dart';
 import '../../helpers/loader.dart';
 import '../../helpers/local_storage.dart';
 import '../../helpers/syntax_highlighter.dart';
-import '../../helpers/validation.dart';
-import '../../models/config_model.dart';
-import '../../models/slide_asset_model.dart';
+import '../../models/asset_model.dart';
+import '../../models/options_model.dart';
+import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../../theme.dart';
 import 'scaled_app.dart';
@@ -39,10 +40,10 @@ class SuperDeckApp extends StatefulWidget {
 }
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
-  late List<SlideOptions> _slides = [];
+  late List<Slide> _slides = [];
   late List<SlideAsset> _assets = [];
-  late ProjectOptions _projectOptions = const ProjectOptions();
-  SchemaErrorSlideOptions? _projectError;
+  late Config _config = const Config.empty();
+  Slide? _errorSlide;
   bool _loading = true;
 
   List<StreamSubscription<WatchEvent>> _subscriptions = [];
@@ -63,7 +64,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     super.dispose();
   }
 
-  void _setSlides(List<SlideOptions> slides) {
+  void _setSlides(List<Slide> slides) {
     // only update state if slide optinos are different
     if (!listEquals(slides, _slides)) {
       setState(() {
@@ -81,11 +82,11 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     }
   }
 
-  void _setProjectConfig(ProjectOptions projectOptions) {
+  void _setProjectConfig(Config projectOptions) {
     // only update state if project options are different
-    if (projectOptions != _projectOptions) {
+    if (projectOptions != _config) {
       setState(() {
-        _projectOptions = projectOptions;
+        _config = projectOptions;
       });
     }
   }
@@ -100,13 +101,14 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       setState(() {
         _slides = slides;
         _assets = assets;
-        _projectOptions = project;
+        _config = project;
       });
       if (kDebugMode) {
         _subscriptions = _registerLocalListener();
       }
     } catch (e) {
       print('Error loading slides: $e');
+      rethrow;
     } finally {
       setState(() {
         _loading = false;
@@ -114,20 +116,19 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     }
   }
 
-  Future<ProjectOptions> _loadProjectConfig() async {
+  Future<Config> _loadProjectConfig() async {
     try {
       final project = await SlidesLoader.loadProjectConfig();
-      _projectError = null;
+      _errorSlide = null;
       return project;
-    } on Exception catch (_) {
-      final errors = await SlidesLoader.validateProjectConfig();
+    } on SchemaError catch (e) {
+      _errorSlide = InvalidSlide.projectSchemaError(e);
 
-      _projectError = SchemaErrorSlideOptions(
-        content: '# Project configuration error',
-        errors: errors.map(parseErrorObject).toList(),
-      );
+      return const Config.empty();
+    } on Exception catch (e) {
+      _errorSlide = InvalidSlide.exception(e);
 
-      return const ProjectOptions();
+      return const Config.empty();
     }
   }
 
@@ -159,7 +160,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
 
   @override
   Widget build(BuildContext context) {
-    final slides = _projectError != null ? [_projectError!] : _slides;
+    final slides = _errorSlide != null ? [_errorSlide!] : _slides;
     return ScaledApp(builder: (context, _) {
       return MaterialApp(
         theme: darkTheme,
@@ -171,7 +172,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
               slides: slides,
               assets: _assets,
               style: defaultStyle.merge(widget.style),
-              projectOptions: _projectOptions,
+              projectOptions: _config,
               widgetBuilders: widget.previewBuilders ?? {},
               child: _loading
                   ? const Center(child: CircularProgressIndicator())

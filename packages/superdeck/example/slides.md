@@ -1,12 +1,11 @@
 ---
-alignment: center
 style: quote
 layout: image
 image:
   src: https://source.unsplash.com/random/900×700/?inspiration
   fit: cover
   position: right
-  flex: 2
+  flex: 1
 ---
 
 
@@ -17,7 +16,6 @@ image:
 
 ---
 background: https://source.unsplash.com/random/900×700/?landscape
-alignment: bottom_right
 style: cover
 ---
 
@@ -42,7 +40,12 @@ This is an example of an awesome widget
 
 ---
 layout: two_column_header
-alignment: center_left
+content:
+  alignment: center
+left_section:
+  alignment: center
+header:
+  alignment: bottom_left
 ---
 
 # Two Column Header
@@ -103,7 +106,6 @@ title: "Slide 3: Links and Images"
 
 
 ---
-alignment: center
 ---
 
 > If you want to go fast, go alone. 

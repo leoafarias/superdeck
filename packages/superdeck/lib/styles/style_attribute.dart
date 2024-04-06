@@ -5,7 +5,6 @@ import 'style_spec.dart';
 
 class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
     with Mergeable<SlideSpecAttribute> {
-  final TextStyleDto? textStyle;
   final MdTextStyleDto? headline1;
   final MdTextStyleDto? headline2;
   final MdTextStyleDto? headline3;
@@ -26,7 +25,6 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
   final ImageSpecAttribute? image;
 
   const SlideSpecAttribute({
-    this.textStyle,
     this.headline1,
     this.headline2,
     this.headline3,
@@ -50,7 +48,6 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
   @override
   SlideSpecAttribute merge(SlideSpecAttribute? other) {
     return SlideSpecAttribute(
-      textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
       headline1: headline1?.merge(other?.headline1) ?? other?.headline1,
       headline2: headline2?.merge(other?.headline2) ?? other?.headline2,
       headline3: headline3?.merge(other?.headline3) ?? other?.headline3,
@@ -78,7 +75,6 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
   @override
   SlideSpec resolve(MixData mix) {
     return SlideSpec(
-      textStyle: textStyle?.resolve(mix),
       headline1: headline1?.resolve(mix),
       headline2: headline2?.resolve(mix),
       headline3: headline3?.resolve(mix),
@@ -102,7 +98,6 @@ class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
 
   @override
   get props => [
-        textStyle,
         headline1,
         headline2,
         headline3,

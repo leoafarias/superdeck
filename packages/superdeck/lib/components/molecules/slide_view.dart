@@ -2,42 +2,42 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/layout_builder.dart';
-import '../../models/config_model.dart';
+import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../atoms/slide_transition_widget.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
-    this.config, {
+    this.props, {
     super.key,
   });
 
-  final SlideOptions config;
+  final Slide props;
 
   @override
   @override
   Widget build(BuildContext context) {
-    final config = this.config;
+    final props = this.props;
 
-    final style = SuperDeck.styleOf(context).applyVariant(config.styleVariant);
+    final style = SuperDeck.styleOf(context).applyVariant(props.styleVariant);
 
     return SlideTransitionWidget(
-      key: ValueKey(config.transition),
-      transition: config.transition,
+      key: ValueKey(props.transition),
+      transition: props.transition,
       child: LayoutBuilder(builder: (context, constraints) {
         return Stack(
           children: [
             Container(
               width: constraints.maxWidth,
               height: constraints.maxHeight,
-              decoration: _backgroundDecoration(config.background),
+              decoration: _backgroundDecoration(props.background),
             ),
             SizedBox(
               width: constraints.maxWidth,
               height: constraints.maxHeight,
               child: StyledWidgetBuilder(
                   style: style.animate(),
-                  key: ValueKey(config),
+                  key: ValueKey(props),
                   builder: (mix) {
                     final spec = SlideSpec.of(mix);
                     return AnimatedMixedBox(
@@ -45,20 +45,18 @@ class SlideView extends StatelessWidget {
                       duration: const Duration(milliseconds: 300),
                       child: LayoutBuilder(builder: (_, constraints) {
                         return Builder(builder: (_) {
-                          if (config is SimpleSlideOptions) {
-                            return SimpleSlide(config: config);
-                          } else if (config is WidgetSlideOptions) {
-                            return WidgetSlide(config: config);
-                          } else if (config is ImageSlideOptions) {
-                            return ImageSlide(config: config);
-                          } else if (config is TwoColumnSlideOptions) {
-                            return TwoColumnSlide(config: config);
-                          } else if (config is TwoColumnHeaderSlideOptions) {
-                            return TwoColumnHeaderSlide(config: config);
-                          } else if (config is SchemaErrorSlideOptions) {
-                            return SchemaErrorSlide(config: config);
-                          } else if (config is InvalidSlideOptions) {
-                            return InvalidSlide(config: config);
+                          if (props is SimpleSlide) {
+                            return SimpleSlideTemplate(config: props);
+                          } else if (props is WidgetSlide) {
+                            return WidgetSlideTemplate(config: props);
+                          } else if (props is ImageSlide) {
+                            return ImageSlideTemplate(config: props);
+                          } else if (props is TwoColumnSlide) {
+                            return TwoColumnSlideTemplate(config: props);
+                          } else if (props is TwoColumnHeaderSlide) {
+                            return TwoColumnHeaderSlideTemplate(config: props);
+                          } else if (props is InvalidSlide) {
+                            return InvalidSlideTemplate(config: props);
                           } else {
                             throw UnimplementedError(
                               'Slide config not implemented',

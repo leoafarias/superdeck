@@ -4,7 +4,7 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:mix/mix.dart';
 
 import '../../helpers/syntax_highlighter.dart';
-import '../../models/slide_asset_model.dart';
+import '../../models/asset_model.dart';
 import '../../styles/style_spec.dart';
 
 class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
@@ -66,7 +66,7 @@ class _AnimatedMarkdownViewerState
           TextSpan(
             style: _styleTween!.evaluate(animation).code?.codeSpan ??
                 const TextStyle(),
-            children: SyntaxHighlight.render(text, language ?? 'simple'),
+            children: SyntaxHighlight.render(text, language),
           ),
         ];
       },

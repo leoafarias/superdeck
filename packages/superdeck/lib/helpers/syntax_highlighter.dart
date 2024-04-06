@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_prism/flutter_prism.dart';
-import 'package:syntax_highlight/syntax_highlight.dart';
+import 'package:re_highlight/languages/all.dart';
+import 'package:re_highlight/re_highlight.dart' as re;
+import 'package:re_highlight/styles/all.dart';
+
+final reHighlight = re.Highlight();
 
 class SyntaxHighlight {
   SyntaxHighlight._();
 
-  static List<String> get supportedLanguages => ['dart', 'yaml', 'json'];
-
-  static late HighlighterTheme _theme;
-
   static initialize() async {
-    await Highlighter.initialize(supportedLanguages);
-
-    _theme = await HighlighterTheme.loadForBrightness(Brightness.dark);
+    reHighlight.registerLanguages(builtinAllLanguages);
   }
 
-  static List<TextSpan> render(String source, String language) {
-    if (supportedLanguages.contains(language)) {
-      return [Highlighter(language: language, theme: _theme).highlight(source)];
+  static List<TextSpan> render(String source, String? language) {
+    re.HighlightResult result;
+
+    if (language == null) {
+      result = reHighlight.highlightAuto(source);
     } else {
-      final prism = Prism(style: const PrismStyle.dark());
-      return prism.render(source, language);
+      result = reHighlight.highlight(code: source, language: language);
     }
+
+    final renderer =
+        re.TextSpanRenderer(null, builtinAllThemes['tokyo-night-dark']!);
+    result.render(renderer);
+    final span = renderer.span ?? const TextSpan();
+
+    return [span];
   }
 }
 
@@ -70,3 +75,119 @@ List<int> parseLineNumbers(String input) {
   lineNumberList.sort();
   return lineNumberList;
 }
+
+final markdownGrammar = {
+  'fileTypes': [
+    'md',
+    'markdown',
+  ],
+  "name": "Markdown",
+  'scopeName': 'source.markdown',
+  'patterns': [
+    {
+      'include': '#heading',
+    },
+    {
+      'include': '#italic',
+    },
+    {
+      'include': '#bold',
+    },
+    {
+      'include': '#link',
+    },
+    {
+      'include': '#image',
+    },
+    {
+      'match': '^\\s*[-+*]\\s+(.+)\$',
+      'captures': {
+        '0': {'name': 'markup.list.unnumbered.markdown'},
+      },
+    },
+    {
+      'match': '^\\s*\\d+\\.\\s+(.+)\$',
+      'captures': {
+        '0': {'name': 'markup.list.numbered.markdown'},
+      },
+    },
+    {
+      'match': '`([^`]+)`',
+      'captures': {
+        '0': {'name': 'markup.raw.inline.markdown'},
+      },
+    },
+    {
+      'begin': '```',
+      'end': '```',
+      'name': 'markup.raw.block.markdown',
+    },
+    {
+      'match': '^\\s*>\\s*(.+)\$',
+      'captures': {
+        '0': {'name': 'markup.quote.markdown'},
+      },
+    },
+    {
+      'match': '^[-*_]{3,}\$',
+      'name': 'punctuation.definition.thematic-break.markdown',
+    },
+    {
+      'match': '^\\|?(.+\\|.+)\\|?\$',
+      'captures': {
+        '0': {'name': 'markup.other.table.markdown'},
+      },
+    },
+    {
+      'match': '~~([^~]+)~~',
+      'captures': {
+        '0': {'name': 'markup.strikethrough.markdown'},
+      },
+    },
+    {
+      'match': '^\\s*[-+*]\\s+\\[[xX\\s]\\]\\s+(.+)\$',
+      'captures': {
+        '0': {'name': 'markup.list.unnumbered.todo.markdown'},
+      },
+    },
+    {
+      'match': '<([^>]+)>',
+      'name': 'markup.raw.inline.html.markdown',
+    },
+  ],
+  'repository': {
+    'heading': {
+      'match': '^(#{1,6})\\s+(.*?)\$',
+      'captures': {
+        '1': {'name': 'punctuation.definition.heading.markdown'},
+        '2': {'name': 'entity.name.section.markdown'},
+      },
+    },
+    'italic': {
+      'match': '\\*([^*]+)\\*',
+      'captures': {
+        '0': {'name': 'markup.italic.markdown'},
+      },
+    },
+    'bold': {
+      'match': '\\*\\*([^*]+)\\*\\*',
+      'captures': {
+        '0': {'name': 'markup.bold.markdown'},
+      },
+    },
+    'link': {
+      'match': '\\[([^\\]]+)\\]\\(([^\\)]+)\\)',
+      'captures': {
+        '0': {'name': 'markup.underline.link.markdown'},
+      },
+    },
+    'image': {
+      'match': '!\\[([^\\]]+)\\]\\(([^\\)]+)\\)',
+      'captures': {
+        '0': {'name': 'markup.underline.link.image.markdown'},
+      },
+    },
+  },
+  'foldingStartMarker': '^\\s*<!--\\s*#?region\\b.*-->',
+  'foldingStopMarker': '^\\s*<!--\\s*#?endregion\\b.*-->',
+};

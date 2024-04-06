@@ -10,3 +10,4 @@ global_options:
     options:
       caseStyle: snakeCase
       enumCaseStyle: snakeCase
+      ignoreNull: true

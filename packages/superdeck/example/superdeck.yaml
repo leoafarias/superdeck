@@ -1,4 +1,4 @@
 transition:
   type: fade_in_up
-  duration: 1000
+  duration: 100
   

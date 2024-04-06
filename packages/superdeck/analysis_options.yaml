@@ -7,7 +7,14 @@ analyzer:
     invalid_annotation_target: ignore
   plugins:
     - custom_lint
+  exclude:
+    - '**.freezed.dart'
+    - '**.g.dart'
+    - '**.gr.dart'
+    - '**.mapper.dart'
+    - '**/generated_plugin_registrant.dart'
 linter:
   rules:
     public_member_api_docs: false
     prefer_relative_imports: true
+

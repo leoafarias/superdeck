@@ -10,8 +10,7 @@ VariantAttribute get coverStyle {
     $.h1.textStyle.fontWeight.bold(),
 
     // $.paragraph.padding.right(300),
-    $.paragraph.textStyle.fontSize(36),
-    $.paragraph.textStyle.fontWeight.w100(),
+
     $.innerContainer.borderRadius.all(0),
     $.innerContainer.gradient.linear(
       begin: Alignment.topCenter,
@@ -28,8 +27,9 @@ VariantAttribute get quoteStyle {
       width: 4,
       color: Colors.red,
     ),
-    $.h3.textStyle.as(GoogleFonts.notoSerif()),
-    $.h3.textStyle.fontSize(20),
+    $.paragraph.textStyle.fontSize(32),
+    $.h6.textStyle.as(GoogleFonts.notoSerif()),
+    $.h6.textStyle.fontSize(20),
   );
 }
 
@@ -41,7 +41,7 @@ Style get style {
     quoteStyle,
 
     // $.h1.textStyle.color.red(),
-    // $.contentContainer.border(color: Colors.blue),
+    $.contentContainer.border(color: Colors.blue),
   );
 }
 
@@ -89,6 +89,7 @@ void main() async {
   runApp(
     Builder(builder: (context) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
           style: style,
           previewBuilders: previewBuilders,

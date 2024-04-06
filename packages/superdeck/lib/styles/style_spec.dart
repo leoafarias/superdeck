@@ -333,7 +333,6 @@ class MdCode extends Spec<MdCode> {
 }
 
 class SlideSpec extends Spec<SlideSpec> {
-  final TextStyle? textStyle;
   final MdTextStyle? headline1;
   final MdTextStyle? headline2;
   final MdTextStyle? headline3;
@@ -354,7 +353,6 @@ class SlideSpec extends Spec<SlideSpec> {
   final ImageSpec? _image;
 
   const SlideSpec({
-    required this.textStyle,
     required this.headline1,
     required this.headline2,
     required this.headline3,
@@ -379,8 +377,7 @@ class SlideSpec extends Spec<SlideSpec> {
         _image = image;
 
   const SlideSpec.empty()
-      : textStyle = null,
-        headline1 = null,
+      : headline1 = null,
         headline2 = null,
         headline3 = null,
         headline4 = null,
@@ -420,7 +417,6 @@ class SlideSpec extends Spec<SlideSpec> {
     if (other == null) return this;
 
     return SlideSpec(
-      textStyle: TextStyle.lerp(textStyle, other.textStyle, t),
       headline1: headline1?.lerp(other.headline1, t),
       headline2: headline2?.lerp(other.headline2, t),
       headline3: headline3?.lerp(other.headline3, t),
@@ -444,7 +440,6 @@ class SlideSpec extends Spec<SlideSpec> {
 
   MarkdownStyle toStyle() {
     return MarkdownStyle(
-      textStyle: textStyle,
       headline1: headline1?.textStyle,
       h1Padding: headline1?.padding ?? EdgeInsets.zero,
       headline2: headline2?.textStyle,
@@ -513,7 +508,6 @@ class SlideSpec extends Spec<SlideSpec> {
     ImageSpec? image,
   }) {
     return SlideSpec(
-      textStyle: textStyle ?? this.textStyle,
       headline1: headline1 ?? this.headline1,
       headline2: headline2 ?? this.headline2,
       headline3: headline3 ?? this.headline3,
@@ -537,7 +531,6 @@ class SlideSpec extends Spec<SlideSpec> {
 
   @override
   get props => [
-        textStyle,
         headline1,
         headline2,
         headline3,

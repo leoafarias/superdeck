@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/slide_options_model.dart';
+import '../../models/options_model.dart';
 
 class SlideTransitionWidget extends StatelessWidget {
   final TransitionOptions? transition;

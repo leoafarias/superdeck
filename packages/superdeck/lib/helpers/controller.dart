@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../models/config_model.dart';
-import '../models/slide_asset_model.dart';
-import '../models/slide_options_model.dart';
+import '../models/asset_model.dart';
+import '../models/options_model.dart';
+import '../models/slide_model.dart';
 import '../superdeck.dart';
 import 'layout_builder.dart';
 
 typedef DeckData = (
-  List<SlideOptions> slides,
+  List<Slide> slides,
   List<SlideAsset> assets,
 );
 
@@ -35,9 +35,9 @@ enum SuperDeckAspect {
 }
 
 class SuperDeck extends InheritedModel<SuperDeckAspect> {
-  final List<SlideOptions> slides;
+  final List<Slide> slides;
   final List<SlideAsset> assets;
-  final ProjectOptions projectOptions;
+  final Config projectOptions;
   final Map<String, WidgetDisplayBuilder> widgetBuilders;
   final Style style;
 
@@ -55,7 +55,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
     return InheritedModel.inheritFrom<SuperDeck>(context)!;
   }
 
-  static List<SlideOptions> slidesOf(BuildContext context) {
+  static List<Slide> slidesOf(BuildContext context) {
     return InheritedModel.inheritFrom<SuperDeck>(context,
             aspect: SuperDeckAspect.slides)!
         .slides;
@@ -67,7 +67,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
         .assets;
   }
 
-  static ProjectOptions projectOptionsOf(BuildContext context) {
+  static Config projectOptionsOf(BuildContext context) {
     return InheritedModel.inheritFrom<SuperDeck>(context,
             aspect: SuperDeckAspect.projectOptions)!
         .projectOptions;

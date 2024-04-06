@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 
-part 'slide_asset_model.mapper.dart';
+part 'asset_model.mapper.dart';
 
 @MappableClass(includeCustomMappers: [Uint8ListMapper()])
 class SlideAsset with SlideAssetMappable {

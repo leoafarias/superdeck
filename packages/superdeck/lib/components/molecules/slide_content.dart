@@ -3,20 +3,16 @@ import 'package:mix/mix.dart';
 
 import '../../helpers/controller.dart';
 import '../../helpers/measure_size.dart';
-import '../../models/slide_options_model.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/markdown_viewer.dart';
 
 class SlideContent extends StatelessWidget {
   const SlideContent({
-    required this.content,
-    this.alignment,
+    required this.data,
     super.key,
   });
 
-  final String content;
-
-  final ContentAlignment? alignment;
+  final String data;
 
   @override
   Widget build(context) {
@@ -26,34 +22,28 @@ class SlideContent extends StatelessWidget {
 
     final assets = SuperDeck.assetsOf(context);
 
-    final alignment = this.alignment ?? ContentAlignment.centerLeft;
-
     return SlideConstraintBuilder(
       builder: (context, size) {
-        return Column(
-          mainAxisAlignment: alignment.toMainAxisAlignment(),
-          crossAxisAlignment: alignment.toCrossAxisAlignment(),
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: size.height,
-                maxWidth: size.width,
-              ),
-              child: SingleChildScrollView(
-                child: AnimatedMixedBox(
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: size.width,
+            maxHeight: size.height,
+          ),
+          child: SingleChildScrollView(
+            child: AnimatedMixedBox(
+              duration: const Duration(milliseconds: 300),
+              spec: spec.contentContainer,
+              child: IntrinsicWidth(
+                child: AnimatedMarkdownViewer(
+                  content: data,
+                  spec: spec,
+                  assets: assets,
+                  constraints: _calculateConstraints(size, container),
                   duration: const Duration(milliseconds: 300),
-                  spec: spec.contentContainer,
-                  child: AnimatedMarkdownViewer(
-                    content: content,
-                    spec: spec,
-                    assets: assets,
-                    constraints: _calculateConstraints(size, container),
-                    duration: const Duration(milliseconds: 300),
-                  ),
                 ),
               ),
             ),
-          ],
+          ),
         );
       },
     );
