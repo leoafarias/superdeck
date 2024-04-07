@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
 import '../helpers/json_schema.dart';
+import '../helpers/layout_builder.dart';
+import 'slide_model.dart';
 
 part 'options_model.mapper.dart';
 
@@ -31,8 +33,8 @@ class Config with ConfigMappable {
   static const fromMap = ConfigMapper.fromMap;
   static const fromJson = ConfigMapper.fromJson;
 
-  static final schema = SchemaObject(
-    optional: {
+  static final schema = SchemaMap(
+    properties: {
       'content': ContentOptions.schema,
       "background": Schema.string,
       "style": Schema.string,
@@ -59,8 +61,8 @@ class ContentOptions with ContentOptionsMappable {
   static const fromMap = ContentOptionsMapper.fromMap;
   static const fromJson = ContentOptionsMapper.fromJson;
 
-  static final schema = SchemaObject(
-    optional: {
+  static final schema = SchemaMap(
+    properties: {
       "alignment": ContentAlignment.schema,
       "flex": Schema.integer,
     },
@@ -84,15 +86,14 @@ class ImageOptions with ImageOptionsMappable {
   static const fromMap = ImageOptionsMapper.fromMap;
   static const fromJson = ImageOptionsMapper.fromJson;
 
-  static final schema = SchemaObject(
-    optional: {
+  static final schema = SchemaMap(
+    properties: {
       "fit": ImageFit.schema,
       "position": LayoutPosition.schema,
       "flex": Schema.integer,
-    },
-    required: {
       "src": Schema.string,
     },
+    required: ["src"],
   );
 }
 
@@ -116,15 +117,14 @@ class TransitionOptions with TransitionOptionsMappable {
 
   static const fromJson = TransitionOptionsMapper.fromJson;
 
-  static final schema = SchemaObject(
-    required: {
+  static final schema = SchemaMap(
+    properties: {
       "type": TransitionType.schema,
-    },
-    optional: {
       "duration": Schema.integer,
       "delay": Schema.integer,
       "curve": CurveType.schema
     },
+    required: ["type"],
   );
 }
 
@@ -142,10 +142,28 @@ class DurationMapper extends SimpleMapper<Duration> {
   }
 }
 
-typedef WidgetBuilderOptions = Widget Function(WidgetOptions);
+typedef WidgetBuilderOptions = Widget Function(Map<String, dynamic>);
+
+abstract class WidgetDemoBuilder<T> {
+  const WidgetDemoBuilder();
+
+  T encode(Map<String, dynamic> args);
+
+  SchemaMap get schema => const SchemaMap.any();
+
+  Widget call(Map<String, dynamic> args) {
+    final result = schema.validate(args);
+    if (!result.isValid) {
+      return InvalidSlideTemplate(config: InvalidSlide.schemaError(result));
+    }
+    return build(encode(args));
+  }
+
+  Widget build(T args);
+}
 
 @MappableClass()
-class WidgetOptions with WidgetOptionsMappable {
+class WidgetOptions<T> with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
   final LayoutPosition position;
@@ -161,15 +179,14 @@ class WidgetOptions with WidgetOptionsMappable {
   static const fromMap = WidgetOptionsMapper.fromMap;
   static const fromJson = WidgetOptionsMapper.fromJson;
 
-  static final schema = SchemaObject(
-    required: {
+  static final schema = SchemaMap(
+    properties: {
       "name": Schema.string,
-    },
-    optional: {
-      "args": Schema.map,
+      "args": Schema.any,
       "position": LayoutPosition.schema,
       "flex": Schema.integer,
     },
+    required: ["name"],
   );
 }
 

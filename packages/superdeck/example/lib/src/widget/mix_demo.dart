@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:superdeck/helpers/json_schema.dart';
 import 'package:superdeck/models/options_model.dart';
 import 'package:superdeck/superdeck.dart';
 
@@ -67,7 +68,63 @@ final style = Style(
   ),
 );
 
-Widget mixDemo(WidgetOptions option) {
+class MixDemoOptions {
+  final double height;
+  final double width;
+  final String? image;
+  final String? text;
+  const MixDemoOptions({
+    required this.height,
+    required this.width,
+    this.image,
+    this.text,
+  });
+
+  static MixDemoOptions fromMap(Map<String, dynamic> map) {
+    return MixDemoOptions(
+      height: map['height'] as double,
+      width: map['width'] as double,
+      image: map['image'] as String?,
+      text: map['text'] as String?,
+    );
+  }
+
+  static const SchemaMap schema = SchemaMap(
+    properties: {
+      'height': Schema.double,
+      'width': Schema.double,
+      'image': Schema.string,
+      'text': Schema.string,
+    },
+    required: ['height', 'width'],
+  );
+}
+
+class MixDemo extends WidgetDemoBuilder<MixDemoOptions> {
+  const MixDemo();
+
+  @override
+  MixDemoOptions encode(Map<String, dynamic> args) {
+    return MixDemoOptions.fromMap(args);
+  }
+
+  @override
+  SchemaMap get schema => MixDemoOptions.schema;
+
+  @override
+  Widget build(MixDemoOptions args) {
+    return PressableBox(
+      onPress: () {},
+      style: style.animate().mix(
+            box.height(args.height),
+            box.width(args.width),
+          ),
+      child: StyledText(args.text ?? 'Mix'),
+    );
+  }
+}
+
+Widget mixDemo(Map<String, dynamic> args) {
   return PressableBox(
     onPress: () {},
     style: style.animate(),

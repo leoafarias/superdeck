@@ -129,7 +129,7 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
               child: WidgetOptionsProvider(
                 options: options,
                 child: CodePreview(
-                  child: builder?.call(options),
+                  child: builder?.call(options.args),
                 ),
               ),
             ),

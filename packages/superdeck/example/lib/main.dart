@@ -61,8 +61,8 @@ void main() async {
         debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
           style: style,
-          widgetBuilders: const {
-            'mix': mixDemo,
+          widgetBuilders: {
+            'mix': const MixDemo(),
           },
         ),
       );

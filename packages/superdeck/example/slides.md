@@ -5,7 +5,7 @@ widget:
   name: mix
   position: right
   args:
-    title: Awesome Widget
+    text: Awesome Widget
     height: 200.0
     width: 500.0
     image: https://source.unsplash.com/random/300x200/?landscape

@@ -6,64 +6,6 @@
 
 part of 'json_schema.dart';
 
-class ErrorTypeMapper extends EnumMapper<ErrorType> {
-  ErrorTypeMapper._();
-
-  static ErrorTypeMapper? _instance;
-  static ErrorTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ErrorTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static ErrorType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  ErrorType decode(dynamic value) {
-    switch (value) {
-      case 'unallowed_additional_property':
-        return ErrorType.unallowedAdditionalProperty;
-      case 'enum_violated':
-        return ErrorType.enumViolated;
-      case 'required_prop_missing':
-        return ErrorType.requiredPropMissing;
-      case 'invalid_type':
-        return ErrorType.invalidType;
-      case 'unknown':
-        return ErrorType.unknown;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(ErrorType self) {
-    switch (self) {
-      case ErrorType.unallowedAdditionalProperty:
-        return 'unallowed_additional_property';
-      case ErrorType.enumViolated:
-        return 'enum_violated';
-      case ErrorType.requiredPropMissing:
-        return 'required_prop_missing';
-      case ErrorType.invalidType:
-        return 'invalid_type';
-      case ErrorType.unknown:
-        return 'unknown';
-    }
-  }
-}
-
-extension ErrorTypeMapperExtension on ErrorType {
-  String toValue() {
-    ErrorTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<ErrorType>(this) as String;
-  }
-}
-
 class SchemaValidationErrorMapper
     extends ClassMapperBase<SchemaValidationError> {
   SchemaValidationErrorMapper._();
@@ -72,7 +14,6 @@ class SchemaValidationErrorMapper
   static SchemaValidationErrorMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SchemaValidationErrorMapper._());
-      ErrorTypeMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -80,35 +21,24 @@ class SchemaValidationErrorMapper
   @override
   final String id = 'SchemaValidationError';
 
-  static String _$location(SchemaValidationError v) => v.location;
-  static const Field<SchemaValidationError, String> _f$location =
-      Field('location', _$location);
-  static String _$propertyName(SchemaValidationError v) => v.propertyName;
-  static const Field<SchemaValidationError, String> _f$propertyName =
-      Field('propertyName', _$propertyName, key: 'property_name');
-  static String? _$value(SchemaValidationError v) => v.value;
-  static const Field<SchemaValidationError, String> _f$value =
-      Field('value', _$value, opt: true);
-  static ErrorType _$errorType(SchemaValidationError v) => v.errorType;
-  static const Field<SchemaValidationError, ErrorType> _f$errorType =
-      Field('errorType', _$errorType, key: 'error_type');
+  static String _$type(SchemaValidationError v) => v.type;
+  static const Field<SchemaValidationError, String> _f$type =
+      Field('type', _$type);
+  static String _$message(SchemaValidationError v) => v.message;
+  static const Field<SchemaValidationError, String> _f$message =
+      Field('message', _$message);
 
   @override
   final MappableFields<SchemaValidationError> fields = const {
-    #location: _f$location,
-    #propertyName: _f$propertyName,
-    #value: _f$value,
-    #errorType: _f$errorType,
+    #type: _f$type,
+    #message: _f$message,
   };
   @override
   final bool ignoreNull = true;
 
   static SchemaValidationError _instantiate(DecodingData data) {
     return SchemaValidationError(
-        location: data.dec(_f$location),
-        propertyName: data.dec(_f$propertyName),
-        value: data.dec(_f$value),
-        errorType: data.dec(_f$errorType));
+        type: data.dec(_f$type), message: data.dec(_f$message));
   }
 
   @override
@@ -170,11 +100,7 @@ abstract class SchemaValidationErrorCopyWith<
     $R,
     $In extends SchemaValidationError,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call(
-      {String? location,
-      String? propertyName,
-      String? value,
-      ErrorType? errorType});
+  $R call({String? type, String? message});
   SchemaValidationErrorCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -188,23 +114,12 @@ class _SchemaValidationErrorCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SchemaValidationError> $mapper =
       SchemaValidationErrorMapper.ensureInitialized();
   @override
-  $R call(
-          {String? location,
-          String? propertyName,
-          Object? value = $none,
-          ErrorType? errorType}) =>
-      $apply(FieldCopyWithData({
-        if (location != null) #location: location,
-        if (propertyName != null) #propertyName: propertyName,
-        if (value != $none) #value: value,
-        if (errorType != null) #errorType: errorType
-      }));
+  $R call({String? type, String? message}) => $apply(FieldCopyWithData(
+      {if (type != null) #type: type, if (message != null) #message: message}));
   @override
   SchemaValidationError $make(CopyWithData data) => SchemaValidationError(
-      location: data.get(#location, or: $value.location),
-      propertyName: data.get(#propertyName, or: $value.propertyName),
-      value: data.get(#value, or: $value.value),
-      errorType: data.get(#errorType, or: $value.errorType));
+      type: data.get(#type, or: $value.type),
+      message: data.get(#message, or: $value.message));
 
   @override
   SchemaValidationErrorCopyWith<$R2, SchemaValidationError, $Out2>

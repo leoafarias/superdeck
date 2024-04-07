@@ -1,80 +1,63 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:json_schema/json_schema.dart';
-
-import 'deep_merge.dart';
 
 part 'json_schema.mapper.dart';
 
 typedef JSON = Map<String, dynamic>;
 
-class SchemaError implements Exception {
+class SchemaValidationException implements Exception {
   final SchemaValidationResult result;
 
-  const SchemaError(this.result);
-
-  @override
-  String toString() {
-    return 'SchemaError: ${result.errors.map((e) => e.errorMessage).join('\n')}';
-  }
+  const SchemaValidationException(this.result);
 }
 
-@MappableEnum()
-enum ErrorType {
-  unallowedAdditionalProperty('Unallowed additional property'),
-  enumViolated('Not a valid value'),
-  requiredPropMissing('Required property missing'),
-  invalidType('Invalid type'),
-  unknown('Unknown error');
-
-  const ErrorType(this.message);
-
-  final String message;
+class SchemaError {
+  const SchemaError._();
+  static const unallowedAdditionalProperty = 'unnalowed_additional_property';
+  static const enumViolated = 'enum_violated';
+  static const requiredPropMissing = 'required_property_missing';
+  static const invalidType = 'invalid_type';
+  static const constraints = 'constraints';
+  static const unknown = 'unknown';
 }
 
 @MappableClass()
 class SchemaValidationError with SchemaValidationErrorMappable {
-  final String location;
-  final String propertyName;
-  final String? value;
-  final ErrorType errorType;
-
+  final String type;
+  final String message;
   const SchemaValidationError({
-    required this.location,
-    required this.propertyName,
-    this.value,
-    required this.errorType,
+    required this.type,
+    required this.message,
   });
 
-  const SchemaValidationError.root({
-    required String propertyName,
-    required ErrorType errorType,
-    String? value,
-  }) : this(
-          location: 'root',
-          propertyName: propertyName,
-          value: value,
-          errorType: errorType,
-        );
+  const SchemaValidationError.unknown()
+      : type = SchemaError.unknown,
+        message = 'Unknown error';
 
-  String get errorMessage {
-    switch (errorType) {
-      case ErrorType.unallowedAdditionalProperty:
-        return "## $location \n ${errorType.message}: `$value`.";
-      case ErrorType.enumViolated:
-        return "## $location \n ${errorType.message}: `$value`.";
-      case ErrorType.requiredPropMissing:
-        return "## $location \n ${errorType.message}: `$value`.";
-      case ErrorType.invalidType:
-        return "## $location \n ${errorType.message}: `$value`";
-      default:
-        return 'Unknown error type.';
-    }
+  const SchemaValidationError.constraints(this.message)
+      : type = SchemaError.constraints;
+
+  const SchemaValidationError.unallowedAdditionalProperty(String property)
+      : type = SchemaError.unallowedAdditionalProperty,
+        message = 'Unallowed additional property: $property';
+
+  const SchemaValidationError.enumViolated(String value)
+      : type = SchemaError.enumViolated,
+        message = 'Enum violated: $value';
+
+  const SchemaValidationError.requiredPropMissing(String property)
+      : type = SchemaError.requiredPropMissing,
+        message = 'Required prop missing: $property';
+
+  const SchemaValidationError.invalidType(String value, String expectedType)
+      : type = SchemaError.invalidType,
+        message = 'Type: wanted [$expectedType] got $value';
+
+  @override
+  String toString() {
+    return 'SchemaValidationError{type: $type, message: $message}';
   }
-
-  static const fromMap = SchemaValidationErrorMapper.fromMap;
-  static const fromJson = SchemaValidationErrorMapper.fromJson;
 }
 
 @MappableClass()
@@ -84,6 +67,46 @@ class SchemaValidationResult with SchemaValidationResultMappable {
   const SchemaValidationResult({
     required this.errors,
   });
+
+  const SchemaValidationResult.valid() : errors = const [];
+
+  static SchemaValidationResult invalidType<T>(
+    T value,
+    String expectedType,
+  ) {
+    return SchemaValidationResult(
+      errors: [
+        SchemaValidationError.invalidType(
+          value.runtimeType.toString(),
+          expectedType,
+        )
+      ],
+    );
+  }
+
+  static SchemaValidationResult unallowedAdditionalProperty(String property) {
+    return SchemaValidationResult(
+      errors: [SchemaValidationError.unallowedAdditionalProperty(property)],
+    );
+  }
+
+  static SchemaValidationResult enumViolated(String value) {
+    return SchemaValidationResult(
+      errors: [SchemaValidationError.enumViolated(value)],
+    );
+  }
+
+  static SchemaValidationResult requiredPropMissing(String property) {
+    return SchemaValidationResult(
+      errors: [SchemaValidationError.requiredPropMissing(property)],
+    );
+  }
+
+  static SchemaValidationResult constraints(String message) {
+    return SchemaValidationResult(
+      errors: [SchemaValidationError.constraints(message)],
+    );
+  }
 
   @override
   String toString() {
@@ -96,169 +119,249 @@ class SchemaValidationResult with SchemaValidationResultMappable {
   static const fromJson = SchemaValidationResultMapper.fromJson;
 }
 
+abstract class SchemaType {
+  const SchemaType();
+
+  SchemaValidationResult validate(Object value);
+
+  void validateOrThrow(Object value) {
+    final result = validate(value);
+    if (!result.isValid) {
+      throw SchemaValidationException(result);
+    }
+  }
+}
+
 @immutable
 class Schema {
-  final JSON _definition;
+  final SchemaType type;
 
-  static final Map<String, JsonSchema> _schemas = {};
+  const Schema({
+    required this.type,
+  });
 
-  const Schema(
-    JSON definition,
-  ) : _definition = definition;
+  static const string = SchemaString();
+  static const double = SchemaDouble();
+  static const integer = SchemaInterger();
+  static const boolean = SchemaBoolean();
+  static const any = SchemaAny();
+}
 
-  // JSON get refDefinition => {_key: _definition};
+class SchemaDouble extends SchemaType {
+  const SchemaDouble();
 
-  // JSON get ref => {r"$ref": "#/definitions/$_key"};
+  @override
+  SchemaValidationResult validate(Object value) {
+    if (value is num) {
+      return const SchemaValidationResult.valid();
+    } else if (value is String) {
+      if (double.tryParse(value) != null) {
+        return const SchemaValidationResult.valid();
+      }
+    }
+    return SchemaValidationResult.invalidType(value, 'number');
+  }
+}
 
-  JSON get definition => _definition;
+class SchemaString extends SchemaType {
+  const SchemaString();
 
-  static SchemaString get string => SchemaString();
-  static SchemaNumber get number => SchemaNumber();
-  static SchemaInterger get integer => SchemaInterger();
-  static SchemaObject get map => SchemaObject(
-        optional: const {},
-        additionalProperties: true,
-      );
-
-  Future<SchemaValidationResult> validate(JSON data) async {
-    JsonSchema schema;
-    if (_schemas.containsKey(_key)) {
-      schema = _schemas[_key]!;
+  @override
+  SchemaValidationResult validate(Object value) {
+    if (value is String) {
+      return const SchemaValidationResult.valid();
     } else {
-      schema = await JsonSchema.createAsync(definition);
-      _schemas[_key] = schema;
-    }
-    final result = schema.validate(data);
-    return SchemaValidationResult(
-      errors: result.errors.map(_parseErrorObject).toList(),
-    );
-  }
-
-  Future<void> validateOrThrow(JSON data) async {
-    final result = await validate(data);
-    if (!result.isValid) {
-      throw SchemaError(result);
+      return SchemaValidationResult.invalidType(value, 'string');
     }
   }
+}
 
-  String get _key => _definition.hashCode.toString();
+class SchemaInterger extends SchemaType {
+  const SchemaInterger();
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Schema && other._definition == _definition;
+  SchemaValidationResult validate(Object value) {
+    if (value is int) {
+      return const SchemaValidationResult.valid();
+    } else if (value is String) {
+      if (int.tryParse(value) != null) {
+        return const SchemaValidationResult.valid();
+      }
+    }
+    return SchemaValidationResult.invalidType(value, 'integer');
   }
+}
+
+class SchemaBoolean extends SchemaType {
+  const SchemaBoolean();
 
   @override
-  int get hashCode => _definition.hashCode;
+  SchemaValidationResult validate(Object value) {
+    if (value is bool) {
+      return const SchemaValidationResult.valid();
+    } else if (value is String) {
+      if (value.toLowerCase() == 'true' || value.toLowerCase() == 'false') {
+        return const SchemaValidationResult.valid();
+      }
+    }
+    return SchemaValidationResult.invalidType(value, 'boolean');
+  }
 }
 
-class SchemaNumber extends Schema {
-  SchemaNumber() : super({"type": "number"});
+class SchemaAny extends SchemaType {
+  const SchemaAny();
+
+  @override
+  SchemaValidationResult validate(Object value) =>
+      const SchemaValidationResult.valid();
 }
 
-class SchemaString extends Schema {
-  SchemaString() : super({"type": "string"});
+class SchemaList<T extends SchemaType> extends SchemaType {
+  final T items;
+  final int? min;
+  final int? max;
+  final bool? uniqueItems;
+
+  const SchemaList({
+    required this.items,
+    this.min,
+    this.max,
+    this.uniqueItems,
+  });
+
+  @override
+  SchemaValidationResult validate(Object value) {
+    if (value is List) {
+      if (min != null && value.length < min!) {
+        return SchemaValidationResult.constraints(
+          'List length is less than the minimum required length: $min',
+        );
+      }
+
+      if (max != null && value.length > max!) {
+        return SchemaValidationResult.constraints(
+          'List length is greater than the maximum required length: $max',
+        );
+      }
+
+      if (uniqueItems == true) {
+        final unique = value.toSet();
+        if (unique.length != value.length) {
+          return SchemaValidationResult.constraints(
+            'List items are not unique',
+          );
+        }
+      }
+
+      final errors = value.map((item) => items.validate(item)).toList();
+
+      if (errors.any((error) => !error.isValid)) {
+        return SchemaValidationResult(
+          errors: errors.expand((e) => e.errors).toList(),
+        );
+      }
+
+      return const SchemaValidationResult.valid();
+    } else {
+      return SchemaValidationResult.invalidType(value, 'List');
+    }
+  }
 }
 
-class SchemaInterger extends Schema {
-  SchemaInterger() : super({"type": "integer"});
-}
+class SchemaMap extends SchemaType {
+  final Map<String, SchemaType> properties;
+  final bool? additionalProperties;
+  final List<String> required;
+  const SchemaMap({
+    required this.properties,
+    this.required = const [],
+    this.additionalProperties,
+  });
 
-class SchemaObject extends Schema {
-  SchemaObject._({
-    Map<String, dynamic> properties = const {},
-    List<String> required = const [],
-    bool additionalProperties = false,
-  }) : super({
-          "type": "object",
-          "additionalProperties": additionalProperties,
-          "properties": properties,
-          "required": required,
-        });
-  factory SchemaObject({
-    Map<String, Schema> optional = const {},
-    Map<String, Schema> required = const {},
-    bool additionalProperties = false,
-  }) {
-    return SchemaObject._(
-      properties: {...optional, ...required}.map(
-        (key, value) => MapEntry(key, value.definition),
-      ),
-      required: required.keys.toList(),
-      additionalProperties: additionalProperties,
-    );
+  const SchemaMap.any()
+      : properties = const {},
+        required = const [],
+        additionalProperties = true;
+
+  @override
+  SchemaValidationResult validate(Object value) {
+    if (value is Map<String, dynamic>) {
+      final keys = value.keys.toSet();
+      final requiredKeys = required.toSet();
+
+      if (!keys.containsAll(requiredKeys)) {
+        return SchemaValidationResult(
+            errors: requiredKeys
+                .difference(keys)
+                .map(SchemaValidationError.requiredPropMissing)
+                .toList());
+      }
+      if (additionalProperties == false) {
+        final extraKeys = keys.difference(properties.keys.toSet());
+        if (extraKeys.isNotEmpty) {
+          return SchemaValidationResult(
+            errors: extraKeys
+                .map(SchemaValidationError.unallowedAdditionalProperty)
+                .toList(),
+          );
+        }
+      }
+
+      final errors = value.entries.map((entry) {
+        final key = entry.key;
+        final prop = properties[key];
+
+        if (prop == null) {
+          return additionalProperties == true
+              ? const SchemaValidationResult.valid()
+              : SchemaValidationResult.unallowedAdditionalProperty(key);
+        }
+
+        return prop.validate(entry.value);
+      }).toList();
+
+      if (errors.any((error) => !error.isValid)) {
+        return SchemaValidationResult(
+          errors: errors.expand((e) => e.errors).toList(),
+        );
+      }
+
+      return const SchemaValidationResult.valid();
+    } else {
+      return SchemaValidationResult.invalidType(value, 'Map<String, dynamic>');
+    }
   }
 
-  static SchemaObject merge(SchemaObject self, SchemaObject other) {
-    return SchemaObject._(
-      properties: deepMerge(
-        self._definition['properties'],
-        other._definition['properties'],
-      ),
+  static SchemaMap merge(SchemaMap self, SchemaMap other) {
+    final properties = {...self.properties, ...other.properties};
+
+    return SchemaMap(
+      properties: properties,
+      additionalProperties:
+          other.additionalProperties ?? self.additionalProperties,
       required: <String>{
-        ...self._definition['required'],
-        ...other._definition['required']
+        ...self.required,
+        ...other.required,
       }.toList(),
-      additionalProperties: other._definition['additionalProperties'],
     );
   }
 }
 
-class SchemaEnum extends Schema {
-  SchemaEnum({
-    required List<String> values,
-  }) : super({
-          "type": "string",
-          "enum": values,
-        });
-}
+class SchemaEnum extends SchemaString {
+  final List<String> values;
+  const SchemaEnum({
+    required this.values,
+  });
 
-SchemaValidationError _parseErrorObject(ValidationError error) {
-  final instancePath = error.instancePath ?? '';
-  final message = error.message;
+  @override
+  SchemaValidationResult validate(Object value) {
+    final result = super.validate(value);
+    if (!result.isValid) {
+      return result;
+    }
 
-  var location = instancePath.replaceAll('/', '.');
-  final propertyName = location.split('.').last;
-
-  if (location.startsWith('.')) {
-    location = location.substring(1);
+    return values.contains(value)
+        ? const SchemaValidationResult.valid()
+        : SchemaValidationResult.enumViolated(value as String);
   }
-
-  dynamic value;
-  ErrorType errorType = ErrorType.unknown;
-
-  if (message.startsWith('unallowed additional property')) {
-    errorType = ErrorType.unallowedAdditionalProperty;
-    value = message.replaceAll('unallowed additional property', '').trim();
-  } else if (message.startsWith('enum violated')) {
-    errorType = ErrorType.enumViolated;
-    // "enum violated rightf"
-    value = message.split('enum violated').last.trim();
-  } else if (message.startsWith('required prop missing:')) {
-    errorType = ErrorType.requiredPropMissing;
-    // "required prop missing: name from {position: rightf, argfs: {title: Awesome Widget, height: 200.02, width: 500.02}}"
-    value = message
-        .replaceAll('required prop missing:', '')
-        .split('from')
-        .first
-        .trim();
-  } else if (message.startsWith('type:')) {
-    errorType = ErrorType.invalidType;
-    // extract the type value from the message
-    // "type: wanted [string] got 5"
-
-    final type = message.split('[').last.split(']').first;
-    value = message.split('got').last.trim();
-
-    value = '$value, expected $type.';
-  }
-
-  return SchemaValidationError(
-    location: location,
-    propertyName: propertyName,
-    value: value,
-    errorType: errorType,
-  );
 }

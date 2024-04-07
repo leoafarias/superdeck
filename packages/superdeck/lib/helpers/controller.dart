@@ -37,7 +37,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
   final List<Slide> slides;
   final List<SlideAsset> assets;
   final Config projectOptions;
-  final Map<String, Widget Function(WidgetOptions)> widgetBuilders;
+  final Map<String, WidgetBuilderOptions> widgetBuilders;
   final Style style;
 
   const SuperDeck({

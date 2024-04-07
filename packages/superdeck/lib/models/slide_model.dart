@@ -39,17 +39,16 @@ abstract class Slide extends Config with SlideMappable {
 
   static const fromJson = SlideMapper.fromJson;
 
-  static final schema = SchemaObject.merge(
+  static final schema = SchemaMap.merge(
     Config.schema,
-    SchemaObject(
-      required: {
+    SchemaMap(
+      properties: {
         "layout": Schema.string,
         "data": Schema.string,
-      },
-      optional: {
         "content": ContentOptions.schema,
         "title": Schema.string,
       },
+      required: ['layout', 'data'],
       // Accepts any additional properties
       // because its an abstract class
       additionalProperties: false,
@@ -93,12 +92,13 @@ class ImageSlide extends Slide with ImageSlideMappable {
 
   static const fromJson = ImageSlideMapper.fromJson;
 
-  static final schema = SchemaObject.merge(
+  static final schema = SchemaMap.merge(
     Slide.schema,
-    SchemaObject(
-      required: {
+    SchemaMap(
+      properties: {
         'image': ImageOptions.schema,
       },
+      required: ['image'],
     ),
   );
 }
@@ -121,12 +121,13 @@ class WidgetSlide extends Slide with WidgetSlideMappable {
 
   static const fromJson = WidgetSlideMapper.fromJson;
 
-  static final schema = SchemaObject.merge(
+  static final schema = SchemaMap.merge(
     Slide.schema,
-    SchemaObject(
-      required: {
+    SchemaMap(
+      properties: {
         'widget': WidgetOptions.schema,
       },
+      required: ['widget'],
     ),
   );
 }
@@ -156,10 +157,10 @@ abstract class TwoSectionSlide extends Slide with TwoSectionSlideMappable {
 
   String get rightContent => sections[SectionTag.right] ?? '';
 
-  static final schema = SchemaObject.merge(
+  static final schema = SchemaMap.merge(
     Slide.schema,
-    SchemaObject(
-      optional: {
+    SchemaMap(
+      properties: {
         'left_section': ContentOptions.schema,
         'right_section': ContentOptions.schema,
       },
@@ -211,10 +212,10 @@ class TwoColumnHeaderSlide extends TwoSectionSlide
 
   static const fromJson = TwoColumnHeaderSlideMapper.fromJson;
 
-  static final schema = SchemaObject.merge(
+  static final schema = SchemaMap.merge(
     TwoSectionSlide.schema,
-    SchemaObject(
-      optional: {
+    SchemaMap(
+      properties: {
         'header': ContentOptions.schema,
       },
     ),
@@ -250,16 +251,17 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
     return InvalidSlide.message('# Exception \n ## ${exception.toString()}');
   }
 
-  factory InvalidSlide.schemaError(SchemaError error, [String? content]) {
-    final errors = error.result.errors;
-    final errorMessage = errors.map((error) => error.errorMessage).join('\n');
+  factory InvalidSlide.schemaError(SchemaValidationResult result,
+      [String? content]) {
+    final errors = result.errors;
+    final errorMessage = errors.map((error) => error.message).join('\n');
 
     content ??= '# Schema Error';
 
     return InvalidSlide.message('$content \n ## $errorMessage');
   }
 
-  factory InvalidSlide.projectSchemaError(SchemaError error) {
+  factory InvalidSlide.projectSchemaError(SchemaValidationResult error) {
     return InvalidSlide.schemaError(error, '# Project configuration error');
   }
 

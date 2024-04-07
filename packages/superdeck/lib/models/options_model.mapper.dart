@@ -1410,6 +1410,8 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
 
   @override
   final String id = 'WidgetOptions';
+  @override
+  Function get typeFactory => <T>(f) => f<WidgetOptions<T>>();
 
   static String _$name(WidgetOptions v) => v.name;
   static const Field<WidgetOptions, String> _f$name = Field('name', _$name);
@@ -1433,7 +1435,7 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   @override
   final bool ignoreNull = true;
 
-  static WidgetOptions _instantiate(DecodingData data) {
+  static WidgetOptions<T> _instantiate<T>(DecodingData data) {
     return WidgetOptions(
         name: data.dec(_f$name),
         args: data.dec(_f$args),
@@ -1444,33 +1446,33 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   @override
   final Function instantiate = _instantiate;
 
-  static WidgetOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<WidgetOptions>(map);
+  static WidgetOptions<T> fromMap<T>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<WidgetOptions<T>>(map);
   }
 
-  static WidgetOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<WidgetOptions>(json);
+  static WidgetOptions<T> fromJson<T>(String json) {
+    return ensureInitialized().decodeJson<WidgetOptions<T>>(json);
   }
 }
 
-mixin WidgetOptionsMappable {
+mixin WidgetOptionsMappable<T> {
   String toJson() {
     return WidgetOptionsMapper.ensureInitialized()
-        .encodeJson<WidgetOptions>(this as WidgetOptions);
+        .encodeJson<WidgetOptions<T>>(this as WidgetOptions<T>);
   }
 
   Map<String, dynamic> toMap() {
     return WidgetOptionsMapper.ensureInitialized()
-        .encodeMap<WidgetOptions>(this as WidgetOptions);
+        .encodeMap<WidgetOptions<T>>(this as WidgetOptions<T>);
   }
 
-  WidgetOptionsCopyWith<WidgetOptions, WidgetOptions, WidgetOptions>
+  WidgetOptionsCopyWith<WidgetOptions<T>, WidgetOptions<T>, WidgetOptions<T>, T>
       get copyWith => _WidgetOptionsCopyWithImpl(
-          this as WidgetOptions, $identity, $identity);
+          this as WidgetOptions<T>, $identity, $identity);
   @override
   String toString() {
     return WidgetOptionsMapper.ensureInitialized()
-        .stringifyValue(this as WidgetOptions);
+        .stringifyValue(this as WidgetOptions<T>);
   }
 
   @override
@@ -1478,23 +1480,23 @@ mixin WidgetOptionsMappable {
     return identical(this, other) ||
         (runtimeType == other.runtimeType &&
             WidgetOptionsMapper.ensureInitialized()
-                .isValueEqual(this as WidgetOptions, other));
+                .isValueEqual(this as WidgetOptions<T>, other));
   }
 
   @override
   int get hashCode {
     return WidgetOptionsMapper.ensureInitialized()
-        .hashValue(this as WidgetOptions);
+        .hashValue(this as WidgetOptions<T>);
   }
 }
 
-extension WidgetOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, WidgetOptions, $Out> {
-  WidgetOptionsCopyWith<$R, WidgetOptions, $Out> get $asWidgetOptions =>
+extension WidgetOptionsValueCopy<$R, $Out, T>
+    on ObjectCopyWith<$R, WidgetOptions<T>, $Out> {
+  WidgetOptionsCopyWith<$R, WidgetOptions<T>, $Out, T> get $asWidgetOptions =>
       $base.as((v, t, t2) => _WidgetOptionsCopyWithImpl(v, t, t2));
 }
 
-abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions, $Out>
+abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions<T>, $Out, T>
     implements ClassCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get args;
@@ -1503,12 +1505,13 @@ abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions, $Out>
       Map<String, dynamic>? args,
       int? flex,
       LayoutPosition? position});
-  WidgetOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  WidgetOptionsCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
 }
 
-class _WidgetOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, WidgetOptions, $Out>
-    implements WidgetOptionsCopyWith<$R, WidgetOptions, $Out> {
+class _WidgetOptionsCopyWithImpl<$R, $Out, T>
+    extends ClassCopyWithBase<$R, WidgetOptions<T>, $Out>
+    implements WidgetOptionsCopyWith<$R, WidgetOptions<T>, $Out, T> {
   _WidgetOptionsCopyWithImpl(super.value, super.then, super.then2);
 
   @override
@@ -1531,14 +1534,14 @@ class _WidgetOptionsCopyWithImpl<$R, $Out>
         if (position != null) #position: position
       }));
   @override
-  WidgetOptions $make(CopyWithData data) => WidgetOptions(
+  WidgetOptions<T> $make(CopyWithData data) => WidgetOptions(
       name: data.get(#name, or: $value.name),
       args: data.get(#args, or: $value.args),
       flex: data.get(#flex, or: $value.flex),
       position: data.get(#position, or: $value.position));
 
   @override
-  WidgetOptionsCopyWith<$R2, WidgetOptions, $Out2> $chain<$R2, $Out2>(
+  WidgetOptionsCopyWith<$R2, WidgetOptions<T>, $Out2, T> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _WidgetOptionsCopyWithImpl($value, $cast, t);
 }

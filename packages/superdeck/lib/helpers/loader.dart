@@ -34,7 +34,7 @@ class SlidesLoader {
     final data = _loadYamlAsMap(projectConfigContents);
 
     //  Run validation
-    await Config.schema.validateOrThrow(data);
+    Config.schema.validateOrThrow(data);
 
     return Config.fromMap(data);
   }
@@ -363,26 +363,26 @@ Future<Slide> _parseSlideFromMap(Map<String, dynamic> map) async {
     switch (layout) {
       case LayoutType.simple:
       case null:
-        await SimpleSlide.schema.validateOrThrow(map);
+        SimpleSlide.schema.validateOrThrow(map);
         return SimpleSlide.fromMap(map);
       case LayoutType.image:
-        await ImageSlide.schema.validateOrThrow(map);
+        ImageSlide.schema.validateOrThrow(map);
         return ImageSlide.fromMap(map);
       case LayoutType.widget:
-        await WidgetSlide.schema.validateOrThrow(map);
+        WidgetSlide.schema.validateOrThrow(map);
         return WidgetSlide.fromMap(map);
       case LayoutType.twoColumn:
-        await TwoColumnSlide.schema.validateOrThrow(map);
+        TwoColumnSlide.schema.validateOrThrow(map);
         return TwoColumnSlide.fromMap(map);
       case LayoutType.twoColumnHeader:
-        await TwoColumnHeaderSlide.schema.validateOrThrow(map);
+        TwoColumnHeaderSlide.schema.validateOrThrow(map);
         return TwoColumnHeaderSlide.fromMap(map);
 
       default:
         return InvalidSlide.invalidTemplate(layout);
     }
-  } on SchemaError catch (e) {
-    return InvalidSlide.schemaError(e);
+  } on SchemaValidationException catch (e) {
+    return InvalidSlide.schemaError(e.result);
   } on Exception catch (e) {
     return InvalidSlide.exception(e);
   } catch (e) {

@@ -32,7 +32,7 @@ class SuperDeckApp extends StatefulWidget {
   }
 
   final Style? style;
-  final Map<String, Widget Function(WidgetOptions)>? widgetBuilders;
+  final Map<String, WidgetBuilderOptions>? widgetBuilders;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -121,8 +121,8 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       final project = await SlidesLoader.loadProjectConfig();
       _errorSlide = null;
       return project;
-    } on SchemaError catch (e) {
-      _errorSlide = InvalidSlide.projectSchemaError(e);
+    } on SchemaValidationException catch (e) {
+      _errorSlide = InvalidSlide.projectSchemaError(e.result);
 
       return const Config.empty();
     } on Exception catch (e) {

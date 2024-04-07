@@ -513,8 +513,8 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
   static String? _$title(WidgetSlide v) => v.title;
   static const Field<WidgetSlide, String> _f$title =
       Field('title', _$title, opt: true);
-  static WidgetOptions _$widget(WidgetSlide v) => v.widget;
-  static const Field<WidgetSlide, WidgetOptions> _f$widget =
+  static WidgetOptions<dynamic> _$widget(WidgetSlide v) => v.widget;
+  static const Field<WidgetSlide, WidgetOptions<dynamic>> _f$widget =
       Field('widget', _$widget);
   static String? _$style(WidgetSlide v) => v.style;
   static const Field<WidgetSlide, String> _f$style =
@@ -619,7 +619,8 @@ extension WidgetSlideValueCopy<$R, $Out>
 
 abstract class WidgetSlideCopyWith<$R, $In extends WidgetSlide, $Out>
     implements SlideCopyWith<$R, $In, $Out> {
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get widget;
+  WidgetOptionsCopyWith<$R, WidgetOptions<dynamic>, WidgetOptions<dynamic>,
+      dynamic> get widget;
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;
@@ -629,7 +630,7 @@ abstract class WidgetSlideCopyWith<$R, $In extends WidgetSlide, $Out>
   @override
   $R call(
       {String? title,
-      WidgetOptions? widget,
+      WidgetOptions<dynamic>? widget,
       String? style,
       String? background,
       ContentOptions? contentOptions,
@@ -647,8 +648,9 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
   late final ClassMapperBase<WidgetSlide> $mapper =
       WidgetSlideMapper.ensureInitialized();
   @override
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get widget =>
-      $value.widget.copyWith.$chain((v) => call(widget: v));
+  WidgetOptionsCopyWith<$R, WidgetOptions<dynamic>, WidgetOptions<dynamic>,
+          dynamic>
+      get widget => $value.widget.copyWith.$chain((v) => call(widget: v));
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions => $value.contentOptions?.copyWith
@@ -660,7 +662,7 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? title = $none,
-          WidgetOptions? widget,
+          WidgetOptions<dynamic>? widget,
           Object? style = $none,
           Object? background = $none,
           Object? contentOptions = $none,
