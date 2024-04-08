@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../helpers/json_schema.dart';
+import '../helpers/schema/json_schema.dart';
 import '../styles/style_util.dart';
 import 'options_model.dart';
 import 'syntax_tag.dart';
@@ -12,12 +12,14 @@ abstract class Slide extends Config with SlideMappable {
   final String? title;
   final String layout;
   final String data;
+  @MappableField(key: 'content')
+  final ContentOptions? contentOptions;
 
   const Slide({
     required this.layout,
     required this.data,
     required this.title,
-    required super.contentOptions,
+    required this.contentOptions,
     required super.background,
     required super.style,
     required super.transition,
@@ -39,20 +41,13 @@ abstract class Slide extends Config with SlideMappable {
 
   static const fromJson = SlideMapper.fromJson;
 
-  static final schema = SchemaMap.merge(
-    Config.schema,
-    SchemaMap(
-      properties: {
-        "layout": Schema.string,
-        "data": Schema.string,
-        "content": ContentOptions.schema,
-        "title": Schema.string,
-      },
-      required: ['layout', 'data'],
-      // Accepts any additional properties
-      // because its an abstract class
-      additionalProperties: false,
-    ),
+  static final schema = Config.schema.merge(
+    {
+      "layout": Schema.string.required(),
+      "data": Schema.string.required(),
+      "content": ContentOptions.schema.optional(),
+      "title": Schema.string.optional(),
+    },
   );
 }
 
@@ -92,14 +87,10 @@ class ImageSlide extends Slide with ImageSlideMappable {
 
   static const fromJson = ImageSlideMapper.fromJson;
 
-  static final schema = SchemaMap.merge(
-    Slide.schema,
-    SchemaMap(
-      properties: {
-        'image': ImageOptions.schema,
-      },
-      required: ['image'],
-    ),
+  static final schema = Slide.schema.merge(
+    {
+      'image': ImageOptions.schema.required(),
+    },
   );
 }
 
@@ -121,14 +112,10 @@ class WidgetSlide extends Slide with WidgetSlideMappable {
 
   static const fromJson = WidgetSlideMapper.fromJson;
 
-  static final schema = SchemaMap.merge(
-    Slide.schema,
-    SchemaMap(
-      properties: {
-        'widget': WidgetOptions.schema,
-      },
-      required: ['widget'],
-    ),
+  static final schema = Slide.schema.merge(
+    {
+      'widget': WidgetOptions.schema.required(),
+    },
   );
 }
 
@@ -157,14 +144,11 @@ abstract class TwoSectionSlide extends Slide with TwoSectionSlideMappable {
 
   String get rightContent => sections[SectionTag.right] ?? '';
 
-  static final schema = SchemaMap.merge(
-    Slide.schema,
-    SchemaMap(
-      properties: {
-        'left_section': ContentOptions.schema,
-        'right_section': ContentOptions.schema,
-      },
-    ),
+  static final schema = Slide.schema.merge(
+    {
+      'left_section': ContentOptions.schema.optional(),
+      'right_section': ContentOptions.schema.optional(),
+    },
   );
 }
 
@@ -212,13 +196,10 @@ class TwoColumnHeaderSlide extends TwoSectionSlide
 
   static const fromJson = TwoColumnHeaderSlideMapper.fromJson;
 
-  static final schema = SchemaMap.merge(
-    TwoSectionSlide.schema,
-    SchemaMap(
-      properties: {
-        'header': ContentOptions.schema,
-      },
-    ),
+  static final schema = TwoSectionSlide.schema.merge(
+    {
+      'header': ContentOptions.schema.optional(),
+    },
   );
 }
 
@@ -251,14 +232,30 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
     return InvalidSlide.message('# Exception \n ## ${exception.toString()}');
   }
 
-  factory InvalidSlide.schemaError(SchemaValidationResult result,
-      [String? content]) {
+  factory InvalidSlide.schemaError(
+    SchemaValidationResult result, [
+    String? content,
+  ]) {
+    final path = result.key;
     final errors = result.errors;
     final errorMessage = errors.map((error) => error.message).join('\n');
 
+    //  dont forget the tab or spacing since they are nested
+    String keysNested = '';
+
+    if (path.isNotEmpty) {
+      keysNested = path.join('.');
+    }
+
     content ??= '# Schema Error';
 
-    return InvalidSlide.message('$content \n ## $errorMessage');
+    final message = '''
+$content  
+## $keysNested
+$errorMessage
+''';
+
+    return InvalidSlide.message(message);
   }
 
   factory InvalidSlide.projectSchemaError(SchemaValidationResult error) {

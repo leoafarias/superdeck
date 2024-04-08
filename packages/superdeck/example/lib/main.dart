@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:superdeck/models/options_model.dart';
 import 'package:superdeck/superdeck.dart';
 import 'package:superdeck_demo/src/widget/mix_demo.dart';
 
@@ -61,25 +62,25 @@ void main() async {
         debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
           style: style,
-          widgetBuilders: {
-            'mix': const MixDemo(),
-          },
+          // ignore: prefer_const_literals_to_create_immutables
+          examples: [
+            // ignore: prefer_const_constructors
+            Example.withDecoder(
+              name: 'demo',
+              decoder: ExampleOptions.fromMap,
+              schema: ExampleOptions.schema,
+              builder: (args) {
+                return Container(
+                  color: Colors.purple,
+                  child: const Center(
+                    child: Text('Hello World'),
+                  ),
+                );
+              },
+            )
+          ],
         ),
       );
     }),
   );
-}
-
-class MyPresentation extends StatelessWidget {
-  const MyPresentation({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SuperDeckApp(
-      style: style,
-      widgetBuilders: const {
-        'mix': mixDemo,
-      },
-    );
-  }
 }

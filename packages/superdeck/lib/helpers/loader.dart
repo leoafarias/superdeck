@@ -10,7 +10,7 @@ import 'package:yaml/yaml.dart';
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
-import 'json_schema.dart';
+import 'schema/json_schema.dart';
 
 const _assetPrefix = 'sd_';
 
@@ -34,7 +34,7 @@ class SlidesLoader {
     final data = _loadYamlAsMap(projectConfigContents);
 
     //  Run validation
-    Config.schema.validateOrThrow(data);
+    Config.schema.validateOrThrow('config', data);
 
     return Config.fromMap(data);
   }
@@ -359,23 +359,24 @@ List<Slide> _parseFromJson(String slidesJson) {
 Future<Slide> _parseSlideFromMap(Map<String, dynamic> map) async {
   final layout = map['layout'] as String?;
 
+  const options = 'options';
   try {
     switch (layout) {
       case LayoutType.simple:
       case null:
-        SimpleSlide.schema.validateOrThrow(map);
+        SimpleSlide.schema.validateOrThrow(options, map);
         return SimpleSlide.fromMap(map);
       case LayoutType.image:
-        ImageSlide.schema.validateOrThrow(map);
+        ImageSlide.schema.validateOrThrow(options, map);
         return ImageSlide.fromMap(map);
       case LayoutType.widget:
-        WidgetSlide.schema.validateOrThrow(map);
+        WidgetSlide.schema.validateOrThrow(options, map);
         return WidgetSlide.fromMap(map);
       case LayoutType.twoColumn:
-        TwoColumnSlide.schema.validateOrThrow(map);
+        TwoColumnSlide.schema.validateOrThrow(options, map);
         return TwoColumnSlide.fromMap(map);
       case LayoutType.twoColumnHeader:
-        TwoColumnHeaderSlide.schema.validateOrThrow(map);
+        TwoColumnHeaderSlide.schema.validateOrThrow(options, map);
         return TwoColumnHeaderSlide.fromMap(map);
 
       default:

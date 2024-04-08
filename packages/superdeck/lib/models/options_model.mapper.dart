@@ -855,7 +855,6 @@ class ConfigMapper extends ClassMapperBase<Config> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfigMapper._());
       TransitionOptionsMapper.ensureInitialized();
-      ContentOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -871,16 +870,12 @@ class ConfigMapper extends ClassMapperBase<Config> {
   static TransitionOptions? _$transition(Config v) => v.transition;
   static const Field<Config, TransitionOptions> _f$transition =
       Field('transition', _$transition);
-  static ContentOptions? _$contentOptions(Config v) => v.contentOptions;
-  static const Field<Config, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
 
   @override
   final MappableFields<Config> fields = const {
     #background: _f$background,
     #style: _f$style,
     #transition: _f$transition,
-    #contentOptions: _f$contentOptions,
   };
   @override
   final bool ignoreNull = true;
@@ -889,8 +884,7 @@ class ConfigMapper extends ClassMapperBase<Config> {
     return Config(
         background: data.dec(_f$background),
         style: data.dec(_f$style),
-        transition: data.dec(_f$transition),
-        contentOptions: data.dec(_f$contentOptions));
+        transition: data.dec(_f$transition));
   }
 
   @override
@@ -944,13 +938,7 @@ abstract class ConfigCopyWith<$R, $In extends Config, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition;
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
-      get contentOptions;
-  $R call(
-      {String? background,
-      String? style,
-      TransitionOptions? transition,
-      ContentOptions? contentOptions});
+  $R call({String? background, String? style, TransitionOptions? transition});
   ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -965,27 +953,20 @@ class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
       get transition =>
           $value.transition?.copyWith.$chain((v) => call(transition: v));
   @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
-      get contentOptions => $value.contentOptions?.copyWith
-          .$chain((v) => call(contentOptions: v));
-  @override
   $R call(
           {Object? background = $none,
           Object? style = $none,
-          Object? transition = $none,
-          Object? contentOptions = $none}) =>
+          Object? transition = $none}) =>
       $apply(FieldCopyWithData({
         if (background != $none) #background: background,
         if (style != $none) #style: style,
-        if (transition != $none) #transition: transition,
-        if (contentOptions != $none) #contentOptions: contentOptions
+        if (transition != $none) #transition: transition
       }));
   @override
   Config $make(CopyWithData data) => Config(
       background: data.get(#background, or: $value.background),
       style: data.get(#style, or: $value.style),
-      transition: data.get(#transition, or: $value.transition),
-      contentOptions: data.get(#contentOptions, or: $value.contentOptions));
+      transition: data.get(#transition, or: $value.transition));
 
   @override
   ConfigCopyWith<$R2, Config, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -1423,7 +1404,7 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
       Field('flex', _$flex, opt: true, def: 1);
   static LayoutPosition _$position(WidgetOptions v) => v.position;
   static const Field<WidgetOptions, LayoutPosition> _f$position =
-      Field('position', _$position, opt: true, def: LayoutPosition.left);
+      Field('position', _$position, opt: true, def: LayoutPosition.right);
 
   @override
   final MappableFields<WidgetOptions> fields = const {

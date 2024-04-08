@@ -37,14 +37,14 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
   final List<Slide> slides;
   final List<SlideAsset> assets;
   final Config projectOptions;
-  final Map<String, WidgetBuilderOptions> widgetBuilders;
+  final Map<String, Example> widgetExamples;
   final Style style;
 
   const SuperDeck({
     super.key,
     required this.slides,
     required this.assets,
-    required this.widgetBuilders,
+    required this.widgetExamples,
     required this.style,
     required this.projectOptions,
     required super.child,
@@ -78,11 +78,10 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
         .style;
   }
 
-  static Map<String, WidgetBuilderOptions> widgetBuildersOf(
-      BuildContext context) {
+  static Map<String, Example> widgetExamplesOf(BuildContext context) {
     return InheritedModel.inheritFrom<SuperDeck>(context,
             aspect: SuperDeckAspect.widgetBuilders)!
-        .widgetBuilders;
+        .widgetExamples;
   }
 
   @override
@@ -90,7 +89,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
     return oldWidget.slides != slides ||
         oldWidget.assets != assets ||
         oldWidget.style != style ||
-        oldWidget.widgetBuilders != widgetBuilders;
+        oldWidget.widgetExamples != widgetExamples;
   }
 
   @override
@@ -105,7 +104,7 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
       return true;
     }
     if (dependencies.contains(SuperDeckAspect.widgetBuilders) &&
-        oldWidget.widgetBuilders != widgetBuilders) {
+        oldWidget.widgetExamples != widgetExamples) {
       return true;
     }
     if (dependencies.contains(SuperDeckAspect.style) &&

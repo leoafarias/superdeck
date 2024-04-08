@@ -2,8 +2,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
-import '../helpers/json_schema.dart';
 import '../helpers/layout_builder.dart';
+import '../helpers/schema/json_schema.dart';
 import 'slide_model.dart';
 
 part 'options_model.mapper.dart';
@@ -14,31 +14,25 @@ class Config with ConfigMappable {
   final String? style;
   final TransitionOptions? transition;
 
-  @MappableField(key: 'content')
-  final ContentOptions? contentOptions;
-
   const Config({
     required this.background,
     required this.style,
     required this.transition,
-    required this.contentOptions,
   });
 
   const Config.empty()
       : background = null,
         style = null,
-        contentOptions = null,
         transition = null;
 
   static const fromMap = ConfigMapper.fromMap;
   static const fromJson = ConfigMapper.fromJson;
 
-  static final schema = SchemaMap(
-    properties: {
-      'content': ContentOptions.schema,
-      "background": Schema.string,
-      "style": Schema.string,
-      "transition": TransitionOptions.schema,
+  static final schema = Schema(
+    {
+      "background": Schema.string.optional(),
+      "style": Schema.string.optional(),
+      "transition": TransitionOptions.schema.optional(),
     },
   );
 }
@@ -61,10 +55,10 @@ class ContentOptions with ContentOptionsMappable {
   static const fromMap = ContentOptionsMapper.fromMap;
   static const fromJson = ContentOptionsMapper.fromJson;
 
-  static final schema = SchemaMap(
-    properties: {
-      "alignment": ContentAlignment.schema,
-      "flex": Schema.integer,
+  static final schema = Schema(
+    {
+      "alignment": ContentAlignment.schema.optional(),
+      "flex": Schema.integer.optional(),
     },
   );
 }
@@ -86,14 +80,13 @@ class ImageOptions with ImageOptionsMappable {
   static const fromMap = ImageOptionsMapper.fromMap;
   static const fromJson = ImageOptionsMapper.fromJson;
 
-  static final schema = SchemaMap(
-    properties: {
-      "fit": ImageFit.schema,
-      "position": LayoutPosition.schema,
-      "flex": Schema.integer,
-      "src": Schema.string,
+  static final schema = Schema(
+    {
+      "fit": ImageFit.schema.optional(),
+      "position": LayoutPosition.schema.optional(),
+      "flex": Schema.integer.optional(),
+      "src": Schema.string.required(),
     },
-    required: ["src"],
   );
 }
 
@@ -117,14 +110,13 @@ class TransitionOptions with TransitionOptionsMappable {
 
   static const fromJson = TransitionOptionsMapper.fromJson;
 
-  static final schema = SchemaMap(
-    properties: {
-      "type": TransitionType.schema,
-      "duration": Schema.integer,
-      "delay": Schema.integer,
-      "curve": CurveType.schema
+  static final schema = Schema(
+    {
+      "type": TransitionType.schema.required(),
+      "duration": Schema.integer.optional(),
+      "delay": Schema.integer.optional(),
+      "curve": CurveType.schema.optional()
     },
-    required: ["type"],
   );
 }
 
@@ -142,21 +134,82 @@ class DurationMapper extends SimpleMapper<Duration> {
   }
 }
 
-typedef WidgetBuilderOptions = Widget Function(Map<String, dynamic>);
+Map<String, dynamic> _defaultEncoder(Map<String, dynamic> args) {
+  return args;
+}
 
-abstract class WidgetDemoBuilder<T> {
-  const WidgetDemoBuilder();
+typedef Decoder<T> = T Function(Map<String, dynamic>);
 
-  T encode(Map<String, dynamic> args);
+class Example<T> extends ExampleWidget {
+  final Widget Function(T) builder;
+  @override
+  final Schema schema;
 
-  SchemaMap get schema => const SchemaMap.any();
+  final Decoder<T>? _decoder;
+
+  const Example._({
+    required super.name,
+    required this.builder,
+    this.schema = Schema.any,
+    Decoder<T>? decoder,
+  }) : _decoder = decoder;
+
+  static Example<Map<String, dynamic>> simple({
+    required String name,
+    required Widget Function(Map<String, dynamic>) builder,
+  }) {
+    return Example._(
+      name: name,
+      builder: builder,
+      decoder: _defaultEncoder,
+    );
+  }
+
+  static Example withDecoder<T>({
+    required String name,
+    required Widget Function(T) builder,
+    required Decoder<T> decoder,
+    Schema schema = Schema.any,
+  }) {
+    return Example<T>._(
+      name: name,
+      builder: builder,
+      decoder: decoder,
+      schema: schema,
+    );
+  }
+
+  @override
+  T decode(Map<String, dynamic> args) {
+    if (_decoder != null) {
+      return _decoder!(args);
+    }
+    return args as T;
+  }
+
+  @override
+  Widget build(args) {
+    return builder(args);
+  }
+}
+
+abstract class ExampleWidget<T> {
+  const ExampleWidget({
+    required this.name,
+  });
+
+  final String name;
+
+  T decode(Map<String, dynamic> args);
+
+  Schema get schema;
 
   Widget call(Map<String, dynamic> args) {
-    final result = schema.validate(args);
+    final result = schema.validate(['widget', name], args);
     if (!result.isValid) {
       return InvalidSlideTemplate(config: InvalidSlide.schemaError(result));
     }
-    return build(encode(args));
+    return build(decode(args));
   }
 
   Widget build(T args);
@@ -173,20 +226,19 @@ class WidgetOptions<T> with WidgetOptionsMappable {
     required this.name,
     this.args = const {},
     this.flex = 1,
-    this.position = LayoutPosition.left,
+    this.position = LayoutPosition.right,
   });
 
   static const fromMap = WidgetOptionsMapper.fromMap;
   static const fromJson = WidgetOptionsMapper.fromJson;
 
-  static final schema = SchemaMap(
-    properties: {
-      "name": Schema.string,
-      "args": Schema.any,
-      "position": LayoutPosition.schema,
-      "flex": Schema.integer,
+  static final schema = Schema(
+    {
+      "name": Schema.string.required(),
+      "args": Schema.any.optional(),
+      "position": LayoutPosition.schema.optional(),
+      "flex": Schema.integer.optional(),
     },
-    required: ["name"],
   );
 }
 
@@ -200,7 +252,7 @@ enum ImageFit {
   none,
   scaleDown;
 
-  static final schema = SchemaEnum(
+  static final schema = EnumSchema(
     values: ImageFit.values.map((e) => e.name.snakeCase).toList(),
   );
 
@@ -302,7 +354,7 @@ enum SyntaxHighlightTheme {
   xcode,
   xt256;
 
-  static final schema = SchemaEnum(
+  static final schema = EnumSchema(
     values: SyntaxHighlightTheme.values.map((e) => e.name.snakeCase).toList(),
   );
 }
@@ -373,7 +425,7 @@ enum TransitionType {
   spinPerfect,
   swing;
 
-  static final schema = SchemaEnum(
+  static final schema = EnumSchema(
     values: TransitionType.values.map((e) => e.name.snakeCase).toList(),
   );
 }
@@ -396,8 +448,8 @@ enum CurveType {
   slowMiddle,
   linearToEaseOut;
 
-  static final schema = SchemaEnum(
-    values: CurveType.values.map((e) => e.name.snakeCase).toList(),
+  static final schema = EnumSchema(
+    values: values.map((e) => e.name.snakeCase).toList(),
   );
 }
 
@@ -408,7 +460,7 @@ enum LayoutPosition {
   top,
   bottom;
 
-  static final schema = SchemaEnum(
+  static final schema = EnumSchema(
     values: LayoutPosition.values.map((e) => e.name.snakeCase).toList(),
   );
 }
@@ -425,7 +477,7 @@ enum ContentAlignment {
   bottomCenter,
   bottomRight;
 
-  static final schema = SchemaEnum(
+  static final schema = EnumSchema(
     values: ContentAlignment.values.map((e) => e.name.snakeCase).toList(),
   );
 

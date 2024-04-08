@@ -50,6 +50,7 @@ Style get defaultStyle => Style.create([
       $.table.textStyle.as(baseTextStyle),
       $.table.head.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
       $.table.body.as(baseTextStyle),
+      $.blockSpacing(20),
       $.table.cellPadding.all(12),
       $.table.border.all(color: Colors.grey, width: 2),
       $.table.rowDecoration.color(Colors.grey.withOpacity(0.1)),

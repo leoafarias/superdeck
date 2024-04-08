@@ -26,6 +26,7 @@ dependencies:
   json_schema: ^5.1.6  
   re_highlight: ^0.0.3
   recase: ^4.1.0
+  syntax_highlight: ^0.4.0
   
 dev_dependencies:
   flutter_test:
@@ -36,3 +37,6 @@ dev_dependencies:
   dart_mappable_builder: ^4.2.1
 
 flutter:
+  assets:
+    # - grammars/
+    # - themes/

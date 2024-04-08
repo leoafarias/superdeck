@@ -91,7 +91,6 @@ mixin SlideMappable {
 
 abstract class SlideCopyWith<$R, $In extends Slide, $Out>
     implements ConfigCopyWith<$R, $In, $Out> {
-  @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;
   @override

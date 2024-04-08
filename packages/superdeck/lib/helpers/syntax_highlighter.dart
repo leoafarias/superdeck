@@ -1,28 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:re_highlight/languages/all.dart';
-import 'package:re_highlight/re_highlight.dart' as re;
-import 'package:re_highlight/styles/all.dart';
+import 'package:re_highlight/re_highlight.dart';
+import 'package:syntax_highlight/syntax_highlight.dart';
 
-final reHighlight = re.Highlight();
+final reHighlight = Highlight();
 
 class SyntaxHighlight {
   SyntaxHighlight._();
 
+  static late HighlighterTheme _theme;
+
+  static final List<String> _mainSupportedLanguages = [
+    'dart',
+    'json',
+    'yaml',
+  ];
+
+  static final List<String> _secondarySupportedLangs = [];
+
   static initialize() async {
-    reHighlight.registerLanguages(builtinAllLanguages);
+    await Highlighter.initialize(_mainSupportedLanguages);
+
+    // Load the default light theme and create a highlightfer.
+    _theme = await HighlighterTheme.loadDarkTheme();
+  }
+
+  static HighlightResult _highlightResult(String source, String? language) {
+    if (language == null) {
+      return reHighlight.highlightAuto(source);
+    }
+    if (!_secondarySupportedLangs.contains(language)) {
+      reHighlight.registerLanguage(language, builtinAllLanguages[language]!);
+    }
+
+    return reHighlight.highlight(code: source, language: language);
   }
 
   static List<TextSpan> render(String source, String? language) {
-    re.HighlightResult result;
-
-    if (language == null) {
-      result = reHighlight.highlightAuto(source);
-    } else {
-      result = reHighlight.highlight(code: source, language: language);
+    if (_mainSupportedLanguages.contains(language)) {
+      final highlighter = Highlighter(language: language!, theme: _theme);
+      return [highlighter.highlight(source)];
     }
 
-    final renderer =
-        re.TextSpanRenderer(null, builtinAllThemes['tokyo-night-dark']!);
+    final result = _highlightResult(source, language);
+
+    final renderer = TextSpanRenderer(
+      const TextStyle(),
+      vscodeDarkTheme,
+    );
     result.render(renderer);
     final span = renderer.span ?? const TextSpan();
 
@@ -76,118 +101,33 @@ List<int> parseLineNumbers(String input) {
   return lineNumberList;
 }
 
-final markdownGrammar = {
-  'fileTypes': [
-    'md',
-    'markdown',
-  ],
-  "name": "Markdown",
-  'scopeName': 'source.markdown',
-  'patterns': [
-    {
-      'include': '#heading',
-    },
-    {
-      'include': '#italic',
-    },
-    {
-      'include': '#bold',
-    },
-    {
-      'include': '#link',
-    },
-    {
-      'include': '#image',
-    },
-    {
-      'match': '^\\s*[-+*]\\s+(.+)\$',
-      'captures': {
-        '0': {'name': 'markup.list.unnumbered.markdown'},
-      },
-    },
-    {
-      'match': '^\\s*\\d+\\.\\s+(.+)\$',
-      'captures': {
-        '0': {'name': 'markup.list.numbered.markdown'},
-      },
-    },
-    {
-      'match': '`([^`]+)`',
-      'captures': {
-        '0': {'name': 'markup.raw.inline.markdown'},
-      },
-    },
-    {
-      'begin': '```',
-      'end': '```',
-      'name': 'markup.raw.block.markdown',
-    },
-    {
-      'match': '^\\s*>\\s*(.+)\$',
-      'captures': {
-        '0': {'name': 'markup.quote.markdown'},
-      },
-    },
-    {
-      'match': '^[-*_]{3,}\$',
-      'name': 'punctuation.definition.thematic-break.markdown',
-    },
-    {
-      'match': '^\\|?(.+\\|.+)\\|?\$',
-      'captures': {
-        '0': {'name': 'markup.other.table.markdown'},
-      },
-    },
-    {
-      'match': '~~([^~]+)~~',
-      'captures': {
-        '0': {'name': 'markup.strikethrough.markdown'},
-      },
-    },
-    {
-      'match': '^\\s*[-+*]\\s+\\[[xX\\s]\\]\\s+(.+)\$',
-      'captures': {
-        '0': {'name': 'markup.list.unnumbered.todo.markdown'},
-      },
-    },
-    {
-      'match': '<([^>]+)>',
-      'name': 'markup.raw.inline.html.markdown',
-    },
-  ],
-  'repository': {
-    'heading': {
-      'match': '^(#{1,6})\\s+(.*?)\$',
-      'captures': {
-        '1': {'name': 'punctuation.definition.heading.markdown'},
-        '2': {'name': 'entity.name.section.markdown'},
-      },
-    },
-    'italic': {
-      'match': '\\*([^*]+)\\*',
-      'captures': {
-        '0': {'name': 'markup.italic.markdown'},
-      },
-    },
-    'bold': {
-      'match': '\\*\\*([^*]+)\\*\\*',
-      'captures': {
-        '0': {'name': 'markup.bold.markdown'},
-      },
-    },
-    'link': {
-      'match': '\\[([^\\]]+)\\]\\(([^\\)]+)\\)',
-      'captures': {
-        '0': {'name': 'markup.underline.link.markdown'},
-      },
-    },
-    'image': {
-      'match': '!\\[([^\\]]+)\\]\\(([^\\)]+)\\)',
-      'captures': {
-        '0': {'name': 'markup.underline.link.image.markdown'},
-      },
-    },
-  },
-  'foldingStartMarker': '^\\s*<!--\\s*#?region\\b.*-->',
-  'foldingStopMarker': '^\\s*<!--\\s*#?endregion\\b.*-->',
+const vscodeDarkTheme = {
+  'root':
+      TextStyle(color: Color(0xffD4D4D4), backgroundColor: Color(0xff1E1E1E)),
+  'emphasis': TextStyle(fontStyle: FontStyle.italic),
+  'strong': TextStyle(fontWeight: FontWeight.bold),
+  'section': TextStyle(color: Color(0xff569cd6), fontWeight: FontWeight.bold),
+  'comment': TextStyle(color: Color(0xff608b4e)),
+  'literal': TextStyle(color: Color(0xffb5cea8)),
+  'regexp': TextStyle(color: Color(0xff646695)),
+  'selector-tag': TextStyle(color: Color(0xff569cd6)),
+  'selector-class': TextStyle(color: Color(0xffd7ba7d)),
+  'selector-attr': TextStyle(color: Color(0xff9cdcfe)),
+  'selector-pseudo': TextStyle(color: Color(0xffd7ba7d)),
+  'built_in': TextStyle(color: Color(0xff569cd6)),
+  'bullet': TextStyle(color: Color(0xff6796e6)),
+  'code': TextStyle(color: Color(0xffce9178)),
+  'formula': TextStyle(color: Color(0xff569cd6)),
+  'keyword': TextStyle(color: Color(0xff569cd6)),
+  'keyword.operator': TextStyle(color: Color(0xffd4d4d4)),
+  'operator': TextStyle(color: Color(0xff569cd6)),
+  'punctuation': TextStyle(color: Color(0xff808080)),
+  'meta': TextStyle(color: Color(0xff569cd6)),
+  'meta.string': TextStyle(color: Color(0xffce9178)),
+  'number': TextStyle(color: Color(0xffb5cea8)),
+  'string': TextStyle(color: Color(0xffce9178)),
+  'string.regexp': TextStyle(color: Color(0xffd16969)),
+  'symbol': TextStyle(color: Color(0xff569cd6)),
+  'type': TextStyle(color: Color(0xff569cd6)),
+  'variable': TextStyle(color: Color(0xff9cdcfe)),
 };

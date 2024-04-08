@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:superdeck/helpers/json_schema.dart';
+import 'package:superdeck/helpers/schema/json_schema.dart';
 import 'package:superdeck/models/options_model.dart';
 import 'package:superdeck/superdeck.dart';
 
@@ -29,11 +29,10 @@ final style = Style(
   opacity(1),
   // Text
   text.textAlign.center(),
-  text.uppercase(),
   text.style.shadow.blurRadius(2),
   text.style(
     color: Colors.white,
-    fontSize: 68,
+    fontSize: 32,
   ),
   // Events
   onMouseHover((event) {
@@ -68,20 +67,20 @@ final style = Style(
   ),
 );
 
-class MixDemoOptions {
+class ExampleOptions {
   final double height;
   final double width;
   final String? image;
   final String? text;
-  const MixDemoOptions({
+  const ExampleOptions({
     required this.height,
     required this.width,
     this.image,
     this.text,
   });
 
-  static MixDemoOptions fromMap(Map<String, dynamic> map) {
-    return MixDemoOptions(
+  static ExampleOptions fromMap(Map<String, dynamic> map) {
+    return ExampleOptions(
       height: map['height'] as double,
       width: map['width'] as double,
       image: map['image'] as String?,
@@ -89,47 +88,40 @@ class MixDemoOptions {
     );
   }
 
-  static const SchemaMap schema = SchemaMap(
-    properties: {
-      'height': Schema.double,
-      'width': Schema.double,
-      'image': Schema.string,
-      'text': Schema.string,
+  static final schema = Schema(
+    {
+      'height': Schema.double.required(),
+      'width': Schema.double.required(),
+      'image': Schema.string.required(),
+      'text': Schema.string.required(),
     },
-    required: ['height', 'width'],
   );
 }
 
-class MixDemo extends WidgetDemoBuilder<MixDemoOptions> {
-  const MixDemo();
+class MixExample extends ExampleWidget<ExampleOptions> {
+  MixExample() : super(name: 'mix');
 
   @override
-  MixDemoOptions encode(Map<String, dynamic> args) {
-    return MixDemoOptions.fromMap(args);
+  ExampleOptions decode(Map<String, dynamic> args) {
+    return ExampleOptions.fromMap(args);
   }
 
   @override
-  SchemaMap get schema => MixDemoOptions.schema;
+  final schema = ExampleOptions.schema;
 
   @override
-  Widget build(MixDemoOptions args) {
-    return PressableBox(
-      onPress: () {},
-      style: style.animate().mix(
-            box.height(args.height),
-            box.width(args.width),
-          ),
-      child: StyledText(args.text ?? 'Mix'),
-    );
+  Widget build(ExampleOptions args) {
+    return Builder(builder: (context) {
+      return PressableBox(
+        onPress: () {},
+        style: style.animate().mix(
+              box.height(args.height),
+              box.width(args.width),
+            ),
+        child: StyledText(args.text ?? 'Mix'),
+      );
+    });
   }
-}
-
-Widget mixDemo(Map<String, dynamic> args) {
-  return PressableBox(
-    onPress: () {},
-    style: style.animate(),
-    child: const StyledText('Mix'),
-  );
 }
 
 double _calculateDistance(Alignment alignment) {

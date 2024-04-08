@@ -8,9 +8,9 @@ import 'package:watcher/watcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../helpers/constants.dart';
-import '../../helpers/json_schema.dart';
 import '../../helpers/loader.dart';
 import '../../helpers/local_storage.dart';
+import '../../helpers/schema/json_schema.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../models/asset_model.dart';
 import '../../models/options_model.dart';
@@ -24,7 +24,7 @@ class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
     super.key,
     this.style,
-    this.widgetBuilders,
+    this.examples = const [],
   });
 
   static Future<void> initialize() async {
@@ -32,7 +32,7 @@ class SuperDeckApp extends StatefulWidget {
   }
 
   final Style? style;
-  final Map<String, WidgetBuilderOptions>? widgetBuilders;
+  final List<Example> examples;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -161,6 +161,11 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   @override
   Widget build(BuildContext context) {
     final slides = _errorSlide != null ? [_errorSlide!] : _slides;
+    final exampleBuilders =
+        widget.examples.fold({}.cast<String, Example>(), (acc, builder) {
+      acc[builder.name] = builder;
+      return acc;
+    });
     return ScaledApp(builder: (context, _) {
       return MaterialApp(
         theme: darkTheme,
@@ -173,7 +178,9 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
               assets: _assets,
               style: defaultStyle.merge(widget.style),
               projectOptions: _config,
-              widgetBuilders: widget.widgetBuilders ?? {},
+              //  Convert a List<WidgetDemo> to a Map<String, WidgetDemo>
+              // where the key of the map is the widgetDemo.name
+              widgetExamples: exampleBuilders,
               child: _loading
                   ? const Center(child: CircularProgressIndicator())
                   : const AppShell(),

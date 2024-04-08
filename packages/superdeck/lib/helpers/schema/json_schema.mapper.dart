@@ -143,6 +143,9 @@ class SchemaValidationResultMapper
   @override
   final String id = 'SchemaValidationResult';
 
+  static List<String> _$key(SchemaValidationResult v) => v.key;
+  static const Field<SchemaValidationResult, List<String>> _f$key =
+      Field('key', _$key);
   static List<SchemaValidationError> _$errors(SchemaValidationResult v) =>
       v.errors;
   static const Field<SchemaValidationResult, List<SchemaValidationError>>
@@ -150,13 +153,15 @@ class SchemaValidationResultMapper
 
   @override
   final MappableFields<SchemaValidationResult> fields = const {
+    #key: _f$key,
     #errors: _f$errors,
   };
   @override
   final bool ignoreNull = true;
 
   static SchemaValidationResult _instantiate(DecodingData data) {
-    return SchemaValidationResult(errors: data.dec(_f$errors));
+    return SchemaValidationResult(
+        key: data.dec(_f$key), errors: data.dec(_f$errors));
   }
 
   @override
@@ -218,12 +223,13 @@ abstract class SchemaValidationResultCopyWith<
     $R,
     $In extends SchemaValidationResult,
     $Out> implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get key;
   ListCopyWith<
       $R,
       SchemaValidationError,
       SchemaValidationErrorCopyWith<$R, SchemaValidationError,
           SchemaValidationError>> get errors;
-  $R call({List<SchemaValidationError>? errors});
+  $R call({List<String>? key, List<SchemaValidationError>? errors});
   SchemaValidationResultCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -238,6 +244,10 @@ class _SchemaValidationResultCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SchemaValidationResult> $mapper =
       SchemaValidationResultMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get key =>
+      ListCopyWith($value.key, (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(key: v));
+  @override
   ListCopyWith<
       $R,
       SchemaValidationError,
@@ -245,11 +255,13 @@ class _SchemaValidationResultCopyWithImpl<$R, $Out>
           SchemaValidationError>> get errors => ListCopyWith(
       $value.errors, (v, t) => v.copyWith.$chain(t), (v) => call(errors: v));
   @override
-  $R call({List<SchemaValidationError>? errors}) =>
-      $apply(FieldCopyWithData({if (errors != null) #errors: errors}));
+  $R call({List<String>? key, List<SchemaValidationError>? errors}) =>
+      $apply(FieldCopyWithData(
+          {if (key != null) #key: key, if (errors != null) #errors: errors}));
   @override
-  SchemaValidationResult $make(CopyWithData data) =>
-      SchemaValidationResult(errors: data.get(#errors, or: $value.errors));
+  SchemaValidationResult $make(CopyWithData data) => SchemaValidationResult(
+      key: data.get(#key, or: $value.key),
+      errors: data.get(#errors, or: $value.errors));
 
   @override
   SchemaValidationResultCopyWith<$R2, SchemaValidationResult, $Out2>

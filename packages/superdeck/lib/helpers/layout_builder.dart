@@ -83,25 +83,6 @@ class InvalidSlideTemplate extends SlideTemplate<InvalidSlide> {
   }
 }
 
-class WidgetOptionsProvider extends InheritedWidget {
-  final WidgetOptions options;
-
-  const WidgetOptionsProvider({
-    required this.options,
-    required super.child,
-    super.key,
-  });
-
-  static WidgetOptionsProvider of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<WidgetOptionsProvider>()!;
-  }
-
-  @override
-  bool updateShouldNotify(WidgetOptionsProvider oldWidget) {
-    return options != oldWidget.options;
-  }
-}
-
 class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
   const WidgetSlideTemplate({required super.config, super.key});
 
@@ -110,7 +91,7 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
     final options = config.widget;
     final position = options.position;
 
-    final previewBuilders = SuperDeck.widgetBuildersOf(context);
+    final previewBuilders = SuperDeck.widgetExamplesOf(context);
 
     final builder = previewBuilders[options.name];
 
@@ -126,11 +107,8 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
                 maxWidth: size.width,
                 maxHeight: size.height,
               ),
-              child: WidgetOptionsProvider(
-                options: options,
-                child: CodePreview(
-                  child: builder?.call(options.args),
-                ),
+              child: CodePreview(
+                child: builder?.call(options.args),
               ),
             ),
           );
