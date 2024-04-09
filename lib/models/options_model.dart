@@ -8,9 +8,6 @@ import '../helpers/schema/schema.dart';
 import '../helpers/schema/schema_values.dart';
 import 'slide_model.dart';
 
-export 'package:device_frame/device_frame.dart'
-    show Devices, DeviceInfo, DeviceFrame;
-
 part 'options_model.mapper.dart';
 
 @MappableClass()

@@ -80,24 +80,6 @@ void main() async {
                 );
               },
             ),
-            // // ignore: prefer_const_constructors
-            // Example.withDecoder(
-            //   name: 'demo',
-            //   decoder: ExampleOptions.fromMap,
-            //   schema: ExampleOptions.schema,
-            //   builder: (args) {
-            //     return Container(
-            //       height: args.height,
-            //       width: args.width,
-            //       color: Colors.purple,
-            //       child: Center(
-            //         child: Text(
-            //           args.text ?? 'No text',
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // )
           ],
         ),
       );

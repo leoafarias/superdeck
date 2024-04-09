@@ -19,11 +19,9 @@ Follow these steps to integrate SuperDeck into your Flutter project:
    import 'package:superdeck/superdeck.dart';
    ```
 
-3. Initialize SuperDeck and run the app. The `SuperDeck.initialize()` function sets up the necessary configurations and assets for the package.
-
+3. Initialize SuperDeck and run the app. 
    ```dart
-   void main() async {
-     await SuperDeck.initialize();
+   void main() {
      runApp(const SuperDeck());
    }
    ```
