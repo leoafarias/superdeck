@@ -1,0 +1,19 @@
+[
+  {
+    "widget": {
+      "name": "demo",
+      "args": {
+        "text": "Hello World",
+        "height": 400.0,
+        "width": 350.0
+      },
+      "flex": 1,
+      "preview": true,
+      "position": "right"
+    },
+    "style": "demo",
+    "data": "# Demo Your Code\n\n\n```dart\nExample(\n  name: 'demo',\n  schema: ExampleOptions.schema,\n  builder: (args) {\n    return Center(\n      child: Container(\n        height: args.height,\n        width: args.width,\n        color: Colors.blue,\n        alignment: Alignment.center,\n        child: Text(args.text),\n      ),\n    );\n  },\n),\n```",
+    "type": "Slide",
+    "layout": "widget"
+  }
+]

@@ -1,7 +1,7 @@
-# SuperDeck
+![Superdeck logo](./assets/logo-dark.png#gh-dark-mode-only)
+![Superdeck logo](./assets/logo-light.png#gh-light-mode-only)
 
-SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown. Tailor every aspect of your slides with comprehensive customization options, and leverage a variety of templates to bring your content to life.
-
+SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown.
 
 ## Getting Started
 
@@ -43,13 +43,39 @@ Follow these steps to integrate SuperDeck into your Flutter project:
 
 6. Start building your slides in the `slides.md` file using Markdown syntax and SuperDeck's slide templates and configurations.
 
-## Configuration Options
+### SuperDeck Options
 
-Each slide in SuperDeck can be uniquely tailored through a set of configuration options defined in the YAML front matter at the beginning of each slide section in the `slides.md` file. These options control various aspects of the slide's appearance, layout, and behavior.
+#### `style`
 
-### Available Options
+SuperDeck provides a robust styling system by leveraging [Mix](https://fluttermix.com), This allows a complete control by creating endless possibilty of defining styling every element in teh slide, and also creating `style variants`.
+
+#### `examples`
+
+These are widget examples that can be referenced in the slide. You can read more about how to reference these examples in the [Widget Template](#widget-template) section.
+
+```dart
+SuperDeckApp(
+   style: style,
+   examples: [
+      Example(
+         name: 'demo',
+         builder: (args) {
+            return CustomWidget();
+         },
+      ),
+   ],
+);
+```
+
+### Shared Slide Options
+Some shared options can be applied by adding them to a `superdeck.yaml` file in the root of your project. These options will be applied to all slides unless overridden by slide-specific options.
+
+### Slide Options
 
 The following options are available for configuring each slide. All options are optional.
+
+**Shared Options**
+Some shared options can be applied by adding them to a `superdeck.yaml` file in the root of your project. These options will be applied to all slides unless overridden by slide-specific options.
 
 #### `title`
 
@@ -59,25 +85,35 @@ The title of the slide.
 
 The background image that will be displayed on the slide. You can use a URL or a local asset path.
 
-#### `content_alignment`
+#### `content`
 
-The alignment of the slide content. Options include:
+The markdown content of the slide. This is where you write the main content of the slide using Markdown syntax.
 
-- `top_left`, `top_center`, and `top_right`
-- `center_left`, `center`, and `center_right`
-- `bottom_left`, `bottom_center`, and `bottom_right`
+- `alignment`: The alignment of the slide content. Options include:
+- `flex`: The flex value of the slide content. This determines how much space the content occupies relative to other content on the slide.
 
-This option allows you to position the slide content within the slide area. For example, `top_left` aligns the content to the top-left corner of the slide.
+#### `style`
+
+This is the style variants that will be applied to the slide. You can define style variants by using `Mix` and pass them to the `SuperDeck` constructor.
+
+#### `transition`
+
+The transition effect to be applied when navigating to the slide.
+
+- `type`: The type of transition effect.
+- `duration`: The duration of the transition effect in milliseconds.
+- `delay`: The delay before the transition effect starts in milliseconds.
+- `curve`: The curve of the transition effect.
 
 #### `layout`
 
-Selects a slide layout template. Available options include: `base`, `two_column`, `two_column_header`, and `image`.
+Selects a slide layout template. Available options include: `simple`, `two_column`, `two_column_header`,  `image`, and `widget`.
 
 ## Templates
 
 SuperDeck provides a diverse collection of templates, each designed to meet different presentation needs. From simple text slides to complex layouts with images and columns, you can easily find the right template for your content.
 
-### Base Template (default)
+### Simple Template (default)
 
 A straightforward template for your presentations.
 
@@ -101,11 +137,13 @@ layout: two_column
 ---
 
 ::left::
+
 # Product A
 - Feature 1
 - Feature 2
 
 ::right::
+
 # Product B
 - Feature X
 - Feature Y
@@ -125,12 +163,14 @@ layout: two_column_header
 # Product Comparison
 
 ::left::
+
 ## Product A
 - Feature 1
 - Feature 2
 - Feature 3
 
 ::right::
+
 ## Product B
 - Feature X
 - Feature Y
@@ -162,5 +202,34 @@ image:
 The `image` option specifies the image to be displayed. It has the following sub-options:
 
 - `src`: The URL or path to the image file.
-- `fit`: How the image should be fitted within the slide. Possible values are: `fill`, `contain`, `cover`, `fit_width`, `fit_height`, `none`, `scale_down`.
-- `position`: The position of the image relative to the slide content. Possible values are: `left` (image on the left, content on the right) or `right` (image on the right, content on the left).
+- `fit`: How the image should be fitted within the slide.
+- `position`: The position of the image relative to the slide content.
+
+### Widget Template
+
+Embed a custom widget within the slide.
+
+```markdown
+---
+layout: widget
+widget:
+   name: demo
+   position: center
+   flex: 1
+   args:
+      customArg: value
+      customArg2: value2
+---
+
+# Custom Widget
+
+This slide contains a custom widget.
+```
+
+The `widget` option specifies the widget to be embedded. It has the following sub-options:
+
+- `name`: The name of the widget.
+- `position`: The position of the widget relative to the slide content.
+- `flex`: The flex value of the widget.
+- `args`: Additional arguments to be passed to the widget.
+

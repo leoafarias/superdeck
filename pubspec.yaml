@@ -1,0 +1,42 @@
+name: superdeck
+description: A new Flutter package project.
+version: 0.0.1
+homepage: https://github.com/leoafarias/superdeck
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  mix: ^1.0.0-beta.12
+  cached_network_image: ^3.3.1
+  window_manager: ^0.3.8
+  watcher: ^1.1.0
+  shared_preferences: ^2.2.2
+  collection: ^1.18.0
+  google_fonts: ^6.2.1
+  path: ^1.9.0
+  dart_mappable: ^4.2.2
+  dart_markdown: ^3.1.7
+  markdown_viewer: ^0.6.2
+  yaml: ^3.1.2
+  animate_do: ^3.3.4
+  json_schema: ^5.1.7  
+  re_highlight: ^0.0.3
+  recase: ^4.1.0
+  syntax_highlight: ^0.4.0
+  device_preview: ^1.1.0
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+  custom_lint: ^0.6.4
+  build_runner: ^2.4.9
+  dart_mappable_builder: ^4.2.3
+
+flutter:
+  # assets:
+    # - grammars/
+    # - themes/
