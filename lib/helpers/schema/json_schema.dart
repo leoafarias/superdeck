@@ -185,11 +185,17 @@ abstract class SchemaValue<V> {
   V? tryParse(Object value) => value as V?;
 
   SchemaProperty<T, V> optional<T extends SchemaValue<V>>() {
-    return SchemaProperty(schema: this as T, optional: true);
+    return SchemaProperty(
+      schema: this as T,
+      optional: true,
+    );
   }
 
   SchemaProperty<T, V> required<T extends SchemaValue<V>>() {
-    return SchemaProperty(schema: this as T, optional: false);
+    return SchemaProperty(
+      schema: this as T,
+      optional: false,
+    );
   }
 }
 

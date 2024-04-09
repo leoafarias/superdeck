@@ -2,30 +2,36 @@
 layout: widget
 style: demo
 widget:
-  name: mix
+  name: demo
   position: right
   args:
-    text: Awesome Widget
+    text: Demo widget
     height: 200.0
-    width: 500.0
+    width: 350.0
     image: https://source.unsplash.com/random/300x200/?landscape
 ---
 
-# Present your widgets
+# Present Your Widgets
 
-SuperDeck allows you to present your widgets in a beautiful way.
 
 ```dart
-Widget buildWidget(WidgetOptions options) {
-  return Container(
-    height: options.height,
-    width: options.width,
-    child: Image.network(options.image),
-  
-  )
-}
+Example.simple(
+  name: 'demo',
+  builder: (args) {
+    final options = ExampleOptions.fromMap(args);
+    return Container(
+      height: options.height,
+      width: options.width,
+      color: Colors.purple,
+      child: Center(
+        child: Text(
+          options.text ?? 'No text',
+        ),
+      ),
+    );
+  },
+),
 ```
-
 
 ---
 style: quote

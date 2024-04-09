@@ -112,13 +112,15 @@ class MixExample extends ExampleWidget<ExampleOptions> {
   @override
   Widget build(ExampleOptions args) {
     return Builder(builder: (context) {
-      return PressableBox(
-        onPress: () {},
-        style: style.animate().mix(
-              box.height(args.height),
-              box.width(args.width),
-            ),
-        child: StyledText(args.text ?? 'Mix'),
+      return Center(
+        child: PressableBox(
+          onPress: () {},
+          style: style.animate().mix(
+                box.height(args.height),
+                box.width(args.width),
+              ),
+          child: StyledText(args.text ?? 'Mix'),
+        ),
       );
     });
   }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'slide_model.dart';
@@ -208,10 +208,8 @@ mixin SimpleSlideMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SimpleSlideMapper.ensureInitialized()
-                .isValueEqual(this as SimpleSlide, other));
+    return SimpleSlideMapper.ensureInitialized()
+        .equalsValue(this as SimpleSlide, other);
   }
 
   @override
@@ -399,10 +397,8 @@ mixin ImageSlideMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ImageSlideMapper.ensureInitialized()
-                .isValueEqual(this as ImageSlide, other));
+    return ImageSlideMapper.ensureInitialized()
+        .equalsValue(this as ImageSlide, other);
   }
 
   @override
@@ -598,10 +594,8 @@ mixin WidgetSlideMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            WidgetSlideMapper.ensureInitialized()
-                .isValueEqual(this as WidgetSlide, other));
+    return WidgetSlideMapper.ensureInitialized()
+        .equalsValue(this as WidgetSlide, other);
   }
 
   @override
@@ -922,10 +916,8 @@ mixin TwoColumnSlideMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TwoColumnSlideMapper.ensureInitialized()
-                .isValueEqual(this as TwoColumnSlide, other));
+    return TwoColumnSlideMapper.ensureInitialized()
+        .equalsValue(this as TwoColumnSlide, other);
   }
 
   @override
@@ -1152,10 +1144,8 @@ mixin TwoColumnHeaderSlideMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TwoColumnHeaderSlideMapper.ensureInitialized()
-                .isValueEqual(this as TwoColumnHeaderSlide, other));
+    return TwoColumnHeaderSlideMapper.ensureInitialized()
+        .equalsValue(this as TwoColumnHeaderSlide, other);
   }
 
   @override
@@ -1370,10 +1360,8 @@ mixin InvalidSlideMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            InvalidSlideMapper.ensureInitialized()
-                .isValueEqual(this as InvalidSlide, other));
+    return InvalidSlideMapper.ensureInitialized()
+        .equalsValue(this as InvalidSlide, other);
   }
 
   @override

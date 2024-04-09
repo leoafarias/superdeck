@@ -2,7 +2,6 @@
 
 SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown. Tailor every aspect of your slides with comprehensive customization options, and leverage a variety of templates to bring your content to life.
 
-
 ## Getting Started
 
 Follow these steps to integrate SuperDeck into your Flutter project:

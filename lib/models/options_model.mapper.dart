@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'options_model.dart';
@@ -917,10 +917,7 @@ mixin ConfigMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ConfigMapper.ensureInitialized()
-                .isValueEqual(this as Config, other));
+    return ConfigMapper.ensureInitialized().equalsValue(this as Config, other);
   }
 
   @override
@@ -1056,10 +1053,8 @@ mixin TransitionOptionsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TransitionOptionsMapper.ensureInitialized()
-                .isValueEqual(this as TransitionOptions, other));
+    return TransitionOptionsMapper.ensureInitialized()
+        .equalsValue(this as TransitionOptions, other);
   }
 
   @override
@@ -1189,10 +1184,8 @@ mixin ContentOptionsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ContentOptionsMapper.ensureInitialized()
-                .isValueEqual(this as ContentOptions, other));
+    return ContentOptionsMapper.ensureInitialized()
+        .equalsValue(this as ContentOptions, other);
   }
 
   @override
@@ -1319,10 +1312,8 @@ mixin ImageOptionsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ImageOptionsMapper.ensureInitialized()
-                .isValueEqual(this as ImageOptions, other));
+    return ImageOptionsMapper.ensureInitialized()
+        .equalsValue(this as ImageOptions, other);
   }
 
   @override
@@ -1458,10 +1449,8 @@ mixin WidgetOptionsMappable<T> {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            WidgetOptionsMapper.ensureInitialized()
-                .isValueEqual(this as WidgetOptions<T>, other));
+    return WidgetOptionsMapper.ensureInitialized()
+        .equalsValue(this as WidgetOptions<T>, other);
   }
 
   @override

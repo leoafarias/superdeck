@@ -29,10 +29,10 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
   const MeasureSize({
-    Key? key,
+    super.key,
     required this.onChange,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required Widget super.child,
+  });
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -55,6 +55,7 @@ class SlideConstraintBuilder extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _SlideConstraintBuilderState createState() => _SlideConstraintBuilderState();
 }
 

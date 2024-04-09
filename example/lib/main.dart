@@ -29,6 +29,7 @@ VariantAttribute get demoStyle {
       end: Alignment.bottomCenter,
       colors: [Colors.purple.withOpacity(0.1), Colors.purple.withOpacity(0.3)],
     ),
+    $.code.span.fontSize(14),
   );
 }
 
@@ -64,20 +65,40 @@ void main() async {
           style: style,
           // ignore: prefer_const_literals_to_create_immutables
           examples: [
-            // ignore: prefer_const_constructors
-            Example.withDecoder(
+            Example.simple(
               name: 'demo',
-              decoder: ExampleOptions.fromMap,
-              schema: ExampleOptions.schema,
               builder: (args) {
+                final options = ExampleOptions.fromMap(args);
                 return Container(
-                  color: Colors.purple,
-                  child: const Center(
-                    child: Text('Hello World'),
+                  height: options.height,
+                  width: options.width,
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                      options.text ?? 'No text',
+                    ),
                   ),
                 );
               },
-            )
+            ),
+            // // ignore: prefer_const_constructors
+            // Example.withDecoder(
+            //   name: 'demo',
+            //   decoder: ExampleOptions.fromMap,
+            //   schema: ExampleOptions.schema,
+            //   builder: (args) {
+            //     return Container(
+            //       height: args.height,
+            //       width: args.width,
+            //       color: Colors.purple,
+            //       child: Center(
+            //         child: Text(
+            //           args.text ?? 'No text',
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // )
           ],
         ),
       );

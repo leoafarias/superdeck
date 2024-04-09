@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'json_schema.dart';
@@ -76,10 +76,8 @@ mixin SchemaValidationErrorMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SchemaValidationErrorMapper.ensureInitialized()
-                .isValueEqual(this as SchemaValidationError, other));
+    return SchemaValidationErrorMapper.ensureInitialized()
+        .equalsValue(this as SchemaValidationError, other);
   }
 
   @override
@@ -199,10 +197,8 @@ mixin SchemaValidationResultMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SchemaValidationResultMapper.ensureInitialized()
-                .isValueEqual(this as SchemaValidationResult, other));
+    return SchemaValidationResultMapper.ensureInitialized()
+        .equalsValue(this as SchemaValidationResult, other);
   }
 
   @override

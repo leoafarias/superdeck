@@ -1,7 +1,132 @@
 [
   {
-    "data": "# Schema Error  \n## options.content.flex\nInvalid type: [int] got [String]\n",
+    "widget": {
+      "name": "demo",
+      "args": {
+        "text": "Demo widget",
+        "height": 200.0,
+        "width": 350.0,
+        "image": "https://source.unsplash.com/random/300x200/?landscape"
+      },
+      "flex": 1,
+      "position": "right"
+    },
+    "style": "demo",
+    "data": "# Present Your Widgets\n\n\n```dart\nExample.simple(\n  name: 'demo',\n  builder: (args) {\n    final options = ExampleOptions.fromMap(args);\n    return Container(\n      height: options.height,\n      width: options.width,\n      color: Colors.purple,\n      child: Center(\n        child: Text(\n          options.text ?? 'No text',\n        ),\n      ),\n    );\n  },\n),\n```",
     "type": "Slide",
-    "layout": "invalid"
+    "layout": "widget"
+  },
+  {
+    "image": {
+      "src": "https://source.unsplash.com/random/900×700/?inspiration",
+      "fit": "cover",
+      "flex": 1,
+      "position": "right"
+    },
+    "style": "quote",
+    "content": {
+      "flex": 2,
+      "alignment": "bottom_right"
+    },
+    "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
+    "type": "Slide",
+    "layout": "image"
+  },
+  {
+    "background": "https://source.unsplash.com/random/900×700/?landscape",
+    "style": "cover",
+    "data": "# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.",
+    "type": "Slide"
+  },
+  {
+    "widget": {
+      "name": "slide",
+      "args": {
+        "title": "Awesome Widget",
+        "height": 200.0,
+        "width": 500.0,
+        "image": "https://source.unsplash.com/random/300x200/?landscape"
+      },
+      "flex": 1,
+      "position": "right"
+    },
+    "data": "This is an example of an awesome widget",
+    "type": "Slide",
+    "layout": "widget"
+  },
+  {
+    "content": {
+      "alignment": "center"
+    },
+    "data": "# Two Column Header\n\nThis is your main header, providing a context or introducing the core concept covered in this slide.\n\n::left::\n\n### Left Heading\n- Point A\n- Point B\n- Point C\n\n::right::\n\n### Right Heading\n- Point X\n- Point Y\n- Point Z",
+    "left_section": {
+      "alignment": "center"
+    },
+    "header": {
+      "alignment": "bottom_left"
+    },
+    "type": "Slide",
+    "layout": "two_column_header"
+  },
+  {
+    "image": {
+      "src": "https://source.unsplash.com/random/900×700/?nature",
+      "fit": "cover",
+      "flex": 1,
+      "position": "left"
+    },
+    "data": "# Key Features\n\n- Innovative design\n- User-friendly\n- Energy-efficient",
+    "type": "Slide",
+    "layout": "image"
+  },
+  {
+    "title": "Slide 2: Text Styling",
+    "data": "**Bold Text**\n\n*Italic Text*\n\n~~Strikethrough~~\n\n`Inline Code`",
+    "type": "Slide"
+  },
+  {
+    "title": "Slide 3: Links and Images",
+    "data": "[Link](https://github.com)\n\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape#500x250)",
+    "type": "Slide"
+  },
+  {
+    "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
+    "type": "Slide"
+  },
+  {
+    "data": "```dart {1, 3-8}\nint factorial(int n) {\n  if (n == 0) {\n    return 1;\n  } else {\n    return n * factorial(n - 1);\n  }\n}\n```",
+    "type": "Slide"
+  },
+  {
+    "title": "Slide 6: Lists",
+    "data": "1. Ordered list item 1\n2. Ordered list item 2\n\n- Unordered list item 1\n- Unordered list item 2",
+    "type": "Slide"
+  },
+  {
+    "title": "Slide 7: Tables",
+    "data": "| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1A  | Cell 1B  |\n| Cell 2A  | Cell 2B  |",
+    "type": "Slide"
+  },
+  {
+    "title": "Mermaid example",
+    "data": "::left::\n\n![Mermaid Diagram](assets/images/sd_mermaid_523883852.png)\n::right::\n## Mermaid Example",
+    "type": "Slide",
+    "layout": "two_column"
+  },
+  {
+    "title": "Slide 8: Task Lists",
+    "data": "::left::\n\n- [ ] Task List Item 1\n- [x] Task List Item 2\n\n::right::\n\n#### Subtask\n\n- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim",
+    "type": "Slide",
+    "layout": "two_column"
+  },
+  {
+    "title": "Dividers",
+    "data": "_____\nDividers\n____",
+    "type": "Slide"
+  },
+  {
+    "title": "Code rendering performance",
+    "data": "```dart\nclass SyntaxTags {\n  const SyntaxTags._();\n  static final left = '::left::';\n  static final right = '::right::';\n  static final content = '::content::';\n}\n\nMap<String, List<String>> parseContentWithTags(\n    String input, List<String> tags) {\n  final Map<String, List<String>> parsedContent = {};\n  int lastTagEndIndex = 0;\n  String currentTag = SyntaxTags.content;\n\n  for (int i = 0; i < input.length; i++) {\n    for (String tag in tags) {\n      if (input.substring(i).startsWith(tag)) {\n        // Add the content before this tag to the list\n        final content = input.substring(lastTagEndIndex, i).trim();\n        if (content.isNotEmpty) {\n          parsedContent.putIfAbsent(currentTag, () => []).add(content);\n        }\n\n        // Update the current tag and last tag end index\n        currentTag = tag;\n        lastTagEndIndex = i + tag.length;\n\n        // Skip the characters of this tag\n        i += tag.length - 1;\n        break;\n      }\n    }\n  }\n\n  // Add remaining content if any\n  if (lastTagEndIndex < input.length) {\n    final content = input.substring(lastTagEndIndex).trim();\n    if (content.isNotEmpty) {\n      parsedContent.putIfAbsent(currentTag, () => []).add(content);\n    }\n  }\n\n  return parsedContent;\n}\n```",
+    "type": "Slide"
   }
 ]

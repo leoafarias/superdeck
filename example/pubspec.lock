@@ -93,10 +93,10 @@ packages:
     dependency: transitive
     description:
       name: dart_mappable
-      sha256: f9f272f2af6c11adf4abc22574eb946df110251052a0d00c03519ecf2442defc
+      sha256: "47269caf2060533c29b823ff7fa9706502355ffcb61e7f2a374e3a0fb2f2c3f0"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.1"
+    version: "4.2.2"
   dart_markdown:
     dependency: transitive
     description:
@@ -196,10 +196,10 @@ packages:
     dependency: transitive
     description:
       name: json_schema
-      sha256: "58d4c2007c01b9d508283a2aa1001f368a8fb7cf18f9d8a6a6bfce97bec00933"
+      sha256: f1bcf81647c347f53281dca9c8ea3e2b7b4d0eee5b4d1e4cee3173a5c162f358
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.6"
+    version: "5.1.7"
   leak_tracker:
     dependency: transitive
     description:
@@ -275,10 +275,11 @@ packages:
   mix:
     dependency: transitive
     description:
-      path: "../../mix"
-      relative: true
-    source: path
-    version: "1.0.0-beta.11"
+      name: mix
+      sha256: "76809b1599a1851111562f7f5985925703e5f80ba4a1aef77c5269f804fba890"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0-beta.12"
   octo_image:
     dependency: transitive
     description:
@@ -567,10 +568,10 @@ packages:
     dependency: transitive
     description:
       name: type_plus
-      sha256: "2e33cfac2e129297d5874567bdf7587502ec359881e9318551e014d91b02f84a"
+      sha256: d5d1019471f0d38b91603adb9b5fd4ce7ab903c879d2fbf1a3f80a630a03fcc9
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   typed_data:
     dependency: transitive
     description:
