@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 
 import '../components/molecules/code_preview.dart';
@@ -107,8 +108,13 @@ class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
                 maxWidth: size.width,
                 maxHeight: size.height,
               ),
-              child: CodePreview(
-                child: builder?.call(options.args),
+              child: DevicePreview(
+                enabled: options.preview,
+                builder: (context) {
+                  return CodePreview(
+                    child: builder?.call(options.args),
+                  );
+                },
               ),
             ),
           );

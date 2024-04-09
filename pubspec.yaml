@@ -26,6 +26,7 @@ dependencies:
   re_highlight: ^0.0.3
   recase: ^4.1.0
   syntax_highlight: ^0.4.0
+  device_preview: ^1.1.0
   
 dev_dependencies:
   flutter_test:

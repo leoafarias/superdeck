@@ -1,10 +1,15 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
 import '../helpers/layout_builder.dart';
-import '../helpers/schema/json_schema.dart';
+import '../helpers/schema/schema.dart';
+import '../helpers/schema/schema_values.dart';
 import 'slide_model.dart';
+
+export 'package:device_frame/device_frame.dart'
+    show Devices, DeviceInfo, DeviceFrame;
 
 part 'options_model.mapper.dart';
 
@@ -34,6 +39,7 @@ class Config with ConfigMappable {
       "style": Schema.string.optional(),
       "transition": TransitionOptions.schema.optional(),
     },
+    additionalProperties: false,
   );
 }
 
@@ -134,57 +140,67 @@ class DurationMapper extends SimpleMapper<Duration> {
   }
 }
 
-Map<String, dynamic> _defaultEncoder(Map<String, dynamic> args) {
-  return args;
+typedef Decoder<T> = T Function(Map<String, dynamic>);
+
+T mapDecoder<T>(Map<String, dynamic> args) {
+  return args as T;
 }
 
-typedef Decoder<T> = T Function(Map<String, dynamic>);
+class ArgsSchema<T> {
+  final Schema validator;
+  final Decoder<T> decoder;
+
+  const ArgsSchema({
+    required this.validator,
+    required this.decoder,
+  });
+}
 
 class Example<T> extends ExampleWidget {
   final Widget Function(T) builder;
-  @override
-  final Schema schema;
 
-  final Decoder<T>? _decoder;
+  @override
+  final ArgsSchema<T>? schema;
 
   const Example._({
     required super.name,
     required this.builder,
-    this.schema = Schema.any,
-    Decoder<T>? decoder,
-  }) : _decoder = decoder;
+    this.schema,
+  });
 
-  static Example<Map<String, dynamic>> simple({
-    required String name,
-    required Widget Function(Map<String, dynamic>) builder,
-  }) {
-    return Example._(
-      name: name,
-      builder: builder,
-      decoder: _defaultEncoder,
-    );
-  }
-
-  static Example withDecoder<T>({
+  static Example device<T>({
     required String name,
     required Widget Function(T) builder,
-    required Decoder<T> decoder,
-    Schema schema = Schema.any,
+    ArgsSchema<T>? schema,
   }) {
     return Example<T>._(
       name: name,
-      builder: builder,
-      decoder: decoder,
       schema: schema,
+      builder: (args) {
+        return Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: DevicePreview(
+            backgroundColor: Colors.black,
+            enabled: true,
+            builder: (_) {
+              return builder(args);
+            },
+          ),
+        );
+      },
     );
   }
 
-  @override
-  T decode(Map<String, dynamic> args) {
-    if (_decoder != null) {
-      return _decoder!(args);
-    }
-    return args as T;
+  factory Example({
+    required String name,
+    required Widget Function(T) builder,
+    ArgsSchema<T>? schema,
+  }) {
+    return Example._(
+      name: name,
+      schema: schema,
+      builder: builder,
+    );
   }
 
   @override
@@ -200,14 +216,39 @@ abstract class ExampleWidget<T> {
 
   final String name;
 
-  T decode(Map<String, dynamic> args);
+  T decode(Map<String, dynamic> args) {
+    if (schema?.decoder == null) {
+      return args as T;
+    } else {
+      return schema!.decoder(args);
+    }
+  }
 
-  Schema get schema;
+  ArgsSchema? get schema;
+
+  SchemaValidationResult _validate(Map<String, dynamic> args) {
+    if (schema?.validator == null) {
+      return SchemaValidationResult.valid(['widget', name]);
+    } else {
+      return schema!.validator.validate(['widget', name], args);
+    }
+  }
 
   Widget call(Map<String, dynamic> args) {
-    final result = schema.validate(['widget', name], args);
+    final result = _validate(args);
     if (!result.isValid) {
-      return InvalidSlideTemplate(config: InvalidSlide.schemaError(result));
+      return Row(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.red,
+              child: InvalidSlideTemplate(
+                config: InvalidSlide.schemaError(result),
+              ),
+            ),
+          ),
+        ],
+      );
     }
     return build(decode(args));
   }
@@ -220,12 +261,14 @@ class WidgetOptions<T> with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
   final LayoutPosition position;
+  final bool preview;
   final int flex;
 
   const WidgetOptions({
     required this.name,
     this.args = const {},
     this.flex = 1,
+    this.preview = false,
     this.position = LayoutPosition.right,
   });
 
@@ -238,7 +281,18 @@ class WidgetOptions<T> with WidgetOptionsMappable {
       "args": Schema.any.optional(),
       "position": LayoutPosition.schema.optional(),
       "flex": Schema.integer.optional(),
+      "preview": Schema.boolean.optional(),
     },
+  );
+}
+
+enum SampleEnum {
+  value1,
+  value2,
+  value3;
+
+  static final schema = EnumSchema(
+    values: SampleEnum.values.map((e) => e.name.snakeCase).toList(),
   );
 }
 
@@ -277,86 +331,6 @@ class LayoutType {
   static const twoColumn = 'two_column';
   static const twoColumnHeader = 'two_column_header';
   static const invalid = 'invalid';
-}
-
-@MappableEnum()
-enum SyntaxHighlightTheme {
-  a11yDark,
-  a11yLight,
-  agate,
-  anOldHope,
-  androidstudio,
-  arduinoLight,
-  arta,
-  ascetic,
-  atomOneDarkReasonable,
-  atomOneDark,
-  atomOneLight,
-  brownPaper,
-  codepenEmbed,
-  colorBrewer,
-  dark,
-  defaultTheme,
-  devibeans,
-  docco,
-  far,
-  felipec,
-  foundation,
-  githubDarkDimmed,
-  githubDark,
-  github,
-  gml,
-  googlecode,
-  gradientDark,
-  gradientLight,
-  grayscale,
-  hybrid,
-  idea,
-  intellijLight,
-  irBlack,
-  isblEditorDark,
-  isblEditorLight,
-  kimbieDark,
-  kimbieLight,
-  lightfair,
-  lioshi,
-  magula,
-  monoBlue,
-  monokaiSublime,
-  monokai,
-  nightOwl,
-  nnfxDark,
-  nnfxLight,
-  nord,
-  obsidian,
-  pandaSyntaxDark,
-  pandaSyntaxLight,
-  paraisoDark,
-  paraisoLight,
-  pojoaque,
-  purebasic,
-  qtcreatorDark,
-  qtcreatorLight,
-  rainbow,
-  routeros,
-  schoolBook,
-  shadesOfPurple,
-  srcery,
-  stackoverflowDark,
-  stackoverflowLight,
-  sunburst,
-  tokyoNightDark,
-  tokyoNightLight,
-  tomorrowNightBlue,
-  tomorrowNightBright,
-  vs,
-  vs2015,
-  xcode,
-  xt256;
-
-  static final schema = EnumSchema(
-    values: SyntaxHighlightTheme.values.map((e) => e.name.snakeCase).toList(),
-  );
 }
 
 @MappableEnum()

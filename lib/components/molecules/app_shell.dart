@@ -10,7 +10,7 @@ import 'package:window_manager/window_manager.dart';
 import '../../helpers/constants.dart';
 import '../../helpers/loader.dart';
 import '../../helpers/local_storage.dart';
-import '../../helpers/schema/json_schema.dart';
+import '../../helpers/schema/schema.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../models/asset_model.dart';
 import '../../models/options_model.dart';

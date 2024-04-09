@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:superdeck/helpers/schema/json_schema.dart';
+import 'package:superdeck/helpers/schema/schema.dart';
 import 'package:superdeck/models/options_model.dart';
 import 'package:superdeck/superdeck.dart';
 
@@ -70,12 +70,10 @@ final style = Style(
 class ExampleOptions {
   final double height;
   final double width;
-  final String? image;
   final String? text;
   const ExampleOptions({
     required this.height,
     required this.width,
-    this.image,
     this.text,
   });
 
@@ -83,18 +81,19 @@ class ExampleOptions {
     return ExampleOptions(
       height: map['height'] as double,
       width: map['width'] as double,
-      image: map['image'] as String?,
       text: map['text'] as String?,
     );
   }
 
-  static final schema = Schema(
-    {
-      'height': Schema.double.required(),
-      'width': Schema.double.required(),
-      'image': Schema.string.required(),
-      'text': Schema.string.required(),
-    },
+  static final schema = ArgsSchema(
+    validator: Schema(
+      {
+        'height': Schema.double.required(),
+        'width': Schema.double.required(),
+        'text': Schema.string.required(),
+      },
+    ),
+    decoder: fromMap,
   );
 }
 

@@ -72,333 +72,6 @@ extension ImageFitMapperExtension on ImageFit {
   }
 }
 
-class SyntaxHighlightThemeMapper extends EnumMapper<SyntaxHighlightTheme> {
-  SyntaxHighlightThemeMapper._();
-
-  static SyntaxHighlightThemeMapper? _instance;
-  static SyntaxHighlightThemeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SyntaxHighlightThemeMapper._());
-    }
-    return _instance!;
-  }
-
-  static SyntaxHighlightTheme fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  SyntaxHighlightTheme decode(dynamic value) {
-    switch (value) {
-      case 'a11y_dark':
-        return SyntaxHighlightTheme.a11yDark;
-      case 'a11y_light':
-        return SyntaxHighlightTheme.a11yLight;
-      case 'agate':
-        return SyntaxHighlightTheme.agate;
-      case 'an_old_hope':
-        return SyntaxHighlightTheme.anOldHope;
-      case 'androidstudio':
-        return SyntaxHighlightTheme.androidstudio;
-      case 'arduino_light':
-        return SyntaxHighlightTheme.arduinoLight;
-      case 'arta':
-        return SyntaxHighlightTheme.arta;
-      case 'ascetic':
-        return SyntaxHighlightTheme.ascetic;
-      case 'atom_one_dark_reasonable':
-        return SyntaxHighlightTheme.atomOneDarkReasonable;
-      case 'atom_one_dark':
-        return SyntaxHighlightTheme.atomOneDark;
-      case 'atom_one_light':
-        return SyntaxHighlightTheme.atomOneLight;
-      case 'brown_paper':
-        return SyntaxHighlightTheme.brownPaper;
-      case 'codepen_embed':
-        return SyntaxHighlightTheme.codepenEmbed;
-      case 'color_brewer':
-        return SyntaxHighlightTheme.colorBrewer;
-      case 'dark':
-        return SyntaxHighlightTheme.dark;
-      case 'default_theme':
-        return SyntaxHighlightTheme.defaultTheme;
-      case 'devibeans':
-        return SyntaxHighlightTheme.devibeans;
-      case 'docco':
-        return SyntaxHighlightTheme.docco;
-      case 'far':
-        return SyntaxHighlightTheme.far;
-      case 'felipec':
-        return SyntaxHighlightTheme.felipec;
-      case 'foundation':
-        return SyntaxHighlightTheme.foundation;
-      case 'github_dark_dimmed':
-        return SyntaxHighlightTheme.githubDarkDimmed;
-      case 'github_dark':
-        return SyntaxHighlightTheme.githubDark;
-      case 'github':
-        return SyntaxHighlightTheme.github;
-      case 'gml':
-        return SyntaxHighlightTheme.gml;
-      case 'googlecode':
-        return SyntaxHighlightTheme.googlecode;
-      case 'gradient_dark':
-        return SyntaxHighlightTheme.gradientDark;
-      case 'gradient_light':
-        return SyntaxHighlightTheme.gradientLight;
-      case 'grayscale':
-        return SyntaxHighlightTheme.grayscale;
-      case 'hybrid':
-        return SyntaxHighlightTheme.hybrid;
-      case 'idea':
-        return SyntaxHighlightTheme.idea;
-      case 'intellij_light':
-        return SyntaxHighlightTheme.intellijLight;
-      case 'ir_black':
-        return SyntaxHighlightTheme.irBlack;
-      case 'isbl_editor_dark':
-        return SyntaxHighlightTheme.isblEditorDark;
-      case 'isbl_editor_light':
-        return SyntaxHighlightTheme.isblEditorLight;
-      case 'kimbie_dark':
-        return SyntaxHighlightTheme.kimbieDark;
-      case 'kimbie_light':
-        return SyntaxHighlightTheme.kimbieLight;
-      case 'lightfair':
-        return SyntaxHighlightTheme.lightfair;
-      case 'lioshi':
-        return SyntaxHighlightTheme.lioshi;
-      case 'magula':
-        return SyntaxHighlightTheme.magula;
-      case 'mono_blue':
-        return SyntaxHighlightTheme.monoBlue;
-      case 'monokai_sublime':
-        return SyntaxHighlightTheme.monokaiSublime;
-      case 'monokai':
-        return SyntaxHighlightTheme.monokai;
-      case 'night_owl':
-        return SyntaxHighlightTheme.nightOwl;
-      case 'nnfx_dark':
-        return SyntaxHighlightTheme.nnfxDark;
-      case 'nnfx_light':
-        return SyntaxHighlightTheme.nnfxLight;
-      case 'nord':
-        return SyntaxHighlightTheme.nord;
-      case 'obsidian':
-        return SyntaxHighlightTheme.obsidian;
-      case 'panda_syntax_dark':
-        return SyntaxHighlightTheme.pandaSyntaxDark;
-      case 'panda_syntax_light':
-        return SyntaxHighlightTheme.pandaSyntaxLight;
-      case 'paraiso_dark':
-        return SyntaxHighlightTheme.paraisoDark;
-      case 'paraiso_light':
-        return SyntaxHighlightTheme.paraisoLight;
-      case 'pojoaque':
-        return SyntaxHighlightTheme.pojoaque;
-      case 'purebasic':
-        return SyntaxHighlightTheme.purebasic;
-      case 'qtcreator_dark':
-        return SyntaxHighlightTheme.qtcreatorDark;
-      case 'qtcreator_light':
-        return SyntaxHighlightTheme.qtcreatorLight;
-      case 'rainbow':
-        return SyntaxHighlightTheme.rainbow;
-      case 'routeros':
-        return SyntaxHighlightTheme.routeros;
-      case 'school_book':
-        return SyntaxHighlightTheme.schoolBook;
-      case 'shades_of_purple':
-        return SyntaxHighlightTheme.shadesOfPurple;
-      case 'srcery':
-        return SyntaxHighlightTheme.srcery;
-      case 'stackoverflow_dark':
-        return SyntaxHighlightTheme.stackoverflowDark;
-      case 'stackoverflow_light':
-        return SyntaxHighlightTheme.stackoverflowLight;
-      case 'sunburst':
-        return SyntaxHighlightTheme.sunburst;
-      case 'tokyo_night_dark':
-        return SyntaxHighlightTheme.tokyoNightDark;
-      case 'tokyo_night_light':
-        return SyntaxHighlightTheme.tokyoNightLight;
-      case 'tomorrow_night_blue':
-        return SyntaxHighlightTheme.tomorrowNightBlue;
-      case 'tomorrow_night_bright':
-        return SyntaxHighlightTheme.tomorrowNightBright;
-      case 'vs':
-        return SyntaxHighlightTheme.vs;
-      case 'vs2015':
-        return SyntaxHighlightTheme.vs2015;
-      case 'xcode':
-        return SyntaxHighlightTheme.xcode;
-      case 'xt256':
-        return SyntaxHighlightTheme.xt256;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(SyntaxHighlightTheme self) {
-    switch (self) {
-      case SyntaxHighlightTheme.a11yDark:
-        return 'a11y_dark';
-      case SyntaxHighlightTheme.a11yLight:
-        return 'a11y_light';
-      case SyntaxHighlightTheme.agate:
-        return 'agate';
-      case SyntaxHighlightTheme.anOldHope:
-        return 'an_old_hope';
-      case SyntaxHighlightTheme.androidstudio:
-        return 'androidstudio';
-      case SyntaxHighlightTheme.arduinoLight:
-        return 'arduino_light';
-      case SyntaxHighlightTheme.arta:
-        return 'arta';
-      case SyntaxHighlightTheme.ascetic:
-        return 'ascetic';
-      case SyntaxHighlightTheme.atomOneDarkReasonable:
-        return 'atom_one_dark_reasonable';
-      case SyntaxHighlightTheme.atomOneDark:
-        return 'atom_one_dark';
-      case SyntaxHighlightTheme.atomOneLight:
-        return 'atom_one_light';
-      case SyntaxHighlightTheme.brownPaper:
-        return 'brown_paper';
-      case SyntaxHighlightTheme.codepenEmbed:
-        return 'codepen_embed';
-      case SyntaxHighlightTheme.colorBrewer:
-        return 'color_brewer';
-      case SyntaxHighlightTheme.dark:
-        return 'dark';
-      case SyntaxHighlightTheme.defaultTheme:
-        return 'default_theme';
-      case SyntaxHighlightTheme.devibeans:
-        return 'devibeans';
-      case SyntaxHighlightTheme.docco:
-        return 'docco';
-      case SyntaxHighlightTheme.far:
-        return 'far';
-      case SyntaxHighlightTheme.felipec:
-        return 'felipec';
-      case SyntaxHighlightTheme.foundation:
-        return 'foundation';
-      case SyntaxHighlightTheme.githubDarkDimmed:
-        return 'github_dark_dimmed';
-      case SyntaxHighlightTheme.githubDark:
-        return 'github_dark';
-      case SyntaxHighlightTheme.github:
-        return 'github';
-      case SyntaxHighlightTheme.gml:
-        return 'gml';
-      case SyntaxHighlightTheme.googlecode:
-        return 'googlecode';
-      case SyntaxHighlightTheme.gradientDark:
-        return 'gradient_dark';
-      case SyntaxHighlightTheme.gradientLight:
-        return 'gradient_light';
-      case SyntaxHighlightTheme.grayscale:
-        return 'grayscale';
-      case SyntaxHighlightTheme.hybrid:
-        return 'hybrid';
-      case SyntaxHighlightTheme.idea:
-        return 'idea';
-      case SyntaxHighlightTheme.intellijLight:
-        return 'intellij_light';
-      case SyntaxHighlightTheme.irBlack:
-        return 'ir_black';
-      case SyntaxHighlightTheme.isblEditorDark:
-        return 'isbl_editor_dark';
-      case SyntaxHighlightTheme.isblEditorLight:
-        return 'isbl_editor_light';
-      case SyntaxHighlightTheme.kimbieDark:
-        return 'kimbie_dark';
-      case SyntaxHighlightTheme.kimbieLight:
-        return 'kimbie_light';
-      case SyntaxHighlightTheme.lightfair:
-        return 'lightfair';
-      case SyntaxHighlightTheme.lioshi:
-        return 'lioshi';
-      case SyntaxHighlightTheme.magula:
-        return 'magula';
-      case SyntaxHighlightTheme.monoBlue:
-        return 'mono_blue';
-      case SyntaxHighlightTheme.monokaiSublime:
-        return 'monokai_sublime';
-      case SyntaxHighlightTheme.monokai:
-        return 'monokai';
-      case SyntaxHighlightTheme.nightOwl:
-        return 'night_owl';
-      case SyntaxHighlightTheme.nnfxDark:
-        return 'nnfx_dark';
-      case SyntaxHighlightTheme.nnfxLight:
-        return 'nnfx_light';
-      case SyntaxHighlightTheme.nord:
-        return 'nord';
-      case SyntaxHighlightTheme.obsidian:
-        return 'obsidian';
-      case SyntaxHighlightTheme.pandaSyntaxDark:
-        return 'panda_syntax_dark';
-      case SyntaxHighlightTheme.pandaSyntaxLight:
-        return 'panda_syntax_light';
-      case SyntaxHighlightTheme.paraisoDark:
-        return 'paraiso_dark';
-      case SyntaxHighlightTheme.paraisoLight:
-        return 'paraiso_light';
-      case SyntaxHighlightTheme.pojoaque:
-        return 'pojoaque';
-      case SyntaxHighlightTheme.purebasic:
-        return 'purebasic';
-      case SyntaxHighlightTheme.qtcreatorDark:
-        return 'qtcreator_dark';
-      case SyntaxHighlightTheme.qtcreatorLight:
-        return 'qtcreator_light';
-      case SyntaxHighlightTheme.rainbow:
-        return 'rainbow';
-      case SyntaxHighlightTheme.routeros:
-        return 'routeros';
-      case SyntaxHighlightTheme.schoolBook:
-        return 'school_book';
-      case SyntaxHighlightTheme.shadesOfPurple:
-        return 'shades_of_purple';
-      case SyntaxHighlightTheme.srcery:
-        return 'srcery';
-      case SyntaxHighlightTheme.stackoverflowDark:
-        return 'stackoverflow_dark';
-      case SyntaxHighlightTheme.stackoverflowLight:
-        return 'stackoverflow_light';
-      case SyntaxHighlightTheme.sunburst:
-        return 'sunburst';
-      case SyntaxHighlightTheme.tokyoNightDark:
-        return 'tokyo_night_dark';
-      case SyntaxHighlightTheme.tokyoNightLight:
-        return 'tokyo_night_light';
-      case SyntaxHighlightTheme.tomorrowNightBlue:
-        return 'tomorrow_night_blue';
-      case SyntaxHighlightTheme.tomorrowNightBright:
-        return 'tomorrow_night_bright';
-      case SyntaxHighlightTheme.vs:
-        return 'vs';
-      case SyntaxHighlightTheme.vs2015:
-        return 'vs2015';
-      case SyntaxHighlightTheme.xcode:
-        return 'xcode';
-      case SyntaxHighlightTheme.xt256:
-        return 'xt256';
-    }
-  }
-}
-
-extension SyntaxHighlightThemeMapperExtension on SyntaxHighlightTheme {
-  String toValue() {
-    SyntaxHighlightThemeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<SyntaxHighlightTheme>(this)
-        as String;
-  }
-}
-
 class TransitionTypeMapper extends EnumMapper<TransitionType> {
   TransitionTypeMapper._();
 
@@ -1393,6 +1066,9 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   static int _$flex(WidgetOptions v) => v.flex;
   static const Field<WidgetOptions, int> _f$flex =
       Field('flex', _$flex, opt: true, def: 1);
+  static bool _$preview(WidgetOptions v) => v.preview;
+  static const Field<WidgetOptions, bool> _f$preview =
+      Field('preview', _$preview, opt: true, def: false);
   static LayoutPosition _$position(WidgetOptions v) => v.position;
   static const Field<WidgetOptions, LayoutPosition> _f$position =
       Field('position', _$position, opt: true, def: LayoutPosition.right);
@@ -1402,6 +1078,7 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
     #name: _f$name,
     #args: _f$args,
     #flex: _f$flex,
+    #preview: _f$preview,
     #position: _f$position,
   };
   @override
@@ -1412,6 +1089,7 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
         name: data.dec(_f$name),
         args: data.dec(_f$args),
         flex: data.dec(_f$flex),
+        preview: data.dec(_f$preview),
         position: data.dec(_f$position));
   }
 
@@ -1474,6 +1152,7 @@ abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions<T>, $Out, T>
       {String? name,
       Map<String, dynamic>? args,
       int? flex,
+      bool? preview,
       LayoutPosition? position});
   WidgetOptionsCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -1496,11 +1175,13 @@ class _WidgetOptionsCopyWithImpl<$R, $Out, T>
           {String? name,
           Map<String, dynamic>? args,
           int? flex,
+          bool? preview,
           LayoutPosition? position}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
         if (flex != null) #flex: flex,
+        if (preview != null) #preview: preview,
         if (position != null) #position: position
       }));
   @override
@@ -1508,6 +1189,7 @@ class _WidgetOptionsCopyWithImpl<$R, $Out, T>
       name: data.get(#name, or: $value.name),
       args: data.get(#args, or: $value.args),
       flex: data.get(#flex, or: $value.flex),
+      preview: data.get(#preview, or: $value.preview),
       position: data.get(#position, or: $value.position));
 
   @override

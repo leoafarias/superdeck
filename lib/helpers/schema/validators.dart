@@ -1,4 +1,4 @@
-import 'json_schema.dart';
+import 'schema.dart';
 
 abstract class Validator<T> {
   const Validator();

@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../helpers/schema/json_schema.dart';
+import '../helpers/schema/schema.dart';
 import '../styles/style_util.dart';
 import 'options_model.dart';
 import 'syntax_tag.dart';

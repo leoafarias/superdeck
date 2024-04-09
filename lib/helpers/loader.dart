@@ -10,7 +10,7 @@ import 'package:yaml/yaml.dart';
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
-import 'schema/json_schema.dart';
+import 'schema/schema.dart';
 
 const _assetPrefix = 'sd_';
 

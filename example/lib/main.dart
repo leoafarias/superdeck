@@ -24,11 +24,11 @@ VariantAttribute get demoStyle {
   return const SlideVariant('demo')(
     $.h1.textStyle.fontSize(56),
     $.h1.textStyle.fontWeight.bold(),
-    $.innerContainer.gradient.linear(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.purple.withOpacity(0.1), Colors.purple.withOpacity(0.3)],
-    ),
+    // $.innerContainer.gradient.linear(
+    //   begin: Alignment.topCenter,
+    //   end: Alignment.bottomCenter,
+    //   colors: [Colors.black.withOpacity(0.1), Colors.purple.withOpacity(0.2)],
+    // ),
     $.code.span.fontSize(14),
   );
 }
@@ -65,18 +65,17 @@ void main() async {
           style: style,
           // ignore: prefer_const_literals_to_create_immutables
           examples: [
-            Example.simple(
+            Example(
               name: 'demo',
+              schema: ExampleOptions.schema,
               builder: (args) {
-                final options = ExampleOptions.fromMap(args);
-                return Container(
-                  height: options.height,
-                  width: options.width,
-                  color: Colors.blue,
-                  child: Center(
-                    child: Text(
-                      options.text ?? 'No text',
-                    ),
+                return Center(
+                  child: Container(
+                    height: args.height,
+                    width: args.width,
+                    color: Colors.blue,
+                    alignment: Alignment.center,
+                    child: Text(args.text),
                   ),
                 );
               },
