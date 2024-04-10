@@ -8,9 +8,7 @@ VariantAttribute get coverStyle {
   return SlideVariant.cover(
     $.h1.textStyle.fontSize(96),
     $.h1.textStyle.fontWeight.bold(),
-
-    // $.paragraph.padding.right(300),
-
+    $.textStyle.as(GoogleFonts.poppins()),
     $.innerContainer.borderRadius.all(0),
     $.innerContainer.gradient.linear(
       begin: Alignment.topCenter,

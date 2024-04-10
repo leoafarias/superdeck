@@ -29,18 +29,16 @@ class SlideContent extends StatelessWidget {
             maxWidth: size.width,
             maxHeight: size.height,
           ),
-          child: SingleChildScrollView(
-            child: AnimatedMixedBox(
-              duration: const Duration(milliseconds: 300),
-              spec: spec.contentContainer,
-              child: IntrinsicWidth(
-                child: AnimatedMarkdownViewer(
-                  content: data,
-                  spec: spec,
-                  assets: assets,
-                  constraints: _calculateConstraints(size, container),
-                  duration: const Duration(milliseconds: 300),
-                ),
+          child: AnimatedMixedBox(
+            duration: const Duration(milliseconds: 300),
+            spec: spec.contentContainer,
+            child: SingleChildScrollView(
+              child: AnimatedMarkdownViewer(
+                content: data,
+                spec: spec,
+                assets: assets,
+                constraints: _calculateConstraints(size, container),
+                duration: const Duration(milliseconds: 300),
               ),
             ),
           ),

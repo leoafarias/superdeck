@@ -165,7 +165,10 @@ class ImageSlideTemplate extends SlideTemplate<ImageSlide> {
     }
 
     List<Widget> children = [
-      buildContentSection(config.data, config.contentOptions),
+      buildContentSection(
+        config.data,
+        config.contentOptions,
+      ),
       Expanded(
         flex: config.image.flex,
         child: Container(
