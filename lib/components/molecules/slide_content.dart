@@ -2,48 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../helpers/controller.dart';
-import '../../helpers/measure_size.dart';
+import '../../models/options_model.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/markdown_viewer.dart';
+import 'slide_view.dart';
 
 class SlideContent extends StatelessWidget {
   const SlideContent({
     required this.data,
+    required this.options,
     super.key,
   });
 
   final String data;
+  final ContentOptions? options;
 
   @override
   Widget build(context) {
     final mix = MixProvider.of(context);
     final spec = SlideSpec.of(mix);
     final container = spec.contentContainer;
+    final alignment = options?.alignment ?? ContentAlignment.center;
 
     final assets = SuperDeck.assetsOf(context);
 
-    return SlideConstraintBuilder(
-      builder: (context, size) {
-        return ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: size.width,
-            maxHeight: size.height,
-          ),
-          child: AnimatedMixedBox(
+    final constraints = SlideConstraints.of(context);
+
+    return AnimatedMixedBox(
+      duration: const Duration(milliseconds: 300),
+      spec: spec.contentContainer.copyWith(
+        alignment: alignment.toAlignment(),
+      ),
+      child: SingleChildScrollView(
+        child: IntrinsicWidth(
+          child: AnimatedMarkdownViewer(
+            content: data,
+            spec: spec,
+            assets: assets,
+            constraints: _calculateConstraints(constraints.biggest, container),
             duration: const Duration(milliseconds: 300),
-            spec: spec.contentContainer,
-            child: SingleChildScrollView(
-              child: AnimatedMarkdownViewer(
-                content: data,
-                spec: spec,
-                assets: assets,
-                constraints: _calculateConstraints(size, container),
-                duration: const Duration(milliseconds: 300),
-              ),
-            ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

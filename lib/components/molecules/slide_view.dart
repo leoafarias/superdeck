@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/layout_builder.dart';
+import '../../helpers/measure_size.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
-import '../atoms/slide_transition_widget.dart';
+import '../atoms/transition_widget.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
@@ -21,55 +22,42 @@ class SlideView extends StatelessWidget {
 
     final style = SuperDeck.styleOf(context).applyVariant(props.styleVariant);
 
-    return SlideTransitionWidget(
+    return TransitionWidget(
       key: ValueKey(props.transition),
       transition: props.transition,
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Stack(
-          children: [
-            Container(
-              width: constraints.maxWidth,
-              height: constraints.maxHeight,
+      child: MixBuilder(
+        style: style.animate(),
+        key: ValueKey(props),
+        builder: (mix) {
+          final spec = SlideSpec.of(mix);
+          return AnimatedMixedBox(
+            spec: spec.innerContainer,
+            duration: const Duration(milliseconds: 300),
+            child: Container(
               decoration: _backgroundDecoration(props.background),
+              child: SlideConstraintBuilder(builder: (_, __) {
+                if (props is SimpleSlide) {
+                  return SimpleSlideBuilder(config: props);
+                } else if (props is WidgetSlide) {
+                  return WidgetSlideBuilder(config: props);
+                } else if (props is ImageSlide) {
+                  return ImageSlideBuilder(config: props);
+                } else if (props is TwoColumnSlide) {
+                  return TwoColumnSlideBuilder(config: props);
+                } else if (props is TwoColumnHeaderSlide) {
+                  return TwoColumnHeaderSlideBuilder(config: props);
+                } else if (props is InvalidSlide) {
+                  return InvalidSlideBuilder(config: props);
+                } else {
+                  throw UnimplementedError(
+                    'Slide config not implemented',
+                  );
+                }
+              }),
             ),
-            SizedBox(
-              width: constraints.maxWidth,
-              height: constraints.maxHeight,
-              child: StyledWidgetBuilder(
-                  style: style.animate(),
-                  key: ValueKey(props),
-                  builder: (mix) {
-                    final spec = SlideSpec.of(mix);
-                    return AnimatedMixedBox(
-                      spec: spec.innerContainer,
-                      duration: const Duration(milliseconds: 300),
-                      child: LayoutBuilder(builder: (_, constraints) {
-                        return Builder(builder: (_) {
-                          if (props is SimpleSlide) {
-                            return SimpleSlideTemplate(config: props);
-                          } else if (props is WidgetSlide) {
-                            return WidgetSlideTemplate(config: props);
-                          } else if (props is ImageSlide) {
-                            return ImageSlideTemplate(config: props);
-                          } else if (props is TwoColumnSlide) {
-                            return TwoColumnSlideTemplate(config: props);
-                          } else if (props is TwoColumnHeaderSlide) {
-                            return TwoColumnHeaderSlideTemplate(config: props);
-                          } else if (props is InvalidSlide) {
-                            return InvalidSlideTemplate(config: props);
-                          } else {
-                            throw UnimplementedError(
-                              'Slide config not implemented',
-                            );
-                          }
-                        });
-                      }),
-                    );
-                  }),
-            ),
-          ],
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

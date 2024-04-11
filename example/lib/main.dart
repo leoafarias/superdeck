@@ -49,7 +49,6 @@ Style get style {
     coverStyle,
     quoteStyle,
     demoStyle,
-
     // $.contentContainer.border(color: Colors.blue),
   );
 }

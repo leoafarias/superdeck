@@ -17,7 +17,7 @@ class SlideMapper extends SubClassMapperBase<Slide> {
       SimpleSlideMapper.ensureInitialized();
       ImageSlideMapper.ensureInitialized();
       WidgetSlideMapper.ensureInitialized();
-      TwoSectionSlideMapper.ensureInitialized();
+      SectionsSlideMapper.ensureInitialized();
       InvalidSlideMapper.ensureInitialized();
       ContentOptionsMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
@@ -686,13 +686,13 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
       _WidgetSlideCopyWithImpl($value, $cast, t);
 }
 
-class TwoSectionSlideMapper extends SubClassMapperBase<TwoSectionSlide> {
-  TwoSectionSlideMapper._();
+class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
+  SectionsSlideMapper._();
 
-  static TwoSectionSlideMapper? _instance;
-  static TwoSectionSlideMapper ensureInitialized() {
+  static SectionsSlideMapper? _instance;
+  static SectionsSlideMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = TwoSectionSlideMapper._());
+      MapperContainer.globals.use(_instance = SectionsSlideMapper._());
       SlideMapper.ensureInitialized().addSubMapper(_instance!);
       TwoColumnSlideMapper.ensureInitialized();
       TwoColumnHeaderSlideMapper.ensureInitialized();
@@ -703,46 +703,41 @@ class TwoSectionSlideMapper extends SubClassMapperBase<TwoSectionSlide> {
   }
 
   @override
-  final String id = 'TwoSectionSlide';
+  final String id = 'SectionsSlide';
 
-  static String? _$title(TwoSectionSlide v) => v.title;
-  static const Field<TwoSectionSlide, String> _f$title =
+  static String? _$title(SectionsSlide v) => v.title;
+  static const Field<SectionsSlide, String> _f$title =
       Field('title', _$title, opt: true);
-  static String? _$background(TwoSectionSlide v) => v.background;
-  static const Field<TwoSectionSlide, String> _f$background =
+  static String? _$background(SectionsSlide v) => v.background;
+  static const Field<SectionsSlide, String> _f$background =
       Field('background', _$background, opt: true);
-  static ContentOptions? _$contentOptions(TwoSectionSlide v) =>
-      v.contentOptions;
-  static const Field<TwoSectionSlide, ContentOptions> _f$contentOptions =
+  static ContentOptions? _$contentOptions(SectionsSlide v) => v.contentOptions;
+  static const Field<SectionsSlide, ContentOptions> _f$contentOptions =
       Field('contentOptions', _$contentOptions, key: 'content');
-  static String? _$style(TwoSectionSlide v) => v.style;
-  static const Field<TwoSectionSlide, String> _f$style =
+  static String? _$style(SectionsSlide v) => v.style;
+  static const Field<SectionsSlide, String> _f$style =
       Field('style', _$style, opt: true);
-  static TransitionOptions? _$transition(TwoSectionSlide v) => v.transition;
-  static const Field<TwoSectionSlide, TransitionOptions> _f$transition =
+  static TransitionOptions? _$transition(SectionsSlide v) => v.transition;
+  static const Field<SectionsSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(TwoSectionSlide v) => v.data;
-  static const Field<TwoSectionSlide, String> _f$data = Field('data', _$data);
-  static ContentOptions? _$leftOptions(TwoSectionSlide v) => v.leftOptions;
-  static const Field<TwoSectionSlide, ContentOptions> _f$leftOptions =
-      Field('leftOptions', _$leftOptions, key: 'left_section', opt: true);
-  static ContentOptions? _$rightOptions(TwoSectionSlide v) => v.rightOptions;
-  static const Field<TwoSectionSlide, ContentOptions> _f$rightOptions =
-      Field('rightOptions', _$rightOptions, key: 'right_section', opt: true);
-  static String _$layout(TwoSectionSlide v) => v.layout;
-  static const Field<TwoSectionSlide, String> _f$layout =
+  static String _$data(SectionsSlide v) => v.data;
+  static const Field<SectionsSlide, String> _f$data = Field('data', _$data);
+  static Map<String, ContentOptions?> _$sections(SectionsSlide v) => v.sections;
+  static const Field<SectionsSlide, Map<String, ContentOptions?>> _f$sections =
+      Field('sections', _$sections, opt: true, def: const {});
+  static String _$layout(SectionsSlide v) => v.layout;
+  static const Field<SectionsSlide, String> _f$layout =
       Field('layout', _$layout);
 
   @override
-  final MappableFields<TwoSectionSlide> fields = const {
+  final MappableFields<SectionsSlide> fields = const {
     #title: _f$title,
     #background: _f$background,
     #contentOptions: _f$contentOptions,
     #style: _f$style,
     #transition: _f$transition,
     #data: _f$data,
-    #leftOptions: _f$leftOptions,
-    #rightOptions: _f$rightOptions,
+    #sections: _f$sections,
     #layout: _f$layout,
   };
   @override
@@ -751,35 +746,35 @@ class TwoSectionSlideMapper extends SubClassMapperBase<TwoSectionSlide> {
   @override
   final String discriminatorKey = 'layout';
   @override
-  final dynamic discriminatorValue = 'TwoSectionSlide';
+  final dynamic discriminatorValue = 'SectionsSlide';
   @override
   late final ClassMapperBase superMapper = SlideMapper.ensureInitialized();
 
-  static TwoSectionSlide _instantiate(DecodingData data) {
+  static SectionsSlide _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'TwoSectionSlide', 'layout', '${data.value['layout']}');
+        'SectionsSlide', 'layout', '${data.value['layout']}');
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static TwoSectionSlide fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<TwoSectionSlide>(map);
+  static SectionsSlide fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SectionsSlide>(map);
   }
 
-  static TwoSectionSlide fromJson(String json) {
-    return ensureInitialized().decodeJson<TwoSectionSlide>(json);
+  static SectionsSlide fromJson(String json) {
+    return ensureInitialized().decodeJson<SectionsSlide>(json);
   }
 }
 
-mixin TwoSectionSlideMappable {
+mixin SectionsSlideMappable {
   String toJson();
   Map<String, dynamic> toMap();
-  TwoSectionSlideCopyWith<TwoSectionSlide, TwoSectionSlide, TwoSectionSlide>
+  SectionsSlideCopyWith<SectionsSlide, SectionsSlide, SectionsSlide>
       get copyWith;
 }
 
-abstract class TwoSectionSlideCopyWith<$R, $In extends TwoSectionSlide, $Out>
+abstract class SectionsSlideCopyWith<$R, $In extends SectionsSlide, $Out>
     implements SlideCopyWith<$R, $In, $Out> {
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
@@ -787,8 +782,8 @@ abstract class TwoSectionSlideCopyWith<$R, $In extends TwoSectionSlide, $Out>
   @override
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition;
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get leftOptions;
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get rightOptions;
+  MapCopyWith<$R, String, ContentOptions?,
+      ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?> get sections;
   @override
   $R call(
       {String? title,
@@ -797,10 +792,8 @@ abstract class TwoSectionSlideCopyWith<$R, $In extends TwoSectionSlide, $Out>
       String? style,
       TransitionOptions? transition,
       String? data,
-      ContentOptions? leftOptions,
-      ContentOptions? rightOptions});
-  TwoSectionSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+      Map<String, ContentOptions?>? sections});
+  SectionsSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
 class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
@@ -810,7 +803,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
   static TwoColumnSlideMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TwoColumnSlideMapper._());
-      TwoSectionSlideMapper.ensureInitialized().addSubMapper(_instance!);
+      SectionsSlideMapper.ensureInitialized().addSubMapper(_instance!);
       ContentOptionsMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
     }
@@ -837,12 +830,10 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
       Field('transition', _$transition, opt: true);
   static String _$data(TwoColumnSlide v) => v.data;
   static const Field<TwoColumnSlide, String> _f$data = Field('data', _$data);
-  static ContentOptions? _$leftOptions(TwoColumnSlide v) => v.leftOptions;
-  static const Field<TwoColumnSlide, ContentOptions> _f$leftOptions =
-      Field('leftOptions', _$leftOptions, key: 'left_section', opt: true);
-  static ContentOptions? _$rightOptions(TwoColumnSlide v) => v.rightOptions;
-  static const Field<TwoColumnSlide, ContentOptions> _f$rightOptions =
-      Field('rightOptions', _$rightOptions, key: 'right_section', opt: true);
+  static Map<String, ContentOptions?> _$sections(TwoColumnSlide v) =>
+      v.sections;
+  static const Field<TwoColumnSlide, Map<String, ContentOptions?>> _f$sections =
+      Field('sections', _$sections, opt: true, def: const {});
   static String _$layout(TwoColumnSlide v) => v.layout;
   static const Field<TwoColumnSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
@@ -855,8 +846,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
     #style: _f$style,
     #transition: _f$transition,
     #data: _f$data,
-    #leftOptions: _f$leftOptions,
-    #rightOptions: _f$rightOptions,
+    #sections: _f$sections,
     #layout: _f$layout,
   };
   @override
@@ -868,7 +858,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
   final dynamic discriminatorValue = LayoutType.twoColumn;
   @override
   late final ClassMapperBase superMapper =
-      TwoSectionSlideMapper.ensureInitialized();
+      SectionsSlideMapper.ensureInitialized();
 
   static TwoColumnSlide _instantiate(DecodingData data) {
     return TwoColumnSlide(
@@ -878,8 +868,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
         style: data.dec(_f$style),
         transition: data.dec(_f$transition),
         data: data.dec(_f$data),
-        leftOptions: data.dec(_f$leftOptions),
-        rightOptions: data.dec(_f$rightOptions));
+        sections: data.dec(_f$sections));
   }
 
   @override
@@ -934,7 +923,7 @@ extension TwoColumnSlideValueCopy<$R, $Out>
 }
 
 abstract class TwoColumnSlideCopyWith<$R, $In extends TwoColumnSlide, $Out>
-    implements TwoSectionSlideCopyWith<$R, $In, $Out> {
+    implements SectionsSlideCopyWith<$R, $In, $Out> {
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;
@@ -942,9 +931,8 @@ abstract class TwoColumnSlideCopyWith<$R, $In extends TwoColumnSlide, $Out>
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition;
   @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get leftOptions;
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get rightOptions;
+  MapCopyWith<$R, String, ContentOptions?,
+      ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?> get sections;
   @override
   $R call(
       {String? title,
@@ -953,8 +941,7 @@ abstract class TwoColumnSlideCopyWith<$R, $In extends TwoColumnSlide, $Out>
       String? style,
       TransitionOptions? transition,
       String? data,
-      ContentOptions? leftOptions,
-      ContentOptions? rightOptions});
+      Map<String, ContentOptions?>? sections});
   TwoColumnSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -976,12 +963,10 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
       get transition =>
           $value.transition?.copyWith.$chain((v) => call(transition: v));
   @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get leftOptions =>
-      $value.leftOptions?.copyWith.$chain((v) => call(leftOptions: v));
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
-      get rightOptions =>
-          $value.rightOptions?.copyWith.$chain((v) => call(rightOptions: v));
+  MapCopyWith<$R, String, ContentOptions?,
+          ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?>
+      get sections => MapCopyWith($value.sections,
+          (v, t) => v?.copyWith.$chain(t), (v) => call(sections: v));
   @override
   $R call(
           {Object? title = $none,
@@ -990,8 +975,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
           Object? style = $none,
           Object? transition = $none,
           String? data,
-          Object? leftOptions = $none,
-          Object? rightOptions = $none}) =>
+          Map<String, ContentOptions?>? sections}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
@@ -999,8 +983,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
-        if (leftOptions != $none) #leftOptions: leftOptions,
-        if (rightOptions != $none) #rightOptions: rightOptions
+        if (sections != null) #sections: sections
       }));
   @override
   TwoColumnSlide $make(CopyWithData data) => TwoColumnSlide(
@@ -1010,8 +993,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
       data: data.get(#data, or: $value.data),
-      leftOptions: data.get(#leftOptions, or: $value.leftOptions),
-      rightOptions: data.get(#rightOptions, or: $value.rightOptions));
+      sections: data.get(#sections, or: $value.sections));
 
   @override
   TwoColumnSlideCopyWith<$R2, TwoColumnSlide, $Out2> $chain<$R2, $Out2>(
@@ -1027,7 +1009,7 @@ class TwoColumnHeaderSlideMapper
   static TwoColumnHeaderSlideMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = TwoColumnHeaderSlideMapper._());
-      TwoSectionSlideMapper.ensureInitialized().addSubMapper(_instance!);
+      SectionsSlideMapper.ensureInitialized().addSubMapper(_instance!);
       ContentOptionsMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
     }
@@ -1057,17 +1039,10 @@ class TwoColumnHeaderSlideMapper
   static String _$data(TwoColumnHeaderSlide v) => v.data;
   static const Field<TwoColumnHeaderSlide, String> _f$data =
       Field('data', _$data);
-  static ContentOptions? _$leftOptions(TwoColumnHeaderSlide v) => v.leftOptions;
-  static const Field<TwoColumnHeaderSlide, ContentOptions> _f$leftOptions =
-      Field('leftOptions', _$leftOptions, key: 'left_section', opt: true);
-  static ContentOptions? _$rightOptions(TwoColumnHeaderSlide v) =>
-      v.rightOptions;
-  static const Field<TwoColumnHeaderSlide, ContentOptions> _f$rightOptions =
-      Field('rightOptions', _$rightOptions, key: 'right_section', opt: true);
-  static ContentOptions? _$headerOptions(TwoColumnHeaderSlide v) =>
-      v.headerOptions;
-  static const Field<TwoColumnHeaderSlide, ContentOptions> _f$headerOptions =
-      Field('headerOptions', _$headerOptions, key: 'header', opt: true);
+  static Map<String, ContentOptions?> _$sections(TwoColumnHeaderSlide v) =>
+      v.sections;
+  static const Field<TwoColumnHeaderSlide, Map<String, ContentOptions?>>
+      _f$sections = Field('sections', _$sections, opt: true, def: const {});
   static String _$layout(TwoColumnHeaderSlide v) => v.layout;
   static const Field<TwoColumnHeaderSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
@@ -1080,9 +1055,7 @@ class TwoColumnHeaderSlideMapper
     #style: _f$style,
     #transition: _f$transition,
     #data: _f$data,
-    #leftOptions: _f$leftOptions,
-    #rightOptions: _f$rightOptions,
-    #headerOptions: _f$headerOptions,
+    #sections: _f$sections,
     #layout: _f$layout,
   };
   @override
@@ -1094,7 +1067,7 @@ class TwoColumnHeaderSlideMapper
   final dynamic discriminatorValue = LayoutType.twoColumnHeader;
   @override
   late final ClassMapperBase superMapper =
-      TwoSectionSlideMapper.ensureInitialized();
+      SectionsSlideMapper.ensureInitialized();
 
   static TwoColumnHeaderSlide _instantiate(DecodingData data) {
     return TwoColumnHeaderSlide(
@@ -1104,9 +1077,7 @@ class TwoColumnHeaderSlideMapper
         style: data.dec(_f$style),
         transition: data.dec(_f$transition),
         data: data.dec(_f$data),
-        leftOptions: data.dec(_f$leftOptions),
-        rightOptions: data.dec(_f$rightOptions),
-        headerOptions: data.dec(_f$headerOptions));
+        sections: data.dec(_f$sections));
   }
 
   @override
@@ -1165,7 +1136,7 @@ extension TwoColumnHeaderSlideValueCopy<$R, $Out>
 abstract class TwoColumnHeaderSlideCopyWith<
     $R,
     $In extends TwoColumnHeaderSlide,
-    $Out> implements TwoSectionSlideCopyWith<$R, $In, $Out> {
+    $Out> implements SectionsSlideCopyWith<$R, $In, $Out> {
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;
@@ -1173,10 +1144,8 @@ abstract class TwoColumnHeaderSlideCopyWith<
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition;
   @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get leftOptions;
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get rightOptions;
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get headerOptions;
+  MapCopyWith<$R, String, ContentOptions?,
+      ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?> get sections;
   @override
   $R call(
       {String? title,
@@ -1185,9 +1154,7 @@ abstract class TwoColumnHeaderSlideCopyWith<
       String? style,
       TransitionOptions? transition,
       String? data,
-      ContentOptions? leftOptions,
-      ContentOptions? rightOptions,
-      ContentOptions? headerOptions});
+      Map<String, ContentOptions?>? sections});
   TwoColumnHeaderSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -1209,16 +1176,10 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
       get transition =>
           $value.transition?.copyWith.$chain((v) => call(transition: v));
   @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get leftOptions =>
-      $value.leftOptions?.copyWith.$chain((v) => call(leftOptions: v));
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
-      get rightOptions =>
-          $value.rightOptions?.copyWith.$chain((v) => call(rightOptions: v));
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
-      get headerOptions =>
-          $value.headerOptions?.copyWith.$chain((v) => call(headerOptions: v));
+  MapCopyWith<$R, String, ContentOptions?,
+          ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?>
+      get sections => MapCopyWith($value.sections,
+          (v, t) => v?.copyWith.$chain(t), (v) => call(sections: v));
   @override
   $R call(
           {Object? title = $none,
@@ -1227,9 +1188,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
           Object? style = $none,
           Object? transition = $none,
           String? data,
-          Object? leftOptions = $none,
-          Object? rightOptions = $none,
-          Object? headerOptions = $none}) =>
+          Map<String, ContentOptions?>? sections}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
@@ -1237,9 +1196,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
-        if (leftOptions != $none) #leftOptions: leftOptions,
-        if (rightOptions != $none) #rightOptions: rightOptions,
-        if (headerOptions != $none) #headerOptions: headerOptions
+        if (sections != null) #sections: sections
       }));
   @override
   TwoColumnHeaderSlide $make(CopyWithData data) => TwoColumnHeaderSlide(
@@ -1249,9 +1206,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
       data: data.get(#data, or: $value.data),
-      leftOptions: data.get(#leftOptions, or: $value.leftOptions),
-      rightOptions: data.get(#rightOptions, or: $value.rightOptions),
-      headerOptions: data.get(#headerOptions, or: $value.headerOptions));
+      sections: data.get(#sections, or: $value.sections));
 
   @override
   TwoColumnHeaderSlideCopyWith<$R2, TwoColumnHeaderSlide, $Out2>
@@ -1441,4 +1396,102 @@ class _InvalidSlideCopyWithImpl<$R, $Out>
   InvalidSlideCopyWith<$R2, InvalidSlide, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _InvalidSlideCopyWithImpl($value, $cast, t);
+}
+
+class SectionDataMapper extends RecordMapperBase<SectionData> {
+  static SectionDataMapper? _instance;
+  SectionDataMapper._();
+
+  static SectionDataMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SectionDataMapper._());
+      MapperBase.addType(<A, B>(f) => f<({A content, B options})>());
+    }
+    return _instance!;
+  }
+
+  static String _$content(SectionData v) => v.content;
+  static const Field<SectionData, String> _f$content =
+      Field('content', _$content);
+  static ContentOptions _$options(SectionData v) => v.options;
+  static const Field<SectionData, ContentOptions> _f$options =
+      Field('options', _$options);
+
+  @override
+  final MappableFields<SectionData> fields = const {
+    #content: _f$content,
+    #options: _f$options,
+  };
+
+  @override
+  Function get typeFactory => (f) => f<SectionData>();
+
+  @override
+  List<Type> apply(MappingContext context) {
+    return [];
+  }
+
+  static SectionData _instantiate(DecodingData<SectionData> data) {
+    return (content: data.dec(_f$content), options: data.dec(_f$options));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static SectionData fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SectionData>(map);
+  }
+
+  static SectionData fromJson(String json) {
+    return ensureInitialized().decodeJson<SectionData>(json);
+  }
+}
+
+extension SectionDataMappable on SectionData {
+  Map<String, dynamic> toMap() {
+    return SectionDataMapper.ensureInitialized().encodeMap(this);
+  }
+
+  String toJson() {
+    return SectionDataMapper.ensureInitialized().encodeJson(this);
+  }
+
+  SectionDataCopyWith<SectionData> get copyWith =>
+      _SectionDataCopyWithImpl(this, $identity, $identity);
+}
+
+extension SectionDataValueCopy<$R>
+    on ObjectCopyWith<$R, SectionData, SectionData> {
+  SectionDataCopyWith<$R> get $asSectionData =>
+      $base.as((v, t, t2) => _SectionDataCopyWithImpl(v, t, t2));
+}
+
+abstract class SectionDataCopyWith<$R>
+    implements RecordCopyWith<$R, SectionData> {
+  $R call({String? content, ContentOptions? options});
+  SectionDataCopyWith<$R2> $chain<$R2>(Then<SectionData, $R2> t);
+}
+
+class _SectionDataCopyWithImpl<$R> extends RecordCopyWithBase<$R, SectionData>
+    implements SectionDataCopyWith<$R> {
+  _SectionDataCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final RecordMapperBase<SectionData> $mapper =
+      SectionDataMapper.ensureInitialized();
+  @override
+  $R call({String? content, ContentOptions? options}) =>
+      $apply(FieldCopyWithData({
+        if (content != null) #content: content,
+        if (options != null) #options: options
+      }));
+  @override
+  SectionData $make(CopyWithData data) => (
+        content: data.get(#content, or: $value.content),
+        options: data.get(#options, or: $value.options)
+      );
+
+  @override
+  SectionDataCopyWith<$R2> $chain<$R2>(Then<SectionData, $R2> t) =>
+      _SectionDataCopyWithImpl($value, $cast, t);
 }

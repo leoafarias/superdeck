@@ -1,3 +1,22 @@
+
+---
+style: quote
+layout: image
+image:
+  src: https://source.unsplash.com/random/900×700/?inspiration
+  fit: cover
+  position: left
+content:
+  alignment: bottom_right
+  flex: 1
+---
+
+
+> If you want to go fast, go alone. 
+> If you want to go far, go together.
+> ### African Proverb
+
+
 ---
 background: https://source.unsplash.com/random/900×700/?landscape
 ---
@@ -5,32 +24,6 @@ background: https://source.unsplash.com/random/900×700/?landscape
 # SuperDeck
  
 SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
-
-
-# SuperDeck
- 
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
-
-
-# SuperDeck
- 
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
-
-
-# SuperDeck
- 
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
-
-
-# SuperDeck
- 
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
-
-
-# SuperDeck
- 
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
-
 
 ---
 layout: widget
@@ -50,10 +43,14 @@ This is an example of an awesome widget
 layout: two_column_header
 content:
   alignment: center
-left_section:
-  alignment: center
-header:
-  alignment: bottom_left
+sections:
+  left:
+    alignment: bottom_right
+    flex: 2
+  right:
+    alignment: bottom_left
+  header:
+    alignment: bottom_left
 ---
 
 # Two Column Header
@@ -109,8 +106,7 @@ title: "Slide 3: Links and Images"
 
 [Link](https://github.com)
 
-![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape#500x250)
-
+![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)
 
 
 ---
@@ -120,10 +116,8 @@ image:
   src: https://source.unsplash.com/random/900×700/?inspiration
   fit: cover
   position: right
-  flex: 1
 content:
   alignment: bottom_right
-  flex: 2
 ---
 
 

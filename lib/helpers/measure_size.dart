@@ -73,17 +73,21 @@ class _SlideConstraintBuilderState extends State<SlideConstraintBuilder> {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final size = _widgetSize == null ? constraints.biggest : _widgetSize!;
+        final constraintSize = BoxConstraints(
+          maxHeight: size.height,
+          maxWidth: size.width,
+        );
         return MeasureSize(
           onChange: _onWidgetSizeChange,
-          child: SlideConstraints(
-            constraints: BoxConstraints(
-              maxHeight: size.height,
-              maxWidth: size.width,
-            ),
-            child: Builder(
-              builder: (BuildContext context) {
-                return widget.builder(context, size);
-              },
+          child: ConstrainedBox(
+            constraints: constraintSize,
+            child: SlideConstraints(
+              constraints: constraintSize,
+              child: Builder(
+                builder: (BuildContext context) {
+                  return widget.builder(context, size);
+                },
+              ),
             ),
           ),
         );

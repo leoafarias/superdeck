@@ -353,6 +353,7 @@ Future<List<Slide>> _parseSlidesYaml(String slidesYaml) async {
 List<Slide> _parseFromJson(String slidesJson) {
   final slides = jsonDecode(slidesJson) as List;
   final slideMap = List.castFrom<dynamic, Map<String, dynamic>>(slides);
+
   return slideMap.map(Slide.fromMap).toList();
 }
 
@@ -389,4 +390,15 @@ Future<Slide> _parseSlideFromMap(Map<String, dynamic> map) async {
   } catch (e) {
     return InvalidSlide.message('# Unknown Error \n $e');
   }
+}
+
+Slide Function(Map<String, dynamic>) _getLayoutMapper(String layout) {
+  return switch (layout) {
+    LayoutType.simple => SimpleSlide.fromMap,
+    LayoutType.image => ImageSlide.fromMap,
+    LayoutType.widget => WidgetSlide.fromMap,
+    LayoutType.twoColumn => TwoColumnSlide.fromMap,
+    LayoutType.twoColumnHeader => TwoColumnHeaderSlide.fromMap,
+    _ => InvalidSlide.fromMap,
+  };
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:signals/signals_flutter.dart';
 import 'package:watcher/watcher.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -17,8 +19,10 @@ import '../../models/options_model.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../../theme.dart';
+import '../atoms/slide_thumbnail.dart';
 import 'scaled_app.dart';
 import 'slide_view.dart';
+import 'split_view.dart';
 
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
@@ -166,29 +170,27 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       acc[builder.name] = builder;
       return acc;
     });
-    return ScaledApp(builder: (context, _) {
-      return MaterialApp(
-        theme: darkTheme,
-        debugShowCheckedModeBanner: false,
-        home: MixTheme(
-          data: MixThemeData.withMaterial(),
-          child: Scaffold(
-            body: SuperDeck(
-              slides: slides,
-              assets: _assets,
-              style: defaultStyle.merge(widget.style),
-              projectOptions: _config,
-              //  Convert a List<WidgetDemo> to a Map<String, WidgetDemo>
-              // where the key of the map is the widgetDemo.name
-              widgetExamples: exampleBuilders,
-              child: _loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : const AppShell(),
-            ),
+    return MaterialApp(
+      theme: darkTheme,
+      debugShowCheckedModeBanner: false,
+      home: MixTheme(
+        data: MixThemeData.withMaterial(),
+        child: Scaffold(
+          body: SuperDeck(
+            slides: slides,
+            assets: _assets,
+            style: defaultStyle.merge(widget.style),
+            projectOptions: _config,
+            //  Convert a List<WidgetDemo> to a Map<String, WidgetDemo>
+            // where the key of the map is the widgetDemo.name
+            widgetExamples: exampleBuilders,
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : const AppShell(),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
@@ -201,7 +203,10 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   final _pageController = PageController();
+  final _sideIsOpen = signal(false);
+  final _selectedSlide = signal(0);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -218,7 +223,6 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     final slides = SuperDeck.slidesOf(context);
-    final style = SuperDeck.styleOf(context);
 
     Future<void> goToPage(int page) async {
       if (page < 0 || page >= slides.length) return;
@@ -229,6 +233,8 @@ class _AppShellState extends State<AppShell> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+
+      _selectedSlide.value = page - 1;
 
       // _pageController.jumpToPage(page);
     }
@@ -256,23 +262,59 @@ class _AppShellState extends State<AppShell> {
 
     return CallbackShortcuts(
       bindings: bindings,
-      child: Pressable(
-        onPress: () {},
-        child: StyledWidgetBuilder(
-            style: style.animate(),
-            builder: (mix) {
-              final spec = SlideSpec.of(mix);
-
-              return AnimatedMixedBox(
-                duration: mix.animation?.duration ?? const Duration(),
-                spec: spec.outerContainer,
-                child: PageView(
-                  // scrollDirection: Axis.vertical,
-                  controller: _pageController,
-                  children: slides.map(SlideView.new).toList(),
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _sideIsOpen.value = !_sideIsOpen.value;
+          },
+          child: const Icon(Icons.menu),
+        ),
+        key: _scaffoldKey,
+        body: SplitView(
+          isOpen: _sideIsOpen.watch(context),
+          sideWidth: 300,
+          side: Column(
+            children: [
+              Container(
+                color: Colors.grey.shade800,
+                height: 60,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Slides'),
+                  ],
                 ),
-              );
-            }),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    color: Colors.grey.shade900,
+                    child: Column(
+                      children: slides.mapIndexed(
+                        (idx, slide) {
+                          return SlideThumbnail(
+                            slide: slide,
+                            selected: idx == _selectedSlide.watch(context),
+                            onTap: () {
+                              print(idx);
+                              goToPage(idx + 1);
+                            },
+                          );
+                        },
+                      ).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          body: ScaledWidget(
+            child: PageView(
+              controller: _pageController,
+              children: slides.map(SlideView.new).toList(),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -304,4 +346,16 @@ Future<void> _initialize() async {
   });
 
   await windowManager.setAspectRatio(kAspectRatio);
+}
+
+class FullScreenPage extends StatelessWidget {
+  const FullScreenPage({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(title: const Text("Big screen web app")),
+      body: const Row(children: [
+        Drawer(/* Menu items here */),
+        Placeholder(/* Normal body here */),
+      ]));
 }

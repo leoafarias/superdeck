@@ -1,7 +1,23 @@
 [
   {
+    "image": {
+      "src": "https://source.unsplash.com/random/900×700/?inspiration",
+      "fit": "cover",
+      "flex": 1,
+      "position": "left"
+    },
+    "style": "quote",
+    "content": {
+      "flex": 1,
+      "alignment": "bottom_right"
+    },
+    "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
+    "type": "Slide",
+    "layout": "image"
+  },
+  {
     "background": "https://source.unsplash.com/random/900×700/?landscape",
-    "data": "# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.\n\n\n# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.\n\n\n# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.\n\n\n# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.\n\n\n# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.\n\n\n# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.",
+    "data": "# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.",
     "type": "Slide"
   },
   {
@@ -25,11 +41,17 @@
       "alignment": "center"
     },
     "data": "# Two Column Header\n\nThis is your main header, providing a context or introducing the core concept covered in this slide.\n\n::left::\n\n### Left Heading\n- Point A\n- Point B\n- Point C\n\n::right::\n\n### Right Heading\n- Point X\n- Point Y\n- Point Z",
-    "left_section": {
-      "alignment": "center"
-    },
-    "header": {
-      "alignment": "bottom_left"
+    "sections": {
+      "left": {
+        "flex": 2,
+        "alignment": "bottom_right"
+      },
+      "right": {
+        "alignment": "bottom_left"
+      },
+      "header": {
+        "alignment": "bottom_left"
+      }
     },
     "type": "Slide",
     "layout": "two_column_header"
@@ -52,7 +74,7 @@
   },
   {
     "title": "Slide 3: Links and Images",
-    "data": "[Link](https://github.com)\n\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape#500x250)",
+    "data": "[Link](https://github.com)\n\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)",
     "type": "Slide"
   },
   {
@@ -64,7 +86,6 @@
     },
     "style": "quote",
     "content": {
-      "flex": 2,
       "alignment": "bottom_right"
     },
     "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
@@ -88,12 +109,14 @@
   {
     "title": "Mermaid example",
     "data": "::left::\n\n![Mermaid Diagram](assets/images/sd_mermaid_523883852.png)\n::right::\n\n## Mermaid Example",
+    "sections": {},
     "type": "Slide",
     "layout": "two_column"
   },
   {
     "title": "Slide 8: Task Lists",
     "data": "::left::\n\n- [ ] Task List Item 1\n- [x] Task List Item 2\n\n::right::\n\n#### Subtask\n\n- [x] foo\n  - [ ] bar\n  - [x] baz\n- [ ] bim",
+    "sections": {},
     "type": "Slide",
     "layout": "two_column"
   },

@@ -55,9 +55,6 @@ class ContentOptions with ContentOptionsMappable {
     return copyWith.$merge(other);
   }
 
-  static const fromMap = ContentOptionsMapper.fromMap;
-  static const fromJson = ContentOptionsMapper.fromJson;
-
   static final schema = Schema(
     {
       "alignment": ContentAlignment.schema.optional(),
@@ -79,9 +76,6 @@ class ImageOptions with ImageOptionsMappable {
     this.flex = 1,
     this.position = LayoutPosition.left,
   });
-
-  static const fromMap = ImageOptionsMapper.fromMap;
-  static const fromJson = ImageOptionsMapper.fromJson;
 
   static final schema = Schema(
     {
@@ -108,8 +102,6 @@ class TransitionOptions with TransitionOptionsMappable {
     this.delay,
     this.curve,
   });
-
-  static const fromMap = TransitionOptionsMapper.fromMap;
 
   static const fromJson = TransitionOptionsMapper.fromJson;
 
@@ -239,7 +231,7 @@ abstract class ExampleWidget<T> {
           Expanded(
             child: Container(
               color: Colors.red,
-              child: InvalidSlideTemplate(
+              child: InvalidSlideBuilder(
                 config: InvalidSlide.schemaError(result),
               ),
             ),
@@ -268,9 +260,6 @@ class WidgetOptions<T> with WidgetOptionsMappable {
     this.preview = false,
     this.position = LayoutPosition.right,
   });
-
-  static const fromMap = WidgetOptionsMapper.fromMap;
-  static const fromJson = WidgetOptionsMapper.fromJson;
 
   static final schema = Schema(
     {
@@ -452,42 +441,17 @@ enum ContentAlignment {
     values: ContentAlignment.values.map((e) => e.name.snakeCase).toList(),
   );
 
-  CrossAxisAlignment toCrossAxisAlignment() {
-    switch (this) {
-      // If the alignment is left align start
-      case ContentAlignment.topLeft:
-      case ContentAlignment.centerLeft:
-      case ContentAlignment.bottomLeft:
-        return CrossAxisAlignment.start;
-
-      // If the alignment is right align end
-      case ContentAlignment.topRight:
-      case ContentAlignment.centerRight:
-      case ContentAlignment.bottomRight:
-        return CrossAxisAlignment.end;
-      // If the alignment is center align center
-      default:
-        return CrossAxisAlignment.center;
-    }
-  }
-
-  MainAxisAlignment toMainAxisAlignment() {
-    switch (this) {
-      // If the alignment is top align start
-      case ContentAlignment.topLeft:
-      case ContentAlignment.topCenter:
-      case ContentAlignment.topRight:
-        return MainAxisAlignment.start;
-
-      // If the alignment is bottom align end
-      case ContentAlignment.bottomLeft:
-      case ContentAlignment.bottomCenter:
-      case ContentAlignment.bottomRight:
-        return MainAxisAlignment.end;
-
-      // If the alignment is center align center
-      default:
-        return MainAxisAlignment.center;
-    }
+  Alignment toAlignment() {
+    return switch (this) {
+      ContentAlignment.topLeft => Alignment.topLeft,
+      ContentAlignment.topCenter => Alignment.topCenter,
+      ContentAlignment.topRight => Alignment.topRight,
+      ContentAlignment.centerLeft => Alignment.centerLeft,
+      ContentAlignment.center => Alignment.center,
+      ContentAlignment.centerRight => Alignment.centerRight,
+      ContentAlignment.bottomLeft => Alignment.bottomLeft,
+      ContentAlignment.bottomCenter => Alignment.bottomCenter,
+      ContentAlignment.bottomRight => Alignment.bottomRight,
+    };
   }
 }

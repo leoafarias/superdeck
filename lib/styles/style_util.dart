@@ -22,9 +22,10 @@ TextStyle get serifTextStyle =>
 TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
 
 Style get defaultStyle => Style.create([
-      $.outerContainer.only(),
-      $.innerContainer.only(),
+      $.outerContainer.color.black(),
+      $.innerContainer.color.black(),
       $.contentContainer.padding.all(40),
+      // $.contentContainer.color(Colors.yellow),
       $.textStyle.as(baseTextStyle),
       $.headings.textStyle.as(headingTextStyle),
       $.h1.textStyle.fontSize(72),

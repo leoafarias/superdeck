@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../helpers/schema/schema.dart';
-import '../styles/style_util.dart';
+import '../superdeck.dart';
 import 'options_model.dart';
 import 'syntax_tag.dart';
 
@@ -12,6 +12,7 @@ abstract class Slide extends Config with SlideMappable {
   final String? title;
   final String layout;
   final String data;
+
   @MappableField(key: 'content')
   final ContentOptions? contentOptions;
 
@@ -24,14 +25,6 @@ abstract class Slide extends Config with SlideMappable {
     required super.style,
     required super.transition,
   });
-
-  static final Map<int, Map<String, String>> _sectionCache = {};
-
-  Map<String, String> get sections {
-    final sections = _sectionCache[data.hashCode];
-    return sections ??
-        (_sectionCache[data.hashCode] = parseContentSections(data));
-  }
 
   SlideVariant get styleVariant {
     return style == null ? SlideVariant.none : SlideVariant(style!);
@@ -119,41 +112,49 @@ class WidgetSlide extends Slide with WidgetSlideMappable {
   );
 }
 
+@MappableRecord()
+typedef SectionData = ({String content, ContentOptions options});
+
 @MappableClass()
-abstract class TwoSectionSlide extends Slide with TwoSectionSlideMappable {
-  @MappableField(key: 'left_section')
-  final ContentOptions? leftOptions;
+abstract class SectionsSlide extends Slide with SectionsSlideMappable {
+  @MappableField()
+  final Map<String, ContentOptions?> sections;
 
-  @MappableField(key: 'right_section')
-  final ContentOptions? rightOptions;
-
-  TwoSectionSlide({
+  SectionsSlide({
     super.title,
     super.background,
     required super.contentOptions,
     super.style,
     super.transition,
     required super.data,
-    this.leftOptions,
-    this.rightOptions,
+    this.sections = const {},
     required super.layout,
   });
 
-  String get leftContent =>
-      sections[SectionTag.left] ?? sections[SectionTag.first] ?? '';
+  Map<String, String>? _sectionCache;
 
-  String get rightContent => sections[SectionTag.right] ?? '';
+  Map<String, String> get _contentSections {
+    if (_sectionCache != null) return _sectionCache!;
 
-  static final schema = Slide.schema.merge(
-    {
-      'left_section': ContentOptions.schema.optional(),
-      'right_section': ContentOptions.schema.optional(),
-    },
-  );
+    return _sectionCache = parseContentSections(data);
+  }
+
+  SectionData getSection(String section, [String? sectionFallback]) {
+    var content = _contentSections[section];
+
+    content ??= _contentSections[sectionFallback];
+
+    final payload = (
+      content: content ?? '',
+      options: sections[section] ?? const ContentOptions(),
+    );
+
+    return payload;
+  }
 }
 
 @MappableClass(discriminatorValue: LayoutType.twoColumn)
-class TwoColumnSlide extends TwoSectionSlide with TwoColumnSlideMappable {
+class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
   TwoColumnSlide({
     super.title,
     super.background,
@@ -161,23 +162,28 @@ class TwoColumnSlide extends TwoSectionSlide with TwoColumnSlideMappable {
     super.style,
     super.transition,
     required super.data,
-    super.leftOptions,
-    super.rightOptions,
+    super.sections,
   }) : super(layout: LayoutType.twoColumn);
+
+  SectionData get left => getSection(Section.left, Section.first);
+
+  SectionData get right => getSection(Section.right);
 
   static const fromMap = TwoColumnSlideMapper.fromMap;
 
   static const fromJson = TwoColumnSlideMapper.fromJson;
 
-  static final schema = TwoSectionSlide.schema;
+  static final schema = Slide.schema.merge({
+    'sections': SchemaMap.optional({
+      'left': ContentOptions.schema.optional(),
+      'right': ContentOptions.schema.optional(),
+    }),
+  });
 }
 
 @MappableClass(discriminatorValue: LayoutType.twoColumnHeader)
-class TwoColumnHeaderSlide extends TwoSectionSlide
+class TwoColumnHeaderSlide extends SectionsSlide
     with TwoColumnHeaderSlideMappable {
-  @MappableField(key: 'header')
-  final ContentOptions? headerOptions;
-
   TwoColumnHeaderSlide({
     super.title,
     super.background,
@@ -185,20 +191,24 @@ class TwoColumnHeaderSlide extends TwoSectionSlide
     super.style,
     super.transition,
     required super.data,
-    super.leftOptions,
-    super.rightOptions,
-    this.headerOptions,
+    super.sections,
   }) : super(layout: LayoutType.twoColumnHeader);
 
-  String get headerContent => sections[SectionTag.first] ?? '';
+  SectionData get header => getSection(Section.header, Section.first);
+
+  SectionData get left => getSection(Section.left);
+
+  SectionData get right => getSection(Section.right);
 
   static const fromMap = TwoColumnHeaderSlideMapper.fromMap;
 
   static const fromJson = TwoColumnHeaderSlideMapper.fromJson;
 
-  static final schema = TwoSectionSlide.schema.merge(
+  static final schema = TwoColumnSlide.schema.merge(
     {
-      'header': ContentOptions.schema.optional(),
+      'sections': SchemaMap.optional({
+        'header': ContentOptions.schema.optional(),
+      }),
     },
   );
 }
@@ -238,7 +248,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
   ]) {
     final path = result.key;
     final errors = result.errors;
-    final errorMessage = errors.map((error) => error.message).join('\n');
+    final errorMessage = errors.map((error) => error.message).join('\n\n');
 
     //  dont forget the tab or spacing since they are nested
     String keysNested = '';

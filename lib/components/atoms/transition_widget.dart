@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../../models/options_model.dart';
 
-class SlideTransitionWidget extends StatelessWidget {
+class TransitionWidget extends StatelessWidget {
   final TransitionOptions? transition;
   final Widget child;
 
-  const SlideTransitionWidget({
+  const TransitionWidget({
     super.key,
     required this.transition,
     required this.child,

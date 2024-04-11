@@ -1,7 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'schema_values.dart';
-import 'validators.dart';
 
 part 'schema.mapper.dart';
 
@@ -137,26 +136,74 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   final bool additionalProperties;
   const SchemaMap(
     this.properties, {
-    super.optional = false,
+    super.isOptional = false,
     this.additionalProperties = false,
   }) : super(validators: const []);
 
+  // optional constructor
+  const SchemaMap.optional(
+    this.properties, {
+    this.additionalProperties = false,
+  }) : super(
+          validators: const [],
+          isOptional: true,
+        );
+
   @override
   SchemaMap copyWith({
-    bool? optional,
-    List<Validator<Map<String, dynamic>>>? validators,
+    bool? isOptional,
+    bool? additionalProperties,
     Map<String, SchemaValue>? properties,
   }) {
     return SchemaMap(
       properties ?? this.properties,
-      additionalProperties: additionalProperties,
-      optional: optional ?? isOptional,
+      additionalProperties: additionalProperties ?? this.additionalProperties,
+      isOptional: isOptional ?? this.isOptional,
     );
   }
 
   @override
   Map<String, dynamic>? tryParse(Object? value) {
     return value is Map<String, dynamic> ? value : null;
+  }
+
+  SchemaMap mergeSchema(SchemaMap schema) {
+    return merge(
+      schema.properties,
+      additionalProperties: schema.additionalProperties,
+    );
+  }
+
+  T? getSchemaValue<T extends SchemaValue>(String key) {
+    return properties[key] as T?;
+  }
+
+  SchemaMap merge(
+    Map<String, SchemaValue> properties, {
+    bool? additionalProperties,
+    bool? isOptional,
+  }) {
+    // if property SchemaValue is of SchemaMap, we need to merge them
+    final mergedProperties = {...this.properties};
+
+    for (final entry in properties.entries) {
+      final key = entry.key;
+      final prop = entry.value;
+
+      final existingProp = mergedProperties[key];
+
+      if (existingProp is SchemaMap && prop is SchemaMap) {
+        mergedProperties[key] = existingProp.merge(prop.properties);
+      } else {
+        mergedProperties[key] = prop;
+      }
+    }
+
+    return copyWith(
+      properties: mergedProperties,
+      isOptional: isOptional,
+      additionalProperties: additionalProperties,
+    );
   }
 
   @override
@@ -242,21 +289,4 @@ class Schema extends SchemaMap {
   static const enumType = EnumSchema.new;
 
   static const any = Schema({}, additionalProperties: true);
-
-  void validateOrThrow(String key, Object value) {
-    final result = validate([key], value);
-    if (!result.isValid) {
-      throw SchemaValidationException(result);
-    }
-  }
-
-  Schema merge(
-    Map<String, SchemaValue> properties, {
-    bool? additionalProperties,
-  }) {
-    return Schema(
-      {...this.properties, ...properties},
-      additionalProperties: additionalProperties ?? this.additionalProperties,
-    );
-  }
 }
