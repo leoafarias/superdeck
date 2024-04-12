@@ -27,6 +27,7 @@ dependencies:
   syntax_highlight: ^0.4.0
   device_preview: ^1.1.0
   signals: ^4.5.1
+  scrollable_positioned_list: ^0.3.8
   
 dev_dependencies:
   flutter_test:

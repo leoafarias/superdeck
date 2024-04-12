@@ -64,25 +64,62 @@ class ContentOptions with ContentOptionsMappable {
 }
 
 @MappableClass()
-class ImageOptions with ImageOptionsMappable {
-  final String src;
-  final ImageFit? fit;
-  final LayoutPosition position;
-  final int flex;
+abstract class SplitOptions with SplitOptionsMappable {
+  final int? flex;
+  final LayoutPosition? position;
 
-  const ImageOptions({
-    required this.src,
-    this.fit,
-    this.flex = 1,
-    this.position = LayoutPosition.left,
+  const SplitOptions({
+    required this.flex,
+    required this.position,
   });
 
   static final schema = Schema(
     {
-      "fit": ImageFit.schema.optional(),
-      "position": LayoutPosition.schema.optional(),
       "flex": Schema.integer.optional(),
+      "position": LayoutPosition.schema.optional(),
+    },
+  );
+}
+
+@MappableClass()
+class ImageOptions extends SplitOptions with ImageOptionsMappable {
+  final String src;
+  final ImageFit? fit;
+
+  const ImageOptions({
+    required this.src,
+    this.fit,
+    super.flex,
+    super.position,
+  });
+
+  static final schema = SplitOptions.schema.merge(
+    {
+      "fit": ImageFit.schema.optional(),
       "src": Schema.string.required(),
+    },
+  );
+}
+
+@MappableClass()
+class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
+  final String name;
+  final Map<String, dynamic> args;
+  final bool preview;
+
+  const WidgetOptions({
+    required this.name,
+    this.args = const {},
+    this.preview = false,
+    super.flex,
+    super.position,
+  });
+
+  static final schema = SplitOptions.schema.merge(
+    {
+      "name": Schema.string.required(),
+      "args": Schema.any.optional(),
+      "preview": Schema.boolean.optional(),
     },
   );
 }
@@ -104,6 +141,11 @@ class TransitionOptions with TransitionOptionsMappable {
   });
 
   static const fromJson = TransitionOptionsMapper.fromJson;
+
+  TransitionOptions merge(TransitionOptions? other) {
+    if (other == null) return this;
+    return copyWith.$merge(other);
+  }
 
   static final schema = Schema(
     {
@@ -243,43 +285,6 @@ abstract class ExampleWidget<T> {
   }
 
   Widget build(T args);
-}
-
-@MappableClass()
-class WidgetOptions<T> with WidgetOptionsMappable {
-  final String name;
-  final Map<String, dynamic> args;
-  final LayoutPosition position;
-  final bool preview;
-  final int flex;
-
-  const WidgetOptions({
-    required this.name,
-    this.args = const {},
-    this.flex = 1,
-    this.preview = false,
-    this.position = LayoutPosition.right,
-  });
-
-  static final schema = Schema(
-    {
-      "name": Schema.string.required(),
-      "args": Schema.any.optional(),
-      "position": LayoutPosition.schema.optional(),
-      "flex": Schema.integer.optional(),
-      "preview": Schema.boolean.optional(),
-    },
-  );
-}
-
-enum SampleEnum {
-  value1,
-  value2,
-  value3;
-
-  static final schema = EnumSchema(
-    values: SampleEnum.values.map((e) => e.name.snakeCase).toList(),
-  );
 }
 
 @MappableEnum()

@@ -44,10 +44,16 @@ class _SplitViewState extends State<SplitView>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(
+        milliseconds: 300,
+      ),
     );
-    _animation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.ease,
+      ),
+    );
 
     if (widget.isOpen) {
       _animationController.value = 1.0;
@@ -82,20 +88,38 @@ class _SplitViewState extends State<SplitView>
           animation: _animation,
           builder: (context, child) {
             final animatedWidth = _animation.value * widget.sideWidth;
+            final paddingSize = animatedWidth / 20;
+
             final rightWidth = size.width - animatedWidth;
             final rightHeight = size.height * (rightWidth / size.width);
-            final rightSize = Size(rightWidth, rightHeight);
+            final rightSize = Size(rightWidth - (paddingSize * 2), rightHeight);
 
             return Stack(
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: animatedWidth),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints.tight(rightSize),
-                      child: ScaledWidget(
-                        child: widget.body,
+                Padding(
+                  padding: EdgeInsets.only(left: animatedWidth),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade900,
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints.tight(rightSize),
+                        child: Container(
+                          margin: EdgeInsets.all(paddingSize),
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 6,
+                                spreadRadius: 3,
+                              ),
+                            ],
+                          ),
+                          child: ScaledWidget(child: widget.body),
+                        ),
                       ),
                     ),
                   ),

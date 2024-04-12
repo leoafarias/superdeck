@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:watcher/watcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../helpers/constants.dart';
 import '../../helpers/loader.dart';
-import '../../helpers/local_storage.dart';
+import '../../helpers/preference_storage.dart';
 import '../../helpers/schema/schema.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../models/asset_model.dart';
@@ -202,19 +202,30 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  final _pageController = PageController();
+  final _pageController = PageController(
+    initialPage: PreferenceStorage.instance.lastPage ?? 0,
+  );
+  final _itemScrollController = ItemScrollController();
+  final _itemPositionsListener = ItemPositionsListener.create();
   final _sideIsOpen = signal(false);
-  final _selectedSlide = signal(0);
+  final _currentSlide = signal(0);
+  var _visibleItems = <ItemPosition>[];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   void initState() {
     super.initState();
+    _itemPositionsListener.itemPositions.addListener(() {
+      _visibleItems = _itemPositionsListener.itemPositions.value.toList();
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _sideIsOpen.dispose();
+    _currentSlide.dispose();
+
     super.dispose();
   }
 
@@ -224,19 +235,55 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final slides = SuperDeck.slidesOf(context);
 
-    Future<void> goToPage(int page) async {
+    final totalInvalidSlides = slides.whereType<InvalidSlide>().length;
+
+    Future<void> goToPage(int page, {bool animate = true}) async {
       if (page < 0 || page >= slides.length) return;
       await _isPaging;
 
-      _isPaging = _pageController.animateToPage(
-        page,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+      const duration = Duration(milliseconds: 300);
+      const curve = Curves.easeInOutCubic;
+
+      if (animate) {
+        _isPaging = _pageController.animateToPage(
+          page,
+          duration: duration,
+          curve: curve,
+        );
+      } else {
+        _pageController.jumpToPage(page);
+      }
+
+      final visibleItem =
+          _visibleItems.firstWhereOrNull((e) => e.index == page);
+
+      double alignment;
+
+      if (visibleItem == null) {
+        final isBeginning = _visibleItems.first.index > page;
+
+        alignment = isBeginning ? 0 : 0.75;
+      } else {
+        if (visibleItem.itemTrailingEdge > 1) {
+          final totalSpace =
+              visibleItem.itemTrailingEdge - visibleItem.itemLeadingEdge;
+          alignment = 1 - totalSpace;
+        } else if (visibleItem.itemLeadingEdge < 0) {
+          alignment = 0;
+        } else {
+          alignment = visibleItem.itemLeadingEdge;
+        }
+      }
+      _itemScrollController.scrollTo(
+        index: page,
+        alignment: alignment,
+        duration: duration,
+        curve: curve,
       );
 
-      _selectedSlide.value = page - 1;
+      _currentSlide.value = page;
 
-      // _pageController.jumpToPage(page);
+      await PreferenceStorage.instance.setLastPage(page);
     }
 
     void nextPage() => goToPage(_pageController.page!.toInt() + 1);
@@ -267,17 +314,29 @@ class _AppShellState extends State<AppShell> {
           onPressed: () {
             _sideIsOpen.value = !_sideIsOpen.value;
           },
-          child: const Icon(Icons.menu),
+          child: Badge(
+            label: Text(totalInvalidSlides.toString()),
+            isLabelVisible: totalInvalidSlides != 0,
+            child: const Icon(Icons.menu),
+          ),
         ),
         key: _scaffoldKey,
         body: SplitView(
           isOpen: _sideIsOpen.watch(context),
           sideWidth: 300,
           side: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                color: Colors.grey.shade800,
                 height: 60,
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(255, 19, 19, 19),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Color.fromARGB(255, 43, 43, 43),
+                    ),
+                  ),
+                ),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -286,32 +345,39 @@ class _AppShellState extends State<AppShell> {
                 ),
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    color: Colors.grey.shade900,
-                    child: Column(
-                      children: slides.mapIndexed(
-                        (idx, slide) {
-                          return SlideThumbnail(
-                            slide: slide,
-                            selected: idx == _selectedSlide.watch(context),
-                            onTap: () {
-                              print(idx);
-                              goToPage(idx + 1);
-                            },
+                child: Container(
+                  color: const Color.fromARGB(255, 20, 20, 20),
+                  child: ScrollablePositionedList.builder(
+                      itemCount: slides.length,
+                      itemPositionsListener: _itemPositionsListener,
+                      itemScrollController: _itemScrollController,
+                      padding: const EdgeInsets.all(20),
+                      itemBuilder: (context, idx) {
+                        return Watch.builder(builder: (context) {
+                          return Center(
+                            child: SlideThumbnail(
+                              slide: slides[idx],
+                              selected: idx == _currentSlide.value,
+                              onTap: () {
+                                goToPage(idx, animate: false);
+                              },
+                            ),
                           );
-                        },
-                      ).toList(),
-                    ),
-                  ),
+                        });
+                      }),
                 ),
               ),
             ],
           ),
           body: ScaledWidget(
-            child: PageView(
+            child: PageView.builder(
               controller: _pageController,
-              children: slides.map(SlideView.new).toList(),
+              physics: const ClampingScrollPhysics(),
+              itemCount: slides.length,
+              itemBuilder: (context, index) {
+                final slide = slides[index];
+                return SlideView(slide);
+              },
             ),
           ),
         ),
@@ -323,7 +389,7 @@ class _AppShellState extends State<AppShell> {
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await LocalStorage.initialize();
+  await PreferenceStorage.initialize();
   await SyntaxHighlight.initialize();
 
   // Return if its web
@@ -346,16 +412,4 @@ Future<void> _initialize() async {
   });
 
   await windowManager.setAspectRatio(kAspectRatio);
-}
-
-class FullScreenPage extends StatelessWidget {
-  const FullScreenPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text("Big screen web app")),
-      body: const Row(children: [
-        Drawer(/* Menu items here */),
-        Placeholder(/* Normal body here */),
-      ]));
 }

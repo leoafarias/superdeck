@@ -34,7 +34,7 @@ class SlidesLoader {
     final data = _loadYamlAsMap(projectConfigContents);
 
     //  Run validation
-    Config.schema.validateOrThrow('config', data);
+    Config.schema.validateOrThrow('Project config', data);
 
     return Config.fromMap(data);
   }
@@ -333,15 +333,16 @@ String prettyJson(dynamic json) {
 }
 
 Future<List<Slide>> _parseSlidesYaml(String slidesYaml) async {
-  final slidesMap = _extractSlides(slidesYaml).map((String slideYaml) {
-    final frontMatter = _extractFrontMatter(slideYaml);
+  final slidesMap = _extractSlides(slidesYaml).map((String raw) {
+    final frontMatter = _extractFrontMatter(raw);
     final options = _loadYamlAsMap(frontMatter);
-    final data = _removeMatchingFrontMatter(slideYaml, frontMatter);
+    final data = _removeMatchingFrontMatter(raw, frontMatter);
 
     final map = {
       ...options,
       'layout': options['layout'] ?? 'simple',
       'data': data,
+      'raw': raw,
     }.cast<String, dynamic>();
 
     return map;
@@ -360,26 +361,25 @@ List<Slide> _parseFromJson(String slidesJson) {
 Future<Slide> _parseSlideFromMap(Map<String, dynamic> map) async {
   final layout = map['layout'] as String?;
 
-  const options = 'options';
+  const config = 'config';
   try {
     switch (layout) {
       case LayoutType.simple:
       case null:
-        SimpleSlide.schema.validateOrThrow(options, map);
+        SimpleSlide.schema.validateOrThrow(config, map);
         return SimpleSlide.fromMap(map);
       case LayoutType.image:
-        ImageSlide.schema.validateOrThrow(options, map);
+        ImageSlide.schema.validateOrThrow(config, map);
         return ImageSlide.fromMap(map);
       case LayoutType.widget:
-        WidgetSlide.schema.validateOrThrow(options, map);
+        WidgetSlide.schema.validateOrThrow(config, map);
         return WidgetSlide.fromMap(map);
       case LayoutType.twoColumn:
-        TwoColumnSlide.schema.validateOrThrow(options, map);
+        TwoColumnSlide.schema.validateOrThrow(config, map);
         return TwoColumnSlide.fromMap(map);
       case LayoutType.twoColumnHeader:
-        TwoColumnHeaderSlide.schema.validateOrThrow(options, map);
+        TwoColumnHeaderSlide.schema.validateOrThrow(config, map);
         return TwoColumnHeaderSlide.fromMap(map);
-
       default:
         return InvalidSlide.invalidTemplate(layout);
     }

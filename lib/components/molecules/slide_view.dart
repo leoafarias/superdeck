@@ -9,45 +9,49 @@ import '../atoms/transition_widget.dart';
 
 class SlideView extends StatelessWidget {
   const SlideView(
-    this.props, {
+    this.slide, {
     super.key,
   });
 
-  final Slide props;
+  final Slide slide;
 
   @override
   @override
   Widget build(BuildContext context) {
-    final props = this.props;
+    final slide = this.slide;
 
-    final style = SuperDeck.styleOf(context).applyVariant(props.styleVariant);
+    final style = SuperDeck.styleOf(context).applyVariant(slide.styleVariant);
+    final projectTransition = SuperDeck.projectOptionsOf(context).transition;
+
+    final transition =
+        projectTransition?.merge(slide.transition) ?? slide.transition;
 
     return TransitionWidget(
-      key: ValueKey(props.transition),
-      transition: props.transition,
+      key: ValueKey(transition),
+      transition: transition,
       child: MixBuilder(
         style: style.animate(),
-        key: ValueKey(props),
+        key: ValueKey(slide),
         builder: (mix) {
           final spec = SlideSpec.of(mix);
           return AnimatedMixedBox(
             spec: spec.innerContainer,
             duration: const Duration(milliseconds: 300),
             child: Container(
-              decoration: _backgroundDecoration(props.background),
+              decoration: _backgroundDecoration(slide.background),
               child: SlideConstraintBuilder(builder: (_, __) {
-                if (props is SimpleSlide) {
-                  return SimpleSlideBuilder(config: props);
-                } else if (props is WidgetSlide) {
-                  return WidgetSlideBuilder(config: props);
-                } else if (props is ImageSlide) {
-                  return ImageSlideBuilder(config: props);
-                } else if (props is TwoColumnSlide) {
-                  return TwoColumnSlideBuilder(config: props);
-                } else if (props is TwoColumnHeaderSlide) {
-                  return TwoColumnHeaderSlideBuilder(config: props);
-                } else if (props is InvalidSlide) {
-                  return InvalidSlideBuilder(config: props);
+                if (slide is SimpleSlide) {
+                  return SimpleSlideBuilder(config: slide);
+                } else if (slide is WidgetSlide) {
+                  return WidgetSlideBuilder(config: slide);
+                } else if (slide is ImageSlide) {
+                  return ImageSlideBuilder(config: slide);
+                } else if (slide is TwoColumnSlide) {
+                  return TwoColumnSlideBuilder(config: slide);
+                } else if (slide is TwoColumnHeaderSlide) {
+                  return TwoColumnHeaderSlideBuilder(config: slide);
+                } else if (slide is InvalidSlide) {
+                  return InvalidSlideBuilder(config: slide);
                 } else {
                   throw UnimplementedError(
                     'Slide config not implemented',

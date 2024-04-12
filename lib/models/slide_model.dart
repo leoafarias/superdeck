@@ -12,6 +12,7 @@ abstract class Slide extends Config with SlideMappable {
   final String? title;
   final String layout;
   final String data;
+  final String? raw;
 
   @MappableField(key: 'content')
   final ContentOptions? contentOptions;
@@ -19,6 +20,7 @@ abstract class Slide extends Config with SlideMappable {
   const Slide({
     required this.layout,
     required this.data,
+    required this.raw,
     required this.title,
     required this.contentOptions,
     required super.background,
@@ -40,6 +42,7 @@ abstract class Slide extends Config with SlideMappable {
       "data": Schema.string.required(),
       "content": ContentOptions.schema.optional(),
       "title": Schema.string.optional(),
+      "raw": Schema.string.optional(),
     },
   );
 }
@@ -52,6 +55,7 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
     required super.contentOptions,
     super.style,
     super.transition,
+    super.raw,
     required super.data,
   }) : super(layout: LayoutType.simple);
 
@@ -62,18 +66,34 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
   static final schema = Slide.schema;
 }
 
-@MappableClass(discriminatorValue: LayoutType.image)
-class ImageSlide extends Slide with ImageSlideMappable {
-  final ImageOptions image;
+@MappableClass()
+abstract class SplitSlide<T extends SplitOptions> extends Slide
+    with SplitSlideMappable<T> {
+  final T options;
 
+  const SplitSlide({
+    required this.options,
+    super.title,
+    super.background,
+    required super.contentOptions,
+    super.style,
+    super.transition,
+    required super.data,
+    required super.layout,
+    super.raw,
+  });
+}
+
+@MappableClass(discriminatorValue: LayoutType.image)
+class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
   const ImageSlide({
     super.title,
-    required this.image,
     super.style,
     super.background,
     required super.contentOptions,
     super.transition,
     required super.data,
+    required super.options,
   }) : super(layout: LayoutType.image);
 
   static const fromMap = ImageSlideMapper.fromMap;
@@ -82,23 +102,22 @@ class ImageSlide extends Slide with ImageSlideMappable {
 
   static final schema = Slide.schema.merge(
     {
-      'image': ImageOptions.schema.required(),
+      'options': ImageOptions.schema.required(),
     },
   );
 }
 
 @MappableClass(discriminatorValue: LayoutType.widget)
-class WidgetSlide extends Slide with WidgetSlideMappable {
-  final WidgetOptions widget;
-
+class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
   const WidgetSlide({
     super.title,
-    required this.widget,
+    required super.options,
     super.style,
     super.background,
     required super.contentOptions,
     super.transition,
     required super.data,
+    super.raw,
   }) : super(layout: LayoutType.widget);
 
   static const fromMap = WidgetSlideMapper.fromMap;
@@ -107,7 +126,7 @@ class WidgetSlide extends Slide with WidgetSlideMappable {
 
   static final schema = Slide.schema.merge(
     {
-      'widget': WidgetOptions.schema.required(),
+      'options': WidgetOptions.schema.required(),
     },
   );
 }
@@ -129,6 +148,7 @@ abstract class SectionsSlide extends Slide with SectionsSlideMappable {
     required super.data,
     this.sections = const {},
     required super.layout,
+    required super.raw,
   });
 
   Map<String, String>? _sectionCache;
@@ -163,6 +183,7 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
     super.transition,
     required super.data,
     super.sections,
+    super.raw,
   }) : super(layout: LayoutType.twoColumn);
 
   SectionData get left => getSection(Section.left, Section.first);
@@ -192,6 +213,7 @@ class TwoColumnHeaderSlide extends SectionsSlide
     super.transition,
     required super.data,
     super.sections,
+    super.raw,
   }) : super(layout: LayoutType.twoColumnHeader);
 
   SectionData get header => getSection(Section.header, Section.first);
@@ -222,6 +244,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
     super.style,
     super.transition,
     required super.data,
+    super.raw,
   }) : super(layout: LayoutType.invalid);
 
   InvalidSlide.message(String message)
@@ -232,6 +255,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
           background: null,
           contentOptions: null,
           style: null,
+          raw: null,
           transition: null,
         );
 

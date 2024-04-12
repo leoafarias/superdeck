@@ -15,10 +15,21 @@ class TransitionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (transition?.type == null) return child;
+    final duration = transition?.duration ?? const Duration(milliseconds: 500);
+    final delay = transition?.delay ?? const Duration(milliseconds: 0);
+    final curve = _getCurveFromType(transition?.curve) ?? Curves.easeInOut;
+    final type = transition?.type;
 
+    if (type == null) return child;
+
+    final buildAnimation = _getWidgetByType(type);
     return Container(
-      child: _getWidgetByType(transition!, child),
+      child: buildAnimation(
+        duration: duration,
+        delay: delay,
+        curve: curve,
+        child: child,
+      ),
     );
   }
 }
@@ -60,333 +71,106 @@ Curve? _getCurveFromType(CurveType? curveType) {
   }
 }
 
-Widget _getWidgetByType(TransitionOptions transition, Widget child) {
-  final duration = transition.duration ?? const Duration(milliseconds: 500);
-  final delay = transition.delay ?? const Duration(milliseconds: 0);
-  final curve = _getCurveFromType(transition.curve) ?? Curves.easeInOut;
-  final type = transition.type;
+Widget Function({
+  required Duration duration,
+  required Duration delay,
+  required Curve curve,
+  required Widget child,
+}) _getWidgetByType(
+  TransitionType type,
+) {
   switch (type) {
     case TransitionType.fadeIn:
-      return FadeIn(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeIn.new;
     case TransitionType.fadeInDown:
-      return FadeInDown(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInDown.new;
     case TransitionType.fadeInDownBig:
-      return FadeInDownBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInDownBig.new;
     case TransitionType.fadeInUp:
-      return FadeInUp(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInUp.new;
     case TransitionType.fadeInUpBig:
-      return FadeInUpBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInUpBig.new;
     case TransitionType.fadeInLeft:
-      return FadeInLeft(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInLeft.new;
     case TransitionType.fadeInLeftBig:
-      return FadeInLeftBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInLeftBig.new;
     case TransitionType.fadeInRight:
-      return FadeInRight(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInRight.new;
     case TransitionType.fadeInRightBig:
-      return FadeInRightBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeInRightBig.new;
     case TransitionType.fadeOut:
-      return FadeOut(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOut.new;
     case TransitionType.fadeOutDown:
-      return FadeOutDown(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutDown.new;
     case TransitionType.fadeOutDownBig:
-      return FadeOutDownBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutDownBig.new;
     case TransitionType.fadeOutUp:
-      return FadeOutUp(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutUp.new;
     case TransitionType.fadeOutUpBig:
-      return FadeOutUpBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutUpBig.new;
     case TransitionType.fadeOutLeft:
-      return FadeOutLeft(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutLeft.new;
     case TransitionType.fadeOutLeftBig:
-      return FadeOutLeftBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutLeftBig.new;
     case TransitionType.fadeOutRight:
-      return FadeOutRight(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutRight.new;
     case TransitionType.fadeOutRightBig:
-      return FadeOutRightBig(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FadeOutRightBig.new;
     case TransitionType.bounceInDown:
-      return BounceInDown(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return BounceInDown.new;
     case TransitionType.bounceInUp:
-      return BounceInUp(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return BounceInUp.new;
     case TransitionType.bounceInLeft:
-      return BounceInLeft(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return BounceInLeft.new;
     case TransitionType.bounceInRight:
-      return BounceInRight(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return BounceInRight.new;
     case TransitionType.elasticIn:
-      return ElasticIn(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ElasticIn.new;
     case TransitionType.elasticInDown:
-      return ElasticInDown(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ElasticInDown.new;
     case TransitionType.elasticInUp:
-      return ElasticInUp(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ElasticInUp.new;
     case TransitionType.elasticInLeft:
-      return ElasticInLeft(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ElasticInLeft.new;
     case TransitionType.elasticInRight:
-      return ElasticInRight(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ElasticInRight.new;
     case TransitionType.slideInDown:
-      return SlideInDown(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return SlideInDown.new;
     case TransitionType.slideInUp:
-      return SlideInUp(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return SlideInUp.new;
     case TransitionType.slideInLeft:
-      return SlideInLeft(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return SlideInLeft.new;
     case TransitionType.slideInRight:
-      return SlideInRight(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return SlideInRight.new;
     case TransitionType.flipInX:
-      return FlipInX(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FlipInX.new;
     case TransitionType.flipInY:
-      return FlipInY(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return FlipInY.new;
     case TransitionType.zoomIn:
-      return ZoomIn(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ZoomIn.new;
     case TransitionType.zoomOut:
-      return ZoomOut(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ZoomOut.new;
     case TransitionType.jelloIn:
-      return JelloIn(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return JelloIn.new;
     case TransitionType.bounce:
-      return Bounce(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Bounce.new;
     case TransitionType.dance:
-      return Dance(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Dance.new;
     case TransitionType.flash:
-      return Flash(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Flash.new;
     case TransitionType.pulse:
-      return Pulse(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Pulse.new;
     case TransitionType.roulette:
-      return Roulette(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Roulette.new;
     case TransitionType.shakeX:
-      return ShakeX(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ShakeX.new;
     case TransitionType.shakeY:
-      return ShakeY(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return ShakeY.new;
     case TransitionType.spin:
-      return Spin(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Spin.new;
     case TransitionType.spinPerfect:
-      return SpinPerfect(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return SpinPerfect.new;
     case TransitionType.swing:
-      return Swing(
-        duration: duration,
-        delay: delay,
-        curve: curve,
-        child: child,
-      );
+      return Swing.new;
   }
 }

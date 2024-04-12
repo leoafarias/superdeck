@@ -2,7 +2,7 @@
 ---
 style: quote
 layout: image
-image:
+options:
   src: https://source.unsplash.com/random/900×700/?inspiration
   fit: cover
   position: left
@@ -27,7 +27,7 @@ SuperDeck is a Flutter package that allows you to create beautiful presentations
 
 ---
 layout: widget
-widget:
+options:
   name: demo
   position: right
   args:
@@ -75,7 +75,7 @@ This is your main header, providing a context or introducing the core concept co
 
 ---
 layout: image
-image:
+options:
   src: https://source.unsplash.com/random/900×700/?nature
   fit: cover
   position: left
@@ -112,7 +112,7 @@ title: "Slide 3: Links and Images"
 ---
 style: quote
 layout: image
-image:
+options:
   src: https://source.unsplash.com/random/900×700/?inspiration
   fit: cover
   position: right

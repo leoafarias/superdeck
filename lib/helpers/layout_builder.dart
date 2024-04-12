@@ -75,45 +75,19 @@ class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
   }
 }
 
-class WidgetSlideBuilder extends SlideBuilder<WidgetSlide> {
-  const WidgetSlideBuilder({required super.config, super.key});
+abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
+  const SplitSlideBuilder({required super.config, super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final widgetOptions = config.widget;
-    final position = widgetOptions.position;
-
-    final previewBuilders = SuperDeck.widgetExamplesOf(context);
-
-    final builder = previewBuilders[widgetOptions.name];
+  Widget buildSplitSlide(Widget side) {
+    final position = config.options.position;
+    final flex = config.options.flex ?? 1;
 
     List<Widget> children = [
       buildContentSection((
         content: config.data,
         options: config.contentOptions ?? const ContentOptions(),
       )),
-      Expanded(
-        flex: widgetOptions.flex,
-        child: SlideConstraintBuilder(builder: (context, size) {
-          return MediaQuery(
-            data: MediaQueryData(size: size),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: size.width,
-                maxHeight: size.height,
-              ),
-              child: DevicePreview(
-                enabled: widgetOptions.preview,
-                builder: (context) {
-                  return CodePreview(
-                    child: builder?.call(widgetOptions.args),
-                  );
-                },
-              ),
-            ),
-          );
-        }),
-      )
+      Expanded(flex: flex, child: side),
     ];
 
     if (position == LayoutPosition.left || position == LayoutPosition.top) {
@@ -131,61 +105,76 @@ class WidgetSlideBuilder extends SlideBuilder<WidgetSlide> {
   }
 }
 
-class ImageSlideBuilder extends SlideBuilder<ImageSlide> {
+class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
+  const WidgetSlideBuilder({required super.config, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final options = config.options;
+
+    final previewBuilders = SuperDeck.widgetExamplesOf(context);
+
+    final builder = previewBuilders[options.name];
+
+    final side = SlideConstraintBuilder(builder: (context, size) {
+      return MediaQuery(
+        data: MediaQueryData(size: size),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: size.width,
+            maxHeight: size.height,
+          ),
+          child: DevicePreview(
+            enabled: options.preview,
+            builder: (context) {
+              return CodePreview(
+                child: builder?.call(options.args),
+              );
+            },
+          ),
+        ),
+      );
+    });
+
+    return buildSplitSlide(side);
+  }
+}
+
+class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
   const ImageSlideBuilder({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final image = config.image;
-    final position = image.position;
-
     final mix = MixProvider.of(context);
     final spec = SlideSpec.of(mix);
 
+    final src = config.options.src;
+    final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
+
     ImageProvider provider;
 
-    if (image.src.startsWith('http') || image.src.startsWith('https')) {
-      provider = CachedNetworkImageProvider(image.src);
+    if (src.startsWith('http') || src.startsWith('https')) {
+      provider = CachedNetworkImageProvider(src);
     } else {
-      provider = AssetImage(image.src);
+      provider = AssetImage(src);
     }
 
-    List<Widget> children = [
-      buildContentSection((
-        content: config.data,
-        options: config.contentOptions ?? const ContentOptions(),
-      )),
-      Expanded(
-        flex: config.image.flex,
-        child: Container(
-          height: spec.image.height,
-          width: spec.image.width,
-          alignment: spec.image.alignment,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: provider,
-              centerSlice: spec.image.centerSlice,
-              repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
-              filterQuality: spec.image.filterQuality ?? FilterQuality.low,
-              fit: config.image.fit?.toBoxFit() ?? spec.image.fit,
-            ),
-          ),
+    final side = Container(
+      height: spec.image.height,
+      width: spec.image.width,
+      alignment: spec.image.alignment,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: provider,
+          centerSlice: spec.image.centerSlice,
+          repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
+          filterQuality: spec.image.filterQuality ?? FilterQuality.low,
+          fit: boxFit,
         ),
-      )
-    ];
+      ),
+    );
 
-    if (position == LayoutPosition.left || position == LayoutPosition.top) {
-      children = children.reversed.toList();
-    }
-
-    final isVertical =
-        position == LayoutPosition.top || position == LayoutPosition.bottom;
-
-    if (isVertical) {
-      return Column(children: children);
-    } else {
-      return Row(children: children);
-    }
+    return buildSplitSlide(side);
   }
 }
 
