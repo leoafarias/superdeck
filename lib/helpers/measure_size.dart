@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../components/molecules/slide_view.dart';
+import '../components/atoms/slide_view.dart';
 
 typedef OnWidgetSizeChange = void Function(Size size);
 

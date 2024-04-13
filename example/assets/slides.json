@@ -9,6 +9,7 @@
     "options": {
       "src": "https://source.unsplash.com/random/900×700/?inspiration",
       "fit": "cover",
+      "flex": 1,
       "position": "left"
     },
     "type": "Slide",
@@ -29,6 +30,7 @@
         "width": 500.0
       },
       "preview": false,
+      "flex": 1,
       "position": "right"
     },
     "data": "This is an example of an awesome widget",
@@ -38,6 +40,7 @@
   },
   {
     "content": {
+      "flex": 1,
       "alignment": "center"
     },
     "data": "# Two Column Header\n\nThis is your main header, providing a context or introducing the core concept covered in this slide.\n\n::left::\n\n### Left Heading\n- Point A\n- Point B\n- Point C\n\n::right::\n\n### Right Heading\n- Point X\n- Point Y\n- Point Z",
@@ -47,9 +50,11 @@
         "alignment": "bottom_right"
       },
       "right": {
+        "flex": 1,
         "alignment": "bottom_left"
       },
       "header": {
+        "flex": 1,
         "alignment": "bottom_left"
       }
     },
@@ -83,12 +88,14 @@
   {
     "style": "quote",
     "content": {
+      "flex": 1,
       "alignment": "bottom_right"
     },
     "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
     "options": {
       "src": "https://source.unsplash.com/random/900×700/?inspiration",
       "fit": "cover",
+      "flex": 1,
       "position": "right"
     },
     "type": "Slide",

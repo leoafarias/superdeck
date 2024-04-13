@@ -10,21 +10,6 @@ typedef DeckData = (
   List<SlideAsset> assets,
 );
 
-// class WidgetDisplayBuilder extends StatelessWidget {
-//   const WidgetDisplayBuilder({
-//     required this.builder,
-//     super.key,
-//   });
-
-//   final Widget Function(BuildContext, WidgetOptions) builder;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final options = WidgetOptionsProvider.of(context).options;
-//     return builder(context, options);
-//   }
-// }
-
 enum SuperDeckAspect {
   slides,
   assets,

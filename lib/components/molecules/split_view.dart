@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../superdeck.dart';
-import 'scaled_app.dart';
 
 // ignore: non_constant_identifier_names
 final SlidePreviewBox = Style(
@@ -99,9 +98,7 @@ class _SplitViewState extends State<SplitView>
                 Padding(
                   padding: EdgeInsets.only(left: animatedWidth),
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900,
-                    ),
+                    color: const Color.fromARGB(144, 0, 0, 0),
                     child: Align(
                       alignment: Alignment.center,
                       child: ConstrainedBox(
@@ -109,7 +106,6 @@ class _SplitViewState extends State<SplitView>
                         child: Container(
                           margin: EdgeInsets.all(paddingSize),
                           decoration: BoxDecoration(
-                            color: Colors.black,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.3),
@@ -118,7 +114,7 @@ class _SplitViewState extends State<SplitView>
                               ),
                             ],
                           ),
-                          child: ScaledWidget(child: widget.body),
+                          child: widget.body,
                         ),
                       ),
                     ),

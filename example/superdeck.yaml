@@ -1,4 +1,4 @@
 transition:
   type: fade_in
-  duration: 1000
+  duration: 0
   

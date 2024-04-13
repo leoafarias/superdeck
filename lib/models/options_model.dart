@@ -42,12 +42,12 @@ class Config with ConfigMappable {
 
 @MappableClass()
 class ContentOptions with ContentOptionsMappable {
-  final ContentAlignment? alignment;
-  final int? flex;
+  final ContentAlignment alignment;
+  final int flex;
 
   const ContentOptions({
-    this.flex,
-    this.alignment,
+    this.flex = 1,
+    this.alignment = ContentAlignment.centerLeft,
   });
 
   ContentOptions merge(ContentOptions? other) {
@@ -65,12 +65,12 @@ class ContentOptions with ContentOptionsMappable {
 
 @MappableClass()
 abstract class SplitOptions with SplitOptionsMappable {
-  final int? flex;
-  final LayoutPosition? position;
+  final int flex;
+  final LayoutPosition position;
 
   const SplitOptions({
-    required this.flex,
-    required this.position,
+    this.flex = 1,
+    this.position = LayoutPosition.right,
   });
 
   static final schema = Schema(
@@ -129,18 +129,20 @@ class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
 )
 class TransitionOptions with TransitionOptionsMappable {
   final TransitionType type;
-  final Duration? duration;
-  final Duration? delay;
-  final CurveType? curve;
+  final Duration duration;
+  final Duration delay;
+  final CurveType curve;
 
   const TransitionOptions({
     required this.type,
-    this.duration,
-    this.delay,
-    this.curve,
+    this.duration = const Duration(milliseconds: 200),
+    this.delay = const Duration(milliseconds: 0),
+    this.curve = CurveType.ease,
   });
 
   static const fromJson = TransitionOptionsMapper.fromJson;
+
+  Duration get totalAnimationDuration => duration + delay;
 
   TransitionOptions merge(TransitionOptions? other) {
     if (other == null) return this;

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../models/slide_model.dart';
 import '../../superdeck.dart';
-import '../molecules/scaled_app.dart';
-import '../molecules/slide_view.dart';
 
-final previewStyle = AnimatedStyle(
+final _previewStyle = AnimatedStyle(
   Style(
     box.color.grey.shade900(),
     box.margin.all(8),
@@ -21,16 +18,16 @@ final previewStyle = AnimatedStyle(
 );
 
 // ignore: non_constant_identifier_names
-final PreviewBox = previewStyle.box;
+final PreviewBox = _previewStyle.box;
 
 class SlideThumbnail extends StatelessWidget {
-  final Slide slide;
+  final Widget child;
   final bool selected;
   final VoidCallback onTap;
 
   const SlideThumbnail({
     super.key,
-    required this.slide,
+    required this.child,
     required this.selected,
     required this.onTap,
   });
@@ -47,9 +44,7 @@ class SlideThumbnail extends StatelessWidget {
           ),
         ),
         child: AbsorbPointer(
-          child: ScaledWidget(
-            child: SlideView(slide),
-          ),
+          child: child,
         ),
       ),
     );

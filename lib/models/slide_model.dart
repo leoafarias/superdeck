@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/widgets.dart';
 
 import '../helpers/schema/schema.dart';
 import '../superdeck.dart';
@@ -13,11 +14,12 @@ abstract class Slide extends Config with SlideMappable {
   final String layout;
   final String data;
   final String? raw;
+  final GlobalKey key = GlobalKey();
 
   @MappableField(key: 'content')
   final ContentOptions? contentOptions;
 
-  const Slide({
+  Slide({
     required this.layout,
     required this.data,
     required this.raw,
@@ -49,7 +51,7 @@ abstract class Slide extends Config with SlideMappable {
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
 class SimpleSlide extends Slide with SimpleSlideMappable {
-  const SimpleSlide({
+  SimpleSlide({
     super.title,
     super.background,
     required super.contentOptions,
@@ -71,7 +73,7 @@ abstract class SplitSlide<T extends SplitOptions> extends Slide
     with SplitSlideMappable<T> {
   final T options;
 
-  const SplitSlide({
+  SplitSlide({
     required this.options,
     super.title,
     super.background,
@@ -86,7 +88,7 @@ abstract class SplitSlide<T extends SplitOptions> extends Slide
 
 @MappableClass(discriminatorValue: LayoutType.image)
 class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
-  const ImageSlide({
+  ImageSlide({
     super.title,
     super.style,
     super.background,
@@ -109,7 +111,7 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
 
 @MappableClass(discriminatorValue: LayoutType.widget)
 class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
-  const WidgetSlide({
+  WidgetSlide({
     super.title,
     required super.options,
     super.style,
@@ -237,7 +239,7 @@ class TwoColumnHeaderSlide extends SectionsSlide
 
 @MappableClass(discriminatorValue: LayoutType.invalid)
 class InvalidSlide extends Slide with InvalidSlideMappable {
-  const InvalidSlide({
+  InvalidSlide({
     required super.contentOptions,
     super.title,
     super.background,

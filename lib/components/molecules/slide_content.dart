@@ -5,7 +5,7 @@ import '../../helpers/controller.dart';
 import '../../models/options_model.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/markdown_viewer.dart';
-import 'slide_view.dart';
+import '../atoms/slide_view.dart';
 
 class SlideContent extends StatelessWidget {
   const SlideContent({
