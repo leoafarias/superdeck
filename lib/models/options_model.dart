@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
 import '../helpers/layout_builder.dart';
-import '../helpers/schema/schema.dart';
-import '../helpers/schema/schema_values.dart';
+import '../schema/schema.dart';
+import '../schema/schema_values.dart';
 import 'slide_model.dart';
 
 part 'options_model.mapper.dart';

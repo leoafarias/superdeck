@@ -21,7 +21,7 @@ enum SuperDeckAspect {
 class SuperDeck extends InheritedModel<SuperDeckAspect> {
   final List<Slide> slides;
   final List<SlideAsset> assets;
-  final Config projectOptions;
+
   final Map<String, Example> widgetExamples;
   final Style style;
 
@@ -31,7 +31,6 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
     required this.assets,
     required this.widgetExamples,
     required this.style,
-    required this.projectOptions,
     required super.child,
   });
 
@@ -49,12 +48,6 @@ class SuperDeck extends InheritedModel<SuperDeckAspect> {
     return InheritedModel.inheritFrom<SuperDeck>(context,
             aspect: SuperDeckAspect.assets)!
         .assets;
-  }
-
-  static Config projectOptionsOf(BuildContext context) {
-    return InheritedModel.inheritFrom<SuperDeck>(context,
-            aspect: SuperDeckAspect.projectOptions)!
-        .projectOptions;
   }
 
   static Style styleOf(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ import '../../models/asset_model.dart';
 import '../../models/options_model.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
+import '../helpers/config.dart';
 import '../helpers/theme.dart';
 
 class SuperDeckApp extends StatefulWidget {
@@ -38,7 +38,6 @@ class SuperDeckApp extends StatefulWidget {
 class _SuperDeckAppState extends State<SuperDeckApp> {
   late List<Slide> _slides = [];
   late List<SlideAsset> _assets = [];
-  late Config _config = const Config.empty();
 
   bool _loading = true;
 
@@ -78,28 +77,17 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     }
   }
 
-  void _setProjectConfig(Config projectOptions) {
-    // only update state if project options are different
-    if (projectOptions != _config) {
-      setState(() {
-        _config = projectOptions;
-      });
-    }
-  }
-
   Future<void> _loadData() async {
     try {
       await SuperDeckApp.initialize();
 
-      final project = await SlidesLoader.loadProjectConfig();
       final (slides, assets) = await SlidesLoader.loadFromStorage();
 
       setState(() {
         _slides = slides;
         _assets = assets;
-        _config = project;
       });
-      if (kDebugMode) {
+      if (kDebugMode && !kIsWeb) {
         _subscriptions = _registerLocalListener();
       }
     } catch (e) {
@@ -112,30 +100,20 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     }
   }
 
-  StreamSubscription<WatchEvent> _createFileListener(
-    File file,
-    void Function() callback,
-  ) {
-    return FileWatcher(file.path).events.listen((event) async {
-      if (event.type == ChangeType.MODIFY) {
-        callback();
-      }
-    });
-  }
-
   List<StreamSubscription<WatchEvent>> _registerLocalListener() {
     return [
-      _createFileListener(config.slidesMarkdownFile, () async {
-        print('Reloading slides');
-        final (slides, assets) = await SlidesLoader.load();
-        _setSlides(slides);
-        _setAssets(assets);
-      }),
-      _createFileListener(config.projectConfigFile, () async {
-        print('Reloading project config');
-        _setProjectConfig(await SlidesLoader.loadProjectConfig());
-      })
-    ];
+      kConfig.slidesMarkdownFile,
+      kConfig.projectConfigFile,
+    ].map((file) {
+      return FileWatcher(file.path).events.listen((event) async {
+        if (event.type == ChangeType.MODIFY) {
+          print('Reloading slides');
+          final (slides, assets) = await SlidesLoader.load();
+          _setSlides(slides);
+          _setAssets(assets);
+        }
+      });
+    }).toList();
   }
 
   @override
@@ -155,7 +133,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
             slides: _slides,
             assets: _assets,
             style: defaultStyle.merge(widget.style),
-            projectOptions: _config,
+
             //  Convert a List<WidgetDemo> to a Map<String, WidgetDemo>
             // where the key of the map is the widgetDemo.name
             widgetExamples: exampleBuilders,

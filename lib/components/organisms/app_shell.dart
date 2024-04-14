@@ -31,7 +31,7 @@ class _AppShellState extends State<AppShell> {
 
   final _sideIsOpen = signal(false);
   late final _currentSlide = signal(initialPage);
-  final _menuIndex = signal(0);
+  final _menuSelection = signal(MenuSelection.play);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -52,11 +52,9 @@ class _AppShellState extends State<AppShell> {
 
     final totalInvalidSlides = slides.whereType<InvalidSlide>().length;
 
-    final selectedMenu = MenuSelection.values[_menuIndex.watch(context)];
-
     void toggleDrawer() {
       if (_sideIsOpen.value) {
-        _menuIndex.value = MenuSelection.play.index;
+        _menuSelection.value = MenuSelection.play;
       }
       _sideIsOpen.value = !_sideIsOpen.value;
     }
@@ -127,8 +125,6 @@ class _AppShellState extends State<AppShell> {
                 child: Scaffold(
                   appBar: AppBar(
                     centerTitle: false,
-                    leading: const Spacer(),
-                    actions: const [],
                     scrolledUnderElevation: 10,
                     elevation: 4,
                     toolbarHeight: 30,
@@ -137,9 +133,9 @@ class _AppShellState extends State<AppShell> {
                     children: [
                       NavigationRail(
                         extended: false,
-                        selectedIndex: _menuIndex.watch(context),
+                        selectedIndex: _menuSelection.watch(context).index,
                         onDestinationSelected: (int idx) {
-                          _menuIndex.value = idx;
+                          _menuSelection.value = MenuSelection.values[idx];
                         },
                         trailing: Expanded(
                           child: Column(
@@ -193,6 +189,8 @@ class _AppShellState extends State<AppShell> {
             ],
           ),
           builder: (data) {
+            final isPreview =
+                MenuSelection.play == _menuSelection.watch(context);
             return Padding(
               padding: EdgeInsets.only(left: data.sideWidth),
               child: PageView.builder(
@@ -200,15 +198,15 @@ class _AppShellState extends State<AppShell> {
                 itemCount: slides.length,
                 itemBuilder: (context, idx) {
                   final slide = slides[idx];
-                  if (MenuSelection.play.index == _menuIndex.watch(context)) {
-                    return SlidePreview(
-                      slide: slide,
-                      size: data.size,
-                      sideWidth: data.sideWidth,
-                    );
-                  } else {
-                    return SlideMarkdownPreview(slide: slide);
-                  }
+                  return isPreview
+                      ? SlidePreview(
+                          slide: slide,
+                          size: data.size,
+                          sideWidth: data.sideWidth,
+                        )
+                      : SlideMarkdownPreview(
+                          slide: slide,
+                        );
                 },
               ),
             );

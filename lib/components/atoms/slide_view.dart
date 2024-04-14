@@ -21,15 +21,11 @@ class SlideView extends StatelessWidget {
     final slide = this.slide;
 
     final style = SuperDeck.styleOf(context).applyVariant(slide.styleVariant);
-    final projectTransition = SuperDeck.projectOptionsOf(context).transition;
-
-    final transition =
-        projectTransition?.merge(slide.transition) ?? slide.transition;
 
     return ScaledWidget(
       child: TransitionWidget(
-        key: ValueKey(transition),
-        transition: transition,
+        key: ValueKey(slide.transition),
+        transition: slide.transition,
         child: MixBuilder(
           style: style.animate(),
           key: ValueKey(slide),

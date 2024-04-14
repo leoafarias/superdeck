@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/widgets.dart';
 
-import '../helpers/schema/schema.dart';
+import '../schema/schema.dart';
 import '../superdeck.dart';
 import 'options_model.dart';
 import 'syntax_tag.dart';

@@ -10,7 +10,10 @@ import 'package:yaml/yaml.dart';
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
-import 'schema/schema.dart';
+import '../schema/schema.dart';
+import '../superdeck.dart';
+import 'config.dart';
+import 'deep_merge.dart';
 
 const _assetPrefix = 'sd_';
 
@@ -23,24 +26,8 @@ class SlidesLoader {
   // Constructor that accepts the text input for parsing.
   const SlidesLoader._();
 
-  static Future<Config> loadProjectConfig() async {
-    final projectConfig = config.projectConfigFile;
-
-    if (!await projectConfig.exists()) {
-      return const Config.empty();
-    }
-
-    final projectConfigContents = await projectConfig.readAsString();
-    final data = _loadYamlAsMap(projectConfigContents);
-
-    //  Run validation
-    Config.schema.validateOrThrow('Project config', data);
-
-    return Config.fromMap(data);
-  }
-
   static Future<DeckData> load() async {
-    final slidesMd = config.slidesMarkdownFile;
+    final slidesMd = kConfig.slidesMarkdownFile;
 
     if (!await slidesMd.exists()) {
       throw Exception('Slides markdown file not found');
@@ -48,19 +35,27 @@ class SlidesLoader {
 
     final slidesMdContents = await slidesMd.readAsString();
 
-    final (contents, imageFiles) =
+    final (contents, mermaidFiles) =
         await getMermaidContentAndAssets(slidesMdContents.trim());
 
-    final slides = await _parseSlidesYaml(contents);
-    final assets = await _parseAssetsFromFiles(imageFiles);
+    final (localContent, imageFiles) =
+        await _getImageContentAndAssets(contents);
 
-    await _saveSlideJson(slides);
+    final assets =
+        await _parseAssetsFromFiles([...mermaidFiles, ...imageFiles]);
+
     await _saveAssetsJson(assets);
+
+    final slides = await _parseSlidesYaml(localContent);
+    await _saveSlideJson(slides);
 
     return (slides, assets);
   }
 
   static Future<DeckData> loadFromStorage() async {
+    if (kIsWeb) {
+      return _loadFromRootBundle();
+    }
     await load();
     if (kDebugMode) {
       return _loadFromLocalStorage();
@@ -71,7 +66,7 @@ class SlidesLoader {
 
   static Future<void> _saveSlideJson(List<Slide> slides) async {
     try {
-      final slidesJson = config.slidesJsonFile;
+      final slidesJson = kConfig.slidesJsonFile;
 
       final map = slides.map((e) => e.toMap()).toList();
 
@@ -88,7 +83,7 @@ class SlidesLoader {
   }
 
   static Future<void> _saveAssetsJson(List<SlideAsset> assets) async {
-    final assetsJson = config.assetsJsonFile;
+    final assetsJson = kConfig.assetsJsonFile;
 
     if (!await assetsJson.exists()) {
       await assetsJson.create(recursive: true);
@@ -97,7 +92,7 @@ class SlidesLoader {
     // Write a json file with a list of assets
     await assetsJson.writeAsString(prettyJson(map));
 
-    await config.assetsImageDir.list().forEach((f) async {
+    await kConfig.assetsImageDir.list().forEach((f) async {
       if (f is File) {
         if (!assets.any((element) => element.path == f.path)) {
           // Only remove if starts with the asset prefix
@@ -138,15 +133,15 @@ Future<SlideAsset> _getImage(String imagePath) async {
 }
 
 Future<DeckData> _loadFromLocalStorage() async {
-  final slidesJson = await config.slidesJsonFile.readAsString();
-  final assetsJson = await config.assetsJsonFile.readAsString();
+  final slidesJson = await kConfig.slidesJsonFile.readAsString();
+  final assetsJson = await kConfig.assetsJsonFile.readAsString();
 
   return (_parseFromJson(slidesJson), _parseAssets(assetsJson));
 }
 
 Future<DeckData> _loadFromRootBundle() async {
-  final slidesJson = await rootBundle.loadString(config.slidesJsonFile.path);
-  final assetsJson = await rootBundle.loadString(config.assetsJsonFile.path);
+  final slidesJson = await rootBundle.loadString(kConfig.slidesJsonFile.path);
+  final assetsJson = await rootBundle.loadString(kConfig.assetsJsonFile.path);
 
   return (_parseFromJson(slidesJson), _parseAssets(assetsJson));
 }
@@ -154,6 +149,80 @@ Future<DeckData> _loadFromRootBundle() async {
 List<SlideAsset> _parseAssets(String assetsJson) {
   final assets = jsonDecode(assetsJson) as List;
   return assets.map((asset) => SlideAsset.fromMap(asset)).toList();
+}
+
+Future<(String, List<File>)> _getImageContentAndAssets(String content) async {
+  // Get any url of images that are in the markdown
+  // Save it the local path on the device
+  // and replace the url with the local path
+  final imageRegex = RegExp(r'!\[.*?\]\((.*?)\)');
+
+  //  Check also if image is on background: or src: in front matter
+  //  and replace the url with the local path
+
+  final List<File> imageFiles = [];
+
+  final assetsJson = await kConfig.assetsJsonFile.readAsString();
+
+  final assets = _parseAssets(assetsJson);
+
+  final matches = imageRegex.allMatches(content);
+
+  for (final Match match in matches) {
+    final imageUrl = match.group(1);
+    if (imageUrl == null) continue;
+
+    if (!imageUrl.startsWith('http')) continue;
+
+    // If its already in assets return file name in assetsjson
+    final imageUrlHash = imageUrl.hashCode.toString();
+
+    final asset = assets
+        .firstWhereOrNull((element) => element.path.contains(imageUrlHash));
+
+    File imageFile;
+    if (asset != null) {
+      imageFile = File(asset.path);
+    } else {
+      imageFile = await _downloadAndSave(imageUrl);
+    }
+
+    final relativePath =
+        relative(imageFile.path, from: kConfig.assetsDir.parent.path);
+
+    final imageMarkdown = '![Image]($relativePath)';
+
+    content = content.replaceFirst(match.group(0)!, imageMarkdown);
+
+    imageFiles.add(imageFile);
+  }
+
+  return (content, imageFiles);
+}
+
+Future<File> _downloadAndSave(String imageUrl) async {
+  final imageUrlHash = imageUrl.hashCode.toString();
+
+  final HttpClient client = HttpClient();
+  final HttpClientRequest request = await client.getUrl(Uri.parse(imageUrl));
+  final HttpClientResponse response = await request.close();
+  final bytes = await consolidateHttpClientResponseBytes(response);
+
+  final contentType = response.headers.contentType;
+  // Default to .jpg if no extension is found
+  final extension = contentType?.subType ?? 'jpg';
+
+  final imageFile = File(join(
+    kConfig.assetsImageDir.path,
+    '$_assetPrefix$imageUrlHash.$extension',
+  ));
+
+  if (await imageFile.exists()) {
+    return imageFile;
+  }
+
+  await imageFile.writeAsBytes(bytes);
+  return imageFile;
 }
 
 Future<(String, List<File>)> getMermaidContentAndAssets(String content) async {
@@ -170,7 +239,7 @@ Future<(String, List<File>)> getMermaidContentAndAssets(String content) async {
     final imageFile = await _processMermaidSyntax(mermaidSyntax);
 
     final relativePath =
-        relative(imageFile.path, from: config.assetsDir.parent.path);
+        relative(imageFile.path, from: kConfig.assetsDir.parent.path);
 
     final String imageMarkdown = '![Mermaid Diagram]($relativePath)';
 
@@ -206,7 +275,7 @@ Future<File> _processMermaidSyntax(String mermaidSyntax) async {
 
     // has the mermaidSyntax string
     final filePath = 'sd_mermaid_${mermaidSyntax.hashCode}.png';
-    final mermaidAssetFile = File(join(config.assetsImageDir.path, filePath));
+    final mermaidAssetFile = File(join(kConfig.assetsImageDir.path, filePath));
 
     if (await mermaidAssetFile.exists()) {
       return mermaidAssetFile;
@@ -214,7 +283,7 @@ Future<File> _processMermaidSyntax(String mermaidSyntax) async {
 
     await tempFile.writeAsString(mermaidSyntax);
 
-    final outputFile = File(join(config.assetsImageDir.path, filePath));
+    final outputFile = File(join(kConfig.assetsImageDir.path, filePath));
 
     if (!await outputFile.parent.exists()) {
       await outputFile.parent.create(recursive: true);
@@ -308,23 +377,6 @@ List<String> _splitSlides(String content) {
   return slides;
 }
 
-final config = SuperDeckConfig();
-
-class SuperDeckConfig {
-  SuperDeckConfig();
-
-  String get _assetsDirName => 'assets';
-
-  String get _slidesMarkdownName => 'slides.md';
-
-  File get slidesMarkdownFile => File(_slidesMarkdownName);
-  Directory get assetsDir => Directory(_assetsDirName);
-  Directory get assetsImageDir => Directory(join(_assetsDirName, 'images'));
-  File get slidesJsonFile => File(join(_assetsDirName, 'slides.json'));
-  File get assetsJsonFile => File(join(_assetsDirName, 'assets.json'));
-  File get projectConfigFile => File('superdeck.yaml');
-}
-
 /// Formats [json]
 String prettyJson(dynamic json) {
   var spaces = ' ' * 2;
@@ -361,25 +413,29 @@ List<Slide> _parseFromJson(String slidesJson) {
 Future<Slide> _parseSlideFromMap(Map<String, dynamic> map) async {
   final layout = map['layout'] as String?;
 
+  final projectMap = await _loadProjectConfig();
+
+  final mergedMap = deepMerge(projectMap, map);
+
   const config = 'config';
   try {
     switch (layout) {
       case LayoutType.simple:
       case null:
-        SimpleSlide.schema.validateOrThrow(config, map);
-        return SimpleSlide.fromMap(map);
+        SimpleSlide.schema.validateOrThrow(config, mergedMap);
+        return SimpleSlide.fromMap(mergedMap);
       case LayoutType.image:
-        ImageSlide.schema.validateOrThrow(config, map);
-        return ImageSlide.fromMap(map);
+        ImageSlide.schema.validateOrThrow(config, mergedMap);
+        return ImageSlide.fromMap(mergedMap);
       case LayoutType.widget:
-        WidgetSlide.schema.validateOrThrow(config, map);
-        return WidgetSlide.fromMap(map);
+        WidgetSlide.schema.validateOrThrow(config, mergedMap);
+        return WidgetSlide.fromMap(mergedMap);
       case LayoutType.twoColumn:
-        TwoColumnSlide.schema.validateOrThrow(config, map);
-        return TwoColumnSlide.fromMap(map);
+        TwoColumnSlide.schema.validateOrThrow(config, mergedMap);
+        return TwoColumnSlide.fromMap(mergedMap);
       case LayoutType.twoColumnHeader:
-        TwoColumnHeaderSlide.schema.validateOrThrow(config, map);
-        return TwoColumnHeaderSlide.fromMap(map);
+        TwoColumnHeaderSlide.schema.validateOrThrow(config, mergedMap);
+        return TwoColumnHeaderSlide.fromMap(mergedMap);
       default:
         return InvalidSlide.invalidTemplate(layout);
     }
@@ -392,13 +448,13 @@ Future<Slide> _parseSlideFromMap(Map<String, dynamic> map) async {
   }
 }
 
-Slide Function(Map<String, dynamic>) _getLayoutMapper(String layout) {
-  return switch (layout) {
-    LayoutType.simple => SimpleSlide.fromMap,
-    LayoutType.image => ImageSlide.fromMap,
-    LayoutType.widget => WidgetSlide.fromMap,
-    LayoutType.twoColumn => TwoColumnSlide.fromMap,
-    LayoutType.twoColumnHeader => TwoColumnHeaderSlide.fromMap,
-    _ => InvalidSlide.fromMap,
-  };
+Future<Map<String, dynamic>> _loadProjectConfig() async {
+  final projectConfig = kConfig.projectConfigFile;
+
+  if (!await projectConfig.exists()) {
+    return {};
+  }
+
+  final projectConfigContents = await projectConfig.readAsString();
+  return _loadYamlAsMap(projectConfigContents);
 }
