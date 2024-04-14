@@ -105,6 +105,7 @@ abstract class SlideCopyWith<$R, $In extends Slide, $Out>
   @override
   $R call(
       {String? data,
+      String? raw,
       String? title,
       ContentOptions? contentOptions,
       String? background,
@@ -355,8 +356,7 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
   static String _$layout(SplitSlide v) => v.layout;
   static const Field<SplitSlide, String> _f$layout = Field('layout', _$layout);
   static String? _$raw(SplitSlide v) => v.raw;
-  static const Field<SplitSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static const Field<SplitSlide, String> _f$raw = Field('raw', _$raw);
   static GlobalKey<State<StatefulWidget>> _$key(SplitSlide v) => v.key;
   static const Field<SplitSlide, GlobalKey<State<StatefulWidget>>> _f$key =
       Field('key', _$key, mode: FieldMode.member);
@@ -431,7 +431,8 @@ abstract class SplitSlideCopyWith<$R, $In extends SplitSlide<T>, $Out,
       ContentOptions? contentOptions,
       String? style,
       TransitionOptions? transition,
-      String? data});
+      String? data,
+      String? raw});
   SplitSlideCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -473,12 +474,12 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
   static ImageOptions _$options(ImageSlide v) => v.options;
   static const Field<ImageSlide, ImageOptions> _f$options =
       Field('options', _$options);
+  static String? _$raw(ImageSlide v) => v.raw;
+  static const Field<ImageSlide, String> _f$raw =
+      Field('raw', _$raw, opt: true);
   static String _$layout(ImageSlide v) => v.layout;
   static const Field<ImageSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String? _$raw(ImageSlide v) => v.raw;
-  static const Field<ImageSlide, String> _f$raw =
-      Field('raw', _$raw, mode: FieldMode.member);
   static GlobalKey<State<StatefulWidget>> _$key(ImageSlide v) => v.key;
   static const Field<ImageSlide, GlobalKey<State<StatefulWidget>>> _f$key =
       Field('key', _$key, mode: FieldMode.member);
@@ -492,8 +493,8 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
     #transition: _f$transition,
     #data: _f$data,
     #options: _f$options,
-    #layout: _f$layout,
     #raw: _f$raw,
+    #layout: _f$layout,
     #key: _f$key,
   };
   @override
@@ -519,7 +520,8 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
         contentOptions: data.dec(_f$contentOptions),
         transition: data.dec(_f$transition),
         data: data.dec(_f$data),
-        options: data.dec(_f$options));
+        options: data.dec(_f$options),
+        raw: data.dec(_f$raw));
   }
 
   @override
@@ -589,7 +591,8 @@ abstract class ImageSlideCopyWith<$R, $In extends ImageSlide, $Out>
       ContentOptions? contentOptions,
       TransitionOptions? transition,
       String? data,
-      ImageOptions? options});
+      ImageOptions? options,
+      String? raw});
   ImageSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -620,7 +623,8 @@ class _ImageSlideCopyWithImpl<$R, $Out>
           Object? contentOptions = $none,
           Object? transition = $none,
           String? data,
-          ImageOptions? options}) =>
+          ImageOptions? options,
+          Object? raw = $none}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (style != $none) #style: style,
@@ -628,7 +632,8 @@ class _ImageSlideCopyWithImpl<$R, $Out>
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
-        if (options != null) #options: options
+        if (options != null) #options: options,
+        if (raw != $none) #raw: raw
       }));
   @override
   ImageSlide $make(CopyWithData data) => ImageSlide(
@@ -638,7 +643,8 @@ class _ImageSlideCopyWithImpl<$R, $Out>
       contentOptions: data.get(#contentOptions, or: $value.contentOptions),
       transition: data.get(#transition, or: $value.transition),
       data: data.get(#data, or: $value.data),
-      options: data.get(#options, or: $value.options));
+      options: data.get(#options, or: $value.options),
+      raw: data.get(#raw, or: $value.raw));
 
   @override
   ImageSlideCopyWith<$R2, ImageSlide, $Out2> $chain<$R2, $Out2>(

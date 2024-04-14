@@ -271,7 +271,7 @@ dynamic _convertYamlToMap(dynamic yamlObject) {
   }
 }
 
-List<String> _extractSlides(String content) {
+List<String> _splitSlides(String content) {
   final lines = content.split('\n');
   final slides = <String>[];
   final buffer = StringBuffer();
@@ -333,7 +333,7 @@ String prettyJson(dynamic json) {
 }
 
 Future<List<Slide>> _parseSlidesYaml(String slidesYaml) async {
-  final slidesMap = _extractSlides(slidesYaml).map((String raw) {
+  final slidesMap = _splitSlides(slidesYaml).map((String raw) {
     final frontMatter = _extractFrontMatter(raw);
     final options = _loadYamlAsMap(frontMatter);
     final data = _removeMatchingFrontMatter(raw, frontMatter);
@@ -342,7 +342,7 @@ Future<List<Slide>> _parseSlidesYaml(String slidesYaml) async {
       ...options,
       'layout': options['layout'] ?? 'simple',
       'data': data,
-      'raw': raw,
+      'raw': frontMatter,
     }.cast<String, dynamic>();
 
     return map;

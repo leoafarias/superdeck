@@ -82,7 +82,7 @@ abstract class SplitSlide<T extends SplitOptions> extends Slide
     super.transition,
     required super.data,
     required super.layout,
-    super.raw,
+    required super.raw,
   });
 }
 
@@ -96,6 +96,7 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
     super.transition,
     required super.data,
     required super.options,
+    super.raw,
   }) : super(layout: LayoutType.image);
 
   static const fromMap = ImageSlideMapper.fromMap;

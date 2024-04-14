@@ -54,6 +54,13 @@ class _AppShellState extends State<AppShell> {
 
     final selectedMenu = MenuSelection.values[_menuIndex.watch(context)];
 
+    void toggleDrawer() {
+      if (_sideIsOpen.value) {
+        _menuIndex.value = MenuSelection.play.index;
+      }
+      _sideIsOpen.value = !_sideIsOpen.value;
+    }
+
     Future<void> goToPage(int page, {bool animate = true}) async {
       if (page < 0 || page >= slides.length) return;
       await _isPaging;
@@ -99,26 +106,11 @@ class _AppShellState extends State<AppShell> {
       ): previousPage,
     };
 
-    Widget bodyWidget() {
-      return switch (selectedMenu) {
-        MenuSelection.play => SlidePreview(
-            slides: slides,
-            controller: _pageController,
-          ),
-        MenuSelection.markdown => SlideMarkdownPreview(
-            slides: slides,
-            controller: _pageController,
-          ),
-      };
-    }
-
     return CallbackShortcuts(
       bindings: bindings,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _sideIsOpen.value = !_sideIsOpen.value;
-          },
+          onPressed: toggleDrawer,
           child: Badge(
             label: Text(totalInvalidSlides.toString()),
             isLabelVisible: totalInvalidSlides != 0,
@@ -127,57 +119,101 @@ class _AppShellState extends State<AppShell> {
         ),
         key: _scaffoldKey,
         body: SplitView(
-            isOpen: _sideIsOpen.watch(context),
-            sideWidth: 380,
-            side: Row(
-              children: [
-                Expanded(
-                  child: Scaffold(
-                    appBar: AppBar(
-                      title: const Text('SD'),
-                      scrolledUnderElevation: 10,
-                      elevation: 4,
-                    ),
-                    body: Row(
-                      children: [
-                        NavigationRail(
-                          extended: false,
-                          selectedIndex: _menuIndex.watch(context),
-                          onDestinationSelected: (int idx) {
-                            _menuIndex.value = idx;
-                          },
-                          labelType: NavigationRailLabelType.none,
-                          destinations: const [
-                            NavigationRailDestination(
-                              icon: Icon(
-                                Icons.play_arrow,
-                                size: 20,
+          isOpen: _sideIsOpen.watch(context),
+          sideWidth: 380,
+          side: Row(
+            children: [
+              Expanded(
+                child: Scaffold(
+                  appBar: AppBar(
+                    centerTitle: false,
+                    leading: const Spacer(),
+                    actions: const [],
+                    scrolledUnderElevation: 10,
+                    elevation: 4,
+                    toolbarHeight: 30,
+                  ),
+                  body: Row(
+                    children: [
+                      NavigationRail(
+                        extended: false,
+                        selectedIndex: _menuIndex.watch(context),
+                        onDestinationSelected: (int idx) {
+                          _menuIndex.value = idx;
+                        },
+                        trailing: Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              // Add your leading widget here
+                              // For example:
+                              Text(
+                                'SD',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      color: Colors.white.withOpacity(0.2),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
-                              label: Text('Debug'),
-                            ),
-                            NavigationRailDestination(
-                              icon: Icon(
-                                Icons.code,
-                                size: 20,
-                              ),
-                              label: Text('Save pdf'),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: SlideThumbnailList(
-                            currentSlide: _currentSlide.watch(context),
-                            onSelect: onThumbnailSelected,
-                            slides: slides,
+                              const SizedBox(height: 20)
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                        labelType: NavigationRailLabelType.none,
+                        destinations: const [
+                          NavigationRailDestination(
+                            icon: Icon(
+                              Icons.play_arrow,
+                              size: 20,
+                            ),
+                            label: Text('Debug'),
+                          ),
+                          NavigationRailDestination(
+                            icon: Icon(
+                              Icons.code,
+                              size: 20,
+                            ),
+                            label: Text('Save pdf'),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: SlideThumbnailList(
+                          currentSlide: _currentSlide.watch(context),
+                          onSelect: onThumbnailSelected,
+                          slides: slides,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            body: bodyWidget()),
+              ),
+            ],
+          ),
+          builder: (data) {
+            return Padding(
+              padding: EdgeInsets.only(left: data.sideWidth),
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: slides.length,
+                itemBuilder: (context, idx) {
+                  final slide = slides[idx];
+                  if (MenuSelection.play.index == _menuIndex.watch(context)) {
+                    return SlidePreview(
+                      slide: slide,
+                      size: data.size,
+                      sideWidth: data.sideWidth,
+                    );
+                  } else {
+                    return SlideMarkdownPreview(slide: slide);
+                  }
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

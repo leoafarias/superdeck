@@ -16,16 +16,17 @@ final SlidePreviewBox = Style(
 
 class SplitView extends StatefulWidget {
   final Widget side;
-  final Widget body;
+
   final double sideWidth;
   final bool isOpen;
+  final Widget Function(({double sideWidth, Size size})) builder;
 
   const SplitView({
     super.key,
     required this.side,
-    required this.body,
     this.sideWidth = 300,
     this.isOpen = false,
+    required this.builder,
   });
 
   @override
@@ -87,39 +88,10 @@ class _SplitViewState extends State<SplitView>
           animation: _animation,
           builder: (context, child) {
             final animatedWidth = _animation.value * widget.sideWidth;
-            final paddingSize = animatedWidth / 20;
-
-            final rightWidth = size.width - animatedWidth;
-            final rightHeight = size.height * (rightWidth / size.width);
-            final rightSize = Size(rightWidth - (paddingSize * 2), rightHeight);
 
             return Stack(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: animatedWidth),
-                  child: Container(
-                    color: const Color.fromARGB(144, 0, 0, 0),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints.tight(rightSize),
-                        child: Container(
-                          margin: EdgeInsets.all(paddingSize),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.3),
-                                blurRadius: 6,
-                                spreadRadius: 3,
-                              ),
-                            ],
-                          ),
-                          child: widget.body,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                widget.builder((sideWidth: animatedWidth, size: size)),
                 Transform.translate(
                   offset: Offset(animatedWidth - widget.sideWidth, 0),
                   child: SizedBox(
