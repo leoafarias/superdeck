@@ -126,7 +126,7 @@
       "curve": "ease"
     },
     "raw": "\ntitle: \"Slide 3: Links and Images\"\n",
-    "data": "[Link](https://github.com)\n\n![Image](assets/images/sd_151971805.jpeg)",
+    "data": "[Link](https://github.com)\n\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)",
     "type": "Slide"
   },
   {
