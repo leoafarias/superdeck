@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:watcher/watcher.dart';
 
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
@@ -24,7 +26,7 @@ class SlidesLoader {
     ],
   );
 
-  static Future<DeckData> load() async {
+  static Future<DeckData> generate() async {
     final markdownFile = kConfig.slidesMarkdownFile;
 
     if (!await markdownFile.exists()) {
@@ -36,11 +38,27 @@ class SlidesLoader {
     return data;
   }
 
+  static List<StreamSubscription<WatchEvent>> listen(
+      void Function(DeckData) callback) {
+    return [
+      kConfig.slidesMarkdownFile,
+      kConfig.projectConfigFile,
+    ].map((file) {
+      return FileWatcher(file.path).events.listen((event) async {
+        if (event.type == ChangeType.MODIFY) {
+          print('Reloading slides');
+          final data = await SlidesLoader.generate();
+          callback(data);
+        }
+      });
+    }).toList();
+  }
+
   static Future<DeckData> loadFromStorage() async {
     if (kIsWeb) {
       return _loadFromRootBundle();
     }
-    await load();
+    await generate();
     if (kDebugMode) {
       return _loadFromLocalStorage();
     } else {

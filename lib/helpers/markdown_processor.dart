@@ -25,6 +25,12 @@ typedef DeckData = ({
   Config config,
 });
 
+final emptyDeckData = (
+  slides: <Slide>[],
+  assets: <SlideAsset>[],
+  config: const Config.empty(),
+);
+
 typedef MarkdownData = ({
   String content,
   Map<String, dynamic> options,

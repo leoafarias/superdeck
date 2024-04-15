@@ -2,90 +2,60 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:signals/signals_flutter.dart';
 
-import '../../helpers/preference_storage.dart';
-import '../../models/slide_model.dart';
+import '../../providers/superdeck_controller.dart';
 import '../../superdeck.dart';
 import '../molecules/slide_preview.dart';
 import '../molecules/slide_thumbnail_list.dart';
 import '../molecules/split_view.dart';
 
-enum MenuSelection {
-  play,
-  markdown,
-}
-
-class AppShell extends StatefulWidget {
-  const AppShell({super.key});
-
-  @override
-  State<AppShell> createState() => _AppShellState();
-}
-
-class _AppShellState extends State<AppShell> {
-  final initialPage = PreferenceStorage.instance.lastPage ?? 0;
-  late final _pageController = PageController(
-    initialPage: initialPage,
-  );
-
-  final _sideIsOpen = signal(false);
-  late final _currentSlide = signal(initialPage);
-  final _menuSelection = signal(MenuSelection.play);
+class AppShell extends HookWidget {
+  AppShell({super.key});
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    _sideIsOpen.dispose();
-    _currentSlide.dispose();
-
-    super.dispose();
-  }
-
-  Future<void> _isPaging = Future.value();
-
-  @override
   Widget build(BuildContext context) {
-    final slides = SuperDeck.slidesOf(context);
+    final (:currentSlide, :menuSelection, :menuIsOpen) = deckState();
+    final pageController = usePageController(initialPage: currentSlide.value);
 
-    final totalInvalidSlides = slides.whereType<InvalidSlide>().length;
+    final slides = superDeck.slides.watch(context);
+
+    final totalInvalid = superDeck.totalInvalid.watch(context);
 
     void toggleDrawer() {
-      if (_sideIsOpen.value) {
-        _menuSelection.value = MenuSelection.play;
+      if (menuIsOpen.value) {
+        menuSelection.value = 0;
       }
-      _sideIsOpen.value = !_sideIsOpen.value;
+      menuIsOpen.value = !menuIsOpen.value;
     }
 
     Future<void> goToPage(int page, {bool animate = true}) async {
       if (page < 0 || page >= slides.length) return;
-      await _isPaging;
 
       const duration = Duration(milliseconds: 300);
       const curve = Curves.easeInOutCubic;
 
       if (animate) {
-        _isPaging = _pageController.animateToPage(
+        pageController.animateToPage(
           page,
           duration: duration,
           curve: curve,
         );
       } else {
-        _pageController.jumpToPage(page);
+        pageController.jumpToPage(page);
       }
 
-      _currentSlide.value = page;
-
-      await PreferenceStorage.instance.setLastPage(page);
+      currentSlide.value = page;
     }
 
     void onThumbnailSelected(int index) => goToPage(index, animate: false);
 
-    void nextPage() => goToPage(_pageController.page!.toInt() + 1);
+    void nextPage() => goToPage(pageController.page!.toInt() + 1);
 
-    void previousPage() => goToPage(_pageController.page!.toInt() - 1);
+    void previousPage() => goToPage(pageController.page!.toInt() - 1);
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
@@ -110,14 +80,14 @@ class _AppShellState extends State<AppShell> {
         floatingActionButton: FloatingActionButton(
           onPressed: toggleDrawer,
           child: Badge(
-            label: Text(totalInvalidSlides.toString()),
-            isLabelVisible: totalInvalidSlides != 0,
+            label: Text(totalInvalid.toString()),
+            isLabelVisible: totalInvalid != 0,
             child: const Icon(Icons.menu),
           ),
         ),
         key: _scaffoldKey,
         body: SplitView(
-          isOpen: _sideIsOpen.watch(context),
+          isOpen: menuIsOpen.watch(context),
           sideWidth: 380,
           side: Row(
             children: [
@@ -133,9 +103,9 @@ class _AppShellState extends State<AppShell> {
                     children: [
                       NavigationRail(
                         extended: false,
-                        selectedIndex: _menuSelection.watch(context).index,
+                        selectedIndex: menuSelection.watch(context),
                         onDestinationSelected: (int idx) {
-                          _menuSelection.value = MenuSelection.values[idx];
+                          menuSelection.value = idx;
                         },
                         trailing: Expanded(
                           child: Column(
@@ -177,7 +147,7 @@ class _AppShellState extends State<AppShell> {
                       ),
                       Expanded(
                         child: SlideThumbnailList(
-                          currentSlide: _currentSlide.watch(context),
+                          currentSlide: currentSlide.watch(context),
                           onSelect: onThumbnailSelected,
                           slides: slides,
                         ),
@@ -189,12 +159,11 @@ class _AppShellState extends State<AppShell> {
             ],
           ),
           builder: (data) {
-            final isPreview =
-                MenuSelection.play == _menuSelection.watch(context);
+            final isPreview = 0 == menuSelection.watch(context);
             return Padding(
               padding: EdgeInsets.only(left: data.sideWidth),
               child: PageView.builder(
-                controller: _pageController,
+                controller: pageController,
                 itemCount: slides.length,
                 itemBuilder: (context, idx) {
                   final slide = slides[idx];

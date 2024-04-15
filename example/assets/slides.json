@@ -13,24 +13,29 @@
     },
     "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
     "options": {
-      "src": "assets/images/sd_375293288.jpeg",
+      "src": "assets/images/sd_475860768.jpeg",
       "fit": "cover",
       "flex": 1,
-      "position": "left"
+      "position": "right"
     },
-    "raw": "\nstyle: quote\nlayout: image\noptions:\n  src: https://source.unsplash.com/random/900×700/?inspiration\n  fit: cover\n  position: left\ncontent:\n  alignment: bottom_right\n  flex: 1\n",
+    "raw": "\nstyle: quote\nlayout: image\noptions:\n  src: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0\n  fit: cover\n  position: right\ncontent:\n  alignment: bottom_right\n  flex: 1\n",
     "type": "Slide",
     "layout": "image"
   },
   {
-    "background": "assets/images/sd_70635435.jpeg",
+    "background": "assets/images/sd_381945141.jpeg",
+    "content": {
+      "flex": 1,
+      "alignment": "bottom_left"
+    },
+    "style": "cover",
     "transition": {
       "type": "fade_in",
       "duration": 0,
       "delay": 0,
       "curve": "ease"
     },
-    "raw": "\nbackground: https://source.unsplash.com/random/900×700/?landscape\n",
+    "raw": "\nstyle: cover\ncontent:\n  alignment: bottom_left\nbackground: https://source.unsplash.com/random/900×700/?car\n",
     "data": "# SuperDeck\n \nSuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.",
     "type": "Slide"
   },

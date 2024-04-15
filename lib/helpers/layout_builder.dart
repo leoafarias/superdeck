@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
@@ -112,7 +113,7 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
   Widget build(BuildContext context) {
     final options = config.options;
 
-    final previewBuilders = SuperDeck.widgetExamplesOf(context);
+    final previewBuilders = superDeck.examples.watch(context);
 
     final builder = previewBuilders[options.name];
 
@@ -147,7 +148,7 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
   Widget build(BuildContext context) {
     final mix = MixProvider.of(context);
     final spec = SlideSpec.of(mix);
-    final assets = SuperDeck.assetsOf(context);
+    final assets = superDeck.assets.watch(context);
 
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;

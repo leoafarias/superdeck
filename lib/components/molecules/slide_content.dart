@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:signals/signals_flutter.dart';
 
-import '../../helpers/controller.dart';
 import '../../models/options_model.dart';
+import '../../providers/superdeck_controller.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/markdown_viewer.dart';
 import '../atoms/slide_view.dart';
@@ -24,7 +25,7 @@ class SlideContent extends StatelessWidget {
     final container = spec.contentContainer;
     final alignment = options?.alignment ?? ContentAlignment.center;
 
-    final assets = SuperDeck.assetsOf(context);
+    final assets = superDeck.assets.watch(context);
 
     final constraints = SlideConstraints.of(context);
 

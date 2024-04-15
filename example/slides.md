@@ -3,9 +3,9 @@
 style: quote
 layout: image
 options:
-  src: https://source.unsplash.com/random/900×700/?inspiration
+  src: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0
   fit: cover
-  position: left
+  position: right
 content:
   alignment: bottom_right
   flex: 1
@@ -19,7 +19,10 @@ content:
 
 
 ---
-background: https://source.unsplash.com/random/900×700/?landscape
+style: cover
+content:
+  alignment: bottom_left
+background: https://source.unsplash.com/random/900×700/?car
 ---
 
 # SuperDeck

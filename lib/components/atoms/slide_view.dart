@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/layout_builder.dart';
 import '../../helpers/measure_size.dart';
@@ -19,48 +20,51 @@ class SlideView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final slide = this.slide;
+    final variant = slide.styleVariant;
 
-    final style = SuperDeck.styleOf(context).applyVariant(slide.styleVariant);
+    final style = superDeck.style.watch(context);
 
-    return ScaledWidget(
-      child: TransitionWidget(
-        key: ValueKey(slide.transition),
-        transition: slide.transition,
-        child: MixBuilder(
-          style: style.animate(),
-          key: ValueKey(slide),
-          builder: (mix) {
-            final spec = SlideSpec.of(mix);
-            return AnimatedMixedBox(
-              spec: spec.innerContainer,
-              duration: const Duration(milliseconds: 300),
-              child: Container(
-                decoration: _backgroundDecoration(slide.background),
-                child: SlideConstraintBuilder(builder: (_, __) {
-                  if (slide is SimpleSlide) {
-                    return SimpleSlideBuilder(config: slide);
-                  } else if (slide is WidgetSlide) {
-                    return WidgetSlideBuilder(config: slide);
-                  } else if (slide is ImageSlide) {
-                    return ImageSlideBuilder(config: slide);
-                  } else if (slide is TwoColumnSlide) {
-                    return TwoColumnSlideBuilder(config: slide);
-                  } else if (slide is TwoColumnHeaderSlide) {
-                    return TwoColumnHeaderSlideBuilder(config: slide);
-                  } else if (slide is InvalidSlide) {
-                    return InvalidSlideBuilder(config: slide);
-                  } else {
-                    throw UnimplementedError(
-                      'Slide config not implemented',
-                    );
-                  }
-                }),
-              ),
-            );
-          },
+    return Watch.builder(builder: (context) {
+      return ScaledWidget(
+        child: TransitionWidget(
+          key: ValueKey(slide.transition),
+          transition: slide.transition,
+          child: MixBuilder(
+            style: style.applyVariant(variant).animate(),
+            key: ValueKey(slide),
+            builder: (mix) {
+              final spec = SlideSpec.of(mix);
+              return AnimatedMixedBox(
+                spec: spec.innerContainer,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  decoration: _backgroundDecoration(slide.background),
+                  child: SlideConstraintBuilder(builder: (_, __) {
+                    if (slide is SimpleSlide) {
+                      return SimpleSlideBuilder(config: slide);
+                    } else if (slide is WidgetSlide) {
+                      return WidgetSlideBuilder(config: slide);
+                    } else if (slide is ImageSlide) {
+                      return ImageSlideBuilder(config: slide);
+                    } else if (slide is TwoColumnSlide) {
+                      return TwoColumnSlideBuilder(config: slide);
+                    } else if (slide is TwoColumnHeaderSlide) {
+                      return TwoColumnHeaderSlideBuilder(config: slide);
+                    } else if (slide is InvalidSlide) {
+                      return InvalidSlideBuilder(config: slide);
+                    } else {
+                      throw UnimplementedError(
+                        'Slide config not implemented',
+                      );
+                    }
+                  }),
+                ),
+              );
+            },
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
