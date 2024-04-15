@@ -81,7 +81,8 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     try {
       await SuperDeckApp.initialize();
 
-      final (:slides, :assets) = await SlidesLoader.loadFromStorage();
+      final (:slides, :assets, config: _) =
+          await SlidesLoader.loadFromStorage();
 
       setState(() {
         _slides = slides;
@@ -108,7 +109,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       return FileWatcher(file.path).events.listen((event) async {
         if (event.type == ChangeType.MODIFY) {
           print('Reloading slides');
-          final (:slides, :assets) = await SlidesLoader.load();
+          final (:slides, :assets, config: _) = await SlidesLoader.load();
           _setSlides(slides);
           _setAssets(assets);
         }

@@ -1,0 +1,8 @@
+{
+  "transition": {
+    "type": "fade_in",
+    "duration": 0,
+    "delay": 0,
+    "curve": "ease"
+  }
+}

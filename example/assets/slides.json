@@ -13,7 +13,7 @@
     },
     "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
     "options": {
-      "src": "https://source.unsplash.com/random/900×700/?inspiration",
+      "src": "assets/images/sd_375293288.jpeg",
       "fit": "cover",
       "flex": 1,
       "position": "left"
@@ -23,7 +23,7 @@
     "layout": "image"
   },
   {
-    "background": "https://source.unsplash.com/random/900×700/?landscape",
+    "background": "assets/images/sd_70635435.jpeg",
     "transition": {
       "type": "fade_in",
       "duration": 0,
@@ -96,7 +96,7 @@
     },
     "data": "# Key Features\n\n- Innovative design\n- User-friendly\n- Energy-efficient",
     "options": {
-      "src": "https://source.unsplash.com/random/900×700/?nature",
+      "src": "assets/images/sd_408925076.jpeg",
       "fit": "cover",
       "flex": 1,
       "position": "left"
@@ -126,7 +126,7 @@
       "curve": "ease"
     },
     "raw": "\ntitle: \"Slide 3: Links and Images\"\n",
-    "data": "[Link](https://github.com)\n\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)",
+    "data": "[Link](https://github.com)\n\n![Image](assets/images/sd_151971805.jpeg)",
     "type": "Slide"
   },
   {
@@ -143,7 +143,7 @@
     },
     "data": "> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
     "options": {
-      "src": "https://source.unsplash.com/random/900×700/?inspiration",
+      "src": "assets/images/sd_375293288.jpeg",
       "fit": "cover",
       "flex": 1,
       "position": "right"

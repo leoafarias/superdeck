@@ -28,7 +28,7 @@ abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
 
   Widget buildContentSection(SectionData section) {
     return Expanded(
-      flex: section.options.flex ?? 1,
+      flex: section.options.flex,
       child: _buildContent(section.content, section.options),
     );
   }
@@ -80,7 +80,7 @@ abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
 
   Widget buildSplitSlide(Widget side) {
     final position = config.options.position;
-    final flex = config.options.flex ?? 1;
+    final flex = config.options.flex;
 
     List<Widget> children = [
       buildContentSection((
@@ -147,6 +147,7 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
   Widget build(BuildContext context) {
     final mix = MixProvider.of(context);
     final spec = SlideSpec.of(mix);
+    final assets = SuperDeck.assetsOf(context);
 
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
@@ -156,7 +157,15 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
     if (src.startsWith('http') || src.startsWith('https')) {
       provider = CachedNetworkImageProvider(src);
     } else {
-      provider = AssetImage(src);
+      final asset = assets.firstWhereOrNull(
+        (element) => element.path == src,
+      );
+
+      if (asset != null) {
+        provider = MemoryImage(asset.bytes);
+      } else {
+        provider = AssetImage(src);
+      }
     }
 
     final side = Container(
@@ -184,7 +193,7 @@ class TwoColumnSlideBuilder extends SlideBuilder<TwoColumnSlide> {
   @override
   Widget build(BuildContext context) {
     final options = config.contentOptions ?? const ContentOptions();
-    final alignment = options.alignment ?? ContentAlignment.centerLeft;
+    final alignment = options.alignment;
 
     return Container(
       alignment: alignment.toAlignment(),
@@ -204,8 +213,8 @@ class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
   @override
   Widget build(BuildContext context) {
     final options = config.contentOptions ?? const ContentOptions();
-    final alignment = options.alignment ?? ContentAlignment.centerLeft;
-    final flex = options.flex ?? 1;
+    final alignment = options.alignment;
+    final flex = options.flex;
 
     final header = config.header;
 
@@ -214,7 +223,7 @@ class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
     return Column(
       children: [
         Expanded(
-          flex: header.options.flex ?? 1,
+          flex: header.options.flex,
           child: Row(
             children: [
               buildContentSection((

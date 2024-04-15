@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
 import '../helpers/layout_builder.dart';
+import '../helpers/utils.dart';
 import '../schema/schema.dart';
 import '../schema/schema_values.dart';
 import 'slide_model.dart';
@@ -29,6 +30,10 @@ class Config with ConfigMappable {
 
   static const fromMap = ConfigMapper.fromMap;
   static const fromJson = ConfigMapper.fromJson;
+
+  static Config fromYaml(String yaml) {
+    return ConfigMapper.fromMap(converYamlToMap(yaml));
+  }
 
   static final schema = Schema(
     {

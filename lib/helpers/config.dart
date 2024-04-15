@@ -14,7 +14,13 @@ class SuperDeckConfig {
   File get slidesMarkdownFile => File(_slidesMarkdownName);
   Directory get assetsDir => Directory(_assetsDirName);
   Directory get assetsImageDir => Directory(join(_assetsDirName, 'images'));
-  File get slidesJsonFile => File(join(_assetsDirName, 'slides.json'));
-  File get assetsJsonFile => File(join(_assetsDirName, 'assets.json'));
   File get projectConfigFile => File('superdeck.yaml');
+
+  ({File slides, File assets, File config}) get references {
+    return (
+      slides: File(join(_assetsDirName, 'slides.json')),
+      assets: File(join(_assetsDirName, 'assets.json')),
+      config: File(join(_assetsDirName, 'config.json')),
+    );
+  }
 }

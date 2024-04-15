@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:yaml/yaml.dart';
 
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
@@ -11,24 +13,32 @@ import '../models/slide_model.dart';
 import '../schema/schema.dart';
 import 'config.dart';
 import 'deep_merge.dart';
+import 'utils.dart';
 
 final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+
+const _assetPrefix = 'sd_';
 
 typedef DeckData = ({
   List<Slide> slides,
   List<SlideAsset> assets,
+  Config config,
 });
 
-typedef ProcessData = ({
+typedef MarkdownData = ({
   String content,
   Map<String, dynamic> options,
   Config config,
 });
 
-class ProcessorRunner {
-  final List<Processor> _processors;
+class Pipeline {
+  final List<MarkdownProcessor> markdown;
+  final List<PostMarkdownProcessor> postMarkdown;
 
-  const ProcessorRunner(this._processors);
+  const Pipeline({
+    required this.markdown,
+    required this.postMarkdown,
+  });
 
   Future<DeckData> run(String contents) async {
     final slidesRaw = _splitSlides(contents.trim());
@@ -38,22 +48,34 @@ class ProcessorRunner {
     final slides = <Slide>[];
 
     for (final raw in slidesRaw) {
-      final slide = await runEach(raw, config);
-      slides.add(slide);
+      slides.add(await runEach(raw, config));
     }
 
     final assets = await _loadAssets();
 
-    return (
+    final data = (
       slides: slides,
       assets: assets,
+      config: config,
     );
+
+    return await _runPostMarkdown(data);
+  }
+
+  Future<DeckData> _runPostMarkdown(DeckData data) async {
+    var updatedData = data;
+
+    for (final processor in postMarkdown) {
+      updatedData = await processor.run(updatedData);
+    }
+
+    return updatedData;
   }
 
   Future<Slide> runEach(String slideContents, Config config) async {
-    ProcessData result = (content: slideContents, options: {}, config: config);
+    MarkdownData result = (content: slideContents, options: {}, config: config);
 
-    for (final processor in _processors) {
+    for (final processor in markdown) {
       result = await processor.run(result);
     }
 
@@ -74,7 +96,7 @@ class ProcessorRunner {
     }
 
     final configContents = await file.readAsString();
-    return Config.fromMap(_yamlToMap(configContents));
+    return Config.fromYaml(configContents);
   }
 
   Future<Slide> _parseSlideFromMap(Map<String, dynamic> slideMap) async {
@@ -178,23 +200,99 @@ class ProcessorRunner {
   }
 }
 
-abstract class Processor {
-  const Processor();
+abstract class PostMarkdownProcessor {
+  const PostMarkdownProcessor();
 
-  FutureOr<ProcessData> run(ProcessData data);
+  FutureOr<DeckData> run(DeckData data);
+}
+
+class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
+  const StoreLocalReferencesProcessor();
+
+  @override
+  Future<DeckData> run(DeckData data) async {
+    final (:slides, :assets, :config) = data;
+
+    await _saveAssetsJson(assets);
+    await _saveSlideJson(slides);
+    await _saveConfig(config);
+
+    return data;
+  }
+
+  Future<void> _saveConfig(Config config) async {
+    try {
+      final configJson = kConfig.references.config;
+      if (!await configJson.exists()) {
+        await configJson.create(recursive: true);
+      }
+
+      await configJson.writeAsString(prettyJson(config.toMap()));
+      print('Config saved');
+    } catch (e) {
+      print('Error while saving config: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> _saveSlideJson(List<Slide> slides) async {
+    try {
+      final slidesJson = kConfig.references.slides;
+
+      final map = slides.map((e) => e.toMap()).toList();
+
+      if (!await slidesJson.exists()) {
+        await slidesJson.create(recursive: true);
+      }
+
+      // Write a json file with a list of slide
+      await slidesJson.writeAsString(prettyJson(map));
+    } catch (e) {
+      print('Error while saving slides json: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> _saveAssetsJson(List<SlideAsset> assets) async {
+    final assetsJson = kConfig.references.assets;
+
+    if (!await assetsJson.exists()) {
+      await assetsJson.create(recursive: true);
+    }
+    final map = assets.map((e) => e.toMap()).toList();
+    // Write a json file with a list of assets
+    await assetsJson.writeAsString(prettyJson(map));
+
+    await kConfig.assetsImageDir.list().forEach((f) async {
+      if (f is File) {
+        if (!assets.any((element) => element.path == f.path)) {
+          // Only remove if starts with the asset prefix
+          if (f.path.startsWith(_assetPrefix)) {
+            await f.delete();
+          }
+        }
+      }
+    });
+  }
+}
+
+abstract class MarkdownProcessor {
+  const MarkdownProcessor();
+
+  FutureOr<MarkdownData> run(MarkdownData data);
 }
 
 final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
 
-class FrontMatterProcessor extends Processor {
+class FrontMatterProcessor extends MarkdownProcessor {
   const FrontMatterProcessor();
 
   @override
-  ProcessData run(ProcessData data) {
+  MarkdownData run(MarkdownData data) {
     final frontMatter =
         _frontMatterRegex.firstMatch(data.content)?.group(1) ?? '';
 
-    final options = _yamlToMap(frontMatter);
+    final options = converYamlToMap(frontMatter);
 
     final content = data.content
         .substring(_frontMatterRegex.matchAsPrefix(data.content)?.end ?? 0)
@@ -202,6 +300,8 @@ class FrontMatterProcessor extends Processor {
 
     // Set default layout
     options['layout'] = options['layout'] ?? 'simple';
+
+    options['raw'] = frontMatter;
 
     final mergedOptions = deepMerge(
       data.config.toMap(),
@@ -216,11 +316,151 @@ class FrontMatterProcessor extends Processor {
   }
 }
 
-class MermaidProcessor extends Processor {
+class ImageMarkdownProcessor extends MarkdownProcessor {
+  const ImageMarkdownProcessor();
+
+  @override
+  Future<MarkdownData> run(MarkdownData data) async {
+    // Get any url of images that are in the markdown
+    // Save it the local path on the device
+    // and replace the url with the local path
+    final imageRegex = RegExp(r'!\[.*?\]\((.*?)\)');
+
+    var content = data.content;
+    var options = {...data.options};
+
+    //  Check also if image is on background: or src: in front mattef
+    //  and replace the url with the local path
+
+    final assetsJson = await kConfig.references.assets.readAsString();
+
+    final assets = _parseAssets(assetsJson);
+
+    final matches = imageRegex.allMatches(data.content);
+
+    for (final Match match in matches) {
+      final imageUrl = match.group(1);
+      if (imageUrl == null) continue;
+
+      if (!imageUrl.startsWith('http')) continue;
+
+      // If its already in assets return file name in assetsjson
+      final imageUrlHash = imageUrl.hashCode.toString();
+
+      final asset =
+          assets.firstWhereOrNull((e) => e.path.contains(imageUrlHash));
+
+      File imageFile;
+      if (asset != null) {
+        imageFile = File(asset.path);
+      } else {
+        imageFile = await _downloadAndSave(imageUrl);
+      }
+
+      final relativePath =
+          relative(imageFile.path, from: kConfig.assetsDir.parent.path);
+
+      final imageMarkdown = '![Image]($relativePath)';
+
+      content = content.replaceFirst(match.group(0)!, imageMarkdown);
+    }
+
+    // Check also if image is on background: or src: in front matter
+    // and replace the url with the local path, frontmatter is now data.options Map<String, dynamic>
+    final hasBackground = options.containsKey('background');
+
+    if (hasBackground) {
+      final background = options['background'];
+      if (background is String) {
+        if (background.startsWith('http')) {
+          final imageUrl = background;
+          if (!imageUrl.startsWith('http')) return data;
+          // If its already in assets return file name in assetsjson
+          final imageUrlHash = imageUrl.hashCode.toString();
+          final asset = assets.firstWhereOrNull(
+            (e) => e.path.contains(imageUrlHash),
+          );
+          File imageFile;
+          if (asset != null) {
+            imageFile = File(asset.path);
+          } else {
+            imageFile = await _downloadAndSave(imageUrl);
+          }
+          final relativePath =
+              relative(imageFile.path, from: kConfig.assetsDir.parent.path);
+
+          options['background'] = relativePath;
+        }
+      }
+    }
+
+    final hasImageSrc =
+        (options['options'] as Map<String, dynamic>?)?.containsKey('src') ??
+            false;
+
+    if (hasImageSrc) {
+      final src = options['options']?['src'];
+      if (src is String) {
+        if (src.startsWith('http')) {
+          final imageUrl = src;
+          if (!imageUrl.startsWith('http')) return data;
+          // If its already in assets return file name in assetsjson
+          final imageUrlHash = imageUrl.hashCode.toString();
+          final asset = assets.firstWhereOrNull(
+            (e) => e.path.contains(imageUrlHash),
+          );
+          File imageFile;
+          if (asset != null) {
+            imageFile = File(asset.path);
+          } else {
+            imageFile = await _downloadAndSave(imageUrl);
+          }
+          final relativePath =
+              relative(imageFile.path, from: kConfig.assetsDir.parent.path);
+          options['options']?['src'] = relativePath;
+        }
+      }
+      return data;
+    }
+
+    return (
+      content: content,
+      options: options,
+      config: data.config,
+    );
+  }
+
+  Future<File> _downloadAndSave(String imageUrl) async {
+    final imageUrlHash = imageUrl.hashCode.toString();
+
+    final client = HttpClient();
+    final request = await client.getUrl(Uri.parse(imageUrl));
+    final response = await request.close();
+    final bytes = await consolidateHttpClientResponseBytes(response);
+
+    final contentType = response.headers.contentType;
+    // Default to .jpg if no extension is found
+    final extension = contentType?.subType ?? 'jpg';
+
+    final imageFile = File(join(
+      kConfig.assetsImageDir.path,
+      'sd_$imageUrlHash.$extension',
+    ));
+
+    if (await imageFile.exists()) {
+      return imageFile;
+    }
+
+    await imageFile.writeAsBytes(bytes);
+    return imageFile;
+  }
+}
+
+class MermaidProcessor extends MarkdownProcessor {
   const MermaidProcessor();
 
   @override
-  Future<ProcessData> run(ProcessData data) async {
+  Future<MarkdownData> run(MarkdownData data) async {
     final replacements = <({int start, int end, String markdown})>[];
 
     var content = data.content;
@@ -272,7 +512,7 @@ class MermaidProcessor extends Processor {
       mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
 
       // has the mermaidSyntax string
-      final filePath = 'sd_mermaid_${mermaidSyntax.hashCode}.png';
+      final filePath = '${_assetPrefix}mermaid_${mermaidSyntax.hashCode}.png';
       final mermaidAssetFile =
           File(join(kConfig.assetsImageDir.path, filePath));
 
@@ -311,23 +551,7 @@ class MermaidProcessor extends Processor {
   }
 }
 
-Map<String, dynamic> _yamlToMap(String yamlString) {
-  final yamlMap = loadYaml(yamlString) as YamlMap? ?? YamlMap();
-
-  dynamic convertYamlToMap(dynamic yamlObject) {
-    if (yamlObject is YamlMap) {
-      Map<String, dynamic> dartMap = {};
-      yamlObject.forEach((key, value) {
-        dartMap[key.toString()] = convertYamlToMap(value);
-      });
-      return dartMap;
-    } else {
-      return yamlObject;
-    }
-  }
-
-  return {
-    ...convertYamlToMap(yamlMap),
-    'raw': yamlString,
-  };
+List<SlideAsset> _parseAssets(String assetsJson) {
+  final assets = jsonDecode(assetsJson) as List;
+  return assets.map((asset) => SlideAsset.fromMap(asset)).toList();
 }
