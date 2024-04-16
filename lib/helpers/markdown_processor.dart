@@ -19,6 +19,8 @@ final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
 
 const _assetPrefix = 'sd_';
 
+final kSupportedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+
 typedef DeckData = ({
   List<Slide> slides,
   List<SlideAsset> assets,
@@ -199,7 +201,7 @@ class Pipeline {
 
     return SlideAsset(
       path: file.path,
-      bytes: bytes,
+      bytes: AssetFileBytes.fromBytes(bytes),
       width: frame.image.width.toDouble(),
       height: frame.image.height.toDouble(),
     );
@@ -447,6 +449,12 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     final contentType = response.headers.contentType;
     // Default to .jpg if no extension is found
     final extension = contentType?.subType ?? 'jpg';
+
+    if (!kSupportedExtensions.contains(extension)) {
+      throw Exception(
+        'Unsupported image extension: $extension. Supported extensions: ${kSupportedExtensions.join(', ')}',
+      );
+    }
 
     final imageFile = File(join(
       kConfig.assetsImageDir.path,

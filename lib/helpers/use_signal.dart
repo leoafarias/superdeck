@@ -2,15 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:signals/signals_flutter.dart';
 
-Signal<T> useSignal<T>(T initialData, [List<Object?>? keys]) {
-  return use(
-    _SignalHook(
-      initialData: initialData,
-      keys: keys,
-    ),
-  );
-}
-
 T useWatch<T>(Signal<T> signal, [List<Object?>? keys]) {
   return use(
     _WatchHook<T>(
@@ -30,19 +21,57 @@ class _WatchHook<T> extends Hook<T> {
 }
 
 class _UseWatchHookState<T> extends HookState<T, _WatchHook<T>> {
-  late T data;
-
   @override
-  void initHook() {
-    hook.signal.listen(context, () {
-      setState(() => this.data = hook.signal.value);
-    });
-  }
+  void initHook() {}
 
   @override
   T build(BuildContext context) {
-    return data;
+    return hook.signal.watch(context);
   }
+}
+
+// useListen
+
+Signal<T> useListen<T>(Signal<T> signal, [List<Object?>? keys]) {
+  return use(
+    _ListenHook<T>(
+      signal: signal,
+      keys: keys,
+    ),
+  );
+}
+
+class _ListenHook<T> extends Hook<Signal<T>> {
+  const _ListenHook({super.keys, required this.signal});
+
+  final Signal<T> signal;
+
+  @override
+  _UseListenHookState<T> createState() => _UseListenHookState<T>();
+}
+
+class _UseListenHookState<T> extends HookState<Signal<T>, _ListenHook<T>> {
+  @override
+  Signal<T> build(BuildContext context) {
+    return hook.signal;
+  }
+
+  @override
+  void dispose() {
+    hook.signal.dispose();
+  }
+
+  @override
+  String get debugLabel => 'useListen';
+}
+
+Signal<T> useSignal<T>(T initialData, [List<Object?>? keys]) {
+  return use(
+    _SignalHook(
+      initialData: initialData,
+      keys: keys,
+    ),
+  );
 }
 
 class _SignalHook<T> extends Hook<Signal<T>> {

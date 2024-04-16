@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../atoms/slide_thumbnail.dart';
-import '../atoms/slide_view.dart';
 
 class SlideThumbnailList extends StatefulWidget {
   const SlideThumbnailList({
@@ -28,14 +26,6 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
   final _itemPositionsListener = ItemPositionsListener.create();
 
   var _visibleItems = <ItemPosition>[];
-
-  @override
-  void initState() {
-    super.initState();
-    _itemPositionsListener.itemPositions.addListener(() {
-      _visibleItems = _itemPositionsListener.itemPositions.value.toList();
-    });
-  }
 
   Future<void> goToPage(int page, {bool animate = true}) async {
     if (page < 0 || page >= widget.slides.length) return;
@@ -73,6 +63,14 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _itemPositionsListener.itemPositions.addListener(() {
+      _visibleItems = _itemPositionsListener.itemPositions.value.toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: const Color.fromARGB(108, 0, 0, 0),
@@ -83,13 +81,13 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           padding: const EdgeInsets.all(20),
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
-            return Watch.builder(builder: (context) {
-              return SlideThumbnail(
-                selected: idx == widget.currentSlide,
-                onTap: () => goToPage(idx),
-                child: SlideView(slide),
-              );
-            });
+
+            return SlideThumbnail(
+              key: ValueKey(slide),
+              selected: idx == widget.currentSlide,
+              onTap: () => goToPage(idx),
+              slide: slide,
+            );
           }),
     );
   }

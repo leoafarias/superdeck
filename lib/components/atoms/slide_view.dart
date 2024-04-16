@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/layout_builder.dart';
 import '../../helpers/measure_size.dart';
+import '../../helpers/utils.dart';
+import '../../models/asset_model.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../molecules/scaled_app.dart';
@@ -21,50 +22,52 @@ class SlideView extends StatelessWidget {
   Widget build(BuildContext context) {
     final slide = this.slide;
     final variant = slide.styleVariant;
-
     final style = superDeck.style.watch(context);
+    final assets = superDeck.assets.watch(context);
 
-    return Watch.builder(builder: (context) {
-      return ScaledWidget(
-        child: TransitionWidget(
-          key: ValueKey(slide.transition),
-          transition: slide.transition,
-          child: MixBuilder(
-            style: style.applyVariant(variant).animate(),
-            key: ValueKey(slide),
-            builder: (mix) {
-              final spec = SlideSpec.of(mix);
-              return AnimatedMixedBox(
+    return ScaledWidget(
+      child: TransitionWidget(
+        key: ValueKey(slide.transition),
+        transition: slide.transition,
+        child: MixBuilder(
+          style: style.applyVariant(variant).animate(),
+          builder: (mix) {
+            final spec = SlideSpec.of(mix);
+
+            return Container(
+              key: ValueKey(slide),
+              decoration: _backgroundDecoration(
+                slide.background,
+                assets,
+              ),
+              child: AnimatedMixedBox(
                 spec: spec.innerContainer,
                 duration: const Duration(milliseconds: 300),
-                child: Container(
-                  decoration: _backgroundDecoration(slide.background),
-                  child: SlideConstraintBuilder(builder: (_, __) {
-                    if (slide is SimpleSlide) {
-                      return SimpleSlideBuilder(config: slide);
-                    } else if (slide is WidgetSlide) {
-                      return WidgetSlideBuilder(config: slide);
-                    } else if (slide is ImageSlide) {
-                      return ImageSlideBuilder(config: slide);
-                    } else if (slide is TwoColumnSlide) {
-                      return TwoColumnSlideBuilder(config: slide);
-                    } else if (slide is TwoColumnHeaderSlide) {
-                      return TwoColumnHeaderSlideBuilder(config: slide);
-                    } else if (slide is InvalidSlide) {
-                      return InvalidSlideBuilder(config: slide);
-                    } else {
-                      throw UnimplementedError(
-                        'Slide config not implemented',
-                      );
-                    }
-                  }),
-                ),
-              );
-            },
-          ),
+                child: SlideConstraintBuilder(builder: (_, __) {
+                  if (slide is SimpleSlide) {
+                    return SimpleSlideBuilder(config: slide);
+                  } else if (slide is WidgetSlide) {
+                    return WidgetSlideBuilder(config: slide);
+                  } else if (slide is ImageSlide) {
+                    return ImageSlideBuilder(config: slide);
+                  } else if (slide is TwoColumnSlide) {
+                    return TwoColumnSlideBuilder(config: slide);
+                  } else if (slide is TwoColumnHeaderSlide) {
+                    return TwoColumnHeaderSlideBuilder(config: slide);
+                  } else if (slide is InvalidSlide) {
+                    return InvalidSlideBuilder(config: slide);
+                  } else {
+                    throw UnimplementedError(
+                      'Slide config not implemented',
+                    );
+                  }
+                }),
+              ),
+            );
+          },
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
@@ -92,21 +95,15 @@ class SlideConstraints extends InheritedWidget {
   }
 }
 
-BoxDecoration? _backgroundDecoration(String? background) {
-  ImageProvider imageProvider;
-
+BoxDecoration? _backgroundDecoration(
+    String? background, List<SlideAsset> assets) {
   if (background == null) {
     return null;
   }
 
-  if (background.startsWith('http')) {
-    imageProvider = CachedNetworkImageProvider(background);
-  } else {
-    imageProvider = AssetImage(background);
-  }
   return BoxDecoration(
     image: DecorationImage(
-      image: imageProvider,
+      image: getImageProvider(background, assets),
       fit: BoxFit.cover,
     ),
   );

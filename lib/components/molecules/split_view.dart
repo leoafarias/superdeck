@@ -82,8 +82,6 @@ class _SplitViewState extends State<SplitView>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final size = constraints.biggest;
-
         return AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
@@ -91,7 +89,10 @@ class _SplitViewState extends State<SplitView>
 
             return Stack(
               children: [
-                widget.builder((sideWidth: animatedWidth, size: size)),
+                widget.builder((
+                  sideWidth: animatedWidth,
+                  size: constraints.biggest,
+                )),
                 Transform.translate(
                   offset: Offset(animatedWidth - widget.sideWidth, 0),
                   child: SizedBox(

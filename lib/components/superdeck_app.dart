@@ -11,6 +11,7 @@ import '../../helpers/syntax_highlighter.dart';
 import '../../models/options_model.dart';
 import '../../superdeck.dart';
 import '../helpers/theme.dart';
+import 'molecules/exception_widget.dart';
 
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
@@ -36,10 +37,22 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   }
 
   @override
+  void didUpdateWidget(SuperDeckApp oldWidget) {
+    if (widget.style != oldWidget.style ||
+        widget.examples != oldWidget.examples) {
+      superDeck.update(
+        style: widget.style,
+        examples: widget.examples,
+      );
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     superDeck.dispose();
-    deckState.dispose();
   }
 
   Future<void> _initialize() async {
@@ -49,7 +62,6 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     await initLocalStorage();
     await SyntaxHighlight.initialize();
 
-    await deckState.initialize();
     await superDeck.initialize(
       style: widget.style,
       examples: widget.examples,
@@ -68,11 +80,27 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       debugShowCheckedModeBanner: false,
       home: MixTheme(
         data: MixThemeData.withMaterial(),
-        child: Scaffold(
-          body: superDeck.loading.watch(context)
-              ? const Center(child: CircularProgressIndicator())
-              : AppShell(),
-        ),
+        child: Scaffold(body: Watch.builder(builder: (context) {
+          if (superDeck.loading.value) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            if (superDeck.error.value != null) {
+              return ExceptionWidget(
+                superDeck.error.value!,
+                onRetry: () {
+                  superDeck.initialize(
+                    style: widget.style,
+                    examples: widget.examples,
+                  );
+                },
+              );
+            } else {
+              return const AppShell();
+            }
+          }
+        })),
       ),
     );
   }

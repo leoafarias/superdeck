@@ -26,29 +26,33 @@ class SlidesLoader {
     ],
   );
 
-  static Future<DeckData> generate() async {
+  static Future<void> generate() async {
     final markdownFile = kConfig.slidesMarkdownFile;
 
     if (!await markdownFile.exists()) {
       throw Exception('Slides markdown file not found');
     }
 
-    final data = await _pipeline.run(await markdownFile.readAsString());
-
-    return data;
+    await _pipeline.run(await markdownFile.readAsString());
   }
 
-  static List<StreamSubscription<WatchEvent>> listen(
-      void Function(DeckData) callback) {
+  static List<StreamSubscription<WatchEvent>> listen({
+    required void Function() onChange,
+    required void Function(Exception?) onError,
+  }) {
     return [
       kConfig.slidesMarkdownFile,
       kConfig.projectConfigFile,
     ].map((file) {
       return FileWatcher(file.path).events.listen((event) async {
         if (event.type == ChangeType.MODIFY) {
-          print('Reloading slides');
-          final data = await SlidesLoader.generate();
-          callback(data);
+          try {
+            await SlidesLoader.generate();
+            onChange();
+            onError(null);
+          } on Exception catch (e) {
+            onError(e);
+          }
         }
       });
     }).toList();
@@ -58,7 +62,7 @@ class SlidesLoader {
     if (kIsWeb) {
       return _loadFromRootBundle();
     }
-    await generate();
+
     if (kDebugMode) {
       return _loadFromLocalStorage();
     } else {
@@ -71,6 +75,8 @@ Future<DeckData> _loadFromLocalStorage() async {
   final slidesJson = await kConfig.references.slides.readAsString();
   final assetsJson = await kConfig.references.assets.readAsString();
   final configJson = await kConfig.references.config.readAsString();
+
+// parsed json
 
   return (
     slides: _parseFromJson(slidesJson),

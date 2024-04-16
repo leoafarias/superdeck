@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
 import 'package:mix/mix.dart';
 
 import '../../helpers/syntax_highlighter.dart';
+import '../../helpers/utils.dart';
 import '../../models/asset_model.dart';
 import '../../styles/style_spec.dart';
 
@@ -100,31 +100,17 @@ Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
   BoxConstraints constraints,
   ImageSpec spec,
 ) {
+  print('image builder');
   return (
     Uri uri,
     MarkdownImageInfo info,
   ) {
-    ImageProvider provider;
-    SlideAsset? asset;
-    //  check if its a local path or a network path
-    if (uri.scheme == 'http' || uri.scheme == 'https') {
-      provider = CachedNetworkImageProvider(uri.toString());
-    } else {
-      asset = assets.firstWhereOrNull(
-        (element) => element.path == uri.toString(),
-      );
-
-      if (asset != null) {
-        provider = MemoryImage(asset.bytes);
-      } else {
-        provider = AssetImage(uri.toString());
-      }
-    }
+    final imageProvider = getImageProvider(uri.path, assets);
 
     return ConstrainedBox(
       constraints: constraints,
       child: MixedImage(
-        image: provider,
+        image: imageProvider,
         spec: spec.copyWith(
           width: info.width ?? spec.width,
           height: info.height ?? spec.height,

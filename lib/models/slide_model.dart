@@ -14,7 +14,6 @@ abstract class Slide extends Config with SlideMappable {
   final String layout;
   final String data;
   final String? raw;
-  final GlobalKey key = GlobalKey();
 
   @MappableField(key: 'content')
   final ContentOptions? contentOptions;

@@ -46,10 +46,7 @@ class SlidePreview extends StatelessWidget {
             ),
             child: SlideConstraintBuilder(
               builder: (context, _) {
-                return RepaintBoundary(
-                  key: slide.key,
-                  child: SlideView(slide),
-                );
+                return SlideView(slide);
               },
             ),
           ),

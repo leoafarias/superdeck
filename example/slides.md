@@ -1,3 +1,14 @@
+---
+style: cover
+background: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0
+content:
+  alignment: center
+---
+
+# Wild Ones
+ 
+SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
+
 
 ---
 style: quote
@@ -15,19 +26,6 @@ content:
 > If you want to go fast, go alone. 
 > If you want to go far, go together.
 > ### African Proverb
-
-
-
----
-style: cover
-content:
-  alignment: bottom_left
-background: https://source.unsplash.com/random/900×700/?car
----
-
-# SuperDeck
- 
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
 
 ---
 layout: widget

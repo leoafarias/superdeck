@@ -46,9 +46,6 @@ class SlideMapper extends SubClassMapperBase<Slide> {
   static TransitionOptions? _$transition(Slide v) => v.transition;
   static const Field<Slide, TransitionOptions> _f$transition =
       Field('transition', _$transition);
-  static GlobalKey<State<StatefulWidget>> _$key(Slide v) => v.key;
-  static const Field<Slide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<Slide> fields = const {
@@ -60,7 +57,6 @@ class SlideMapper extends SubClassMapperBase<Slide> {
     #background: _f$background,
     #style: _f$style,
     #transition: _f$transition,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -154,9 +150,6 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
   static String _$layout(SimpleSlide v) => v.layout;
   static const Field<SimpleSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static GlobalKey<State<StatefulWidget>> _$key(SimpleSlide v) => v.key;
-  static const Field<SimpleSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<SimpleSlide> fields = const {
@@ -168,7 +161,6 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
     #raw: _f$raw,
     #data: _f$data,
     #layout: _f$layout,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -357,9 +349,6 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
   static const Field<SplitSlide, String> _f$layout = Field('layout', _$layout);
   static String? _$raw(SplitSlide v) => v.raw;
   static const Field<SplitSlide, String> _f$raw = Field('raw', _$raw);
-  static GlobalKey<State<StatefulWidget>> _$key(SplitSlide v) => v.key;
-  static const Field<SplitSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<SplitSlide> fields = const {
@@ -372,7 +361,6 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
     #data: _f$data,
     #layout: _f$layout,
     #raw: _f$raw,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -480,9 +468,6 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
   static String _$layout(ImageSlide v) => v.layout;
   static const Field<ImageSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static GlobalKey<State<StatefulWidget>> _$key(ImageSlide v) => v.key;
-  static const Field<ImageSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<ImageSlide> fields = const {
@@ -495,7 +480,6 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
     #options: _f$options,
     #raw: _f$raw,
     #layout: _f$layout,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -696,9 +680,6 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
   static String _$layout(WidgetSlide v) => v.layout;
   static const Field<WidgetSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static GlobalKey<State<StatefulWidget>> _$key(WidgetSlide v) => v.key;
-  static const Field<WidgetSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<WidgetSlide> fields = const {
@@ -711,7 +692,6 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
     #data: _f$data,
     #raw: _f$raw,
     #layout: _f$layout,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -916,9 +896,6 @@ class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
       Field('layout', _$layout);
   static String? _$raw(SectionsSlide v) => v.raw;
   static const Field<SectionsSlide, String> _f$raw = Field('raw', _$raw);
-  static GlobalKey<State<StatefulWidget>> _$key(SectionsSlide v) => v.key;
-  static const Field<SectionsSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<SectionsSlide> fields = const {
@@ -931,7 +908,6 @@ class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
     #sections: _f$sections,
     #layout: _f$layout,
     #raw: _f$raw,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -1034,9 +1010,6 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
   static String _$layout(TwoColumnSlide v) => v.layout;
   static const Field<TwoColumnSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static GlobalKey<State<StatefulWidget>> _$key(TwoColumnSlide v) => v.key;
-  static const Field<TwoColumnSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<TwoColumnSlide> fields = const {
@@ -1049,7 +1022,6 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
     #sections: _f$sections,
     #raw: _f$raw,
     #layout: _f$layout,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -1256,10 +1228,6 @@ class TwoColumnHeaderSlideMapper
   static String _$layout(TwoColumnHeaderSlide v) => v.layout;
   static const Field<TwoColumnHeaderSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static GlobalKey<State<StatefulWidget>> _$key(TwoColumnHeaderSlide v) =>
-      v.key;
-  static const Field<TwoColumnHeaderSlide, GlobalKey<State<StatefulWidget>>>
-      _f$key = Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<TwoColumnHeaderSlide> fields = const {
@@ -1272,7 +1240,6 @@ class TwoColumnHeaderSlideMapper
     #sections: _f$sections,
     #raw: _f$raw,
     #layout: _f$layout,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -1475,9 +1442,6 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
   static String _$layout(InvalidSlide v) => v.layout;
   static const Field<InvalidSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static GlobalKey<State<StatefulWidget>> _$key(InvalidSlide v) => v.key;
-  static const Field<InvalidSlide, GlobalKey<State<StatefulWidget>>> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<InvalidSlide> fields = const {
@@ -1489,7 +1453,6 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
     #data: _f$data,
     #raw: _f$raw,
     #layout: _f$layout,
-    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;

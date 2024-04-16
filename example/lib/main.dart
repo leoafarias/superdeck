@@ -6,10 +6,13 @@ import 'package:superdeck_demo/src/widget/mix_demo.dart';
 
 VariantAttribute get coverStyle {
   return SlideVariant.cover(
-    $.h1.textStyle.fontSize(96),
-    $.h1.textStyle.fontWeight.bold(),
-    $.textStyle.as(GoogleFonts.poppins()),
+    $.h1.textStyle.fontSize(220),
+    $.h1.textStyle.as(GoogleFonts.smooch()),
+    $.h1.textStyle.shadow(color: Colors.purple, blurRadius: 20),
+    $.h1.textStyle.fontWeight.normal(),
     $.innerContainer.borderRadius.all(0),
+    $.innerContainer.margin.all(50),
+    $.innerContainer.borderRadius(20),
     $.innerContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,

@@ -21,7 +21,29 @@ class PDFExport extends StatefulWidget {
 }
 
 class _PDFExportState extends State<PDFExport> {
-  final _isConverting = signal(false);
+  late final _isConverting = createSignal(context, false);
+  final Map<String, GlobalKey> _globalKeys = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _isConverting.value = true;
+    for (var slide in widget.slides) {
+      _globalKeys[slide.hashCode.toString()] = GlobalKey();
+    }
+  }
+
+  @override
+  void didUpdateWidget(PDFExport oldWidget) {
+    if (widget.slides != oldWidget.slides) {
+      _globalKeys.clear();
+      for (var slide in widget.slides) {
+        _globalKeys[slide.hashCode.toString()] = GlobalKey();
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   Future<Uint8List> getWidgetImageData(
     GlobalKey key, [
     double pixelRatio = 1,
@@ -67,8 +89,8 @@ class _PDFExportState extends State<PDFExport> {
       List<Uint8List> images = [];
       for (int i = 0; i < widget.slides.length; i++) {
         final slide = widget.slides[i];
-
-        final image = await getWidgetImageData(slide.key);
+        final key = _globalKeys[slide.hashCode.toString()]!;
+        final image = await getWidgetImageData(key);
         images.add(image);
       }
 

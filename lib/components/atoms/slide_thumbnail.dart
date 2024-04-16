@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../models/slide_model.dart';
 import '../../superdeck.dart';
+import 'slide_view.dart';
 
 final _previewStyle = AnimatedStyle(
   Style(
@@ -21,15 +23,15 @@ final _previewStyle = AnimatedStyle(
 final PreviewBox = _previewStyle.box;
 
 class SlideThumbnail extends StatelessWidget {
-  final Widget child;
   final bool selected;
   final VoidCallback onTap;
+  final Slide slide;
 
   const SlideThumbnail({
     super.key,
-    required this.child,
     required this.selected,
     required this.onTap,
+    required this.slide,
   });
 
   @override
@@ -44,7 +46,7 @@ class SlideThumbnail extends StatelessWidget {
           ),
         ),
         child: AbsorbPointer(
-          child: child,
+          child: SlideView(slide),
         ),
       ),
     );

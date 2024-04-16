@@ -7,13 +7,12 @@ import 'package:signals/signals_flutter.dart';
 import 'package:watcher/watcher.dart';
 
 import '../helpers/loader.dart';
-import '../helpers/markdown_processor.dart';
+import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import '../superdeck.dart';
 
 final superDeck = SuperDeckProvider.instance;
-final deckState = DeckState.instance;
 
 class SuperDeckProvider {
   SuperDeckProvider._();
@@ -25,92 +24,135 @@ class SuperDeckProvider {
   List<StreamSubscription<WatchEvent>> _subscriptions = [];
 
   final style = signal(const Style.empty());
-  final data = signal(emptyDeckData);
+
+  final config = signal(const Config.empty());
 
   final loading = signal(true);
+  final list = listSignal<int>([]);
 
-  late final slides = computed(() => data.value.slides);
+  final slides = listSignal<Slide>([]);
 
-  late final assets = computed(() => data.value.assets);
+  final assets = listSignal<SlideAsset>([]);
 
   final examples = mapSignal<String, Example>({});
 
-  late final totalInvalid =
-      computed(() => slides.value.whereType<InvalidSlide>().length);
+  late final totalInvalid = computed(() {
+    return slides.value.whereType<InvalidSlide>().length;
+  });
+
+  final error = signal<Exception?>(null);
+
+  Map<String, Example> _examplesToMap(List<Example> examples) {
+    return {for (var e in examples) e.name: e};
+  }
+
+  void update({
+    List<Example> examples = const [],
+    Style? style,
+  }) {
+    batch(() {
+      this.style.value = defaultStyle.merge(style);
+      this.examples.assign(_examplesToMap(examples));
+    });
+  }
+
+  Future<void> _loadData() async {
+    final (:slides, :assets, :config) = await SlidesLoader.loadFromStorage();
+
+    batch(() {
+      this.slides.assign(slides);
+      this.assets.assign(assets);
+      this.config.value = config;
+    });
+  }
 
   Future<void> initialize({
     List<Example> examples = const [],
     Style? style,
   }) async {
     try {
-      this.style.value = defaultStyle.merge(style);
-
-      this.examples.value =
-          examples.fold({}.cast<String, Example>(), (acc, builder) {
-        acc[builder.name] = builder;
-        return acc;
+      batch(() {
+        loading.value = true;
+        error.value = null;
       });
-      data.value = await SlidesLoader.loadFromStorage();
+      // Unsubscribe to listeners in case its a retry
+      _unsubscribe();
+      batch(() {
+        this.style.value = defaultStyle.merge(style);
+        this.examples.assign(_examplesToMap(examples));
+      });
+      await SlidesLoader.generate();
+      await _loadData();
 
       if (kDebugMode && !kIsWeb) {
-        _subscriptions = SlidesLoader.listen((payload) => data.value = payload);
+        _subscriptions = SlidesLoader.listen(
+          onChange: _loadData,
+          onError: (e) => error.value = e,
+        );
       }
-    } catch (e) {
-      print('Error loading slides: $e');
-      rethrow;
+    } on Exception catch (e) {
+      error.value = e;
     } finally {
       loading.value = false;
     }
   }
 
-  void dispose() {
-    style.dispose();
-    data.dispose();
-    slides.dispose();
-    assets.dispose();
-    examples.dispose();
+  void _unsubscribe() {
     for (var sub in _subscriptions) {
       sub.cancel();
     }
-
     _subscriptions.clear();
+  }
+
+  void dispose() {
+    style.dispose();
+
+    slides.dispose();
+    assets.dispose();
+    examples.dispose();
+    _unsubscribe();
   }
 }
 
-class DeckState {
+class NavigationProvider {
   List<EffectCleanup>? _cleanup;
-  DeckState._();
-
-  ({
-    Signal<int> currentSlide,
-    Signal<bool> menuIsOpen,
-    Signal<int> menuSelection
-  }) call() {
-    return (
-      currentSlide: currentSlide,
-      menuIsOpen: menuIsOpen,
-      menuSelection: menuSelection
-    );
+  NavigationProvider() {
+    initialize();
   }
 
-  static DeckState get instance => _instance;
-  static final _instance = DeckState._();
   late final currentSlide = signal(0);
-  late final menuIsOpen = signal(false);
-  late final menuSelection = signal(0);
+  late final sideIsOpen = signal(false);
+  late final currentScreen = signal(0);
 
-  Future<void> initialize() async {
+  void initialize() {
     currentSlide.value = _getItem<int>('current-slide') ?? 0;
-    menuIsOpen.value = _getItem<bool>('menu-is-open') ?? false;
-    menuSelection.value = _getItem<int>('menu-option') ?? 0;
+    sideIsOpen.value = _getItem<bool>('side-is-open') ?? false;
+    currentScreen.value = _getItem<int>('current-screen') ?? 0;
 
     _cleanup = [
       effect(() {
-        _setItem('menu-is-open', menuIsOpen.value);
+        _setItem('side-is-open', sideIsOpen.value);
         _setItem('current-slide', currentSlide.value);
-        _setItem('menu-option', menuSelection.value);
+        _setItem('current-screen', currentScreen.value);
       })
     ];
+  }
+
+  void toggleSide() {
+    batch(() {
+      if (sideIsOpen.value) {
+        currentScreen.value = 0;
+      }
+      sideIsOpen.value = !sideIsOpen.peek();
+    });
+  }
+
+  void goToSlide(int slide) {
+    currentSlide.value = slide;
+  }
+
+  void goToScreen(int screen) {
+    currentScreen.value = screen;
   }
 
   void _setItem<T>(String key, T value) {
@@ -124,7 +166,21 @@ class DeckState {
 
   void dispose() {
     currentSlide.dispose();
-    menuIsOpen.dispose();
+    sideIsOpen.dispose();
     _cleanup?.forEach((e) => e.call());
+  }
+}
+
+extension ListSignalExtension<T> on ListSignal<T> {
+  void assign(List<T> value) {
+    if (listEquals(peek(), value)) return;
+    this.value = value;
+  }
+}
+
+extension MapSignalExtension<K, V> on MapSignal<K, V> {
+  void assign(Map<K, V> value) {
+    if (mapEquals(peek(), value)) return;
+    this.value = value;
   }
 }
