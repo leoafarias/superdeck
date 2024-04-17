@@ -24,7 +24,7 @@ class SplitView extends StatefulWidget {
   const SplitView({
     super.key,
     required this.side,
-    this.sideWidth = 300,
+    this.sideWidth = 400,
     this.isOpen = false,
     required this.builder,
   });
@@ -44,9 +44,7 @@ class _SplitViewState extends State<SplitView>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(
-        milliseconds: 300,
-      ),
+      duration: Durations.medium1,
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(

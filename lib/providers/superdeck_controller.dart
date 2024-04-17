@@ -151,6 +151,14 @@ class NavigationProvider {
     currentSlide.value = slide;
   }
 
+  void nextSlide() {
+    goToSlide(currentSlide.peek() + 1);
+  }
+
+  void previousSlide() {
+    goToSlide(currentSlide.peek() - 1);
+  }
+
   void goToScreen(int screen) {
     currentScreen.value = screen;
   }

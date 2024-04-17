@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../helpers/measure_size.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import 'slide_view.dart';
@@ -8,7 +9,6 @@ final _previewStyle = AnimatedStyle(
   Style(
     box.color.grey.shade900(),
     box.margin.all(8),
-    box.maxHeight(140),
     box.shadow(
       color: Colors.black.withOpacity(0.5),
       blurRadius: 4,
@@ -46,7 +46,11 @@ class SlideThumbnail extends StatelessWidget {
           ),
         ),
         child: AbsorbPointer(
-          child: SlideView(slide),
+          child: SlideConstraintBuilder(
+            builder: (context, size) {
+              return SlideView(slide);
+            },
+          ),
         ),
       ),
     );

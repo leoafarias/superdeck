@@ -17,8 +17,10 @@ class ScaledWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final height = constraints.biggest.height;
         final width = constraints.biggest.width;
+
+        final height = width / kAspectRatio;
+
         final scaleWidth = width / kResolution.width;
         final scaleHeight = height / kResolution.height;
 
