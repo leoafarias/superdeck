@@ -83,7 +83,6 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
             final slide = widget.slides[idx];
 
             return SlideThumbnail(
-              key: ValueKey(slide),
               selected: idx == widget.currentSlide,
               onTap: () => goToPage(idx),
               slide: slide,

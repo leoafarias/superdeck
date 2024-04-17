@@ -17,9 +17,10 @@ class ScaledWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double height = constraints.maxHeight;
-        final double width = height * kAspectRatio;
-        final double scale = width / kResolution.width;
+        final height = constraints.biggest.height;
+        final width = constraints.biggest.width;
+        final scaleWidth = width / kResolution.width;
+        final scaleHeight = height / kResolution.height;
 
         return SizedBox(
           width: width,
@@ -35,11 +36,12 @@ class ScaledWidget extends StatelessWidget {
                   width: kResolution.width.toDouble(),
                   height: kResolution.height.toDouble(),
                   child: Transform.scale(
-                    scale: scale,
+                    scaleY: scaleHeight,
+                    scaleX: scaleWidth,
                     child: MediaQuery(
                       data: MediaQuery.of(context).copyWith(size: kResolution),
                       child: ScaledWidgetProvider(
-                        scale: scale,
+                        scale: scaleWidth,
                         child: child,
                       ),
                     ),

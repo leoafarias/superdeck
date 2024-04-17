@@ -45,7 +45,7 @@ class SlidePreview extends StatelessWidget {
               ],
             ),
             child: SlideConstraintBuilder(
-              builder: (context, _) {
+              builder: (context, size) {
                 return SlideView(slide);
               },
             ),
@@ -82,11 +82,7 @@ class SlideMarkdownPreview extends StatelessWidget {
               padding: const EdgeInsets.all(40.0),
               child: AnimatedMarkdownViewer(
                 content: "$options\n$data\n",
-                constraints: BoxConstraints(
-                  maxHeight: size.height,
-                  maxWidth: size.width,
-                ),
-                spec: SlideSpec.of(mix),
+                spec: SlideSpec.of(context),
                 assets: const [],
                 duration: Duration.zero,
               ),

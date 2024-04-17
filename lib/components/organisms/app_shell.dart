@@ -156,7 +156,7 @@ class _AppShellState extends State<AppShell> {
                       ),
                       Expanded(
                         child: SlideThumbnailList(
-                          currentSlide: navigation.currentSlide(),
+                          currentSlide: navigation.currentSlide.watch(context),
                           onSelect: onThumbnailSelected,
                           slides: slides,
                         ),
@@ -177,7 +177,6 @@ class _AppShellState extends State<AppShell> {
                   final slide = slides[idx];
                   return isPreview
                       ? SlidePreview(
-                          key: ValueKey(slide),
                           slide: slide,
                           size: data.size,
                           sideWidth: data.sideWidth,

@@ -396,9 +396,13 @@ class SlideSpec extends Spec<SlideSpec> {
         _contentContainer = null,
         _image = null;
 
-  static SlideSpec of(MixData mix) {
-    return mix.resolvableOf<SlideSpec, SlideSpecAttribute>() ??
-        const SlideSpec.empty();
+  static SlideSpec of(BuildContext context) {
+    final mix = MixProvider.of(context);
+    return fromMix(mix);
+  }
+
+  static SlideSpec fromMix(MixData mix) {
+    return mix.specOf<SlideSpec, SlideSpecAttribute>(const SlideSpec.empty());
   }
 
   BoxSpec get innerContainer => _innerContainer ?? const BoxSpec.empty();
@@ -550,4 +554,10 @@ class SlideSpec extends Spec<SlideSpec> {
         _contentContainer,
         _image,
       ];
+}
+
+extension on MixData {
+  Spec specOf<Spec, A extends SpecAttribute<A, Spec>>(Spec fallback) {
+    return resolvableOf<Spec, A>() ?? fallback;
+  }
 }

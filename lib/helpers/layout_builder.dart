@@ -146,8 +146,7 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final mix = MixProvider.of(context);
-    final spec = SlideSpec.of(mix);
+    final spec = SlideSpec.of(context);
     final assets = superDeck.assets.watch(context);
 
     final src = config.options.src;

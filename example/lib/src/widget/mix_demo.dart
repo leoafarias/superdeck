@@ -8,7 +8,7 @@ import 'package:superdeck/superdeck.dart';
 const purpleAccent = Color.fromARGB(255, 95, 44, 188);
 const purple = Color.fromARGB(255, 66, 19, 152);
 
-final style = Style(
+final _style = Style(
   // Box
   box.height(250),
   box.width(250),
@@ -114,7 +114,7 @@ class MixExample extends ExampleWidget<ExampleOptions> {
       return Center(
         child: PressableBox(
           onPress: () {},
-          style: style.animate().mix(
+          style: _style.animate().mix(
                 box.height(args.height),
                 box.width(args.width),
               ),

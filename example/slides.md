@@ -1,13 +1,11 @@
 ---
 style: cover
-background: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0
-content:
-  alignment: center
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif
 ---
 
-# Wild Ones
  
-SuperDeck is a Flutter package that allows you to create beautiful presentations using Markdown.
+## Create beautiful presentations
+# Superdeck
 
 
 ---

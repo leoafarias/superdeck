@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mix/mix.dart';
 import 'package:yaml/yaml.dart';
 
 import '../models/asset_model.dart';
@@ -40,4 +40,29 @@ ImageProvider getImageProvider(String url, List<SlideAsset> assets) {
     }
   }
   return provider;
+}
+
+BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
+  final padding = spec.padding ?? EdgeInsets.zero;
+  final margin = spec.margin ?? EdgeInsets.zero;
+
+  double horizontalBorder = 0.0;
+  double verticalBorder = 0.0;
+
+  if (spec.decoration is BoxDecoration) {
+    final border = (spec.decoration as BoxDecoration).border;
+    if (border != null) {
+      horizontalBorder = border.dimensions.horizontal;
+      verticalBorder = border.dimensions.vertical;
+    }
+  }
+
+  final horizontalSpacing =
+      padding.horizontal + margin.horizontal + horizontalBorder;
+  final verticalSpacing = padding.vertical + margin.vertical + verticalBorder;
+
+  return BoxConstraints(
+    maxHeight: size.height - verticalSpacing,
+    maxWidth: size.width - horizontalSpacing,
+  );
 }

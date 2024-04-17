@@ -19,11 +19,11 @@ TextStyle get monoTextStyle =>
 TextStyle get serifTextStyle =>
     GoogleFonts.playfairDisplay().copyWith(fontSize: 50);
 
-TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
+TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.4);
 
 Style get defaultStyle => Style.create([
       $.outerContainer.color.black(),
-      $.innerContainer.color.black(),
+      // $.innerContainer.color.transparent(),
       $.contentContainer.padding.all(40),
       // $.contentContainer.color(Colors.yellow),
       $.textStyle.as(baseTextStyle),

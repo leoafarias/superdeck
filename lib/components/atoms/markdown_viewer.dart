@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:mix/mix.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
 import '../../models/asset_model.dart';
-import '../../styles/style_spec.dart';
+import '../../superdeck.dart';
+import 'slide_view.dart';
 
 class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
   final String content;
   final SlideSpec spec;
   final List<SlideAsset> assets;
-  final BoxConstraints constraints;
 
   const AnimatedMarkdownViewer({
     super.key,
@@ -19,7 +19,6 @@ class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
     required this.spec,
     required super.duration,
     required this.assets,
-    required this.constraints,
     super.curve = Curves.linear,
   });
 
@@ -53,11 +52,7 @@ class _AnimatedMarkdownViewerState
       enableKbd: false,
       syntaxExtensions: const [],
       elementBuilders: const [],
-      imageBuilder: _imageBuilder(
-        widget.assets,
-        widget.constraints,
-        widget.spec.image,
-      ),
+      imageBuilder: _imageBuilder,
       onTapLink: (href, title) {
         print({href, title});
       },
@@ -95,29 +90,29 @@ class SlideSpecTween extends Tween<SlideSpec> {
   }
 }
 
-Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
-  List<SlideAsset> assets,
-  BoxConstraints constraints,
-  ImageSpec spec,
+Widget _imageBuilder(
+  Uri uri,
+  MarkdownImageInfo info,
 ) {
-  print('image builder');
-  return (
-    Uri uri,
-    MarkdownImageInfo info,
-  ) {
-    final imageProvider = getImageProvider(uri.path, assets);
-
-    return ConstrainedBox(
-      constraints: constraints,
-      child: MixedImage(
-        image: imageProvider,
-        spec: spec.copyWith(
-          width: info.width ?? spec.width,
-          height: info.height ?? spec.height,
+  return Builder(
+    builder: (context) {
+      final size = SlideConstraints.of(context).biggest;
+      final assets = superDeck.assets.watch(context);
+      final spec = SlideSpec.of(context);
+      final imageSpec = spec.image;
+      final constraints = calculateConstraints(size, spec.contentContainer);
+      return ConstrainedBox(
+        constraints: constraints,
+        child: AnimatedMixedImage(
+          image: getImageProvider(uri.path, assets),
+          spec: imageSpec.copyWith(
+            width: info.width ?? imageSpec.width,
+            height: info.height ?? imageSpec.height,
+          ),
         ),
-      ),
-    );
-  };
+      );
+    },
+  );
 }
 
 List<TextSpan> updateTextColor(
