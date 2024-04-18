@@ -23,7 +23,7 @@ class SlideContent extends StatelessWidget {
 
     final alignment = options?.alignment ?? ContentAlignment.center;
 
-    final assets = superDeck.assets.watch(context);
+    final assets = superdeck.assets.watch(context);
 
     return AnimatedMixedBox(
       duration: const Duration(milliseconds: 300),

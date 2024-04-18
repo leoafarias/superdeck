@@ -12,7 +12,7 @@ import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import '../superdeck.dart';
 
-final superDeck = SuperDeckProvider.instance;
+final superdeck = SuperDeckProvider.instance;
 
 class SuperDeckProvider {
   SuperDeckProvider._();
@@ -116,9 +116,13 @@ class SuperDeckProvider {
 
 class NavigationProvider {
   List<EffectCleanup>? _cleanup;
-  NavigationProvider() {
+  NavigationProvider._() {
     initialize();
   }
+
+  static NavigationProvider get instance => _instance;
+
+  static final _instance = NavigationProvider._();
 
   late final currentSlide = signal(0);
   late final sideIsOpen = signal(false);

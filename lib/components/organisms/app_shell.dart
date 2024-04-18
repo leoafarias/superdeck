@@ -1,70 +1,46 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../models/slide_model.dart';
 import '../../providers/superdeck_controller.dart';
 import '../../superdeck.dart';
-import '../molecules/slide_preview.dart';
 import '../molecules/split_view.dart';
-import 'drawer.dart';
 
-class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
-  State<AppShell> createState() => _AppShellState();
-}
+/// Builds the "shell" for the app by building a Scaffold with a
+/// BottomNavigationBar, where [child] is placed in the body of the Scaffold.
+class ScaffoldWithNavBar extends StatelessWidget {
+  /// Constructs an [ScaffoldWithNavBar].
+  ScaffoldWithNavBar({
+    required this.navigationShell,
+    Key? key,
+  }) : super(key: key ?? const ValueKey<String>('ScaffoldWithNavBar'));
 
-class _AppShellState extends State<AppShell> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  final navigation = NavigationProvider();
-  late final pageController = PageController(
-    initialPage: navigation.currentSlide.value,
-  );
+  /// The navigation shell and container for the branch Navigators.
+  final StatefulNavigationShell navigationShell;
+  final navigation = NavigationProvider.instance;
+  final superdeck = SuperDeckProvider.instance;
 
-  @override
-  void dispose() {
-    navigation.dispose();
-    pageController.dispose();
-
-    super.dispose();
-  }
-
-  Future<void> goToPage(int page) async {
-    final slides = superDeck.slides;
-    if (page < 0 || page >= slides.value.length) return;
-
-    const duration = Duration(milliseconds: 300);
-    const curve = Curves.easeInOutCubic;
-
-    // Return if already paged
-    if (pageController.page == page) return;
-
-    if (page != navigation.currentSlide.value) {
-      await pageController.animateToPage(
-        page,
-        duration: duration,
-        curve: curve,
-      );
-
-      navigation.currentSlide.value = page;
-    } else {
-      pageController.jumpToPage(page);
-    }
+  void _onTap(BuildContext context, int index) {
+    // When navigating to a new branch, it's recommended to use the goBranch
+    // method, as doing so makes sure the last navigation state of the
+    // Navigator for the branch is restored.
+    navigationShell.goBranch(
+      index,
+      // A common pattern when using bottom navigation bars is to support
+      // navigating to the initial location when tapping the item that is
+      // already active. This example demonstrates how to support this behavior,
+      // using the initialLocation parameter of goBranch.
+      // initialLocation: index == navigationShell.currentIndex,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final slides = superDeck.slides.watch(context);
-
-    navigation.currentSlide.listen(context, () {
-      goToPage(navigation.currentSlide.value);
-    });
-
-    final isPreview = 0 == navigation.currentScreen.watch(context);
+    final slides = superdeck.slides.watch(context);
 
     final totalInvalid = slides.whereType<InvalidSlide>().length;
 
@@ -89,6 +65,7 @@ class _AppShellState extends State<AppShell> {
     return CallbackShortcuts(
       bindings: bindings,
       child: Scaffold(
+        key: scaffoldKey,
         floatingActionButton: FloatingActionButton(
           onPressed: navigation.toggleSide,
           child: Badge(
@@ -97,33 +74,10 @@ class _AppShellState extends State<AppShell> {
             child: const Icon(Icons.menu),
           ),
         ),
-        key: _scaffoldKey,
         body: SplitView(
-          isOpen: navigation.sideIsOpen.watch(context),
-          side: SideDrawer(
-            navigation: navigation,
-          ),
-          builder: (data) {
-            return Padding(
-              padding: EdgeInsets.only(left: data.sideWidth),
-              child: PageView.builder(
-                controller: pageController,
-                itemCount: slides.length,
-                itemBuilder: (context, idx) {
-                  final slide = slides[idx];
-                  return isPreview
-                      ? SlidePreview(
-                          slide: slide,
-                          size: data.size,
-                          sideWidth: data.sideWidth,
-                        )
-                      : SlideMarkdownPreview(
-                          slide: slide,
-                        );
-                },
-              ),
-            );
-          },
+          currentIndex: navigationShell.currentIndex,
+          onIndexChange: (int index) => _onTap(context, index),
+          child: navigationShell,
         ),
       ),
     );

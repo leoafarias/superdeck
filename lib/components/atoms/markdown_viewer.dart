@@ -97,7 +97,7 @@ Widget _imageBuilder(
   return Builder(
     builder: (context) {
       final size = SlideConstraints.of(context).biggest;
-      final assets = superDeck.assets.watch(context);
+      final assets = superdeck.assets.watch(context);
       final spec = SlideSpec.of(context);
       final imageSpec = spec.image;
       final constraints = calculateConstraints(size, spec.contentContainer);

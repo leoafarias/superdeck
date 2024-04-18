@@ -17,4 +17,5 @@ linter:
   rules:
     public_member_api_docs: false
     prefer_relative_imports: true
+    library_private_types_in_public_api: false
 

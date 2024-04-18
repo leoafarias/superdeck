@@ -22,8 +22,8 @@ class SlideView extends StatelessWidget {
   Widget build(BuildContext context) {
     final slide = this.slide;
     final variant = slide.styleVariant;
-    final style = superDeck.style.watch(context);
-    final assets = superDeck.assets.watch(context);
+    final style = superdeck.style.watch(context);
+    final assets = superdeck.assets.watch(context);
 
     return ScaledWidget(
       child: TransitionWidget(

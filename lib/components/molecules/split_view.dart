@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../../superdeck.dart';
+import '../organisms/drawer.dart';
+import 'slide_thumbnail_list.dart';
 
 // ignore: non_constant_identifier_names
 final SlidePreviewBox = Style(
@@ -15,18 +18,18 @@ final SlidePreviewBox = Style(
 ).box;
 
 class SplitView extends StatefulWidget {
-  final Widget side;
-
   final double sideWidth;
-  final bool isOpen;
-  final Widget Function(({double sideWidth, Size size})) builder;
+
+  final Widget child;
+  final int currentIndex;
+  final Function(int) onIndexChange;
 
   const SplitView({
     super.key,
-    required this.side,
     this.sideWidth = 400,
-    this.isOpen = false,
-    required this.builder,
+    required this.child,
+    required this.currentIndex,
+    required this.onIndexChange,
   });
 
   @override
@@ -38,6 +41,9 @@ class _SplitViewState extends State<SplitView>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
+
+  late final navigation = NavigationProvider.instance;
+  late final superdeck = SuperDeckProvider.instance;
 
   @override
   void initState() {
@@ -53,20 +59,8 @@ class _SplitViewState extends State<SplitView>
       ),
     );
 
-    if (widget.isOpen) {
+    if (navigation.sideIsOpen.value) {
       _animationController.value = 1.0;
-    }
-  }
-
-  @override
-  void didUpdateWidget(covariant SplitView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isOpen != oldWidget.isOpen) {
-      if (widget.isOpen) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
     }
   }
 
@@ -78,24 +72,60 @@ class _SplitViewState extends State<SplitView>
 
   @override
   Widget build(BuildContext context) {
+    final slides = superdeck.slides.watch(context);
+
+    navigation.sideIsOpen.listen(context, () {
+      if (navigation.sideIsOpen.value) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
+
+    final isPreview = widget.currentIndex == SideMenu.preview.index;
+
+    final sideWidth = (isPreview ? widget.sideWidth : 80.0);
+    final currentSlide = navigation.currentSlide.watch(context);
+
+    final sidePanel = Expanded(
+      child: SlideThumbnailList(
+        currentSlide: currentSlide,
+        onSelect: navigation.goToSlide,
+        slides: slides,
+      ),
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return AnimatedBuilder(
           animation: _animation,
           builder: (context, child) {
-            final animatedWidth = _animation.value * widget.sideWidth;
+            final animatedWidth = _animation.value * sideWidth;
 
             return Stack(
               children: [
-                widget.builder((
+                SplitViewProvider(
                   sideWidth: animatedWidth,
+                  isOpen: navigation.sideIsOpen.watch(context),
                   size: constraints.biggest,
-                )),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: animatedWidth),
+                    child: widget.child,
+                  ),
+                ),
+                const VerticalDivider(
+                  width: 1,
+                  color: Colors.white,
+                ),
                 Transform.translate(
-                  offset: Offset(animatedWidth - widget.sideWidth, 0),
+                  offset: Offset(animatedWidth - sideWidth, 0),
                   child: SizedBox(
-                    width: widget.sideWidth,
-                    child: widget.side,
+                    width: sideWidth,
+                    child: SideDrawer(
+                      currentIndex: widget.currentIndex,
+                      onTap: widget.onIndexChange,
+                      side: isPreview ? sidePanel : const SizedBox.shrink(),
+                    ),
                   ),
                 ),
               ],
@@ -104,5 +134,66 @@ class _SplitViewState extends State<SplitView>
         );
       },
     );
+  }
+}
+
+enum SplitViewProviderAspect {
+  sideWidth,
+  isOpen,
+  size,
+}
+
+class SplitViewProvider extends InheritedModel<SplitViewProviderAspect> {
+  final double sideWidth;
+  final bool isOpen;
+  final Size size;
+
+  const SplitViewProvider({
+    super.key,
+    required this.sideWidth,
+    required this.isOpen,
+    required this.size,
+    required super.child,
+  });
+
+  @override
+  bool updateShouldNotify(covariant SplitViewProvider oldWidget) {
+    return sideWidth != oldWidget.sideWidth ||
+        isOpen != oldWidget.isOpen ||
+        size != oldWidget.size;
+  }
+
+  @override
+  bool updateShouldNotifyDependent(covariant SplitViewProvider oldWidget,
+      Set<SplitViewProviderAspect> dependencies) {
+    if (dependencies.contains(SplitViewProviderAspect.sideWidth) &&
+        sideWidth != oldWidget.sideWidth) {
+      return true;
+    }
+    if (dependencies.contains(SplitViewProviderAspect.isOpen) &&
+        isOpen != oldWidget.isOpen) {
+      return true;
+    }
+    if (dependencies.contains(SplitViewProviderAspect.size) &&
+        size != oldWidget.size) {
+      return true;
+    }
+    return false;
+  }
+
+  static SplitViewProvider of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SplitViewProvider>()!;
+  }
+
+  static Size sizeOf(BuildContext context) {
+    return SplitViewProvider.of(context).size;
+  }
+
+  static double sideWidthOf(BuildContext context) {
+    return SplitViewProvider.of(context).sideWidth;
+  }
+
+  static bool isOpenOf(BuildContext context) {
+    return SplitViewProvider.of(context).isOpen;
   }
 }

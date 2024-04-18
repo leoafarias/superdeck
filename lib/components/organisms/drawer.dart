@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../providers/superdeck_controller.dart';
-import '../molecules/slide_thumbnail_list.dart';
 
-class SideDrawer extends StatelessWidget {
-  const SideDrawer({
-    super.key,
-    required this.navigation,
+enum SideMenu {
+  preview(icon: Icons.play_arrow, label: 'Preview'),
+  export(icon: Icons.save, label: 'Export');
+
+  const SideMenu({
+    required this.icon,
+    required this.label,
   });
 
-  final NavigationProvider navigation;
+  final IconData icon;
+  final String label;
+}
+
+class SideDrawer extends StatelessWidget {
+  SideDrawer({
+    super.key,
+    required this.currentIndex,
+    this.onTap,
+    required this.side,
+    this.navigationRailWidth = 80,
+  });
+
+  final int currentIndex;
+  final Widget side;
+  final void Function(int)? onTap;
+  final double navigationRailWidth;
+
+  final navigation = NavigationProvider.instance;
+  final superdeck = SuperDeckProvider.instance;
 
   @override
   Widget build(BuildContext context) {
-    final slides = superDeck.slides.watch(context);
     return Row(
       children: [
         Expanded(
@@ -29,8 +48,9 @@ class SideDrawer extends StatelessWidget {
               children: [
                 NavigationRail(
                   extended: false,
-                  selectedIndex: navigation.currentScreen.watch(context),
-                  onDestinationSelected: navigation.goToScreen,
+                  selectedIndex: currentIndex,
+                  onDestinationSelected: onTap,
+                  minWidth: navigationRailWidth - 1,
                   trailing: Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -50,33 +70,23 @@ class SideDrawer extends StatelessWidget {
                     ),
                   ),
                   labelType: NavigationRailLabelType.none,
-                  destinations: const [
-                    NavigationRailDestination(
-                      icon: Icon(
-                        Icons.play_arrow,
-                        size: 20,
-                      ),
-                      label: Text('Debug'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(
-                        Icons.code,
-                        size: 20,
-                      ),
-                      label: Text('Save pdf'),
-                    ),
-                  ],
+                  destinations: SideMenu.values.map(
+                    (e) {
+                      return NavigationRailDestination(
+                        icon: Icon(e.icon, size: 20),
+                        label: Text(e.label),
+                      );
+                    },
+                  ).toList(),
                 ),
-                Expanded(
-                  child: SlideThumbnailList(
-                    currentSlide: navigation.currentSlide.watch(context),
-                    onSelect: navigation.goToSlide,
-                    slides: slides,
-                  ),
-                ),
+                side,
               ],
             ),
           ),
+        ),
+        VerticalDivider(
+          width: 1,
+          color: Colors.grey.withOpacity(0.2),
         ),
       ],
     );

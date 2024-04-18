@@ -4,7 +4,7 @@ background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk
 ---
 
  
-## Create beautiful presentations
+## Create beautiful presentations:
 # Superdeck
 
 

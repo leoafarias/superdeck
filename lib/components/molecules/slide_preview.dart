@@ -5,54 +5,49 @@ import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../atoms/markdown_viewer.dart';
 import '../atoms/slide_view.dart';
+import 'split_view.dart';
 
 class SlidePreview extends StatelessWidget {
-  const SlidePreview({
+  const SlidePreview(
+    this.slide, {
     super.key,
-    required this.slide,
-    required this.size,
-    required this.sideWidth,
   });
 
   final Slide slide;
 
-  final Size size;
-  final double sideWidth;
-
   @override
   Widget build(BuildContext context) {
-    final paddingSize = sideWidth / 20;
+    return LayoutBuilder(builder: (context, constraints) {
+      final sideWidth = SplitViewProvider.sideWidthOf(context);
+      final paddingSize = sideWidth / 20;
+      final size = SplitViewProvider.sizeOf(context);
 
-    final rightWidth = size.width - sideWidth;
-    final rightHeight = size.height * (rightWidth / size.width);
-    final rightSize = Size(rightWidth - (paddingSize * 2), rightHeight);
-
-    return Container(
-      color: const Color.fromARGB(144, 0, 0, 0),
-      child: Align(
-        alignment: Alignment.center,
-        child: ConstrainedBox(
-          constraints: BoxConstraints.tight(rightSize),
-          child: Container(
-            margin: EdgeInsets.all(paddingSize),
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 6,
-                  spreadRadius: 3,
-                ),
-              ],
-            ),
-            child: SlideConstraintBuilder(
-              builder: (context, size) {
-                return SlideView(slide);
-              },
+      final rightWidth = size.width - sideWidth;
+      final rightHeight = size.height * (rightWidth / size.width);
+      final rightSize = Size(rightWidth - (paddingSize * 2), rightHeight);
+      return Container(
+        color: const Color.fromARGB(144, 0, 0, 0),
+        child: Align(
+          alignment: Alignment.center,
+          child: ConstrainedBox(
+            constraints: BoxConstraints.tight(rightSize),
+            child: Container(
+              margin: EdgeInsets.all(paddingSize),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 6,
+                    spreadRadius: 3,
+                  ),
+                ],
+              ),
+              child: SlideView(slide),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

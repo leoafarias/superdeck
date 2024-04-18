@@ -113,7 +113,7 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
   Widget build(BuildContext context) {
     final options = config.options;
 
-    final previewBuilders = superDeck.examples.watch(context);
+    final previewBuilders = superdeck.examples.watch(context);
 
     final builder = previewBuilders[options.name];
 
@@ -147,7 +147,7 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
   @override
   Widget build(BuildContext context) {
     final spec = SlideSpec.of(context);
-    final assets = superDeck.assets.watch(context);
+    final assets = superdeck.assets.watch(context);
 
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;

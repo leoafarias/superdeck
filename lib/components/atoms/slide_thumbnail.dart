@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../helpers/measure_size.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import 'slide_view.dart';
@@ -46,11 +45,7 @@ class SlideThumbnail extends StatelessWidget {
           ),
         ),
         child: AbsorbPointer(
-          child: SlideConstraintBuilder(
-            builder: (context, size) {
-              return SlideView(slide);
-            },
-          ),
+          child: SlideView(slide),
         ),
       ),
     );
