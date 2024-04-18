@@ -27,6 +27,10 @@ class SlidesLoader {
   );
 
   static Future<void> generate() async {
+    if (kIsWeb) {
+      print('Cannot generate slides on the web');
+      return;
+    }
     final markdownFile = kConfig.slidesMarkdownFile;
 
     if (!await markdownFile.exists()) {

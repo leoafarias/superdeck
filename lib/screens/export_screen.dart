@@ -1,17 +1,18 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:signals/signals_flutter.dart';
+import 'package:universal_html/html.dart' as html;
 
 import '../../helpers/constants.dart';
 import '../../models/slide_model.dart';
 import '../components/atoms/slide_view.dart';
-import '../providers/superdeck_controller.dart';
 import '../superdeck.dart';
 
 enum ExportQuality {
@@ -149,7 +150,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
     _isConverting.value = false;
     _slides = superdeck.slides.value;
     assignGlobalKeys(_slides);
-    startConversion();
+    Future.delayed(Durations.medium1).then((value) => startConversion());
   }
 
   void assignGlobalKeys(List<Slide> slides) {
@@ -164,51 +165,82 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
     super.dispose();
   }
 
-  Future<Uint8List> getWidgetImageData(GlobalKey key) async {
-    final boundary =
-        key.currentContext!.findRenderObject() as RenderRepaintBoundary;
-
-    final image = await boundary.toImage(
-      pixelRatio: widget.quality.pixelRatio,
-    );
-
+  Future<Uint8List> getImageInBytes(ui.Image image) async {
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
 
+  Future<ui.Image> getImageFromWidget(Widget child) async {
+    return await fromWidgetToImage(
+      child,
+      pixelRatio: widget.quality.pixelRatio,
+      context: context,
+      targetSize: kResolution,
+    );
+  }
+
   Future<void> startConversion() async {
-    await Future.delayed(Durations.medium1);
     try {
       _isConverting.value = true;
 
-      List<Uint8List> images = [];
-      for (int i = 0; i < _slides.length; i++) {
-        _currentSlide.value = i + 1;
+      List<ui.Image> images = [];
+      List<Uint8List> bytes = [];
+      _currentSlide.value = 0;
+      await Future.delayed(Duration.zero);
+
+      for (var slide in _slides) {
+        _currentSlide.value++;
         _status.value =
-            'Exporting slide ${_currentSlide.value} of ${_slides.length}';
+            'Extracting slide ${_currentSlide.value} of ${_slides.length}';
+        // await Future.delayed(Durations.short1);
         await Future.delayed(Duration.zero);
-        await _pageController.animateToPage(
-          i,
-          duration: Durations.short1,
-          curve: Curves.linear,
-        );
-
-        final slide = _slides[i];
-        final key = _globalKeys[slide.hashCode]!;
-
-        final image = await getWidgetImageData(key);
+        final image = await getImageFromWidget(SlideView(slide));
         images.add(image);
+      }
+
+      _currentSlide.value = 0;
+      await Future.delayed(Durations.short1);
+
+      for (var image in images) {
+        _currentSlide.value++;
+        _status.value =
+            'Converting slide ${_currentSlide.value} of ${_slides.length}';
+        await Future.delayed(Duration.zero);
+        bytes.add(await getImageInBytes(image));
       }
 
       _status.value = 'Building PDF...';
       await Future.delayed(Durations.short1);
 
-      final pdf = await buildPdf(images);
+      final pdf = await buildPdf(bytes);
 
-      _status.value = 'Saving...';
-      await Future.delayed(Durations.short1);
-      final file = File('superdeck.pdf');
-      await file.writeAsBytes(pdf);
+      if (kIsWeb) {
+        // Create a Blob from the PDF bytes
+        final blob = html.Blob([pdf], 'application/pdf');
+
+        // Create a URL for the Blob
+        final url = html.Url.createObjectUrlFromBlob(blob);
+
+        html.AnchorElement(href: url)
+          ..setAttribute('download', 'superdeck.pdf')
+          ..click();
+
+        return;
+      }
+
+      final outputFile = await FilePicker.platform.saveFile(
+        dialogTitle: 'Save PDF',
+        fileName: 'superdeck.pdf',
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+      if (outputFile != null) {
+        File file = File(outputFile);
+        _status.value = 'Saving...';
+
+        await file.writeAsBytes(pdf);
+      }
+
       _currentSlide.value = 0;
     } on Exception catch (e) {
       print(e.toString());
@@ -248,28 +280,8 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentSlide = _currentSlide.watch(context);
-
-    final screenSize = MediaQuery.sizeOf(context);
-
     return Stack(
       children: [
-        PageView.builder(
-          controller: _pageController,
-          itemBuilder: (context, index) {
-            final slide = _slides[index];
-            final key = _globalKeys[slide.hashCode]!;
-            return RepaintBoundary(
-              key: key,
-              child: SizedBox(
-                width: screenSize.width,
-                height: screenSize.height,
-                child: SlideView(slide),
-              ),
-            );
-          },
-          itemCount: _slides.length,
-        ),
         Container(
           color: Colors.black,
           padding: const EdgeInsets.all(200),
@@ -277,12 +289,12 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                _status.watch(context),
+                _status.value,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
               SmoothLinearProgressIndicator(
-                progress: currentSlide / _slides.length,
+                progress: _currentSlide.value / _slides.length,
               )
             ],
           ),
@@ -351,4 +363,112 @@ class _SmoothLinearProgressIndicatorState
       },
     );
   }
+}
+
+Future<ui.Image> fromWidgetToImage(
+  Widget widget, {
+  Duration delay = Durations.short1,
+  double pixelRatio = 1.0,
+  required BuildContext context,
+  Size? targetSize,
+}) async {
+  Widget child = widget;
+
+  child = InheritedTheme.captureAll(
+    context,
+    MediaQuery(
+      data: MediaQuery.of(context),
+      child: MaterialApp(
+        theme: Theme.of(context),
+        color: Colors.transparent,
+        home: child,
+      ),
+    ),
+  );
+
+  final repaintBoundary = RenderRepaintBoundary();
+  // final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
+  // final fallBackView = platformDispatcher.views.first;
+  final view = View.of(context);
+  final logicalSize = targetSize ?? view.physicalSize / view.devicePixelRatio;
+
+  int retryCount = 3;
+  bool isDirty = false;
+
+  final renderView = RenderView(
+    view: view,
+    child: RenderPositionedBox(
+      alignment: Alignment.center,
+      child: repaintBoundary,
+    ),
+    configuration: ViewConfiguration(
+      size: logicalSize,
+      devicePixelRatio: pixelRatio,
+    ),
+  );
+
+  final pipelineOwner = PipelineOwner();
+  final buildOwner = BuildOwner(
+    focusManager: FocusManager(),
+    onBuildScheduled: () {
+      isDirty = true;
+    },
+  );
+
+  pipelineOwner.rootNode = renderView;
+  renderView.prepareInitialFrame();
+
+  final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
+    container: repaintBoundary,
+    child: Directionality(
+      textDirection: TextDirection.ltr,
+      child: child,
+    ),
+  ).attachToRenderTree(buildOwner);
+  ui.Image? image;
+  while (retryCount > 0) {
+    isDirty = false;
+    image = await _captureImage(
+      buildOwner: buildOwner,
+      rootElement: rootElement,
+      pipelineOwner: pipelineOwner,
+      repaintBoundary: repaintBoundary,
+      pixelRatio: pixelRatio,
+      logicalSize: logicalSize,
+      delay: delay,
+    );
+
+    if (!isDirty) {
+      break;
+    }
+
+    retryCount--;
+  }
+
+  try {
+    buildOwner.finalizeTree();
+  } catch (e) {}
+
+  return image!;
+}
+
+Future<ui.Image?> _captureImage({
+  required BuildOwner buildOwner,
+  required RenderObjectToWidgetElement<RenderBox> rootElement,
+  required PipelineOwner pipelineOwner,
+  required RenderRepaintBoundary repaintBoundary,
+  required double pixelRatio,
+  required Size logicalSize,
+  required Duration delay,
+}) async {
+  buildOwner.buildScope(rootElement);
+  buildOwner.finalizeTree();
+
+  pipelineOwner.flushLayout();
+  pipelineOwner.flushCompositingBits();
+  pipelineOwner.flushPaint();
+
+  await Future.delayed(delay);
+
+  return repaintBoundary.toImage(pixelRatio: pixelRatio);
 }

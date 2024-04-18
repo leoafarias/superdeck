@@ -33,6 +33,8 @@ dependencies:
   flutter_hooks: ^0.20.5
   localstorage: ^5.0.0
   go_router: ^13.2.4
+  file_picker: ^8.0.1
+  universal_html: ^2.2.4
   
 dev_dependencies:
   flutter_test:
