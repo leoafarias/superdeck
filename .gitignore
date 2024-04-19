@@ -31,3 +31,4 @@ build/
 
 # FVM Version Cache
 .fvm/
+example/.firebase
