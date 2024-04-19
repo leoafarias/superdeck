@@ -1,5 +1,4 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter/widgets.dart';
 
 import '../schema/schema.dart';
 import '../superdeck.dart';
