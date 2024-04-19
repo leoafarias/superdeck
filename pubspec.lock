@@ -398,14 +398,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
-  flutter_hooks:
-    dependency: "direct main"
-    description:
-      name: flutter_hooks
-      sha256: cde36b12f7188c85286fba9b38cc5a902e7279f36dd676967106c041dc9dde70
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.20.5"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -432,14 +424,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_to_pdf:
-    dependency: "direct main"
-    description:
-      name: flutter_to_pdf
-      sha256: "57c767c0a3fa4527c6543c6aac01af6d106120328d097be3d7fc80be18bc1e27"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
