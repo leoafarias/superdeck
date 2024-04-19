@@ -116,12 +116,15 @@ BoxSpec _buildInnerContainerSpec({
   if (background == null) {
     return spec;
   }
+  final uri = Uri.tryParse(background);
+
+  if (uri == null) {
+    return spec;
+  }
 
   final decoration = spec.decoration;
 
-  final imageProvider = getImageProvider(background, assets);
-
-  print('imageProvider: $background');
+  final imageProvider = getImageProvider(uri, assets);
 
   if (decoration is BoxDecoration) {
     final innerContainerSpecImage = decoration.image;

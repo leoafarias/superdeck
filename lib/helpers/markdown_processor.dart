@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui' as ui;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
@@ -16,10 +14,6 @@ import 'deep_merge.dart';
 import 'utils.dart';
 
 final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
-
-const _assetPrefix = 'sd_';
-
-final kSupportedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
 typedef DeckData = ({
   List<Slide> slides,
@@ -43,10 +37,49 @@ class Pipeline {
   final List<MarkdownProcessor> markdown;
   final List<PostMarkdownProcessor> postMarkdown;
 
+  static List<SlideAsset> assetsLoaded = [];
+
+  static Future<void> cleanAssets() async {
+    //  Gothrough the assets directory and check if the asset is not in assetsSaved
+    //  delete it
+    final assetsDir = kConfig.assetsImageDir;
+
+    if (!await assetsDir.exists()) return;
+
+    await for (final entity in assetsDir.list()) {
+      if (entity is File) {
+        final asset = await SlideAsset.maybeLoad(entity);
+        if (!assetsLoaded.contains(asset)) {
+          await entity.delete();
+        }
+      }
+    }
+  }
+
   const Pipeline({
     required this.markdown,
     required this.postMarkdown,
   });
+
+  static Future<SlideAsset?> getAsset(String fileName) async {
+    final assetFile = SlideAsset.buildFile(fileName);
+
+    return await SlideAsset.maybeLoad(assetFile);
+  }
+
+  static Future<SlideAsset> saveAsset(
+    String fileName, {
+    required List<int> data,
+    required,
+  }) async {
+    final imageFile = SlideAsset.buildFile(fileName);
+
+    await imageFile.writeAsBytes(data);
+    final asset = await SlideAsset.load(imageFile);
+    Pipeline.assetsLoaded.add(asset);
+
+    return asset;
+  }
 
   Future<DeckData> run(String contents) async {
     final slidesRaw = _splitSlides(contents.trim());
@@ -148,7 +181,7 @@ class Pipeline {
     if (await assetsDir.exists()) {
       await for (final entity in assetsDir.list()) {
         if (entity is File) {
-          final asset = await _getAssetFromPath(entity);
+          final asset = await SlideAsset.load(entity);
           assets.add(asset);
         }
       }
@@ -192,19 +225,6 @@ class Pipeline {
     }
 
     return slides;
-  }
-
-  Future<SlideAsset> _getAssetFromPath(File file) async {
-    final bytes = await file.readAsBytes();
-    final codec = await ui.instantiateImageCodec(bytes);
-    final frame = await codec.getNextFrame();
-
-    return SlideAsset(
-      path: file.path,
-      bytes: AssetFileBytes.fromBytes(bytes),
-      width: frame.image.width.toDouble(),
-      height: frame.image.height.toDouble(),
-    );
   }
 }
 
@@ -270,17 +290,6 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
     final map = assets.map((e) => e.toMap()).toList();
     // Write a json file with a list of assets
     await assetsJson.writeAsString(prettyJson(map));
-
-    await kConfig.assetsImageDir.list().forEach((f) async {
-      if (f is File) {
-        if (!assets.any((element) => element.path == f.path)) {
-          // Only remove if starts with the asset prefix
-          if (f.path.startsWith(_assetPrefix)) {
-            await f.delete();
-          }
-        }
-      }
-    });
   }
 }
 
@@ -337,98 +346,42 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     var content = data.content;
     var options = {...data.options};
 
-    //  Check also if image is on background: or src: in front mattef
-    //  and replace the url with the local path
-
-    final assetsJson = await kConfig.references.assets.readAsString();
-
-    final assets = _parseAssets(assetsJson);
-
     final matches = imageRegex.allMatches(data.content);
 
     for (final Match match in matches) {
       final imageUrl = match.group(1);
       if (imageUrl == null) continue;
 
-      if (!imageUrl.startsWith('http')) continue;
+      final asset = await _fetchAsset(imageUrl);
 
-      // If its already in assets return file name in assetsjson
-      final imageUrlHash = imageUrl.hashCode.toString();
-
-      final asset =
-          assets.firstWhereOrNull((e) => e.path.contains(imageUrlHash));
-
-      File imageFile;
       if (asset != null) {
-        imageFile = File(asset.path);
-      } else {
-        imageFile = await _downloadAndSave(imageUrl);
+        final imageMarkdown = '![Image](${asset.relativePath})';
+        content = content.replaceFirst(match.group(0)!, imageMarkdown);
       }
-
-      final relativePath =
-          relative(imageFile.path, from: kConfig.assetsDir.parent.path);
-
-      final imageMarkdown = '![Image]($relativePath)';
-
-      content = content.replaceFirst(match.group(0)!, imageMarkdown);
     }
 
     // Check also if image is on background: or src: in front matter
     // and replace the url with the local path, frontmatter is now data.options Map<String, dynamic>
-    final hasBackground = options.containsKey('background');
+    var background = options['background'];
 
-    if (hasBackground) {
-      final background = options['background'];
-      if (background is String) {
-        if (background.startsWith('http')) {
-          final imageUrl = background;
-          if (!imageUrl.startsWith('http')) return data;
-          // If its already in assets return file name in assetsjson
-          final imageUrlHash = imageUrl.hashCode.toString();
-          final asset = assets.firstWhereOrNull(
-            (e) => e.path.contains(imageUrlHash),
-          );
-          File imageFile;
-          if (asset != null) {
-            imageFile = File(asset.path);
-          } else {
-            imageFile = await _downloadAndSave(imageUrl);
-          }
-          final relativePath =
-              relative(imageFile.path, from: kConfig.assetsDir.parent.path);
+    if (background != null && background is String) {
+      final asset = await _fetchAsset(background);
 
-          options['background'] = relativePath;
-        }
+      if (asset != null) {
+        background = asset.relativePath;
+        options['background'] = background;
       }
     }
 
-    final hasImageSrc =
-        (options['options'] as Map<String, dynamic>?)?.containsKey('src') ??
-            false;
+    var imageSource = options['options']?['src'];
 
-    if (hasImageSrc) {
-      final src = options['options']?['src'];
-      if (src is String) {
-        if (src.startsWith('http')) {
-          final imageUrl = src;
-          if (!imageUrl.startsWith('http')) return data;
-          // If its already in assets return file name in assetsjson
-          final imageUrlHash = imageUrl.hashCode.toString();
-          final asset = assets.firstWhereOrNull(
-            (e) => e.path.contains(imageUrlHash),
-          );
-          File imageFile;
-          if (asset != null) {
-            imageFile = File(asset.path);
-          } else {
-            imageFile = await _downloadAndSave(imageUrl);
-          }
-          final relativePath =
-              relative(imageFile.path, from: kConfig.assetsDir.parent.path);
-          options['options']?['src'] = relativePath;
-        }
+    if (imageSource != null && imageSource is String) {
+      final asset = await _fetchAsset(imageSource);
+
+      if (asset != null) {
+        imageSource = asset.relativePath;
+        options['options']['src'] = imageSource;
       }
-      return data;
     }
 
     return (
@@ -438,44 +391,44 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     );
   }
 
-  Future<File> _downloadAndSave(String imageUrl) async {
-    final imageUrlHash = imageUrl.hashCode.toString();
+  Future<SlideAsset?> _fetchAsset(String url) async {
+    if (!url.startsWith('http')) {
+      return null;
+    }
+
+    var ext = p.extension(url).replaceFirst('.', '');
+
+    // Check if url has extension and is an image
+    if (!SlideAsset.allowedExtensions.contains(ext)) {
+      return null;
+    }
 
     final client = HttpClient();
-    final request = await client.getUrl(Uri.parse(imageUrl));
+    final request = await client.getUrl(Uri.parse(url));
     final response = await request.close();
-    final bytes = await consolidateHttpClientResponseBytes(response);
+    final data = await consolidateHttpClientResponseBytes(response);
 
     final contentType = response.headers.contentType;
     // Default to .jpg if no extension is found
     final extension = contentType?.subType ?? 'jpg';
 
-    if (!kSupportedExtensions.contains(extension)) {
-      throw Exception(
-        'Unsupported image extension: $extension. Supported extensions: ${kSupportedExtensions.join(', ')}',
-      );
-    }
+    final fileName = '${url.hashCode}.$extension';
 
-    final imageFile = File(join(
-      kConfig.assetsImageDir.path,
-      'sd_$imageUrlHash.$extension',
-    ));
-
-    if (await imageFile.exists()) {
-      return imageFile;
-    }
-
-    await imageFile.writeAsBytes(bytes);
-    return imageFile;
+    return Pipeline.saveAsset(
+      fileName,
+      data: data,
+    );
   }
 }
+
+typedef Replacement = ({int start, int end, String markdown});
 
 class MermaidProcessor extends MarkdownProcessor {
   const MermaidProcessor();
 
   @override
   Future<MarkdownData> run(MarkdownData data) async {
-    final replacements = <({int start, int end, String markdown})>[];
+    final replacements = <Replacement>[];
 
     var content = data.content;
 
@@ -487,14 +440,11 @@ class MermaidProcessor extends MarkdownProcessor {
       if (mermaidSyntax == null) continue;
 
       // Process the mermaid syntax to generate an image file
-      final file = await generateAndSaveMermaidImage(mermaidSyntax);
+      final asset = await generateAndSaveMermaidImage(mermaidSyntax);
 
-      final relativePath = relative(
-        file.path,
-        from: kConfig.assetsDir.parent.path,
-      );
+      if (asset == null) continue;
 
-      final markdown = '![Mermaid Diagram]($relativePath)';
+      final markdown = '![Mermaid Diagram](${asset.relativePath})';
 
       // Collect replacement information
       replacements.add((
@@ -518,48 +468,65 @@ class MermaidProcessor extends MarkdownProcessor {
     );
   }
 
-  Future<File> generateAndSaveMermaidImage(String mermaidSyntax) async {
-    const tempFilePath = 'temp.mmd';
+  Future<SlideAsset?> generateAndSaveMermaidImage(String mermaidSyntax) async {
+    final fileName = '${mermaidSyntax.hashCode}.png';
+
+    final existingAsset = await Pipeline.getAsset(fileName);
+
+    if (existingAsset != null) {
+      return existingAsset;
+    }
+
+    const tempDirPath = '.tmp_superdeck';
+    final tempFilePath = p.join(tempDirPath, '$fileName.mmd');
     final tempFile = File(tempFilePath);
+    final tempOutputPath = p.join(tempDirPath, fileName);
+
+    if (!await Directory(tempDirPath).exists()) {
+      await Directory(tempDirPath).create(recursive: true);
+    }
 
     try {
       mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
 
-      // has the mermaidSyntax string
-      final filePath = '${_assetPrefix}mermaid_${mermaidSyntax.hashCode}.png';
-      final mermaidAssetFile =
-          File(join(kConfig.assetsImageDir.path, filePath));
-
-      if (await mermaidAssetFile.exists()) {
-        return mermaidAssetFile;
-      }
-
       await tempFile.writeAsString(mermaidSyntax);
-
-      final outputFile = File(join(kConfig.assetsImageDir.path, filePath));
-
-      if (!await outputFile.parent.exists()) {
-        await outputFile.parent.create(recursive: true);
-      }
 
       final imageSizeParams = '--scale 2'.split(' ');
       final params =
-          '-t dark -b transparent -i $tempFilePath -o ${outputFile.path} '
+          '-t dark -b transparent -i $tempFilePath -o $tempOutputPath '
               .split(' ');
+
+      // Check if can execute mmdc before executing command
+      final mmdcResult = await Process.run('mmdc', ['--version']);
+
+      if (mmdcResult.exitCode != 0) {
+        print(
+          '"mmdc" not found. You need mermaid cli installed to process mermaid syntax',
+        );
+
+        return null;
+      }
 
       final result = await Process.run('mmdc', [...params, ...imageSizeParams]);
 
       if (result.exitCode != 0) {
         print('Error while processing mermaid syntax');
         print(result.stderr);
+        return null;
       }
 
-      return outputFile;
+      final output = await File(tempOutputPath).readAsBytes();
+
+      return Pipeline.saveAsset(
+        fileName,
+        data: output,
+      );
     } catch (e) {
-      throw Exception('Error while processing mermaid syntax');
+      throw Exception('Error while processing mermaid syntax $e');
     } finally {
-      if (await tempFile.exists()) {
-        await tempFile.delete();
+      final tempDir = Directory(tempDirPath);
+      if (await tempDir.exists()) {
+        await tempDir.delete(recursive: true);
       }
     }
   }

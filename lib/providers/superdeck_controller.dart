@@ -92,6 +92,7 @@ class SuperDeckProvider {
       }
     } on Exception catch (e) {
       error.value = e;
+      rethrow;
     } finally {
       loading.value = false;
     }

@@ -22,8 +22,11 @@ String prettyJson(dynamic json) {
   return encoder.convert(json);
 }
 
-ImageProvider getImageProvider(String url, List<SlideAsset> assets) {
+ImageProvider getImageProvider(Uri uri, List<SlideAsset> assets) {
   ImageProvider provider;
+
+  // get complete url from uri
+  final url = uri.toString();
 
   //  check if its a local path or a network path
   if (url.startsWith('http')) {

@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
+
+import '../helpers/config.dart';
 
 part 'asset_model.mapper.dart';
 
@@ -21,6 +26,61 @@ class SlideAsset with SlideAssetMappable {
   }) : _file = bytes;
 
   Uint8List get bytes => _file.bytes;
+
+  String get extension => path.split('.').last;
+
+  String get relativePath => p.relative(
+        path,
+        from: kConfig.assetsDir.parent.path,
+      );
+
+  static Future<SlideAsset?> maybeLoad(File file) async {
+    if (!await file.exists()) {
+      return null;
+    }
+    final bytes = await file.readAsBytes();
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+
+    return SlideAsset(
+      path: file.path,
+      bytes: AssetFileBytes.fromBytes(bytes),
+      width: frame.image.width.toDouble(),
+      height: frame.image.height.toDouble(),
+    );
+  }
+
+  static Future<SlideAsset> load(File file) async {
+    final asset = await maybeLoad(file);
+    return asset ?? (throw Exception('Invalid asset file: ${file.path}'));
+  }
+
+  static File buildFile(String fileName) {
+    // Check file file contains an allowed extension
+    final ext = p.extension(fileName).substring(1);
+    if (!SlideAsset.allowedExtensions.contains(ext)) {
+      throw Exception('Invalid file extension: $ext');
+    }
+    return File(
+      p.join(
+        kConfig.assetsImageDir.path,
+        '${SlideAsset.assetPrefix}$fileName',
+      ),
+    );
+  }
+
+  String get name {
+    // Get name without extnesion and remove prefix
+    final fileName = path.split('/').last.split('.').first;
+    // remove asset prefix
+    return fileName.startsWith(SlideAsset.assetPrefix)
+        ? fileName.substring(SlideAsset.assetPrefix.length)
+        : fileName;
+  }
+
+  static const assetPrefix = 'sd_';
+
+  static const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
 
   static const fromMap = SlideAssetMapper.fromMap;
   static const fromJson = SlideAssetMapper.fromJson;
