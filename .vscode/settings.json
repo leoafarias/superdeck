@@ -1,5 +1,5 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "dart.flutterSdkPath": ".fvm/versions/beta",
   "files.exclude": {
     "**/.fvm/versions": true,
     "**/.fvm/flutter_sdk": true
