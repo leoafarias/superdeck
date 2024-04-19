@@ -13,7 +13,6 @@ dependencies:
   cached_network_image: ^3.3.1
   window_manager: ^0.3.8
   watcher: ^1.1.0
-  shared_preferences: ^2.2.2
   collection: ^1.18.0
   google_fonts: ^6.2.1
   path: ^1.9.0
@@ -26,15 +25,24 @@ dependencies:
   recase: ^4.1.0
   syntax_highlight: ^0.4.0
   device_preview: ^1.1.0
+  signals: ^5.0.0
+  scrollable_positioned_list: ^0.3.8
+  pdf: ^3.10.8
+  localstorage: ^5.0.0
+  go_router: ^13.2.4
+  file_picker: ^8.0.1
+  universal_html: ^2.2.4
+  
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.2
-  custom_lint: ^0.6.4
+  custom_lint: ^0.5.11
   build_runner: ^2.4.9
+  signals_lint: ^5.0.0
   dart_mappable_builder: ^4.2.3
-
+  
 flutter:
   # assets:
     # - grammars/

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
 import '../helpers/layout_builder.dart';
-import '../helpers/schema/schema.dart';
-import '../helpers/schema/schema_values.dart';
+import '../helpers/utils.dart';
+import '../schema/schema.dart';
+import '../schema/schema_values.dart';
 import 'slide_model.dart';
 
 part 'options_model.mapper.dart';
@@ -30,6 +31,10 @@ class Config with ConfigMappable {
   static const fromMap = ConfigMapper.fromMap;
   static const fromJson = ConfigMapper.fromJson;
 
+  static Config fromYaml(String yaml) {
+    return ConfigMapper.fromMap(converYamlToMap(yaml));
+  }
+
   static final schema = Schema(
     {
       "background": Schema.string.optional(),
@@ -42,21 +47,18 @@ class Config with ConfigMappable {
 
 @MappableClass()
 class ContentOptions with ContentOptionsMappable {
-  final ContentAlignment? alignment;
-  final int? flex;
+  final ContentAlignment alignment;
+  final int flex;
 
   const ContentOptions({
-    this.flex,
-    this.alignment,
+    this.flex = 1,
+    this.alignment = ContentAlignment.centerLeft,
   });
 
   ContentOptions merge(ContentOptions? other) {
     if (other == null) return this;
     return copyWith.$merge(other);
   }
-
-  static const fromMap = ContentOptionsMapper.fromMap;
-  static const fromJson = ContentOptionsMapper.fromJson;
 
   static final schema = Schema(
     {
@@ -67,28 +69,62 @@ class ContentOptions with ContentOptionsMappable {
 }
 
 @MappableClass()
-class ImageOptions with ImageOptionsMappable {
+abstract class SplitOptions with SplitOptionsMappable {
+  final int flex;
+  final LayoutPosition position;
+
+  const SplitOptions({
+    this.flex = 1,
+    this.position = LayoutPosition.right,
+  });
+
+  static final schema = Schema(
+    {
+      "flex": Schema.integer.optional(),
+      "position": LayoutPosition.schema.optional(),
+    },
+  );
+}
+
+@MappableClass()
+class ImageOptions extends SplitOptions with ImageOptionsMappable {
   final String src;
   final ImageFit? fit;
-  final LayoutPosition position;
-  final int flex;
 
   const ImageOptions({
     required this.src,
     this.fit,
-    this.flex = 1,
-    this.position = LayoutPosition.left,
+    super.flex,
+    super.position,
   });
 
-  static const fromMap = ImageOptionsMapper.fromMap;
-  static const fromJson = ImageOptionsMapper.fromJson;
-
-  static final schema = Schema(
+  static final schema = SplitOptions.schema.merge(
     {
       "fit": ImageFit.schema.optional(),
-      "position": LayoutPosition.schema.optional(),
-      "flex": Schema.integer.optional(),
       "src": Schema.string.required(),
+    },
+  );
+}
+
+@MappableClass()
+class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
+  final String name;
+  final Map<String, dynamic> args;
+  final bool preview;
+
+  const WidgetOptions({
+    required this.name,
+    this.args = const {},
+    this.preview = false,
+    super.flex,
+    super.position,
+  });
+
+  static final schema = SplitOptions.schema.merge(
+    {
+      "name": Schema.string.required(),
+      "args": Schema.any.optional(),
+      "preview": Schema.boolean.optional(),
     },
   );
 }
@@ -98,20 +134,25 @@ class ImageOptions with ImageOptionsMappable {
 )
 class TransitionOptions with TransitionOptionsMappable {
   final TransitionType type;
-  final Duration? duration;
-  final Duration? delay;
-  final CurveType? curve;
+  final Duration duration;
+  final Duration delay;
+  final CurveType curve;
 
   const TransitionOptions({
     required this.type,
-    this.duration,
-    this.delay,
-    this.curve,
+    this.duration = const Duration(milliseconds: 200),
+    this.delay = const Duration(milliseconds: 0),
+    this.curve = CurveType.ease,
   });
 
-  static const fromMap = TransitionOptionsMapper.fromMap;
-
   static const fromJson = TransitionOptionsMapper.fromJson;
+
+  Duration get totalAnimationDuration => duration + delay;
+
+  TransitionOptions merge(TransitionOptions? other) {
+    if (other == null) return this;
+    return copyWith.$merge(other);
+  }
 
   static final schema = Schema(
     {
@@ -239,7 +280,7 @@ abstract class ExampleWidget<T> {
           Expanded(
             child: Container(
               color: Colors.red,
-              child: InvalidSlideTemplate(
+              child: InvalidSlideBuilder(
                 config: InvalidSlide.schemaError(result),
               ),
             ),
@@ -251,46 +292,6 @@ abstract class ExampleWidget<T> {
   }
 
   Widget build(T args);
-}
-
-@MappableClass()
-class WidgetOptions<T> with WidgetOptionsMappable {
-  final String name;
-  final Map<String, dynamic> args;
-  final LayoutPosition position;
-  final bool preview;
-  final int flex;
-
-  const WidgetOptions({
-    required this.name,
-    this.args = const {},
-    this.flex = 1,
-    this.preview = false,
-    this.position = LayoutPosition.right,
-  });
-
-  static const fromMap = WidgetOptionsMapper.fromMap;
-  static const fromJson = WidgetOptionsMapper.fromJson;
-
-  static final schema = Schema(
-    {
-      "name": Schema.string.required(),
-      "args": Schema.any.optional(),
-      "position": LayoutPosition.schema.optional(),
-      "flex": Schema.integer.optional(),
-      "preview": Schema.boolean.optional(),
-    },
-  );
-}
-
-enum SampleEnum {
-  value1,
-  value2,
-  value3;
-
-  static final schema = EnumSchema(
-    values: SampleEnum.values.map((e) => e.name.snakeCase).toList(),
-  );
 }
 
 @MappableEnum()
@@ -452,42 +453,17 @@ enum ContentAlignment {
     values: ContentAlignment.values.map((e) => e.name.snakeCase).toList(),
   );
 
-  CrossAxisAlignment toCrossAxisAlignment() {
-    switch (this) {
-      // If the alignment is left align start
-      case ContentAlignment.topLeft:
-      case ContentAlignment.centerLeft:
-      case ContentAlignment.bottomLeft:
-        return CrossAxisAlignment.start;
-
-      // If the alignment is right align end
-      case ContentAlignment.topRight:
-      case ContentAlignment.centerRight:
-      case ContentAlignment.bottomRight:
-        return CrossAxisAlignment.end;
-      // If the alignment is center align center
-      default:
-        return CrossAxisAlignment.center;
-    }
-  }
-
-  MainAxisAlignment toMainAxisAlignment() {
-    switch (this) {
-      // If the alignment is top align start
-      case ContentAlignment.topLeft:
-      case ContentAlignment.topCenter:
-      case ContentAlignment.topRight:
-        return MainAxisAlignment.start;
-
-      // If the alignment is bottom align end
-      case ContentAlignment.bottomLeft:
-      case ContentAlignment.bottomCenter:
-      case ContentAlignment.bottomRight:
-        return MainAxisAlignment.end;
-
-      // If the alignment is center align center
-      default:
-        return MainAxisAlignment.center;
-    }
+  Alignment toAlignment() {
+    return switch (this) {
+      ContentAlignment.topLeft => Alignment.topLeft,
+      ContentAlignment.topCenter => Alignment.topCenter,
+      ContentAlignment.topRight => Alignment.topRight,
+      ContentAlignment.centerLeft => Alignment.centerLeft,
+      ContentAlignment.center => Alignment.center,
+      ContentAlignment.centerRight => Alignment.centerRight,
+      ContentAlignment.bottomLeft => Alignment.bottomLeft,
+      ContentAlignment.bottomCenter => Alignment.bottomCenter,
+      ContentAlignment.bottomRight => Alignment.bottomRight,
+    };
   }
 }

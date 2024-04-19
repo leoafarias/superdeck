@@ -10,12 +10,12 @@ class CachedMemoryImage extends StatelessWidget {
   final BoxFit fit;
 
   const CachedMemoryImage({
-    Key? key,
+    super.key,
     required this.base64Image,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

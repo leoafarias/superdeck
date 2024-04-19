@@ -45,7 +45,7 @@ Follow these steps to integrate SuperDeck into your Flutter project:
 
 #### `style`
 
-SuperDeck provides a robust styling system by leveraging [Mix](https://fluttermix.com), This allows a complete control by creating endless possibilty of defining styling every element in teh slide, and also creating `style variants`.
+SuperDeck provides a robust styling system by leveraging [Mix](https://fluttermix.com), This allows a complete control by creating endless possibility of defining styling every element in teh slide, and also creating `style variants`.
 
 #### `examples`
 
@@ -87,7 +87,7 @@ The background image that will be displayed on the slide. You can use a URL or a
 
 The markdown content of the slide. This is where you write the main content of the slide using Markdown syntax.
 
-- `alignment`: The alignment of the slide content. Options include:
+- `alignment`: The alignment of the slide content.
 - `flex`: The flex value of the slide content. This determines how much space the content occupies relative to other content on the slide.
 
 #### `style`
@@ -105,7 +105,7 @@ The transition effect to be applied when navigating to the slide.
 
 #### `layout`
 
-Selects a slide layout template. Available options include: `simple`, `two_column`, `two_column_header`,  `image`, and `widget`.
+Selects a slide layout template. Available options include: `simple`, `two_column`, `two_column_header`, `image`, and `widget`.
 
 ## Templates
 
@@ -147,7 +147,26 @@ layout: two_column
 - Feature Y
 ```
 
-To specify the content for each column, use the `::left::` and `::right::` tags. The content before the first tag will be placed in the top section of the slide. If either tag is omitted, the corresponding column will be left empty.
+#### Sections
+
+- `::left::`: The content that will be placed in the left column.
+- `::right::`: The content that will be placed in the right column.
+
+If the first tag that is found is `::right::` everything before this tag will be placed on the `::left::` section.
+
+You can control the content options for each section on the front matter of the slide.
+
+```markdown
+sections:
+   left:
+      flex: 2
+      alignment: center_left
+   right:
+      flex: 1
+      alignment: center_right
+```
+
+Read more about on the [content options](#content) section.
 
 ### Two-Column Header Template
 
@@ -157,6 +176,8 @@ Similar to the two-column template, but with an additional header section at the
 ---
 layout: two_column_header
 ---
+
+::header::
 
 # Product Comparison
 
@@ -175,8 +196,32 @@ layout: two_column_header
 - Feature Z
 ```
 
-The content before the first tag will be placed in the header section, while the content within the `::left::` and `::right::` tags will be placed in the respective columns.
+#### Sections
 
+-  `::header::`: The content that will be placed in the header section.
+-  `::left::`: The content that will be placed in the left column.
+-  `::right::`: The content that will be placed in the right column.
+
+If the first tag that is found is `::left::`, everything before this tag will be placed in the `::header::` section.
+
+You can control the content options for each section in the front matter of the slide.
+
+```markdown
+sections:
+   header:
+      flex: 2
+      alignment: top_right
+   left:
+      flex: 2
+      alignment: center_left
+   right:
+      flex: 1
+      alignment: center_right
+```
+
+Keep in mind that you can also control the flex of the `left` and `right` sections by using the `content` property.
+
+Read more about it in the [content options](#content) section.
 ### Image Template
 
 Display an image alongside the slide content.
@@ -184,7 +229,7 @@ Display an image alongside the slide content.
 ```markdown
 ---
 layout: image
-image:
+options:
   src: https://source.unsplash.com/random/900×700/?nature
   fit: cover
   position: left
@@ -197,7 +242,7 @@ image:
 - Energy-efficient
 ```
 
-The `image` option specifies the image to be displayed. It has the following sub-options:
+The `options` property specifies the image to be displayed. It has the following sub-options:
 
 - `src`: The URL or path to the image file.
 - `fit`: How the image should be fitted within the slide.
@@ -210,7 +255,7 @@ Embed a custom widget within the slide.
 ```markdown
 ---
 layout: widget
-widget:
+options:
    name: demo
    position: center
    flex: 1
@@ -224,7 +269,7 @@ widget:
 This slide contains a custom widget.
 ```
 
-The `widget` option specifies the widget to be embedded. It has the following sub-options:
+The `options` property specifies the widget to be embedded. It has the following sub-options:
 
 - `name`: The name of the widget.
 - `position`: The position of the widget relative to the slide content.

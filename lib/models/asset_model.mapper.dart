@@ -13,7 +13,7 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   static SlideAssetMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideAssetMapper._());
-      MapperContainer.globals.useAll([Uint8ListMapper()]);
+      MapperContainer.globals.useAll([AssetFileBytesMapper()]);
     }
     return _instance!;
   }
@@ -21,8 +21,9 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   @override
   final String id = 'SlideAsset';
 
-  static Uint8List _$bytes(SlideAsset v) => v.bytes;
-  static const Field<SlideAsset, Uint8List> _f$bytes = Field('bytes', _$bytes);
+  static AssetFileBytes _$_file(SlideAsset v) => v._file;
+  static const Field<SlideAsset, AssetFileBytes> _f$_file =
+      Field('_file', _$_file, key: 'bytes');
   static double _$width(SlideAsset v) => v.width;
   static const Field<SlideAsset, double> _f$width = Field('width', _$width);
   static double _$height(SlideAsset v) => v.height;
@@ -32,7 +33,7 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
 
   @override
   final MappableFields<SlideAsset> fields = const {
-    #bytes: _f$bytes,
+    #_file: _f$_file,
     #width: _f$width,
     #height: _f$height,
     #path: _f$path,
@@ -42,7 +43,7 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
 
   static SlideAsset _instantiate(DecodingData data) {
     return SlideAsset(
-        bytes: data.dec(_f$bytes),
+        bytes: data.dec(_f$_file),
         width: data.dec(_f$width),
         height: data.dec(_f$height),
         path: data.dec(_f$path));
@@ -99,7 +100,7 @@ extension SlideAssetValueCopy<$R, $Out>
 
 abstract class SlideAssetCopyWith<$R, $In extends SlideAsset, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({Uint8List? bytes, double? width, double? height, String? path});
+  $R call({AssetFileBytes? bytes, double? width, double? height, String? path});
   SlideAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -112,7 +113,11 @@ class _SlideAssetCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SlideAsset> $mapper =
       SlideAssetMapper.ensureInitialized();
   @override
-  $R call({Uint8List? bytes, double? width, double? height, String? path}) =>
+  $R call(
+          {AssetFileBytes? bytes,
+          double? width,
+          double? height,
+          String? path}) =>
       $apply(FieldCopyWithData({
         if (bytes != null) #bytes: bytes,
         if (width != null) #width: width,
@@ -121,7 +126,7 @@ class _SlideAssetCopyWithImpl<$R, $Out>
       }));
   @override
   SlideAsset $make(CopyWithData data) => SlideAsset(
-      bytes: data.get(#bytes, or: $value.bytes),
+      bytes: data.get(#bytes, or: $value._file),
       width: data.get(#width, or: $value.width),
       height: data.get(#height, or: $value.height),
       path: data.get(#path, or: $value.path));

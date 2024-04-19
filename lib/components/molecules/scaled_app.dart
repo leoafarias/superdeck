@@ -1,22 +1,28 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../helpers/constants.dart';
 
-class ScaledApp extends StatelessWidget {
-  final Widget Function(BuildContext context, double scale) builder;
+class ScaledWidget extends StatelessWidget {
+  final Widget child;
 
-  const ScaledApp({
+  const ScaledWidget({
     super.key,
-    required this.builder,
+    required this.child,
   });
+
+  static double of(BuildContext context) => ScaledWidgetProvider.of(context);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double height = constraints.maxHeight;
-        final double width = height * kAspectRatio;
-        final double scale = width / kResolution.width;
+        final width = constraints.biggest.width;
+
+        final height = width / kAspectRatio;
+
+        final scaleWidth = width / kResolution.width;
+        final scaleHeight = height / kResolution.height;
 
         return SizedBox(
           width: width,
@@ -32,10 +38,14 @@ class ScaledApp extends StatelessWidget {
                   width: kResolution.width.toDouble(),
                   height: kResolution.height.toDouble(),
                   child: Transform.scale(
-                    scale: scale,
+                    scaleY: scaleHeight,
+                    scaleX: scaleWidth,
                     child: MediaQuery(
                       data: MediaQuery.of(context).copyWith(size: kResolution),
-                      child: builder(context, scale),
+                      child: ScaledWidgetProvider(
+                        scale: scaleWidth,
+                        child: child,
+                      ),
                     ),
                   ),
                 )
@@ -45,5 +55,27 @@ class ScaledApp extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+//  create inherited widget that can pass teh scale factor to the child widget
+class ScaledWidgetProvider extends InheritedWidget {
+  const ScaledWidgetProvider({
+    required this.scale,
+    required super.child,
+    super.key,
+  });
+
+  final double scale;
+
+  static double of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<ScaledWidgetProvider>()!
+        .scale;
+  }
+
+  @override
+  bool updateShouldNotify(ScaledWidgetProvider oldWidget) {
+    return oldWidget.scale != scale;
   }
 }

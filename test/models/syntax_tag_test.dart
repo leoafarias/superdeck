@@ -19,13 +19,13 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        SectionTag.left: '''
+        Section.left: '''
 
 ## Content One
 Description of content
 
 ''',
-        SectionTag.right: '''
+        Section.right: '''
 
 #### Content Two
 
@@ -46,7 +46,7 @@ Description of content
 Description of content
 ''';
       final expected = <String, String>{
-        SectionTag.first: '''
+        Section.first: '''
 ## Content One
 Description of content
 '''
@@ -68,12 +68,12 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        SectionTag.first: '''
+        Section.first: '''
 ## Content One
 Description of content
 
 ''',
-        SectionTag.right: '''
+        Section.right: '''
 
 #### Content Two
 
@@ -99,12 +99,12 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        SectionTag.first: '''
+        Section.first: '''
 ## Content One
 Description of content
 
 ''',
-        SectionTag.left: '''
+        Section.left: '''
 
 #### Content Two
 

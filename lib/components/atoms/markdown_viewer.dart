@@ -1,17 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:mix/mix.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/syntax_highlighter.dart';
+import '../../helpers/utils.dart';
 import '../../models/asset_model.dart';
-import '../../styles/style_spec.dart';
+import '../../superdeck.dart';
+import 'slide_view.dart';
 
 class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
   final String content;
   final SlideSpec spec;
   final List<SlideAsset> assets;
-  final BoxConstraints constraints;
 
   const AnimatedMarkdownViewer({
     super.key,
@@ -19,7 +19,6 @@ class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
     required this.spec,
     required super.duration,
     required this.assets,
-    required this.constraints,
     super.curve = Curves.linear,
   });
 
@@ -53,11 +52,7 @@ class _AnimatedMarkdownViewerState
       enableKbd: false,
       syntaxExtensions: const [],
       elementBuilders: const [],
-      imageBuilder: _imageBuilder(
-        widget.assets,
-        widget.constraints,
-        widget.spec.image,
-      ),
+      imageBuilder: _imageBuilder,
       onTapLink: (href, title) {
         print({href, title});
       },
@@ -95,43 +90,29 @@ class SlideSpecTween extends Tween<SlideSpec> {
   }
 }
 
-Widget Function(Uri, MarkdownImageInfo) _imageBuilder(
-  List<SlideAsset> assets,
-  BoxConstraints constraints,
-  ImageSpec spec,
+Widget _imageBuilder(
+  Uri uri,
+  MarkdownImageInfo info,
 ) {
-  return (
-    Uri uri,
-    MarkdownImageInfo info,
-  ) {
-    ImageProvider provider;
-    SlideAsset? asset;
-    //  check if its a local path or a network path
-    if (uri.scheme == 'http' || uri.scheme == 'https') {
-      provider = CachedNetworkImageProvider(uri.toString());
-    } else {
-      asset = assets.firstWhereOrNull(
-        (element) => element.path == uri.toString(),
-      );
-
-      if (asset != null) {
-        provider = MemoryImage(asset.bytes);
-      } else {
-        provider = AssetImage(uri.toString());
-      }
-    }
-
-    return ConstrainedBox(
-      constraints: constraints,
-      child: MixedImage(
-        image: provider,
-        spec: spec.copyWith(
-          width: info.width ?? spec.width,
-          height: info.height ?? spec.height,
+  return Builder(
+    builder: (context) {
+      final size = SlideConstraints.of(context).biggest;
+      final assets = superdeck.assets.watch(context);
+      final spec = SlideSpec.of(context);
+      final imageSpec = spec.image;
+      final constraints = calculateConstraints(size, spec.contentContainer);
+      return ConstrainedBox(
+        constraints: constraints,
+        child: AnimatedMixedImage(
+          image: getImageProvider(uri, assets),
+          spec: imageSpec.copyWith(
+            width: info.width ?? imageSpec.width,
+            height: info.height ?? imageSpec.height,
+          ),
         ),
-      ),
-    );
-  };
+      );
+    },
+  );
 }
 
 List<TextSpan> updateTextColor(
@@ -183,40 +164,4 @@ List<TextSpan> updateTextColor(
   }
 
   return updatedSpans;
-}
-
-/// Parses a block padding, including:
-///
-/// 1. Remove `top` when it is the first child.
-/// 2. Remove `bottom` when it is the last child.
-EdgeInsets? parseBlockPadding(EdgeInsets? padding, SiblingPosition position) {
-  if (padding == null || padding == EdgeInsets.zero) {
-    return null;
-  }
-
-  final isLast = position.index + 1 == position.total;
-  final isFirst = position.index == 0;
-
-  if (!isLast && !isFirst) {
-    return padding;
-  }
-
-  var top = padding.top;
-  var bottom = padding.bottom;
-
-  if (isFirst && isLast) {
-    top = 0;
-    bottom = 0;
-  } else if (isFirst) {
-    top = 0;
-  } else if (isLast) {
-    bottom = 0;
-  }
-
-  return padding.copyWith(
-    top: top,
-    bottom: bottom,
-    left: padding.left,
-    right: padding.right,
-  );
 }

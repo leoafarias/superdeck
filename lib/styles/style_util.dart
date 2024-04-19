@@ -19,12 +19,13 @@ TextStyle get monoTextStyle =>
 TextStyle get serifTextStyle =>
     GoogleFonts.playfairDisplay().copyWith(fontSize: 50);
 
-TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
+TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.4);
 
 Style get defaultStyle => Style.create([
-      $.outerContainer.only(),
-      $.innerContainer.only(),
+      $.outerContainer.color.black(),
+      // $.innerContainer.color.transparent(),
       $.contentContainer.padding.all(40),
+      // $.contentContainer.color(Colors.yellow),
       $.textStyle.as(baseTextStyle),
       $.headings.textStyle.as(headingTextStyle),
       $.h1.textStyle.fontSize(72),
@@ -67,7 +68,7 @@ Style get defaultStyle => Style.create([
       $.divider.height(1),
       $.divider.color(Colors.grey),
       $.divider.thickness(2),
-      $.image.fit.contain(),
+      $.image.fit.cover(),
     ]);
 
 const $ = SlideStyleUtility(selfBuilder);

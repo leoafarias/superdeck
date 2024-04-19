@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
@@ -9,10 +10,10 @@ import '../models/slide_model.dart';
 import '../superdeck.dart';
 import 'measure_size.dart';
 
-abstract class SlideTemplate<Config extends Slide> extends StatelessWidget {
-  final Config config;
+abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
+  final T config;
 
-  const SlideTemplate({required this.config, super.key});
+  const SlideBuilder({required this.config, super.key});
 
   Widget buildContent() {
     return _buildContent(
@@ -23,35 +24,26 @@ abstract class SlideTemplate<Config extends Slide> extends StatelessWidget {
 
   @protected
   Widget _buildContent(String content, ContentOptions? options) {
-    final alignment = options?.alignment ?? ContentAlignment.center;
-    return Column(
-      mainAxisAlignment: alignment.toMainAxisAlignment(),
-      crossAxisAlignment: alignment.toCrossAxisAlignment(),
-      children: [
-        SlideContent(data: content),
-      ],
-    );
+    return SlideContent(data: content, options: options);
   }
 
-  Widget buildContentSection(String content, ContentOptions? options) {
+  Widget buildContentSection(SectionData section) {
     return Expanded(
-      flex: options?.flex ?? 1,
-      child: _buildContent(content, options),
+      flex: section.options.flex,
+      child: _buildContent(section.content, section.options),
     );
   }
 }
 
-class SimpleSlideTemplate extends SlideTemplate<SimpleSlide> {
-  const SimpleSlideTemplate({required super.config, super.key});
+class SimpleSlideBuilder extends SlideBuilder<SimpleSlide> {
+  const SimpleSlideBuilder({required super.config, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return buildContent();
-  }
+  Widget build(BuildContext context) => buildContent();
 }
 
-class InvalidSlideTemplate extends SlideTemplate<InvalidSlide> {
-  const InvalidSlideTemplate({required super.config, super.key});
+class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
+  const InvalidSlideBuilder({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,207 +76,179 @@ class InvalidSlideTemplate extends SlideTemplate<InvalidSlide> {
   }
 }
 
-class WidgetSlideTemplate extends SlideTemplate<WidgetSlide> {
-  const WidgetSlideTemplate({required super.config, super.key});
+abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
+  const SplitSlideBuilder({required super.config, super.key});
+
+  Widget buildSplitSlide(Widget side) {
+    final position = config.options.position;
+    final flex = config.options.flex;
+
+    List<Widget> children = [
+      buildContentSection((
+        content: config.data,
+        options: config.contentOptions ?? const ContentOptions(),
+      )),
+      Expanded(flex: flex, child: side),
+    ];
+
+    if (position == LayoutPosition.left || position == LayoutPosition.top) {
+      children = children.reversed.toList();
+    }
+
+    final isVertical =
+        position == LayoutPosition.top || position == LayoutPosition.bottom;
+
+    if (isVertical) {
+      return Column(children: children);
+    } else {
+      return Row(children: children);
+    }
+  }
+}
+
+class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
+  const WidgetSlideBuilder({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final options = config.widget;
-    final position = options.position;
+    final options = config.options;
 
-    final previewBuilders = SuperDeck.widgetExamplesOf(context);
+    final previewBuilders = superdeck.examples.watch(context);
 
     final builder = previewBuilders[options.name];
 
-    List<Widget> children = [
-      buildContentSection(config.data, config.contentOptions),
-      Expanded(
-        flex: options.flex,
-        child: SlideConstraintBuilder(builder: (context, size) {
-          return MediaQuery(
-            data: MediaQueryData(size: size),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: size.width,
-                maxHeight: size.height,
-              ),
-              child: DevicePreview(
-                enabled: options.preview,
-                builder: (context) {
-                  return CodePreview(
-                    child: builder?.call(options.args),
-                  );
-                },
-              ),
-            ),
-          );
-        }),
-      )
-    ];
+    final side = SlideConstraintBuilder(builder: (context, size) {
+      return MediaQuery(
+        data: MediaQueryData(size: size),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: size.width,
+            maxHeight: size.height,
+          ),
+          child: DevicePreview(
+            enabled: options.preview,
+            builder: (context) {
+              return CodePreview(
+                child: builder?.call(options.args),
+              );
+            },
+          ),
+        ),
+      );
+    });
 
-    if (position == LayoutPosition.left || position == LayoutPosition.top) {
-      children = children.reversed.toList();
-    }
-
-    final isVertical =
-        position == LayoutPosition.top || position == LayoutPosition.bottom;
-
-    if (isVertical) {
-      children = children.map((child) {
-        return Expanded(
-          child: Row(children: [child]),
-        );
-      }).toList();
-    }
-
-    if (isVertical) {
-      return Column(children: children);
-    } else {
-      return Row(children: children);
-    }
+    return buildSplitSlide(side);
   }
 }
 
-class ImageSlideTemplate extends SlideTemplate<ImageSlide> {
-  const ImageSlideTemplate({required super.config, super.key});
+class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
+  const ImageSlideBuilder({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final image = config.image;
-    final position = image.position;
+    final spec = SlideSpec.of(context);
+    final assets = superdeck.assets.watch(context);
 
-    final mix = MixProvider.of(context);
-    final spec = SlideSpec.of(mix);
+    final src = config.options.src;
+    final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
 
     ImageProvider provider;
 
-    if (image.src.startsWith('http') || image.src.startsWith('https')) {
-      provider = CachedNetworkImageProvider(image.src);
+    if (src.startsWith('http') || src.startsWith('https')) {
+      provider = CachedNetworkImageProvider(src);
     } else {
-      provider = AssetImage(image.src);
+      final asset = assets.firstWhereOrNull(
+        (element) => element.path == src,
+      );
+
+      if (asset != null) {
+        provider = MemoryImage(asset.bytes);
+      } else {
+        provider = AssetImage(src);
+      }
     }
 
-    List<Widget> children = [
-      buildContentSection(config.data, config.contentOptions),
-      Expanded(
-        flex: config.image.flex,
-        child: Container(
-          height: spec.image.height,
-          width: spec.image.width,
-          alignment: spec.image.alignment,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: provider,
-              centerSlice: spec.image.centerSlice,
-              repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
-              filterQuality: spec.image.filterQuality ?? FilterQuality.low,
-              fit: config.image.fit?.toBoxFit() ?? spec.image.fit,
-            ),
-          ),
+    final side = Container(
+      height: spec.image.height,
+      width: spec.image.width,
+      alignment: spec.image.alignment,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: provider,
+          centerSlice: spec.image.centerSlice,
+          repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
+          filterQuality: spec.image.filterQuality ?? FilterQuality.low,
+          fit: boxFit,
         ),
-      )
-    ];
+      ),
+    );
 
-    if (position == LayoutPosition.left || position == LayoutPosition.top) {
-      children = children.reversed.toList();
-    }
-
-    final isVertical =
-        position == LayoutPosition.top || position == LayoutPosition.bottom;
-
-    if (isVertical) {
-      children = children.map((child) {
-        return Expanded(
-          child: Row(children: [child]),
-        );
-      }).toList();
-    }
-
-    if (isVertical) {
-      return Column(children: children);
-    } else {
-      return Row(children: children);
-    }
+    return buildSplitSlide(side);
   }
 }
 
-class TwoColumnSlideTemplate extends SlideTemplate<TwoColumnSlide> {
-  const TwoColumnSlideTemplate({required super.config, super.key});
+class TwoColumnSlideBuilder extends SlideBuilder<TwoColumnSlide> {
+  const TwoColumnSlideBuilder({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
     final options = config.contentOptions ?? const ContentOptions();
-    final alignment = options.alignment ?? ContentAlignment.centerLeft;
+    final alignment = options.alignment;
 
-    final leftOptions = options.merge(config.leftOptions);
-    final rightOptions = options.merge(config.rightOptions);
-    return Column(
-      mainAxisAlignment: alignment.toMainAxisAlignment(),
-      crossAxisAlignment: alignment.toCrossAxisAlignment(),
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              buildContentSection(
-                config.leftContent,
-                leftOptions,
-              ),
-              buildContentSection(
-                config.rightContent,
-                rightOptions,
-              ),
-            ],
-          ),
-        ),
-      ],
+    return Container(
+      alignment: alignment.toAlignment(),
+      child: Row(
+        children: [
+          buildContentSection(config.left),
+          buildContentSection(config.right),
+        ],
+      ),
     );
   }
 }
 
-class TwoColumnHeaderSlideTemplate extends SlideTemplate<TwoColumnHeaderSlide> {
-  const TwoColumnHeaderSlideTemplate({required super.config, super.key});
+class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
+  const TwoColumnHeaderSlideBuilder({required super.config, super.key});
 
   @override
   Widget build(BuildContext context) {
     final options = config.contentOptions ?? const ContentOptions();
-    final alignment = options.alignment ?? ContentAlignment.centerLeft;
-    final flex = options.flex ?? 1;
+    final alignment = options.alignment;
+    final flex = options.flex;
+
+    final header = config.header;
+
+    final left = config.left;
+    final right = config.right;
     return Column(
       children: [
         Expanded(
-          flex: config.headerOptions?.flex ?? flex,
+          flex: header.options.flex,
           child: Row(
             children: [
-              buildContentSection(
-                config.headerContent,
-                options.merge(config.headerOptions),
-              ),
+              buildContentSection((
+                content: header.content,
+                options: options.merge(header.options),
+              )),
             ],
           ),
         ),
         Expanded(
           flex: flex,
-          child: Column(
-            mainAxisAlignment: alignment.toMainAxisAlignment(),
-            crossAxisAlignment: alignment.toCrossAxisAlignment(),
-            children: [
-              Row(
-                children: [
-                  buildContentSection(
-                    config.leftContent,
-                    options.merge(
-                      config.leftOptions,
-                    ),
-                  ),
-                  buildContentSection(
-                    config.rightContent,
-                    options.merge(
-                      config.rightOptions,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          child: Container(
+            alignment: alignment.toAlignment(),
+            child: Row(
+              children: [
+                buildContentSection((
+                  content: left.content,
+                  options: options.merge(left.options),
+                )),
+                buildContentSection((
+                  content: right.content,
+                  options: options.merge(right.options),
+                )),
+              ],
+            ),
           ),
         ),
       ],

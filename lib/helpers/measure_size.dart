@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../components/molecules/slide_view.dart';
+import '../components/atoms/slide_view.dart';
 
 typedef OnWidgetSizeChange = void Function(Size size);
 
@@ -71,15 +71,20 @@ class _SlideConstraintBuilderState extends State<SlideConstraintBuilder> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
+      builder: (
+        BuildContext context,
+        BoxConstraints constraints,
+      ) {
         final size = _widgetSize == null ? constraints.biggest : _widgetSize!;
+        final constraintSize = BoxConstraints(
+          maxHeight: size.height,
+          maxWidth: size.width,
+        );
+
         return MeasureSize(
           onChange: _onWidgetSizeChange,
           child: SlideConstraints(
-            constraints: BoxConstraints(
-              maxHeight: size.height,
-              maxWidth: size.width,
-            ),
+            constraints: constraintSize,
             child: Builder(
               builder: (BuildContext context) {
                 return widget.builder(context, size);
