@@ -113,10 +113,6 @@ class _SplitViewState extends State<SplitView>
                     child: widget.child,
                   ),
                 ),
-                const VerticalDivider(
-                  width: 1,
-                  color: Colors.white,
-                ),
                 Transform.translate(
                   offset: Offset(animatedWidth - sideWidth, 0),
                   child: SizedBox(

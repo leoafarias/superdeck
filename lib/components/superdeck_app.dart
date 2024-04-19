@@ -103,6 +103,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
         return MixTheme(
           data: MixThemeData.withMaterial(),
           child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
             title: 'Superdeck',
             theme: theme,
             routerConfig: _router,

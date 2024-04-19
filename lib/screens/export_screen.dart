@@ -12,6 +12,7 @@ import 'package:universal_html/html.dart' as html;
 
 import '../../helpers/constants.dart';
 import '../../models/slide_model.dart';
+import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
 import '../superdeck.dart';
 
@@ -24,6 +25,17 @@ enum ExportQuality {
 
   final String label;
   final double pixelRatio;
+}
+
+enum ExportProcessStatus {
+  idle,
+  converting,
+  creatingPdf,
+  complete;
+
+  const ExportProcessStatus();
+
+  bool get isComplete => this == ExportProcessStatus.complete;
 }
 
 class ExportScreen extends StatefulWidget {
@@ -96,13 +108,6 @@ class _ExportScreenState extends State<ExportScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'The exported file will be saved as "superdeck.pdf" in the root of your project.',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              const SizedBox(height: 24.0),
-              const Text(
                 'Select Quality:',
                 style: TextStyle(
                   fontSize: 16.0,
@@ -137,17 +142,17 @@ class ExportingProcessScreen extends StatefulWidget {
 }
 
 class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
-  late final _isConverting = createSignal(context, false);
   final Map<int, GlobalKey> _globalKeys = {};
-  late final _currentSlide = createSignal(context, 0);
-  late final _status = createSignal(context, '');
+
+  late final _status = createSignal(context, ExportProcessStatus.idle);
   final _pageController = PageController();
   late List<Slide> _slides;
+  late final _images = listSignal<Uint8List>([]);
 
   @override
   void initState() {
     super.initState();
-    _isConverting.value = false;
+
     _slides = superdeck.slides.value;
     assignGlobalKeys(_slides);
     Future.delayed(Durations.medium1).then((value) => startConversion());
@@ -181,38 +186,38 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   Future<void> startConversion() async {
     try {
-      _isConverting.value = true;
+      _status.value = ExportProcessStatus.converting;
 
-      List<ui.Image> images = [];
-      List<Uint8List> bytes = [];
-      _currentSlide.value = 0;
-      await Future.delayed(Duration.zero);
+      List<Future<Uint8List>> futures = [];
+
+      Future<Uint8List> convertSlide(Slide slide) async {
+        final image = await getImageFromWidget(SlideView(slide));
+
+        final convertedImage = await getImageInBytes(image);
+
+        image.dispose();
+
+        _images.add(convertedImage);
+        await Future.delayed(Durations.short1);
+
+        return convertedImage;
+      }
 
       for (var slide in _slides) {
-        _currentSlide.value++;
-        _status.value =
-            'Extracting slide ${_currentSlide.value} of ${_slides.length}';
-        // await Future.delayed(Durations.short1);
-        await Future.delayed(Duration.zero);
-        final image = await getImageFromWidget(SlideView(slide));
-        images.add(image);
+        futures.add(convertSlide(slide));
+        // _images.add(await convertSlide(slide));
       }
 
-      _currentSlide.value = 0;
+      final images = await Future.wait(futures);
+
+      await Future.delayed(Durations.short1);
+      _status.value = ExportProcessStatus.creatingPdf;
       await Future.delayed(Durations.short1);
 
-      for (var image in images) {
-        _currentSlide.value++;
-        _status.value =
-            'Converting slide ${_currentSlide.value} of ${_slides.length}';
-        await Future.delayed(Duration.zero);
-        bytes.add(await getImageInBytes(image));
-      }
+      final pdf = await buildPdf(images);
 
-      _status.value = 'Building PDF...';
+      _status.value = ExportProcessStatus.complete;
       await Future.delayed(Durations.short1);
-
-      final pdf = await buildPdf(bytes);
 
       if (kIsWeb) {
         // Create a Blob from the PDF bytes
@@ -234,18 +239,15 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
         type: FileType.custom,
         allowedExtensions: ['pdf'],
       );
+
       if (outputFile != null) {
         File file = File(outputFile);
-        _status.value = 'Saving...';
 
         await file.writeAsBytes(pdf);
       }
-
-      _currentSlide.value = 0;
     } on Exception catch (e) {
       print(e.toString());
     } finally {
-      _isConverting.value = false;
       widget.onComplete();
     }
   }
@@ -280,95 +282,114 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          color: Colors.black,
-          padding: const EdgeInsets.all(200),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _status.value,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-              SmoothLinearProgressIndicator(
-                progress: _currentSlide.value / _slides.length,
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class SmoothLinearProgressIndicator extends StatefulWidget {
-  final double progress;
-
-  const SmoothLinearProgressIndicator({super.key, required this.progress});
-
-  @override
-  _SmoothLinearProgressIndicatorState createState() =>
-      _SmoothLinearProgressIndicatorState();
-}
-
-class _SmoothLinearProgressIndicatorState
-    extends State<SmoothLinearProgressIndicator>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    _animation = Tween<double>(begin: 0.0, end: widget.progress)
-        .animate(_animationController);
-    _animationController.forward();
-  }
-
-  @override
-  void didUpdateWidget(covariant SmoothLinearProgressIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.progress != oldWidget.progress) {
-      _animation = Tween<double>(
-        begin: _animation.value,
-        end: widget.progress,
-      ).animate(_animationController);
-      _animationController.forward(from: 0.0);
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return LinearProgressIndicator(
-          minHeight: 10,
-          borderRadius: BorderRadius.circular(10),
-          value: _animation.value,
-        );
+    _images.listen(
+      context,
+      () {
+        int page;
+        if (_images.length == _slides.length) {
+          page = 0;
+        } else {
+          page = _images.length - 1;
+        }
+        _pageController.jumpToPage(page);
       },
     );
+
+    return Watch.builder(builder: (context) {
+      final totalSlides = _slides.length;
+      final totalImages = _images.length;
+
+      final statusLabel = switch (_status.value) {
+        ExportProcessStatus.idle => 'Idle',
+        ExportProcessStatus.converting => 'Converting',
+        ExportProcessStatus.creatingPdf => 'Creating PDF',
+        ExportProcessStatus.complete => 'Done',
+      };
+
+      List<Widget> buildChildren() {
+        if (_status.value.isComplete) {
+          return [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 48,
+                ),
+                SizedBox(width: 16),
+                Text(
+                  'Done',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )
+          ];
+        }
+
+        return [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.black,
+            ),
+            height: 225,
+            width: 400,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _images.length,
+              itemBuilder: (context, index) {
+                return SlideView(_slides[index]);
+              },
+            ),
+          ),
+          const SizedBox(height: 26),
+          Text(
+            statusLabel,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: AnimatedLinearProgressIndicator(
+                  progress: totalImages / totalSlides,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                '$totalImages/$totalSlides',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          )
+        ];
+      }
+
+      return Stack(
+        children: [
+          Container(
+            color: Theme.of(context).colorScheme.background,
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.8),
+            padding: const EdgeInsets.all(200),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: buildChildren(),
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 
 Future<ui.Image> fromWidgetToImage(
   Widget widget, {
-  Duration delay = Durations.short1,
-  double pixelRatio = 1.0,
+  required double pixelRatio,
   required BuildContext context,
   Size? targetSize,
 }) async {
@@ -379,20 +400,21 @@ Future<ui.Image> fromWidgetToImage(
     MediaQuery(
       data: MediaQuery.of(context),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: Theme.of(context),
         color: Colors.transparent,
-        home: child,
+        home: Scaffold(body: child),
       ),
     ),
   );
 
   final repaintBoundary = RenderRepaintBoundary();
-  // final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
-  // final fallBackView = platformDispatcher.views.first;
-  final view = View.of(context);
+  final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
+
+  final view = View.maybeOf(context) ?? platformDispatcher.views.first;
   final logicalSize = targetSize ?? view.physicalSize / view.devicePixelRatio;
 
-  int retryCount = 3;
+  int retryCount = 5;
   bool isDirty = false;
 
   final renderView = RenderView(
@@ -427,6 +449,7 @@ Future<ui.Image> fromWidgetToImage(
   ).attachToRenderTree(buildOwner);
   ui.Image? image;
   while (retryCount > 0) {
+    // await Future.delayed(const Duration(seconds: 1));
     isDirty = false;
     image = await _captureImage(
       buildOwner: buildOwner,
@@ -435,12 +458,13 @@ Future<ui.Image> fromWidgetToImage(
       repaintBoundary: repaintBoundary,
       pixelRatio: pixelRatio,
       logicalSize: logicalSize,
-      delay: delay,
     );
 
     if (!isDirty) {
       break;
     }
+
+    await Future.delayed(Durations.medium1);
 
     retryCount--;
   }
@@ -459,7 +483,6 @@ Future<ui.Image?> _captureImage({
   required RenderRepaintBoundary repaintBoundary,
   required double pixelRatio,
   required Size logicalSize,
-  required Duration delay,
 }) async {
   buildOwner.buildScope(rootElement);
   buildOwner.finalizeTree();
@@ -467,8 +490,6 @@ Future<ui.Image?> _captureImage({
   pipelineOwner.flushLayout();
   pipelineOwner.flushCompositingBits();
   pipelineOwner.flushPaint();
-
-  await Future.delayed(delay);
 
   return repaintBoundary.toImage(pixelRatio: pixelRatio);
 }

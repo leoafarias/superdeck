@@ -37,6 +37,10 @@ class SlidesLoader {
       throw Exception('Slides markdown file not found');
     }
 
+    if (!await kConfig.assetsImageDir.exists()) {
+      await kConfig.assetsImageDir.create(recursive: true);
+    }
+
     await _pipeline.run(await markdownFile.readAsString());
   }
 
@@ -68,6 +72,7 @@ class SlidesLoader {
     }
 
     if (kDebugMode) {
+      await generate();
       return _loadFromLocalStorage();
     } else {
       return _loadFromRootBundle();

@@ -25,48 +25,57 @@ class SlideView extends StatelessWidget {
     final style = superdeck.style.watch(context);
     final assets = superdeck.assets.watch(context);
 
+    final variantStyle = style.applyVariant(variant);
+
     return ScaledWidget(
       child: TransitionWidget(
         key: ValueKey(slide.transition),
         transition: slide.transition,
-        child: MixBuilder(
-          style: style.applyVariant(variant).animate(),
-          builder: (mix) {
-            final spec = SlideSpec.fromMix(mix);
-            return AnimatedMixedBox(
-              spec: spec.outerContainer,
-              duration: Durations.medium1,
-              child: AnimatedMixedBox(
-                spec: _buildInnerContainerSpec(
-                  slide,
-                  spec.innerContainer,
-                  assets,
-                ),
-                duration: const Duration(milliseconds: 300),
-                child: SlideConstraintBuilder(
-                  builder: (_, __) {
-                    if (slide is SimpleSlide) {
-                      return SimpleSlideBuilder(config: slide);
-                    } else if (slide is WidgetSlide) {
-                      return WidgetSlideBuilder(config: slide);
-                    } else if (slide is ImageSlide) {
-                      return ImageSlideBuilder(config: slide);
-                    } else if (slide is TwoColumnSlide) {
-                      return TwoColumnSlideBuilder(config: slide);
-                    } else if (slide is TwoColumnHeaderSlide) {
-                      return TwoColumnHeaderSlideBuilder(config: slide);
-                    } else if (slide is InvalidSlide) {
-                      return InvalidSlideBuilder(config: slide);
-                    } else {
-                      throw UnimplementedError(
-                        'Slide config not implemented',
-                      );
-                    }
-                  },
-                ),
-              ),
-            );
-          },
+        child: Pressable(
+          onPress: () {},
+          child: MixBuilder(
+            key: ValueKey(variantStyle),
+            style: variantStyle.animate(),
+            builder: (mix) {
+              final spec = SlideSpec.fromMix(mix);
+              return Builder(builder: (context) {
+                return AnimatedMixedBox(
+                  spec: spec.outerContainer,
+                  duration: Durations.medium1,
+                  child: AnimatedMixedBox(
+                    spec: _buildInnerContainerSpec(
+                      slide: slide,
+                      spec: spec.innerContainer,
+                      assets: assets,
+                      context: context,
+                    ),
+                    duration: const Duration(milliseconds: 300),
+                    child: SlideConstraintBuilder(
+                      builder: (_, __) {
+                        if (slide is SimpleSlide) {
+                          return SimpleSlideBuilder(config: slide);
+                        } else if (slide is WidgetSlide) {
+                          return WidgetSlideBuilder(config: slide);
+                        } else if (slide is ImageSlide) {
+                          return ImageSlideBuilder(config: slide);
+                        } else if (slide is TwoColumnSlide) {
+                          return TwoColumnSlideBuilder(config: slide);
+                        } else if (slide is TwoColumnHeaderSlide) {
+                          return TwoColumnHeaderSlideBuilder(config: slide);
+                        } else if (slide is InvalidSlide) {
+                          return InvalidSlideBuilder(config: slide);
+                        } else {
+                          throw UnimplementedError(
+                            'Slide config not implemented',
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                );
+              });
+            },
+          ),
         ),
       ),
     );
@@ -97,11 +106,12 @@ class SlideConstraints extends InheritedWidget {
   }
 }
 
-BoxSpec _buildInnerContainerSpec(
-  Slide slide,
-  BoxSpec spec,
-  List<SlideAsset> assets,
-) {
+BoxSpec _buildInnerContainerSpec({
+  required Slide slide,
+  required BoxSpec spec,
+  required List<SlideAsset> assets,
+  required BuildContext context,
+}) {
   final background = slide.background;
   if (background == null) {
     return spec;
@@ -109,21 +119,44 @@ BoxSpec _buildInnerContainerSpec(
 
   final decoration = spec.decoration;
 
+  final imageProvider = getImageProvider(background, assets);
+
+  print('imageProvider: $background');
+
   if (decoration is BoxDecoration) {
-    return spec.copyWith(
+    final innerContainerSpecImage = decoration.image;
+    final mix = MixProvider.of(context);
+    final backgroundDecorationDto = DecorationImageDto(
+      image: imageProvider,
+      fit: BoxFit.cover,
+      alignment: Alignment.center,
+    );
+
+    if (innerContainerSpecImage == null) {
+      return spec.copyWith(
         decoration: decoration.copyWith(
-      image: DecorationImage(
-        image: getImageProvider(background, assets),
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
+          image: backgroundDecorationDto.resolve(mix),
+        ),
+      );
+    }
+
+    final decorationDto = DecorationImageDto.from(innerContainerSpecImage);
+
+    final newDecoration = backgroundDecorationDto
+        .merge(decorationDto)
+        .merge(DecorationImageDto(image: imageProvider));
+
+    return spec.copyWith(
+      decoration: decoration.copyWith(
+        image: newDecoration.resolve(mix),
       ),
-    ));
+    );
   }
 
   return spec.copyWith(
     decoration: BoxDecoration(
       image: DecorationImage(
-        image: getImageProvider(background, assets),
+        image: imageProvider,
         fit: BoxFit.cover,
         alignment: Alignment.center,
       ),

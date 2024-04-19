@@ -1,12 +1,20 @@
 ---
-style: cover
+style: custom
+layout: two_column_header
 background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif
+sections:
+  header:
+    alignment: bottom_center
+    flex: 2
+  left:
+    flex: 1
 ---
 
  
-## Create beautiful presentations:
 # Superdeck
 
+::left::
+## Beautiful Flutter presentations with Markdown
 
 ---
 style: quote
@@ -14,35 +22,112 @@ layout: image
 options:
   src: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0
   fit: cover
-  position: right
 content:
   alignment: bottom_right
+---
+
+
+> Create your Flutter presentations faster and easier than ever.
+> You can quote me on that.
+> ### Leo Farias
+
+
+---
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24wb3V5cThlZ3ExY2NvY3czcmozang0bGQ1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XzWd8acQ37byKR4tmd/giphy.gif
+style: cover
+---
+
+# Complex layouts
+
+---
+layout: image
+style: show_sections
+options:
+  src: https://source.unsplash.com/random/900×700/?waves
+  fit: cover
+  position: left
   flex: 1
 ---
 
+# Image Layout
 
-> If you want to go fast, go alone. 
-> If you want to go far, go together.
-> ### African Proverb
+Create beautiful slides with images that fit your content.
 
----
-layout: widget
+##### Options
+```yaml
 options:
-  name: demo
-  position: right
-  args:
-    text: Awesome Widget
-    height: 200.0
-    width: 500.0
+  src: https//www.url.com/image.jpg
+  fit: cover
+  position: left
+  flex: 1
+```
+
+> Define position fit and flex options for the image.
+
+
+
+---
+layout: two_column
+style: show_sections
+sections:
+  left:
+    flex: 2
+  right:
+    alignment: bottom_left
 ---
 
-This is an example of an awesome widget
+::left::
 
+# Two Column
+
+This is a two-column layout. You can use it to compare two different concepts or ideas.
+
+::right::
+
+### Section Options
+
+Easily customize the content of each section to suit your needs.
+
+Use front matter to define the layout of each section
+
+
+```yaml
+sections:
+  left:
+    flex: 2
+  right:
+    alignment: bottom_left
+```
 
 ---
 layout: two_column_header
 content:
   alignment: center
+  flex: 2
+sections:
+  left:
+    flex: 2
+  right:
+    alignment: bottom_left
+  header:
+    alignment: bottom_left
+style: show_sections
+---
+
+# Two Column + Header
+
+
+::left::
+
+### Left Section
+Easily customize the content of each section to suit your needs.
+
+Use front matter to define the layout of each section
+::right::
+
+#### Section Options
+
+```yaml
 sections:
   left:
     alignment: bottom_right
@@ -51,46 +136,102 @@ sections:
     alignment: bottom_left
   header:
     alignment: bottom_left
+```
+ 
+
+---
+style: rad
+layout: two_column
+content:
+  alignment: center
+sections:
+  left:
+  right:
+    alignment: bottom_left
+    flex: 2
 ---
 
-# Two Column Header
+# Mix
 
-This is your main header, providing a context or introducing the core concept covered in this slide.
-
-::left::
-
-### Left Heading
-- Point A
-- Point B
-- Point C
+Integration with Mix gives you complete control over all styling elements in your slides with a simple and intuitive API.
 
 ::right::
 
-### Right Heading
-- Point X
-- Point Y
-- Point Z
+```dart
+VariantAttribute get radStyle {
+  return const SlideVariant('rad')(
+    $.h1.textStyle.as(GoogleFonts.poppins()),
+    $.h1.textStyle.fontSize(140),
+    $.code.decoration.border.all(
+      color: Colors.red,
+      width: 3,
+    ),
+    $.code.decoration(
+      color: Colors.black54,
+    ),
+    $.code.padding.all(40),
 
+    $.outerContainer.margin.all(60),
 
+    $.innerContainer.borderRadius(25),
+    $.innerContainer.shadow(
+      blurRadius: 0,
+      spreadRadius: 10,
+      color: Colors.red.withOpacity(1),
+    ),
+    $.innerContainer.gradient.radial(
+      stops: [0.0, 1.0],
+      radius: 0.7,
+      colors: [Colors.purple, Colors.deepPurple],
+    ),
+
+    // Events
+    onMouseHover((event) {
+      final position = event.position;
+      final dx = position.x * 10;
+      final dy = position.y * 10;
+
+      return Style(
+        $.innerContainer.transform(_transformMatrix(position)),
+        $.innerContainer.shadow.offset(dx, dy),
+        $.innerContainer.gradient.radial(
+          center: position,
+        ),
+      );
+    }),
+
+    (onPressed | onLongPressed)(
+      $.innerContainer.shadow(
+        blurRadius: 5,
+        spreadRadius: 1,
+        offset: Offset.zero,
+        color: Colors.purpleAccent,
+      ),
+      $.innerContainer.border.all(color: Colors.white, width: 1),
+      $.innerContainer.gradient.radial
+          .colors([Colors.purpleAccent, Colors.purpleAccent]),
+    ),
+  );
+}
+```
 
 ---
-layout: image
-options:
-  src: https://source.unsplash.com/random/900×700/?nature
-  fit: cover
-  position: left
-  flex: 1
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif
+style: cover
 ---
 
-# Key Features
-
-- Innovative design
-- User-friendly
-- Energy-efficient
+# Markdown support
 
 ---
-title: "Slide 2: Text Styling"
+layout: two_column
+sections:
+
+content:
+  flex: 4
 ---
+
+::left::
+
 
 **Bold Text**
 
@@ -100,47 +241,11 @@ title: "Slide 2: Text Styling"
 
 `Inline Code`
 
----
-title: "Slide 3: Links and Images"
----
+[Link here](https://github.com/leoafarias/superdeck)
 
-[Link](https://github.com)
+::right::
 
-![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)
-
-
----
-style: quote
-layout: image
-options:
-  src: https://source.unsplash.com/random/900×700/?inspiration
-  fit: cover
-  position: right
-content:
-  alignment: bottom_right
----
-
-
-> If you want to go fast, go alone. 
-> If you want to go far, go together.
-> ### African Proverb
-
----
----
-
-```dart {1, 3-8}
-int factorial(int n) {
-  if (n == 0) {
-    return 1;
-  } else {
-    return n * factorial(n - 1);
-  }
-}
-```
-
----
-title: "Slide 6: Lists"
----
+Lists
 
 1. Ordered list item 1
 2. Ordered list item 2
@@ -148,14 +253,53 @@ title: "Slide 6: Lists"
 - Unordered list item 1
 - Unordered list item 2
 
+Quotes
+
+> If you want to go fast, go alone. 
+> If you want to go far, go together.
+> ### African Proverb
+
+
 ---
-title: "Slide 7: Tables"
+layout: two_column
 ---
+
+::left::
+
+
+Code
+```dart
+int factorial(int n) {
+   return n == 0 ? 1 : n * factorial(n - 1);
+}
+```
+
+Tasks
+- [ ] Item 1
+- [x] Item 2
+
+Subtasks
+
+- [x] Item 1
+  - [ ] Subitem 1
+
+::right::
+
+Images
+![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)
+
+
+Table
 
 | Header 1 | Header 2 |
 |----------|----------|
 | Cell 1A  | Cell 1B  |
 | Cell 2A  | Cell 2B  |
+
+Divider
+
+___
+
 
 ---
 title: "Mermaid example"
@@ -175,81 +319,397 @@ flowchart TD
 ```
 ::right::
 
-## Mermaid Example
+## Mermaid Support
+
+Superdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.
 
 ---
-title: "Slide 8: Task Lists"
+layout: widget
+options:
+  name: demo
+  position: right
+  args:
+    text: Custom
+    height: 200.0
+    width: 200.0
+---
+
+## Interactive Examples
+
+Showcase your custom widgets with ease.
+
+---
+layout: two_column_header
+sections:
+  right: 
+    flex: 2
+  header: 
+    alignment: bottom_left
+  left:
+    alignment: top_center
+content:
+  flex: 2
+---
+::header::
+# Pretty cool right?
+
+::left::
+
+This whole presentation was created using the following markdown. With some custom styling with Mix.
+
+## Scroll here 👉
+
+::right:: 
+
+```markdown
+---
+style: custom
+layout: two_column_header
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif
+sections:
+  header:
+    alignment: bottom_center
+    flex: 2
+  left:
+    flex: 1
+---
+
+ 
+# Superdeck
+
+::left::
+## Beautiful Flutter presentations with Markdown
+
+---
+style: quote
+layout: image
+options:
+  src: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0
+  fit: cover
+content:
+  alignment: bottom_right
+---
+
+
+> Create your Flutter presentations faster and easier than ever.
+> You can quote me on that.
+> ### Leo Farias
+
+
+---
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24wb3V5cThlZ3ExY2NvY3czcmozang0bGQ1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XzWd8acQ37byKR4tmd/giphy.gif
+style: cover
+---
+
+# Complex layouts
+
+---
+layout: image
+style: show_sections
+options:
+  src: https://source.unsplash.com/random/900×700/?waves
+  fit: cover
+  position: left
+  flex: 1
+---
+
+# Image Layout
+
+Create beautiful slides with images that fit your content.
+
+##### Options
+yaml
+options:
+  src: https//www.url.com/image.jpg
+  fit: cover
+  position: left
+  flex: 1
+
+
+> Define position fit and flex options for the image.
+
+
+
+---
+layout: two_column
+style: show_sections
+sections:
+  left:
+    flex: 2
+  right:
+    alignment: bottom_left
+---
+
+::left::
+
+# Two Column
+
+This is a two-column layout. You can use it to compare two different concepts or ideas.
+
+::right::
+
+### Section Options
+
+Easily customize the content of each section to suit your needs.
+
+Use front matter to define the layout of each section
+
+
+yaml
+sections:
+  left:
+    flex: 2
+  right:
+    alignment: bottom_left
+
+
+---
+layout: two_column_header
+content:
+  alignment: center
+  flex: 2
+sections:
+  left:
+    flex: 2
+  right:
+    alignment: bottom_left
+  header:
+    alignment: bottom_left
+style: show_sections
+---
+
+# Two Column + Header
+
+
+::left::
+
+### Left Section
+Easily customize the content of each section to suit your needs.
+
+Use front matter to define the layout of each section
+::right::
+
+#### Section Options
+
+yaml
+sections:
+  left:
+    alignment: bottom_right
+    flex: 2
+  right:
+    alignment: bottom_left
+  header:
+    alignment: bottom_left
+
+ 
+
+---
+style: rad
+layout: two_column
+content:
+  alignment: center
+sections:
+  left:
+  right:
+    alignment: bottom_left
+    flex: 2
+---
+
+# Mix
+
+Integration with Mix gives you complete control over all styling elements in your slides with a simple and intuitive API.
+
+::right::
+
+dart
+VariantAttribute get radStyle {
+  return const SlideVariant('rad')(
+    $.h1.textStyle.as(GoogleFonts.poppins()),
+    $.h1.textStyle.fontSize(140),
+    $.code.decoration.border.all(
+      color: Colors.red,
+      width: 3,
+    ),
+    $.code.decoration(
+      color: Colors.black54,
+    ),
+    $.code.padding.all(40),
+
+    $.outerContainer.margin.all(60),
+
+    $.innerContainer.borderRadius(25),
+    $.innerContainer.shadow(
+      blurRadius: 0,
+      spreadRadius: 10,
+      color: Colors.red.withOpacity(1),
+    ),
+    $.innerContainer.gradient.radial(
+      stops: [0.0, 1.0],
+      radius: 0.7,
+      colors: [Colors.purple, Colors.deepPurple],
+    ),
+
+    // Events
+    onMouseHover((event) {
+      final position = event.position;
+      final dx = position.x * 10;
+      final dy = position.y * 10;
+
+      return Style(
+        $.innerContainer.transform(_transformMatrix(position)),
+        $.innerContainer.shadow.offset(dx, dy),
+        $.innerContainer.gradient.radial(
+          center: position,
+        ),
+      );
+    }),
+
+    (onPressed | onLongPressed)(
+      $.innerContainer.shadow(
+        blurRadius: 5,
+        spreadRadius: 1,
+        offset: Offset.zero,
+        color: Colors.purpleAccent,
+      ),
+      $.innerContainer.border.all(color: Colors.white, width: 1),
+      $.innerContainer.gradient.radial
+          .colors([Colors.purpleAccent, Colors.purpleAccent]),
+    ),
+  );
+}
+
+
+---
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif
+style: cover
+---
+
+# Markdown support
+
+---
+layout: two_column
+sections:
+
+content:
+  flex: 4
+---
+
+::left::
+
+
+**Bold Text**
+
+*Italic Text*
+
+~~Strikethrough~~
+
+`Inline Code`
+
+[Link here](https://github.com/leoafarias/superdeck)
+
+::right::
+
+Lists
+
+1. Ordered list item 1
+2. Ordered list item 2
+
+- Unordered list item 1
+- Unordered list item 2
+
+Quotes
+
+> If you want to go fast, go alone. 
+> If you want to go far, go together.
+> ### African Proverb
+
+
+---
 layout: two_column
 ---
 
 ::left::
 
-- [ ] Task List Item 1
-- [x] Task List Item 2
+
+Code
+dart
+int factorial(int n) {
+   return n == 0 ? 1 : n * factorial(n - 1);
+}
+
+
+Tasks
+- [ ] Item 1
+- [x] Item 2
+
+Subtasks
+
+- [x] Item 1
+  - [ ] Subitem 1
 
 ::right::
 
-#### Subtask
+Images
+![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)
 
-- [x] foo
-  - [ ] bar
-  - [x] baz
-- [ ] bim
+
+Table
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1A  | Cell 1B  |
+| Cell 2A  | Cell 2B  |
+
+Divider
+
+___
+
 
 ---
-title: Dividers
+title: "Mermaid example"
+layout: two_column
 ---
 
-_____
-Dividers
-____
+::left::
+
+mermaid
+flowchart TD
+    A[This is crazy] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+  
+
+::right::
+
+## Mermaid Support
+
+Superdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.
 
 ---
-title: Code rendering performance
+layout: widget
+options:
+  name: demo
+  position: right
+  preview: true
+  args:
+    text: Custom
+    height: 200.0
+    width: 200.0
 ---
 
-```dart
-class SyntaxTags {
-  const SyntaxTags._();
-  static final left = '::left::';
-  static final right = '::right::';
-  static final content = '::content::';
-}
+## Interactive Examples
 
-Map<String, List<String>> parseContentWithTags(
-    String input, List<String> tags) {
-  final Map<String, List<String>> parsedContent = {};
-  int lastTagEndIndex = 0;
-  String currentTag = SyntaxTags.content;
+Showcase your custom widgets with ease.
 
-  for (int i = 0; i < input.length; i++) {
-    for (String tag in tags) {
-      if (input.substring(i).startsWith(tag)) {
-        // Add the content before this tag to the list
-        final content = input.substring(lastTagEndIndex, i).trim();
-        if (content.isNotEmpty) {
-          parsedContent.putIfAbsent(currentTag, () => []).add(content);
-        }
+---
+layout: two_column
+sections:
+  right: 
+    flex: 2
+---
 
-        // Update the current tag and last tag end index
-        currentTag = tag;
-        lastTagEndIndex = i + tag.length;
+# Isn't this amazing?
 
-        // Skip the characters of this tag
-        i += tag.length - 1;
-        break;
-      }
-    }
-  }
-
-  // Add remaining content if any
-  if (lastTagEndIndex < input.length) {
-    final content = input.substring(lastTagEndIndex).trim();
-    if (content.isNotEmpty) {
-      parsedContent.putIfAbsent(currentTag, () => []).add(content);
-    }
-  }
-
-  return parsedContent;
-}
 ```

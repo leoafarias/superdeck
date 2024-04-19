@@ -68,7 +68,7 @@ Style get defaultStyle => Style.create([
       $.divider.height(1),
       $.divider.color(Colors.grey),
       $.divider.thickness(2),
-      $.image.fit.contain(),
+      $.image.fit.cover(),
     ]);
 
 const $ = SlideStyleUtility(selfBuilder);
