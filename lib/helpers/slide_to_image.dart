@@ -1,15 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
 import '../models/slide_model.dart';
-
-Map<String, Uint8List> _imageCache = {};
 
 enum ExportQuality {
   low('Low', pixelRatio: 0.4),
@@ -27,12 +27,51 @@ String _getCacheKey(Slide slide, ExportQuality quality) {
   return '${slide.hashCode}_${quality.label}';
 }
 
+final Map<String, Uint8List> _imageCache = {};
+//  Create a simple cache class that also stores the image in application folder
+//  to avoid generating the image again
+
+class ImageCache {
+  const ImageCache._();
+
+  static ImageCache get instance => _instance;
+
+  static const _instance = ImageCache._();
+
+  Future<void> set(String key, Uint8List image) async {
+    final directory = await getApplicationSupportDirectory();
+    await get(key);
+    final file = File('${directory.path}/$key.png');
+    await file.writeAsBytes(image);
+
+    _imageCache[key] = image;
+  }
+
+  Future<Uint8List?> get(String key) async {
+    if (_imageCache.containsKey(key)) {
+      return _imageCache[key];
+    }
+    final directory = await getApplicationSupportDirectory();
+    final file = File('${directory.path}/$key.png');
+
+    if (await file.exists()) {
+      print('exists!');
+      final data = await file.readAsBytes();
+      _imageCache[key] = data;
+      return data;
+    }
+    return null;
+  }
+}
+
 class SlideToImage {
   SlideToImage._();
 
   static SlideToImage get instance => _instance;
 
   static final _instance = SlideToImage._();
+
+  final cache = ImageCache.instance;
 
   Uint8List? getFromCache(Slide slide, ExportQuality quality) {
     final key = _getCacheKey(slide, quality);
@@ -45,8 +84,10 @@ class SlideToImage {
     required Slide slide,
   }) async {
     final key = _getCacheKey(slide, quality);
-    if (_imageCache.containsKey(key)) {
-      return _imageCache[key]!;
+    final cacheData = await cache.get(key);
+    if (cacheData != null) {
+      print('exists');
+      return cacheData;
     }
 
     final image = await fromWidgetToImage(
@@ -58,7 +99,7 @@ class SlideToImage {
     final convertedImage = await getImageInBytes(image);
     image.dispose();
 
-    _imageCache[key] = convertedImage;
+    await cache.set(key, convertedImage);
     return convertedImage;
   }
 
