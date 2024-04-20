@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:signals/signals_flutter.dart';
@@ -14,18 +12,8 @@ import '../../helpers/constants.dart';
 import '../../models/slide_model.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
+import '../helpers/slide_to_image.dart';
 import '../superdeck.dart';
-
-enum ExportQuality {
-  good('Good', pixelRatio: 1),
-  better('Better', pixelRatio: 2),
-  best('Best', pixelRatio: 3);
-
-  const ExportQuality(this.label, {required this.pixelRatio});
-
-  final String label;
-  final double pixelRatio;
-}
 
 enum ExportProcessStatus {
   idle,
@@ -142,8 +130,6 @@ class ExportingProcessScreen extends StatefulWidget {
 }
 
 class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
-  final Map<int, GlobalKey> _globalKeys = {};
-
   late final _status = createSignal(context, ExportProcessStatus.idle);
   final _pageController = PageController();
   late List<Slide> _slides;
@@ -154,14 +140,8 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
     super.initState();
 
     _slides = superdeck.slides.value;
-    assignGlobalKeys(_slides);
-    Future.delayed(Durations.medium1).then((value) => startConversion());
-  }
 
-  void assignGlobalKeys(List<Slide> slides) {
-    for (var slide in slides) {
-      _globalKeys[slide.hashCode] = GlobalKey();
-    }
+    Future.delayed(Durations.medium1).then((value) => startConversion());
   }
 
   @override
@@ -170,33 +150,19 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
     super.dispose();
   }
 
-  Future<Uint8List> getImageInBytes(ui.Image image) async {
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    return byteData!.buffer.asUint8List();
-  }
-
-  Future<ui.Image> getImageFromWidget(Widget child) async {
-    return await fromWidgetToImage(
-      child,
-      pixelRatio: widget.quality.pixelRatio,
-      context: context,
-      targetSize: kResolution,
-    );
-  }
-
   Future<void> startConversion() async {
     try {
+      final generator = SlideToImage.instance;
       _status.value = ExportProcessStatus.converting;
 
       List<Future<Uint8List>> futures = [];
 
       Future<Uint8List> convertSlide(Slide slide) async {
-        final image = await getImageFromWidget(SlideView(slide));
-
-        final convertedImage = await getImageInBytes(image);
-
-        image.dispose();
-
+        final convertedImage = await generator.generate(
+          context: context,
+          quality: widget.quality,
+          slide: slide,
+        );
         _images.add(convertedImage);
         await Future.delayed(Durations.short1);
 
@@ -205,7 +171,6 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
       for (var slide in _slides) {
         futures.add(convertSlide(slide));
-        // _images.add(await convertSlide(slide));
       }
 
       final images = await Future.wait(futures);
@@ -385,111 +350,4 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
       );
     });
   }
-}
-
-Future<ui.Image> fromWidgetToImage(
-  Widget widget, {
-  required double pixelRatio,
-  required BuildContext context,
-  Size? targetSize,
-}) async {
-  Widget child = widget;
-
-  child = InheritedTheme.captureAll(
-    context,
-    MediaQuery(
-      data: MediaQuery.of(context),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: Theme.of(context),
-        color: Colors.transparent,
-        home: Scaffold(body: child),
-      ),
-    ),
-  );
-
-  final repaintBoundary = RenderRepaintBoundary();
-  final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
-
-  final view = View.maybeOf(context) ?? platformDispatcher.views.first;
-  final logicalSize = targetSize ?? view.physicalSize / view.devicePixelRatio;
-
-  int retryCount = 5;
-  bool isDirty = false;
-
-  final renderView = RenderView(
-    view: view,
-    child: RenderPositionedBox(
-      alignment: Alignment.center,
-      child: repaintBoundary,
-    ),
-    configuration: ViewConfiguration(
-      size: logicalSize,
-      devicePixelRatio: pixelRatio,
-    ),
-  );
-
-  final pipelineOwner = PipelineOwner();
-  final buildOwner = BuildOwner(
-    focusManager: FocusManager(),
-    onBuildScheduled: () {
-      isDirty = true;
-    },
-  );
-
-  pipelineOwner.rootNode = renderView;
-  renderView.prepareInitialFrame();
-
-  final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
-    container: repaintBoundary,
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    ),
-  ).attachToRenderTree(buildOwner);
-  ui.Image? image;
-  while (retryCount > 0) {
-    // await Future.delayed(const Duration(seconds: 1));
-    isDirty = false;
-    image = await _captureImage(
-      buildOwner: buildOwner,
-      rootElement: rootElement,
-      pipelineOwner: pipelineOwner,
-      repaintBoundary: repaintBoundary,
-      pixelRatio: pixelRatio,
-      logicalSize: logicalSize,
-    );
-
-    if (!isDirty) {
-      break;
-    }
-
-    await Future.delayed(Durations.medium1);
-
-    retryCount--;
-  }
-
-  try {
-    buildOwner.finalizeTree();
-  } catch (e) {}
-
-  return image!;
-}
-
-Future<ui.Image?> _captureImage({
-  required BuildOwner buildOwner,
-  required RenderObjectToWidgetElement<RenderBox> rootElement,
-  required PipelineOwner pipelineOwner,
-  required RenderRepaintBoundary repaintBoundary,
-  required double pixelRatio,
-  required Size logicalSize,
-}) async {
-  buildOwner.buildScope(rootElement);
-  buildOwner.finalizeTree();
-
-  pipelineOwner.flushLayout();
-  pipelineOwner.flushCompositingBits();
-  pipelineOwner.flushPaint();
-
-  return repaintBoundary.toImage(pixelRatio: pixelRatio);
 }

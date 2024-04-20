@@ -1,6 +1,6 @@
 [
   {
-    "background": "assets/images/sd_1024568622.gif",
+    "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif",
     "style": "custom",
     "transition": {
       "type": "fade_in",
@@ -47,7 +47,7 @@
     "layout": "image"
   },
   {
-    "background": "assets/images/sd_968081805.gif",
+    "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24wb3V5cThlZ3ExY2NvY3czcmozang0bGQ1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XzWd8acQ37byKR4tmd/giphy.gif",
     "style": "cover",
     "transition": {
       "type": "fade_in",
@@ -157,7 +157,7 @@
     "layout": "two_column"
   },
   {
-    "background": "assets/images/sd_165689209.gif",
+    "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif",
     "style": "cover",
     "transition": {
       "type": "fade_in",

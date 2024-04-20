@@ -72,7 +72,6 @@ class SlidesLoader {
     }
 
     if (kDebugMode) {
-      await generate();
       return _loadFromLocalStorage();
     } else {
       return _loadFromRootBundle();
@@ -90,7 +89,7 @@ Future<DeckData> _loadFromLocalStorage() async {
   return (
     slides: _parseFromJson(slidesJson),
     assets: _parseAssets(assetsJson),
-    config: Config.fromJson(configJson),
+    config: ProjectConfig.fromJson(configJson),
   );
 }
 
@@ -105,7 +104,7 @@ Future<DeckData> _loadFromRootBundle() async {
   return (
     slides: _parseFromJson(slidesJson),
     assets: _parseAssets(assetsJson),
-    config: Config.fromJson(configJson)
+    config: ProjectConfig.fromJson(configJson)
   );
 }
 

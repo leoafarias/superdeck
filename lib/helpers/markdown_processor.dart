@@ -18,19 +18,19 @@ final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
 typedef DeckData = ({
   List<Slide> slides,
   List<SlideAsset> assets,
-  Config config,
+  ProjectConfig config,
 });
 
 final emptyDeckData = (
   slides: <Slide>[],
   assets: <SlideAsset>[],
-  config: const Config.empty(),
+  config: const ProjectConfig.empty(),
 );
 
-typedef MarkdownData = ({
+typedef ProcessData = ({
   String content,
   Map<String, dynamic> options,
-  Config config,
+  ProjectConfig config,
 });
 
 class Pipeline {
@@ -54,6 +54,8 @@ class Pipeline {
         }
       }
     }
+
+    assetsLoaded.clear();
   }
 
   const Pipeline({
@@ -64,13 +66,16 @@ class Pipeline {
   static Future<SlideAsset?> getAsset(String fileName) async {
     final assetFile = SlideAsset.buildFile(fileName);
 
-    return await SlideAsset.maybeLoad(assetFile);
+    final asset = await SlideAsset.maybeLoad(assetFile);
+    if (asset != null) {
+      Pipeline.assetsLoaded.add(asset);
+    }
+    return asset;
   }
 
   static Future<SlideAsset> saveAsset(
     String fileName, {
     required List<int> data,
-    required,
   }) async {
     final imageFile = SlideAsset.buildFile(fileName);
 
@@ -84,7 +89,7 @@ class Pipeline {
   Future<DeckData> run(String contents) async {
     final slidesRaw = _splitSlides(contents.trim());
 
-    final config = await _loadConfig();
+    final config = await _loadProjectConfig();
 
     final slides = <Slide>[];
 
@@ -100,7 +105,10 @@ class Pipeline {
       config: config,
     );
 
-    return await _runPostMarkdown(data);
+    final result = await _runPostMarkdown(data);
+
+    await cleanAssets();
+    return result;
   }
 
   Future<DeckData> _runPostMarkdown(DeckData data) async {
@@ -113,8 +121,8 @@ class Pipeline {
     return updatedData;
   }
 
-  Future<Slide> runEach(String slideContents, Config config) async {
-    MarkdownData result = (content: slideContents, options: {}, config: config);
+  Future<Slide> runEach(String slideContents, ProjectConfig config) async {
+    ProcessData result = (content: slideContents, options: {}, config: config);
 
     for (final processor in markdown) {
       result = await processor.run(result);
@@ -129,15 +137,15 @@ class Pipeline {
     });
   }
 
-  Future<Config> _loadConfig() async {
+  Future<ProjectConfig> _loadProjectConfig() async {
     final file = kConfig.projectConfigFile;
 
     if (!await file.exists()) {
-      return const Config.empty();
+      return const ProjectConfig.empty();
     }
 
     final configContents = await file.readAsString();
-    return Config.fromYaml(configContents);
+    return ProjectConfig.fromYaml(configContents);
   }
 
   Future<Slide> _parseSlideFromMap(Map<String, dynamic> slideMap) async {
@@ -296,7 +304,7 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
 abstract class MarkdownProcessor {
   const MarkdownProcessor();
 
-  FutureOr<MarkdownData> run(MarkdownData data);
+  FutureOr<ProcessData> run(ProcessData data);
 }
 
 final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
@@ -305,7 +313,7 @@ class FrontMatterProcessor extends MarkdownProcessor {
   const FrontMatterProcessor();
 
   @override
-  MarkdownData run(MarkdownData data) {
+  ProcessData run(ProcessData data) {
     final frontMatter =
         _frontMatterRegex.firstMatch(data.content)?.group(1) ?? '';
 
@@ -321,7 +329,7 @@ class FrontMatterProcessor extends MarkdownProcessor {
     options['raw'] = frontMatter;
 
     final mergedOptions = deepMerge(
-      data.config.toMap(),
+      data.config.toSlideMap(),
       options,
     );
 
@@ -337,7 +345,11 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
   const ImageMarkdownProcessor();
 
   @override
-  Future<MarkdownData> run(MarkdownData data) async {
+  Future<ProcessData> run(ProcessData data) async {
+    // Do not cache remot edata if cacheRemoteAssets is false
+    if (!data.config.cacheRemoteAssets) {
+      return data;
+    }
     // Get any url of images that are in the markdown
     // Save it the local path on the device
     // and replace the url with the local path
@@ -352,7 +364,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
       final imageUrl = match.group(1);
       if (imageUrl == null) continue;
 
-      final asset = await _fetchAsset(imageUrl);
+      final asset = await _cacheRemoteAsset(imageUrl);
 
       if (asset != null) {
         final imageMarkdown = '![Image](${asset.relativePath})';
@@ -365,7 +377,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     var background = options['background'];
 
     if (background != null && background is String) {
-      final asset = await _fetchAsset(background);
+      final asset = await _cacheRemoteAsset(background);
 
       if (asset != null) {
         background = asset.relativePath;
@@ -376,7 +388,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     var imageSource = options['options']?['src'];
 
     if (imageSource != null && imageSource is String) {
-      final asset = await _fetchAsset(imageSource);
+      final asset = await _cacheRemoteAsset(imageSource);
 
       if (asset != null) {
         imageSource = asset.relativePath;
@@ -391,7 +403,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     );
   }
 
-  Future<SlideAsset?> _fetchAsset(String url) async {
+  Future<SlideAsset?> _cacheRemoteAsset(String url) async {
     if (!url.startsWith('http')) {
       return null;
     }
@@ -427,7 +439,7 @@ class MermaidProcessor extends MarkdownProcessor {
   const MermaidProcessor();
 
   @override
-  Future<MarkdownData> run(MarkdownData data) async {
+  Future<ProcessData> run(ProcessData data) async {
     final replacements = <Replacement>[];
 
     var content = data.content;

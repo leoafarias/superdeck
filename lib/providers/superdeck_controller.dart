@@ -25,7 +25,7 @@ class SuperDeckProvider {
 
   final style = signal(const Style.empty());
 
-  final config = signal(const Config.empty());
+  final config = signal(const ProjectConfig.empty());
 
   final loading = signal(true);
   final list = listSignal<int>([]);

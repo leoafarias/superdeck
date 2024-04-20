@@ -4,5 +4,6 @@
     "duration": 0,
     "delay": 0,
     "curve": "ease"
-  }
+  },
+  "cache_remote_assets": false
 }

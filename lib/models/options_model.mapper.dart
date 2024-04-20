@@ -527,6 +527,7 @@ class ConfigMapper extends ClassMapperBase<Config> {
   static ConfigMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfigMapper._());
+      ProjectConfigMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -554,10 +555,7 @@ class ConfigMapper extends ClassMapperBase<Config> {
   final bool ignoreNull = true;
 
   static Config _instantiate(DecodingData data) {
-    return Config(
-        background: data.dec(_f$background),
-        style: data.dec(_f$style),
-        transition: data.dec(_f$transition));
+    throw MapperException.missingConstructor('Config');
   }
 
   @override
@@ -573,35 +571,9 @@ class ConfigMapper extends ClassMapperBase<Config> {
 }
 
 mixin ConfigMappable {
-  String toJson() {
-    return ConfigMapper.ensureInitialized().encodeJson<Config>(this as Config);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ConfigMapper.ensureInitialized().encodeMap<Config>(this as Config);
-  }
-
-  ConfigCopyWith<Config, Config, Config> get copyWith =>
-      _ConfigCopyWithImpl(this as Config, $identity, $identity);
-  @override
-  String toString() {
-    return ConfigMapper.ensureInitialized().stringifyValue(this as Config);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return ConfigMapper.ensureInitialized().equalsValue(this as Config, other);
-  }
-
-  @override
-  int get hashCode {
-    return ConfigMapper.ensureInitialized().hashValue(this as Config);
-  }
-}
-
-extension ConfigValueCopy<$R, $Out> on ObjectCopyWith<$R, Config, $Out> {
-  ConfigCopyWith<$R, Config, $Out> get $asConfig =>
-      $base.as((v, t, t2) => _ConfigCopyWithImpl(v, t, t2));
+  String toJson();
+  Map<String, dynamic> toMap();
+  ConfigCopyWith<Config, Config, Config> get copyWith;
 }
 
 abstract class ConfigCopyWith<$R, $In extends Config, $Out>
@@ -610,37 +582,6 @@ abstract class ConfigCopyWith<$R, $In extends Config, $Out>
       get transition;
   $R call({String? background, String? style, TransitionOptions? transition});
   ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
-    implements ConfigCopyWith<$R, Config, $Out> {
-  _ConfigCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Config> $mapper = ConfigMapper.ensureInitialized();
-  @override
-  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
-      get transition =>
-          $value.transition?.copyWith.$chain((v) => call(transition: v));
-  @override
-  $R call(
-          {Object? background = $none,
-          Object? style = $none,
-          Object? transition = $none}) =>
-      $apply(FieldCopyWithData({
-        if (background != $none) #background: background,
-        if (style != $none) #style: style,
-        if (transition != $none) #transition: transition
-      }));
-  @override
-  Config $make(CopyWithData data) => Config(
-      background: data.get(#background, or: $value.background),
-      style: data.get(#style, or: $value.style),
-      transition: data.get(#transition, or: $value.transition));
-
-  @override
-  ConfigCopyWith<$R2, Config, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ConfigCopyWithImpl($value, $cast, t);
 }
 
 class TransitionOptionsMapper extends ClassMapperBase<TransitionOptions> {
@@ -787,6 +728,156 @@ class _TransitionOptionsCopyWithImpl<$R, $Out>
   TransitionOptionsCopyWith<$R2, TransitionOptions, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _TransitionOptionsCopyWithImpl($value, $cast, t);
+}
+
+class ProjectConfigMapper extends ClassMapperBase<ProjectConfig> {
+  ProjectConfigMapper._();
+
+  static ProjectConfigMapper? _instance;
+  static ProjectConfigMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ProjectConfigMapper._());
+      ConfigMapper.ensureInitialized();
+      TransitionOptionsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ProjectConfig';
+
+  static String? _$background(ProjectConfig v) => v.background;
+  static const Field<ProjectConfig, String> _f$background =
+      Field('background', _$background);
+  static String? _$style(ProjectConfig v) => v.style;
+  static const Field<ProjectConfig, String> _f$style = Field('style', _$style);
+  static TransitionOptions? _$transition(ProjectConfig v) => v.transition;
+  static const Field<ProjectConfig, TransitionOptions> _f$transition =
+      Field('transition', _$transition);
+  static bool _$cacheRemoteAssets(ProjectConfig v) => v.cacheRemoteAssets;
+  static const Field<ProjectConfig, bool> _f$cacheRemoteAssets = Field(
+      'cacheRemoteAssets', _$cacheRemoteAssets,
+      key: 'cache_remote_assets', opt: true, def: false);
+
+  @override
+  final MappableFields<ProjectConfig> fields = const {
+    #background: _f$background,
+    #style: _f$style,
+    #transition: _f$transition,
+    #cacheRemoteAssets: _f$cacheRemoteAssets,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static ProjectConfig _instantiate(DecodingData data) {
+    return ProjectConfig(
+        background: data.dec(_f$background),
+        style: data.dec(_f$style),
+        transition: data.dec(_f$transition),
+        cacheRemoteAssets: data.dec(_f$cacheRemoteAssets));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static ProjectConfig fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ProjectConfig>(map);
+  }
+
+  static ProjectConfig fromJson(String json) {
+    return ensureInitialized().decodeJson<ProjectConfig>(json);
+  }
+}
+
+mixin ProjectConfigMappable {
+  String toJson() {
+    return ProjectConfigMapper.ensureInitialized()
+        .encodeJson<ProjectConfig>(this as ProjectConfig);
+  }
+
+  Map<String, dynamic> toMap() {
+    return ProjectConfigMapper.ensureInitialized()
+        .encodeMap<ProjectConfig>(this as ProjectConfig);
+  }
+
+  ProjectConfigCopyWith<ProjectConfig, ProjectConfig, ProjectConfig>
+      get copyWith => _ProjectConfigCopyWithImpl(
+          this as ProjectConfig, $identity, $identity);
+  @override
+  String toString() {
+    return ProjectConfigMapper.ensureInitialized()
+        .stringifyValue(this as ProjectConfig);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return ProjectConfigMapper.ensureInitialized()
+        .equalsValue(this as ProjectConfig, other);
+  }
+
+  @override
+  int get hashCode {
+    return ProjectConfigMapper.ensureInitialized()
+        .hashValue(this as ProjectConfig);
+  }
+}
+
+extension ProjectConfigValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ProjectConfig, $Out> {
+  ProjectConfigCopyWith<$R, ProjectConfig, $Out> get $asProjectConfig =>
+      $base.as((v, t, t2) => _ProjectConfigCopyWithImpl(v, t, t2));
+}
+
+abstract class ProjectConfigCopyWith<$R, $In extends ProjectConfig, $Out>
+    implements ConfigCopyWith<$R, $In, $Out> {
+  @override
+  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
+      get transition;
+  @override
+  $R call(
+      {String? background,
+      String? style,
+      TransitionOptions? transition,
+      bool? cacheRemoteAssets});
+  ProjectConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ProjectConfigCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ProjectConfig, $Out>
+    implements ProjectConfigCopyWith<$R, ProjectConfig, $Out> {
+  _ProjectConfigCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ProjectConfig> $mapper =
+      ProjectConfigMapper.ensureInitialized();
+  @override
+  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
+      get transition =>
+          $value.transition?.copyWith.$chain((v) => call(transition: v));
+  @override
+  $R call(
+          {Object? background = $none,
+          Object? style = $none,
+          Object? transition = $none,
+          bool? cacheRemoteAssets}) =>
+      $apply(FieldCopyWithData({
+        if (background != $none) #background: background,
+        if (style != $none) #style: style,
+        if (transition != $none) #transition: transition,
+        if (cacheRemoteAssets != null) #cacheRemoteAssets: cacheRemoteAssets
+      }));
+  @override
+  ProjectConfig $make(CopyWithData data) => ProjectConfig(
+      background: data.get(#background, or: $value.background),
+      style: data.get(#style, or: $value.style),
+      transition: data.get(#transition, or: $value.transition),
+      cacheRemoteAssets:
+          data.get(#cacheRemoteAssets, or: $value.cacheRemoteAssets));
+
+  @override
+  ProjectConfigCopyWith<$R2, ProjectConfig, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _ProjectConfigCopyWithImpl($value, $cast, t);
 }
 
 class ContentOptionsMapper extends ClassMapperBase<ContentOptions> {

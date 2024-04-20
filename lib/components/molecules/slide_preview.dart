@@ -17,37 +17,28 @@ class SlidePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final sideWidth = SplitViewProvider.sideWidthOf(context);
-      final paddingSize = sideWidth / 20;
-      final size = SplitViewProvider.sizeOf(context);
+    final sideWidth = SplitViewProvider.sideWidthOf(context);
+    final paddingSize = sideWidth / 20;
 
-      final rightWidth = size.width - sideWidth;
-      final rightHeight = size.height * (rightWidth / size.width);
-      final rightSize = Size(rightWidth - (paddingSize * 2), rightHeight);
-      return Container(
-        color: const Color.fromARGB(144, 0, 0, 0),
-        child: Align(
-          alignment: Alignment.center,
-          child: ConstrainedBox(
-            constraints: BoxConstraints.tight(rightSize),
-            child: Container(
-              margin: EdgeInsets.all(paddingSize),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 6,
-                    spreadRadius: 3,
-                  ),
-                ],
-              ),
-              child: SlideView(slide),
+    return Container(
+      color: const Color.fromARGB(144, 0, 0, 0),
+      alignment: Alignment.center,
+      child: Container(
+        margin: EdgeInsets.all(paddingSize),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 6,
+              spreadRadius: 3,
             ),
-          ),
+          ],
         ),
-      );
-    });
+        child: SlideConstraintBuilder(builder: (context, _) {
+          return SlideView(slide);
+        }),
+      ),
+    );
   }
 }
 

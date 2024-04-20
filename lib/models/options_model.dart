@@ -12,7 +12,7 @@ import 'slide_model.dart';
 part 'options_model.mapper.dart';
 
 @MappableClass()
-class Config with ConfigMappable {
+abstract class Config with ConfigMappable {
   final String? background;
   final String? style;
   final TransitionOptions? transition;
@@ -23,18 +23,6 @@ class Config with ConfigMappable {
     required this.transition,
   });
 
-  const Config.empty()
-      : background = null,
-        style = null,
-        transition = null;
-
-  static const fromMap = ConfigMapper.fromMap;
-  static const fromJson = ConfigMapper.fromJson;
-
-  static Config fromYaml(String yaml) {
-    return ConfigMapper.fromMap(converYamlToMap(yaml));
-  }
-
   static final schema = Schema(
     {
       "background": Schema.string.optional(),
@@ -42,6 +30,44 @@ class Config with ConfigMappable {
       "transition": TransitionOptions.schema.optional(),
     },
     additionalProperties: false,
+  );
+}
+
+@MappableClass()
+class ProjectConfig extends Config with ProjectConfigMappable {
+  final bool cacheRemoteAssets;
+  const ProjectConfig({
+    required super.background,
+    required super.style,
+    required super.transition,
+    this.cacheRemoteAssets = false,
+  });
+
+  const ProjectConfig.empty()
+      : cacheRemoteAssets = false,
+        super(
+          background: '',
+          style: '',
+          transition: const TransitionOptions(type: TransitionType.fadeIn),
+        );
+
+  static const fromMap = ProjectConfigMapper.fromMap;
+  static const fromJson = ProjectConfigMapper.fromJson;
+
+  Map<String, dynamic> toSlideMap() {
+    final config = toMap();
+    config.remove('cache_remote_assets');
+    return config;
+  }
+
+  static ProjectConfig fromYaml(String yaml) {
+    return ProjectConfigMapper.fromMap(converYamlToMap(yaml));
+  }
+
+  static final schema = Config.schema.merge(
+    {
+      "cache_remote_assets": Schema.boolean.optional(),
+    },
   );
 }
 
