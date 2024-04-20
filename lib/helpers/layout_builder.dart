@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
@@ -9,6 +8,7 @@ import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import '../superdeck.dart';
 import 'measure_size.dart';
+import 'utils.dart';
 
 abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
   final T config;
@@ -152,29 +152,14 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
 
-    ImageProvider provider;
-
-    if (src.startsWith('http') || src.startsWith('https')) {
-      provider = CachedNetworkImageProvider(src);
-    } else {
-      final asset = assets.firstWhereOrNull(
-        (element) => element.path == src,
-      );
-
-      if (asset != null) {
-        provider = MemoryImage(asset.bytes);
-      } else {
-        provider = AssetImage(src);
-      }
-    }
-
+    final uri = Uri.parse(src);
     final side = Container(
       height: spec.image.height,
       width: spec.image.width,
       alignment: spec.image.alignment,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: provider,
+          image: getImageProvider(uri, assets),
           centerSlice: spec.image.centerSlice,
           repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
           filterQuality: spec.image.filterQuality ?? FilterQuality.low,

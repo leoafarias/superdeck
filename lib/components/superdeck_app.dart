@@ -62,18 +62,16 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     WidgetsFlutterBinding.ensureInitialized();
     SignalsObserver.instance = null;
 
-    await initLocalStorage();
-    await SyntaxHighlight.initialize();
+    await Future.wait([
+      initLocalStorage(),
+      SyntaxHighlight.initialize(),
+      _initializeWindowManager(),
+    ]);
 
     await superdeck.initialize(
       style: widget.style,
       examples: widget.examples,
     );
-
-    // Return if its web
-    if (kIsWeb) return;
-    // Must add this line.
-    await _initializeWindowManager();
   }
 
   void onRetry() {
@@ -115,6 +113,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
 }
 
 Future<void> _initializeWindowManager() async {
+  if (kIsWeb) return;
   // Must add this line.
   await windowManager.ensureInitialized();
 
