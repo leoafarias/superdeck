@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../providers/superdeck_controller.dart';
+import '../../providers/sd_provider.dart';
 
 enum SideMenu {
   preview(icon: Icons.play_arrow, label: 'Preview'),

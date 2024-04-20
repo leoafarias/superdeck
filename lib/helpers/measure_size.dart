@@ -46,20 +46,35 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }
 }
 
-class SlideConstraintBuilder extends StatefulWidget {
-  final Widget Function(BuildContext context, Size size) builder;
+class SlideConstraints extends StatefulWidget {
+  final Widget Function(Size) builder;
 
-  const SlideConstraintBuilder({
+  const SlideConstraints(
+    this.builder, {
     super.key,
-    required this.builder,
   });
+
+  static BoxConstraints of(BuildContext context) {
+    final provider =
+        context.dependOnInheritedWidgetOfExactType<SlideConstraintsProvider>();
+    if (provider == null) {
+      throw FlutterError('SlideConstraintsProvider not found in context');
+    }
+
+    return provider.constraints;
+  }
+
+  static Size sizeOf(BuildContext context) {
+    final constraints = of(context);
+    return Size(constraints.maxWidth, constraints.maxHeight);
+  }
 
   @override
   // ignore: library_private_types_in_public_api
-  _SlideConstraintBuilderState createState() => _SlideConstraintBuilderState();
+  _SlideConstraintsState createState() => _SlideConstraintsState();
 }
 
-class _SlideConstraintBuilderState extends State<SlideConstraintBuilder> {
+class _SlideConstraintsState extends State<SlideConstraints> {
   Size? _widgetSize;
 
   void _onWidgetSizeChange(Size size) {
@@ -83,11 +98,11 @@ class _SlideConstraintBuilderState extends State<SlideConstraintBuilder> {
 
         return MeasureSize(
           onChange: _onWidgetSizeChange,
-          child: SlideConstraints(
+          child: SlideConstraintsProvider(
             constraints: constraintSize,
             child: Builder(
               builder: (BuildContext context) {
-                return widget.builder(context, size);
+                return widget.builder(size);
               },
             ),
           ),

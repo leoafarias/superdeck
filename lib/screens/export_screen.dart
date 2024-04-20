@@ -134,6 +134,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
   final _pageController = PageController();
   late List<Slide> _slides;
   late final _images = listSignal<Uint8List>([]);
+  late final superdeck = SuperDeckProvider.instance;
 
   @override
   void initState() {

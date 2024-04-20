@@ -1,11 +1,11 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
+import '../providers/slide_provider.dart';
 import '../superdeck.dart';
 import 'measure_size.dart';
 import 'utils.dart';
@@ -113,29 +113,31 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
   Widget build(BuildContext context) {
     final options = config.options;
 
-    final previewBuilders = superdeck.examples.watch(context);
+    final examples = SlideProvider.examplesOf(context);
 
-    final builder = previewBuilders[options.name];
+    final builder = examples[options.name];
 
-    final side = SlideConstraintBuilder(builder: (context, size) {
-      return MediaQuery(
-        data: MediaQueryData(size: size),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: size.width,
-            maxHeight: size.height,
+    final side = SlideConstraints(
+      (size) {
+        return MediaQuery(
+          data: MediaQueryData(size: size),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: size.width,
+              maxHeight: size.height,
+            ),
+            child: DevicePreview(
+              enabled: options.preview,
+              builder: (context) {
+                return CodePreview(
+                  child: builder?.call(options.args),
+                );
+              },
+            ),
           ),
-          child: DevicePreview(
-            enabled: options.preview,
-            builder: (context) {
-              return CodePreview(
-                child: builder?.call(options.args),
-              );
-            },
-          ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     return buildSplitSlide(side);
   }
@@ -146,8 +148,8 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final spec = SlideSpec.of(context);
-    final assets = superdeck.assets.watch(context);
+    final spec = SlideProvider.specOf(context);
+    final assets = SlideProvider.assetsOf(context);
 
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;

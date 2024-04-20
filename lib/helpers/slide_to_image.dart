@@ -11,7 +11,19 @@ import '../models/slide_model.dart';
 
 Map<String, Uint8List> _imageCache = {};
 
-String getCacheKey(Slide slide, ExportQuality quality) {
+enum ExportQuality {
+  low('Low', pixelRatio: 0.4),
+  good('Good', pixelRatio: 1),
+  better('Better', pixelRatio: 2),
+  best('Best', pixelRatio: 3);
+
+  const ExportQuality(this.label, {required this.pixelRatio});
+
+  final String label;
+  final double pixelRatio;
+}
+
+String _getCacheKey(Slide slide, ExportQuality quality) {
   return '${slide.hashCode}_${quality.label}';
 }
 
@@ -22,17 +34,27 @@ class SlideToImage {
 
   static final _instance = SlideToImage._();
 
+  Uint8List? getFromCache(Slide slide, ExportQuality quality) {
+    final key = _getCacheKey(slide, quality);
+    return _imageCache[key];
+  }
+
   Future<Uint8List> generate({
     required BuildContext context,
     ExportQuality quality = ExportQuality.good,
     required Slide slide,
   }) async {
-    final key = getCacheKey(slide, quality);
+    final key = _getCacheKey(slide, quality);
     if (_imageCache.containsKey(key)) {
       return _imageCache[key]!;
     }
 
-    final image = await getImageFromWidget(context, quality, SlideView(slide));
+    final image = await fromWidgetToImage(
+      SlideView.snapshot(slide),
+      context: context,
+      pixelRatio: quality.pixelRatio,
+      targetSize: kResolution,
+    );
     final convertedImage = await getImageInBytes(image);
     image.dispose();
 
@@ -40,35 +62,10 @@ class SlideToImage {
     return convertedImage;
   }
 
-  Future<ui.Image> getImageFromWidget(
-    BuildContext context,
-    ExportQuality quality,
-    Widget child,
-  ) async {
-    return await fromWidgetToImage(
-      child,
-      pixelRatio: quality.pixelRatio,
-      context: context,
-      targetSize: kResolution,
-    );
-  }
-
   Future<Uint8List> getImageInBytes(ui.Image image) async {
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
-}
-
-enum ExportQuality {
-  low('Low', pixelRatio: 0.5),
-  good('Good', pixelRatio: 1),
-  better('Better', pixelRatio: 2),
-  best('Best', pixelRatio: 3);
-
-  const ExportQuality(this.label, {required this.pixelRatio});
-
-  final String label;
-  final double pixelRatio;
 }
 
 Future<ui.Image> fromWidgetToImage(
@@ -113,7 +110,11 @@ Future<ui.Image> fromWidgetToImage(
     ),
   );
 
-  final pipelineOwner = PipelineOwner();
+  final pipelineOwner = PipelineOwner(
+    onNeedVisualUpdate: () {
+      isDirty = true;
+    },
+  );
   final buildOwner = BuildOwner(
     focusManager: FocusManager(),
     onBuildScheduled: () {
@@ -133,8 +134,8 @@ Future<ui.Image> fromWidgetToImage(
   ).attachToRenderTree(buildOwner);
   ui.Image? image;
   while (retryCount > 0) {
-    // await Future.delayed(const Duration(seconds: 1));
     isDirty = false;
+
     image = await _captureImage(
       buildOwner: buildOwner,
       rootElement: rootElement,
@@ -148,7 +149,8 @@ Future<ui.Image> fromWidgetToImage(
       break;
     }
 
-    await Future.delayed(Durations.medium1);
+    await _waitForImagesLoaded(rootElement);
+    // await Future.delayed(Durations.short2);
 
     retryCount--;
   }
@@ -174,7 +176,7 @@ Future<ui.Image?> _captureImage({
   pipelineOwner.flushLayout();
   pipelineOwner.flushCompositingBits();
   pipelineOwner.flushPaint();
-
+  await Future.delayed(Durations.short2);
   return repaintBoundary.toImage(pixelRatio: pixelRatio);
 }
 
@@ -184,20 +186,18 @@ Future<void> _waitForImagesLoaded(Element rootElement) async {
   void traverseElement(Element element) {
     if (element.widget is Image) {
       final imageProvider = (element.widget as Image).image;
-      print(element.widget);
+
       final stream = imageProvider.resolve(ImageConfiguration.empty);
-      print('Resolved ImageStream: $stream');
+
       final completer = Completer<void>();
 
       late ImageStreamListener listener;
       listener = ImageStreamListener(
         (ImageInfo image, bool synchronousCall) {
-          print('Image loaded: $image');
           completer.complete();
           stream.removeListener(listener);
         },
         onError: (dynamic exception, StackTrace? stackTrace) {
-          print('Image loading error: $exception');
           completer.completeError(exception, stackTrace);
           stream.removeListener(listener);
         },
@@ -205,7 +205,6 @@ Future<void> _waitForImagesLoaded(Element rootElement) async {
 
       stream.addListener(listener);
       futures.add(completer.future);
-      print('Number of futures: ${futures.length}');
     }
 
     element.visitChildren(traverseElement);

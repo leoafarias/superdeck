@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../models/options_model.dart';
-import '../../providers/superdeck_controller.dart';
+import '../../providers/slide_provider.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/markdown_viewer.dart';
 
@@ -23,23 +22,30 @@ class SlideContent extends StatelessWidget {
 
     final alignment = options?.alignment ?? ContentAlignment.center;
 
-    final assets = superdeck.assets.watch(context);
+    final assets = SlideProvider.assetsOf(context);
+    final isExporting = SlideProvider.isSnapshotOf(context);
+
+    Widget child = IntrinsicWidth(
+      child: AnimatedMarkdownViewer(
+        content: data,
+        spec: spec,
+        assets: assets,
+        duration: Durations.medium1,
+      ),
+    );
+
+    if (!isExporting) {
+      child = SingleChildScrollView(
+        child: child,
+      );
+    }
 
     return AnimatedMixedBox(
       duration: const Duration(milliseconds: 300),
       spec: spec.contentContainer.copyWith(
         alignment: alignment.toAlignment(),
       ),
-      child: SingleChildScrollView(
-        child: IntrinsicWidth(
-          child: AnimatedMarkdownViewer(
-            content: data,
-            spec: spec,
-            assets: assets,
-            duration: const Duration(milliseconds: 300),
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 }

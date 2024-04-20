@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../models/slide_model.dart';
-import '../../providers/superdeck_controller.dart';
+import '../../providers/sd_provider.dart';
 import '../../superdeck.dart';
 import '../molecules/split_view.dart';
 
