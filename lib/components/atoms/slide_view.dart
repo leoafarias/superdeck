@@ -6,15 +6,23 @@ import '../../helpers/measure_size.dart';
 import '../../helpers/utils.dart';
 import '../../models/asset_model.dart';
 import '../../models/slide_model.dart';
+import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
 import '../molecules/scaled_app.dart';
 import 'transition_widget.dart';
 
 class SlideView extends StatelessWidget {
+  // If SlideView is a snapshot for image generation
+  final bool _isSnapshot;
   const SlideView(
     this.slide, {
     super.key,
-  });
+  }) : _isSnapshot = false;
+
+  const SlideView.snapshot(
+    this.slide, {
+    super.key,
+  }) : _isSnapshot = true;
 
   final Slide slide;
 
@@ -27,54 +35,63 @@ class SlideView extends StatelessWidget {
 
     final variantStyle = style.applyVariant(variant);
 
-    return ScaledWidget(
-      child: TransitionWidget(
-        key: ValueKey(slide.transition),
-        transition: slide.transition,
-        child: Pressable(
-          onPress: () {},
-          child: MixBuilder(
-            key: ValueKey(variantStyle),
-            style: variantStyle.animate(),
-            builder: (mix) {
-              final spec = SlideSpec.fromMix(mix);
-              return Builder(builder: (context) {
-                return AnimatedMixedBox(
-                  spec: spec.outerContainer,
-                  duration: Durations.medium1,
-                  child: AnimatedMixedBox(
-                    spec: _buildInnerContainerSpec(
-                      slide: slide,
-                      spec: spec.innerContainer,
-                      assets: assets,
-                      context: context,
+    return Center(
+      child: ScaledWidget(
+        child: TransitionWidget(
+          key: ValueKey(slide.transition),
+          transition: slide.transition,
+          child: Pressable(
+            onPress: () {},
+            child: MixBuilder(
+              key: ValueKey(variantStyle),
+              style: variantStyle.animate(),
+              builder: (mix) {
+                final spec = SlideSpec.fromMix(mix);
+                return Builder(builder: (context) {
+                  return AnimatedMixedBox(
+                    spec: spec.outerContainer,
+                    duration: Durations.medium1,
+                    child: AnimatedMixedBox(
+                      spec: _buildInnerContainerSpec(
+                        slide: slide,
+                        spec: spec.innerContainer,
+                        assets: assets,
+                        context: context,
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                      child: SlideProvider(
+                        slide: slide,
+                        spec: spec,
+                        assets: assets,
+                        examples: superdeck.examples.watch(context),
+                        isSnapshot: _isSnapshot,
+                        child: SlideConstraints(
+                          (_) {
+                            if (slide is SimpleSlide) {
+                              return SimpleSlideBuilder(config: slide);
+                            } else if (slide is WidgetSlide) {
+                              return WidgetSlideBuilder(config: slide);
+                            } else if (slide is ImageSlide) {
+                              return ImageSlideBuilder(config: slide);
+                            } else if (slide is TwoColumnSlide) {
+                              return TwoColumnSlideBuilder(config: slide);
+                            } else if (slide is TwoColumnHeaderSlide) {
+                              return TwoColumnHeaderSlideBuilder(config: slide);
+                            } else if (slide is InvalidSlide) {
+                              return InvalidSlideBuilder(config: slide);
+                            } else {
+                              throw UnimplementedError(
+                                'Slide config not implemented',
+                              );
+                            }
+                          },
+                        ),
+                      ),
                     ),
-                    duration: const Duration(milliseconds: 300),
-                    child: SlideConstraintBuilder(
-                      builder: (_, __) {
-                        if (slide is SimpleSlide) {
-                          return SimpleSlideBuilder(config: slide);
-                        } else if (slide is WidgetSlide) {
-                          return WidgetSlideBuilder(config: slide);
-                        } else if (slide is ImageSlide) {
-                          return ImageSlideBuilder(config: slide);
-                        } else if (slide is TwoColumnSlide) {
-                          return TwoColumnSlideBuilder(config: slide);
-                        } else if (slide is TwoColumnHeaderSlide) {
-                          return TwoColumnHeaderSlideBuilder(config: slide);
-                        } else if (slide is InvalidSlide) {
-                          return InvalidSlideBuilder(config: slide);
-                        } else {
-                          throw UnimplementedError(
-                            'Slide config not implemented',
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                );
-              });
-            },
+                  );
+                });
+              },
+            ),
           ),
         ),
       ),
@@ -82,8 +99,8 @@ class SlideView extends StatelessWidget {
   }
 }
 
-class SlideConstraints extends InheritedWidget {
-  const SlideConstraints({
+class SlideConstraintsProvider extends InheritedWidget {
+  const SlideConstraintsProvider({
     required this.constraints,
     required super.child,
     super.key,
@@ -93,7 +110,7 @@ class SlideConstraints extends InheritedWidget {
 
   static BoxConstraints of(BuildContext context) {
     final slideConstraints =
-        context.dependOnInheritedWidgetOfExactType<SlideConstraints>();
+        context.dependOnInheritedWidgetOfExactType<SlideConstraintsProvider>();
     if (slideConstraints == null) {
       throw Exception('SlideConstraints not found in context');
     }
@@ -101,7 +118,7 @@ class SlideConstraints extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(SlideConstraints oldWidget) {
+  bool updateShouldNotify(SlideConstraintsProvider oldWidget) {
     return oldWidget.constraints != constraints;
   }
 }

@@ -28,7 +28,6 @@ class SuperDeckProvider {
   final config = signal(const ProjectConfig.empty());
 
   final loading = signal(true);
-  final list = listSignal<int>([]);
 
   final slides = listSignal<Slide>([]);
 

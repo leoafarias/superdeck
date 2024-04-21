@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:signals/signals_flutter.dart';
 
+import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
 import '../../models/asset_model.dart';
+import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
-import 'slide_view.dart';
 
 class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
   final String content;
@@ -97,8 +97,8 @@ Widget _imageBuilder(
   return Builder(
     builder: (context) {
       final size = SlideConstraints.of(context).biggest;
-      final assets = superdeck.assets.watch(context);
-      final spec = SlideSpec.of(context);
+      final assets = SlideProvider.assetsOf(context);
+      final spec = SlideProvider.specOf(context);
       final imageSpec = spec.image;
       final constraints = calculateConstraints(size, spec.contentContainer);
       return ConstrainedBox(

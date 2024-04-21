@@ -18,7 +18,7 @@ class SyntaxHighlight {
 
   static final List<String> _secondarySupportedLangs = [];
 
-  static initialize() async {
+  static Future<void> initialize() async {
     await Highlighter.initialize(_mainSupportedLanguages);
 
     // Load the default light theme and create a highlightfer.

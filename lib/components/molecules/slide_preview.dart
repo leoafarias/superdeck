@@ -34,9 +34,9 @@ class SlidePreview extends StatelessWidget {
             ),
           ],
         ),
-        child: SlideConstraintBuilder(builder: (context, _) {
-          return SlideView(slide);
-        }),
+        child: SlideConstraints(
+          (_) => SlideView(slide),
+        ),
       ),
     );
   }
@@ -62,19 +62,17 @@ class SlideMarkdownPreview extends StatelessWidget {
         ),
       ),
       builder: (mix) {
-        return SlideConstraintBuilder(
-          builder: (context, size) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(40.0),
-              child: AnimatedMarkdownViewer(
-                content: "$options\n$data\n",
-                spec: SlideSpec.of(context),
-                assets: const [],
-                duration: Duration.zero,
-              ),
-            );
-          },
-        );
+        return SlideConstraints((_) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(40.0),
+            child: AnimatedMarkdownViewer(
+              content: "$options\n$data\n",
+              spec: SlideSpec.of(context),
+              assets: const [],
+              duration: Duration.zero,
+            ),
+          );
+        });
       },
     );
   }
