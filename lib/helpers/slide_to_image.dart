@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,28 +39,38 @@ class ImageCache {
   static const _instance = ImageCache._();
 
   Future<void> set(String key, Uint8List image) async {
-    final directory = await getApplicationSupportDirectory();
-    await get(key);
-    final file = File('${directory.path}/$key.png');
-    await file.writeAsBytes(image);
-
     _imageCache[key] = image;
+    if (kIsWeb) return;
+    try {
+      final directory = await getApplicationSupportDirectory();
+      await get(key);
+      final file = File('${directory.path}/$key.png');
+      await file.writeAsBytes(image);
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<Uint8List?> get(String key) async {
     if (_imageCache.containsKey(key)) {
       return _imageCache[key];
     }
-    final directory = await getApplicationSupportDirectory();
-    final file = File('${directory.path}/$key.png');
+    if (kIsWeb) return null;
+    try {
+      final directory = await getApplicationSupportDirectory();
+      final file = File('${directory.path}/$key.png');
 
-    if (await file.exists()) {
-      print('exists!');
-      final data = await file.readAsBytes();
-      _imageCache[key] = data;
-      return data;
+      if (await file.exists()) {
+        print('exists!');
+        final data = await file.readAsBytes();
+        _imageCache[key] = data;
+        return data;
+      }
+      return null;
+    } catch (e) {
+      print(e);
+      return null;
     }
-    return null;
   }
 }
 
