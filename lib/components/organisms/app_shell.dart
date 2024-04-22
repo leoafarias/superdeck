@@ -128,34 +128,34 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
     );
 
     //  if screen small return a bottom bar navigation simila to the navigationRail
-    // final smallNavigation = BottomNavigationBar(
-    //   currentIndex: widget.navigationShell.currentIndex,
-    //   showUnselectedLabels: false,
-    //   showSelectedLabels: false,
-    //   onTap: onTap,
-    //   items: SideMenu.values.map(
-    //     (e) {
-    //       return BottomNavigationBarItem(
-    //         icon: Icon(e.icon),
-    //         label: e.label,
-    //       );
-    //     },
-    //   ).toList(),
-    // );
+    final smallNavigation = BottomNavigationBar(
+      currentIndex: widget.navigationShell.currentIndex,
+      showUnselectedLabels: false,
+      showSelectedLabels: false,
+      onTap: onTap,
+      items: SideMenu.values.map(
+        (e) {
+          return BottomNavigationBarItem(
+            icon: Icon(e.icon),
+            label: e.label,
+          );
+        },
+      ).toList(),
+    );
 
-    // // Add bottom bar later
-    // final bottomNavBar = isSmall
-    //     ? AnimatedBuilder(
-    //         animation: _animation,
-    //         builder: (context, child) {
-    //           return SizeTransition(
-    //             sizeFactor: _animation,
-    //             axis: Axis.vertical,
-    //             child: smallNavigation,
-    //           );
-    //         },
-    //       )
-    //     : null;
+    // Add bottom bar later
+    final bottomNavBar = isSmall
+        ? AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
+              return SizeTransition(
+                sizeFactor: _animation,
+                axis: Axis.vertical,
+                child: smallNavigation,
+              );
+            },
+          )
+        : null;
 
     final sideNavBar = !isSmall
         ? AnimatedBuilder(
@@ -172,7 +172,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
     return CallbackShortcuts(
       bindings: bindings,
       child: Scaffold(
-        bottomNavigationBar: null,
+        bottomNavigationBar: bottomNavBar,
         key: scaffoldKey,
         floatingActionButtonLocation: isSmall
             ? FloatingActionButtonLocation.miniEndFloat
@@ -185,7 +185,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
             child: const Icon(Icons.menu),
           ),
         ),
-        body: context.isSmall
+        body: isSmall
             ? widget.navigationShell
             : Row(
                 children: [

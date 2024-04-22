@@ -75,7 +75,7 @@ class _SplitViewState extends State<SplitView>
       }
     });
 
-    const sideWidth = 400.0;
+    final sideWidth = context.isMobileLandscape ? 200.0 : 400.0;
     const sideHeight = 200.0;
     final currentSlide = navigation.currentSlide.watch(context);
     final sideIsOpen = navigation.sideIsOpen.watch(context);

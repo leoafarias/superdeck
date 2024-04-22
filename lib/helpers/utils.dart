@@ -115,6 +115,12 @@ extension BuildContextExt on BuildContext {
 
   bool get isExtraLarge => size.width >= 1440;
 
+  bool get isMobile => isSmall || isMobileLandscape;
+
+  bool get isMobileLandscape {
+    return size.shortestSide < 600 && isLandscape;
+  }
+
   bool get isLandscape =>
       MediaQuery.orientationOf(this) == Orientation.landscape;
 
