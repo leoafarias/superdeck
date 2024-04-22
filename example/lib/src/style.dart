@@ -130,7 +130,7 @@ VariantAttribute get announcementStyle {
 }
 
 VariantAttribute get quoteStyle {
-  return SlideVariant.quote(
+  return const SlideVariant('quopte')(
     $.blockquote.textStyle.as(GoogleFonts.notoSerif()),
     $.blockquote.decoration.border.left(
       width: 4,

@@ -88,9 +88,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
 
-            final variant = slide.styleVariant;
-
-            final slideStyle = style.applyVariant(variant);
+            final slideStyle = style.applyVariant(slide.styleVariant);
             final key = md5Hash(slideStyle.toString() + slide.hashKey);
 
             return SlideThumbnail(

@@ -29,8 +29,8 @@ abstract class Slide extends Config with SlideMappable {
     required super.transition,
   });
 
-  SlideVariant get styleVariant {
-    return style == null ? SlideVariant.none : SlideVariant(style!);
+  SlideVariant? get styleVariant {
+    return style == null ? null : SlideVariant(style!);
   }
 
   String get hashKey => md5Hash((raw ?? '') + data);

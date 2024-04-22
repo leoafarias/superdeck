@@ -6,10 +6,6 @@ import '../superdeck.dart';
 
 class SlideVariant extends Variant {
   const SlideVariant(super.name);
-
-  static const cover = SlideVariant('cover');
-  static const quote = SlideVariant('quote');
-  static const none = SlideVariant('none');
 }
 
 TextStyle get baseTextStyle =>
