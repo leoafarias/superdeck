@@ -1,4 +1,17 @@
 ---
+style: announcement
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXE3N3hlcXl0OXR3eXJjOGJ3MGtvcmMwMWY4eDZqMHFvd3lxaHA4ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YpwVvng323pw45tYwv/giphy.gif
+content:
+  alignment: center
+---
+
+ # SUPERDECK 
+ ## RELEASED! 🎉
+
+ ### Create beautiful Flutter
+ ### slides with Markdown
+
+---
 style: custom
 layout: two_column_header
 background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif

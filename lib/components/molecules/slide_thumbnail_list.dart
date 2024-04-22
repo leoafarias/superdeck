@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:signals/signals_flutter.dart';
 
+import '../../helpers/utils.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../atoms/slide_thumbnail.dart';
@@ -74,6 +76,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
 
   @override
   Widget build(BuildContext context) {
+    final style = SuperDeckProvider.instance.style.watch(context);
     return Container(
       color: const Color.fromARGB(108, 0, 0, 0),
       child: ScrollablePositionedList.builder(
@@ -85,7 +88,14 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
 
+            final variant = slide.styleVariant;
+
+            final slideStyle = style.applyVariant(variant);
+            final key = md5Hash(slideStyle.toString() + slide.hashKey);
+
             return SlideThumbnail(
+              key: Key(key),
+              cacheKey: key,
               selected: idx == widget.currentSlide,
               onTap: () => goToPage(idx),
               slide: slide,

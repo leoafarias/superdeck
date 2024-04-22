@@ -31,12 +31,14 @@ class SlideThumbnail extends StatefulWidget {
   final bool selected;
   final VoidCallback onTap;
   final Slide slide;
+  final String cacheKey;
 
   const SlideThumbnail({
     super.key,
     required this.selected,
     required this.onTap,
     required this.slide,
+    required this.cacheKey,
   });
 
   @override
@@ -48,6 +50,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   late final imageCache = ImageCacheService(
     slide: widget.slide,
     quality: ExportQuality.low,
+    cacheKey: widget.cacheKey,
   );
   late final quality = ExportQuality.low;
 
@@ -56,22 +59,44 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   @override
   void initState() {
     super.initState();
-    getThumbnail();
+    _getLocalAsset().then((value) => getThumbnail());
+  }
+
+  @override
+  void didUpdateWidget(SlideThumbnail oldWidget) {
+    if (oldWidget.cacheKey != widget.cacheKey) {
+      getThumbnail();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   Future<void> getThumbnail() async {
+    if (kCanRunProcess) {
+      await _generateThumbnail();
+    } else {
+      await _getLocalAsset();
+    }
+  }
+
+  Future<void> _getLocalAsset() async {
     try {
+      asyncState.value = AsyncState.loading();
       final asset = await imageCache.get();
 
       if (asset != null) {
         asyncState.value = AsyncState.data(asset);
-        return;
       }
+    } on Exception catch (e) {
+      asyncState.value = AsyncState.error(e);
+    }
+  }
 
-      if (!kCanRunProcess) {
-        asyncState.value = AsyncState.error(
-          Exception('Cannot generate thumbnails on the web'),
-        );
+  Future<void> _generateThumbnail() async {
+    try {
+      final asset = imageCache.getMemory();
+
+      if (asset != null) {
+        asyncState.value = AsyncState.data(asset);
         return;
       }
 
@@ -100,16 +125,6 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
     }
   }
 
-  // if widget.slide changes, we need to refresh the widget
-  @override
-  void didUpdateWidget(covariant SlideThumbnail oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.slide != widget.slide) {
-      getThumbnail();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
@@ -126,7 +141,10 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
           child: AspectRatio(
             aspectRatio: kAspectRatio,
             child: result.map(
-              data: (data) => Image.memory(data),
+              data: (data) => Image.memory(
+                data,
+                gaplessPlayback: true,
+              ),
               loading: () {
                 return const Center(
                   child: CircularProgressIndicator(),

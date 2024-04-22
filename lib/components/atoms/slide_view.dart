@@ -41,7 +41,6 @@ class SlideView extends StatelessWidget {
       child: Pressable(
         onPress: () {},
         child: MixBuilder(
-          key: ValueKey(variantStyle),
           style: variantStyle.animate(),
           builder: (mix) {
             final spec = SlideSpec.fromMix(mix);

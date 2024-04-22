@@ -33,7 +33,7 @@ abstract class Slide extends Config with SlideMappable {
     return style == null ? SlideVariant.none : SlideVariant(style!);
   }
 
-  String get hashKey => hashString(data + (raw ?? ''));
+  String get hashKey => md5Hash((raw ?? '') + data);
 
   static const fromMap = SlideMapper.fromMap;
 

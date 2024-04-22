@@ -172,7 +172,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
     return CallbackShortcuts(
       bindings: bindings,
       child: Scaffold(
-        bottomNavigationBar: bottomNavBar,
+        bottomNavigationBar: null,
         key: scaffoldKey,
         floatingActionButtonLocation: isSmall
             ? FloatingActionButtonLocation.miniEndFloat

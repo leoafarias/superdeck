@@ -31,20 +31,16 @@ class ImageCacheService {
   const ImageCacheService({
     required this.slide,
     required this.quality,
+    required this.cacheKey,
   });
-
-  String _getCacheKey(Slide slide, ExportQuality quality) {
-    return 'thumb_${slide.hashKey}_${quality.label.toLowerCase()}';
-  }
-
-  String get _cacheKey => _getCacheKey(slide, quality);
 
   final Slide slide;
   final ExportQuality quality;
+  final String cacheKey;
 
   File _getAssetFile() {
     final directory = kConfig.assetsImageDir;
-    return File('${directory.path}/$_cacheKey.png');
+    return File('${directory.path}/thumb_${slide.hashKey}.png');
   }
 
   Future<Uint8List?> loadAssetFile() async {
@@ -64,25 +60,14 @@ class ImageCacheService {
     }
   }
 
-  // Future<Uint8List?> loadSupportFile() async {
-  //   try {
-  //     final file = await getSupportFile();
-  //     return await file.exists() ? file.readAsBytes() : null;
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
-
-  // Future<File> getSupportFile() async {
-  //   final directory = await getApplicationSupportDirectory();
-  //   return File('${directory.path}/$cacheKey.png');
-  // }
-
   Future<void> set(Uint8List image) async {
-    _imageCache[_cacheKey] = image;
+    _imageCache.removeWhere((key, value) => key.contains(slide.hashKey));
+
+    _imageCache[cacheKey] = image;
 
     if (kCanRunProcess) {
       final file = _getAssetFile();
+
       await file.writeAsBytes(image);
       return;
     }
@@ -90,11 +75,14 @@ class ImageCacheService {
     throw Exception('Cannot cache image on the web');
   }
 
-  Future<Uint8List?> get() async {
-    if (_imageCache.containsKey(_cacheKey)) {
-      return _imageCache[_cacheKey];
+  Uint8List? getMemory() {
+    if (_imageCache.containsKey(cacheKey)) {
+      return _imageCache[cacheKey];
     }
+    return null;
+  }
 
+  Future<Uint8List?> get() async {
     try {
       return await loadAssetFile();
     } catch (e) {

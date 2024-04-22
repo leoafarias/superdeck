@@ -114,6 +114,21 @@ VariantAttribute get coverStyle {
   );
 }
 
+VariantAttribute get announcementStyle {
+  return const SlideVariant('announcement')(
+    apply(coverStyle.value),
+    $.innerContainer.color.red(),
+    $.textStyle.height(0.6),
+    $.h1.textStyle.fontSize(140),
+    $.h1.textStyle.bold(),
+    $.h1.textStyle.color(Colors.yellow),
+    $.h2.textStyle.fontSize(140),
+    $.h3.textStyle.fontSize(60),
+    $.h3.textStyle.color(Colors.white),
+    $.h3.textStyle.fontWeight(FontWeight.w100),
+  );
+}
+
 VariantAttribute get quoteStyle {
   return SlideVariant.quote(
     $.blockquote.textStyle.as(GoogleFonts.notoSerif()),
@@ -143,6 +158,7 @@ Style get style {
     quoteStyle,
     showSectionsStyle,
     coverStyle,
+    announcementStyle,
     radStyle,
   );
 }

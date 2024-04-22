@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:yaml/yaml.dart';
@@ -76,6 +77,12 @@ String hashString(String input) {
     hash = (hash * 31 + input.codeUnitAt(i)) & 0x7FFFFFFF;
   }
   return hash.toString();
+}
+
+String md5Hash(String input) {
+  var bytes = utf8.encode(input);
+  var digest = md5.convert(bytes);
+  return digest.toString();
 }
 
 ({List<T> added, List<T> removed}) compareListChanges<T>(

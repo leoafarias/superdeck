@@ -189,6 +189,11 @@ class Pipeline {
     if (await assetsDir.exists()) {
       await for (final entity in assetsDir.list()) {
         if (entity is File) {
+          // if file name does not contains prefix skip
+          final fileName = entity.path.split('/').last;
+          if (!fileName.startsWith(SlideAsset.assetPrefix)) {
+            continue;
+          }
           final asset = await SlideAsset.load(entity);
           assets.add(asset);
         }
