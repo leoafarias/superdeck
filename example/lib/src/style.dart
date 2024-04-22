@@ -117,7 +117,6 @@ VariantAttribute get coverStyle {
 VariantAttribute get announcementStyle {
   return const SlideVariant('announcement')(
     apply(coverStyle.value),
-    $.innerContainer.color.red(),
     $.textStyle.height(0.6),
     $.h1.textStyle.fontSize(140),
     $.h1.textStyle.bold(),

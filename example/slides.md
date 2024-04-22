@@ -14,7 +14,7 @@ content:
 ---
 style: custom
 layout: two_column_header
-background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif
+background: https://source.unsplash.com/black-and-gray-microphone-on-black-stand-QrqeusbpFMM
 sections:
   header:
     alignment: center
@@ -24,7 +24,7 @@ sections:
 ---
 
  
-# Superdeck
+# Go wild!
 
 ::left::
 ## Beautiful Flutter presentations with Markdown
@@ -312,3 +312,28 @@ Table
 Divider
 
 ___
+
+
+
+---
+title: "Mermaid example"
+layout: two_column
+---
+
+::left::
+
+```mermaid
+flowchart TD
+    A[This is crazy] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+```
+  
+
+::right::
+
+## Mermaid Support
+
+Superdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.

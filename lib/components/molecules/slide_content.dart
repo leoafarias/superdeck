@@ -38,6 +38,13 @@ class SlideContent extends StatelessWidget {
       child = SingleChildScrollView(
         child: child,
       );
+    } else {
+      child = Wrap(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          child,
+        ],
+      );
     }
 
     return AnimatedMixedBox(

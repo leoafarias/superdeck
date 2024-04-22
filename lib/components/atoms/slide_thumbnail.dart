@@ -93,21 +93,14 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
   Future<void> _generateThumbnail() async {
     try {
-      final asset = imageCache.getMemory();
-
-      if (asset != null) {
-        asyncState.value = AsyncState.data(asset);
-        return;
-      }
-
-      const delay = Durations.short1;
+      const delay = Durations.short2;
       while (_isGenerating) {
         await Future.delayed(delay);
       }
 
       _isGenerating = true;
 
-      await Future.delayed(delay);
+      await Future.delayed(delay * 5);
       final data = await imageGenerator.generate(
         // ignore: use_build_context_synchronously
         context: context,

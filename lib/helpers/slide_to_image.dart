@@ -23,7 +23,7 @@ enum ExportQuality {
   final double pixelRatio;
 }
 
-final Map<String, Uint8List> _imageCache = {};
+// final Map<String, Uint8List> _imageCache = {};
 //  Create a simple cache class that also stores the image in application folder
 //  to avoid generating the image again
 
@@ -61,10 +61,6 @@ class ImageCacheService {
   }
 
   Future<void> set(Uint8List image) async {
-    _imageCache.removeWhere((key, value) => key.contains(slide.hashKey));
-
-    _imageCache[cacheKey] = image;
-
     if (kCanRunProcess) {
       final file = _getAssetFile();
 
@@ -73,13 +69,6 @@ class ImageCacheService {
     }
 
     throw Exception('Cannot cache image on the web');
-  }
-
-  Uint8List? getMemory() {
-    if (_imageCache.containsKey(cacheKey)) {
-      return _imageCache[cacheKey];
-    }
-    return null;
   }
 
   Future<Uint8List?> get() async {
@@ -206,7 +195,6 @@ class ImageGenerationService {
         break;
       }
 
-      await _waitForImagesLoaded(rootElement);
       // await Future.delayed(Durations.short2);
 
       retryCount--;
@@ -230,6 +218,7 @@ class ImageGenerationService {
     buildOwner.buildScope(rootElement);
     buildOwner.finalizeTree();
 
+    await _waitForImagesLoaded(rootElement);
     pipelineOwner.flushLayout();
     pipelineOwner.flushCompositingBits();
     pipelineOwner.flushPaint();

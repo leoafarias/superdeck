@@ -12,6 +12,7 @@ import '../../helpers/constants.dart';
 import '../../models/slide_model.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
+import '../components/molecules/scaled_app.dart';
 import '../helpers/slide_to_image.dart';
 import '../superdeck.dart';
 
@@ -307,7 +308,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
               controller: _pageController,
               itemCount: _images.length,
               itemBuilder: (context, index) {
-                return SlideView(_slides[index]);
+                return ScaledWidget(child: SlideView(_slides[index]));
               },
             ),
           ),

@@ -64,14 +64,11 @@ class SlideMarkdownPreview extends StatelessWidget {
       ),
       builder: (mix) {
         return SlideConstraints((_) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(40.0),
-            child: AnimatedMarkdownViewer(
-              content: "$options\n$data\n",
-              spec: SlideSpec.of(context),
-              assets: const [],
-              duration: Duration.zero,
-            ),
+          return AnimatedMarkdownViewer(
+            content: "$options\n$data\n",
+            spec: SlideSpec.of(context),
+            assets: const [],
+            duration: Duration.zero,
           );
         });
       },

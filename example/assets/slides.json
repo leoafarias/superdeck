@@ -17,7 +17,7 @@
     "type": "Slide"
   },
   {
-    "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif",
+    "background": "https://source.unsplash.com/black-and-gray-microphone-on-black-stand-QrqeusbpFMM",
     "style": "custom",
     "transition": {
       "type": "fade_in",
@@ -25,7 +25,7 @@
       "delay": 0,
       "curve": "ease"
     },
-    "data": "# Superdeck\n\n::left::\n## Beautiful Flutter presentations with Markdown",
+    "data": "# Go wild!\n\n::left::\n## Beautiful Flutter presentations with Markdown",
     "sections": {
       "header": {
         "flex": 2,
@@ -36,7 +36,7 @@
         "alignment": "center_left"
       }
     },
-    "raw": "\nstyle: custom\nlayout: two_column_header\nbackground: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc21yZzZhNzQ3bmt4dGk3amE5a2ozaHQxbTdpeGM4bHlmazdibmJjdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8L43c9x5Lvl2o/giphy.gif\nsections:\n  header:\n    alignment: center\n    flex: 2\n  left:\n    flex: 1\n",
+    "raw": "\nstyle: custom\nlayout: two_column_header\nbackground: https://source.unsplash.com/black-and-gray-microphone-on-black-stand-QrqeusbpFMM\nsections:\n  header:\n    alignment: center\n    flex: 2\n  left:\n    flex: 1\n",
     "type": "Slide",
     "layout": "two_column_header"
   },
@@ -213,6 +213,20 @@
     "data": "::left::\n\n\nCode\n```dart\nint factorial(int n) {\n   return n == 0 ? 1 : n * factorial(n - 1);\n}\n```\n\nTasks\n- [ ] Item 1\n- [x] Item 2\n\nSubtasks\n\n- [x] Item 1\n  - [ ] Subitem 1\n\n::right::\n\nImages\n![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)\n\n\nTable\n\n| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1A  | Cell 1B  |\n| Cell 2A  | Cell 2B  |\n\nDivider\n\n___",
     "sections": {},
     "raw": "\nlayout: two_column\n",
+    "type": "Slide",
+    "layout": "two_column"
+  },
+  {
+    "title": "Mermaid example",
+    "transition": {
+      "type": "fade_in",
+      "duration": 0,
+      "delay": 0,
+      "curve": "ease"
+    },
+    "data": "::left::\n\n![Mermaid Diagram](assets/images/sd_175456242.png)\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.",
+    "sections": {},
+    "raw": "\ntitle: \"Mermaid example\"\nlayout: two_column\n",
     "type": "Slide",
     "layout": "two_column"
   }
