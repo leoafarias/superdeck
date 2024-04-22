@@ -27,10 +27,6 @@ class SlidesLoader {
   );
 
   static Future<void> generate() async {
-    if (kIsWeb) {
-      print('Cannot generate slides on the web');
-      return;
-    }
     final markdownFile = kConfig.slidesMarkdownFile;
 
     if (!await markdownFile.exists()) {
@@ -46,7 +42,6 @@ class SlidesLoader {
 
   static List<StreamSubscription<WatchEvent>> listen({
     required void Function() onChange,
-    required void Function(Exception?) onError,
   }) {
     return [
       kConfig.slidesMarkdownFile,
@@ -54,13 +49,7 @@ class SlidesLoader {
     ].map((file) {
       return FileWatcher(file.path).events.listen((event) async {
         if (event.type == ChangeType.MODIFY) {
-          try {
-            await SlidesLoader.generate();
-            onChange();
-            onError(null);
-          } on Exception catch (e) {
-            onError(e);
-          }
+          onChange();
         }
       });
     }).toList();

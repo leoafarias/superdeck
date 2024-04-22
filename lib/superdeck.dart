@@ -2,7 +2,7 @@ library superdeck;
 
 export 'package:mix/mix.dart';
 export 'package:superdeck/components/superdeck_app.dart';
-export 'package:superdeck/providers/sd_provider.dart';
+export 'package:superdeck/providers/deck_provider.dart';
 export 'package:superdeck/styles/style_attribute.dart';
 export 'package:superdeck/styles/style_dto.dart';
 export 'package:superdeck/styles/style_spec.dart';

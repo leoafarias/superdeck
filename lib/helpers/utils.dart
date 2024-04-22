@@ -69,3 +69,57 @@ BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
     maxWidth: size.width - horizontalSpacing,
   );
 }
+
+String hashString(String input) {
+  int hash = 0;
+  for (int i = 0; i < input.length; i++) {
+    hash = (hash * 31 + input.codeUnitAt(i)) & 0x7FFFFFFF;
+  }
+  return hash.toString();
+}
+
+({List<T> added, List<T> removed}) compareListChanges<T>(
+    List<T> oldList, List<T> newList) {
+  final added = <T>[];
+  final removed = <T>[];
+
+  final oldSet = oldList.toSet();
+  final newSet = newList.toSet();
+
+  for (final item in newList) {
+    if (!oldSet.contains(item)) {
+      added.add(item);
+    }
+  }
+
+  for (final item in oldList) {
+    if (!newSet.contains(item)) {
+      removed.add(item);
+    }
+  }
+
+  return (
+    added: added,
+    removed: removed,
+  );
+}
+
+extension BuildContextExt on BuildContext {
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+  bool get isSmall => MediaQuery.of(this).size.width < 600;
+
+  Size get size => MediaQuery.sizeOf(this);
+  bool get isMedium => size.width >= 600 && size.width < 1024;
+
+  bool get isLarge => size.width >= 1024;
+
+  bool get isExtraLarge => size.width >= 1440;
+
+  bool get isLandscape =>
+      MediaQuery.orientationOf(this) == Orientation.landscape;
+
+  bool get isPortrait => MediaQuery.orientationOf(this) == Orientation.portrait;
+
+  double get width => size.width;
+  double get height => size.height;
+}

@@ -8,7 +8,6 @@ import '../../models/asset_model.dart';
 import '../../models/slide_model.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
-import '../molecules/scaled_app.dart';
 import 'transition_widget.dart';
 
 class SlideView extends StatelessWidget {
@@ -28,6 +27,7 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final superdeck = SuperDeckProvider.instance;
     final slide = this.slide;
     final variant = slide.styleVariant;
     final style = superdeck.style.watch(context);
@@ -35,64 +35,60 @@ class SlideView extends StatelessWidget {
 
     final variantStyle = style.applyVariant(variant);
 
-    return Center(
-      child: ScaledWidget(
-        child: TransitionWidget(
-          key: ValueKey(slide.transition),
-          transition: slide.transition,
-          child: Pressable(
-            onPress: () {},
-            child: MixBuilder(
-              key: ValueKey(variantStyle),
-              style: variantStyle.animate(),
-              builder: (mix) {
-                final spec = SlideSpec.fromMix(mix);
-                return Builder(builder: (context) {
-                  return AnimatedMixedBox(
-                    spec: spec.outerContainer,
-                    duration: Durations.medium1,
-                    child: AnimatedMixedBox(
-                      spec: _buildInnerContainerSpec(
-                        slide: slide,
-                        spec: spec.innerContainer,
-                        assets: assets,
-                        context: context,
-                      ),
-                      duration: const Duration(milliseconds: 300),
-                      child: SlideProvider(
-                        slide: slide,
-                        spec: spec,
-                        assets: assets,
-                        examples: superdeck.examples.watch(context),
-                        isSnapshot: _isSnapshot,
-                        child: SlideConstraints(
-                          (_) {
-                            if (slide is SimpleSlide) {
-                              return SimpleSlideBuilder(config: slide);
-                            } else if (slide is WidgetSlide) {
-                              return WidgetSlideBuilder(config: slide);
-                            } else if (slide is ImageSlide) {
-                              return ImageSlideBuilder(config: slide);
-                            } else if (slide is TwoColumnSlide) {
-                              return TwoColumnSlideBuilder(config: slide);
-                            } else if (slide is TwoColumnHeaderSlide) {
-                              return TwoColumnHeaderSlideBuilder(config: slide);
-                            } else if (slide is InvalidSlide) {
-                              return InvalidSlideBuilder(config: slide);
-                            } else {
-                              throw UnimplementedError(
-                                'Slide config not implemented',
-                              );
-                            }
-                          },
-                        ),
-                      ),
+    return TransitionWidget(
+      key: ValueKey(slide.transition),
+      transition: slide.transition,
+      child: Pressable(
+        onPress: () {},
+        child: MixBuilder(
+          key: ValueKey(variantStyle),
+          style: variantStyle.animate(),
+          builder: (mix) {
+            final spec = SlideSpec.fromMix(mix);
+            return Builder(builder: (context) {
+              return AnimatedMixedBox(
+                spec: spec.outerContainer,
+                duration: Durations.medium1,
+                child: AnimatedMixedBox(
+                  spec: _buildInnerContainerSpec(
+                    slide: slide,
+                    spec: spec.innerContainer,
+                    assets: assets,
+                    context: context,
+                  ),
+                  duration: const Duration(milliseconds: 300),
+                  child: SlideProvider(
+                    slide: slide,
+                    spec: spec,
+                    assets: assets,
+                    examples: superdeck.examples.watch(context),
+                    isSnapshot: _isSnapshot,
+                    child: SlideConstraints(
+                      (_) {
+                        if (slide is SimpleSlide) {
+                          return SimpleSlideBuilder(config: slide);
+                        } else if (slide is WidgetSlide) {
+                          return WidgetSlideBuilder(config: slide);
+                        } else if (slide is ImageSlide) {
+                          return ImageSlideBuilder(config: slide);
+                        } else if (slide is TwoColumnSlide) {
+                          return TwoColumnSlideBuilder(config: slide);
+                        } else if (slide is TwoColumnHeaderSlide) {
+                          return TwoColumnHeaderSlideBuilder(config: slide);
+                        } else if (slide is InvalidSlide) {
+                          return InvalidSlideBuilder(config: slide);
+                        } else {
+                          throw UnimplementedError(
+                            'Slide config not implemented',
+                          );
+                        }
+                      },
                     ),
-                  );
-                });
-              },
-            ),
-          ),
+                  ),
+                ),
+              );
+            });
+          },
         ),
       ),
     );

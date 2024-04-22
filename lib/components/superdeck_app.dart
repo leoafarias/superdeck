@@ -7,10 +7,10 @@ import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../helpers/constants.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../models/options_model.dart';
 import '../../superdeck.dart';
+import '../helpers/constants.dart';
 import '../helpers/theme.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
@@ -32,6 +32,8 @@ class SuperDeckApp extends StatefulWidget {
 }
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
+  final superdeck = SuperDeckProvider.instance;
+
   @override
   void initState() {
     super.initState();
@@ -83,21 +85,10 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Watch.builder(
-      builder: (context) {
-        if (superdeck.loading.value) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    final result = superdeck.data.watch(context);
 
-        if (superdeck.error.value != null) {
-          return ExceptionWidget(
-            superdeck.error.value!,
-            onRetry: onRetry,
-          );
-        }
-
+    return result.map(
+      data: (data) {
         return MixTheme(
           data: MixThemeData.withMaterial(),
           child: MaterialApp.router(
@@ -108,21 +99,32 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
           ),
         );
       },
+      loading: () {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+      error: (error) {
+        return ExceptionWidget(
+          error,
+          onRetry: onRetry,
+        );
+      },
     );
   }
 }
 
 Future<void> _initializeWindowManager() async {
   if (kIsWeb) return;
+
   // Must add this line.
   await windowManager.ensureInitialized();
 
   const windowOptions = WindowOptions(
     size: kResolution,
-    center: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.black,
     skipTaskbar: false,
-    minimumSize: Size(640, 360),
+    minimumSize: kResolution,
     titleBarStyle: TitleBarStyle.hidden,
   );
 

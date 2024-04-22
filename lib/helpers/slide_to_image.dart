@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
 import '../models/slide_model.dart';
+import 'config.dart';
 
 enum ExportQuality {
   low('Low', pixelRatio: 0.4),
@@ -23,50 +23,80 @@ enum ExportQuality {
   final double pixelRatio;
 }
 
-String _getCacheKey(Slide slide, ExportQuality quality) {
-  return '${slide.hashCode}_${quality.label}';
-}
-
 final Map<String, Uint8List> _imageCache = {};
 //  Create a simple cache class that also stores the image in application folder
 //  to avoid generating the image again
 
-class ImageCache {
-  const ImageCache._();
+class ImageCacheService {
+  const ImageCacheService({
+    required this.slide,
+    required this.quality,
+  });
 
-  static ImageCache get instance => _instance;
+  String _getCacheKey(Slide slide, ExportQuality quality) {
+    return 'thumb_${slide.hashKey}_${quality.label.toLowerCase()}';
+  }
 
-  static const _instance = ImageCache._();
+  String get _cacheKey => _getCacheKey(slide, quality);
 
-  Future<void> set(String key, Uint8List image) async {
-    _imageCache[key] = image;
-    if (kIsWeb) return;
+  final Slide slide;
+  final ExportQuality quality;
+
+  File _getAssetFile() {
+    final directory = kConfig.assetsImageDir;
+    return File('${directory.path}/$_cacheKey.png');
+  }
+
+  Future<Uint8List?> loadAssetFile() async {
     try {
-      final directory = await getApplicationSupportDirectory();
-      await get(key);
-      final file = File('${directory.path}/$key.png');
-      await file.writeAsBytes(image);
+      if (kCanRunProcess) {
+        final file = _getAssetFile();
+        if (await file.exists()) {
+          return await file.readAsBytes();
+        } else {
+          return null;
+        }
+      }
+      final asset = await rootBundle.load(_getAssetFile().path);
+      return asset.buffer.asUint8List();
     } catch (e) {
-      print(e);
+      return null;
     }
   }
 
-  Future<Uint8List?> get(String key) async {
-    if (_imageCache.containsKey(key)) {
-      return _imageCache[key];
-    }
-    if (kIsWeb) return null;
-    try {
-      final directory = await getApplicationSupportDirectory();
-      final file = File('${directory.path}/$key.png');
+  // Future<Uint8List?> loadSupportFile() async {
+  //   try {
+  //     final file = await getSupportFile();
+  //     return await file.exists() ? file.readAsBytes() : null;
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
-      if (await file.exists()) {
-        print('exists!');
-        final data = await file.readAsBytes();
-        _imageCache[key] = data;
-        return data;
-      }
-      return null;
+  // Future<File> getSupportFile() async {
+  //   final directory = await getApplicationSupportDirectory();
+  //   return File('${directory.path}/$cacheKey.png');
+  // }
+
+  Future<void> set(Uint8List image) async {
+    _imageCache[_cacheKey] = image;
+
+    if (kCanRunProcess) {
+      final file = _getAssetFile();
+      await file.writeAsBytes(image);
+      return;
+    }
+
+    throw Exception('Cannot cache image on the web');
+  }
+
+  Future<Uint8List?> get() async {
+    if (_imageCache.containsKey(_cacheKey)) {
+      return _imageCache[_cacheKey];
+    }
+
+    try {
+      return await loadAssetFile();
     } catch (e) {
       print(e);
       return null;
@@ -74,194 +104,183 @@ class ImageCache {
   }
 }
 
-class SlideToImage {
-  SlideToImage._();
+class ImageGenerationService {
+  ImageGenerationService._();
 
-  static SlideToImage get instance => _instance;
+  static ImageGenerationService get instance => _instance;
 
-  static final _instance = SlideToImage._();
-
-  final cache = ImageCache.instance;
-
-  Uint8List? getFromCache(Slide slide, ExportQuality quality) {
-    final key = _getCacheKey(slide, quality);
-    return _imageCache[key];
-  }
+  static final _instance = ImageGenerationService._();
 
   Future<Uint8List> generate({
     required BuildContext context,
     ExportQuality quality = ExportQuality.good,
     required Slide slide,
   }) async {
-    final key = _getCacheKey(slide, quality);
-    final cacheData = await cache.get(key);
-    if (cacheData != null) {
-      print('exists');
-      return cacheData;
+    if (!context.mounted) {
+      throw Exception('Context is not mounted');
     }
 
-    final image = await fromWidgetToImage(
+    final image = await _fromWidgetToImage(
       SlideView.snapshot(slide),
       context: context,
       pixelRatio: quality.pixelRatio,
       targetSize: kResolution,
     );
-    final convertedImage = await getImageInBytes(image);
+    final convertedImage = await _getImageInBytes(image);
     image.dispose();
 
-    await cache.set(key, convertedImage);
     return convertedImage;
   }
 
-  Future<Uint8List> getImageInBytes(ui.Image image) async {
+  Future<Uint8List> _getImageInBytes(ui.Image image) async {
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
-}
 
-Future<ui.Image> fromWidgetToImage(
-  Widget widget, {
-  required double pixelRatio,
-  required BuildContext context,
-  Size? targetSize,
-}) async {
-  Widget child = widget;
+  Future<ui.Image> _fromWidgetToImage(
+    Widget widget, {
+    required double pixelRatio,
+    required BuildContext context,
+    Size? targetSize,
+  }) async {
+    Widget child = widget;
 
-  child = InheritedTheme.captureAll(
-    context,
-    MediaQuery(
-      data: MediaQuery.of(context),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: Theme.of(context),
-        color: Colors.transparent,
-        home: Scaffold(body: child),
+    child = InheritedTheme.captureAll(
+      context,
+      MediaQuery(
+        data: MediaQuery.of(context),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: Theme.of(context),
+          color: Colors.transparent,
+          home: Scaffold(body: child),
+        ),
       ),
-    ),
-  );
-
-  final repaintBoundary = RenderRepaintBoundary();
-  final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
-
-  final view = View.maybeOf(context) ?? platformDispatcher.views.first;
-  final logicalSize = targetSize ?? view.physicalSize / view.devicePixelRatio;
-
-  int retryCount = 5;
-  bool isDirty = false;
-
-  final renderView = RenderView(
-    view: view,
-    child: RenderPositionedBox(
-      alignment: Alignment.center,
-      child: repaintBoundary,
-    ),
-    configuration: ViewConfiguration(
-      size: logicalSize,
-      devicePixelRatio: pixelRatio,
-    ),
-  );
-
-  final pipelineOwner = PipelineOwner(
-    onNeedVisualUpdate: () {
-      isDirty = true;
-    },
-  );
-  final buildOwner = BuildOwner(
-    focusManager: FocusManager(),
-    onBuildScheduled: () {
-      isDirty = true;
-    },
-  );
-
-  pipelineOwner.rootNode = renderView;
-  renderView.prepareInitialFrame();
-
-  final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
-    container: repaintBoundary,
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: child,
-    ),
-  ).attachToRenderTree(buildOwner);
-  ui.Image? image;
-  while (retryCount > 0) {
-    isDirty = false;
-
-    image = await _captureImage(
-      buildOwner: buildOwner,
-      rootElement: rootElement,
-      pipelineOwner: pipelineOwner,
-      repaintBoundary: repaintBoundary,
-      pixelRatio: pixelRatio,
-      logicalSize: logicalSize,
     );
 
-    if (!isDirty) {
-      break;
-    }
+    final repaintBoundary = RenderRepaintBoundary();
+    final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
 
-    await _waitForImagesLoaded(rootElement);
-    // await Future.delayed(Durations.short2);
+    final view = View.maybeOf(context) ?? platformDispatcher.views.first;
+    final logicalSize = targetSize ?? view.physicalSize / view.devicePixelRatio;
 
-    retryCount--;
-  }
+    int retryCount = 5;
+    bool isDirty = false;
 
-  try {
-    buildOwner.finalizeTree();
-  } catch (e) {}
+    final renderView = RenderView(
+      view: view,
+      child: RenderPositionedBox(
+        alignment: Alignment.center,
+        child: repaintBoundary,
+      ),
+      configuration: ViewConfiguration(
+        size: logicalSize,
+        devicePixelRatio: pixelRatio,
+      ),
+    );
 
-  return image!;
-}
+    final pipelineOwner = PipelineOwner(
+      onNeedVisualUpdate: () {
+        isDirty = true;
+      },
+    );
+    final buildOwner = BuildOwner(
+      focusManager: FocusManager(),
+      onBuildScheduled: () {
+        isDirty = true;
+      },
+    );
 
-Future<ui.Image?> _captureImage({
-  required BuildOwner buildOwner,
-  required RenderObjectToWidgetElement<RenderBox> rootElement,
-  required PipelineOwner pipelineOwner,
-  required RenderRepaintBoundary repaintBoundary,
-  required double pixelRatio,
-  required Size logicalSize,
-}) async {
-  buildOwner.buildScope(rootElement);
-  buildOwner.finalizeTree();
+    pipelineOwner.rootNode = renderView;
+    renderView.prepareInitialFrame();
 
-  pipelineOwner.flushLayout();
-  pipelineOwner.flushCompositingBits();
-  pipelineOwner.flushPaint();
-  await Future.delayed(Durations.short2);
-  return repaintBoundary.toImage(pixelRatio: pixelRatio);
-}
+    final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
+      container: repaintBoundary,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: child,
+      ),
+    ).attachToRenderTree(buildOwner);
+    ui.Image? image;
+    while (retryCount > 0) {
+      isDirty = false;
 
-Future<void> _waitForImagesLoaded(Element rootElement) async {
-  final List<Future<void>> futures = [];
-
-  void traverseElement(Element element) {
-    if (element.widget is Image) {
-      final imageProvider = (element.widget as Image).image;
-
-      final stream = imageProvider.resolve(ImageConfiguration.empty);
-
-      final completer = Completer<void>();
-
-      late ImageStreamListener listener;
-      listener = ImageStreamListener(
-        (ImageInfo image, bool synchronousCall) {
-          completer.complete();
-          stream.removeListener(listener);
-        },
-        onError: (dynamic exception, StackTrace? stackTrace) {
-          completer.completeError(exception, stackTrace);
-          stream.removeListener(listener);
-        },
+      image = await _captureImage(
+        buildOwner: buildOwner,
+        rootElement: rootElement,
+        pipelineOwner: pipelineOwner,
+        repaintBoundary: repaintBoundary,
+        pixelRatio: pixelRatio,
+        logicalSize: logicalSize,
       );
 
-      stream.addListener(listener);
-      futures.add(completer.future);
+      if (!isDirty) {
+        break;
+      }
+
+      await _waitForImagesLoaded(rootElement);
+      // await Future.delayed(Durations.short2);
+
+      retryCount--;
     }
 
-    element.visitChildren(traverseElement);
+    try {
+      buildOwner.finalizeTree();
+    } catch (e) {}
+
+    return image!;
   }
 
-  rootElement.visitChildren(traverseElement);
+  Future<ui.Image?> _captureImage({
+    required BuildOwner buildOwner,
+    required RenderObjectToWidgetElement<RenderBox> rootElement,
+    required PipelineOwner pipelineOwner,
+    required RenderRepaintBoundary repaintBoundary,
+    required double pixelRatio,
+    required Size logicalSize,
+  }) async {
+    buildOwner.buildScope(rootElement);
+    buildOwner.finalizeTree();
 
-  await Future.wait(futures);
+    pipelineOwner.flushLayout();
+    pipelineOwner.flushCompositingBits();
+    pipelineOwner.flushPaint();
+    await Future.delayed(Durations.short2);
+    return repaintBoundary.toImage(pixelRatio: pixelRatio);
+  }
+
+  Future<void> _waitForImagesLoaded(Element rootElement) async {
+    final List<Future<void>> futures = [];
+
+    void traverseElement(Element element) {
+      if (element.widget is Image) {
+        final imageProvider = (element.widget as Image).image;
+
+        final stream = imageProvider.resolve(ImageConfiguration.empty);
+
+        final completer = Completer<void>();
+
+        late ImageStreamListener listener;
+        listener = ImageStreamListener(
+          (ImageInfo image, bool synchronousCall) {
+            completer.complete();
+            stream.removeListener(listener);
+          },
+          onError: (dynamic exception, StackTrace? stackTrace) {
+            completer.completeError(exception, stackTrace);
+            stream.removeListener(listener);
+          },
+        );
+
+        stream.addListener(listener);
+        futures.add(completer.future);
+      }
+
+      element.visitChildren(traverseElement);
+    }
+
+    rootElement.visitChildren(traverseElement);
+
+    await Future.wait(futures);
+  }
 }

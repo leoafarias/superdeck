@@ -101,7 +101,7 @@ class _SlideConstraintsState extends State<SlideConstraints> {
           child: SlideConstraintsProvider(
             constraints: constraintSize,
             child: Builder(
-              builder: (BuildContext context) {
+              builder: (context) {
                 return widget.builder(size);
               },
             ),

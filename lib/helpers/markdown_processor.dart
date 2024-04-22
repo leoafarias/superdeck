@@ -50,7 +50,7 @@ class Pipeline {
       if (entity is File) {
         final asset = await SlideAsset.maybeLoad(entity);
         if (!assetsLoaded.contains(asset)) {
-          await entity.delete();
+          // await entity.delete();
         }
       }
     }

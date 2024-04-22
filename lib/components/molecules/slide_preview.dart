@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../helpers/measure_size.dart';
+import '../../helpers/utils.dart';
 import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../atoms/markdown_viewer.dart';
 import '../atoms/slide_view.dart';
+import 'scaled_app.dart';
 import 'split_view.dart';
 
 class SlidePreview extends StatelessWidget {
@@ -17,15 +19,14 @@ class SlidePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sideWidth = SplitViewProvider.sideWidthOf(context);
-    final paddingSize = sideWidth / 20;
+    final panelSize = SplitViewProvider.panelSizeOf(context);
+    var paddingSize = panelSize / (context.isSmall ? 5.0 : 20.0);
 
-    return Container(
-      color: const Color.fromARGB(144, 0, 0, 0),
-      alignment: Alignment.center,
+    return Center(
       child: Container(
         margin: EdgeInsets.all(paddingSize),
         decoration: BoxDecoration(
+          color: const Color.fromARGB(144, 0, 0, 0),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -34,8 +35,8 @@ class SlidePreview extends StatelessWidget {
             ),
           ],
         ),
-        child: SlideConstraints(
-          (_) => SlideView(slide),
+        child: ScaledWidget(
+          child: SlideView(slide),
         ),
       ),
     );

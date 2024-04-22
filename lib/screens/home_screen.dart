@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../components/molecules/slide_preview.dart';
+import '../components/molecules/split_view.dart';
 import '../superdeck.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,9 +16,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final pageController = PageController();
+  late final PageController pageController;
   final superdeck = SuperDeckProvider.instance;
   final navigation = NavigationProvider.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController(initialPage: navigation.currentSlide.value);
+  }
 
   @override
   void dispose() {
@@ -56,19 +63,17 @@ class _HomeScreenState extends State<HomeScreen> {
       goToPage(navigation.currentSlide.value);
     });
 
-    return Container(
-      alignment: Alignment.center,
-      child: PageView.builder(
-        controller: pageController,
-        itemCount: slides.length,
-        itemBuilder: (context, idx) {
-          final slide = slides[idx];
-          return true
-              ? SlidePreview(slide)
-              : SlideMarkdownPreview(
-                  slide: slide,
-                );
-        },
+    return SplitView(
+      child: Container(
+        alignment: Alignment.center,
+        child: PageView.builder(
+          controller: pageController,
+          itemCount: slides.length,
+          itemBuilder: (context, idx) {
+            final slide = slides[idx];
+            return SlidePreview(slide);
+          },
+        ),
       ),
     );
   }

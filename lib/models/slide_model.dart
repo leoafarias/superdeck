@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../helpers/utils.dart';
 import '../schema/schema.dart';
 import '../superdeck.dart';
 import 'options_model.dart';
@@ -31,6 +32,8 @@ abstract class Slide extends Config with SlideMappable {
   SlideVariant get styleVariant {
     return style == null ? SlideVariant.none : SlideVariant(style!);
   }
+
+  String get hashKey => hashString(data + (raw ?? ''));
 
   static const fromMap = SlideMapper.fromMap;
 

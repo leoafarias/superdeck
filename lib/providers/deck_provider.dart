@@ -6,13 +6,11 @@ import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:watcher/watcher.dart';
 
+import '../helpers/constants.dart';
 import '../helpers/loader.dart';
-import '../models/asset_model.dart';
+import '../helpers/utils.dart';
 import '../models/options_model.dart';
-import '../models/slide_model.dart';
 import '../superdeck.dart';
-
-final superdeck = SuperDeckProvider.instance;
 
 class SuperDeckProvider {
   SuperDeckProvider._();
@@ -21,25 +19,53 @@ class SuperDeckProvider {
 
   static final _instance = SuperDeckProvider._();
 
+  final data = futureSignal(() async {
+    if (kCanRunProcess) {
+      await SlidesLoader.generate();
+    }
+    return SlidesLoader.loadFromStorage();
+  });
+
   List<StreamSubscription<WatchEvent>> _subscriptions = [];
+
+  late final listenToSlideChanges = effect(() {
+    slides.value;
+    final previousValue = slides.previousValue ?? [];
+
+    if (listEquals(slides.value, previousValue)) {
+      return;
+    }
+
+    final changes = compareListChanges(previousValue, slides.value);
+
+    for (var added in changes.added) {
+      print('Added: $added');
+    }
+
+    for (var removed in changes.removed) {
+      print('Removed: $removed');
+    }
+  });
 
   final style = signal(const Style.empty());
 
-  final config = signal(const ProjectConfig.empty());
+  late final loading = computed(() {
+    return data.value is AsyncLoading;
+  });
 
-  final loading = signal(true);
-
-  final slides = listSignal<Slide>([]);
-
-  final assets = listSignal<SlideAsset>([]);
+  late final slides = computed(() => data.value.value?.slides ?? []);
+  late final assets = computed(() => data.value.value?.assets ?? []);
+  late final config =
+      computed(() => data.value.value?.config ?? const ProjectConfig.empty());
 
   final examples = mapSignal<String, Example>({});
 
-  late final totalInvalid = computed(() {
-    return slides.value.whereType<InvalidSlide>().length;
-  });
-
-  final error = signal<Exception?>(null);
+  late final error = computed(
+    () {
+      final data = this.data.value;
+      return data is AsyncError ? data.error : null;
+    },
+  );
 
   Map<String, Example> _examplesToMap(List<Example> examples) {
     return {for (var e in examples) e.name: e};
@@ -55,45 +81,23 @@ class SuperDeckProvider {
     });
   }
 
-  Future<void> _loadData() async {
-    final (:slides, :assets, :config) = await SlidesLoader.loadFromStorage();
-
-    batch(() {
-      this.slides.assign(slides);
-      this.assets.assign(assets);
-      this.config.value = config;
-    });
-  }
-
   Future<void> initialize({
     List<Example> examples = const [],
     Style? style,
   }) async {
-    try {
-      batch(() {
-        loading.value = true;
-        error.value = null;
-      });
-      // Unsubscribe to listeners in case its a retry
-      _unsubscribe();
-      batch(() {
-        this.style.value = defaultStyle.merge(style);
-        this.examples.assign(_examplesToMap(examples));
-      });
-      await SlidesLoader.generate();
-      await _loadData();
+    // Unsubscribe to listeners in case its a retry
+    _unsubscribe();
+    batch(() {
+      this.style.value = defaultStyle.merge(style);
+      this.examples.assign(_examplesToMap(examples));
+    });
 
-      if (kDebugMode && !kIsWeb) {
-        _subscriptions = SlidesLoader.listen(
-          onChange: _loadData,
-          onError: (e) => error.value = e,
-        );
-      }
-    } on Exception catch (e) {
-      error.value = e;
-      rethrow;
-    } finally {
-      loading.value = false;
+    if (kCanRunProcess) {
+      _subscriptions = SlidesLoader.listen(
+        onChange: () async {
+          data.refresh();
+        },
+      );
     }
   }
 

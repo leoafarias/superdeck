@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -43,31 +44,61 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final thumbnailGen = SlideToImage.instance;
+  late final imageGenerator = ImageGenerationService.instance;
+  late final imageCache = ImageCacheService(
+    slide: widget.slide,
+    quality: ExportQuality.low,
+  );
   late final quality = ExportQuality.low;
 
-  late final slideImage = futureSignal(() async {
-    const delay = Durations.short2;
-    await Future.delayed(delay);
-    while (_isGenerating) {
-      await Future.delayed(delay);
-    }
+  late final asyncState = signal<AsyncState<Uint8List>>(AsyncState.loading());
 
-    _isGenerating = true;
+  @override
+  void initState() {
+    super.initState();
+    getThumbnail();
+  }
 
+  Future<void> getThumbnail() async {
     try {
-      final data = await thumbnailGen.generate(
+      final asset = await imageCache.get();
+
+      if (asset != null) {
+        asyncState.value = AsyncState.data(asset);
+        return;
+      }
+
+      if (!kCanRunProcess) {
+        asyncState.value = AsyncState.error(
+          Exception('Cannot generate thumbnails on the web'),
+        );
+        return;
+      }
+
+      const delay = Durations.short1;
+      while (_isGenerating) {
+        await Future.delayed(delay);
+      }
+
+      _isGenerating = true;
+
+      await Future.delayed(delay);
+      final data = await imageGenerator.generate(
         // ignore: use_build_context_synchronously
         context: context,
         quality: quality,
         slide: widget.slide,
       );
 
-      return data;
+      await imageCache.set(data);
+
+      asyncState.value = AsyncState.data(data);
+    } on Exception catch (e) {
+      asyncState.value = AsyncState.error(e);
     } finally {
       _isGenerating = false;
     }
-  });
+  }
 
   // if widget.slide changes, we need to refresh the widget
   @override
@@ -75,7 +106,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.slide != widget.slide) {
-      slideImage.refresh();
+      getThumbnail();
     }
   }
 
@@ -83,28 +114,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   Widget build(BuildContext context) {
     final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
 
-    final result = slideImage.watch(context);
-
-    Widget buildChild() {
-      final cacheData = thumbnailGen.getFromCache(widget.slide, quality);
-      if (cacheData != null) {
-        return Image.memory(cacheData);
-      } else {
-        return result.map(
-          data: (data) => Image.memory(data),
-          loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-          error: (error, _) {
-            return const Center(
-              child: Text('Error loading image'),
-            );
-          },
-        );
-      }
-    }
+    final result = asyncState.watch(context);
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -115,7 +125,19 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
         child: AbsorbPointer(
           child: AspectRatio(
             aspectRatio: kAspectRatio,
-            child: buildChild(),
+            child: result.map(
+              data: (data) => Image.memory(data),
+              loading: () {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+              error: (error, _) {
+                return const Center(
+                  child: Text('Error loading image'),
+                );
+              },
+            ),
           ),
         ),
       ),

@@ -47,8 +47,14 @@
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
+        
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+          // Canvaskit for now is only supported in web due to image encoding
+          // review later https://docs.flutter.dev/platform-integration/web/web-images#flutter-renderers-on-the-web
+          let config = {
+          renderer: 'canvaskit',
+        };
+          engineInitializer.initializeEngine(config).then(function(appRunner) {
             appRunner.runApp();
           });
         }

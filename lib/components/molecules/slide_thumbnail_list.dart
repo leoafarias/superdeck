@@ -11,11 +11,13 @@ class SlideThumbnailList extends StatefulWidget {
     required this.slides,
     required this.currentSlide,
     required this.onSelect,
+    required this.scrollDirection,
   });
 
   final List<Slide> slides;
   final int currentSlide;
   final void Function(int) onSelect;
+  final Axis scrollDirection;
 
   @override
   State<SlideThumbnailList> createState() => _SlideThumbnailListState();
@@ -75,6 +77,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
     return Container(
       color: const Color.fromARGB(108, 0, 0, 0),
       child: ScrollablePositionedList.builder(
+          scrollDirection: widget.scrollDirection,
           itemCount: widget.slides.length,
           itemPositionsListener: _itemPositionsListener,
           itemScrollController: _itemScrollController,

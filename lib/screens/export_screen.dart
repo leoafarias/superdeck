@@ -153,7 +153,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   Future<void> startConversion() async {
     try {
-      final generator = SlideToImage.instance;
+      final generator = ImageGenerationService.instance;
       _status.value = ExportProcessStatus.converting;
 
       List<Future<Uint8List>> futures = [];
