@@ -78,7 +78,7 @@ class SlideAsset with SlideAssetMappable {
         : fileName;
   }
 
-  static const assetPrefix = 'sd_';
+  static const assetPrefix = 'sd_asset_';
 
   static const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
 

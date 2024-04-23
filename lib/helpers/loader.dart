@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:watcher/watcher.dart';
 
-import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import 'config.dart';
@@ -70,14 +69,12 @@ class SlidesLoader {
 
 Future<DeckData> _loadFromLocalStorage() async {
   final slidesJson = await kConfig.references.slides.readAsString();
-  final assetsJson = await kConfig.references.assets.readAsString();
   final configJson = await kConfig.references.config.readAsString();
 
 // parsed json
 
   return (
     slides: _parseFromJson(slidesJson),
-    assets: _parseAssets(assetsJson),
     config: ProjectConfig.fromJson(configJson),
   );
 }
@@ -85,21 +82,14 @@ Future<DeckData> _loadFromLocalStorage() async {
 Future<DeckData> _loadFromRootBundle() async {
   final slidesJson =
       await rootBundle.loadString(kConfig.references.slides.path);
-  final assetsJson =
-      await rootBundle.loadString(kConfig.references.assets.path);
+
   final configJson =
       await rootBundle.loadString(kConfig.references.config.path);
 
   return (
     slides: _parseFromJson(slidesJson),
-    assets: _parseAssets(assetsJson),
     config: ProjectConfig.fromJson(configJson)
   );
-}
-
-List<SlideAsset> _parseAssets(String assetsJson) {
-  final assets = jsonDecode(assetsJson) as List;
-  return assets.map((asset) => SlideAsset.fromMap(asset)).toList();
 }
 
 List<Slide> _parseFromJson(String slidesJson) {

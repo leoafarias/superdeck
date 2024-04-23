@@ -54,7 +54,7 @@ class SuperDeckProvider {
   });
 
   late final slides = computed(() => data.value.value?.slides ?? []);
-  late final assets = computed(() => data.value.value?.assets ?? []);
+
   late final config =
       computed(() => data.value.value?.config ?? const ProjectConfig.empty());
 
@@ -112,7 +112,7 @@ class SuperDeckProvider {
     style.dispose();
 
     slides.dispose();
-    assets.dispose();
+
     examples.dispose();
     _unsubscribe();
   }

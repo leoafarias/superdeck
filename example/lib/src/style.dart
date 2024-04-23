@@ -116,7 +116,6 @@ VariantAttribute get coverStyle {
 
 VariantAttribute get announcementStyle {
   return const SlideVariant('announcement')(
-    apply(coverStyle.value),
     $.textStyle.height(0.6),
     $.h1.textStyle.fontSize(140),
     $.h1.textStyle.bold(),
@@ -125,11 +124,19 @@ VariantAttribute get announcementStyle {
     $.h3.textStyle.fontSize(60),
     $.h3.textStyle.color(Colors.white),
     $.h3.textStyle.fontWeight(FontWeight.w100),
+    $.contentContainer.gradient.linear(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Colors.black.withOpacity(0.5),
+        Colors.black.withOpacity(0.95),
+      ],
+    ),
   );
 }
 
 VariantAttribute get quoteStyle {
-  return const SlideVariant('quopte')(
+  return const SlideVariant('quote')(
     $.blockquote.textStyle.as(GoogleFonts.notoSerif()),
     $.blockquote.decoration.border.left(
       width: 4,

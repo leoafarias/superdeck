@@ -1,33 +1,40 @@
 ---
 style: announcement
+
 background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXE3N3hlcXl0OXR3eXJjOGJ3MGtvcmMwMWY4eDZqMHFvd3lxaHA4ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YpwVvng323pw45tYwv/giphy.gif
 content:
-  alignment: center
+  alignment: center_left
+
 ---
+
 
  # SUPERDECK 
  ## RELEASED! 🎉
 
- ### Create beautiful Flutter
- ### slides with Markdown
+ #### Create beautiful Flutter
+ #### slides with Markdown
+
+
 
 ---
-style: custom
-layout: two_column_header
-background: https://source.unsplash.com/black-and-gray-microphone-on-black-stand-QrqeusbpFMM
+style: cover
+layout: two_column
+background: https://source.unsplash.com/person-discussing-while-standing-in-front-of-a-large-screen-in-front-of-people-inside-dim-lighted-room-bzdhc5b3Bxs
 sections:
-  header:
-    alignment: center
-    flex: 2
   left:
+    flex: 2
+    alignment: center_left
+  right:
+    alignment: bottom_right
     flex: 1
 ---
 
- 
-# Go wild!
-
 ::left::
-## Beautiful Flutter presentations with Markdown
+ 
+## Making your Flutter presentations easier than ever.
+
+::right::
+#### For Flutter developers. Made with ❤️ Flutter.
 
 ---
 style: quote
@@ -229,16 +236,16 @@ VariantAttribute get radStyle {
 ```
 
 ---
-background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif
 style: cover
+background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif
 ---
 
 # Markdown support
 
 ---
+style: show_sections
 layout: two_column
 sections:
-
 content:
   flex: 4
 ---
@@ -325,7 +332,7 @@ layout: two_column
 ```mermaid
 flowchart TD
     A[This is crazy] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
+    B --> C{Let me car}
     C -->|One| D[Laptop]
     C -->|Two| E[iPhone]
     C -->|Three| F[fa:fa-car Car]
@@ -337,3 +344,15 @@ flowchart TD
 ## Mermaid Support
 
 Superdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.
+
+---
+layout: widget
+options:
+  name: demo
+  args:
+    text: Hello, Superdeck!
+    height: 200.0
+    width: 300.0
+---
+
+## Showcase your widgets

@@ -64,7 +64,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
   @override
   void didUpdateWidget(SlideThumbnail oldWidget) {
-    if (oldWidget.index != widget.index) {
+    if (oldWidget.index != widget.index || oldWidget.slide != widget.slide) {
       getThumbnail();
     }
     super.didUpdateWidget(oldWidget);
@@ -100,7 +100,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
       _isGenerating = true;
 
-      await Future.delayed(delay * 5);
+      await Future.delayed(delay * 3);
       final data = await imageGenerator.generate(
         // ignore: use_build_context_synchronously
         context: context,
