@@ -30,15 +30,15 @@ bool _isGenerating = false;
 class SlideThumbnail extends StatefulWidget {
   final bool selected;
   final VoidCallback onTap;
+  final int index;
   final Slide slide;
-  final String cacheKey;
 
   const SlideThumbnail({
     super.key,
     required this.selected,
+    required this.index,
     required this.onTap,
     required this.slide,
-    required this.cacheKey,
   });
 
   @override
@@ -50,7 +50,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   late final imageCache = ImageCacheService(
     slide: widget.slide,
     quality: ExportQuality.low,
-    cacheKey: widget.cacheKey,
+    cacheKey: widget.index.toString(),
   );
   late final quality = ExportQuality.low;
 
@@ -64,7 +64,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
   @override
   void didUpdateWidget(SlideThumbnail oldWidget) {
-    if (oldWidget.cacheKey != widget.cacheKey) {
+    if (oldWidget.index != widget.index) {
       getThumbnail();
     }
     super.didUpdateWidget(oldWidget);

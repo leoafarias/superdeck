@@ -105,6 +105,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
         );
       },
       error: (error) {
+        throw error;
         return ExceptionWidget(
           error,
           onRetry: onRetry,

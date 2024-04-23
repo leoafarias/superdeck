@@ -40,7 +40,7 @@ class ImageCacheService {
 
   File _getAssetFile() {
     final directory = kConfig.assetsImageDir;
-    return File('${directory.path}/thumb_${slide.hashKey}.png');
+    return File('${directory.path}/sd_slide_${cacheKey}_thumb.png');
   }
 
   Future<Uint8List?> loadAssetFile() async {
@@ -181,6 +181,10 @@ class ImageGenerationService {
     ui.Image? image;
     while (retryCount > 0) {
       isDirty = false;
+
+      if (!context.mounted) {
+        break;
+      }
 
       image = await _captureImage(
         buildOwner: buildOwner,

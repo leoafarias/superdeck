@@ -254,14 +254,33 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
   Future<DeckData> run(DeckData data) async {
     final (:slides, :assets, :config) = data;
 
-    await _saveAssetsJson(assets);
-    await _saveSlideJson(slides);
-    await _saveConfig(config);
+    await saveSlideJson(slides);
+    await saveAssetsJson(assets);
+    await saveConfig(config);
+    final assetsDir = kConfig.assetsImageDir;
+
+    final files = await assetsDir.list().where((e) => e is File).toList();
+
+    for (var file in files) {
+      final fileName = file.path.split('/').last;
+      print(fileName);
+      // filename example sd_asset_1_thumb.png
+      // get the number after sd_asset_ and before _thumb.png
+      final regex = RegExp(r'sd_slide_(\d+)_thumb.png');
+      final match = regex.firstMatch(fileName);
+      if (match != null) {
+        final slideIndex = int.parse(match.group(1)!);
+
+        if (slideIndex > slides.length) {
+          await file.delete();
+        }
+      }
+    }
 
     return data;
   }
 
-  Future<void> _saveConfig(Config config) async {
+  Future<void> saveConfig(Config config) async {
     try {
       final configJson = kConfig.references.config;
       if (!await configJson.exists()) {
@@ -276,7 +295,7 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
     }
   }
 
-  Future<void> _saveSlideJson(List<Slide> slides) async {
+  Future<void> saveSlideJson(List<Slide> slides) async {
     try {
       final slidesJson = kConfig.references.slides;
 
@@ -294,7 +313,7 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
     }
   }
 
-  Future<void> _saveAssetsJson(List<SlideAsset> assets) async {
+  Future<void> saveAssetsJson(List<SlideAsset> assets) async {
     final assetsJson = kConfig.references.assets;
 
     if (!await assetsJson.exists()) {
@@ -369,7 +388,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
       final imageUrl = match.group(1);
       if (imageUrl == null) continue;
 
-      final asset = await _cacheRemoteAsset(imageUrl);
+      final asset = await cacheRemoteAsset(imageUrl);
 
       if (asset != null) {
         final imageMarkdown = '![Image](${asset.relativePath})';
@@ -382,7 +401,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     var background = options['background'];
 
     if (background != null && background is String) {
-      final asset = await _cacheRemoteAsset(background);
+      final asset = await cacheRemoteAsset(background);
 
       if (asset != null) {
         background = asset.relativePath;
@@ -393,7 +412,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     var imageSource = options['options']?['src'];
 
     if (imageSource != null && imageSource is String) {
-      final asset = await _cacheRemoteAsset(imageSource);
+      final asset = await cacheRemoteAsset(imageSource);
 
       if (asset != null) {
         imageSource = asset.relativePath;
@@ -408,7 +427,7 @@ class ImageMarkdownProcessor extends MarkdownProcessor {
     );
   }
 
-  Future<SlideAsset?> _cacheRemoteAsset(String url) async {
+  Future<SlideAsset?> cacheRemoteAsset(String url) async {
     if (!url.startsWith('http')) {
       return null;
     }
