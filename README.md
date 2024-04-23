@@ -3,10 +3,13 @@
 
 SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown.
 
-
-[View demo here](https://superdeck-dev.web.app)
-
 ![Screenshot](https://github.com/leoafarias/superdeck/assets/435833/42ec88e9-d3d9-4c52-bbf9-5a2809cca257)
+
+### [View demo here](https://superdeck-dev.web.app)
+
+### [Example code](https://github.com/leoafarias/superdeck/tree/main/example/lib)
+
+
 
 ## Getting Started
 
