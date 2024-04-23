@@ -1,3 +1,7 @@
+## 0.0.2
+
+* Added demo and example code
+
 ## 0.0.1
 
 * Initial version
