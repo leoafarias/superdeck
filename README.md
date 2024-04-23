@@ -1,5 +1,4 @@
-![Superdeck logo](./assets/logo-dark.png#gh-dark-mode-only )
-![Superdeck logo](./assets/logo-light.png#gh-light-mode-only)
+![Superdeck logo](./assets/logo.png)
 
 SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown.
 
