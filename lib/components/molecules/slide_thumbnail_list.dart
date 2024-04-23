@@ -85,11 +85,9 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           padding: const EdgeInsets.all(20),
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
-            final style = SuperDeckProvider.instance.style.watch(context);
+            SuperDeckProvider.instance.style.watch(context);
 
-            final slideStyle = style.applyVariant(slide.styleVariant);
-
-            return SlideThumbnail(
+            return SlideThumbnailDynamic(
               index: idx,
               selected: idx == widget.currentSlide,
               onTap: () => goToPage(idx),
