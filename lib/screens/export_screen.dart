@@ -308,7 +308,11 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
               controller: _pageController,
               itemCount: _images.length,
               itemBuilder: (context, index) {
-                return ScaledWidget(child: SlideView(_slides[index]));
+                return ScaledWidget(
+                  child: SlideView(
+                    _slides[index],
+                  ),
+                );
               },
             ),
           ),

@@ -67,7 +67,6 @@ class SlideMarkdownPreview extends StatelessWidget {
           return AnimatedMarkdownViewer(
             content: "$options\n$data\n",
             spec: SlideSpec.of(context),
-            assets: const [],
             duration: Duration.zero,
           );
         });

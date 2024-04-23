@@ -3,11 +3,10 @@ import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/layout_builder.dart';
 import '../../helpers/measure_size.dart';
-import '../../helpers/utils.dart';
-import '../../models/asset_model.dart';
 import '../../models/slide_model.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
+import 'image_widget.dart';
 import 'transition_widget.dart';
 
 class SlideView extends StatelessWidget {
@@ -31,7 +30,6 @@ class SlideView extends StatelessWidget {
     final slide = this.slide;
     final variant = slide.styleVariant;
     final style = superdeck.style.watch(context);
-    final assets = superdeck.assets.watch(context);
 
     final variantStyle = style.applyVariant(variant);
 
@@ -52,14 +50,12 @@ class SlideView extends StatelessWidget {
                   spec: _buildInnerContainerSpec(
                     slide: slide,
                     spec: spec.innerContainer,
-                    assets: assets,
                     context: context,
                   ),
                   duration: const Duration(milliseconds: 300),
                   child: SlideProvider(
                     slide: slide,
                     spec: spec,
-                    assets: assets,
                     examples: superdeck.examples.watch(context),
                     isSnapshot: _isSnapshot,
                     child: SlideConstraints(
@@ -121,7 +117,6 @@ class SlideConstraintsProvider extends InheritedWidget {
 BoxSpec _buildInnerContainerSpec({
   required Slide slide,
   required BoxSpec spec,
-  required List<SlideAsset> assets,
   required BuildContext context,
 }) {
   final background = slide.background;
@@ -136,7 +131,7 @@ BoxSpec _buildInnerContainerSpec({
 
   final decoration = spec.decoration;
 
-  final imageProvider = getImageProvider(uri, assets);
+  final imageProvider = getImageProvider(background);
 
   if (decoration is BoxDecoration) {
     final innerContainerSpecImage = decoration.image;

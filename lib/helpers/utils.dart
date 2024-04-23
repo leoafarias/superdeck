@@ -1,12 +1,8 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:yaml/yaml.dart';
-
-import '../models/asset_model.dart';
 
 Map<String, dynamic> converYamlToMap(String yamlString) {
   final yamlMap = loadYaml(yamlString) as YamlMap? ?? YamlMap();
@@ -23,28 +19,20 @@ String prettyJson(dynamic json) {
   return encoder.convert(json);
 }
 
-ImageProvider getImageProvider(Uri uri, List<SlideAsset> assets) {
-  ImageProvider provider;
+// ImageProvider getImageProvider(Uri uri) {
+//   ImageProvider provider;
 
-  // get complete url from uri
-  final url = uri.toString();
+//   // get complete url from uri
+//   final url = uri.toString();
 
-  //  check if its a local path or a network path
-  if (url.startsWith('http')) {
-    provider = CachedNetworkImageProvider(url);
-  } else {
-    final asset = assets.firstWhereOrNull(
-      (element) => element.path == url,
-    );
-
-    if (asset != null) {
-      provider = MemoryImage(asset.bytes);
-    } else {
-      provider = AssetImage(url);
-    }
-  }
-  return provider;
-}
+//   //  check if its a local path or a network path
+//   if (url.startsWith('http')) {
+//     provider = CachedNetworkImageProvider(url);
+//   } else {
+//     provider = AssetImage(url);
+//   }
+//   return provider;
+// }
 
 BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
   final padding = spec.padding ?? EdgeInsets.zero;
@@ -79,14 +67,10 @@ String hashString(String input) {
   return hash.toString();
 }
 
-String md5Hash(String input) {
-  var bytes = utf8.encode(input);
-  var digest = md5.convert(bytes);
-  return digest.toString();
-}
-
 ({List<T> added, List<T> removed}) compareListChanges<T>(
-    List<T> oldList, List<T> newList) {
+  List<T> oldList,
+  List<T> newList,
+) {
   final added = <T>[];
   final removed = <T>[];
 

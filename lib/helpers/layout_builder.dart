@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 
+import '../components/atoms/image_widget.dart';
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
 import '../models/options_model.dart';
@@ -8,7 +9,6 @@ import '../models/slide_model.dart';
 import '../providers/slide_provider.dart';
 import '../superdeck.dart';
 import 'measure_size.dart';
-import 'utils.dart';
 
 abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
   final T config;
@@ -149,19 +149,17 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
   @override
   Widget build(BuildContext context) {
     final spec = SlideProvider.specOf(context);
-    final assets = SlideProvider.assetsOf(context);
 
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
 
-    final uri = Uri.parse(src);
     final side = Container(
       height: spec.image.height,
       width: spec.image.width,
       alignment: spec.image.alignment,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: getImageProvider(uri, assets),
+          image: getImageProvider(src),
           centerSlice: spec.image.centerSlice,
           repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
           filterQuality: spec.image.filterQuality ?? FilterQuality.low,

@@ -3,7 +3,7 @@
     "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXE3N3hlcXl0OXR3eXJjOGJ3MGtvcmMwMWY4eDZqMHFvd3lxaHA4ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YpwVvng323pw45tYwv/giphy.gif",
     "content": {
       "flex": 1,
-      "alignment": "center"
+      "alignment": "center_left"
     },
     "style": "announcement",
     "transition": {
@@ -12,33 +12,33 @@
       "delay": 0,
       "curve": "ease"
     },
-    "raw": "\nstyle: announcement\nbackground: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXE3N3hlcXl0OXR3eXJjOGJ3MGtvcmMwMWY4eDZqMHFvd3lxaHA4ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YpwVvng323pw45tYwv/giphy.gif\ncontent:\n  alignment: center\n",
-    "data": "# SUPERDECK \n ## RELEASED! 🎉\n\n ### Create beautiful Flutter\n ### slides with Markdown",
+    "raw": "\nstyle: announcement\n\nbackground: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXE3N3hlcXl0OXR3eXJjOGJ3MGtvcmMwMWY4eDZqMHFvd3lxaHA4ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YpwVvng323pw45tYwv/giphy.gif\ncontent:\n  alignment: center_left\n\n",
+    "data": "# SUPERDECK \n ## RELEASED! 🎉\n\n #### Create beautiful Flutter\n #### slides with Markdown",
     "type": "Slide"
   },
   {
-    "background": "https://source.unsplash.com/black-and-gray-microphone-on-black-stand-QrqeusbpFMM",
-    "style": "custom",
+    "background": "https://source.unsplash.com/person-discussing-while-standing-in-front-of-a-large-screen-in-front-of-people-inside-dim-lighted-room-bzdhc5b3Bxs",
+    "style": "cover",
     "transition": {
       "type": "fade_in",
       "duration": 0,
       "delay": 0,
       "curve": "ease"
     },
-    "data": "# Go wild!\n\n::left::\n## Beautiful Flutter presentations with Markdown",
+    "data": "::left::\n \n## Making your Flutter presentations easier than ever.\n\n::right::\n#### For Flutter developers. Made with ❤️ Flutter.",
     "sections": {
-      "header": {
-        "flex": 2,
-        "alignment": "center"
-      },
       "left": {
-        "flex": 1,
+        "flex": 2,
         "alignment": "center_left"
+      },
+      "right": {
+        "flex": 1,
+        "alignment": "bottom_right"
       }
     },
-    "raw": "\nstyle: custom\nlayout: two_column_header\nbackground: https://source.unsplash.com/black-and-gray-microphone-on-black-stand-QrqeusbpFMM\nsections:\n  header:\n    alignment: center\n    flex: 2\n  left:\n    flex: 1\n",
+    "raw": "\nstyle: cover\nlayout: two_column\nbackground: https://source.unsplash.com/person-discussing-while-standing-in-front-of-a-large-screen-in-front-of-people-inside-dim-lighted-room-bzdhc5b3Bxs\nsections:\n  left:\n    flex: 2\n    alignment: center_left\n  right:\n    alignment: bottom_right\n    flex: 1\n",
     "type": "Slide",
-    "layout": "two_column_header"
+    "layout": "two_column"
   },
   {
     "style": "quote",
@@ -182,7 +182,7 @@
       "delay": 0,
       "curve": "ease"
     },
-    "raw": "\nbackground: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif\nstyle: cover\n",
+    "raw": "\nstyle: cover\nbackground: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif\n",
     "data": "# Markdown support",
     "type": "Slide"
   },
@@ -191,6 +191,7 @@
       "flex": 4,
       "alignment": "center_left"
     },
+    "style": "show_sections",
     "transition": {
       "type": "fade_in",
       "duration": 0,
@@ -199,7 +200,7 @@
     },
     "data": "::left::\n\n\n**Bold Text**\n\n*Italic Text*\n\n~~Strikethrough~~\n\n`Inline Code`\n\n[Link here](https://github.com/leoafarias/superdeck)\n\n::right::\n\nLists\n\n1. Ordered list item 1\n2. Ordered list item 2\n\n- Unordered list item 1\n- Unordered list item 2\n\nQuotes\n\n> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
     "sections": {},
-    "raw": "\nlayout: two_column\nsections:\n\ncontent:\n  flex: 4\n",
+    "raw": "\nstyle: show_sections\nlayout: two_column\nsections:\ncontent:\n  flex: 4\n",
     "type": "Slide",
     "layout": "two_column"
   },
@@ -224,10 +225,33 @@
       "delay": 0,
       "curve": "ease"
     },
-    "data": "::left::\n\n![Mermaid Diagram](assets/images/sd_175456242.png)\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.",
+    "data": "::left::\n\n![Mermaid Diagram](assets/images/sd_asset_7177249.png)\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.",
     "sections": {},
     "raw": "\ntitle: \"Mermaid example\"\nlayout: two_column\n",
     "type": "Slide",
     "layout": "two_column"
+  },
+  {
+    "options": {
+      "name": "demo",
+      "args": {
+        "text": "Hello, Superdeck!",
+        "height": 200.0,
+        "width": 300.0
+      },
+      "preview": false,
+      "flex": 1,
+      "position": "right"
+    },
+    "transition": {
+      "type": "fade_in",
+      "duration": 0,
+      "delay": 0,
+      "curve": "ease"
+    },
+    "data": "## Showcase your widgets",
+    "raw": "\nlayout: widget\noptions:\n  name: demo\n  args:\n    text: Hello, Superdeck!\n    height: 200.0\n    width: 300.0\n",
+    "type": "Slide",
+    "layout": "widget"
   }
 ]

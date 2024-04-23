@@ -4,21 +4,19 @@ import 'package:markdown_viewer/markdown_viewer.dart';
 import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
-import '../../models/asset_model.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
+import 'image_widget.dart';
 
 class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
   final String content;
   final SlideSpec spec;
-  final List<SlideAsset> assets;
 
   const AnimatedMarkdownViewer({
     super.key,
     required this.content,
     required this.spec,
     required super.duration,
-    required this.assets,
     super.curve = Curves.linear,
   });
 
@@ -97,14 +95,14 @@ Widget _imageBuilder(
   return Builder(
     builder: (context) {
       final size = SlideConstraints.of(context).biggest;
-      final assets = SlideProvider.assetsOf(context);
+
       final spec = SlideProvider.specOf(context);
       final imageSpec = spec.image;
       final constraints = calculateConstraints(size, spec.contentContainer);
       return ConstrainedBox(
         constraints: constraints,
         child: AnimatedMixedImage(
-          image: getImageProvider(uri, assets),
+          image: getImageProvider(uri.toString()),
           spec: imageSpec.copyWith(
             width: info.width ?? imageSpec.width,
             height: info.height ?? imageSpec.height,

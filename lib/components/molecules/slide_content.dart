@@ -22,14 +22,12 @@ class SlideContent extends StatelessWidget {
 
     final alignment = options?.alignment ?? ContentAlignment.center;
 
-    final assets = SlideProvider.assetsOf(context);
     final isExporting = SlideProvider.isSnapshotOf(context);
 
     Widget child = IntrinsicWidth(
       child: AnimatedMarkdownViewer(
         content: data,
         spec: spec,
-        assets: assets,
         duration: Durations.medium1,
       ),
     );

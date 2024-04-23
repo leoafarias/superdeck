@@ -1,7 +1,6 @@
 // Create a SlideProvider that extends an Inherited widget
 import 'package:flutter/material.dart';
 
-import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import '../styles/style_spec.dart';
@@ -9,7 +8,7 @@ import '../styles/style_spec.dart';
 enum SlideProviderAspect {
   slide,
   spec,
-  assets,
+
   isExporting,
   examples,
 }
@@ -17,7 +16,7 @@ enum SlideProviderAspect {
 class SlideProvider extends InheritedModel<SlideProviderAspect> {
   final Slide slide;
   final SlideSpec spec;
-  final List<SlideAsset> assets;
+
   // If slide is a snapshot for image generation
   final bool isSnapshot;
   final Map<String, Example> examples;
@@ -26,7 +25,6 @@ class SlideProvider extends InheritedModel<SlideProviderAspect> {
     super.key,
     required this.slide,
     required this.spec,
-    required this.assets,
     required this.isSnapshot,
     required this.examples,
     required super.child,
@@ -54,10 +52,7 @@ class SlideProvider extends InheritedModel<SlideProviderAspect> {
         spec != oldWidget.spec) {
       return true;
     }
-    if (dependencies.contains(SlideProviderAspect.assets) &&
-        assets != oldWidget.assets) {
-      return true;
-    }
+
     if (dependencies.contains(SlideProviderAspect.isExporting) &&
         isSnapshot != oldWidget.isSnapshot) {
       return true;
@@ -75,11 +70,6 @@ class SlideProvider extends InheritedModel<SlideProviderAspect> {
 
   static SlideSpec specOf(BuildContext context) {
     return SlideProvider.of(context).spec;
-  }
-
-// Only update if the individual asset changes
-  static List<SlideAsset> assetsOf(BuildContext context) {
-    return SlideProvider.of(context).assets;
   }
 
   static bool isSnapshotOf(BuildContext context) {
