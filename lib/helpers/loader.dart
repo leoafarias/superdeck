@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:watcher/watcher.dart';
 
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import 'config.dart';
+import 'constants.dart';
 import 'markdown_processor.dart';
 
 class SlidesLoader {
@@ -24,6 +25,14 @@ class SlidesLoader {
       StoreLocalReferencesProcessor(),
     ],
   );
+
+  static Future<String> loadString(String path) {
+    if (kCanRunProcess) {
+      return File(path).readAsString();
+    } else {
+      return rootBundle.loadString(path);
+    }
+  }
 
   static Future<void> generate() async {
     final markdownFile = kConfig.slidesMarkdownFile;
@@ -55,41 +64,17 @@ class SlidesLoader {
   }
 
   static Future<DeckData> loadFromStorage() async {
-    if (kIsWeb) {
-      return _loadFromRootBundle();
-    }
+    final slidesJson =
+        await SlidesLoader.loadString(kConfig.references.slides.path);
 
-    if (kDebugMode) {
-      return _loadFromLocalStorage();
-    } else {
-      return _loadFromRootBundle();
-    }
+    final configJson =
+        await SlidesLoader.loadString(kConfig.references.config.path);
+
+    return (
+      slides: _parseFromJson(slidesJson),
+      config: ProjectConfig.fromJson(configJson)
+    );
   }
-}
-
-Future<DeckData> _loadFromLocalStorage() async {
-  final slidesJson = await kConfig.references.slides.readAsString();
-  final configJson = await kConfig.references.config.readAsString();
-
-// parsed json
-
-  return (
-    slides: _parseFromJson(slidesJson),
-    config: ProjectConfig.fromJson(configJson),
-  );
-}
-
-Future<DeckData> _loadFromRootBundle() async {
-  final slidesJson =
-      await rootBundle.loadString(kConfig.references.slides.path);
-
-  final configJson =
-      await rootBundle.loadString(kConfig.references.config.path);
-
-  return (
-    slides: _parseFromJson(slidesJson),
-    config: ProjectConfig.fromJson(configJson)
-  );
 }
 
 List<Slide> _parseFromJson(String slidesJson) {

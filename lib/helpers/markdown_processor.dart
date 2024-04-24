@@ -441,9 +441,9 @@ class MermaidProcessor extends MarkdownProcessor {
   Future<ProcessData> run(ProcessData data) async {
     final replacements = <Replacement>[];
 
-    var content = data.content;
+    final matches = _mermaidBlockRegex.allMatches(data.content);
 
-    final matches = _mermaidBlockRegex.allMatches(content);
+    if (matches.isEmpty) return data;
 
     for (final Match match in matches) {
       final mermaidSyntax = match.group(1);
@@ -464,6 +464,8 @@ class MermaidProcessor extends MarkdownProcessor {
         markdown: markdown,
       ));
     }
+
+    var content = data.content;
 
     // Apply replacements in reverse order
     for (var replacement in replacements.reversed) {
@@ -533,7 +535,8 @@ class MermaidProcessor extends MarkdownProcessor {
         data: output,
       );
     } catch (e) {
-      throw Exception('Error while processing mermaid syntax $e');
+      log('Error while processing mermaid syntax: $e');
+      return null;
     } finally {
       final tempDir = Directory(tempDirPath);
       if (await tempDir.exists()) {

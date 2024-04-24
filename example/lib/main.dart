@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:superdeck/models/options_model.dart';
 import 'package:superdeck/superdeck.dart';
-import 'package:superdeck_demo/src/style.dart';
-import 'package:superdeck_demo/src/widget/mix_demo.dart';
+
+import 'src/style.dart';
+import 'src/widget/mix_demo.dart';
 
 void main() async {
   runApp(
     Builder(builder: (context) {
       return MaterialApp(
+        title: 'Superdeck',
         debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
           style: style,

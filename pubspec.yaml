@@ -14,7 +14,6 @@ dependencies:
   window_manager: ^0.3.8
   watcher: ^1.1.0
   collection: ^1.18.0
-  google_fonts: ^6.2.1
   path: ^1.9.0
   dart_mappable: ^4.2.2
   dart_markdown: ^3.1.7
@@ -46,6 +45,5 @@ dev_dependencies:
   build_verify: ^3.1.0
   
 flutter:
-  # assets:
-    # - grammars/
-    # - themes/
+  assets:
+    - grammars/

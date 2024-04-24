@@ -1,5 +1,5 @@
-name: superdeck_demo
-description: An example project for SuperDeck
+name: superdeck_example
+description: An example presentation for SuperDeck
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
@@ -11,14 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.2.1
+  google_fonts: ^6.2.0
   superdeck:
     path: ../
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.3
+  flutter_lints: ^3.0.2
 
 flutter:
   uses-material-design: true

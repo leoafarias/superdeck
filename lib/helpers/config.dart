@@ -19,12 +19,10 @@ class SuperDeckConfig {
 
   ({
     File slides,
-    File assets,
     File config,
   }) get references {
     return (
       slides: File(join(_assetsDirName, 'slides.json')),
-      assets: File(join(_assetsDirName, 'assets.json')),
       config: File(join(_assetsDirName, 'config.json')),
     );
   }
