@@ -28,7 +28,6 @@ jobs:
       - name: Build Runner
         run: dart run build_runner build --delete-conflicting-outputs
 
-
       - name: Deploy Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         env:
