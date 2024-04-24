@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:localstorage/localstorage.dart';
@@ -39,11 +40,11 @@ class SuperDeckProvider {
     final changes = compareListChanges(previousValue, slides.value);
 
     for (var added in changes.added) {
-      print('Added: $added');
+      log('Added: $added');
     }
 
     for (var removed in changes.removed) {
-      print('Removed: $removed');
+      log('Removed: $removed');
     }
   });
 

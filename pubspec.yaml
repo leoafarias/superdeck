@@ -21,21 +21,22 @@ dependencies:
   markdown_viewer: ^0.6.2
   yaml: ^3.1.2
   animate_do: ^3.3.4
-  re_highlight: ^0.0.3
   recase: ^4.1.0
   syntax_highlight: ^0.4.0
-  device_preview: ^1.1.0
-  signals: ^5.0.0
+  signals: ^5.2.0
   scrollable_positioned_list: ^0.3.8
   pdf: ^3.10.8
   localstorage: ^5.0.0
   go_router: ^13.2.4
-  file_picker: ^8.0.1
+  file_picker: ^8.0.2
   universal_html: ^2.2.4
   path_provider: ^2.1.3
+  url_launcher: ^6.2.6
   
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   flutter_lints: ^3.0.2
   custom_lint: ^0.5.11
@@ -44,6 +45,6 @@ dev_dependencies:
   dart_mappable_builder: ^4.2.3
   
 flutter:
-  # assets:
-    # - grammars/
+  assets:
+    - grammars/
     # - themes/

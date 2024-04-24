@@ -1,5 +1,4 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
@@ -136,12 +135,10 @@ class ImageOptions extends SplitOptions with ImageOptionsMappable {
 class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
-  final bool preview;
 
   const WidgetOptions({
     required this.name,
     this.args = const {},
-    this.preview = false,
     super.flex,
     super.position,
   });
@@ -150,7 +147,6 @@ class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
     {
       "name": Schema.string.required(),
       "args": Schema.any.optional(),
-      "preview": Schema.boolean.optional(),
     },
   );
 }
@@ -243,13 +239,7 @@ class Example<T> extends ExampleWidget {
       builder: (args) {
         return Padding(
           padding: const EdgeInsets.all(40.0),
-          child: DevicePreview(
-            backgroundColor: Colors.black,
-            enabled: true,
-            builder: (_) {
-              return builder(args);
-            },
-          ),
+          child: builder(args),
         );
       },
     );

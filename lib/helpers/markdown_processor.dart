@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -274,9 +275,8 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
       }
 
       await configJson.writeAsString(prettyJson(config.toMap()));
-      print('Config saved');
     } catch (e) {
-      print('Error while saving config: $e');
+      log('Error while saving config: $e');
       rethrow;
     }
   }
@@ -294,7 +294,7 @@ class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
       // Write a json file with a list of slide
       await slidesJson.writeAsString(prettyJson(map));
     } catch (e) {
-      print('Error while saving slides json: $e');
+      log('Error while saving slides json: $e');
       rethrow;
     }
   }
@@ -511,7 +511,7 @@ class MermaidProcessor extends MarkdownProcessor {
       final mmdcResult = await Process.run('mmdc', ['--version']);
 
       if (mmdcResult.exitCode != 0) {
-        print(
+        log(
           '"mmdc" not found. You need mermaid cli installed to process mermaid syntax',
         );
 
@@ -521,8 +521,8 @@ class MermaidProcessor extends MarkdownProcessor {
       final result = await Process.run('mmdc', [...params, ...imageSizeParams]);
 
       if (result.exitCode != 0) {
-        print('Error while processing mermaid syntax');
-        print(result.stderr);
+        log('Error while processing mermaid syntax');
+        log(result.stderr);
         return null;
       }
 

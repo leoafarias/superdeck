@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:re_highlight/languages/all.dart';
-import 'package:re_highlight/re_highlight.dart';
+import 'package:flutter/services.dart';
 import 'package:syntax_highlight/syntax_highlight.dart';
-
-final reHighlight = Highlight();
 
 class SyntaxHighlight {
   SyntaxHighlight._();
@@ -16,42 +13,27 @@ class SyntaxHighlight {
     'yaml',
   ];
 
-  static final List<String> _secondarySupportedLangs = [];
+  static final List<String> _secondarySupportedLangs = [
+    'markdown',
+  ];
 
   static Future<void> initialize() async {
     await Highlighter.initialize(_mainSupportedLanguages);
-
-    // Load the default light theme and create a highlightfer.
     _theme = await HighlighterTheme.loadDarkTheme();
-  }
+    // Load the default light theme and create a highlightfer.
 
-  static HighlightResult _highlightResult(String source, String? language) {
-    if (language == null) {
-      return reHighlight.highlightAuto(source);
+    // Load the markdown grammar and add it to the highlighter.
+    for (var language in _secondarySupportedLangs) {
+      final grammar = await rootBundle.loadString(
+        'packages/superdeck/grammars/$language.json',
+      );
+      Highlighter.addLanguage(language, grammar);
     }
-    if (!_secondarySupportedLangs.contains(language)) {
-      reHighlight.registerLanguage(language, builtinAllLanguages[language]!);
-    }
-
-    return reHighlight.highlight(code: source, language: language);
   }
 
   static List<TextSpan> render(String source, String? language) {
-    if (_mainSupportedLanguages.contains(language)) {
-      final highlighter = Highlighter(language: language!, theme: _theme);
-      return [highlighter.highlight(source)];
-    }
-
-    final result = _highlightResult(source, language);
-
-    final renderer = TextSpanRenderer(
-      const TextStyle(),
-      vscodeDarkTheme,
-    );
-    result.render(renderer);
-    final span = renderer.span ?? const TextSpan();
-
-    return [span];
+    final highlighter = Highlighter(language: language!, theme: _theme);
+    return [highlighter.highlight(source)];
   }
 }
 

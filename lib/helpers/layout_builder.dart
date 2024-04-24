@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 
 import '../components/atoms/image_widget.dart';
@@ -126,13 +125,8 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
               maxWidth: size.width,
               maxHeight: size.height,
             ),
-            child: DevicePreview(
-              enabled: options.preview,
-              builder: (context) {
-                return CodePreview(
-                  child: builder?.call(options.args),
-                );
-              },
+            child: CodePreview(
+              child: builder?.call(options.args),
             ),
           ),
         );

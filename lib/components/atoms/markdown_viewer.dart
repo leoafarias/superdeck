@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
@@ -51,14 +52,16 @@ class _AnimatedMarkdownViewerState
       syntaxExtensions: const [],
       elementBuilders: const [],
       imageBuilder: _imageBuilder,
-      onTapLink: (href, title) {
-        print({href, title});
+      onTapLink: (href, title) async {
+        // open link in the browser
+        if (href == null || href.isEmpty) return;
+        final url = Uri.parse(href);
+        await launchUrl(url);
       },
       highlightBuilder: (text, language, infoString) {
         return [
           TextSpan(
-            style: _styleTween!.evaluate(animation).code?.codeSpan ??
-                const TextStyle(),
+            style: _styleTween!.evaluate(animation).code?.codeSpan,
             children: SyntaxHighlight.render(text, language),
           ),
         ];
