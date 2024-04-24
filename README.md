@@ -29,7 +29,7 @@ Follow these steps to integrate SuperDeck into your Flutter project:
 3. Initialize SuperDeck and run the app. 
    ```dart
    void main() {
-     runApp(const SuperDeck());
+     runApp(const SuperDeckApp());
    }
    ```
 
@@ -44,7 +44,47 @@ Follow these steps to integrate SuperDeck into your Flutter project:
        - assets/images/
    ```
 
-   The `assets` directory is used to slide and asset references, while the `assets/images` directory is specifically used for storing images used in your presentations.
+The `assets` directory is used to slide and asset references, while the `assets/images` directory is specifically used for storing images used in your presentations.
+
+6. Configure your app
+
+MacOS
+
+Change your `Release.entitlements`
+
+```xml
+<dict>
+   <key>com.apple.security.app-sandbox</key>
+   <false/>
+   <key>com.apple.security.network.client</key>
+   <true/>
+</dict>
+```
+
+Change `DebugProfile.entitlements`
+
+```xml
+<dict>
+   <key>com.apple.security.app-sandbox</key>
+   <false/>
+   <key>com.apple.security.cs.allow-jit</key>
+   <true/>
+   <key>com.apple.security.network.server</key>
+   <true/>
+   <key>com.apple.security.network.client</key>
+   <true/>
+</dict>
+```
+
+
+
+
+
+
+
+
+
+
 
 6. Start building your slides in the `slides.md` file using Markdown syntax and SuperDeck's slide templates and configurations.
 
