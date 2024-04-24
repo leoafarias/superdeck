@@ -207,7 +207,9 @@ class ImageGenerationService {
 
     try {
       buildOwner.finalizeTree();
-    } catch (e) {}
+    } catch (e) {
+      log('Error finalizing tree: $e');
+    }
 
     return image!;
   }
