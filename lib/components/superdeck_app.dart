@@ -34,16 +34,11 @@ class SuperDeckApp extends StatefulWidget {
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
   final superdeck = SuperDeckProvider.instance;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _initialize();
-  }
+  late final initialize = futureSignal(_initialize);
 
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
         widget.examples != oldWidget.examples) {
       superdeck.update(
@@ -51,14 +46,12 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
         examples: widget.examples,
       );
     }
-
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
   void dispose() {
     super.dispose();
-    superdeck.dispose();
+    initialize.dispose();
   }
 
   Future<void> _initialize() async {
@@ -86,6 +79,14 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
 
   @override
   Widget build(BuildContext context) {
+    final initializing = initialize.watch(context);
+
+    if (initializing.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     final result = superdeck.data.watch(context);
 
     return result.map(

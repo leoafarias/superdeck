@@ -29,7 +29,7 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>superdeck_demo</title>
+  <title>Presentation</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
@@ -38,25 +38,69 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <style>
+    body {
+      background-color: #1c1c1c;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .loading-container {
+      text-align: center;
+      background-color: #1c1c1c
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #ffffff;
+      background-color: #1c1c1c;
+      animation: spin 1s infinite linear;
+      margin: 0 auto;
+    }
+
+    .loading-text {
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">Loading Superdeck...</div>
+  </div>
+
   <script>
     window.addEventListener('load', function(ev) {
-      // Download main.dart.js
+      var loadingText = document.querySelector('#loading-text');
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        
-        onEntrypointLoaded: function(engineInitializer) {
-          // Canvaskit for now is only supported in web due to image encoding
-          // review later https://docs.flutter.dev/platform-integration/web/web-images#flutter-renderers-on-the-web
-          // let config = {
-          //   renderer: 'canvaskit',
-          // };
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
+        onEntrypointLoaded: async function(engineInitializer) {
+          loadingText.textContent = "Initializing engine...";
+          let appRunner = await engineInitializer.initializeEngine();
+
+          loadingText.textContent = "Running app...";
+          await appRunner.runApp();
         }
       });
     });

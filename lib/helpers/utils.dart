@@ -19,21 +19,6 @@ String prettyJson(dynamic json) {
   return encoder.convert(json);
 }
 
-// ImageProvider getImageProvider(Uri uri) {
-//   ImageProvider provider;
-
-//   // get complete url from uri
-//   final url = uri.toString();
-
-//   //  check if its a local path or a network path
-//   if (url.startsWith('http')) {
-//     provider = CachedNetworkImageProvider(url);
-//   } else {
-//     provider = AssetImage(url);
-//   }
-//   return provider;
-// }
-
 BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
   final padding = spec.padding ?? EdgeInsets.zero;
   final margin = spec.margin ?? EdgeInsets.zero;

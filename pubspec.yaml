@@ -20,11 +20,9 @@ dependencies:
   markdown_viewer: ^0.6.2
   yaml: ^3.1.2
   animate_do: ^3.3.4
-  re_highlight: ^0.0.3
   recase: ^4.1.0
   syntax_highlight: ^0.4.0
-  device_preview: ^1.1.0
-  signals: ^5.0.0
+  signals: ^5.2.0
   scrollable_positioned_list: ^0.3.8
   pdf: ^3.10.8
   localstorage: ^5.0.0
