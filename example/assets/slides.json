@@ -225,7 +225,7 @@
       "delay": 0,
       "curve": "ease"
     },
-    "data": "::left::\n\n```mermaid\nflowchart TD\n    A[This is crazy] -->|Get money| B(Go shopping)\n    B --> C{Let me car}\n    C -->|One| D[Laptop]\n    C -->|Two| E[iPhone]\n    C -->|Three| F[fa:fa-car Car]\n```\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.",
+    "data": "::left::\n\n![Mermaid Diagram](assets/images/sd_asset_7177249.png)\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation.",
     "sections": {},
     "raw": "\ntitle: \"Mermaid example\"\nlayout: two_column\n",
     "type": "Slide",
