@@ -6,7 +6,7 @@ SuperDeck enables you to craft visually appealing and interactive presentations 
 
 ### [View demo here](https://superdeck-dev.web.app)
 
-### [Example code](https://github.com/leoafarias/superdeck/tree/main/example/lib)
+### [Example code](https://github.com/leoafarias/superdeck/blob/main/example/slides.md)
 
 
 
