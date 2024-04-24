@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
         );
       },
       error: (error) {
-        throw error;
+        log(error.toString());
         return ExceptionWidget(
           error,
           onRetry: onRetry,

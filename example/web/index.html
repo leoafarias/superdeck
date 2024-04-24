@@ -51,10 +51,10 @@
         onEntrypointLoaded: function(engineInitializer) {
           // Canvaskit for now is only supported in web due to image encoding
           // review later https://docs.flutter.dev/platform-integration/web/web-images#flutter-renderers-on-the-web
-          let config = {
-          renderer: 'canvaskit',
-        };
-          engineInitializer.initializeEngine(config).then(function(appRunner) {
+          // let config = {
+          //   renderer: 'canvaskit',
+          // };
+          engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();
           });
         }

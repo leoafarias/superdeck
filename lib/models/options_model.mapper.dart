@@ -1219,9 +1219,6 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   static Map<String, dynamic> _$args(WidgetOptions v) => v.args;
   static const Field<WidgetOptions, Map<String, dynamic>> _f$args =
       Field('args', _$args, opt: true, def: const {});
-  static bool _$preview(WidgetOptions v) => v.preview;
-  static const Field<WidgetOptions, bool> _f$preview =
-      Field('preview', _$preview, opt: true, def: false);
   static int _$flex(WidgetOptions v) => v.flex;
   static const Field<WidgetOptions, int> _f$flex =
       Field('flex', _$flex, opt: true, def: 1);
@@ -1233,7 +1230,6 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   final MappableFields<WidgetOptions> fields = const {
     #name: _f$name,
     #args: _f$args,
-    #preview: _f$preview,
     #flex: _f$flex,
     #position: _f$position,
   };
@@ -1244,7 +1240,6 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
     return WidgetOptions(
         name: data.dec(_f$name),
         args: data.dec(_f$args),
-        preview: data.dec(_f$preview),
         flex: data.dec(_f$flex),
         position: data.dec(_f$position));
   }
@@ -1308,7 +1303,6 @@ abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions<T>, $Out, T>
   $R call(
       {String? name,
       Map<String, dynamic>? args,
-      bool? preview,
       int? flex,
       LayoutPosition? position});
   WidgetOptionsCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
@@ -1331,13 +1325,11 @@ class _WidgetOptionsCopyWithImpl<$R, $Out, T>
   $R call(
           {String? name,
           Map<String, dynamic>? args,
-          bool? preview,
           int? flex,
           LayoutPosition? position}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
-        if (preview != null) #preview: preview,
         if (flex != null) #flex: flex,
         if (position != null) #position: position
       }));
@@ -1345,7 +1337,6 @@ class _WidgetOptionsCopyWithImpl<$R, $Out, T>
   WidgetOptions<T> $make(CopyWithData data) => WidgetOptions(
       name: data.get(#name, or: $value.name),
       args: data.get(#args, or: $value.args),
-      preview: data.get(#preview, or: $value.preview),
       flex: data.get(#flex, or: $value.flex),
       position: data.get(#position, or: $value.position));
 

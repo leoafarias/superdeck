@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -74,8 +75,8 @@ class ImageCacheService {
   Future<Uint8List?> get() async {
     try {
       return await loadAssetFile();
-    } catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      log('Error loading image from cache: $e');
       return null;
     }
   }
@@ -206,7 +207,9 @@ class ImageGenerationService {
 
     try {
       buildOwner.finalizeTree();
-    } catch (e) {}
+    } catch (e) {
+      log('Error finalizing tree: $e');
+    }
 
     return image!;
   }
