@@ -49,13 +49,13 @@ class Pipeline {
 
     if (!await assetsDir.exists()) return;
 
-    final assets = assetsUsed.map((e) => e.localPath).toSet();
+    final assetPaths = assetsUsed.map((e) => e.localPath).toSet();
 
     await for (final entity in assetsDir.list()) {
       if (entity is File) {
         final fileName = p.basename(entity.path);
         if (fileName.startsWith(SlideAsset.cachedPrefix)) {
-          if (!assets.contains(entity.path)) {
+          if (!assetPaths.contains(entity.path)) {
             await entity.delete();
           }
         }
@@ -68,22 +68,24 @@ class Pipeline {
 
     if (!await assetsDir.exists()) return;
 
+    final assets = <File>[];
+
     await for (final entity in assetsDir.list()) {
       if (entity is File) {
         final fileName = p.basename(entity.path);
-        if (!fileName.startsWith(SlideAsset.generatedPrefix)) {
+        if (!fileName.startsWith(SlideAsset.thumbnailPrefix)) {
           continue;
         }
 
-        final regex = RegExp(SlideAsset.generatedPrefix + r'(\d+).png');
-        final match = regex.firstMatch(fileName);
-        if (match != null) {
-          final slideIndex = int.parse(match.group(1)!);
+        assets.add(entity);
+      }
+    }
 
-          if (slideIndex > slides.length) {
-            await entity.delete();
-          }
-        }
+    for (final asset in assets) {
+      final slide = slides.firstWhereOrNull((e) => asset.path.contains(e.hash));
+
+      if (slide == null) {
+        await asset.delete();
       }
     }
   }
@@ -107,7 +109,6 @@ class Pipeline {
     }
 
     final presentationRaw = await markdownFile.readAsString();
-    final assets = await AssetService.instance.loadAssets();
 
     final parser = SlideParser(config);
 
@@ -233,7 +234,7 @@ class ImageCachingTask extends Task {
   @override
   Future<TaskDto> run(data) async {
     final slide = data.slide;
-    final assets = [...data.assets];
+    final assets = <CachedAsset>[];
     var content = slide.data;
     // Do not cache remot edata if cacheRemoteAssets is false
 
@@ -291,7 +292,7 @@ class MermaidConverterTask extends Task {
 
     if (matches.isEmpty) return data;
     final replacements =
-        <({int start, int end, String markdown, SlideAsset asset})>[];
+        <({int start, int end, String markdown, GeneratedAsset asset})>[];
 
     for (final Match match in matches) {
       final mermaidSyntax = match.group(1);
@@ -300,10 +301,18 @@ class MermaidConverterTask extends Task {
 
       final mermaidImageHash = mermaidSyntax.hashCode.toString();
 
+      final cache = await assetService.loadGeneratedAsset(mermaidImageHash);
       // Check if image already exists
-      final hasCached = data.assets.any((e) => e.hash == mermaidImageHash);
 
-      if (hasCached) continue;
+      if (cache != null) {
+        replacements.add((
+          start: match.start,
+          end: match.end,
+          markdown: '![Mermaid Diagram](${cache.relativePath})',
+          asset: cache,
+        ));
+        continue;
+      }
 
       // Process the mermaid syntax to generate an image file
       final imageData = await mermaidService.generateImage(mermaidSyntax);
@@ -325,7 +334,7 @@ class MermaidConverterTask extends Task {
     }
 
     var replacedData = slide.data;
-    final assets = [...data.assets];
+    final assets = <GeneratedAsset>[];
 
     // Apply replacements in reverse order
     for (var replacement in replacements.reversed) {

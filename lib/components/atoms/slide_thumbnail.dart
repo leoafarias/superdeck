@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
@@ -86,10 +86,11 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   Future<void> _getLocalAsset() async {
     try {
       asyncState.value = AsyncState.loading();
-      final asset = await assetService.loadThumbnailByHash(widget.slide.hash);
+      final asset = await assetService.loadThumbnailAsset(widget.slide.hash);
 
       if (asset != null) {
-        final assetData = asyncState.value = AsyncState.data(asset);
+        final data = await assetService.loadBytes(asset.localPath);
+        asyncState.value = AsyncState.data(data);
       }
     } on Exception catch (e) {
       asyncState.value = AsyncState.error(e);
@@ -97,6 +98,12 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   }
 
   Future<void> _generateThumbnail() async {
+    final asset = await assetService.loadThumbnailAsset(widget.slide.hash);
+
+    if (asset != null) {
+      await _getLocalAsset();
+      return;
+    }
     try {
       while (_isGenerating) {
         await Future.delayed(const Duration(milliseconds: 1));
@@ -116,7 +123,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
         slide: widget.slide,
       );
 
-      await assetService.saveGeneratedAsset(
+      await assetService.saveThumbnailAsset(
         hash: widget.slide.hash,
         data: image,
       );

@@ -6,52 +6,6 @@
 
 part of 'asset_model.dart';
 
-class AssetTypeMapper extends EnumMapper<AssetType> {
-  AssetTypeMapper._();
-
-  static AssetTypeMapper? _instance;
-  static AssetTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = AssetTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static AssetType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  AssetType decode(dynamic value) {
-    switch (value) {
-      case 'cached':
-        return AssetType.cached;
-      case 'generated':
-        return AssetType.generated;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(AssetType self) {
-    switch (self) {
-      case AssetType.cached:
-        return 'cached';
-      case AssetType.generated:
-        return 'generated';
-    }
-  }
-}
-
-extension AssetTypeMapperExtension on AssetType {
-  String toValue() {
-    AssetTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<AssetType>(this) as String;
-  }
-}
-
 class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   SlideAssetMapper._();
 
@@ -59,10 +13,9 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   static SlideAssetMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideAssetMapper._());
-      MapperContainer.globals.useAll([AssetFileBytesMapper()]);
       GeneratedAssetMapper.ensureInitialized();
       CachedAssetMapper.ensureInitialized();
-      AssetTypeMapper.ensureInitialized();
+      ThumbnailAssetMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -79,8 +32,8 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
       Field('localPath', _$localPath, key: 'local_path');
   static String _$hash(SlideAsset v) => v.hash;
   static const Field<SlideAsset, String> _f$hash = Field('hash', _$hash);
-  static AssetType _$type(SlideAsset v) => v.type;
-  static const Field<SlideAsset, AssetType> _f$type = Field('type', _$type);
+  static String _$type(SlideAsset v) => v.type;
+  static const Field<SlideAsset, String> _f$type = Field('type', _$type);
 
   @override
   final MappableFields<SlideAsset> fields = const {
@@ -118,7 +71,7 @@ mixin SlideAssetMappable {
 
 abstract class SlideAssetCopyWith<$R, $In extends SlideAsset, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({double? width, double? height, String? localPath});
+  $R call({double? width, double? height, String? localPath, String? hash});
   SlideAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -147,8 +100,8 @@ class GeneratedAssetMapper extends SubClassMapperBase<GeneratedAsset> {
       Field('localPath', _$localPath, key: 'local_path');
   static String _$hash(GeneratedAsset v) => v.hash;
   static const Field<GeneratedAsset, String> _f$hash = Field('hash', _$hash);
-  static AssetType _$type(GeneratedAsset v) => v.type;
-  static const Field<GeneratedAsset, AssetType> _f$type =
+  static String _$type(GeneratedAsset v) => v.type;
+  static const Field<GeneratedAsset, String> _f$type =
       Field('type', _$type, mode: FieldMode.member);
 
   @override
@@ -165,7 +118,7 @@ class GeneratedAssetMapper extends SubClassMapperBase<GeneratedAsset> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = AssetType.generated;
+  final dynamic discriminatorValue = 'generated';
   @override
   late final ClassMapperBase superMapper = SlideAssetMapper.ensureInitialized();
 
@@ -280,8 +233,8 @@ class CachedAssetMapper extends SubClassMapperBase<CachedAsset> {
   @override
   final String id = 'CachedAsset';
 
-  static const Field<CachedAsset, String> _f$uri =
-      Field('uri', null, mode: FieldMode.param);
+  static String _$hash(CachedAsset v) => v.hash;
+  static const Field<CachedAsset, String> _f$hash = Field('hash', _$hash);
   static double _$width(CachedAsset v) => v.width;
   static const Field<CachedAsset, double> _f$width = Field('width', _$width);
   static double _$height(CachedAsset v) => v.height;
@@ -289,20 +242,16 @@ class CachedAssetMapper extends SubClassMapperBase<CachedAsset> {
   static String _$localPath(CachedAsset v) => v.localPath;
   static const Field<CachedAsset, String> _f$localPath =
       Field('localPath', _$localPath, key: 'local_path');
-  static String _$hash(CachedAsset v) => v.hash;
-  static const Field<CachedAsset, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
-  static AssetType _$type(CachedAsset v) => v.type;
-  static const Field<CachedAsset, AssetType> _f$type =
+  static String _$type(CachedAsset v) => v.type;
+  static const Field<CachedAsset, String> _f$type =
       Field('type', _$type, mode: FieldMode.member);
 
   @override
   final MappableFields<CachedAsset> fields = const {
-    #uri: _f$uri,
+    #hash: _f$hash,
     #width: _f$width,
     #height: _f$height,
     #localPath: _f$localPath,
-    #hash: _f$hash,
     #type: _f$type,
   };
   @override
@@ -311,13 +260,13 @@ class CachedAssetMapper extends SubClassMapperBase<CachedAsset> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = AssetType.cached;
+  final dynamic discriminatorValue = 'cached';
   @override
   late final ClassMapperBase superMapper = SlideAssetMapper.ensureInitialized();
 
   static CachedAsset _instantiate(DecodingData data) {
     return CachedAsset(
-        uri: data.dec(_f$uri),
+        hash: data.dec(_f$hash),
         width: data.dec(_f$width),
         height: data.dec(_f$height),
         localPath: data.dec(_f$localPath));
@@ -375,8 +324,7 @@ extension CachedAssetValueCopy<$R, $Out>
 abstract class CachedAssetCopyWith<$R, $In extends CachedAsset, $Out>
     implements SlideAssetCopyWith<$R, $In, $Out> {
   @override
-  $R call(
-      {required String uri, double? width, double? height, String? localPath});
+  $R call({String? hash, double? width, double? height, String? localPath});
   CachedAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -389,20 +337,16 @@ class _CachedAssetCopyWithImpl<$R, $Out>
   late final ClassMapperBase<CachedAsset> $mapper =
       CachedAssetMapper.ensureInitialized();
   @override
-  $R call(
-          {required String uri,
-          double? width,
-          double? height,
-          String? localPath}) =>
+  $R call({String? hash, double? width, double? height, String? localPath}) =>
       $apply(FieldCopyWithData({
-        #uri: uri,
+        if (hash != null) #hash: hash,
         if (width != null) #width: width,
         if (height != null) #height: height,
         if (localPath != null) #localPath: localPath
       }));
   @override
   CachedAsset $make(CopyWithData data) => CachedAsset(
-      uri: data.get(#uri),
+      hash: data.get(#hash, or: $value.hash),
       width: data.get(#width, or: $value.width),
       height: data.get(#height, or: $value.height),
       localPath: data.get(#localPath, or: $value.localPath));
@@ -411,4 +355,147 @@ class _CachedAssetCopyWithImpl<$R, $Out>
   CachedAssetCopyWith<$R2, CachedAsset, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _CachedAssetCopyWithImpl($value, $cast, t);
+}
+
+class ThumbnailAssetMapper extends SubClassMapperBase<ThumbnailAsset> {
+  ThumbnailAssetMapper._();
+
+  static ThumbnailAssetMapper? _instance;
+  static ThumbnailAssetMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ThumbnailAssetMapper._());
+      SlideAssetMapper.ensureInitialized().addSubMapper(_instance!);
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ThumbnailAsset';
+
+  static String _$hash(ThumbnailAsset v) => v.hash;
+  static const Field<ThumbnailAsset, String> _f$hash = Field('hash', _$hash);
+  static double _$width(ThumbnailAsset v) => v.width;
+  static const Field<ThumbnailAsset, double> _f$width = Field('width', _$width);
+  static double _$height(ThumbnailAsset v) => v.height;
+  static const Field<ThumbnailAsset, double> _f$height =
+      Field('height', _$height);
+  static String _$localPath(ThumbnailAsset v) => v.localPath;
+  static const Field<ThumbnailAsset, String> _f$localPath =
+      Field('localPath', _$localPath, key: 'local_path');
+  static String _$type(ThumbnailAsset v) => v.type;
+  static const Field<ThumbnailAsset, String> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
+
+  @override
+  final MappableFields<ThumbnailAsset> fields = const {
+    #hash: _f$hash,
+    #width: _f$width,
+    #height: _f$height,
+    #localPath: _f$localPath,
+    #type: _f$type,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'thumbnail';
+  @override
+  late final ClassMapperBase superMapper = SlideAssetMapper.ensureInitialized();
+
+  static ThumbnailAsset _instantiate(DecodingData data) {
+    return ThumbnailAsset(
+        hash: data.dec(_f$hash),
+        width: data.dec(_f$width),
+        height: data.dec(_f$height),
+        localPath: data.dec(_f$localPath));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static ThumbnailAsset fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ThumbnailAsset>(map);
+  }
+
+  static ThumbnailAsset fromJson(String json) {
+    return ensureInitialized().decodeJson<ThumbnailAsset>(json);
+  }
+}
+
+mixin ThumbnailAssetMappable {
+  String toJson() {
+    return ThumbnailAssetMapper.ensureInitialized()
+        .encodeJson<ThumbnailAsset>(this as ThumbnailAsset);
+  }
+
+  Map<String, dynamic> toMap() {
+    return ThumbnailAssetMapper.ensureInitialized()
+        .encodeMap<ThumbnailAsset>(this as ThumbnailAsset);
+  }
+
+  ThumbnailAssetCopyWith<ThumbnailAsset, ThumbnailAsset, ThumbnailAsset>
+      get copyWith => _ThumbnailAssetCopyWithImpl(
+          this as ThumbnailAsset, $identity, $identity);
+  @override
+  String toString() {
+    return ThumbnailAssetMapper.ensureInitialized()
+        .stringifyValue(this as ThumbnailAsset);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return ThumbnailAssetMapper.ensureInitialized()
+        .equalsValue(this as ThumbnailAsset, other);
+  }
+
+  @override
+  int get hashCode {
+    return ThumbnailAssetMapper.ensureInitialized()
+        .hashValue(this as ThumbnailAsset);
+  }
+}
+
+extension ThumbnailAssetValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ThumbnailAsset, $Out> {
+  ThumbnailAssetCopyWith<$R, ThumbnailAsset, $Out> get $asThumbnailAsset =>
+      $base.as((v, t, t2) => _ThumbnailAssetCopyWithImpl(v, t, t2));
+}
+
+abstract class ThumbnailAssetCopyWith<$R, $In extends ThumbnailAsset, $Out>
+    implements SlideAssetCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? hash, double? width, double? height, String? localPath});
+  ThumbnailAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _ThumbnailAssetCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ThumbnailAsset, $Out>
+    implements ThumbnailAssetCopyWith<$R, ThumbnailAsset, $Out> {
+  _ThumbnailAssetCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ThumbnailAsset> $mapper =
+      ThumbnailAssetMapper.ensureInitialized();
+  @override
+  $R call({String? hash, double? width, double? height, String? localPath}) =>
+      $apply(FieldCopyWithData({
+        if (hash != null) #hash: hash,
+        if (width != null) #width: width,
+        if (height != null) #height: height,
+        if (localPath != null) #localPath: localPath
+      }));
+  @override
+  ThumbnailAsset $make(CopyWithData data) => ThumbnailAsset(
+      hash: data.get(#hash, or: $value.hash),
+      width: data.get(#width, or: $value.width),
+      height: data.get(#height, or: $value.height),
+      localPath: data.get(#localPath, or: $value.localPath));
+
+  @override
+  ThumbnailAssetCopyWith<$R2, ThumbnailAsset, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _ThumbnailAssetCopyWithImpl($value, $cast, t);
 }

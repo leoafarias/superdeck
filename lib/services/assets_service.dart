@@ -40,11 +40,19 @@ class AssetService {
     }
   }
 
-  static Future<String> loadString(String path) async {
+  Future<String> loadString(String path) async {
     if (kCanRunProcess) {
       return File(path).readAsString();
     } else {
       return rootBundle.loadString(path);
+    }
+  }
+
+  Future<Uint8List> loadBytes(String path) async {
+    if (kCanRunProcess) {
+      return File(path).readAsBytes();
+    } else {
+      return (await rootBundle.load(path)).buffer.asUint8List();
     }
   }
 
@@ -65,16 +73,16 @@ class AssetService {
   }
 
   Future<List<Slide>> _loadSlides() async {
-    final slidesJson = await AssetService.loadString(_refs.slides.path);
+    final slidesJson = await loadString(_refs.slides.path);
     return _parseList(slidesJson, Slide.fromMap);
   }
 
   Future<ProjectConfig> _loadConfig() async {
-    final configJson = await AssetService.loadString(_refs.config.path);
+    final configJson = await loadString(_refs.config.path);
     return ProjectConfig.fromJson(configJson);
   }
 
-  Future<SlideAsset?> loadGeneratedAsset(String hash) async {
+  Future<GeneratedAsset?> loadGeneratedAsset(String hash) async {
     final assets = await loadAssets();
 
     return assets
@@ -82,7 +90,49 @@ class AssetService {
         .firstWhereOrNull((e) => e.hash == hash);
   }
 
-  Future<SlideAsset?> loadCachedAsset(String url) async {
+  Future<void> saveAsset(SlideAsset asset) async {
+    final assets = await loadAssets();
+
+    final list = [...assets, asset].map((e) => e.toMap()).toList();
+
+    _refs.assets.writeAsString(jsonEncode(list));
+  }
+
+  Future<ThumbnailAsset> saveThumbnailAsset({
+    required String hash,
+    required Uint8List data,
+  }) async {
+    final file = File(
+      p.join(
+        sdConfig.assetsImageDir.path,
+        '${SlideAsset.thumbnailPrefix}$hash.png',
+      ),
+    );
+
+    file.writeAsBytesSync(data);
+
+    final size = await _getImageSize(data);
+
+    final asset = ThumbnailAsset(
+      localPath: file.path,
+      hash: hash,
+      width: size.width,
+      height: size.height,
+    );
+
+    await saveAsset(asset);
+    return asset;
+  }
+
+  Future<ThumbnailAsset?> loadThumbnailAsset(String hash) async {
+    final assets = await loadAssets();
+
+    return assets
+        .whereType<ThumbnailAsset>()
+        .firstWhereOrNull((e) => e.hash == hash);
+  }
+
+  Future<CachedAsset?> loadCachedAsset(String url) async {
     final assets = await loadAssets();
 
     return assets
@@ -91,11 +141,15 @@ class AssetService {
   }
 
   Future<List<SlideAsset>> loadAssets() async {
-    final assetsJson = await AssetService.loadString(_refs.assets.path);
+    final assetsJson = await loadString(_refs.assets.path);
     final assets = _parseList(assetsJson, SlideAsset.fromMap);
 
-    final updatedAssets = <SlideAsset>[];
+    // Just return if you cant run a process
+    if (!kCanRunProcess) {
+      return assets;
+    }
 
+    final updatedAssets = <SlideAsset>[];
     for (final asset in assets) {
       final assetFile = File(asset.localPath);
       if (await assetFile.exists()) {
@@ -109,12 +163,10 @@ class AssetService {
   Future<void> saveReferences(DeckReferenceDto data) async {
     final config = data.config;
     final slides = data.slides;
-    final assets = data.assets;
+
     await _refs.config.ensureWrite(config.toJson());
     final map = slides.map((e) => e.toMap()).toList();
     await _refs.slides.ensureWrite(jsonEncode(map));
-    final assetRefs = assets.map((e) => e.toMap()).toList();
-    await _refs.assets.writeAsString(jsonEncode(assetRefs));
   }
 
   Future<ProjectConfig> loadProjectConfig(File projectFile) async {
@@ -138,12 +190,16 @@ class AssetService {
 
     final size = await _getImageSize(data);
 
-    return GeneratedAsset(
+    final asset = GeneratedAsset(
       localPath: file.path,
       hash: hash,
       width: size.width,
       height: size.height,
     );
+
+    await saveAsset(asset);
+
+    return asset;
   }
 
   Future<CachedAsset> saveCachedAsset(String url) async {
@@ -179,12 +235,16 @@ class AssetService {
 
     final size = await _getImageSize(assetData);
 
-    return CachedAsset(
-      uri: url,
+    final asset = CachedAsset(
+      hash: url.hashCode.toString(),
       width: size.width,
       height: size.height,
       localPath: file.path,
     );
+
+    await saveAsset(asset);
+
+    return asset;
   }
 }
 
