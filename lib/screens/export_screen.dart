@@ -10,11 +10,10 @@ import 'package:signals/signals_flutter.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../helpers/constants.dart';
-import '../../models/slide_model.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
 import '../components/molecules/scaled_app.dart';
-import '../helpers/slide_to_image.dart';
+import '../services/image_generation_service.dart';
 import '../superdeck.dart';
 
 enum ExportProcessStatus {
@@ -38,7 +37,7 @@ class ExportScreen extends StatefulWidget {
 class _ExportScreenState extends State<ExportScreen> {
   final navigation = NavigationProvider.instance;
 
-  late final _selectedQuality = createSignal(context, ExportQuality.good);
+  late final _selectedQuality = createSignal(context, SnapshotQuality.good);
 
   Future<void> convertToPdf(BuildContext context) async {
     final lastState = navigation.sideIsOpen.value;
@@ -66,7 +65,7 @@ class _ExportScreenState extends State<ExportScreen> {
     Overlay.of(context).insert(entry);
   }
 
-  void setQuality(ExportQuality? quality) {
+  void setQuality(SnapshotQuality? quality) {
     if (quality == null) throw Exception('Quality cannot be null');
     _selectedQuality.value = quality;
   }
@@ -75,9 +74,9 @@ class _ExportScreenState extends State<ExportScreen> {
   Widget build(BuildContext context) {
     final selectedQuality = _selectedQuality.watch(context);
 
-    List<RadioListTile<ExportQuality>> buildRadioList() {
-      return ExportQuality.values.map((e) {
-        return RadioListTile<ExportQuality>.adaptive(
+    List<RadioListTile<SnapshotQuality>> buildRadioList() {
+      return SnapshotQuality.values.map((e) {
+        return RadioListTile<SnapshotQuality>.adaptive(
           title: Text(e.label),
           value: e,
           groupValue: selectedQuality,
@@ -125,7 +124,7 @@ class ExportingProcessScreen extends StatefulWidget {
   });
 
   final void Function() onComplete;
-  final ExportQuality quality;
+  final SnapshotQuality quality;
 
   @override
   State<ExportingProcessScreen> createState() => _ExportingProcessScreenState();
@@ -155,14 +154,13 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   Future<void> startConversion() async {
     try {
-      final generator = ImageGenerationService.instance;
+      final generator = ImageGenerationService(context);
       _status.value = ExportProcessStatus.converting;
 
       List<Future<Uint8List>> futures = [];
 
       Future<Uint8List> convertSlide(Slide slide) async {
         final convertedImage = await generator.generate(
-          context: context,
           quality: widget.quality,
           slide: slide,
         );

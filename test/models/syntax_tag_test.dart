@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:superdeck/models/syntax_tag.dart';
+import 'package:superdeck/helpers/section_tag.dart';
 
 void main() {
   group('Tag Detection Tests', () {
@@ -19,13 +19,13 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        Section.left: '''
+        SectionTag.left: '''
 
 ## Content One
 Description of content
 
 ''',
-        Section.right: '''
+        SectionTag.right: '''
 
 #### Content Two
 
@@ -46,7 +46,7 @@ Description of content
 Description of content
 ''';
       final expected = <String, String>{
-        Section.first: '''
+        SectionTag.first: '''
 ## Content One
 Description of content
 '''
@@ -68,12 +68,12 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        Section.first: '''
+        SectionTag.first: '''
 ## Content One
 Description of content
 
 ''',
-        Section.right: '''
+        SectionTag.right: '''
 
 #### Content Two
 
@@ -99,12 +99,12 @@ Description of content
 - Third bullet point
 ''';
       final expected = {
-        Section.first: '''
+        SectionTag.first: '''
 ## Content One
 Description of content
 
 ''',
-        Section.left: '''
+        SectionTag.left: '''
 
 #### Content Two
 

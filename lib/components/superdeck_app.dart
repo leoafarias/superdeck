@@ -9,12 +9,12 @@ import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../helpers/syntax_highlighter.dart';
-import '../../models/options_model.dart';
 import '../../superdeck.dart';
 import '../helpers/constants.dart';
 import '../helpers/theme.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
+import '../services/assets_service.dart';
 import 'molecules/exception_widget.dart';
 
 class SuperDeckApp extends StatefulWidget {
@@ -27,21 +27,41 @@ class SuperDeckApp extends StatefulWidget {
   final Style? style;
   final List<Example> examples;
 
+  static bool isInitialized = false;
+
+  static Future<void> initialize() async {
+    // Return if its initialized
+    if (SuperDeckApp.isInitialized) return;
+
+    WidgetsFlutterBinding.ensureInitialized();
+
+    SignalsObserver.instance = null;
+
+    await Future.wait([
+      initLocalStorage(),
+      SyntaxHighlight.initialize(),
+      AssetService.initialize(),
+      _initializeWindowManager(),
+    ]);
+
+    SuperDeckApp.isInitialized = true;
+  }
+
   @override
   // ignore: library_private_types_in_public_api
   _SuperDeckAppState createState() => _SuperDeckAppState();
 }
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
-  final superdeck = SuperDeckProvider.instance;
-  late final initialize = futureSignal(_initialize);
+  final _provider = SuperDeckProvider.instance;
+  late final _initializing = futureSignal(_initializeDependencies);
 
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
         widget.examples != oldWidget.examples) {
-      superdeck.update(
+      _provider.update(
         style: widget.style,
         examples: widget.examples,
       );
@@ -51,27 +71,19 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   @override
   void dispose() {
     super.dispose();
-    initialize.dispose();
+    _initializing.dispose();
   }
 
-  Future<void> _initialize() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SignalsObserver.instance = null;
-
-    await Future.wait([
-      initLocalStorage(),
-      SyntaxHighlight.initialize(),
-      _initializeWindowManager(),
-    ]);
-
-    await superdeck.initialize(
+  Future<void> _initializeDependencies() async {
+    await SuperDeckApp.initialize();
+    await _provider.initialize(
       style: widget.style,
       examples: widget.examples,
     );
   }
 
   void onRetry() {
-    superdeck.initialize(
+    _provider.initialize(
       style: widget.style,
       examples: widget.examples,
     );
@@ -79,40 +91,40 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
 
   @override
   Widget build(BuildContext context) {
-    final initializing = initialize.watch(context);
-
-    if (initializing.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+    Widget renderLoading() {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
 
-    final result = superdeck.data.watch(context);
+    return MixTheme(
+      data: MixThemeData.withMaterial(),
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'Superdeck',
+        theme: theme,
+        routerConfig: _router,
+        builder: (context, child) {
+          final initializing = _initializing.watch(context);
 
-    return result.map(
-      data: (data) {
-        return MixTheme(
-          data: MixThemeData.withMaterial(),
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: 'Superdeck',
-            theme: theme,
-            routerConfig: _router,
-          ),
-        );
-      },
-      loading: () {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-      error: (error) {
-        log(error.toString());
-        return ExceptionWidget(
-          error,
-          onRetry: onRetry,
-        );
-      },
+          return initializing.map(
+            data: (data) => child!,
+            loading: () => Scaffold(
+              body: renderLoading(),
+            ),
+            error: (error) {
+              log(error.toString());
+
+              return ExceptionWidget(
+                error,
+                onRetry: onRetry,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

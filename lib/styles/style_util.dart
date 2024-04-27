@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
+import 'package:mix/mix.dart';
 
 import '../superdeck.dart';
 

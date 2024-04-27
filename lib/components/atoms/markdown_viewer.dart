@@ -104,8 +104,9 @@ Widget _imageBuilder(
       final constraints = calculateConstraints(size, spec.contentContainer);
       return ConstrainedBox(
         constraints: constraints,
-        child: AnimatedMixedImage(
-          image: getImageProvider(uri.toString()),
+        child: CachedImage(
+          url: uri.toString(),
+          size: constraints.biggest,
           spec: imageSpec.copyWith(
             width: info.width ?? imageSpec.width,
             height: info.height ?? imageSpec.height,

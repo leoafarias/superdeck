@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
-import '../../helpers/slide_to_image.dart';
-import '../../models/slide_model.dart';
+import '../../services/assets_service.dart';
+import '../../services/image_generation_service.dart';
 import '../../superdeck.dart';
 import '../molecules/scaled_app.dart';
 import 'slide_view.dart';
@@ -48,13 +50,8 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final imageGenerator = ImageGenerationService.instance;
-  late final imageCache = ImageCacheService(
-    slide: widget.slide,
-    quality: ExportQuality.low,
-    cacheKey: widget.index.toString(),
-  );
-  late final quality = ExportQuality.low;
+  late final imageGenerator = ImageGenerationService(context);
+  final quality = SnapshotQuality.good;
 
   late final asyncState = signal<AsyncState<Uint8List>>(AsyncState.loading());
 
@@ -62,6 +59,12 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   void initState() {
     super.initState();
     _getLocalAsset().then((value) => getThumbnail());
+  }
+
+  @override
+  void dispose() {
+    imageGenerator.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,10 +86,10 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   Future<void> _getLocalAsset() async {
     try {
       asyncState.value = AsyncState.loading();
-      final asset = await imageCache.get();
+      final asset = await assetService.loadThumbnailByHash(widget.slide.hash);
 
       if (asset != null) {
-        asyncState.value = AsyncState.data(asset);
+        final assetData = asyncState.value = AsyncState.data(asset);
       }
     } on Exception catch (e) {
       asyncState.value = AsyncState.error(e);
@@ -95,26 +98,34 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
   Future<void> _generateThumbnail() async {
     try {
-      const delay = Durations.short2;
       while (_isGenerating) {
-        await Future.delayed(delay);
+        await Future.delayed(const Duration(milliseconds: 1));
       }
+
+      if (!mounted) {
+        log('Context is unmounted');
+        return;
+      }
+
+      Uint8List image;
 
       _isGenerating = true;
 
-      await Future.delayed(delay * 3);
-      final data = await imageGenerator.generate(
-        // ignore: use_build_context_synchronously
-        context: context,
+      image = await imageGenerator.generate(
         quality: quality,
         slide: widget.slide,
       );
 
-      await imageCache.set(data);
+      await assetService.saveGeneratedAsset(
+        hash: widget.slide.hash,
+        data: image,
+      );
 
-      asyncState.value = AsyncState.data(data);
+      asyncState.value = AsyncState.data(image);
     } on Exception catch (e) {
       asyncState.value = AsyncState.error(e);
+      log('Error generating thumbnail: $e');
+      return;
     } finally {
       _isGenerating = false;
     }
@@ -122,41 +133,44 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
+    return LayoutBuilder(builder: (context, constraints) {
+      final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
 
-    final result = asyncState.watch(context);
+      final result = asyncState.watch(context);
 
-    final child = result.map(
-      data: (data) => Image.memory(
-        data,
-        gaplessPlayback: true,
-      ),
-      loading: () {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-      error: (error, _) {
-        return const Center(
-          child: Text('Error loading image'),
-        );
-      },
-    );
-
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: PreviewBox(
-        style: Style(
-          box.border.all.color(selectedColor),
+      final child = result.map(
+        data: (data) => Image.memory(
+          data,
+          gaplessPlayback: true,
+          cacheWidth: constraints.maxWidth.toInt(),
         ),
-        child: AbsorbPointer(
-          child: AspectRatio(
-            aspectRatio: kAspectRatio,
-            child: child,
+        loading: () {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        error: (error, _) {
+          return const Center(
+            child: Text('Error loading image'),
+          );
+        },
+      );
+
+      return GestureDetector(
+        onTap: widget.onTap,
+        child: PreviewBox(
+          style: Style(
+            box.border.all.color(selectedColor),
+          ),
+          child: AbsorbPointer(
+            child: AspectRatio(
+              aspectRatio: kAspectRatio,
+              child: child,
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

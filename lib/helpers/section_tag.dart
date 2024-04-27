@@ -1,5 +1,5 @@
-class Section {
-  const Section._();
+class SectionTag {
+  const SectionTag._();
   static const header = 'header';
   static const left = 'left';
   static const right = 'right';
@@ -20,7 +20,7 @@ String _getTagName(String line) {
 Map<String, String> parseContentSections(String input) {
   final result = <String, String>{};
   final lines = input.split('\n');
-  var currentTag = Section.first;
+  var currentTag = SectionTag.first;
   var currentContent = '';
 
   // If ::tag:: is inside a ``` block, it should be ignored

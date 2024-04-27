@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
+import '../../helpers/constants.dart';
 import '../../helpers/layout_builder.dart';
 import '../../helpers/measure_size.dart';
-import '../../models/slide_model.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
 import 'image_widget.dart';
@@ -26,12 +26,21 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final superdeck = SuperDeckProvider.instance;
+    final provider = SuperDeckProvider.instance;
     final slide = this.slide;
     final variant = slide.styleVariant;
-    final style = superdeck.style.watch(context);
+    final style = provider.style.watch(context);
 
     final variantStyle = style.applyVariant(variant);
+
+    final backgroundWidget = slide.background != null
+        ? CachedImage(
+            url: slide.background!,
+            fit: BoxFit.cover,
+            size: kResolution,
+            alignment: Alignment.center,
+          )
+        : const SizedBox();
 
     return TransitionWidget(
       key: ValueKey(slide.transition),
@@ -46,40 +55,41 @@ class SlideView extends StatelessWidget {
               return AnimatedMixedBox(
                 spec: spec.outerContainer,
                 duration: Durations.medium1,
-                child: AnimatedMixedBox(
-                  spec: _buildInnerContainerSpec(
-                    slide: slide,
-                    spec: spec.innerContainer,
-                    context: context,
-                  ),
-                  duration: const Duration(milliseconds: 300),
-                  child: SlideProvider(
-                    slide: slide,
-                    spec: spec,
-                    examples: superdeck.examples.watch(context),
-                    isSnapshot: _isSnapshot,
-                    child: SlideConstraints(
-                      (_) {
-                        if (slide is SimpleSlide) {
-                          return SimpleSlideBuilder(config: slide);
-                        } else if (slide is WidgetSlide) {
-                          return WidgetSlideBuilder(config: slide);
-                        } else if (slide is ImageSlide) {
-                          return ImageSlideBuilder(config: slide);
-                        } else if (slide is TwoColumnSlide) {
-                          return TwoColumnSlideBuilder(config: slide);
-                        } else if (slide is TwoColumnHeaderSlide) {
-                          return TwoColumnHeaderSlideBuilder(config: slide);
-                        } else if (slide is InvalidSlide) {
-                          return InvalidSlideBuilder(config: slide);
-                        } else {
-                          throw UnimplementedError(
-                            'Slide config not implemented',
-                          );
-                        }
-                      },
+                child: Stack(
+                  children: [
+                    Positioned.fill(child: backgroundWidget),
+                    AnimatedMixedBox(
+                      spec: spec.innerContainer,
+                      duration: const Duration(milliseconds: 300),
+                      child: SlideProvider(
+                        slide: slide,
+                        spec: spec,
+                        examples: provider.examples.watch(context),
+                        isSnapshot: _isSnapshot,
+                        child: SlideConstraints(
+                          (_) {
+                            if (slide is SimpleSlide) {
+                              return SimpleSlideBuilder(config: slide);
+                            } else if (slide is WidgetSlide) {
+                              return WidgetSlideBuilder(config: slide);
+                            } else if (slide is ImageSlide) {
+                              return ImageSlideBuilder(config: slide);
+                            } else if (slide is TwoColumnSlide) {
+                              return TwoColumnSlideBuilder(config: slide);
+                            } else if (slide is TwoColumnHeaderSlide) {
+                              return TwoColumnHeaderSlideBuilder(config: slide);
+                            } else if (slide is InvalidSlide) {
+                              return InvalidSlideBuilder(config: slide);
+                            } else {
+                              throw UnimplementedError(
+                                'Slide config not implemented',
+                              );
+                            }
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               );
             });
@@ -112,64 +122,4 @@ class SlideConstraintsProvider extends InheritedWidget {
   bool updateShouldNotify(SlideConstraintsProvider oldWidget) {
     return oldWidget.constraints != constraints;
   }
-}
-
-BoxSpec _buildInnerContainerSpec({
-  required Slide slide,
-  required BoxSpec spec,
-  required BuildContext context,
-}) {
-  final background = slide.background;
-  if (background == null) {
-    return spec;
-  }
-  final uri = Uri.tryParse(background);
-
-  if (uri == null) {
-    return spec;
-  }
-
-  final decoration = spec.decoration;
-
-  final imageProvider = getImageProvider(background);
-
-  if (decoration is BoxDecoration) {
-    final innerContainerSpecImage = decoration.image;
-    final mix = MixProvider.of(context);
-    final backgroundDecorationDto = DecorationImageDto(
-      image: imageProvider,
-      fit: BoxFit.cover,
-      alignment: Alignment.center,
-    );
-
-    if (innerContainerSpecImage == null) {
-      return spec.copyWith(
-        decoration: decoration.copyWith(
-          image: backgroundDecorationDto.resolve(mix),
-        ),
-      );
-    }
-
-    final decorationDto = DecorationImageDto.from(innerContainerSpecImage);
-
-    final newDecoration = backgroundDecorationDto
-        .merge(decorationDto)
-        .merge(DecorationImageDto(image: imageProvider));
-
-    return spec.copyWith(
-      decoration: decoration.copyWith(
-        image: newDecoration.resolve(mix),
-      ),
-    );
-  }
-
-  return spec.copyWith(
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        image: imageProvider,
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-      ),
-    ),
-  );
 }

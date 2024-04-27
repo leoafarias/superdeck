@@ -1,9 +1,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../helpers/section_tag.dart';
 import '../schema/schema.dart';
 import '../superdeck.dart';
-import 'options_model.dart';
-import 'syntax_tag.dart';
 
 part 'slide_model.mapper.dart';
 
@@ -13,6 +12,7 @@ abstract class Slide extends Config with SlideMappable {
   final String layout;
   final String data;
   final String? raw;
+  final String hash;
 
   @MappableField(key: 'content')
   final ContentOptions? contentOptions;
@@ -26,7 +26,7 @@ abstract class Slide extends Config with SlideMappable {
     required super.background,
     required super.style,
     required super.transition,
-  });
+  }) : hash = raw.hashCode.toString();
 
   SlideVariant? get styleVariant {
     return style == null ? null : SlideVariant(style!);
@@ -187,9 +187,9 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
     super.raw,
   }) : super(layout: LayoutType.twoColumn);
 
-  SectionData get left => getSection(Section.left, Section.first);
+  SectionData get left => getSection(SectionTag.left, SectionTag.first);
 
-  SectionData get right => getSection(Section.right);
+  SectionData get right => getSection(SectionTag.right);
 
   static const fromMap = TwoColumnSlideMapper.fromMap;
 
@@ -217,11 +217,11 @@ class TwoColumnHeaderSlide extends SectionsSlide
     super.raw,
   }) : super(layout: LayoutType.twoColumnHeader);
 
-  SectionData get header => getSection(Section.header, Section.first);
+  SectionData get header => getSection(SectionTag.header, SectionTag.first);
 
-  SectionData get left => getSection(Section.left);
+  SectionData get left => getSection(SectionTag.left);
 
-  SectionData get right => getSection(Section.right);
+  SectionData get right => getSection(SectionTag.right);
 
   static const fromMap = TwoColumnHeaderSlideMapper.fromMap;
 

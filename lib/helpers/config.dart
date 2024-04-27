@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
-final kConfig = SuperDeckConfig();
+const sdConfig = SDConfig.instance;
 
-class SuperDeckConfig {
-  SuperDeckConfig();
+class SDConfig {
+  const SDConfig._();
+
+  static const instance = SDConfig._();
 
   String get _assetsDirName => 'assets';
 
@@ -20,10 +22,10 @@ class SuperDeckConfig {
   ({
     File slides,
     File config,
-  }) get references {
-    return (
-      slides: File(join(_assetsDirName, 'slides.json')),
-      config: File(join(_assetsDirName, 'config.json')),
-    );
-  }
+    File assets,
+  }) get references => (
+        slides: File(join(_assetsDirName, 'slides.json')),
+        config: File(join(_assetsDirName, 'config.json')),
+        assets: File(join(_assetsDirName, 'assets.json')),
+      );
 }
