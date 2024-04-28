@@ -278,7 +278,7 @@ abstract class ExampleWidget<T> {
     }
   }
 
-  ArgsSchema? get schema;
+  ArgsSchema? get schema => null;
 
   SchemaValidationResult _validate(Map<String, dynamic> args) {
     if (schema?.validator == null) {
@@ -451,6 +451,19 @@ enum LayoutPosition {
   static final schema = EnumSchema(
     values: LayoutPosition.values.map((e) => e.name.snakeCase).toList(),
   );
+
+  bool isHorizontal() {
+    return switch (this) {
+      LayoutPosition.left => true,
+      LayoutPosition.right => true,
+      LayoutPosition.top => false,
+      LayoutPosition.bottom => false,
+    };
+  }
+
+  bool isVertical() {
+    return !isHorizontal();
+  }
 }
 
 @MappableEnum()

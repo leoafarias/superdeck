@@ -1,9 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../models/slide_model.dart';
-import '../../superdeck.dart';
+import '../../providers/deck_provider.dart';
 import '../atoms/slide_thumbnail.dart';
 
 class SlideThumbnailList extends StatefulWidget {
@@ -87,7 +88,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
             final slide = widget.slides[idx];
             SuperDeckProvider.instance.style.watch(context);
 
-            return SlideThumbnailDynamic(
+            return SlideThumbnail(
               index: idx,
               selected: idx == widget.currentSlide,
               onTap: () => goToPage(idx),

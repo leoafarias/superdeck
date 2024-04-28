@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:superdeck/models/options_model.dart';
 import 'package:superdeck/schema/schema.dart';
 import 'package:superdeck/superdeck.dart';
 

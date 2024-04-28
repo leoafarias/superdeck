@@ -1,69 +1,35 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
-import 'package:watcher/watcher.dart';
 
 import '../helpers/constants.dart';
 import '../helpers/loader.dart';
-import '../helpers/utils.dart';
-import '../models/options_model.dart';
 import '../superdeck.dart';
 
 class SuperDeckProvider {
   SuperDeckProvider._();
 
-  static SuperDeckProvider get instance => _instance;
+  static final instance = SuperDeckProvider._();
 
-  static final _instance = SuperDeckProvider._();
+  final _data = futureSignal(() => SlidesLoader.instance.loadFromStorage());
 
-  final data = futureSignal(() async {
-    if (kCanRunProcess) {
-      await SlidesLoader.generate();
-    }
-    return SlidesLoader.loadFromStorage();
-  });
+  final style = signal(const Style.empty(), debugLabel: 'Style');
 
-  List<StreamSubscription<WatchEvent>> _subscriptions = [];
+  late final loading = computed(() => _data.value is AsyncLoading);
 
-  late final listenToSlideChanges = effect(() {
-    slides.value;
-    final previousValue = slides.previousValue ?? [];
-
-    if (listEquals(slides.value, previousValue)) {
-      return;
-    }
-
-    final changes = compareListChanges(previousValue, slides.value);
-
-    for (var added in changes.added) {
-      log('Added: $added');
-    }
-
-    for (var removed in changes.removed) {
-      log('Removed: $removed');
-    }
-  });
-
-  final style = signal(const Style.empty());
-
-  late final loading = computed(() {
-    return data.value is AsyncLoading;
-  });
-
-  late final slides = computed(() => data.value.value?.slides ?? []);
-
+  late final slides = computed(() => _data.value.value?.slides ?? []);
+  late final assets = computed(() => _data.value.value?.assets ?? []);
   late final config =
-      computed(() => data.value.value?.config ?? const ProjectConfig.empty());
+      computed(() => _data.value.value?.config ?? const ProjectConfig.empty());
 
   final examples = mapSignal<String, Example>({});
 
   late final error = computed(
     () {
-      final data = this.data.value;
+      final data = _data.value;
       return data is AsyncError ? data.error : null;
     },
   );
@@ -87,35 +53,20 @@ class SuperDeckProvider {
     Style? style,
   }) async {
     // Unsubscribe to listeners in case its a retry
-    _unsubscribe();
-    batch(() {
-      this.style.value = defaultStyle.merge(style);
-      this.examples.assign(_examplesToMap(examples));
-    });
+    await _data.future;
+    update(examples: examples, style: style);
 
     if (kCanRunProcess) {
-      _subscriptions = SlidesLoader.listen(
-        onChange: () async {
-          data.refresh();
-        },
+      SlidesLoader.instance.listen(
+        onChange: () => _data.refresh(),
       );
     }
   }
 
-  void _unsubscribe() {
-    for (var sub in _subscriptions) {
-      sub.cancel();
-    }
-    _subscriptions.clear();
-  }
-
   void dispose() {
     style.dispose();
-
-    slides.dispose();
-
+    _data.dispose();
     examples.dispose();
-    _unsubscribe();
   }
 }
 

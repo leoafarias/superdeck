@@ -1,8 +1,9 @@
 ### 0.0.3
 
-- Cleaned up dependencies
-- Updated example code
-- Improved logging
+* Cleaned up dependencies
+* Updated example code
+* Improved logging
+* Fixed and improved mermaid generation
 
 ## 0.0.2
 

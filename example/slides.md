@@ -1,42 +1,4 @@
 ---
-style: announcement
-
-background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXE3N3hlcXl0OXR3eXJjOGJ3MGtvcmMwMWY4eDZqMHFvd3lxaHA4ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YpwVvng323pw45tYwv/giphy.gif
-content:
-  alignment: center_left
-
----
-
-
- # SUPERDECK 
- ## RELEASED! 🎉
-
- #### Create beautiful Flutter
- #### slides with Markdown
-
-
-
----
-style: cover
-layout: two_column
-background: https://source.unsplash.com/person-discussing-while-standing-in-front-of-a-large-screen-in-front-of-people-inside-dim-lighted-room-bzdhc5b3Bxs
-sections:
-  left:
-    flex: 2
-    alignment: center_left
-  right:
-    alignment: bottom_right
-    flex: 1
----
-
-::left::
- 
-## Making your Flutter presentations easier than ever.
-
-::right::
-#### For Flutter developers. Made with ❤️ Flutter.
-
----
 style: quote
 layout: image
 options:
@@ -50,7 +12,6 @@ content:
 > Create your Flutter presentations faster and easier than ever.
 > You can quote me on that.
 > ### Leo Farias
-
 
 ---
 background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24wb3V5cThlZ3ExY2NvY3czcmozang0bGQ1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XzWd8acQ37byKR4tmd/giphy.gif

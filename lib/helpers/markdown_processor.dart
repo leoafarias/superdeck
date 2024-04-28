@@ -1,188 +1,156 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 
-import '../models/asset_model.dart';
-import '../models/options_model.dart';
-import '../models/slide_model.dart';
 import '../schema/schema.dart';
+import '../services/assets_service.dart';
+import '../services/mermaid_service.dart';
+import '../superdeck.dart';
 import 'config.dart';
 import 'deep_merge.dart';
 import 'utils.dart';
 
 final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
 
-typedef DeckData = ({
+typedef DeckReferenceDto = ({
   List<Slide> slides,
   ProjectConfig config,
+  List<SlideAsset> assets,
 });
 
-final emptyDeckData = (
-  slides: <Slide>[],
-  assets: <SlideAsset>[],
+final DeckReferenceDto emptyDeckData = (
+  slides: [],
+  assets: [],
   config: const ProjectConfig.empty(),
 );
 
-typedef ProcessData = ({
-  String content,
-  Map<String, dynamic> options,
+typedef TaskDto = ({
+  Slide slide,
+  List<SlideAsset> assets,
   ProjectConfig config,
 });
 
 class Pipeline {
-  final List<MarkdownProcessor> markdown;
-  final List<PostMarkdownProcessor> postMarkdown;
+  final List<Task> processors;
+  final ProjectConfig config;
+  final List<SlideAsset> assets;
 
-  static List<String> assetsLoaded = [];
+  Pipeline({
+    required this.processors,
+    required this.assets,
+    required this.config,
+  });
 
-  String getFileName(String path) {
-    return p.basename(path);
-  }
-
-  static Future<void> cleanAssets() async {
+  static Future<void> cleanAssets(List<SlideAsset> assetsUsed) async {
     //  Gothrough the assets directory and check if the asset is not in assetsSaved
     //  delete it
-    final assetsDir = kConfig.assetsImageDir;
+    final assetsDir = sdConfig.assetsImageDir;
 
     if (!await assetsDir.exists()) return;
+
+    final assetPaths = assetsUsed.map((e) => e.localPath).toSet();
 
     await for (final entity in assetsDir.list()) {
       if (entity is File) {
         final fileName = p.basename(entity.path);
-        if (fileName.startsWith(SlideAsset.assetPrefix)) {
-          if (!assetsLoaded.contains(entity.path)) {
+        if (fileName.startsWith(SlideAsset.cachedPrefix)) {
+          if (!assetPaths.contains(entity.path)) {
             await entity.delete();
           }
         }
       }
     }
-
-    assetsLoaded.clear();
   }
 
-  const Pipeline({
-    required this.markdown,
-    required this.postMarkdown,
-  });
+  static Future<void> cleanThumbnails(List<Slide> slides) async {
+    final assetsDir = sdConfig.assetsImageDir;
 
-  static Future<SlideAsset?> getAsset(String fileName) async {
-    final assetFile = SlideAsset.buildFile(fileName);
+    if (!await assetsDir.exists()) return;
 
-    final asset = await SlideAsset.maybeLoad(assetFile);
-    if (asset != null) {
-      Pipeline.assetsLoaded.add(assetFile.path);
-    }
-    return asset;
-  }
+    final assets = <File>[];
 
-  static Future<SlideAsset> saveAsset(
-    String fileName, {
-    required List<int> data,
-  }) async {
-    final imageFile = SlideAsset.buildFile(fileName);
+    await for (final entity in assetsDir.list()) {
+      if (entity is File) {
+        final fileName = p.basename(entity.path);
+        if (!fileName.startsWith(SlideAsset.thumbnailPrefix)) {
+          continue;
+        }
 
-    await imageFile.writeAsBytes(data);
-    final asset = await SlideAsset.load(imageFile);
-    Pipeline.assetsLoaded.add(imageFile.path);
-
-    return asset;
-  }
-
-  Future<DeckData> run(String contents) async {
-    final slidesRaw = _splitSlides(contents.trim());
-
-    final config = await _loadProjectConfig();
-
-    final slides = <Slide>[];
-
-    for (final raw in slidesRaw) {
-      slides.add(await runEach(raw, config));
+        assets.add(entity);
+      }
     }
 
-    final data = (
-      slides: slides,
+    for (final asset in assets) {
+      final slide = slides.firstWhereOrNull((e) => asset.path.contains(e.hash));
+
+      if (slide == null) {
+        await asset.delete();
+      }
+    }
+  }
+
+  Future<void> onFinish(DeckReferenceDto data) async {
+    await cleanAssets(data.assets);
+    await cleanThumbnails(data.slides);
+  }
+
+  Future<void> onInit() async {
+    final assetDir = sdConfig.assetsImageDir;
+    if (!await assetDir.exists()) {
+      await assetDir.create(recursive: true);
+    }
+  }
+
+  Future<DeckReferenceDto> run(File markdownFile) async {
+    await onInit();
+    if (!await markdownFile.exists()) {
+      throw Exception('File not found');
+    }
+
+    final presentationRaw = await markdownFile.readAsString();
+
+    final parser = SlideParser(config);
+
+    final slides = parser.run(presentationRaw);
+    final results = <TaskDto>[];
+
+    for (var slide in slides) {
+      TaskDto result = (slide: slide, assets: assets, config: config);
+      for (var task in processors) {
+        result = await task.run(result);
+      }
+      results.add(result);
+    }
+
+    final slideResults = results.map((e) => e.slide).toList();
+    final assetResults = results.expand((e) => e.assets).toList();
+
+    final result = (
+      slides: slideResults,
+      assets: assetResults,
       config: config,
     );
+    await onFinish(result);
 
-    final result = await _runPostMarkdown(data);
-
-    await cleanAssets();
     return result;
   }
+}
 
-  Future<DeckData> _runPostMarkdown(DeckData data) async {
-    var updatedData = data;
+abstract class Task {
+  const Task();
 
-    for (final processor in postMarkdown) {
-      updatedData = await processor.run(updatedData);
-    }
+  FutureOr<TaskDto> run(
+    TaskDto data,
+  );
+}
 
-    return updatedData;
-  }
+class SlideParser {
+  final ProjectConfig config;
 
-  Future<Slide> runEach(String slideContents, ProjectConfig config) async {
-    ProcessData result = (content: slideContents, options: {}, config: config);
+  SlideParser(this.config);
 
-    for (final processor in markdown) {
-      result = await processor.run(result);
-    }
-
-    final (:content, :options, config: _) = result;
-
-    return _parseSlideFromMap({
-      ...options,
-      'layout': options['layout'] ?? 'simple',
-      'data': content,
-    });
-  }
-
-  Future<ProjectConfig> _loadProjectConfig() async {
-    final file = kConfig.projectConfigFile;
-
-    if (!await file.exists()) {
-      return const ProjectConfig.empty();
-    }
-
-    final configContents = await file.readAsString();
-    return ProjectConfig.fromYaml(configContents);
-  }
-
-  Future<Slide> _parseSlideFromMap(Map<String, dynamic> slideMap) async {
-    final layout = slideMap['layout'] as String?;
-
-    const config = 'config';
-    try {
-      switch (layout) {
-        case LayoutType.simple:
-        case null:
-          SimpleSlide.schema.validateOrThrow(config, slideMap);
-          return SimpleSlide.fromMap(slideMap);
-        case LayoutType.image:
-          ImageSlide.schema.validateOrThrow(config, slideMap);
-          return ImageSlide.fromMap(slideMap);
-        case LayoutType.widget:
-          WidgetSlide.schema.validateOrThrow(config, slideMap);
-          return WidgetSlide.fromMap(slideMap);
-        case LayoutType.twoColumn:
-          TwoColumnSlide.schema.validateOrThrow(config, slideMap);
-          return TwoColumnSlide.fromMap(slideMap);
-        case LayoutType.twoColumnHeader:
-          TwoColumnHeaderSlide.schema.validateOrThrow(config, slideMap);
-          return TwoColumnHeaderSlide.fromMap(slideMap);
-        default:
-          return InvalidSlide.invalidTemplate(layout);
-      }
-    } on SchemaValidationException catch (e) {
-      return InvalidSlide.schemaError(e.result);
-    } on Exception catch (e) {
-      return InvalidSlide.exception(e);
-    } catch (e) {
-      return InvalidSlide.message('# Unknown Error \n $e');
-    }
-  }
+  final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
 
   List<String> _splitSlides(String content) {
     final lines = content.split('\n');
@@ -220,328 +188,190 @@ class Pipeline {
 
     return slides;
   }
-}
 
-abstract class PostMarkdownProcessor {
-  const PostMarkdownProcessor();
+  List<Slide> run(String contents) {
+    final slidesRaw = _splitSlides(contents.trim());
 
-  FutureOr<DeckData> run(DeckData data);
-}
+    final slides = <Slide>[];
 
-class StoreLocalReferencesProcessor extends PostMarkdownProcessor {
-  const StoreLocalReferencesProcessor();
-
-  @override
-  Future<DeckData> run(DeckData data) async {
-    final (:slides, :config) = data;
-
-    await saveSlideJson(slides);
-    await saveConfig(config);
-    final assetsImageDir = kConfig.assetsImageDir;
-
-    final files = await assetsImageDir.list().where((e) => e is File).toList();
-
-    for (var file in files) {
-      final fileName = p.basename(file.path);
-
-      if (!fileName.startsWith('sd_slide_')) {
-        continue;
-      }
-
-      // filename example sd_asset_1_thumb.png
-      // get the number after sd_asset_ and before _thumb.png
-      final regex = RegExp(r'sd_slide_(\d+)_thumb.png');
-      final match = regex.firstMatch(fileName);
-      if (match != null) {
-        final slideIndex = int.parse(match.group(1)!);
-
-        if (slideIndex > slides.length) {
-          await file.delete();
-        }
-      }
-
-      // check for generated assets
-      // check if file starts witih sd_asset_
+    for (final slideRaw in slidesRaw) {
+      slides.add(_runEach(slideRaw));
     }
 
-    return data;
+    return slides;
   }
 
-  Future<void> saveConfig(Config config) async {
-    try {
-      final configJson = kConfig.references.config;
-      if (!await configJson.exists()) {
-        await configJson.create(recursive: true);
-      }
-
-      await configJson.writeAsString(prettyJson(config.toMap()));
-    } catch (e) {
-      log('Error while saving config: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> saveSlideJson(List<Slide> slides) async {
-    try {
-      final slidesJson = kConfig.references.slides;
-
-      final map = slides.map((e) => e.toMap()).toList();
-
-      if (!await slidesJson.exists()) {
-        await slidesJson.create(recursive: true);
-      }
-
-      // Write a json file with a list of slide
-      await slidesJson.writeAsString(prettyJson(map));
-    } catch (e) {
-      log('Error while saving slides json: $e');
-      rethrow;
-    }
-  }
-}
-
-abstract class MarkdownProcessor {
-  const MarkdownProcessor();
-
-  FutureOr<ProcessData> run(ProcessData data);
-}
-
-final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
-
-class FrontMatterProcessor extends MarkdownProcessor {
-  const FrontMatterProcessor();
-
-  @override
-  ProcessData run(ProcessData data) {
-    final frontMatter =
-        _frontMatterRegex.firstMatch(data.content)?.group(1) ?? '';
+  Slide _runEach(String slideRaw) {
+    final frontMatter = _frontMatterRegex.firstMatch(slideRaw)?.group(1) ?? '';
 
     final options = converYamlToMap(frontMatter);
 
-    final content = data.content
-        .substring(_frontMatterRegex.matchAsPrefix(data.content)?.end ?? 0)
+    final content = slideRaw
+        .substring(_frontMatterRegex.matchAsPrefix(slideRaw)?.end ?? 0)
         .trim();
 
     // Set default layout
     options['layout'] = options['layout'] ?? 'simple';
 
-    options['raw'] = frontMatter;
+    // Raw front matter
+    options['raw'] = slideRaw;
+
+    // Slide contents
+    options['data'] = content;
 
     final mergedOptions = deepMerge(
-      data.config.toSlideMap(),
+      config.toSlideMap(),
       options,
     );
 
-    return (
-      content: content,
-      options: mergedOptions,
-      config: data.config,
-    );
+    return _buildSlide(mergedOptions);
   }
 }
 
-class ImageMarkdownProcessor extends MarkdownProcessor {
-  const ImageMarkdownProcessor();
+class ImageCachingTask extends Task {
+  const ImageCachingTask();
 
   @override
-  Future<ProcessData> run(ProcessData data) async {
+  Future<TaskDto> run(data) async {
+    final slide = data.slide;
+    final assets = <CachedAsset>[];
+    var content = slide.data;
     // Do not cache remot edata if cacheRemoteAssets is false
-    if (!data.config.cacheRemoteAssets) {
-      return data;
-    }
+
     // Get any url of images that are in the markdown
     // Save it the local path on the device
     // and replace the url with the local path
     final imageRegex = RegExp(r'!\[.*?\]\((.*?)\)');
 
-    var content = data.content;
-    var options = {...data.options};
+    final matches = imageRegex.allMatches(content);
 
-    final matches = imageRegex.allMatches(data.content);
+    Future<void> saveAsset(String assetUri) async {
+      final cachedAsset = await AssetService.instance.loadCachedAsset(assetUri);
+
+      if (cachedAsset != null) {
+        assets.add(cachedAsset);
+        return;
+      }
+
+      assets.add(await AssetService.instance.saveCachedAsset(assetUri));
+    }
 
     for (final Match match in matches) {
-      final imageUrl = match.group(1);
-      if (imageUrl == null) continue;
+      final assetUri = match.group(1);
+      if (assetUri == null) continue;
 
-      final asset = await cacheRemoteAsset(imageUrl);
-
-      if (asset != null) {
-        final imageMarkdown = '![Image](${asset.relativePath})';
-        content = content.replaceFirst(match.group(0)!, imageMarkdown);
-      }
+      await saveAsset(assetUri);
     }
 
-    // Check also if image is on background: or src: in front matter
-    // and replace the url with the local path, frontmatter is now data.options Map<String, dynamic>
-    var background = options['background'];
+    final background = slide.background;
 
-    if (background != null && background is String) {
-      final asset = await cacheRemoteAsset(background);
-
-      if (asset != null) {
-        background = asset.relativePath;
-        options['background'] = background;
-      }
+    if (background != null) {
+      await saveAsset(background);
     }
 
-    var imageSource = options['options']?['src'];
-
-    if (imageSource != null && imageSource is String) {
-      final asset = await cacheRemoteAsset(imageSource);
-
-      if (asset != null) {
-        imageSource = asset.relativePath;
-        options['options']['src'] = imageSource;
-      }
+    if (slide is ImageSlide) {
+      final imageSource = slide.options.src;
+      await saveAsset(imageSource);
     }
 
-    return (
-      content: content,
-      options: options,
-      config: data.config,
-    );
-  }
-
-  Future<SlideAsset?> cacheRemoteAsset(String url) async {
-    if (!url.startsWith('http')) {
-      return null;
-    }
-
-    var ext = p.extension(url).replaceFirst('.', '');
-
-    // Check if url has extension and is an image
-    if (!SlideAsset.allowedExtensions.contains(ext)) {
-      return null;
-    }
-
-    final client = HttpClient();
-    final request = await client.getUrl(Uri.parse(url));
-    final response = await request.close();
-    final data = await consolidateHttpClientResponseBytes(response);
-
-    final contentType = response.headers.contentType;
-    // Default to .jpg if no extension is found
-    final extension = contentType?.subType ?? 'jpg';
-
-    final fileName = '${url.hashCode}.$extension';
-
-    return Pipeline.saveAsset(
-      fileName,
-      data: data,
-    );
+    return (slide: slide, assets: assets, config: data.config);
   }
 }
 
-typedef Replacement = ({int start, int end, String markdown});
-
-class MermaidProcessor extends MarkdownProcessor {
-  const MermaidProcessor();
+class MermaidConverterTask extends Task {
+  const MermaidConverterTask();
 
   @override
-  Future<ProcessData> run(ProcessData data) async {
-    final replacements = <Replacement>[];
+  FutureOr<TaskDto> run(data) async {
+    final slide = data.slide;
 
-    final matches = _mermaidBlockRegex.allMatches(data.content);
+    final matches = _mermaidBlockRegex.allMatches(slide.data);
 
     if (matches.isEmpty) return data;
+    final replacements =
+        <({int start, int end, String markdown, GeneratedAsset asset})>[];
 
     for (final Match match in matches) {
       final mermaidSyntax = match.group(1);
 
       if (mermaidSyntax == null) continue;
 
-      // Process the mermaid syntax to generate an image file
-      final asset = await generateAndSaveMermaidImage(mermaidSyntax);
+      final mermaidImageHash = mermaidSyntax.hashCode.toString();
+
+      var asset = await assetService.loadGeneratedAsset(mermaidImageHash);
+      // Check if image already exists
+
+      if (asset == null) {
+        // Process the mermaid syntax to generate an image file
+        final imageData = await mermaidService.generateImage(mermaidSyntax);
+
+        if (imageData != null) {
+          asset = await assetService.saveGeneratedAsset(
+            hash: mermaidImageHash,
+            data: imageData,
+          );
+        }
+      }
 
       if (asset == null) continue;
 
-      final markdown = '![Mermaid Diagram](${asset.relativePath})';
-
-      // Collect replacement information
       replacements.add((
         start: match.start,
         end: match.end,
-        markdown: markdown,
+        markdown: '![Mermaid Diagram](${asset.relativePath})',
+        asset: asset,
       ));
     }
 
-    var content = data.content;
+    var replacedData = slide.data;
+    final assets = <GeneratedAsset>[];
 
     // Apply replacements in reverse order
     for (var replacement in replacements.reversed) {
-      final (:start, :end, :markdown) = replacement;
+      final (:start, :end, :markdown, :asset) = replacement;
 
-      content = content.replaceRange(start, end, markdown);
+      replacedData = replacedData.replaceRange(start, end, markdown);
+      assets.add(asset);
     }
 
     return (
-      content: content,
-      options: data.options,
-      config: data.config,
+      slide: slide.copyWith(data: replacedData),
+      assets: assets,
+      config: data.config
     );
   }
+}
 
-  Future<SlideAsset?> generateAndSaveMermaidImage(String mermaidSyntax) async {
-    final fileName = '${mermaidSyntax.hashCode}.png';
+Slide _buildSlide(Map<String, dynamic> slide) {
+  final layout = slide['layout'] as String?;
 
-    final existingAsset = await Pipeline.getAsset(fileName);
-
-    if (existingAsset != null) {
-      return existingAsset;
+  const config = 'config';
+  try {
+    switch (layout) {
+      case LayoutType.simple:
+      case null:
+        SimpleSlide.schema.validateOrThrow(config, slide);
+        return SimpleSlide.fromMap(slide);
+      case LayoutType.image:
+        ImageSlide.schema.validateOrThrow(config, slide);
+        return ImageSlide.fromMap(slide);
+      case LayoutType.widget:
+        WidgetSlide.schema.validateOrThrow(config, slide);
+        return WidgetSlide.fromMap(slide);
+      case LayoutType.twoColumn:
+        TwoColumnSlide.schema.validateOrThrow(config, slide);
+        return TwoColumnSlide.fromMap(slide);
+      case LayoutType.twoColumnHeader:
+        TwoColumnHeaderSlide.schema.validateOrThrow(config, slide);
+        return TwoColumnHeaderSlide.fromMap(slide);
+      default:
+        return InvalidSlide.invalidTemplate(layout);
     }
-
-    const tempDirPath = '.tmp_superdeck';
-    final tempFilePath = p.join(tempDirPath, '$fileName.mmd');
-    final tempFile = File(tempFilePath);
-    final tempOutputPath = p.join(tempDirPath, fileName);
-
-    if (!await Directory(tempDirPath).exists()) {
-      await Directory(tempDirPath).create(recursive: true);
-    }
-
-    try {
-      mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
-
-      await tempFile.writeAsString(mermaidSyntax);
-
-      final imageSizeParams = '--scale 2'.split(' ');
-      final params =
-          '-t dark -b transparent -i $tempFilePath -o $tempOutputPath '
-              .split(' ');
-
-      // Check if can execute mmdc before executing command
-      final mmdcResult = await Process.run('mmdc', ['--version']);
-
-      if (mmdcResult.exitCode != 0) {
-        log(
-          '"mmdc" not found. You need mermaid cli installed to process mermaid syntax',
-        );
-
-        return null;
-      }
-
-      final result = await Process.run('mmdc', [...params, ...imageSizeParams]);
-
-      if (result.exitCode != 0) {
-        log('Error while processing mermaid syntax');
-        log(result.stderr);
-        return null;
-      }
-
-      final output = await File(tempOutputPath).readAsBytes();
-
-      return Pipeline.saveAsset(
-        fileName,
-        data: output,
-      );
-    } catch (e) {
-      log('Error while processing mermaid syntax: $e');
-      return null;
-    } finally {
-      final tempDir = Directory(tempDirPath);
-      if (await tempDir.exists()) {
-        await tempDir.delete(recursive: true);
-      }
-    }
+  } on SchemaValidationException catch (e) {
+    return InvalidSlide.schemaError(e.result);
+  } on Exception catch (e) {
+    return InvalidSlide.exception(e);
+  } catch (e) {
+    return InvalidSlide.message('# Unknown Error \n $e');
   }
 }
