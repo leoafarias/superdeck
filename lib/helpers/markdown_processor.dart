@@ -263,9 +263,6 @@ class ImageCachingTask extends Task {
       await saveAsset(assetUri);
     }
 
-    // Check also if image is on background: or src: in front matter
-    // and replace the url with the local path, frontmatter is now data.options Map<String, dynamic>
-
     final background = slide.background;
 
     if (background != null) {
@@ -301,36 +298,29 @@ class MermaidConverterTask extends Task {
 
       final mermaidImageHash = mermaidSyntax.hashCode.toString();
 
-      final cache = await assetService.loadGeneratedAsset(mermaidImageHash);
+      var asset = await assetService.loadGeneratedAsset(mermaidImageHash);
       // Check if image already exists
 
-      if (cache != null) {
-        replacements.add((
-          start: match.start,
-          end: match.end,
-          markdown: '![Mermaid Diagram](${cache.relativePath})',
-          asset: cache,
-        ));
-        continue;
+      if (asset == null) {
+        // Process the mermaid syntax to generate an image file
+        final imageData = await mermaidService.generateImage(mermaidSyntax);
+
+        if (imageData != null) {
+          asset = await assetService.saveGeneratedAsset(
+            hash: mermaidImageHash,
+            data: imageData,
+          );
+        }
       }
 
-      // Process the mermaid syntax to generate an image file
-      final imageData = await mermaidService.generateImage(mermaidSyntax);
+      if (asset == null) continue;
 
-      if (imageData != null) {
-        final asset = await assetService.saveGeneratedAsset(
-          hash: mermaidImageHash,
-          data: imageData,
-        );
-
-        // Collect replacement information
-        replacements.add((
-          start: match.start,
-          end: match.end,
-          markdown: '![Mermaid Diagram](${asset.relativePath})',
-          asset: asset,
-        ));
-      }
+      replacements.add((
+        start: match.start,
+        end: match.end,
+        markdown: '![Mermaid Diagram](${asset.relativePath})',
+        asset: asset,
+      ));
     }
 
     var replacedData = slide.data;
