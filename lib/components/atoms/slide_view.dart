@@ -6,7 +6,7 @@ import '../../helpers/layout_builder.dart';
 import '../../helpers/measure_size.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
-import 'image_widget.dart';
+import 'cache_image_widget.dart';
 import 'transition_widget.dart';
 
 class SlideView extends StatelessWidget {
@@ -26,15 +26,15 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = SuperDeckProvider.instance;
+    final controller = SuperDeckController.instance;
     final slide = this.slide;
     final variant = slide.styleVariant;
-    final style = provider.style.watch(context);
+    final style = controller.style.watch(context);
 
     final variantStyle = style.applyVariant(variant);
 
     final backgroundWidget = slide.background != null
-        ? CachedImage(
+        ? CacheImage(
             url: slide.background!,
             fit: BoxFit.cover,
             size: kResolution,
@@ -42,19 +42,21 @@ class SlideView extends StatelessWidget {
           )
         : const SizedBox();
 
+    final duration = _isSnapshot ? Duration.zero : null;
+
     return TransitionWidget(
-      key: ValueKey(slide.transition),
+      key: ValueKey(slide.transition?.copyWith(duration: duration)),
       transition: slide.transition,
       child: Pressable(
         onPress: () {},
         child: MixBuilder(
-          style: variantStyle.animate(),
+          style: variantStyle,
           builder: (mix) {
             final spec = SlideSpec.fromMix(mix);
             return Builder(builder: (context) {
               return AnimatedMixedBox(
                 spec: spec.outerContainer,
-                duration: Durations.medium1,
+                duration: duration ?? const Duration(milliseconds: 300),
                 child: Stack(
                   children: [
                     Positioned.fill(child: backgroundWidget),
@@ -64,7 +66,8 @@ class SlideView extends StatelessWidget {
                       child: SlideProvider(
                         slide: slide,
                         spec: spec,
-                        examples: provider.examples.watch(context),
+                        examples: controller.examples.watch(context),
+                        assets: controller.assets.watch(context),
                         isSnapshot: _isSnapshot,
                         child: SlideConstraints(
                           (_) {

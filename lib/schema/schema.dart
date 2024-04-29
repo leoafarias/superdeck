@@ -1,6 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
 import 'schema_values.dart';
+import 'validators.dart';
 
 part 'schema.mapper.dart';
 
@@ -136,9 +137,10 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   final bool additionalProperties;
   const SchemaMap(
     this.properties, {
-    super.isOptional = false,
+    super.optional = false,
     this.additionalProperties = false,
-  }) : super(validators: const []);
+    super.validators = const [],
+  });
 
   // optional constructor
   const SchemaMap.optional(
@@ -146,19 +148,21 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
     this.additionalProperties = false,
   }) : super(
           validators: const [],
-          isOptional: true,
+          optional: true,
         );
 
   @override
   SchemaMap copyWith({
-    bool? isOptional,
+    bool? optional,
     bool? additionalProperties,
     Map<String, SchemaValue>? properties,
+    List<Validator<Map<String, dynamic>>>? validators,
   }) {
     return SchemaMap(
       properties ?? this.properties,
       additionalProperties: additionalProperties ?? this.additionalProperties,
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
+      validators: validators ?? this.validators,
     );
   }
 
@@ -181,7 +185,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   SchemaMap merge(
     Map<String, SchemaValue> properties, {
     bool? additionalProperties,
-    bool? isOptional,
+    bool? optional,
   }) {
     // if property SchemaValue is of SchemaMap, we need to merge them
     final mergedProperties = {...this.properties};
@@ -201,7 +205,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
 
     return copyWith(
       properties: mergedProperties,
-      isOptional: isOptional,
+      optional: optional,
       additionalProperties: additionalProperties,
     );
   }
@@ -209,7 +213,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   @override
   SchemaValidationResult validate(List<String> path, Object? value) {
     if (value == null) {
-      return isOptional
+      return optional
           ? SchemaValidationResult.valid(path)
           : SchemaValidationResult.requiredPropMissing(path);
     }
@@ -227,7 +231,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
     final keys = parsedValue.keys.toSet();
 
     final required = properties.entries
-        .where((entry) => !entry.value.isOptional)
+        .where((entry) => !entry.value.optional)
         .map((entry) => entry.key);
 
     final requiredKeys = required.toSet();

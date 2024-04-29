@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,8 +29,6 @@ final _previewStyle = AnimatedStyle(
 // ignore: non_constant_identifier_names
 final PreviewBox = _previewStyle.box;
 
-bool _isGenerating = false;
-
 class SlideThumbnail extends StatefulWidget {
   final bool selected;
   final VoidCallback onTap;
@@ -50,91 +48,61 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final imageGenerator = ImageGenerationService(context);
-  final quality = SnapshotQuality.good;
+  late final imageGenerator = ImageGenerationService.instance;
+  late final _thumbnailFile = SlideAsset.thumbnail('${widget.slide.hash}.png');
+  bool _isDisposed = false;
+  late final imageLoader = futureSignal(() {
+    return kCanRunProcess ? _generateThumbnail() : _getLocalAsset();
+  });
 
-  late final asyncState = signal<AsyncState<Uint8List>>(AsyncState.loading());
-
-  @override
-  void initState() {
-    super.initState();
-    _getLocalAsset().then((value) => getThumbnail());
-  }
+  static final _generationQueue = <String>{};
+  static const _maxConcurrentGenerations = 3;
 
   @override
   void dispose() {
-    imageGenerator.dispose();
     super.dispose();
+    imageLoader.dispose();
+    _isDisposed = true;
   }
 
   @override
   void didUpdateWidget(SlideThumbnail oldWidget) {
     if (oldWidget.index != widget.index || oldWidget.slide != widget.slide) {
-      getThumbnail();
+      imageLoader.refresh();
     }
     super.didUpdateWidget(oldWidget);
   }
 
-  Future<void> getThumbnail() async {
-    if (kCanRunProcess) {
-      await _generateThumbnail();
-    } else {
-      await _getLocalAsset();
-    }
+  Future<Uint8List> _getLocalAsset() async {
+    return AssetService.instance.loadBytes(_thumbnailFile.path);
   }
 
-  Future<void> _getLocalAsset() async {
-    try {
-      asyncState.value = AsyncState.loading();
-      final asset = await assetService.loadThumbnailAsset(widget.slide.hash);
-
-      if (asset != null) {
-        final data = await assetService.loadBytes(asset.localPath);
-        asyncState.value = AsyncState.data(data);
-      }
-    } on Exception catch (e) {
-      asyncState.value = AsyncState.error(e);
+  Future<Uint8List> _generateThumbnail() async {
+    if (await _thumbnailFile.exists()) {
+      return _getLocalAsset();
     }
-  }
 
-  Future<void> _generateThumbnail() async {
-    final asset = await assetService.loadThumbnailAsset(widget.slide.hash);
-
-    if (asset != null) {
-      await _getLocalAsset();
-      return;
-    }
+    // while (_generationQueue.length > _maxConcurrentGenerations) {
+    //   await Future.delayed(const Duration(milliseconds: 100));
+    // }
     try {
-      while (_isGenerating) {
-        await Future.delayed(const Duration(milliseconds: 1));
-      }
+      // _generationQueue.add(widget.slide.hash);
 
-      if (!mounted) {
-        log('Context is unmounted');
-        return;
-      }
+      // if (_isDisposed) {
+      //   return Uint8List(0);
+      // }
 
-      Uint8List image;
-
-      _isGenerating = true;
-
-      image = await imageGenerator.generate(
-        quality: quality,
+      final imageData = await imageGenerator.generate(
+        // ignore: use_build_context_synchronously
+        quality: SnapshotQuality.low,
         slide: widget.slide,
       );
 
-      await assetService.saveThumbnailAsset(
-        hash: widget.slide.hash,
-        data: image,
-      );
+      await _thumbnailFile.writeAsBytes(imageData);
 
-      asyncState.value = AsyncState.data(image);
-    } on Exception catch (e) {
-      asyncState.value = AsyncState.error(e);
-      log('Error generating thumbnail: $e');
-      return;
+      return imageData;
     } finally {
-      _isGenerating = false;
+      // _generationQueue.remove(widget.slide.hash);
     }
   }
 
@@ -143,7 +111,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
     return LayoutBuilder(builder: (context, constraints) {
       final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
 
-      final result = asyncState.watch(context);
+      final result = imageLoader.watch(context);
 
       final child = result.map(
         data: (data) => Image.memory(

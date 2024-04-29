@@ -10,7 +10,7 @@ content:
 
 
 > Create your Flutter presentations faster and easier than ever.
-> You can quote me on that.
+> You can quote me on that
 > ### Leo Farias
 
 ---
@@ -30,7 +30,7 @@ options:
   flex: 1
 ---
 
-# Image Layout
+## Image Layout
 
 Create beautiful slides with images that fit your content.
 

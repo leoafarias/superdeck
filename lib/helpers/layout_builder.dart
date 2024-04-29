@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../components/atoms/image_widget.dart';
+import '../components/atoms/cache_image_widget.dart';
 import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
 import '../providers/slide_provider.dart';

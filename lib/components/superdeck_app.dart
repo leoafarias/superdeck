@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,9 @@ import '../helpers/constants.dart';
 import '../helpers/theme.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
-import '../services/assets_service.dart';
 import 'molecules/exception_widget.dart';
+
+final kAppKey = GlobalKey();
 
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
@@ -40,7 +40,6 @@ class SuperDeckApp extends StatefulWidget {
     await Future.wait([
       initLocalStorage(),
       SyntaxHighlight.initialize(),
-      AssetService.initialize(),
       _initializeWindowManager(),
     ]);
 
@@ -53,15 +52,21 @@ class SuperDeckApp extends StatefulWidget {
 }
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
-  final _provider = SuperDeckProvider.instance;
-  late final _initializing = futureSignal(_initializeDependencies);
+  final _controller = SuperDeckController.instance;
+  late final _isReady = createSignal(context, false);
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDependencies();
+  }
 
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
         widget.examples != oldWidget.examples) {
-      _provider.update(
+      _controller.update(
         style: widget.style,
         examples: widget.examples,
       );
@@ -71,19 +76,20 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   @override
   void dispose() {
     super.dispose();
-    _initializing.dispose();
   }
 
   Future<void> _initializeDependencies() async {
     await SuperDeckApp.initialize();
-    await _provider.initialize(
+    await _controller.initialize(
       style: widget.style,
       examples: widget.examples,
     );
+
+    _isReady.value = true;
   }
 
   void onRetry() {
-    _provider.initialize(
+    _controller.initialize(
       style: widget.style,
       examples: widget.examples,
     );
@@ -99,31 +105,40 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       );
     }
 
-    return MixTheme(
-      data: MixThemeData.withMaterial(),
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        title: 'Superdeck',
-        theme: theme,
-        routerConfig: _router,
-        builder: (context, child) {
-          final initializing = _initializing.watch(context);
+    return MediaQuery(
+      data: const MediaQueryData(
+        size: kResolution,
+      ),
+      child: Theme(
+        data: theme,
+        child: Builder(builder: (context) {
+          return MixTheme(
+            data: MixThemeData.withMaterial(),
+            child: MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              title: 'Superdeck',
+              routerConfig: _router,
+              theme: Theme.of(context),
+              key: kAppKey,
+              builder: (context, child) {
+                final isLoading = _controller.loading.watch(context) ||
+                    !_isReady.watch(context);
+                if (isLoading) {
+                  return renderLoading();
+                }
 
-          return initializing.map(
-            data: (data) => child!,
-            loading: () => Scaffold(
-              body: renderLoading(),
+                if (_controller.error.watch(context) != null) {
+                  return ExceptionWidget(
+                    _controller.error.watch(context)!,
+                    onRetry: onRetry,
+                  );
+                }
+
+                return child!;
+              },
             ),
-            error: (error) {
-              log(error.toString());
-
-              return ExceptionWidget(
-                error,
-                onRetry: onRetry,
-              );
-            },
           );
-        },
+        }),
       ),
     );
   }

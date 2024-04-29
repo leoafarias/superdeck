@@ -5,16 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
 
+import '../builder/slides_loader.dart';
 import '../helpers/constants.dart';
-import '../helpers/loader.dart';
+import '../helpers/extensions.dart';
 import '../superdeck.dart';
 
-class SuperDeckProvider {
-  SuperDeckProvider._();
+class SuperDeckController {
+  SuperDeckController._();
 
-  static final instance = SuperDeckProvider._();
+  static final instance = SuperDeckController._();
 
-  final _data = futureSignal(() => SlidesLoader.instance.loadFromStorage());
+  final _data = futureSignal(SlidesLoader.instance.loadFromStorage);
 
   final style = signal(const Style.empty(), debugLabel: 'Style');
 
@@ -22,8 +23,6 @@ class SuperDeckProvider {
 
   late final slides = computed(() => _data.value.value?.slides ?? []);
   late final assets = computed(() => _data.value.value?.assets ?? []);
-  late final config =
-      computed(() => _data.value.value?.config ?? const ProjectConfig.empty());
 
   final examples = mapSignal<String, Example>({});
 
@@ -34,17 +33,13 @@ class SuperDeckProvider {
     },
   );
 
-  Map<String, Example> _examplesToMap(List<Example> examples) {
-    return {for (var e in examples) e.name: e};
-  }
-
   void update({
     List<Example> examples = const [],
     Style? style,
   }) {
     batch(() {
       this.style.value = defaultStyle.merge(style);
-      this.examples.assign(_examplesToMap(examples));
+      this.examples.assign({for (var e in examples) e.name: e});
     });
   }
 
@@ -53,18 +48,24 @@ class SuperDeckProvider {
     Style? style,
   }) async {
     // Unsubscribe to listeners in case its a retry
-    await _data.future;
     update(examples: examples, style: style);
 
     if (kCanRunProcess) {
-      SlidesLoader.instance.listen(
-        onChange: () => _data.refresh(),
-      );
+      SlidesLoader.instance.listen(_data.refresh);
     }
+  }
+
+  Future<void> clearGenerated() async {
+    await kProjectRefs.generatedAssetsDir.delete(recursive: true);
+    await kProjectRefs.generatedAssetsDir.ensureExists();
+    await _data.reload();
   }
 
   void dispose() {
     style.dispose();
+    error.dispose();
+    assets.dispose();
+    slides.dispose();
     _data.dispose();
     examples.dispose();
   }

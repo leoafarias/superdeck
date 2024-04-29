@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/utils.dart';
-import '../../models/slide_model.dart';
-import '../../providers/deck_provider.dart';
 import '../../superdeck.dart';
 import 'drawer.dart';
 
@@ -57,9 +55,13 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
   final navigation = NavigationProvider.instance;
 
-  final superdeck = SuperDeckProvider.instance;
+  final superdeck = SuperDeckController.instance;
 
   void _onTap(BuildContext context, int index) {
+    if (index == SideMenu.clearCache.index) {
+      superdeck.clearGenerated();
+      return;
+    }
     // When navigating to a new branch, it's recommended to use the goBranch
     // method, as doing so makes sure the last navigation state of the
     // Navigator for the branch is restored.

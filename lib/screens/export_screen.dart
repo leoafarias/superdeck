@@ -135,7 +135,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
   final _pageController = PageController();
   late List<Slide> _slides;
   late final _images = listSignal<Uint8List>([]);
-  late final superdeck = SuperDeckProvider.instance;
+  late final superdeck = SuperDeckController.instance;
 
   @override
   void initState() {
@@ -154,7 +154,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   Future<void> startConversion() async {
     try {
-      final generator = ImageGenerationService(context);
+      final generator = ImageGenerationService.instance;
       _status.value = ExportProcessStatus.converting;
 
       List<Future<Uint8List>> futures = [];
@@ -165,7 +165,6 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
           slide: slide,
         );
         _images.add(convertedImage);
-        await Future.delayed(Durations.short1);
 
         return convertedImage;
       }

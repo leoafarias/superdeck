@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:mix/mix.dart';
 
 import '../superdeck.dart';
 
@@ -9,9 +8,9 @@ class SlideVariant extends Variant {
 }
 
 TextStyle get baseTextStyle =>
-    const TextStyle().copyWith(fontSize: 22, height: 1.6);
-TextStyle get monoTextStyle => const TextStyle().copyWith(fontSize: 16);
-TextStyle get serifTextStyle => const TextStyle().copyWith(fontSize: 50);
+    const TextStyle().copyWith(fontSize: 22, height: 1.4, color: Colors.white);
+TextStyle get monoTextStyle => baseTextStyle.copyWith(fontSize: 16);
+TextStyle get serifTextStyle => baseTextStyle.copyWith(fontSize: 50);
 
 TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
 

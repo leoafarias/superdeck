@@ -7,7 +7,7 @@ import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
-import 'image_widget.dart';
+import 'cache_image_widget.dart';
 
 class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
   final String content;
@@ -104,7 +104,7 @@ Widget _imageBuilder(
       final constraints = calculateConstraints(size, spec.contentContainer);
       return ConstrainedBox(
         constraints: constraints,
-        child: CachedImage(
+        child: CacheImage(
           url: uri.toString(),
           size: constraints.biggest,
           spec: imageSpec.copyWith(

@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
-import '../models/slide_model.dart';
+import '../superdeck.dart';
 
 enum SnapshotQuality {
   low('Low', pixelRatio: 0.4),
@@ -24,27 +24,28 @@ enum SnapshotQuality {
 
 //
 class ImageGenerationService {
-  bool _isDisposed = false;
-  ImageGenerationService(this.context);
+  ImageGenerationService._();
 
-  final BuildContext context;
+  static final ImageGenerationService instance = ImageGenerationService._();
 
-  void dispose() => _isDisposed = true;
-
-  void checkDisposed() {
-    if (_isDisposed) {
-      throw Exception('ImageGenerationService is disposed');
-    }
-  }
+  static final _generationQueue = <String>{};
+  static const _maxConcurrentGenerations = 3;
 
   Future<Uint8List> generate({
     required SnapshotQuality quality,
     required Slide slide,
   }) async {
+    final queueKey = slide.hash + quality.name;
     try {
+      while (_generationQueue.length > _maxConcurrentGenerations) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
+      _generationQueue.add(queueKey);
+
       final image = await _fromWidgetToImage(
         SlideView.snapshot(slide),
-        context: context,
+        context: kAppKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
       );
@@ -53,6 +54,8 @@ class ImageGenerationService {
     } catch (e, stackTrace) {
       log('Error generating image: $e', stackTrace: stackTrace);
       rethrow;
+    } finally {
+      _generationQueue.remove(queueKey);
     }
   }
 

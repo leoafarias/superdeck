@@ -8,14 +8,14 @@ import 'package:signals/signals_flutter.dart';
 import '../../helpers/constants.dart';
 import '../../superdeck.dart';
 
-class CachedImage extends StatelessWidget {
+class CacheImage extends StatelessWidget {
   final String url;
   final BoxFit? fit;
   final ImageSpec spec;
   final Alignment? alignment;
   final Size size;
 
-  const CachedImage({
+  const CacheImage({
     required this.url,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
@@ -26,21 +26,35 @@ class CachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assets = SuperDeckProvider.instance.assets.watch(context);
+    final assets = SuperDeckController.instance.assets.watch(context);
 
-    final asset =
-        assets.firstWhereOrNull((a) => a.hash == url.hashCode.toString());
+    SlideAsset? asset;
+    var url = this.url;
+
+    if (SlideAsset.isFileAsset(File(url))) {
+      asset = assets.firstWhereOrNull((e) => e.file.path == url);
+    } else {
+      asset = assets
+          .firstWhereOrNull((e) => e.file.path.contains('${url.hashCode}'));
+    }
+
+    if (asset != null) {
+      url = asset.file.path;
+    }
 
     final (:width, :height) = _calculateImageSize(size, asset);
 
     final imageProvider =
         ResizeImage.resizeIfNeeded(width, height, getImageProvider(url, size));
 
-    return AnimatedMixedImage(
-      image: imageProvider,
-      spec: spec.copyWith(
-        fit: fit,
-        alignment: alignment,
+    return RepaintBoundary(
+      key: ValueKey(url),
+      child: AnimatedMixedImage(
+        image: imageProvider,
+        spec: spec.copyWith(
+          fit: fit,
+          alignment: alignment,
+        ),
       ),
     );
   }
@@ -51,14 +65,12 @@ class CachedImage extends StatelessWidget {
   int? cacheHeight;
   //  check if height or asset is larger
   if (asset != null) {
-    final portrait = asset.height > asset.width;
-
     // cache the smallest dimension of the image
     // So set the other dimension to null
-    if (portrait) {
-      cacheHeight = min(size.height, asset.height).toInt();
+    if (asset.isPortrait) {
+      cacheHeight = min(size.height, asset.dimensions.height).toInt();
     } else {
-      cacheWidth = min(size.width, asset.width).toInt();
+      cacheWidth = min(size.width, asset.dimensions.width).toInt();
     }
   } else {
     // If no asset is available, set both cacheWidth and cacheHeight

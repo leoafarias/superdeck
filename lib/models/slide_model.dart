@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import '../helpers/config.dart';
 import '../helpers/section_tag.dart';
 import '../schema/schema.dart';
 import '../superdeck.dart';
@@ -28,6 +29,39 @@ abstract class Slide extends Config with SlideMappable {
     required super.transition,
   }) : hash = raw.hashCode.toString();
 
+  static Slide parse(Map<String, dynamic> map) {
+    final layout = map['layout'] ??= LayoutType.simple;
+
+    try {
+      switch (layout) {
+        case LayoutType.simple:
+        case null:
+          SimpleSlide.schema.validateOrThrow(map);
+          return SimpleSlide.fromMap(map);
+        case LayoutType.image:
+          ImageSlide.schema.validateOrThrow(map);
+          return ImageSlide.fromMap(map);
+        case LayoutType.widget:
+          WidgetSlide.schema.validateOrThrow(map);
+          return WidgetSlide.fromMap(map);
+        case LayoutType.twoColumn:
+          TwoColumnSlide.schema.validateOrThrow(map);
+          return TwoColumnSlide.fromMap(map);
+        case LayoutType.twoColumnHeader:
+          TwoColumnHeaderSlide.schema.validateOrThrow(map);
+          return TwoColumnHeaderSlide.fromMap(map);
+        default:
+          return InvalidSlide.invalidTemplate(layout);
+      }
+    } on SchemaValidationException catch (e) {
+      return InvalidSlide.schemaError(e.result);
+    } on Exception catch (e) {
+      return InvalidSlide.exception(e);
+    } catch (e) {
+      return InvalidSlide.message('# Unknown Error \n $e');
+    }
+  }
+
   SlideVariant? get styleVariant {
     return style == null ? null : SlideVariant(style!);
   }
@@ -38,11 +72,11 @@ abstract class Slide extends Config with SlideMappable {
 
   static final schema = Config.schema.merge(
     {
-      "layout": Schema.string.required(),
-      "data": Schema.string.required(),
-      "content": ContentOptions.schema.optional(),
-      "title": Schema.string.optional(),
-      "raw": Schema.string.optional(),
+      "layout": Schema.string.isRequired(),
+      "data": Schema.string.isRequired(),
+      "content": ContentOptions.schema.isOptional(),
+      "title": Schema.string.isOptional(),
+      "raw": Schema.string.isOptional(),
     },
   );
 }
@@ -103,7 +137,7 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
 
   static final schema = Slide.schema.merge(
     {
-      'options': ImageOptions.schema.required(),
+      'options': ImageOptions.schema.isRequired(),
     },
   );
 }
@@ -127,7 +161,7 @@ class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
 
   static final schema = Slide.schema.merge(
     {
-      'options': WidgetOptions.schema.required(),
+      'options': WidgetOptions.schema.isRequired(),
     },
   );
 }
@@ -197,8 +231,8 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
 
   static final schema = Slide.schema.merge({
     'sections': SchemaMap.optional({
-      'left': ContentOptions.schema.optional(),
-      'right': ContentOptions.schema.optional(),
+      'left': ContentOptions.schema.isOptional(),
+      'right': ContentOptions.schema.isOptional(),
     }),
   });
 }
@@ -230,7 +264,7 @@ class TwoColumnHeaderSlide extends SectionsSlide
   static final schema = TwoColumnSlide.schema.merge(
     {
       'sections': SchemaMap.optional({
-        'header': ContentOptions.schema.optional(),
+        'header': ContentOptions.schema.isOptional(),
       }),
     },
   );
