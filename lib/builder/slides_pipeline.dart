@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
-import 'package:path/path.dart' as p;
 
-import '../helpers/constants.dart';
 import '../services/mermaid_service.dart';
+import '../services/project_service.dart';
 import '../superdeck.dart';
 
 final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
@@ -44,13 +45,6 @@ class TaskController {
       slide: slide ?? this.slide,
       assets: assets ?? _assets,
     )..neededAssets = neededAssets;
-  }
-
-  String getAssetRelativePath(File file) {
-    return p.relative(
-      file.path,
-      from: kProjectRefs.assetsDir.path,
-    );
   }
 
   void markNeeded(File asset) {
@@ -105,7 +99,7 @@ class SlideThumbnailTask extends Task {
 
   @override
   FutureOr<TaskController> run(controller) async {
-    final file = SlideAsset.thumbnail('${controller.slide.hash}.png');
+    final file = SlideAsset.thumbnail(controller.slide);
 
     if (await file.exists()) {
       controller.markNeeded(file);
@@ -131,8 +125,8 @@ class MermaidConverterTask extends Task {
       final mermaidSyntax = match.group(1);
 
       if (mermaidSyntax == null) continue;
-      final fileName = '${mermaidSyntax.hashCode}.png';
-      final mermaidFile = SlideAsset.mermaid(fileName);
+
+      final mermaidFile = SlideAsset.mermaid(mermaidSyntax);
 
       if (!await mermaidFile.exists()) {
         // Process the mermaid syntax to generate an image file
@@ -191,37 +185,48 @@ class ImageCachingTask extends Task {
 
     final matches = imageRegex.allMatches(content);
 
-    Future<void> saveAsset(String assetUri) async {
-      if (SlideAsset.isFileAsset(File(assetUri))) return;
+    Future<void> saveAsset(String url) async {
+      if (ProjectService.instance.isAssetFile(File(url))) return;
       // Look by hashcode to see if the asset is already cached
 
-      final cachedFile = controller._assets
-          .firstWhereOrNull((a) => a.path.contains('${assetUri.hashCode}'));
+      final file = SlideAsset.cached(url);
 
-      if (cachedFile != null) {
-        controller.markNeeded(cachedFile);
+      if (await file.exists()) {
+        controller.markNeeded(file);
         return;
       }
 
-      Uint8List assetData;
-      String extension;
-      if (!assetUri.startsWith('http')) {
-        final file = File(assetUri);
+      final client = HttpClient();
+      final request = await client.getUrl(Uri.parse(url));
+      final response = await request.close();
 
-        assetData = await file.readAsBytes();
-        extension = file.path.split('.').last;
-      } else {
-        final client = HttpClient();
-        final request = await client.getUrl(Uri.parse(assetUri));
-        final response = await request.close();
+      final contentType = response.headers.contentType;
+      // Default to .jpg if no extension is found
+      var assetData = await consolidateHttpClientResponseBytes(response);
+      final extension = contentType?.subType ?? 'jpg';
 
-        final contentType = response.headers.contentType;
-        // Default to .jpg if no extension is found
-        assetData = await consolidateHttpClientResponseBytes(response);
-        extension = contentType?.subType ?? 'jpg';
+      final fileType = AssetFileType.tryParse(extension);
+
+      if (fileType == null) {
+        log('Invalid file type: $extension');
+        return;
       }
 
-      final file = SlideAsset.cached('${assetUri.hashCode}.$extension');
+      final codec = await ui.instantiateImageCodec(assetData);
+
+      if (codec.frameCount > 1) {
+        // get half of the frame count
+        final frameCount = codec.frameCount ~/ 2;
+
+        for (var i = 0; i < frameCount; i++) {
+          await codec.getNextFrame();
+        }
+        final frame = await codec.getNextFrame();
+
+        final bytes =
+            await frame.image.toByteData(format: ui.ImageByteFormat.png);
+        assetData = bytes!.buffer.asUint8List();
+      }
 
       await file.writeAsBytes(assetData);
 

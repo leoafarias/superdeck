@@ -7,7 +7,7 @@ import 'package:signals/signals_flutter.dart';
 
 import '../builder/slides_loader.dart';
 import '../helpers/constants.dart';
-import '../helpers/extensions.dart';
+import '../services/project_service.dart';
 import '../superdeck.dart';
 
 class SuperDeckController {
@@ -15,7 +15,7 @@ class SuperDeckController {
 
   static final instance = SuperDeckController._();
 
-  final _data = futureSignal(SlidesLoader.instance.loadFromStorage);
+  final _data = futureSignal(SlidesLoader.instance.loadDeck);
 
   final style = signal(const Style.empty(), debugLabel: 'Style');
 
@@ -32,6 +32,12 @@ class SuperDeckController {
       return data is AsyncError ? data.error : null;
     },
   );
+
+  late final asset = signalContainer((String key) {
+    final asset =
+        assets.value.firstWhereOrNull((e) => e.file.path.contains(key));
+    return signal(asset);
+  }, cache: true);
 
   void update({
     List<Example> examples = const [],
@@ -56,9 +62,8 @@ class SuperDeckController {
   }
 
   Future<void> clearGenerated() async {
-    await kProjectRefs.generatedAssetsDir.delete(recursive: true);
-    await kProjectRefs.generatedAssetsDir.ensureExists();
-    await _data.reload();
+    await ProjectService.instance.clearGeneratedDir();
+    _data.reload();
   }
 
   void dispose() {

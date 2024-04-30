@@ -173,7 +173,14 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
       alignment: spec.image.alignment,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: getImageProvider(src, Size(width, height)),
+          image: getImageProvider(
+            context: context,
+            url: src,
+            targetSize: Size(
+              width,
+              height,
+            ),
+          ),
           centerSlice: spec.image.centerSlice,
           repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
           filterQuality: spec.image.filterQuality ?? FilterQuality.low,

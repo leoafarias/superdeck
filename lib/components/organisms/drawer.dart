@@ -12,4 +12,13 @@ enum SideMenu {
 
   final IconData icon;
   final String label;
+
+  static List<SideMenu> devMenu = [
+    ...values,
+  ];
+
+  static List<SideMenu> prodMenu = [
+    preview,
+    export,
+  ];
 }

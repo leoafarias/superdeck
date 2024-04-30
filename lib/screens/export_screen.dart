@@ -13,7 +13,7 @@ import '../../helpers/constants.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
 import '../components/molecules/scaled_app.dart';
-import '../services/image_generation_service.dart';
+import '../services/snapshot_service.dart';
 import '../superdeck.dart';
 
 enum ExportProcessStatus {
@@ -154,7 +154,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   Future<void> startConversion() async {
     try {
-      final generator = ImageGenerationService.instance;
+      final generator = SnapshotService.instance;
       _status.value = ExportProcessStatus.converting;
 
       List<Future<Uint8List>> futures = [];

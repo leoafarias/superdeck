@@ -2,6 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 import '../helpers/config.dart';
 import '../helpers/section_tag.dart';
+import '../helpers/utils.dart';
 import '../schema/schema.dart';
 import '../superdeck.dart';
 
@@ -12,8 +13,8 @@ abstract class Slide extends Config with SlideMappable {
   final String? title;
   final String layout;
   final String data;
-  final String? raw;
-  final String hash;
+  final String raw;
+  final String hashKey;
 
   @MappableField(key: 'content')
   final ContentOptions? contentOptions;
@@ -27,7 +28,7 @@ abstract class Slide extends Config with SlideMappable {
     required super.background,
     required super.style,
     required super.transition,
-  }) : hash = raw.hashCode.toString();
+  }) : hashKey = shortHashId(raw);
 
   static Slide parse(Map<String, dynamic> map) {
     final layout = map['layout'] ??= LayoutType.simple;
@@ -89,7 +90,7 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
     required super.contentOptions,
     super.style,
     super.transition,
-    super.raw,
+    required super.raw,
     required super.data,
   }) : super(layout: LayoutType.simple);
 
@@ -128,7 +129,7 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
     super.transition,
     required super.data,
     required super.options,
-    super.raw,
+    required super.raw,
   }) : super(layout: LayoutType.image);
 
   static const fromMap = ImageSlideMapper.fromMap;
@@ -152,7 +153,7 @@ class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
     required super.contentOptions,
     super.transition,
     required super.data,
-    super.raw,
+    required super.raw,
   }) : super(layout: LayoutType.widget);
 
   static const fromMap = WidgetSlideMapper.fromMap;
@@ -218,7 +219,7 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
     super.transition,
     required super.data,
     super.sections,
-    super.raw,
+    required super.raw,
   }) : super(layout: LayoutType.twoColumn);
 
   SectionData get left => getSection(SectionTag.left, SectionTag.first);
@@ -248,7 +249,7 @@ class TwoColumnHeaderSlide extends SectionsSlide
     super.transition,
     required super.data,
     super.sections,
-    super.raw,
+    required super.raw,
   }) : super(layout: LayoutType.twoColumnHeader);
 
   SectionData get header => getSection(SectionTag.header, SectionTag.first);
@@ -279,7 +280,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
     super.style,
     super.transition,
     required super.data,
-    super.raw,
+    required super.raw,
   }) : super(layout: LayoutType.invalid);
 
   InvalidSlide.message(String message)
@@ -290,7 +291,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
           background: null,
           contentOptions: null,
           style: null,
-          raw: null,
+          raw: message,
           transition: null,
         );
 

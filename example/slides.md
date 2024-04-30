@@ -8,7 +8,6 @@ content:
   alignment: bottom_right
 ---
 
-
 > Create your Flutter presentations faster and easier than ever.
 > You can quote me on that
 > ### Leo Farias
@@ -18,7 +17,7 @@ background: https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24
 style: cover
 ---
 
-# Complex layouts
+# Complex layout
 
 ---
 layout: image

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
+import '../helpers/utils.dart';
 import '../superdeck.dart';
 
 enum SnapshotQuality {
@@ -23,10 +24,10 @@ enum SnapshotQuality {
 }
 
 //
-class ImageGenerationService {
-  ImageGenerationService._();
+class SnapshotService {
+  SnapshotService._();
 
-  static final ImageGenerationService instance = ImageGenerationService._();
+  static final SnapshotService instance = SnapshotService._();
 
   static final _generationQueue = <String>{};
   static const _maxConcurrentGenerations = 3;
@@ -35,7 +36,7 @@ class ImageGenerationService {
     required SnapshotQuality quality,
     required Slide slide,
   }) async {
-    final queueKey = slide.hash + quality.name;
+    final queueKey = shortHashId(slide.raw + quality.name);
     try {
       while (_generationQueue.length > _maxConcurrentGenerations) {
         await Future.delayed(const Duration(milliseconds: 100));
@@ -57,6 +58,16 @@ class ImageGenerationService {
     } finally {
       _generationQueue.remove(queueKey);
     }
+  }
+
+  Future<Uint8List> generateWithKey({
+    required GlobalKey key,
+    required SnapshotQuality quality,
+  }) async {
+    final boundary =
+        key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: quality.pixelRatio);
+    return _imageToUint8List(image);
   }
 
   Future<Uint8List> _imageToUint8List(ui.Image image) async {

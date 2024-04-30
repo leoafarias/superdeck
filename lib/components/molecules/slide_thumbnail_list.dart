@@ -89,6 +89,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
             SuperDeckController.instance.style.watch(context);
 
             return SlideThumbnail(
+              key: ValueKey(slide.hashKey),
               index: idx,
               selected: idx == widget.currentSlide,
               onTap: () => goToPage(idx),

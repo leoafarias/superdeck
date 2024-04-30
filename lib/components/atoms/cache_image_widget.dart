@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
+import '../../helpers/utils.dart';
+import '../../services/project_service.dart';
 import '../../superdeck.dart';
 
 class CacheImage extends StatelessWidget {
@@ -26,41 +28,21 @@ class CacheImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assets = SuperDeckController.instance.assets.watch(context);
-
-    SlideAsset? asset;
-    var url = this.url;
-
-    if (SlideAsset.isFileAsset(File(url))) {
-      asset = assets.firstWhereOrNull((e) => e.file.path == url);
-    } else {
-      asset = assets
-          .firstWhereOrNull((e) => e.file.path.contains('${url.hashCode}'));
-    }
-
-    if (asset != null) {
-      url = asset.file.path;
-    }
-
-    final (:width, :height) = _calculateImageSize(size, asset);
-
-    final imageProvider =
-        ResizeImage.resizeIfNeeded(width, height, getImageProvider(url, size));
-
-    return RepaintBoundary(
-      key: ValueKey(url),
-      child: AnimatedMixedImage(
-        image: imageProvider,
-        spec: spec.copyWith(
-          fit: fit,
-          alignment: alignment,
-        ),
+    return AnimatedMixedImage(
+      image: getImageProvider(
+        context: context,
+        url: url,
+        targetSize: size,
+      ),
+      spec: spec.copyWith(
+        fit: fit,
+        alignment: alignment,
       ),
     );
   }
 }
 
-({int? width, int? height}) _calculateImageSize(Size size, SlideAsset? asset) {
+({int? width, int? height}) calculateImageSize(Size size, SlideAsset? asset) {
   int? cacheWidth;
   int? cacheHeight;
   //  check if height or asset is larger
@@ -87,8 +69,25 @@ class CacheImage extends StatelessWidget {
   return (width: cacheWidth, height: cacheHeight);
 }
 
-ImageProvider getImageProvider(String url, Size canvasSize) {
+ImageProvider getImageProvider({
+  required BuildContext context,
+  required String url,
+  required Size targetSize,
+}) {
+  final controller = SuperDeckController.instance;
   ImageProvider provider;
+
+  SlideAsset? asset;
+
+  final firstOrNull = controller.assets.watch(context).firstWhereOrNull;
+
+  if (ProjectService.instance.isAssetFile(File(url))) {
+    asset = firstOrNull((e) => e.file.path == url);
+  } else {
+    asset = firstOrNull((e) => e.file.path.contains(shortHashId(url)));
+  }
+
+  url = asset?.file.path ?? url;
 
   //  check if its a local path or a network path
   if (url.startsWith('http')) {
@@ -102,5 +101,11 @@ ImageProvider getImageProvider(String url, Size canvasSize) {
     }
   }
 
-  return provider;
+  final (:width, :height) = calculateImageSize(targetSize, asset);
+
+  return ResizeImage.resizeIfNeeded(
+    width,
+    height,
+    provider,
+  );
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals/signals_flutter.dart';
 
+import '../../helpers/constants.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
 import 'drawer.dart';
@@ -112,6 +113,8 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
       _onTap(context, index);
     }
 
+    final menuItems = kCanRunProcess ? SideMenu.devMenu : SideMenu.prodMenu;
+
     final navigationRail = NavigationRail(
       extended: false,
       selectedIndex: widget.navigationShell.currentIndex,
@@ -119,7 +122,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
       minWidth: 80,
       leading: const SizedBox(height: 20),
       labelType: NavigationRailLabelType.none,
-      destinations: SideMenu.values.map(
+      destinations: menuItems.map(
         (e) {
           return NavigationRailDestination(
             icon: Icon(e.icon, size: 20),
@@ -128,36 +131,6 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
         },
       ).toList(),
     );
-
-    //  if screen small return a bottom bar navigation simila to the navigationRail
-    // final smallNavigation = BottomNavigationBar(
-    //   currentIndex: widget.navigationShell.currentIndex,
-    //   showUnselectedLabels: false,
-    //   showSelectedLabels: false,
-    //   onTap: onTap,
-    //   items: SideMenu.values.map(
-    //     (e) {
-    //       return BottomNavigationBarItem(
-    //         icon: Icon(e.icon),
-    //         label: e.label,
-    //       );
-    //     },
-    //   ).toList(),
-    // );
-
-    // Add bottom bar later
-    // final bottomNavBar = isSmall
-    //     ? AnimatedBuilder(
-    //         animation: _animation,
-    //         builder: (context, child) {
-    //           return SizeTransition(
-    //             sizeFactor: _animation,
-    //             axis: Axis.vertical,
-    //             child: smallNavigation,
-    //           );
-    //         },
-    //       )
-    //     : null;
 
     final sideNavBar = !isSmall
         ? AnimatedBuilder(
