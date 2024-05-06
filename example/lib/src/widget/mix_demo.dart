@@ -112,10 +112,11 @@ class MixExample extends ExampleWidget<ExampleOptions> {
       return Center(
         child: PressableBox(
           onPress: () {},
-          style: _style.animate().mix(
-                $box.height(args.height),
-                $box.width(args.width),
-              ),
+          style: Style(
+            _style(),
+            $box.height(args.height),
+            $box.width(args.width),
+          ).animate(),
           child: StyledText(args.text ?? 'Mix'),
         ),
       );
