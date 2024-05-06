@@ -7,13 +7,16 @@ import 'package:signals/signals_flutter.dart';
 
 import '../builder/slides_loader.dart';
 import '../helpers/constants.dart';
+import '../helpers/utils.dart';
 import '../services/project_service.dart';
 import '../superdeck.dart';
 
-class SuperDeckController {
-  SuperDeckController._();
+final sdController = SDController.instance;
 
-  static final instance = SuperDeckController._();
+class SDController {
+  SDController._();
+
+  static final instance = SDController._();
 
   final _data = futureSignal(SlidesLoader.instance.loadDeck);
 
@@ -26,6 +29,15 @@ class SuperDeckController {
 
   final examples = mapSignal<String, Example>({});
 
+  late final dependencyKey = computed(() {
+    final variant = style.value.toString();
+    final previousVariant = style.previousValue.toString();
+    final example = examples.values.toString();
+    print(shortHashId(variant));
+    print(style.value.getDiff(style.previousValue!));
+    return shortHashId(variant + example);
+  });
+
   late final error = computed(
     () {
       final data = _data.value;
@@ -33,28 +45,15 @@ class SuperDeckController {
     },
   );
 
-  late final asset = signalContainer((String key) {
-    final asset =
-        assets.value.firstWhereOrNull((e) => e.file.path.contains(key));
-    return signal(asset);
-  }, cache: true);
-
-  void update({
-    List<Example> examples = const [],
-    Style? style,
-  }) {
-    batch(() {
-      this.style.value = defaultStyle.merge(style);
-      this.examples.assign({for (var e in examples) e.name: e});
-    });
-  }
-
   Future<void> initialize({
     List<Example> examples = const [],
     Style? style,
   }) async {
     // Unsubscribe to listeners in case its a retry
-    update(examples: examples, style: style);
+    batch(() {
+      this.style.value = defaultStyle.merge(style);
+      this.examples.assign({for (var e in examples) e.name: e});
+    });
 
     if (kCanRunProcess) {
       SlidesLoader.instance.listen(_data.refresh);
@@ -63,7 +62,7 @@ class SuperDeckController {
 
   Future<void> clearGenerated() async {
     await ProjectService.instance.clearGeneratedDir();
-    _data.reload();
+    _data.refresh();
   }
 
   void dispose() {

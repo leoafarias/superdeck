@@ -15,59 +15,59 @@ TextStyle get serifTextStyle => baseTextStyle.copyWith(fontSize: 50);
 TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
 
 Style get defaultStyle => Style.create([
-      $.outerContainer.color.black(),
+      $deck.outerContainer.color.black(),
       // $.innerContainer.color.transparent(),
-      $.contentContainer.padding.all(40),
+      $deck.contentContainer.padding.all(40),
       // $.contentContainer.color(Colors.yellow),
-      $.textStyle.as(baseTextStyle),
-      $.headings.textStyle.as(headingTextStyle),
-      $.h1.textStyle.fontSize(96),
-      $.h1.padding.bottom(12),
-      $.h2.textStyle.fontSize(72),
-      $.h2.padding.bottom(9),
-      $.h3.textStyle.fontSize(48),
-      $.h3.padding.bottom(6),
-      $.h4.textStyle.fontSize(36),
-      $.h4.padding.bottom(4),
-      $.h5.textStyle.fontSize(24),
-      $.h5.padding.bottom(3),
-      $.h6.textStyle.as(baseTextStyle),
-      $.h6.padding.bottom(3),
-      $.paragraph.textStyle.as(baseTextStyle),
-      $.paragraph.padding.bottom(12),
-      $.link.color(Colors.blue),
-      $.list.textStyle.as(baseTextStyle),
-      $.list.item.as(baseTextStyle),
-      $.list.itemMarker.as(baseTextStyle),
-      $.list.itemMarkerTrailingSpace(12),
-      $.list.itemMinIndent(12),
-      $.table.textStyle.as(baseTextStyle),
-      $.table.head.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
-      $.table.body.as(baseTextStyle),
-      $.blockSpacing(20),
-      $.table.cellPadding.all(12),
-      $.table.border.all(color: Colors.grey, width: 2),
-      $.table.rowDecoration.color(Colors.grey.withOpacity(0.1)),
-      $.code.span.as(monoTextStyle),
-      $.code.padding.all(24),
-      $.code.decoration.color(const Color.fromARGB(255, 23, 23, 23)),
-      $.code.decoration.borderRadius.circular(10),
-      $.blockquote.textStyle.as(serifTextStyle),
-      $.blockquote.textStyle.fontSize(32),
-      $.blockquote.padding.bottom(12),
-      $.blockquote.contentPadding.left(30),
-      $.blockquote.decoration.border.left.color(Colors.grey),
-      $.blockquote.decoration.border.left.width(4),
-      $.divider.height(1),
-      $.divider.color(Colors.grey),
-      $.divider.thickness(2),
-      $.image.fit.cover(),
+      $deck.textStyle.as(baseTextStyle),
+      $deck.headings.textStyle.as(headingTextStyle),
+      $deck.h1.textStyle.fontSize(96),
+      $deck.h1.padding.bottom(12),
+      $deck.h2.textStyle.fontSize(72),
+      $deck.h2.padding.bottom(9),
+      $deck.h3.textStyle.fontSize(48),
+      $deck.h3.padding.bottom(6),
+      $deck.h4.textStyle.fontSize(36),
+      $deck.h4.padding.bottom(4),
+      $deck.h5.textStyle.fontSize(24),
+      $deck.h5.padding.bottom(3),
+      $deck.h6.textStyle.as(baseTextStyle),
+      $deck.h6.padding.bottom(3),
+      $deck.paragraph.textStyle.as(baseTextStyle),
+      $deck.paragraph.padding.bottom(12),
+      $deck.link.color(Colors.blue),
+      $deck.list.textStyle.as(baseTextStyle),
+      $deck.list.item.as(baseTextStyle),
+      $deck.list.itemMarker.as(baseTextStyle),
+      $deck.list.itemMarkerTrailingSpace(12),
+      $deck.list.itemMinIndent(12),
+      $deck.table.textStyle.as(baseTextStyle),
+      $deck.table.head.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
+      $deck.table.body.as(baseTextStyle),
+      $deck.blockSpacing(20),
+      $deck.table.cellPadding.all(12),
+      $deck.table.border.all(color: Colors.grey, width: 2),
+      $deck.table.rowDecoration.color(Colors.grey.withOpacity(0.1)),
+      $deck.code.span.as(monoTextStyle),
+      $deck.code.padding.all(24),
+      $deck.code.decoration.color(const Color.fromARGB(255, 23, 23, 23)),
+      $deck.code.decoration.borderRadius.circular(10),
+      $deck.blockquote.textStyle.as(serifTextStyle),
+      $deck.blockquote.textStyle.fontSize(32),
+      $deck.blockquote.padding.bottom(12),
+      $deck.blockquote.contentPadding.left(30),
+      $deck.blockquote.decoration.border.left.color(Colors.grey),
+      $deck.blockquote.decoration.border.left.width(4),
+      $deck.divider.height(1),
+      $deck.divider.color(Colors.grey),
+      $deck.divider.thickness(2),
+      $deck.image.fit.cover(),
     ]);
 
-const $ = SlideStyleUtility(selfBuilder);
+const $deck = SlideStyleUtility(MixUtility.selfBuilder);
 
 SlideStyleUtility styleSlide() {
-  return const SlideStyleUtility(selfBuilder);
+  return const SlideStyleUtility(MixUtility.selfBuilder);
 }
 
 class SlideStyleUtility<T extends SpecAttribute>
@@ -135,8 +135,8 @@ class SlideStyleUtility<T extends SpecAttribute>
     );
   }
 
-  ImageUtility<T> get image {
-    return ImageUtility(
+  ImageSpecUtility<T> get image {
+    return ImageSpecUtility(
       (value) => only(image: value),
     );
   }
@@ -269,6 +269,7 @@ class MdTextStyleUtil<T extends StyleAttribute>
     return TextStyleUtility<T>((value) => only(textStyle: value));
   }
 
+  @override
   T only({
     TextStyleDto? textStyle,
     SpacingDto? padding,
@@ -308,6 +309,7 @@ class MdDividerUtil<T extends StyleAttribute>
     return DoubleUtility<T>((value) => only(dividerThickness: value));
   }
 
+  @override
   T only({
     double? dividerHeight,
     ColorDto? dividerColor,
@@ -347,6 +349,7 @@ class MdListUtil<T extends StyleAttribute>
     return DoubleUtility<T>((value) => only(itemMinIndent: value));
   }
 
+  @override
   T only({
     TextStyleDto? textStyle,
     TextStyleDto? item,
@@ -406,6 +409,7 @@ class TableBorderUtility<T extends StyleAttribute>
         ));
   }
 
+  @override
   T only({
     BorderSideDto? top,
     BorderSideDto? right,
@@ -475,6 +479,7 @@ class MdTableUtil<T extends StyleAttribute>
     return only(columnWidth: value);
   }
 
+  @override
   T only({
     TextStyleDto? textStyle,
     TextStyleDto? head,
@@ -525,6 +530,7 @@ class MdCodeUtil<T extends StyleAttribute>
     return ColorUtility<T>((value) => only(copyIconColor: value));
   }
 
+  @override
   T only({
     TextStyleDto? span,
     SpacingDto? padding,
@@ -565,6 +571,7 @@ class MdBlockQuoteUtil<T extends StyleAttribute>
     return SpacingUtility<T>((value) => only(contentPadding: value));
   }
 
+  @override
   T only({
     TextStyleDto? textStyle,
     BoxDecorationDto? decoration,

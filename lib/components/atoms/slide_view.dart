@@ -26,12 +26,13 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = SuperDeckController.instance;
     final slide = this.slide;
     final variant = slide.styleVariant;
-    final style = controller.style.watch(context);
+    final style = sdController.style.watch(context);
 
     final variantStyle = style.applyVariant(variant);
+
+    sdController.dependencyKey.watch(context);
 
     final backgroundWidget = slide.background != null
         ? CacheImage(
@@ -49,25 +50,25 @@ class SlideView extends StatelessWidget {
       transition: slide.transition,
       child: Pressable(
         onPress: () {},
-        child: MixBuilder(
+        child: SpecBuilder(
           style: variantStyle,
-          builder: (mix) {
-            final spec = SlideSpec.fromMix(mix);
+          builder: (context) {
+            final spec = SlideSpec.of(context);
             return Builder(builder: (context) {
-              return AnimatedMixedBox(
+              return AnimatedBoxSpecWidget(
                 spec: spec.outerContainer,
                 duration: duration ?? const Duration(milliseconds: 300),
                 child: Stack(
                   children: [
                     Positioned.fill(child: backgroundWidget),
-                    AnimatedMixedBox(
+                    AnimatedBoxSpecWidget(
                       spec: spec.innerContainer,
                       duration: const Duration(milliseconds: 300),
                       child: SlideProvider(
                         slide: slide,
                         spec: spec,
-                        examples: controller.examples.watch(context),
-                        assets: controller.assets.watch(context),
+                        examples: sdController.examples.watch(context),
+                        assets: sdController.assets.watch(context),
                         isSnapshot: _isSnapshot,
                         child: SlideConstraints(
                           (_) {

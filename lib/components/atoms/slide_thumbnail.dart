@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
@@ -48,9 +49,9 @@ class SlideThumbnail extends StatefulWidget {
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
   late final imageGenerator = SnapshotService.instance;
-  late final _thumbnailFile = SlideAsset.thumbnail(widget.slide);
+  late File _thumbnailFile = SlideAsset.thumbnail(widget.slide);
 
-  late final imageLoader = futureSignal(() {
+  late final _thumbnailLoader = futureSignal(() {
     return kCanRunProcess
         ? _generateThumbnail()
         : Future.value(_getLocalAsset());
@@ -59,17 +60,17 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   @override
   void dispose() {
     super.dispose();
-    imageLoader.dispose();
+
+    _thumbnailLoader.dispose();
   }
 
   @override
   void didUpdateWidget(SlideThumbnail oldWidget) {
-    if (oldWidget.index != widget.index ||
-        oldWidget.slide.hashKey != widget.slide.hashKey) {
-      print('reloading');
-      imageLoader.reload();
-    }
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.slide.hashKey != widget.slide.hashKey) {
+      _thumbnailFile = SlideAsset.thumbnail(widget.slide);
+      _thumbnailLoader.refresh();
+    }
   }
 
   String _getLocalAsset() {
@@ -97,19 +98,14 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
     return LayoutBuilder(builder: (context, constraints) {
       final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
 
-      final result = imageLoader.watch(context);
-      final asset = SuperDeckController.instance
-          .asset(widget.slide.hashKey)
-          .watch(context);
-
-      if (asset != null) {}
+      final result = _thumbnailLoader.watch(context);
 
       final child = result.map(
-        data: (data) {
+        data: (path) {
           return Image(
             image: getImageProvider(
               context: context,
-              url: data,
+              url: path,
               targetSize: constraints.biggest,
             ),
           );
@@ -135,7 +131,40 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
           child: AbsorbPointer(
             child: AspectRatio(
               aspectRatio: kAspectRatio,
-              child: child,
+              child: Stack(
+                children: [
+                  child,
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    child: SizedBox(
+                      child: result.isRefreshing
+                          ? const LinearProgressIndicator(
+                              minHeight: 3,
+                              backgroundColor: Colors.transparent,
+                            )
+                          : null,
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                      margin: const EdgeInsets.all(1),
+                      color: Colors.black.withOpacity(0.5),
+                      child: Text(
+                        '${widget.index + 1}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

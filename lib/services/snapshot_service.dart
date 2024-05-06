@@ -130,7 +130,6 @@ class SnapshotService {
         focusManager: FocusManager(),
         onBuildScheduled: () {
           isDirty = true;
-          log('Build scheduled');
         },
       );
 
@@ -156,11 +155,11 @@ class SnapshotService {
         await Future.delayed(const Duration(milliseconds: 250));
 
         if (!isDirty) {
-          print('completed;  ');
+          log('Image generation completed.');
           break;
         }
 
-        print('retrying...  ');
+        log('Image generation.. waiting...');
 
         retryCount--;
       }

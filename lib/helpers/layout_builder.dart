@@ -48,18 +48,18 @@ class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
     const red = Color.fromARGB(255, 166, 6, 6);
 
     final style = Style(
-      $.textStyle.color(Colors.white),
-      $.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
-      $.h1.textStyle.fontSize(36.0),
-      $.h1.textStyle.bold(),
-      $.h2.padding.top(0),
-      $.h2.textStyle.bold(),
-      $.h2.textStyle.color(Colors.yellow),
-      $.code.span.color(Colors.yellow),
-      $.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
+      $deck.textStyle.color(Colors.white),
+      $deck.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
+      $deck.h1.textStyle.fontSize(36.0),
+      $deck.h1.textStyle.bold(),
+      $deck.h2.padding.top(0),
+      $deck.h2.textStyle.bold(),
+      $deck.h2.textStyle.color.yellow(),
+      $deck.code.span.color.yellow(),
+      $deck.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
     );
 
-    return StyledWidgetBuilder(
+    return SpecBuilder(
         style: style,
         builder: (context) {
           //  Maybe there are no validation errors just return the content

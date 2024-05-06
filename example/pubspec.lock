@@ -379,10 +379,9 @@ packages:
   mix:
     dependency: transitive
     description:
-      name: mix
-      sha256: "76809b1599a1851111562f7f5985925703e5f80ba4a1aef77c5269f804fba890"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../mix"
+      relative: true
+    source: path
     version: "1.0.0-beta.12"
   octo_image:
     dependency: transitive

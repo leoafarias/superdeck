@@ -3,8 +3,7 @@ import 'package:mix/mix.dart';
 import 'style_dto.dart';
 import 'style_spec.dart';
 
-class SlideSpecAttribute extends SpecAttribute<SlideSpecAttribute, SlideSpec>
-    with Mergeable<SlideSpecAttribute> {
+class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   final MdTextStyleDto? headline1;
   final MdTextStyleDto? headline2;
   final MdTextStyleDto? headline3;

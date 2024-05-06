@@ -56,11 +56,9 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
   final navigation = NavigationProvider.instance;
 
-  final superdeck = SuperDeckController.instance;
-
   void _onTap(BuildContext context, int index) {
     if (index == SideMenu.clearCache.index) {
-      superdeck.clearGenerated();
+      sdController.clearGenerated();
       return;
     }
     // When navigating to a new branch, it's recommended to use the goBranch
@@ -78,7 +76,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
   @override
   Widget build(BuildContext context) {
-    final slides = superdeck.slides.watch(context);
+    final slides = sdController.slides.watch(context);
 
     navigation.sideIsOpen.listen(context, () {
       if (navigation.sideIsOpen.value) {

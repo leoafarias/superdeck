@@ -28,7 +28,7 @@ class CacheImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedMixedImage(
+    return AnimatedImageSpecWidget(
       image: getImageProvider(
         context: context,
         url: url,
@@ -74,7 +74,7 @@ ImageProvider getImageProvider({
   required String url,
   required Size targetSize,
 }) {
-  final controller = SuperDeckController.instance;
+  final controller = SDController.instance;
   ImageProvider provider;
 
   SlideAsset? asset;

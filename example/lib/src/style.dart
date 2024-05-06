@@ -4,55 +4,56 @@ import 'package:superdeck/superdeck.dart';
 
 VariantAttribute get radStyle {
   return const SlideVariant('rad')(
-    $.h1.textStyle.as(GoogleFonts.poppins()),
-    $.h1.textStyle.fontSize(140),
-    $.code.decoration.border.all(
+    $deck.h1.textStyle.as(GoogleFonts.poppins()),
+    $deck.h1.textStyle.fontSize(140),
+    $deck.code.decoration.border.all(
       color: Colors.red,
       width: 3,
     ),
-    $.code.decoration(
+    $deck.code.decoration(
       color: Colors.black54,
     ),
-    $.code.padding.all(40),
+    $deck.code.padding.all(40),
 
-    $.outerContainer.margin.all(60),
+    $deck.outerContainer.margin.all(60),
 
-    $.innerContainer.borderRadius(25),
-    $.innerContainer.shadow(
+    $deck.innerContainer.borderRadius(25),
+    $deck.innerContainer.shadow(
       blurRadius: 0,
       spreadRadius: 10,
       color: Colors.red.withOpacity(1),
     ),
-    $.innerContainer.gradient.radial(
+    $deck.innerContainer.gradient.radial(
       stops: [0.0, 1.0],
       radius: 0.7,
       colors: [Colors.purple, Colors.deepPurple],
     ),
 
     // Events
-    onMouseHover((event) {
-      final position = event.position;
+    $on.hover.event((e) {
+      if (e == null) return const Style.empty();
+      final position = e.position;
       final dx = position.x * 10;
       final dy = position.y * 10;
 
       return Style(
-        $.innerContainer.transform(_transformMatrix(position)),
-        $.innerContainer.shadow.offset(dx, dy),
-        $.innerContainer.gradient.radial(
+        $deck.innerContainer.transform(_transformMatrix(position)),
+        $deck.innerContainer.shadow.offset(dx, dy),
+        $deck.innerContainer.gradient.radial(
           center: position,
         ),
       );
     }),
 
-    (onPressed | onLongPressed)(
-      $.innerContainer.shadow(
+    ($on.press | $on.longPress)(
+      $deck.innerContainer.shadow(
         blurRadius: 5,
         spreadRadius: 1,
         offset: Offset.zero,
         color: Colors.purpleAccent,
       ),
-      $.innerContainer.border.all(color: Colors.white, width: 1),
-      $.innerContainer.gradient.radial
+      $deck.innerContainer.border.all(color: Colors.white, width: 1),
+      $deck.innerContainer.gradient.radial
           .colors([Colors.purpleAccent, Colors.purpleAccent]),
     ),
   );
@@ -60,17 +61,17 @@ VariantAttribute get radStyle {
 
 VariantAttribute get customStyle {
   return const SlideVariant('custom')(
-    $.textStyle.as(GoogleFonts.poppins()),
-    $.h1.textStyle.as(GoogleFonts.smooch()),
-    $.h1.textStyle.fontSize(200),
-    $.h1.textStyle.height(0),
-    $.h1.textStyle.shadow(
+    $deck.textStyle.as(GoogleFonts.poppins()),
+    $deck.h1.textStyle.as(GoogleFonts.smooch()),
+    $deck.h1.textStyle.fontSize(200),
+    $deck.h1.textStyle.height(0),
+    $deck.h1.textStyle.shadow(
       color: Colors.deepOrange,
       blurRadius: 20,
     ),
-    $.h2.textStyle.fontSize(36),
-    $.contentContainer.borderRadius(25),
-    $.innerContainer.gradient.linear(
+    $deck.h2.textStyle.fontSize(36),
+    $deck.contentContainer.borderRadius(25),
+    $deck.innerContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -78,20 +79,20 @@ VariantAttribute get customStyle {
         Colors.deepPurple.withOpacity(0.9),
       ],
     ),
-    $.contentContainer.padding.vertical(0),
-    $.outerContainer.padding(40),
-    $.outerContainer.gradient.linear(
+    $deck.contentContainer.padding.vertical(0),
+    $deck.outerContainer.padding(40),
+    $deck.outerContainer.gradient.linear(
       colors: [
         Colors.red,
         Colors.redAccent,
       ],
     ),
-    $.innerContainer.borderRadius(25),
-    $.innerContainer.border.all(
+    $deck.innerContainer.borderRadius(25),
+    $deck.innerContainer.border.all(
       color: Colors.deepOrange,
       width: 4,
     ),
-    $.innerContainer.shadow(
+    $deck.innerContainer.shadow(
       color: Colors.black.withOpacity(0.4),
       blurRadius: 20,
       spreadRadius: 5,
@@ -101,9 +102,9 @@ VariantAttribute get customStyle {
 
 VariantAttribute get coverStyle {
   return const SlideVariant('cover')(
-    $.h1.textStyle.as(GoogleFonts.poppins()),
-    $.h1.textStyle.fontSize(100),
-    $.contentContainer.gradient.linear(
+    $deck.h1.textStyle.as(GoogleFonts.poppins()),
+    $deck.h1.textStyle.fontSize(100),
+    $deck.contentContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -116,15 +117,15 @@ VariantAttribute get coverStyle {
 
 VariantAttribute get announcementStyle {
   return const SlideVariant('announcement')(
-    $.textStyle.height(0.6),
-    $.h1.textStyle.fontSize(140),
-    $.h1.textStyle.bold(),
-    $.h1.textStyle.color(Colors.yellow),
-    $.h2.textStyle.fontSize(140),
-    $.h3.textStyle.fontSize(60),
-    $.h3.textStyle.color(Colors.white),
-    $.h3.textStyle.fontWeight(FontWeight.w100),
-    $.contentContainer.gradient.linear(
+    $deck.textStyle.height(0.6),
+    $deck.h1.textStyle.fontSize(140),
+    $deck.h1.textStyle.bold(),
+    $deck.h1.textStyle.color(Colors.yellow),
+    $deck.h2.textStyle.fontSize(140),
+    $deck.h3.textStyle.fontSize(60),
+    $deck.h3.textStyle.color(Colors.white),
+    $deck.h3.textStyle.fontWeight(FontWeight.w100),
+    $deck.contentContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -137,20 +138,20 @@ VariantAttribute get announcementStyle {
 
 VariantAttribute get quoteStyle {
   return const SlideVariant('quote')(
-    $.blockquote.textStyle.as(GoogleFonts.notoSerif()),
-    $.blockquote.decoration.border.left(
+    $deck.blockquote.textStyle.as(GoogleFonts.notoSerif()),
+    $deck.blockquote.decoration.border.left(
       width: 4,
       color: Colors.red,
     ),
-    $.paragraph.textStyle.fontSize(32),
-    $.h6.textStyle.as(GoogleFonts.notoSerif()),
-    $.h6.textStyle.fontSize(20),
+    $deck.paragraph.textStyle.fontSize(32),
+    $deck.h6.textStyle.as(GoogleFonts.notoSerif()),
+    $deck.h6.textStyle.fontSize(20),
   );
 }
 
 VariantAttribute get showSectionsStyle {
   return const SlideVariant('show_sections')(
-    $.contentContainer.border.all(
+    $deck.contentContainer.border.all(
       color: Colors.blue,
       width: 2,
     ),
@@ -159,7 +160,7 @@ VariantAttribute get showSectionsStyle {
 
 Style get style {
   return Style(
-    $.textStyle.as(GoogleFonts.poppins()),
+    $deck.textStyle.as(GoogleFonts.poppins()),
     customStyle,
     quoteStyle,
     showSectionsStyle,

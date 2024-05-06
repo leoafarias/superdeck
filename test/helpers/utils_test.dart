@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:superdeck/helpers/utils.dart';
 
@@ -48,4 +49,103 @@ void main() {
       });
     },
   );
+
+  group('converYamlToMap', () {
+    test('converts YAML string to Map correctly', () {
+      const yamlString = '''
+name: John Doe
+age: 30
+city: New York
+''';
+      final expectedMap = {
+        'name': 'John Doe',
+        'age': 30,
+        'city': 'New York',
+      };
+      expect(converYamlToMap(yamlString), equals(expectedMap));
+    });
+
+    test('returns empty Map for empty YAML string', () {
+      const yamlString = '';
+      expect(converYamlToMap(yamlString), equals({}));
+    });
+
+    test('returns empty Map for null YAML string', () {
+      const yamlString = '';
+      expect(converYamlToMap(yamlString), equals({}));
+    });
+  });
+
+  group('prettyJson', () {
+    test('formats JSON string with indentation', () {
+      final json = {
+        'name': 'John Doe',
+        'age': 30,
+        'city': 'New York',
+        'hobbies': ['reading', 'traveling'],
+      };
+      const expectedOutput = '''
+{
+  "name": "John Doe",
+  "age": 30,
+  "city": "New York",
+  "hobbies": [
+    "reading",
+    "traveling"
+  ]
+}''';
+      expect(prettyJson(json), equals(expectedOutput));
+    });
+
+    test('returns empty string for empty JSON', () {
+      final json = {};
+      expect(prettyJson(json), equals('{}'));
+    });
+
+    test('returns "null" string for null JSON', () {
+      const json = null;
+      expect(prettyJson(json), equals('null'));
+    });
+  });
+
+  group('compareListChanges', () {
+    test('identifies added and removed items correctly', () {
+      final oldList = [1, 2, 3, 4];
+      final newList = [2, 3, 4, 5];
+      final expectedResult = (
+        added: [5],
+        removed: [1],
+      );
+      final actualResults = compareListChanges(oldList, newList);
+      expect(listEquals(actualResults.added, expectedResult.added), true);
+      expect(listEquals(actualResults.removed, expectedResult.removed), true);
+    });
+
+    test('returns empty lists when no changes', () {
+      final oldList = [1, 2, 3];
+      final newList = [1, 2, 3];
+      final expectedResult = (
+        added: [],
+        removed: [],
+      );
+      final actualResults = compareListChanges(oldList, newList);
+
+      expect(listEquals(actualResults.added, expectedResult.added), true);
+      expect(listEquals(actualResults.removed, expectedResult.removed), true);
+    });
+
+    test('handles empty lists correctly', () {
+      final oldList = [];
+      final newList = [1, 2, 3];
+      final expectedResult = (
+        added: [1, 2, 3],
+        removed: [],
+      );
+
+      final actualResults = compareListChanges(oldList, newList);
+
+      expect(listEquals(actualResults.added, expectedResult.added), true);
+      expect(listEquals(actualResults.removed, expectedResult.removed), true);
+    });
+  });
 }

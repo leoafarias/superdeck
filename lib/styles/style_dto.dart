@@ -4,11 +4,11 @@ import 'package:mix/mix.dart';
 
 import 'style_spec.dart';
 
-class MdTextStyleDto extends Dto<MdTextStyle> with Mergeable<MdTextStyleDto> {
+class MdTextStyleDto extends Dto<MdTextStyle> {
   final TextStyleDto? textStyle;
   final SpacingDto? padding;
 
-  MdTextStyleDto({
+  const MdTextStyleDto({
     this.textStyle,
     this.padding,
   });
@@ -44,14 +44,14 @@ class MdTextStyleDto extends Dto<MdTextStyle> with Mergeable<MdTextStyleDto> {
   get props => [textStyle, padding];
 }
 
-class MdListDto extends Dto<MdList> with Mergeable<MdListDto> {
+class MdListDto extends Dto<MdList> {
   final TextStyleDto? textStyle;
   final TextStyleDto? item;
   final TextStyleDto? itemMarker;
   final double? itemMarkerTrailingSpace;
   final double? itemMinIndent;
 
-  MdListDto({
+  const MdListDto({
     this.textStyle,
     this.item,
     this.itemMarker,
@@ -101,12 +101,12 @@ class MdListDto extends Dto<MdList> with Mergeable<MdListDto> {
       [textStyle, item, itemMarker, itemMarkerTrailingSpace, itemMinIndent];
 }
 
-class MdDividerDto extends Dto<MdDivider> with Mergeable<MdDividerDto> {
+class MdDividerDto extends Dto<MdDivider> {
   final double? height;
   final ColorDto? color;
   final double? thickness;
 
-  MdDividerDto({
+  const MdDividerDto({
     this.height,
     this.color,
     this.thickness,
@@ -146,14 +146,13 @@ class MdDividerDto extends Dto<MdDivider> with Mergeable<MdDividerDto> {
   get props => [height, color, thickness];
 }
 
-class MdBlockQuoteDto extends Dto<MdBlockQuote>
-    with Mergeable<MdBlockQuoteDto> {
+class MdBlockQuoteDto extends Dto<MdBlockQuote> {
   final TextStyleDto? textStyle;
   final BoxDecorationDto? decoration;
   final SpacingDto? padding;
   final SpacingDto? contentPadding;
 
-  MdBlockQuoteDto({
+  const MdBlockQuoteDto({
     this.textStyle,
     this.decoration,
     this.padding,
@@ -177,8 +176,7 @@ class MdBlockQuoteDto extends Dto<MdBlockQuote>
   MdBlockQuoteDto merge(MdBlockQuoteDto? other) {
     return MdBlockQuoteDto(
       textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
-      decoration: decoration?.merge(other?.decoration) as BoxDecorationDto? ??
-          other?.decoration,
+      decoration: decoration?.merge(other?.decoration) ?? other?.decoration,
       padding: padding?.merge(other?.padding) ?? other?.padding,
       contentPadding:
           contentPadding?.merge(other?.contentPadding) ?? other?.contentPadding,
@@ -199,7 +197,8 @@ class MdBlockQuoteDto extends Dto<MdBlockQuote>
   get props => [textStyle, decoration, padding, contentPadding];
 }
 
-class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
+@immutable
+class MdTableDto extends Dto<MdTable> {
   final TextStyleDto? textStyle;
   final TextStyleDto? head;
   final TextStyleDto? body;
@@ -209,7 +208,7 @@ class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
   final SpacingDto? cellPadding;
   final TableColumnWidth? columnWidth;
 
-  MdTableDto({
+  const MdTableDto({
     this.textStyle,
     this.head,
     this.body,
@@ -245,8 +244,7 @@ class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
       body: body?.merge(other?.body) ?? other?.body,
       border: other?.border ?? border,
       rowDecoration:
-          rowDecoration?.merge(other?.rowDecoration) as BoxDecorationDto? ??
-              other?.rowDecoration,
+          rowDecoration?.merge(other?.rowDecoration) ?? other?.rowDecoration,
       rowDecorationAlternating:
           other?.rowDecorationAlternating ?? rowDecorationAlternating,
       cellPadding: cellPadding?.merge(other?.cellPadding) ?? other?.cellPadding,
@@ -281,7 +279,8 @@ class MdTableDto extends Dto<MdTable> with Mergeable<MdTableDto> {
       ];
 }
 
-class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
+@immutable
+class MdCodeDto extends Dto<MdCode> {
   final TextStyleDto? span;
   final TextStyleDto? textStyle;
   final SpacingDto? padding;
@@ -289,7 +288,7 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
 
   final ColorDto? copyIconColor;
 
-  MdCodeDto({
+  const MdCodeDto({
     this.textStyle,
     this.span,
     this.padding,
@@ -316,8 +315,7 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
     return MdCodeDto(
       span: span?.merge(other?.span) ?? other?.span,
       padding: padding?.merge(other?.padding) ?? other?.padding,
-      decoration: decoration?.merge(other?.decoration) as BoxDecorationDto? ??
-          other?.decoration,
+      decoration: decoration?.merge(other?.decoration) ?? other?.decoration,
       copyIconColor:
           copyIconColor?.merge(other?.copyIconColor) ?? other?.copyIconColor,
       textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
@@ -339,7 +337,7 @@ class MdCodeDto extends Dto<MdCode> with Mergeable<MdCodeDto> {
   get props => [span, padding, decoration, copyIconColor, textStyle];
 }
 
-class TableBorderDto extends Dto<TableBorder> with Mergeable<TableBorderDto> {
+class TableBorderDto extends Dto<TableBorder> {
   final BorderSideDto? top;
   final BorderSideDto? right;
   final BorderSideDto? bottom;

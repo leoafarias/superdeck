@@ -27,11 +27,11 @@ class SuperDeckApp extends StatefulWidget {
   final Style? style;
   final List<Example> examples;
 
-  static bool isInitialized = false;
+  static bool _isInitialized = false;
 
   static Future<void> initialize() async {
     // Return if its initialized
-    if (SuperDeckApp.isInitialized) return;
+    if (SuperDeckApp._isInitialized) return;
 
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -43,7 +43,7 @@ class SuperDeckApp extends StatefulWidget {
       _initializeWindowManager(),
     ]);
 
-    SuperDeckApp.isInitialized = true;
+    SuperDeckApp._isInitialized = true;
   }
 
   @override
@@ -52,47 +52,28 @@ class SuperDeckApp extends StatefulWidget {
 }
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
-  final _controller = SuperDeckController.instance;
-  late final _isReady = createSignal(context, false);
+  late final _initialize = futureSignal(() async {
+    await SuperDeckApp.initialize();
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeDependencies();
-  }
+    return sdController.initialize(
+      style: widget.style,
+      examples: widget.examples,
+    );
+  });
 
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
-        widget.examples != oldWidget.examples) {
-      _controller.update(
-        style: widget.style,
-        examples: widget.examples,
-      );
+        !listEquals(widget.examples, oldWidget.examples)) {
+      _initialize.refresh();
     }
   }
 
   @override
   void dispose() {
+    _initialize.dispose();
     super.dispose();
-  }
-
-  Future<void> _initializeDependencies() async {
-    await SuperDeckApp.initialize();
-    await _controller.initialize(
-      style: widget.style,
-      examples: widget.examples,
-    );
-
-    _isReady.value = true;
-  }
-
-  void onRetry() {
-    _controller.initialize(
-      style: widget.style,
-      examples: widget.examples,
-    );
   }
 
   @override
@@ -121,20 +102,18 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
               theme: Theme.of(context),
               key: kAppKey,
               builder: (context, child) {
-                final isLoading = _controller.loading.watch(context) ||
-                    !_isReady.watch(context);
-                if (isLoading) {
-                  return renderLoading();
-                }
+                final result = _initialize.watch(context);
 
-                if (_controller.error.watch(context) != null) {
-                  return ExceptionWidget(
-                    _controller.error.watch(context)!,
-                    onRetry: onRetry,
-                  );
-                }
-
-                return child!;
+                return result.map(
+                  data: (value) => child!,
+                  loading: () => renderLoading(),
+                  error: (error, _) {
+                    return ExceptionWidget(
+                      error,
+                      onRetry: _initialize.reload,
+                    );
+                  },
+                );
               },
             ),
           );

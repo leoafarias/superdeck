@@ -55,10 +55,10 @@ class SlideMarkdownPreview extends StatelessWidget {
     final rawYaml = slide.raw;
     final options = '#### Options\n```yaml\n${rawYaml.trim()}\n```\n';
     final data = '#### Content\n```markdown\n${slide.data}\n```\n';
-    return MixBuilder(
+    return SpecBuilder(
       style: defaultStyle.merge(
         Style(
-          $.code.span.fontSize(14),
+          $deck.code.span.fontSize(14),
         ),
       ),
       builder: (mix) {

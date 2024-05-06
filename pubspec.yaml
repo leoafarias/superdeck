@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mix: ^1.0.0-beta.12
+  mix:
+    path: ../mix
   cached_network_image: ^3.3.1
   window_manager: ^0.3.8
   watcher: ^1.1.0

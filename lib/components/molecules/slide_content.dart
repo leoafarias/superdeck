@@ -45,7 +45,7 @@ class SlideContent extends StatelessWidget {
       );
     }
 
-    return AnimatedMixedBox(
+    return AnimatedBoxSpecWidget(
       duration: const Duration(milliseconds: 300),
       spec: spec.contentContainer.copyWith(
         alignment: alignment.toAlignment(),

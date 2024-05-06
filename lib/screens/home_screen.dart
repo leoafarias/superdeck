@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final PageController pageController;
-  final superdeck = SuperDeckController.instance;
+  final superdeck = SDController.instance;
   final navigation = NavigationProvider.instance;
 
   @override
