@@ -31,6 +31,15 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
 
   var _visibleItems = <ItemPosition>[];
 
+  @override
+  void didUpdateWidget(covariant SlideThumbnailList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.currentSlide != oldWidget.currentSlide) {
+      goToPage(widget.currentSlide);
+    }
+  }
+
   Future<void> goToPage(int page, {bool animate = true}) async {
     if (page < 0 || page >= widget.slides.length) return;
 

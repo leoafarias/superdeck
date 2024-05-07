@@ -32,8 +32,6 @@ class SlideView extends StatelessWidget {
 
     final variantStyle = style.applyVariant(variant);
 
-    sdController.dependencyKey.watch(context);
-
     final backgroundWidget = slide.background != null
         ? CacheImage(
             url: slide.background!,

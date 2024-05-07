@@ -105,7 +105,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
                 final result = _initialize.watch(context);
 
                 return result.map(
-                  data: (value) => child!,
+                  data: (_) => child!,
                   loading: () => renderLoading(),
                   error: (error, _) {
                     return ExceptionWidget(

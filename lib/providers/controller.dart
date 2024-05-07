@@ -7,7 +7,6 @@ import 'package:signals/signals_flutter.dart';
 
 import '../builder/slides_loader.dart';
 import '../helpers/constants.dart';
-import '../helpers/utils.dart';
 import '../services/project_service.dart';
 import '../superdeck.dart';
 
@@ -29,15 +28,6 @@ class SDController {
 
   final examples = mapSignal<String, Example>({});
 
-  late final dependencyKey = computed(() {
-    final variant = style.value.toString();
-    final previousVariant = style.previousValue.toString();
-    final example = examples.values.toString();
-    print(shortHashId(variant));
-    print(style.value.getDiff(style.previousValue!));
-    return shortHashId(variant + example);
-  });
-
   late final error = computed(
     () {
       final data = _data.value;
@@ -54,6 +44,12 @@ class SDController {
       this.style.value = defaultStyle.merge(style);
       this.examples.assign({for (var e in examples) e.name: e});
     });
+
+    if (_data.isDone) {
+      await _data.reload();
+    } else {
+      await _data.future;
+    }
 
     if (kCanRunProcess) {
       SlidesLoader.instance.listen(_data.refresh);
@@ -113,6 +109,7 @@ class NavigationProvider {
   }
 
   void goToSlide(int slide) {
+    if (slide < 0 || slide >= sdController.slides.value.length) return;
     currentSlide.value = slide;
   }
 
