@@ -176,7 +176,8 @@ class MdBlockQuoteDto extends Dto<MdBlockQuote> {
   MdBlockQuoteDto merge(MdBlockQuoteDto? other) {
     return MdBlockQuoteDto(
       textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
-      decoration: decoration?.merge(other?.decoration) ?? other?.decoration,
+      decoration: (decoration?.merge(other?.decoration) ?? other?.decoration)
+          as BoxDecorationDto?,
       padding: padding?.merge(other?.padding) ?? other?.padding,
       contentPadding:
           contentPadding?.merge(other?.contentPadding) ?? other?.contentPadding,
@@ -243,8 +244,8 @@ class MdTableDto extends Dto<MdTable> {
       head: head?.merge(other?.head) ?? other?.head,
       body: body?.merge(other?.body) ?? other?.body,
       border: other?.border ?? border,
-      rowDecoration:
-          rowDecoration?.merge(other?.rowDecoration) ?? other?.rowDecoration,
+      rowDecoration: (rowDecoration?.merge(other?.rowDecoration) ??
+          other?.rowDecoration) as BoxDecorationDto?,
       rowDecorationAlternating:
           other?.rowDecorationAlternating ?? rowDecorationAlternating,
       cellPadding: cellPadding?.merge(other?.cellPadding) ?? other?.cellPadding,
@@ -315,7 +316,8 @@ class MdCodeDto extends Dto<MdCode> {
     return MdCodeDto(
       span: span?.merge(other?.span) ?? other?.span,
       padding: padding?.merge(other?.padding) ?? other?.padding,
-      decoration: decoration?.merge(other?.decoration) ?? other?.decoration,
+      decoration: (decoration?.merge(other?.decoration) ?? other?.decoration)
+          as BoxDecorationDto?,
       copyIconColor:
           copyIconColor?.merge(other?.copyIconColor) ?? other?.copyIconColor,
       textStyle: textStyle?.merge(other?.textStyle) ?? other?.textStyle,
