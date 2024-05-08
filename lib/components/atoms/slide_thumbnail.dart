@@ -1,14 +1,14 @@
-import 'dart:developer';
+import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
-import '../../services/assets_service.dart';
-import '../../services/image_generation_service.dart';
+import '../../services/snapshot_service.dart';
 import '../../superdeck.dart';
 import '../molecules/scaled_app.dart';
+import 'cache_image_widget.dart';
 import 'slide_view.dart';
 
 final _previewStyle = AnimatedStyle(
@@ -29,8 +29,6 @@ final _previewStyle = AnimatedStyle(
 // ignore: non_constant_identifier_names
 final PreviewBox = _previewStyle.box;
 
-bool _isGenerating = false;
-
 class SlideThumbnail extends StatefulWidget {
   final bool selected;
   final VoidCallback onTap;
@@ -50,92 +48,49 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final imageGenerator = ImageGenerationService(context);
-  final quality = SnapshotQuality.good;
+  late final imageGenerator = SnapshotService.instance;
+  late File _thumbnailFile = SlideAsset.thumbnail(widget.slide);
 
-  late final asyncState = signal<AsyncState<Uint8List>>(AsyncState.loading());
-
-  @override
-  void initState() {
-    super.initState();
-    _getLocalAsset().then((value) => getThumbnail());
-  }
+  late final _thumbnailLoader = futureSignal(() {
+    return kCanRunProcess
+        ? _generateThumbnail()
+        : Future.value(_getLocalAsset());
+  });
 
   @override
   void dispose() {
-    imageGenerator.dispose();
     super.dispose();
+
+    _thumbnailLoader.dispose();
   }
 
   @override
   void didUpdateWidget(SlideThumbnail oldWidget) {
-    if (oldWidget.index != widget.index || oldWidget.slide != widget.slide) {
-      getThumbnail();
-    }
     super.didUpdateWidget(oldWidget);
-  }
-
-  Future<void> getThumbnail() async {
-    if (kCanRunProcess) {
-      await _generateThumbnail();
-    } else {
-      await _getLocalAsset();
+    if (oldWidget.slide.hashKey != widget.slide.hashKey) {
+      _thumbnailFile = SlideAsset.thumbnail(widget.slide);
+      _thumbnailLoader.refresh();
     }
   }
 
-  Future<void> _getLocalAsset() async {
-    try {
-      asyncState.value = AsyncState.loading();
-      final asset = await assetService.loadThumbnailAsset(widget.slide.hash);
-
-      if (asset != null) {
-        final data = await assetService.loadBytes(asset.localPath);
-        asyncState.value = AsyncState.data(data);
-      }
-    } on Exception catch (e) {
-      asyncState.value = AsyncState.error(e);
-    }
+  String _getLocalAsset() {
+    return _thumbnailFile.path;
   }
 
-  Future<void> _generateThumbnail() async {
-    final asset = await assetService.loadThumbnailAsset(widget.slide.hash);
-
-    if (asset != null) {
-      await _getLocalAsset();
-      return;
+  Future<String> _generateThumbnail() async {
+    if (await _thumbnailFile.exists()) {
+      return _getLocalAsset();
     }
-    try {
-      while (_isGenerating) {
-        await Future.delayed(const Duration(milliseconds: 1));
-      }
 
-      if (!mounted) {
-        log('Context is unmounted');
-        return;
-      }
+    final imageData = await imageGenerator.generate(
+      // ignore: use_build_context_synchronously
+      quality: SnapshotQuality.low,
+      slide: widget.slide,
+    );
 
-      Uint8List image;
+    await _thumbnailFile.writeAsBytes(imageData);
 
-      _isGenerating = true;
-
-      image = await imageGenerator.generate(
-        quality: quality,
-        slide: widget.slide,
-      );
-
-      await assetService.saveThumbnailAsset(
-        hash: widget.slide.hash,
-        data: image,
-      );
-
-      asyncState.value = AsyncState.data(image);
-    } on Exception catch (e) {
-      asyncState.value = AsyncState.error(e);
-      log('Error generating thumbnail: $e');
-      return;
-    } finally {
-      _isGenerating = false;
-    }
+    return _getLocalAsset();
   }
 
   @override
@@ -143,14 +98,18 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
     return LayoutBuilder(builder: (context, constraints) {
       final selectedColor = widget.selected ? Colors.blue : Colors.transparent;
 
-      final result = asyncState.watch(context);
+      final result = _thumbnailLoader.watch(context);
 
       final child = result.map(
-        data: (data) => Image.memory(
-          data,
-          gaplessPlayback: true,
-          cacheWidth: constraints.maxWidth.toInt(),
-        ),
+        data: (path) {
+          return Image(
+            image: getImageProvider(
+              context: context,
+              url: path,
+              targetSize: constraints.biggest,
+            ),
+          );
+        },
         loading: () {
           return const Center(
             child: CircularProgressIndicator(),
@@ -172,7 +131,40 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
           child: AbsorbPointer(
             child: AspectRatio(
               aspectRatio: kAspectRatio,
-              child: child,
+              child: Stack(
+                children: [
+                  child,
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    child: SizedBox(
+                      child: result.isRefreshing
+                          ? const LinearProgressIndicator(
+                              minHeight: 3,
+                              backgroundColor: Colors.transparent,
+                            )
+                          : null,
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                      margin: const EdgeInsets.all(1),
+                      color: Colors.black.withOpacity(0.5),
+                      child: Text(
+                        '${widget.index + 1}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

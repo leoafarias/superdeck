@@ -36,7 +36,7 @@ class _SplitViewState extends State<SplitView>
   late Animation<double> _animation;
 
   late final navigation = NavigationProvider.instance;
-  late final superdeck = SuperDeckProvider.instance;
+  late final superdeck = SDController.instance;
 
   @override
   void initState() {

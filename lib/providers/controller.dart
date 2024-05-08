@@ -5,16 +5,19 @@ import 'package:flutter/foundation.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
 
+import '../builder/slides_loader.dart';
 import '../helpers/constants.dart';
-import '../helpers/loader.dart';
+import '../services/project_service.dart';
 import '../superdeck.dart';
 
-class SuperDeckProvider {
-  SuperDeckProvider._();
+final sdController = SDController.instance;
 
-  static final instance = SuperDeckProvider._();
+class SDController {
+  SDController._();
 
-  final _data = futureSignal(() => SlidesLoader.instance.loadFromStorage());
+  static final instance = SDController._();
+
+  final _data = futureSignal(SlidesLoader.instance.loadDeck);
 
   final style = signal(const Style.empty(), debugLabel: 'Style');
 
@@ -22,8 +25,6 @@ class SuperDeckProvider {
 
   late final slides = computed(() => _data.value.value?.slides ?? []);
   late final assets = computed(() => _data.value.value?.assets ?? []);
-  late final config =
-      computed(() => _data.value.value?.config ?? const ProjectConfig.empty());
 
   final examples = mapSignal<String, Example>({});
 
@@ -34,37 +35,37 @@ class SuperDeckProvider {
     },
   );
 
-  Map<String, Example> _examplesToMap(List<Example> examples) {
-    return {for (var e in examples) e.name: e};
-  }
-
-  void update({
-    List<Example> examples = const [],
-    Style? style,
-  }) {
-    batch(() {
-      this.style.value = defaultStyle.merge(style);
-      this.examples.assign(_examplesToMap(examples));
-    });
-  }
-
   Future<void> initialize({
     List<Example> examples = const [],
     Style? style,
   }) async {
     // Unsubscribe to listeners in case its a retry
-    await _data.future;
-    update(examples: examples, style: style);
+    batch(() {
+      this.style.value = defaultStyle.merge(style);
+      this.examples.assign({for (var e in examples) e.name: e});
+    });
+
+    if (_data.isDone) {
+      await _data.reload();
+    } else {
+      await _data.future;
+    }
 
     if (kCanRunProcess) {
-      SlidesLoader.instance.listen(
-        onChange: () => _data.refresh(),
-      );
+      SlidesLoader.instance.listen(_data.refresh);
     }
+  }
+
+  Future<void> clearGenerated() async {
+    await ProjectService.instance.clearGeneratedDir();
+    _data.refresh();
   }
 
   void dispose() {
     style.dispose();
+    error.dispose();
+    assets.dispose();
+    slides.dispose();
     _data.dispose();
     examples.dispose();
   }
@@ -108,6 +109,7 @@ class NavigationProvider {
   }
 
   void goToSlide(int slide) {
+    if (slide < 0 || slide >= sdController.slides.value.length) return;
     currentSlide.value = slide;
   }
 

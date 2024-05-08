@@ -4,7 +4,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../models/slide_model.dart';
-import '../../providers/deck_provider.dart';
+import '../../providers/controller.dart';
 import '../atoms/slide_thumbnail.dart';
 
 class SlideThumbnailList extends StatefulWidget {
@@ -30,6 +30,15 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
   final _itemPositionsListener = ItemPositionsListener.create();
 
   var _visibleItems = <ItemPosition>[];
+
+  @override
+  void didUpdateWidget(covariant SlideThumbnailList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.currentSlide != oldWidget.currentSlide) {
+      goToPage(widget.currentSlide);
+    }
+  }
 
   Future<void> goToPage(int page, {bool animate = true}) async {
     if (page < 0 || page >= widget.slides.length) return;
@@ -86,7 +95,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           padding: const EdgeInsets.all(20),
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
-            SuperDeckProvider.instance.style.watch(context);
+            SDController.instance.style.watch(context);
 
             return SlideThumbnail(
               index: idx,

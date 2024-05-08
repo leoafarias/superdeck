@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../helpers/measure_size.dart';
 import '../../helpers/utils.dart';
-import '../../models/slide_model.dart';
 import '../../superdeck.dart';
 import '../atoms/markdown_viewer.dart';
 import '../atoms/slide_view.dart';
@@ -53,13 +52,13 @@ class SlideMarkdownPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rawYaml = slide.raw ?? '';
+    final rawYaml = slide.raw;
     final options = '#### Options\n```yaml\n${rawYaml.trim()}\n```\n';
     final data = '#### Content\n```markdown\n${slide.data}\n```\n';
-    return MixBuilder(
+    return SpecBuilder(
       style: defaultStyle.merge(
         Style(
-          $.code.span.fontSize(14),
+          $deck.code.span.fontSize(14),
         ),
       ),
       builder: (mix) {

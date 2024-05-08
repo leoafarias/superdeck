@@ -9,3 +9,4 @@ const _kHeight = 720.0;
 const kResolution = Size(_kWidth, _kHeight);
 
 const kCanRunProcess = kDebugMode && !kIsWeb;
+// const kCanRunProcess = true;

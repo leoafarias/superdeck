@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,9 @@ import '../helpers/constants.dart';
 import '../helpers/theme.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
-import '../services/assets_service.dart';
 import 'molecules/exception_widget.dart';
+
+final kAppKey = GlobalKey();
 
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
@@ -27,11 +27,11 @@ class SuperDeckApp extends StatefulWidget {
   final Style? style;
   final List<Example> examples;
 
-  static bool isInitialized = false;
+  static bool _isInitialized = false;
 
   static Future<void> initialize() async {
     // Return if its initialized
-    if (SuperDeckApp.isInitialized) return;
+    if (SuperDeckApp._isInitialized) return;
 
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -40,11 +40,10 @@ class SuperDeckApp extends StatefulWidget {
     await Future.wait([
       initLocalStorage(),
       SyntaxHighlight.initialize(),
-      AssetService.initialize(),
       _initializeWindowManager(),
     ]);
 
-    SuperDeckApp.isInitialized = true;
+    SuperDeckApp._isInitialized = true;
   }
 
   @override
@@ -53,40 +52,28 @@ class SuperDeckApp extends StatefulWidget {
 }
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
-  final _provider = SuperDeckProvider.instance;
-  late final _initializing = futureSignal(_initializeDependencies);
+  late final _initialize = futureSignal(() async {
+    await SuperDeckApp.initialize();
+
+    return sdController.initialize(
+      style: widget.style,
+      examples: widget.examples,
+    );
+  });
 
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
-        widget.examples != oldWidget.examples) {
-      _provider.update(
-        style: widget.style,
-        examples: widget.examples,
-      );
+        !listEquals(widget.examples, oldWidget.examples)) {
+      _initialize.refresh();
     }
   }
 
   @override
   void dispose() {
+    _initialize.dispose();
     super.dispose();
-    _initializing.dispose();
-  }
-
-  Future<void> _initializeDependencies() async {
-    await SuperDeckApp.initialize();
-    await _provider.initialize(
-      style: widget.style,
-      examples: widget.examples,
-    );
-  }
-
-  void onRetry() {
-    _provider.initialize(
-      style: widget.style,
-      examples: widget.examples,
-    );
   }
 
   @override
@@ -99,31 +86,38 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       );
     }
 
-    return MixTheme(
-      data: MixThemeData.withMaterial(),
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        title: 'Superdeck',
-        theme: theme,
-        routerConfig: _router,
-        builder: (context, child) {
-          final initializing = _initializing.watch(context);
+    return MediaQuery(
+      data: const MediaQueryData(
+        size: kResolution,
+      ),
+      child: Theme(
+        data: theme,
+        child: Builder(builder: (context) {
+          return MixTheme(
+            data: MixThemeData.withMaterial(),
+            child: MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              title: 'Superdeck',
+              routerConfig: _router,
+              theme: Theme.of(context),
+              key: kAppKey,
+              builder: (context, child) {
+                final result = _initialize.watch(context);
 
-          return initializing.map(
-            data: (data) => child!,
-            loading: () => Scaffold(
-              body: renderLoading(),
+                return result.map(
+                  data: (_) => child!,
+                  loading: () => renderLoading(),
+                  error: (error, _) {
+                    return ExceptionWidget(
+                      error,
+                      onRetry: _initialize.reload,
+                    );
+                  },
+                );
+              },
             ),
-            error: (error) {
-              log(error.toString());
-
-              return ExceptionWidget(
-                error,
-                onRetry: onRetry,
-              );
-            },
           );
-        },
+        }),
       ),
     );
   }

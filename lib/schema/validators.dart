@@ -4,24 +4,43 @@ abstract class Validator<T> {
   const Validator();
 
   SchemaValidationError? validate(T value);
+}
 
-  static const email = RegexValidator(
-    name: 'email',
-    pattern: r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$',
-    example: 'example@domain.com',
-  );
+class EmailValidator extends RegexValidator {
+  const EmailValidator()
+      : super(
+          name: 'email',
+          pattern: r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$',
+          example: 'example@domain.com',
+        );
+}
 
-  static const url = RegexValidator(
-    name: 'url',
-    pattern: r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
-    example: 'https://example.com',
-  );
+class UrlValidator extends RegexValidator {
+  const UrlValidator()
+      : super(
+          name: 'url',
+          pattern:
+              r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+          example: 'https://example.com',
+        );
+}
 
-  static const hexColor = RegexValidator(
-    name: 'hex color',
-    pattern: r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$',
-    example: '#ff0000',
-  );
+class PosixPathValidator extends RegexValidator {
+  const PosixPathValidator()
+      : super(
+          name: 'posix path',
+          example: '/path/to/file',
+          pattern: r'^(/[^/ ]*)+/?$',
+        );
+}
+
+class HexColorValidator extends RegexValidator {
+  const HexColorValidator()
+      : super(
+          name: 'hex color',
+          example: '#ff0000',
+          pattern: r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$',
+        );
 }
 
 class RegexValidator extends Validator<String> {

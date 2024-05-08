@@ -31,7 +31,7 @@ class SlideMapper extends SubClassMapperBase<Slide> {
   static const Field<Slide, String> _f$layout = Field('layout', _$layout);
   static String _$data(Slide v) => v.data;
   static const Field<Slide, String> _f$data = Field('data', _$data);
-  static String? _$raw(Slide v) => v.raw;
+  static String _$raw(Slide v) => v.raw;
   static const Field<Slide, String> _f$raw = Field('raw', _$raw);
   static String? _$title(Slide v) => v.title;
   static const Field<Slide, String> _f$title = Field('title', _$title);
@@ -46,9 +46,9 @@ class SlideMapper extends SubClassMapperBase<Slide> {
   static TransitionOptions? _$transition(Slide v) => v.transition;
   static const Field<Slide, TransitionOptions> _f$transition =
       Field('transition', _$transition);
-  static String _$hash(Slide v) => v.hash;
-  static const Field<Slide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(Slide v) => v.hashKey;
+  static const Field<Slide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<Slide> fields = const {
@@ -60,7 +60,7 @@ class SlideMapper extends SubClassMapperBase<Slide> {
     #background: _f$background,
     #style: _f$style,
     #transition: _f$transition,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -146,17 +146,16 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
   static TransitionOptions? _$transition(SimpleSlide v) => v.transition;
   static const Field<SimpleSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String? _$raw(SimpleSlide v) => v.raw;
-  static const Field<SimpleSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static String _$raw(SimpleSlide v) => v.raw;
+  static const Field<SimpleSlide, String> _f$raw = Field('raw', _$raw);
   static String _$data(SimpleSlide v) => v.data;
   static const Field<SimpleSlide, String> _f$data = Field('data', _$data);
   static String _$layout(SimpleSlide v) => v.layout;
   static const Field<SimpleSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String _$hash(SimpleSlide v) => v.hash;
-  static const Field<SimpleSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(SimpleSlide v) => v.hashKey;
+  static const Field<SimpleSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<SimpleSlide> fields = const {
@@ -168,7 +167,7 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
     #raw: _f$raw,
     #data: _f$data,
     #layout: _f$layout,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -283,7 +282,7 @@ class _SimpleSlideCopyWithImpl<$R, $Out>
           Object? contentOptions = $none,
           Object? style = $none,
           Object? transition = $none,
-          Object? raw = $none,
+          String? raw,
           String? data}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
@@ -291,7 +290,7 @@ class _SimpleSlideCopyWithImpl<$R, $Out>
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
-        if (raw != $none) #raw: raw,
+        if (raw != null) #raw: raw,
         if (data != null) #data: data
       }));
   @override
@@ -355,11 +354,11 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
   static const Field<SplitSlide, String> _f$data = Field('data', _$data);
   static String _$layout(SplitSlide v) => v.layout;
   static const Field<SplitSlide, String> _f$layout = Field('layout', _$layout);
-  static String? _$raw(SplitSlide v) => v.raw;
+  static String _$raw(SplitSlide v) => v.raw;
   static const Field<SplitSlide, String> _f$raw = Field('raw', _$raw);
-  static String _$hash(SplitSlide v) => v.hash;
-  static const Field<SplitSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(SplitSlide v) => v.hashKey;
+  static const Field<SplitSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<SplitSlide> fields = const {
@@ -372,7 +371,7 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
     #data: _f$data,
     #layout: _f$layout,
     #raw: _f$raw,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -474,15 +473,14 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
   static ImageOptions _$options(ImageSlide v) => v.options;
   static const Field<ImageSlide, ImageOptions> _f$options =
       Field('options', _$options);
-  static String? _$raw(ImageSlide v) => v.raw;
-  static const Field<ImageSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static String _$raw(ImageSlide v) => v.raw;
+  static const Field<ImageSlide, String> _f$raw = Field('raw', _$raw);
   static String _$layout(ImageSlide v) => v.layout;
   static const Field<ImageSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String _$hash(ImageSlide v) => v.hash;
-  static const Field<ImageSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(ImageSlide v) => v.hashKey;
+  static const Field<ImageSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<ImageSlide> fields = const {
@@ -495,7 +493,7 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
     #options: _f$options,
     #raw: _f$raw,
     #layout: _f$layout,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -624,7 +622,7 @@ class _ImageSlideCopyWithImpl<$R, $Out>
           Object? transition = $none,
           String? data,
           ImageOptions? options,
-          Object? raw = $none}) =>
+          String? raw}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (style != $none) #style: style,
@@ -633,7 +631,7 @@ class _ImageSlideCopyWithImpl<$R, $Out>
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
         if (options != null) #options: options,
-        if (raw != $none) #raw: raw
+        if (raw != null) #raw: raw
       }));
   @override
   ImageSlide $make(CopyWithData data) => ImageSlide(
@@ -690,15 +688,14 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
       Field('transition', _$transition, opt: true);
   static String _$data(WidgetSlide v) => v.data;
   static const Field<WidgetSlide, String> _f$data = Field('data', _$data);
-  static String? _$raw(WidgetSlide v) => v.raw;
-  static const Field<WidgetSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static String _$raw(WidgetSlide v) => v.raw;
+  static const Field<WidgetSlide, String> _f$raw = Field('raw', _$raw);
   static String _$layout(WidgetSlide v) => v.layout;
   static const Field<WidgetSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String _$hash(WidgetSlide v) => v.hash;
-  static const Field<WidgetSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(WidgetSlide v) => v.hashKey;
+  static const Field<WidgetSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<WidgetSlide> fields = const {
@@ -711,7 +708,7 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
     #data: _f$data,
     #raw: _f$raw,
     #layout: _f$layout,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -844,7 +841,7 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
           Object? contentOptions = $none,
           Object? transition = $none,
           String? data,
-          Object? raw = $none}) =>
+          String? raw}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (options != null) #options: options,
@@ -853,7 +850,7 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
-        if (raw != $none) #raw: raw
+        if (raw != null) #raw: raw
       }));
   @override
   WidgetSlide $make(CopyWithData data) => WidgetSlide(
@@ -914,11 +911,11 @@ class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
   static String _$layout(SectionsSlide v) => v.layout;
   static const Field<SectionsSlide, String> _f$layout =
       Field('layout', _$layout);
-  static String? _$raw(SectionsSlide v) => v.raw;
+  static String _$raw(SectionsSlide v) => v.raw;
   static const Field<SectionsSlide, String> _f$raw = Field('raw', _$raw);
-  static String _$hash(SectionsSlide v) => v.hash;
-  static const Field<SectionsSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(SectionsSlide v) => v.hashKey;
+  static const Field<SectionsSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<SectionsSlide> fields = const {
@@ -931,7 +928,7 @@ class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
     #sections: _f$sections,
     #layout: _f$layout,
     #raw: _f$raw,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -1028,15 +1025,14 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
       v.sections;
   static const Field<TwoColumnSlide, Map<String, ContentOptions?>> _f$sections =
       Field('sections', _$sections, opt: true, def: const {});
-  static String? _$raw(TwoColumnSlide v) => v.raw;
-  static const Field<TwoColumnSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static String _$raw(TwoColumnSlide v) => v.raw;
+  static const Field<TwoColumnSlide, String> _f$raw = Field('raw', _$raw);
   static String _$layout(TwoColumnSlide v) => v.layout;
   static const Field<TwoColumnSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String _$hash(TwoColumnSlide v) => v.hash;
-  static const Field<TwoColumnSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(TwoColumnSlide v) => v.hashKey;
+  static const Field<TwoColumnSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<TwoColumnSlide> fields = const {
@@ -1049,7 +1045,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
     #sections: _f$sections,
     #raw: _f$raw,
     #layout: _f$layout,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -1180,7 +1176,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
           Object? transition = $none,
           String? data,
           Map<String, ContentOptions?>? sections,
-          Object? raw = $none}) =>
+          String? raw}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
@@ -1189,7 +1185,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
         if (sections != null) #sections: sections,
-        if (raw != $none) #raw: raw
+        if (raw != null) #raw: raw
       }));
   @override
   TwoColumnSlide $make(CopyWithData data) => TwoColumnSlide(
@@ -1250,15 +1246,14 @@ class TwoColumnHeaderSlideMapper
       v.sections;
   static const Field<TwoColumnHeaderSlide, Map<String, ContentOptions?>>
       _f$sections = Field('sections', _$sections, opt: true, def: const {});
-  static String? _$raw(TwoColumnHeaderSlide v) => v.raw;
-  static const Field<TwoColumnHeaderSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static String _$raw(TwoColumnHeaderSlide v) => v.raw;
+  static const Field<TwoColumnHeaderSlide, String> _f$raw = Field('raw', _$raw);
   static String _$layout(TwoColumnHeaderSlide v) => v.layout;
   static const Field<TwoColumnHeaderSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String _$hash(TwoColumnHeaderSlide v) => v.hash;
-  static const Field<TwoColumnHeaderSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(TwoColumnHeaderSlide v) => v.hashKey;
+  static const Field<TwoColumnHeaderSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<TwoColumnHeaderSlide> fields = const {
@@ -1271,7 +1266,7 @@ class TwoColumnHeaderSlideMapper
     #sections: _f$sections,
     #raw: _f$raw,
     #layout: _f$layout,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -1406,7 +1401,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
           Object? transition = $none,
           String? data,
           Map<String, ContentOptions?>? sections,
-          Object? raw = $none}) =>
+          String? raw}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
@@ -1415,7 +1410,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
         if (sections != null) #sections: sections,
-        if (raw != $none) #raw: raw
+        if (raw != null) #raw: raw
       }));
   @override
   TwoColumnHeaderSlide $make(CopyWithData data) => TwoColumnHeaderSlide(
@@ -1468,15 +1463,14 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
       Field('transition', _$transition, opt: true);
   static String _$data(InvalidSlide v) => v.data;
   static const Field<InvalidSlide, String> _f$data = Field('data', _$data);
-  static String? _$raw(InvalidSlide v) => v.raw;
-  static const Field<InvalidSlide, String> _f$raw =
-      Field('raw', _$raw, opt: true);
+  static String _$raw(InvalidSlide v) => v.raw;
+  static const Field<InvalidSlide, String> _f$raw = Field('raw', _$raw);
   static String _$layout(InvalidSlide v) => v.layout;
   static const Field<InvalidSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
-  static String _$hash(InvalidSlide v) => v.hash;
-  static const Field<InvalidSlide, String> _f$hash =
-      Field('hash', _$hash, mode: FieldMode.member);
+  static String _$hashKey(InvalidSlide v) => v.hashKey;
+  static const Field<InvalidSlide, String> _f$hashKey =
+      Field('hashKey', _$hashKey, key: 'hash_key', mode: FieldMode.member);
 
   @override
   final MappableFields<InvalidSlide> fields = const {
@@ -1488,7 +1482,7 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
     #data: _f$data,
     #raw: _f$raw,
     #layout: _f$layout,
-    #hash: _f$hash,
+    #hashKey: _f$hashKey,
   };
   @override
   final bool ignoreNull = true;
@@ -1605,7 +1599,7 @@ class _InvalidSlideCopyWithImpl<$R, $Out>
           Object? style = $none,
           Object? transition = $none,
           String? data,
-          Object? raw = $none}) =>
+          String? raw}) =>
       $apply(FieldCopyWithData({
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (title != $none) #title: title,
@@ -1613,7 +1607,7 @@ class _InvalidSlideCopyWithImpl<$R, $Out>
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
         if (data != null) #data: data,
-        if (raw != $none) #raw: raw
+        if (raw != null) #raw: raw
       }));
   @override
   InvalidSlide $make(CopyWithData data) => InvalidSlide(

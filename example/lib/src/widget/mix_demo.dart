@@ -7,64 +7,63 @@ import 'package:superdeck/superdeck.dart';
 const purpleAccent = Color.fromARGB(255, 95, 44, 188);
 const purple = Color.fromARGB(255, 66, 19, 152);
 
-final _style = Style(
-  // Box
-  box.height(250),
-  box.width(250),
-  box.borderRadius.circular(10),
-  box.alignment.center(),
-  box.shadow(
-    blurRadius: 20,
-    spreadRadius: 10,
-    color: Colors.black.withOpacity(0.5),
-  ),
-  box.gradient.radial(
-    stops: [0.0, 1.0],
-    radius: 0.7,
-    colors: [purpleAccent, purple],
-  ),
-  // Decorators
-  scale(1.0),
-  opacity(1),
-  // Text
-  text.textAlign.center(),
-  text.style.shadow.blurRadius(2),
-  text.style(
-    color: Colors.white,
-    fontSize: 32,
-  ),
-  // Events
-  onMouseHover((event) {
-    final position = event.position;
-    final dx = position.x * 10;
-    final dy = position.y * 10;
+Style get _style => Style(
+      // Box
+      $box.height(250),
+      $box.width(250),
+      $box.borderRadius.circular(10),
+      $box.alignment.center(),
+      $box.shadow(
+        blurRadius: 20,
+        spreadRadius: 10,
+        color: Colors.black.withOpacity(0.5),
+      ),
+      $box.gradient.radial(
+        stops: [0.0, 1.0],
+        radius: 0.7,
+        colors: [purpleAccent, purple],
+      ),
+      // Decorators
+      $with.scale(1.0),
+      $with.opacity(1),
+      // Text
+      $text.textAlign.center(),
+      $text.style.shadow.blurRadius(2),
+      $text.style(
+        color: Colors.white,
+        fontSize: 32,
+      ),
+      // Events
+      $on.hover.event((e) {
+        if (e == null) return const Style.empty();
+        final position = e.position;
+        final dx = position.x * 10;
+        final dy = position.y * 10;
 
-    final opacityDistance = _calculateDistance(position);
+        final opacityDistance = _calculateDistance(position);
 
-    return Style(
-      text.style.shadow.color.black.withOpacity(opacityDistance),
-      text.style.shadow.offset(-dx, -dy),
-      box.transform(_transformMatrix(position)),
-      box.shadow.offset(dx, dy),
-      box.gradient.radial(
-        center: position,
+        return Style(
+          $text.style.shadow.color.black.withOpacity(opacityDistance),
+          $text.style.shadow.offset(-dx, -dy),
+          $box.transform(_transformMatrix(position)),
+          $box.shadow.offset(dx, dy),
+          $box.gradient.radial.center(position),
+        );
+      }),
+
+      ($on.press | $on.longPress)(
+        $box.shadow(
+          blurRadius: 5,
+          spreadRadius: 1,
+          offset: Offset.zero,
+          color: purpleAccent,
+        ),
+        $box.border(color: Colors.white, width: 1),
+        $box.gradient.radial.colors([purpleAccent, purpleAccent]),
+        $text.style.shadow.offset.zero(),
+        $with.scale(0.95),
       ),
     );
-  }),
-
-  (onPressed | onLongPressed)(
-    box.shadow(
-      blurRadius: 5,
-      spreadRadius: 1,
-      offset: Offset.zero,
-      color: purpleAccent,
-    ),
-    box.border.all(color: Colors.white, width: 1),
-    box.gradient.radial.colors([purpleAccent, purpleAccent]),
-    text.style.shadow.offset.zero(),
-    scale(0.95),
-  ),
-);
 
 class ExampleOptions {
   final double height;
@@ -87,9 +86,9 @@ class ExampleOptions {
   static final schema = ArgsSchema(
     validator: Schema(
       {
-        'height': Schema.double.required(),
-        'width': Schema.double.required(),
-        'text': Schema.string.required(),
+        'height': Schema.double.isRequired(),
+        'width': Schema.double.isRequired(),
+        'text': Schema.string.isRequired(),
       },
     ),
     decoder: fromMap,
@@ -113,10 +112,11 @@ class MixExample extends ExampleWidget<ExampleOptions> {
       return Center(
         child: PressableBox(
           onPress: () {},
-          style: _style.animate().mix(
-                box.height(args.height),
-                box.width(args.width),
-              ),
+          style: Style(
+            _style(),
+            $box.height(args.height),
+            $box.width(args.width),
+          ).animate(),
           child: StyledText(args.text ?? 'Mix'),
         ),
       );

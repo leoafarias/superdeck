@@ -13,7 +13,7 @@ import '../../helpers/constants.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
 import '../components/molecules/scaled_app.dart';
-import '../services/image_generation_service.dart';
+import '../services/snapshot_service.dart';
 import '../superdeck.dart';
 
 enum ExportProcessStatus {
@@ -135,7 +135,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
   final _pageController = PageController();
   late List<Slide> _slides;
   late final _images = listSignal<Uint8List>([]);
-  late final superdeck = SuperDeckProvider.instance;
+  late final superdeck = SDController.instance;
 
   @override
   void initState() {
@@ -154,7 +154,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   Future<void> startConversion() async {
     try {
-      final generator = ImageGenerationService(context);
+      final generator = SnapshotService.instance;
       _status.value = ExportProcessStatus.converting;
 
       List<Future<Uint8List>> futures = [];
@@ -165,7 +165,6 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
           slide: slide,
         );
         _images.add(convertedImage);
-        await Future.delayed(Durations.short1);
 
         return convertedImage;
       }

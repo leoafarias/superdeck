@@ -8,7 +8,8 @@ import 'package:flutter/services.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
-import '../models/slide_model.dart';
+import '../helpers/utils.dart';
+import '../superdeck.dart';
 
 enum SnapshotQuality {
   low('Low', pixelRatio: 0.4),
@@ -23,28 +24,29 @@ enum SnapshotQuality {
 }
 
 //
-class ImageGenerationService {
-  bool _isDisposed = false;
-  ImageGenerationService(this.context);
+class SnapshotService {
+  SnapshotService._();
 
-  final BuildContext context;
+  static final SnapshotService instance = SnapshotService._();
 
-  void dispose() => _isDisposed = true;
-
-  void checkDisposed() {
-    if (_isDisposed) {
-      throw Exception('ImageGenerationService is disposed');
-    }
-  }
+  static final _generationQueue = <String>{};
+  static const _maxConcurrentGenerations = 3;
 
   Future<Uint8List> generate({
     required SnapshotQuality quality,
     required Slide slide,
   }) async {
+    final queueKey = shortHashId(slide.raw + quality.name);
     try {
+      while (_generationQueue.length > _maxConcurrentGenerations) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
+      _generationQueue.add(queueKey);
+
       final image = await _fromWidgetToImage(
         SlideView.snapshot(slide),
-        context: context,
+        context: kAppKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
       );
@@ -53,7 +55,19 @@ class ImageGenerationService {
     } catch (e, stackTrace) {
       log('Error generating image: $e', stackTrace: stackTrace);
       rethrow;
+    } finally {
+      _generationQueue.remove(queueKey);
     }
+  }
+
+  Future<Uint8List> generateWithKey({
+    required GlobalKey key,
+    required SnapshotQuality quality,
+  }) async {
+    final boundary =
+        key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final image = await boundary.toImage(pixelRatio: quality.pixelRatio);
+    return _imageToUint8List(image);
   }
 
   Future<Uint8List> _imageToUint8List(ui.Image image) async {
@@ -116,7 +130,6 @@ class ImageGenerationService {
         focusManager: FocusManager(),
         onBuildScheduled: () {
           isDirty = true;
-          log('Build scheduled');
         },
       );
 
@@ -142,11 +155,11 @@ class ImageGenerationService {
         await Future.delayed(const Duration(milliseconds: 250));
 
         if (!isDirty) {
-          print('completed;  ');
+          log('Image generation completed.');
           break;
         }
 
-        print('retrying...  ');
+        log('Image generation.. waiting...');
 
         retryCount--;
       }

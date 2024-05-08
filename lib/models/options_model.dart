@@ -3,72 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
 import '../helpers/layout_builder.dart';
-import '../helpers/utils.dart';
+import '../helpers/mappers.dart';
 import '../schema/schema.dart';
 import '../schema/schema_values.dart';
 import 'slide_model.dart';
 
 part 'options_model.mapper.dart';
-
-@MappableClass()
-abstract class Config with ConfigMappable {
-  final String? background;
-  final String? style;
-  final TransitionOptions? transition;
-
-  const Config({
-    required this.background,
-    required this.style,
-    required this.transition,
-  });
-
-  static final schema = Schema(
-    {
-      "background": Schema.string.optional(),
-      "style": Schema.string.optional(),
-      "transition": TransitionOptions.schema.optional(),
-    },
-    additionalProperties: false,
-  );
-}
-
-@MappableClass()
-class ProjectConfig extends Config with ProjectConfigMappable {
-  final bool cacheRemoteAssets;
-  const ProjectConfig({
-    required super.background,
-    required super.style,
-    required super.transition,
-    this.cacheRemoteAssets = false,
-  });
-
-  const ProjectConfig.empty()
-      : cacheRemoteAssets = false,
-        super(
-          background: '',
-          style: '',
-          transition: const TransitionOptions(type: TransitionType.fadeIn),
-        );
-
-  static const fromMap = ProjectConfigMapper.fromMap;
-  static const fromJson = ProjectConfigMapper.fromJson;
-
-  Map<String, dynamic> toSlideMap() {
-    final config = toMap();
-    config.remove('cache_remote_assets');
-    return config;
-  }
-
-  static ProjectConfig fromYaml(String yaml) {
-    return ProjectConfigMapper.fromMap(converYamlToMap(yaml));
-  }
-
-  static final schema = Config.schema.merge(
-    {
-      "cache_remote_assets": Schema.boolean.optional(),
-    },
-  );
-}
 
 @MappableClass()
 class ContentOptions with ContentOptionsMappable {
@@ -87,8 +27,8 @@ class ContentOptions with ContentOptionsMappable {
 
   static final schema = Schema(
     {
-      "alignment": ContentAlignment.schema.optional(),
-      "flex": Schema.integer.optional(),
+      "alignment": ContentAlignment.schema.isOptional(),
+      "flex": Schema.integer.isOptional(),
     },
   );
 }
@@ -105,8 +45,8 @@ abstract class SplitOptions with SplitOptionsMappable {
 
   static final schema = Schema(
     {
-      "flex": Schema.integer.optional(),
-      "position": LayoutPosition.schema.optional(),
+      "flex": Schema.integer.isOptional(),
+      "position": LayoutPosition.schema.isOptional(),
     },
   );
 }
@@ -125,8 +65,8 @@ class ImageOptions extends SplitOptions with ImageOptionsMappable {
 
   static final schema = SplitOptions.schema.merge(
     {
-      "fit": ImageFit.schema.optional(),
-      "src": Schema.string.required(),
+      "fit": ImageFit.schema.isOptional(),
+      "src": Schema.string.isRequired(),
     },
   );
 }
@@ -145,8 +85,8 @@ class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
 
   static final schema = SplitOptions.schema.merge(
     {
-      "name": Schema.string.required(),
-      "args": Schema.any.optional(),
+      "name": Schema.string.isRequired(),
+      "args": Schema.any.isOptional(),
     },
   );
 }
@@ -178,26 +118,12 @@ class TransitionOptions with TransitionOptionsMappable {
 
   static final schema = Schema(
     {
-      "type": TransitionType.schema.required(),
-      "duration": Schema.integer.optional(),
-      "delay": Schema.integer.optional(),
-      "curve": CurveType.schema.optional()
+      "type": TransitionType.schema.isRequired(),
+      "duration": Schema.integer.isOptional(),
+      "delay": Schema.integer.isOptional(),
+      "curve": CurveType.schema.isOptional()
     },
   );
-}
-
-class DurationMapper extends SimpleMapper<Duration> {
-  const DurationMapper();
-
-  @override
-  Duration decode(Object value) {
-    return Duration(milliseconds: value as int);
-  }
-
-  @override
-  int encode(Duration self) {
-    return self.inMilliseconds;
-  }
 }
 
 typedef Decoder<T> = T Function(Map<String, dynamic>);

@@ -3,31 +3,32 @@ import 'validators.dart';
 
 abstract class SchemaValue<V> {
   const SchemaValue({
-    required this.isOptional,
+    required this.optional,
     required this.validators,
   });
 
   SchemaValue<V> copyWith({
-    bool? isOptional,
+    bool? optional,
+    List<Validator<V>>? validators,
   });
 
-  SchemaValue<V> required() {
-    return copyWith(isOptional: false);
+  SchemaValue<V> isRequired() {
+    return copyWith(optional: false);
   }
 
-  SchemaValue<V> optional() {
-    return copyWith(isOptional: true);
+  SchemaValue<V> isOptional() {
+    return copyWith(optional: true);
   }
 
-  final bool isOptional;
+  final bool optional;
   final List<Validator<V>> validators;
 
-  bool get isRequired => !isOptional;
+  bool get required => !optional;
 
   V? tryParse(Object value) => value as V?;
 
-  void validateOrThrow(String key, Object value) {
-    final result = validate([key], value);
+  void validateOrThrow(Object value) {
+    final result = validate([], value);
     if (!result.isValid) {
       throw SchemaValidationException(result);
     }
@@ -35,7 +36,7 @@ abstract class SchemaValue<V> {
 
   SchemaValidationResult validate(List<String> path, Object? value) {
     if (value == null) {
-      return isOptional
+      return optional
           ? SchemaValidationResult.valid(path)
           : SchemaValidationResult.requiredPropMissing(path);
     }
@@ -59,15 +60,15 @@ abstract class SchemaValue<V> {
 
 /// Used to remove value from SchemaMap
 class NullSchema extends SchemaValue<Null> {
-  const NullSchema({super.isOptional = false, super.validators = const []});
+  const NullSchema({super.optional = false, super.validators = const []});
 
   @override
   NullSchema copyWith({
-    bool? isOptional,
+    bool? optional,
     List<Validator<Null>>? validators,
   }) {
     return NullSchema(
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
       validators: validators ?? this.validators,
     );
   }
@@ -79,15 +80,15 @@ class NullSchema extends SchemaValue<Null> {
 }
 
 class DoubleSchema extends SchemaValue<double> {
-  const DoubleSchema({super.isOptional = false, super.validators = const []});
+  const DoubleSchema({super.optional = false, super.validators = const []});
 
   @override
   DoubleSchema copyWith({
-    bool? isOptional,
+    bool? optional,
     List<Validator<double>>? validators,
   }) {
     return DoubleSchema(
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
       validators: validators ?? this.validators,
     );
   }
@@ -114,19 +115,19 @@ class EnumSchema extends StringSchema {
   final List<String> values;
   const EnumSchema({
     required this.values,
-    super.isOptional = false,
+    super.optional = false,
     super.validators = const [],
   });
 
   @override
   EnumSchema copyWith({
     List<String>? values,
-    bool? isOptional,
+    bool? optional,
     List<Validator<String>>? validators,
   }) {
     return EnumSchema(
       values: values ?? this.values,
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
       validators: validators ?? this.validators,
     );
   }
@@ -148,15 +149,15 @@ class EnumSchema extends StringSchema {
 }
 
 class StringSchema extends SchemaValue<String> {
-  const StringSchema({super.isOptional = false, super.validators = const []});
+  const StringSchema({super.optional = false, super.validators = const []});
 
   @override
   StringSchema copyWith({
-    bool? isOptional,
+    bool? optional,
     List<Validator<String>>? validators,
   }) {
     return StringSchema(
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
       validators: validators ?? this.validators,
     );
   }
@@ -168,15 +169,15 @@ class StringSchema extends SchemaValue<String> {
 }
 
 class IntegerSchema extends SchemaValue<int> {
-  const IntegerSchema({super.isOptional = false, super.validators = const []});
+  const IntegerSchema({super.optional = false, super.validators = const []});
 
   @override
   IntegerSchema copyWith({
-    bool? isOptional,
+    bool? optional,
     List<Validator<int>>? validators,
   }) {
     return IntegerSchema(
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
       validators: validators ?? this.validators,
     );
   }
@@ -196,15 +197,15 @@ class IntegerSchema extends SchemaValue<int> {
 }
 
 class BooleanSchema extends SchemaValue<bool> {
-  const BooleanSchema({super.isOptional = false, super.validators = const []});
+  const BooleanSchema({super.optional = false, super.validators = const []});
 
   @override
   BooleanSchema copyWith({
-    bool? isOptional,
+    bool? optional,
     List<Validator<bool>>? validators,
   }) {
     return BooleanSchema(
-      isOptional: isOptional ?? this.isOptional,
+      optional: optional ?? this.optional,
       validators: validators ?? this.validators,
     );
   }
@@ -224,5 +225,49 @@ class BooleanSchema extends SchemaValue<bool> {
     }
 
     return null;
+  }
+}
+
+extension StringSchemaExt on SchemaValue<String> {
+  SchemaValue<String> isPosixPath() {
+    return copyWith(validators: [
+      ...validators,
+      const PosixPathValidator(),
+    ]);
+  }
+
+  SchemaValue<String> isEmail() {
+    return copyWith(validators: [
+      ...validators,
+      const EmailValidator(),
+    ]);
+  }
+
+  SchemaValue<String> isHexColor() {
+    return copyWith(validators: [
+      ...validators,
+      const HexColorValidator(),
+    ]);
+  }
+
+  SchemaValue<String> isEmpty() {
+    return copyWith(validators: [
+      ...validators,
+      const IsEmptyValidator(),
+    ]);
+  }
+
+  SchemaValue<String> minLength(int min) {
+    return copyWith(validators: [
+      ...validators,
+      MinLengthValidator(min),
+    ]);
+  }
+
+  SchemaValue<String> maxLength(int max) {
+    return copyWith(validators: [
+      ...validators,
+      MaxLengthValidator(max),
+    ]);
   }
 }

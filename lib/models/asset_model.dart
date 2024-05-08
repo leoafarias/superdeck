@@ -1,73 +1,99 @@
+import 'dart:io';
+
+import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 
-import '../helpers/config.dart';
+import '../helpers/mappers.dart';
+import '../helpers/utils.dart';
+import '../services/project_service.dart';
+import 'slide_model.dart';
 
 part 'asset_model.mapper.dart';
 
-@MappableClass(
-  discriminatorKey: 'type',
-)
-abstract class SlideAsset with SlideAssetMappable {
-  final double width;
-  final double height;
-  final String hash;
-  final String localPath;
-  final String type;
+@MappableEnum()
+enum AssetFileType {
+  png,
+  jpg,
+  jpeg,
+  gif,
+  webp;
 
-  @MappableConstructor()
-  const SlideAsset({
-    required this.width,
-    required this.height,
-    required this.localPath,
-    required this.hash,
-    required this.type,
+  static AssetFileType parse(String value) {
+    return values.firstWhereOrNull((e) => e.name == value) ??
+        (throw Exception('Invalid file type: $value'));
+  }
+
+  static AssetFileType? tryParse(String value) {
+    return values.firstWhereOrNull((e) => value.startsWith(e.name));
+  }
+
+  bool isPng() => this == AssetFileType.png;
+
+  bool isJpg() => this == AssetFileType.jpg || this == AssetFileType.jpeg;
+
+  bool isGif() => this == AssetFileType.gif;
+}
+
+@MappableEnum()
+enum SlideAssetType {
+  cached,
+  thumb,
+  mermaid;
+
+  static SlideAssetType parse(String value) {
+    return values.firstWhereOrNull((e) => e.name == value) ??
+        (throw Exception('Invalid asset type: $value'));
+  }
+
+  static SlideAssetType? tryParse(String value) {
+    return values.firstWhereOrNull((e) => value.startsWith(e.name));
+  }
+}
+
+@MappableClass(
+  includeCustomMappers: [
+    FileMapper(),
+    SizeMapper(),
+  ],
+)
+final class SlideAsset with SlideAssetMappable {
+  final File file;
+  final Size dimensions;
+
+  SlideAsset({
+    required this.file,
+    required this.dimensions,
   });
+
+  String get extension => p.extension(file.path);
+
+  bool get isPortrait => dimensions.height > dimensions.width;
+
+  bool get isLandscape => !isPortrait;
+
+  static File thumbnail(Slide slide) {
+    return ProjectService.instance.buildAssetFile(
+      '${slide.hashKey}.png',
+      SlideAssetType.thumb,
+    );
+  }
+
+  static File cached(String uri) {
+    return ProjectService.instance.buildAssetFile(
+      '${shortHashId(uri)}.png',
+      SlideAssetType.cached,
+    );
+  }
+
+  static File mermaid(String mermaidSyntax) {
+    return ProjectService.instance.buildAssetFile(
+      '${shortHashId(mermaidSyntax)}.png',
+      SlideAssetType.mermaid,
+    );
+  }
 
   static const fromMap = SlideAssetMapper.fromMap;
   static const fromJson = SlideAssetMapper.fromJson;
-
-  String get extension => localPath.split('.').last;
-
-  String get relativePath => p.relative(
-        localPath,
-        from: sdConfig.assetsDir.parent.path,
-      );
-
-  static const cachedPrefix = 'sd_cached_';
-  static const generatedPrefix = 'sd_generated_';
-  static const thumbnailPrefix = 'sd_thumb_';
-
-  static const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-}
-
-@MappableClass(discriminatorValue: 'generated')
-class GeneratedAsset extends SlideAsset with GeneratedAssetMappable {
-  @MappableConstructor()
-  GeneratedAsset({
-    required super.width,
-    required super.height,
-    required super.localPath,
-    required super.hash,
-  }) : super(type: 'generated');
-}
-
-@MappableClass(discriminatorValue: 'cached')
-class CachedAsset extends SlideAsset with CachedAssetMappable {
-  CachedAsset({
-    required super.hash,
-    required super.width,
-    required super.height,
-    required super.localPath,
-  }) : super(type: 'cached');
-}
-
-@MappableClass(discriminatorValue: 'thumbnail')
-class ThumbnailAsset extends SlideAsset with ThumbnailAssetMappable {
-  ThumbnailAsset({
-    required super.hash,
-    required super.width,
-    required super.height,
-    required super.localPath,
-  }) : super(type: 'thumbnail');
 }

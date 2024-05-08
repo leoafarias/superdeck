@@ -1,31 +1,75 @@
 import 'dart:io';
 
-import 'package:path/path.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-const sdConfig = SDConfig.instance;
+import '../models/options_model.dart';
+import '../schema/schema.dart';
+import '../schema/schema_values.dart';
+import 'utils.dart';
 
-class SDConfig {
-  const SDConfig._();
+part 'config.mapper.dart';
 
-  static const instance = SDConfig._();
+@MappableClass()
+abstract class Config with ConfigMappable {
+  final String? background;
+  final String? style;
+  final TransitionOptions? transition;
 
-  String get _assetsDirName => 'assets';
+  const Config({
+    required this.background,
+    required this.style,
+    required this.transition,
+  });
 
-  String get _slidesMarkdownName => 'slides.md';
-  String get imageDirName => 'images';
+  static final schema = Schema(
+    {
+      "background": Schema.string.isOptional(),
+      "style": Schema.string.isOptional(),
+      "transition": TransitionOptions.schema.isOptional(),
+    },
+    additionalProperties: false,
+  );
+}
 
-  File get slidesMarkdownFile => File(_slidesMarkdownName);
-  Directory get assetsDir => Directory(_assetsDirName);
-  Directory get assetsImageDir => Directory(join(_assetsDirName, imageDirName));
-  File get projectConfigFile => File('superdeck.yaml');
+@MappableClass()
+class SDConfig extends Config with SDConfigMappable {
+  final bool? cacheRemoteAssets;
 
-  ({
-    File slides,
-    File config,
-    File assets,
-  }) get references => (
-        slides: File(join(_assetsDirName, 'slides.json')),
-        config: File(join(_assetsDirName, 'config.json')),
-        assets: File(join(_assetsDirName, 'assets.json')),
-      );
+  const SDConfig({
+    required super.background,
+    required super.style,
+    required super.transition,
+    this.cacheRemoteAssets,
+  });
+
+  const SDConfig.empty()
+      : this(
+          cacheRemoteAssets: null,
+          background: null,
+          style: null,
+          transition: null,
+        );
+
+  static const fromMap = SDConfigMapper.fromMap;
+  static const fromJson = SDConfigMapper.fromJson;
+  static SDConfig fromYaml(String yaml) => fromMap(converYamlToMap(yaml));
+
+  static Future<SDConfig> load(File file) async {
+    final contents = await file.readAsString();
+    return fromYaml(contents);
+  }
+
+  Map<String, dynamic> toSlideMap() {
+    final config = toMap();
+    config.remove('cache_remote_assets');
+    return config;
+  }
+
+  static final schema = Config.schema.merge(
+    {
+      "cache_remote_assets": Schema.boolean.isOptional(),
+      "markdown_file": Schema.string.isRequired().isPosixPath(),
+      "assets_dir": Schema.string.isRequired().isPosixPath(),
+    },
+  );
 }

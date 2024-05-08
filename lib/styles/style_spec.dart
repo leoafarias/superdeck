@@ -557,7 +557,7 @@ class SlideSpec extends Spec<SlideSpec> {
 }
 
 extension on MixData {
-  Spec specOf<Spec, A extends SpecAttribute<A, Spec>>(Spec fallback) {
+  Spec specOf<Spec, A extends SpecAttribute<Spec>>(Spec fallback) {
     return resolvableOf<Spec, A>() ?? fallback;
   }
 }

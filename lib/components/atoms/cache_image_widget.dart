@@ -6,16 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
+import '../../helpers/utils.dart';
+import '../../services/project_service.dart';
 import '../../superdeck.dart';
 
-class CachedImage extends StatelessWidget {
+class CacheImage extends StatelessWidget {
   final String url;
   final BoxFit? fit;
   final ImageSpec spec;
   final Alignment? alignment;
   final Size size;
 
-  const CachedImage({
+  const CacheImage({
     required this.url,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
@@ -26,18 +28,12 @@ class CachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assets = SuperDeckProvider.instance.assets.watch(context);
-
-    final asset =
-        assets.firstWhereOrNull((a) => a.hash == url.hashCode.toString());
-
-    final (:width, :height) = _calculateImageSize(size, asset);
-
-    final imageProvider =
-        ResizeImage.resizeIfNeeded(width, height, getImageProvider(url, size));
-
-    return AnimatedMixedImage(
-      image: imageProvider,
+    return AnimatedImageSpecWidget(
+      image: getImageProvider(
+        context: context,
+        url: url,
+        targetSize: size,
+      ),
       spec: spec.copyWith(
         fit: fit,
         alignment: alignment,
@@ -46,19 +42,17 @@ class CachedImage extends StatelessWidget {
   }
 }
 
-({int? width, int? height}) _calculateImageSize(Size size, SlideAsset? asset) {
+({int? width, int? height}) calculateImageSize(Size size, SlideAsset? asset) {
   int? cacheWidth;
   int? cacheHeight;
   //  check if height or asset is larger
   if (asset != null) {
-    final portrait = asset.height > asset.width;
-
     // cache the smallest dimension of the image
     // So set the other dimension to null
-    if (portrait) {
-      cacheHeight = min(size.height, asset.height).toInt();
+    if (asset.isPortrait) {
+      cacheHeight = min(size.height, asset.dimensions.height).toInt();
     } else {
-      cacheWidth = min(size.width, asset.width).toInt();
+      cacheWidth = min(size.width, asset.dimensions.width).toInt();
     }
   } else {
     // If no asset is available, set both cacheWidth and cacheHeight
@@ -75,8 +69,25 @@ class CachedImage extends StatelessWidget {
   return (width: cacheWidth, height: cacheHeight);
 }
 
-ImageProvider getImageProvider(String url, Size canvasSize) {
+ImageProvider getImageProvider({
+  required BuildContext context,
+  required String url,
+  required Size targetSize,
+}) {
+  final controller = SDController.instance;
   ImageProvider provider;
+
+  SlideAsset? asset;
+
+  final firstOrNull = controller.assets.watch(context).firstWhereOrNull;
+
+  if (ProjectService.instance.isAssetFile(File(url))) {
+    asset = firstOrNull((e) => e.file.path == url);
+  } else {
+    asset = firstOrNull((e) => e.file.path.contains(shortHashId(url)));
+  }
+
+  url = asset?.file.path ?? url;
 
   //  check if its a local path or a network path
   if (url.startsWith('http')) {
@@ -90,5 +101,11 @@ ImageProvider getImageProvider(String url, Size canvasSize) {
     }
   }
 
-  return provider;
+  final (:width, :height) = calculateImageSize(targetSize, asset);
+
+  return ResizeImage.resizeIfNeeded(
+    width,
+    height,
+    provider,
+  );
 }
