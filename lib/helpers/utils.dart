@@ -74,7 +74,7 @@ BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
 
 extension BuildContextExt on BuildContext {
   bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
-  bool get isSmall => MediaQuery.of(this).size.width < 600;
+  bool get isSmall => size.width < 600;
 
   Size get size => MediaQuery.sizeOf(this);
   bool get isMedium => size.width >= 600 && size.width < 1024;

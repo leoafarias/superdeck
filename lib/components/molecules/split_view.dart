@@ -80,7 +80,7 @@ class _SplitViewState extends State<SplitView>
     final currentSlide = navigation.currentSlide.watch(context);
     final sideIsOpen = navigation.sideIsOpen.watch(context);
 
-    final isSmall = context.isSmall;
+    final isSmall = context.isMobile;
 
     final sidePanel = SlideThumbnailList(
       scrollDirection: isSmall ? Axis.horizontal : Axis.vertical,
