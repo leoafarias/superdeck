@@ -86,39 +86,34 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       );
     }
 
-    return MediaQuery(
-      data: const MediaQueryData(
-        size: kResolution,
-      ),
-      child: Theme(
-        data: theme,
-        child: Builder(builder: (context) {
-          return MixTheme(
-            data: MixThemeData.withMaterial(),
-            child: MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              title: 'Superdeck',
-              routerConfig: _router,
-              theme: Theme.of(context),
-              key: kAppKey,
-              builder: (context, child) {
-                final result = _initialize.watch(context);
+    return Theme(
+      data: theme,
+      child: Builder(builder: (context) {
+        return MixTheme(
+          data: MixThemeData.withMaterial(),
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'Superdeck',
+            routerConfig: _router,
+            theme: Theme.of(context),
+            key: kAppKey,
+            builder: (context, child) {
+              final result = _initialize.watch(context);
 
-                return result.map(
-                  data: (_) => child!,
-                  loading: () => renderLoading(),
-                  error: (error, _) {
-                    return ExceptionWidget(
-                      error,
-                      onRetry: _initialize.reload,
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        }),
-      ),
+              return result.map(
+                data: (_) => child!,
+                loading: () => renderLoading(),
+                error: (error, _) {
+                  return ExceptionWidget(
+                    error,
+                    onRetry: _initialize.reload,
+                  );
+                },
+              );
+            },
+          ),
+        );
+      }),
     );
   }
 }
