@@ -8,6 +8,7 @@ import 'package:signals/signals_flutter.dart';
 import '../builder/slides_loader.dart';
 import '../helpers/constants.dart';
 import '../services/project_service.dart';
+import '../styles/style_util.dart';
 import '../superdeck.dart';
 
 final sdController = SDController.instance;

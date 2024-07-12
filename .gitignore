@@ -27,12 +27,7 @@ migrate_working_dir/
 
 # Ignoring native folders of the example as they can be re-generated easily using:
 # flutter create --platforms=android,ios,web,windows,macos .
-**/example/android/
-**/example/ios/
-**/example/web/
-**/example/windows/
-**/example/macos/
-**/example/linux/
+
 
 # Flutter/Dart/Pub related
 **/doc/api/

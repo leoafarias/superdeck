@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:watcher/watcher.dart';
 
-import '../helpers/config.dart';
+import '../helpers/config_model.dart';
 import '../helpers/constants.dart';
 import '../helpers/extensions.dart';
 import '../superdeck.dart';
@@ -35,6 +35,8 @@ class ProjectService {
   File get slideRef => File(p.join(assetsDir.path, 'slides.json'));
   File get configRef => File(p.join(assetsDir.path, 'config.json'));
   File get assetsRef => File(p.join(assetsDir.path, 'assets.json'));
+
+  late final watcher = FileWatcher(markdownFile.path);
 
   Future<void> ensureExists() async {
     await assetsDir.ensureExists();
@@ -187,8 +189,6 @@ class ProjectService {
 
     return assets;
   }
-
-  late final watcher = FileWatcher(markdownFile.path);
 }
 
 List<T> _parseList<T>(

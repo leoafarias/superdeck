@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -32,10 +19,7 @@
   <title>Presentation</title>
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
+
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
   <style>
@@ -49,60 +33,62 @@
       height: 100vh;
     }
 
-    .loading-container {
-      text-align: center;
-      background-color: #1c1c1c
-    }
-
-    .loading-spinner {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 6px solid rgba(255, 255, 255, 0.2);
-      border-top-color: #ffffff;
-      background-color: #1c1c1c;
-      animation: spin 1s infinite linear;
-      margin: 0 auto;
-    }
-
-    .loading-text {
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
+    
+.loader {
+  width: 65px;
+  aspect-ratio: 1;
+  position: relative;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  position: absolute;
+  border-radius: 50px;
+  box-shadow: 0 0 0 3px inset #fff;
+  animation: l5 2.5s infinite;
+  z-index: 999  ;
+}
+.loader:after {
+  animation-delay: -1.25s;
+  border-radius: 0;
+}
+@keyframes l5{
+  0%    {inset:0    35px 35px 0   }
+  12.5% {inset:0    35px 0    0   }
+  25%   {inset:35px 35px 0    0   }
+  37.5% {inset:35px 0    0    0   }
+  50%   {inset:35px 0    0    35px}
+  62.5% {inset:0    0    0    35px}
+  75%   {inset:0    0    35px 35px}
+  87.5% {inset:0    0    35px 0   }
+  100%  {inset:0    35px 35px 0   }
+}
   </style>
 </head>
 <body>
-  <div class="loading-container">
-    <div class="loading-spinner"></div>
-    <div class="loading-text" id="loading-text">Loading Superdeck...</div>
-  </div>
+  <div id="loading-container" class="loader"></div>
 
   <script>
-    window.addEventListener('load', function(ev) {
-      var loadingText = document.querySelector('#loading-text');
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: async function(engineInitializer) {
-          loadingText.textContent = "Initializing engine...";
-          let appRunner = await engineInitializer.initializeEngine();
+    {{flutter_js}}
+    {{flutter_build_config}}
 
-          loadingText.textContent = "Running app...";
-          await appRunner.runApp();
-        }
-      });
+    
+    _flutter.loader.load({
+      onEntrypointLoaded: async function(engineInitializer) {
+        
+        const appRunner = await engineInitializer.initializeEngine();
+        
+        
+        await appRunner.runApp();
+        
+        window.setTimeout(function () {
+          const loadingContainer = document.getElementById('loading-container');
+          loadingContainer.style.display = 'none';
+          
+        }, 500);
+        
+        
+      }
     });
   </script>
 </body>

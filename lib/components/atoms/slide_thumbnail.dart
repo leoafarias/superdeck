@@ -9,14 +9,15 @@ import '../../services/snapshot_service.dart';
 import '../../superdeck.dart';
 import '../molecules/scaled_app.dart';
 import 'cache_image_widget.dart';
+import 'loading_indicator.dart';
 import 'slide_view.dart';
 
 final _previewStyle = AnimatedStyle(
   Style(
-    box.color.grey.shade900(),
-    box.margin.all(8),
-    box.border.all.width(2),
-    box.shadow(
+    $box.color.grey.shade900(),
+    $box.margin.all(8),
+    $box.border.all.width(2),
+    $box.shadow(
       color: Colors.black.withOpacity(0.5),
       blurRadius: 4,
       spreadRadius: 1,
@@ -100,33 +101,36 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
       final result = _thumbnailLoader.watch(context);
 
-      final child = result.map(
-        data: (path) {
-          return Image(
-            image: getImageProvider(
-              context: context,
-              url: path,
-              targetSize: constraints.biggest,
-            ),
-          );
-        },
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        error: (error, _) {
-          return const Center(
-            child: Text('Error loading image'),
-          );
-        },
+      final child = LoadingOverlay(
+        isLoading: result.isLoading,
+        child: result.map(
+          data: (path) {
+            return Image(
+              image: getImageProvider(
+                context: context,
+                url: path,
+                targetSize: constraints.biggest,
+              ),
+            );
+          },
+          loading: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+          error: (error, _) {
+            return const Center(
+              child: Text('Error loading image'),
+            );
+          },
+        ),
       );
 
       return GestureDetector(
         onTap: widget.onTap,
         child: PreviewBox(
           style: Style(
-            box.border.all.color(selectedColor),
+            $box.border.all.color(selectedColor),
           ),
           child: AbsorbPointer(
             child: AspectRatio(
@@ -195,7 +199,7 @@ class SlideThumbnailDynamic extends StatelessWidget {
       onTap: onTap,
       child: PreviewBox(
         style: Style(
-          box.border.all.color(selectedColor),
+          $box.border.all.color(selectedColor),
         ),
         child: AbsorbPointer(
           child: AspectRatio(

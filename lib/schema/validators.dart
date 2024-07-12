@@ -1,4 +1,4 @@
-import 'schema.dart';
+import 'schema_model.dart';
 
 abstract class Validator<T> {
   const Validator();

@@ -7,10 +7,10 @@ import 'slide_thumbnail_list.dart';
 
 // ignore: non_constant_identifier_names
 final SlidePreviewBox = Style(
-  box.color.grey.shade900(),
-  box.margin.all(8),
-  box.maxHeight(140),
-  box.shadow(
+  $box.color.grey.shade900(),
+  $box.margin.all(8),
+  $box.maxHeight(140),
+  $box.shadow(
     color: Colors.black.withOpacity(0.5),
     blurRadius: 4,
     spreadRadius: 1,

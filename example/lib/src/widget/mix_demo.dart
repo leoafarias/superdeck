@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:superdeck/schema/schema.dart';
+import 'package:superdeck/schema/schema_model.dart';
 import 'package:superdeck/superdeck.dart';
 
 const purpleAccent = Color.fromARGB(255, 95, 44, 188);
@@ -50,6 +50,10 @@ Style get _style => Style(
           $box.gradient.radial.center(position),
         );
       }),
+
+      $on.hover(
+        $box.color.black(),
+      ),
 
       ($on.press | $on.longPress)(
         $box.shadow(
@@ -110,8 +114,7 @@ class MixExample extends ExampleWidget<ExampleOptions> {
   Widget build(ExampleOptions args) {
     return Builder(builder: (context) {
       return Center(
-        child: PressableBox(
-          onPress: () {},
+        child: Box(
           style: Style(
             _style(),
             $box.height(args.height),

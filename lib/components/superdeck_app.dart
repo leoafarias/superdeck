@@ -13,9 +13,11 @@ import '../helpers/constants.dart';
 import '../helpers/theme.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
+import 'atoms/loading_indicator.dart';
 import 'molecules/exception_widget.dart';
 
 final kAppKey = GlobalKey();
+final _uniqueKey = UniqueKey();
 
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
@@ -78,14 +80,6 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
 
   @override
   Widget build(BuildContext context) {
-    Widget renderLoading() {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Theme(
       data: theme,
       child: Builder(builder: (context) {
@@ -100,15 +94,19 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
             builder: (context, child) {
               final result = _initialize.watch(context);
 
-              return result.map(
-                data: (_) => child!,
-                loading: () => renderLoading(),
-                error: (error, _) {
-                  return ExceptionWidget(
-                    error,
-                    onRetry: _initialize.reload,
-                  );
-                },
+              return LoadingOverlay(
+                isLoading: result.isLoading,
+                key: _uniqueKey,
+                child: result.map(
+                  data: (_) => child!,
+                  loading: () => const SizedBox(),
+                  error: (error, _) {
+                    return ExceptionWidget(
+                      error,
+                      onRetry: _initialize.reload,
+                    );
+                  },
+                ),
               );
             },
           ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -21,7 +22,7 @@ class CacheImage extends StatelessWidget {
     required this.url,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
-    this.spec = const ImageSpec.empty(),
+    this.spec = const ImageSpec(),
     required this.size,
     super.key,
   });

@@ -3,7 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'schema_values.dart';
 import 'validators.dart';
 
-part 'schema.mapper.dart';
+part 'schema_model.mapper.dart';
 
 typedef JSON = Map<String, dynamic>;
 

@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:dart_mappable/dart_mappable.dart';
 
 import '../models/options_model.dart';
-import '../schema/schema.dart';
+import '../schema/schema_model.dart';
 import '../schema/schema_values.dart';
 import 'utils.dart';
 
-part 'config.mapper.dart';
+part 'config_model.mapper.dart';
 
 @MappableClass()
 abstract class Config with ConfigMappable {
