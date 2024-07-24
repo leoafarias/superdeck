@@ -73,7 +73,7 @@ mixin _$MarkdownAlternatingUtility<T extends Attribute>
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$MdDivider on Spec<MdDivider> {
+mixin _$MdDivider on Spec<MdDivider> {
   static MdDivider from(MixData mix) {
     return mix.attributeOf<MdDividerAttribute>()?.resolve(mix) ??
         const MdDivider();
@@ -229,7 +229,7 @@ final class MdDividerAttribute extends SpecAttribute<MdDivider> {
 ///
 /// This class provides methods to set individual properties of a [MdDividerAttribute].
 /// Use the methods of this class to configure specific properties of a [MdDividerAttribute].
-base class MdDividerUtility<T extends Attribute>
+class MdDividerUtility<T extends Attribute>
     extends SpecUtility<T, MdDividerAttribute> {
   /// Utility for defining [MdDividerAttribute.dividerHeight]
   late final height = DoubleUtility((v) => only(dividerHeight: v));
@@ -280,7 +280,7 @@ class MdDividerTween extends Tween<MdDivider?> {
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$MdTextStyle on Spec<MdTextStyle> {
+mixin _$MdTextStyle on Spec<MdTextStyle> {
   static MdTextStyle from(MixData mix) {
     return mix.attributeOf<MdTextStyleAttribute>()?.resolve(mix) ??
         const MdTextStyle();
@@ -424,7 +424,7 @@ final class MdTextStyleAttribute extends SpecAttribute<MdTextStyle> {
 ///
 /// This class provides methods to set individual properties of a [MdTextStyleAttribute].
 /// Use the methods of this class to configure specific properties of a [MdTextStyleAttribute].
-base class MdTextStyleUtility<T extends Attribute>
+class MdTextStyleUtility<T extends Attribute>
     extends SpecUtility<T, MdTextStyleAttribute> {
   /// Utility for defining [MdTextStyleAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
@@ -470,7 +470,7 @@ class MdTextStyleTween extends Tween<MdTextStyle?> {
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$MdList on Spec<MdList> {
+mixin _$MdList on Spec<MdList> {
   static MdList from(MixData mix) {
     return mix.attributeOf<MdListAttribute>()?.resolve(mix) ?? const MdList();
   }
@@ -648,7 +648,7 @@ final class MdListAttribute extends SpecAttribute<MdList> {
 ///
 /// This class provides methods to set individual properties of a [MdListAttribute].
 /// Use the methods of this class to configure specific properties of a [MdListAttribute].
-base class MdListUtility<T extends Attribute>
+class MdListUtility<T extends Attribute>
     extends SpecUtility<T, MdListAttribute> {
   /// Utility for defining [MdListAttribute.list]
   late final textStyle = TextStyleUtility((v) => only(list: v));
@@ -711,7 +711,7 @@ class MdListTween extends Tween<MdList?> {
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$MdBlockQuote on Spec<MdBlockQuote> {
+mixin _$MdBlockQuote on Spec<MdBlockQuote> {
   static MdBlockQuote from(MixData mix) {
     return mix.attributeOf<MdBlockQuoteAttribute>()?.resolve(mix) ??
         const MdBlockQuote();
@@ -884,7 +884,7 @@ final class MdBlockQuoteAttribute extends SpecAttribute<MdBlockQuote> {
 ///
 /// This class provides methods to set individual properties of a [MdBlockQuoteAttribute].
 /// Use the methods of this class to configure specific properties of a [MdBlockQuoteAttribute].
-base class MdBlockQuoteUtility<T extends Attribute>
+class MdBlockQuoteUtility<T extends Attribute>
     extends SpecUtility<T, MdBlockQuoteAttribute> {
   /// Utility for defining [MdBlockQuoteAttribute.blockquote]
   late final textStyle = TextStyleUtility((v) => only(blockquote: v));
@@ -942,7 +942,7 @@ class MdBlockQuoteTween extends Tween<MdBlockQuote?> {
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$MdTable on Spec<MdTable> {
+mixin _$MdTable on Spec<MdTable> {
   static MdTable from(MixData mix) {
     return mix.attributeOf<MdTableAttribute>()?.resolve(mix) ?? const MdTable();
   }
@@ -1150,7 +1150,7 @@ final class MdTableAttribute extends SpecAttribute<MdTable> {
 ///
 /// This class provides methods to set individual properties of a [MdTableAttribute].
 /// Use the methods of this class to configure specific properties of a [MdTableAttribute].
-base class MdTableUtility<T extends Attribute>
+class MdTableUtility<T extends Attribute>
     extends SpecUtility<T, MdTableAttribute> {
   /// Utility for defining [MdTableAttribute.table]
   late final textStyle = TextStyleUtility((v) => only(table: v));
@@ -1229,7 +1229,7 @@ class MdTableTween extends Tween<MdTable?> {
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$MdCode on Spec<MdCode> {
+mixin _$MdCode on Spec<MdCode> {
   static MdCode from(MixData mix) {
     return mix.attributeOf<MdCodeAttribute>()?.resolve(mix) ?? const MdCode();
   }
@@ -1407,7 +1407,7 @@ final class MdCodeAttribute extends SpecAttribute<MdCode> {
 ///
 /// This class provides methods to set individual properties of a [MdCodeAttribute].
 /// Use the methods of this class to configure specific properties of a [MdCodeAttribute].
-base class MdCodeUtility<T extends Attribute>
+class MdCodeUtility<T extends Attribute>
     extends SpecUtility<T, MdCodeAttribute> {
   /// Utility for defining [MdCodeAttribute.codeSpan]
   late final span = TextStyleUtility((v) => only(codeSpan: v));
@@ -1469,7 +1469,7 @@ class MdCodeTween extends Tween<MdCode?> {
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
-base mixin _$SlideSpec on Spec<SlideSpec> {
+mixin _$SlideSpec on Spec<SlideSpec> {
   static SlideSpec from(MixData mix) {
     return mix.attributeOf<SlideSpecAttribute>()?.resolve(mix) ??
         const SlideSpec();
@@ -1772,7 +1772,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
 ///
 /// This class provides methods to set individual properties of a [SlideSpecAttribute].
 /// Use the methods of this class to configure specific properties of a [SlideSpecAttribute].
-base class SlideSpecUtility<T extends Attribute>
+class SlideSpecUtility<T extends Attribute>
     extends SpecUtility<T, SlideSpecAttribute> {
   /// Utility for defining [SlideSpecAttribute.headline1]
   late final h1 = MdTextStyleUtility((v) => only(headline1: v));
