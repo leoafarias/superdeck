@@ -340,7 +340,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
       return Stack(
         children: [
           Container(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
           ),
           Container(
             color: Colors.black.withOpacity(0.8),

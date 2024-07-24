@@ -87,7 +87,7 @@ class SlideSpecTween extends Tween<SlideSpec> {
   SlideSpecTween({super.begin, super.end});
   @override
   SlideSpec lerp(double t) {
-    return begin?.lerp(end!, t) ?? end ?? const SlideSpec.empty();
+    return begin?.lerp(end!, t) ?? end ?? SlideSpec();
   }
 }
 

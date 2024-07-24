@@ -48,6 +48,7 @@ class SlideView extends StatelessWidget {
       transition: slide.transition,
       child: Pressable(
         onPress: () {},
+        autofocus: true,
         child: SpecBuilder(
           style: variantStyle,
           builder: (context) {

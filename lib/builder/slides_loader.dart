@@ -56,7 +56,7 @@ class SlidesLoader {
   void listen(
     FutureOr<void> Function() onChange,
   ) {
-    _listenerSub?.cancel();
+    // _listenerSub?.cancel();
 
     _listenerSub = _projectService.watcher.events.listen((_) => onChange());
   }

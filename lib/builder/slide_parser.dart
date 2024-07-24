@@ -1,4 +1,4 @@
-import '../helpers/config.dart';
+import '../helpers/config_model.dart';
 import '../helpers/deep_merge.dart';
 import '../helpers/utils.dart';
 import '../models/slide_model.dart';

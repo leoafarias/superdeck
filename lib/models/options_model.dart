@@ -4,7 +4,7 @@ import 'package:recase/recase.dart';
 
 import '../helpers/layout_builder.dart';
 import '../helpers/mappers.dart';
-import '../schema/schema.dart';
+import '../schema/schema_model.dart';
 import '../schema/schema_values.dart';
 import 'slide_model.dart';
 

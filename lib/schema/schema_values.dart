@@ -1,4 +1,4 @@
-import 'schema.dart';
+import 'schema_model.dart';
 import 'validators.dart';
 
 abstract class SchemaValue<V> {

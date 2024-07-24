@@ -47,16 +47,18 @@ class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
   Widget build(BuildContext context) {
     const red = Color.fromARGB(255, 166, 6, 6);
 
+    final s = SlideSpecUtility.self;
+
     final style = Style(
-      $deck.textStyle.color(Colors.white),
-      $deck.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
-      $deck.h1.textStyle.fontSize(36.0),
-      $deck.h1.textStyle.bold(),
-      $deck.h2.padding.top(0),
-      $deck.h2.textStyle.bold(),
-      $deck.h2.textStyle.color.yellow(),
-      $deck.code.span.color.yellow(),
-      $deck.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
+      s.textStyle.color(Colors.white),
+      s.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
+      s.h1.textStyle.fontSize(36.0),
+      s.h1.textStyle.bold(),
+      s.h2.padding.top(0),
+      s.h2.textStyle.bold(),
+      s.h2.textStyle.color.yellow(),
+      s.code.span.color.yellow(),
+      s.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
     );
 
     return SpecBuilder(

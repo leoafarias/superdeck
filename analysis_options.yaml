@@ -8,9 +8,6 @@ analyzer:
   plugins:
     - custom_lint
   exclude:
-    - '**.freezed.dart'
-    - '**.g.dart'
-    - '**.gr.dart'
     - '**.mapper.dart'
     - '**/generated_plugin_registrant.dart'
 linter:

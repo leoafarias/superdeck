@@ -1,9 +1,10 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../helpers/config.dart';
+import '../helpers/config_model.dart';
 import '../helpers/section_tag.dart';
 import '../helpers/utils.dart';
-import '../schema/schema.dart';
+import '../schema/schema_model.dart';
+import '../styles/style_util.dart';
 import '../superdeck.dart';
 
 part 'slide_model.mapper.dart';

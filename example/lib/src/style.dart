@@ -1,35 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:superdeck/styles/style_util.dart';
 import 'package:superdeck/superdeck.dart';
+
+final _util = SlideSpecUtility.self;
+final _h1 = _util.h1;
+final _h2 = _util.h2;
+final _h3 = _util.h3;
+
+final _h6 = _util.h6;
+
+final _paragraph = _util.paragraph;
+
+final _code = _util.code;
+final _blockquote = _util.blockquote;
+
+final _outerContainer = _util.outerContainer;
+final _contentContainer = _util.contentContainer;
+
+final _textStyle = _util.textStyle;
+final _innerContainer = _util.innerContainer;
 
 VariantAttribute get radStyle {
   return const SlideVariant('rad')(
-    $deck.h1.textStyle.as(GoogleFonts.poppins()),
-    $deck.h1.textStyle.fontSize(140),
-    $deck.code.decoration.border.all(
-      color: Colors.red,
-      width: 3,
+    _h1.textStyle.as(GoogleFonts.poppins()),
+    _h1.textStyle.fontSize(140),
+    _code.decoration.border.all(
+      color: Colors.white,
+      width: 1,
     ),
-    $deck.code.decoration(
-      color: Colors.black54,
-    ),
-    $deck.code.padding.all(40),
-
-    $deck.outerContainer.margin.all(60),
-
-    $deck.innerContainer.borderRadius(25),
-    $deck.innerContainer.shadow(
+    _code.decoration.color.black(),
+    _code.padding.all(40),
+    _outerContainer.margin.all(60),
+    _innerContainer.borderRadius(25),
+    _innerContainer.shadow(
       blurRadius: 0,
       spreadRadius: 10,
       color: Colors.red.withOpacity(1),
     ),
-    $deck.innerContainer.gradient.radial(
+    _innerContainer.gradient.radial(
       stops: [0.0, 1.0],
       radius: 0.7,
       colors: [Colors.purple, Colors.deepPurple],
     ),
-
-    // Events
+    $on.focus(
+      _innerContainer.color.yellow(),
+    ),
     $on.hover.event((e) {
       if (e == null) return const Style.empty();
       final position = e.position;
@@ -37,23 +53,22 @@ VariantAttribute get radStyle {
       final dy = position.y * 10;
 
       return Style(
-        $deck.innerContainer.transform(_transformMatrix(position)),
-        $deck.innerContainer.shadow.offset(dx, dy),
-        $deck.innerContainer.gradient.radial(
+        _innerContainer.transform(_transformMatrix(position)),
+        _innerContainer.shadow.offset(dx, dy),
+        _innerContainer.gradient.radial(
           center: position,
         ),
       );
     }),
-
     ($on.press | $on.longPress)(
-      $deck.innerContainer.shadow(
+      _innerContainer.shadow(
         blurRadius: 5,
         spreadRadius: 1,
         offset: Offset.zero,
         color: Colors.purpleAccent,
       ),
-      $deck.innerContainer.border.all(color: Colors.white, width: 1),
-      $deck.innerContainer.gradient.radial
+      _innerContainer.border.all(color: Colors.white, width: 1),
+      _innerContainer.gradient.radial
           .colors([Colors.purpleAccent, Colors.purpleAccent]),
     ),
   );
@@ -61,17 +76,17 @@ VariantAttribute get radStyle {
 
 VariantAttribute get customStyle {
   return const SlideVariant('custom')(
-    $deck.textStyle.as(GoogleFonts.poppins()),
-    $deck.h1.textStyle.as(GoogleFonts.smooch()),
-    $deck.h1.textStyle.fontSize(200),
-    $deck.h1.textStyle.height(0),
-    $deck.h1.textStyle.shadow(
+    _textStyle.as(GoogleFonts.poppins()),
+    _h1.textStyle.as(GoogleFonts.smooch()),
+    _h1.textStyle.fontSize(200),
+    _h1.textStyle.height(0),
+    _h1.textStyle.shadow(
       color: Colors.deepOrange,
       blurRadius: 20,
     ),
-    $deck.h2.textStyle.fontSize(36),
-    $deck.contentContainer.borderRadius(25),
-    $deck.innerContainer.gradient.linear(
+    _h2.textStyle.fontSize(36),
+    _contentContainer.borderRadius(25),
+    _innerContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -79,20 +94,20 @@ VariantAttribute get customStyle {
         Colors.deepPurple.withOpacity(0.9),
       ],
     ),
-    $deck.contentContainer.padding.vertical(0),
-    $deck.outerContainer.padding(40),
-    $deck.outerContainer.gradient.linear(
+    _contentContainer.padding.vertical(0),
+    _outerContainer.padding(40),
+    _outerContainer.gradient.linear(
       colors: [
         Colors.red,
         Colors.redAccent,
       ],
     ),
-    $deck.innerContainer.borderRadius(25),
-    $deck.innerContainer.border.all(
+    _innerContainer.borderRadius(25),
+    _innerContainer.border.all(
       color: Colors.deepOrange,
       width: 4,
     ),
-    $deck.innerContainer.shadow(
+    _innerContainer.shadow(
       color: Colors.black.withOpacity(0.4),
       blurRadius: 20,
       spreadRadius: 5,
@@ -102,9 +117,9 @@ VariantAttribute get customStyle {
 
 VariantAttribute get coverStyle {
   return const SlideVariant('cover')(
-    $deck.h1.textStyle.as(GoogleFonts.poppins()),
-    $deck.h1.textStyle.fontSize(100),
-    $deck.contentContainer.gradient.linear(
+    _h1.textStyle.as(GoogleFonts.poppins()),
+    _h1.textStyle.fontSize(100),
+    _contentContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -117,15 +132,15 @@ VariantAttribute get coverStyle {
 
 VariantAttribute get announcementStyle {
   return const SlideVariant('announcement')(
-    $deck.textStyle.height(0.6),
-    $deck.h1.textStyle.fontSize(140),
-    $deck.h1.textStyle.bold(),
-    $deck.h1.textStyle.color(Colors.yellow),
-    $deck.h2.textStyle.fontSize(140),
-    $deck.h3.textStyle.fontSize(60),
-    $deck.h3.textStyle.color(Colors.white),
-    $deck.h3.textStyle.fontWeight(FontWeight.w100),
-    $deck.contentContainer.gradient.linear(
+    _textStyle.height(0.6),
+    _h1.textStyle.fontSize(140),
+    _h1.textStyle.bold(),
+    _h1.textStyle.color(Colors.yellow),
+    _h2.textStyle.fontSize(140),
+    _h3.textStyle.fontSize(60),
+    _h3.textStyle.color(Colors.white),
+    _h3.textStyle.fontWeight(FontWeight.w100),
+    _contentContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -138,20 +153,20 @@ VariantAttribute get announcementStyle {
 
 VariantAttribute get quoteStyle {
   return const SlideVariant('quote')(
-    $deck.blockquote.textStyle.as(GoogleFonts.notoSerif()),
-    $deck.blockquote.decoration.border.left(
+    _blockquote.textStyle.as(GoogleFonts.notoSerif()),
+    _blockquote.decoration.border.left(
       width: 4,
       color: Colors.red,
     ),
-    $deck.paragraph.textStyle.fontSize(32),
-    $deck.h6.textStyle.as(GoogleFonts.notoSerif()),
-    $deck.h6.textStyle.fontSize(20),
+    _paragraph.textStyle.fontSize(32),
+    _h6.textStyle.as(GoogleFonts.notoSerif()),
+    _h6.textStyle.fontSize(20),
   );
 }
 
 VariantAttribute get showSectionsStyle {
   return const SlideVariant('show_sections')(
-    $deck.contentContainer.border.all(
+    _contentContainer.border.all(
       color: Colors.blue,
       width: 2,
     ),
@@ -160,14 +175,14 @@ VariantAttribute get showSectionsStyle {
 
 Style get style {
   return Style(
-    $deck.textStyle.as(GoogleFonts.poppins()),
+    _textStyle.as(GoogleFonts.poppins()),
     customStyle,
     quoteStyle,
     showSectionsStyle,
     coverStyle,
     announcementStyle,
     radStyle,
-  );
+  ).animate();
 }
 
 Matrix4 _transformMatrix(Alignment alignment) {

@@ -115,7 +115,10 @@ class SnapshotService {
           child: repaintBoundary,
         ),
         configuration: ViewConfiguration(
-          size: logicalSize,
+          logicalConstraints: BoxConstraints(
+            maxWidth: logicalSize.width,
+            maxHeight: logicalSize.height,
+          ),
           devicePixelRatio: pixelRatio,
         ),
       );
