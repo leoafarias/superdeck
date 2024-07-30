@@ -50,15 +50,15 @@ class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
     final s = SlideSpecUtility.self;
 
     final style = Style(
-      s.textStyle.color(Colors.white),
+      s.paragraph.textStyle.color(Colors.white),
       s.h1.textStyle.color(const Color.fromARGB(255, 71, 1, 1)),
       s.h1.textStyle.fontSize(36.0),
       s.h1.textStyle.bold(),
       s.h2.padding.top(0),
       s.h2.textStyle.bold(),
       s.h2.textStyle.color.yellow(),
-      s.code.span.color.yellow(),
-      s.code.span.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
+      s.code.textStyle.color.yellow(),
+      s.code.textStyle.backgroundColor(const Color.fromARGB(255, 84, 6, 6)),
     );
 
     return SpecBuilder(

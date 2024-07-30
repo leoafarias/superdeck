@@ -15,8 +15,6 @@ dependencies:
   collection: ^1.18.0
   path: ^1.9.0
   dart_mappable: ^4.2.2
-  dart_markdown: ^3.1.7
-  markdown_viewer: ^0.6.2
   yaml: ^3.1.2
   animate_do: ^3.3.4
   recase: ^4.1.0
@@ -32,6 +30,8 @@ dependencies:
   url_launcher: ^6.2.6
   mix: ^1.2.0
   mix_annotations: ^0.2.0
+  flutter_markdown: ^0.7.3
+  markdown: ^7.2.2
   
   
 dev_dependencies:

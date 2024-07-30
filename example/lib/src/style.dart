@@ -176,6 +176,7 @@ VariantAttribute get showSectionsStyle {
 Style get style {
   return Style(
     _textStyle.as(GoogleFonts.poppins()),
+    _code.textStyle.as(GoogleFonts.sourceCodePro()),
     customStyle,
     quoteStyle,
     showSectionsStyle,

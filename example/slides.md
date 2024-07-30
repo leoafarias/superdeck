@@ -2,7 +2,7 @@
 style: quote
 layout: image
 options:
-  src: https://source.unsplash.com/people-watching-concert-during-night-time-blgOFmPIlr0
+  src: https://picsum.photos/600/600.webp
   fit: cover
 content:
   alignment: bottom_right
@@ -23,7 +23,7 @@ style: cover
 layout: image
 style: show_sections
 options:
-  src: https://source.unsplash.com/random/900×700/?waves
+  src: https://picsum.photos/900/700?waves
   fit: cover
   position: left
   flex: 1
@@ -266,7 +266,7 @@ Subtasks
 ::right::
 
 Images
-![Unsplash Image](https://source.unsplash.com/random/300x200/?landscape)
+![Unsplash Image](https://picsum.photos/300/200?landscape)
 
 
 Table

@@ -52,367 +52,587 @@ mixin _$TableBorderUtility<T extends Attribute> on MixUtility<T, TableBorder> {
 // MixableEnumUtilityGenerator
 // **************************************************************************
 
-/// {@template markdown_alternating_utility}
-/// A utility class for creating [Attribute] instances from [MarkdownAlternating] values.
+/// {@template table_cell_vertical_alignment_utility}
+/// A utility class for creating [Attribute] instances from [TableCellVerticalAlignment] values.
 ///
 /// This class extends [MixUtility] and provides methods to create [Attribute] instances
-/// from predefined [MarkdownAlternating] values.
+/// from predefined [TableCellVerticalAlignment] values.
 /// {@endtemplate}
-mixin _$MarkdownAlternatingUtility<T extends Attribute>
-    on MixUtility<T, MarkdownAlternating> {
-  /// Creates an [Attribute] instance with [MarkdownAlternating.odd] value.
-  T odd() => builder(MarkdownAlternating.odd);
+mixin _$TableCellVerticalAlignmentUtility<T extends Attribute>
+    on MixUtility<T, TableCellVerticalAlignment> {
+  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.top] value.
+  T top() => builder(TableCellVerticalAlignment.top);
 
-  /// Creates an [Attribute] instance with [MarkdownAlternating.even] value.
-  T even() => builder(MarkdownAlternating.even);
+  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.middle] value.
+  T middle() => builder(TableCellVerticalAlignment.middle);
+
+  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.bottom] value.
+  T bottom() => builder(TableCellVerticalAlignment.bottom);
+
+  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.baseline] value.
+  T baseline() => builder(TableCellVerticalAlignment.baseline);
+
+  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.fill] value.
+  T fill() => builder(TableCellVerticalAlignment.fill);
+
+  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.intrinsicHeight] value.
+  T intrinsicHeight() => builder(TableCellVerticalAlignment.intrinsicHeight);
+
+  /// Creates an [Attribute] instance with the specified TableCellVerticalAlignment value.
+  T call(TableCellVerticalAlignment value) => builder(value);
 }
 
 // **************************************************************************
 // MixableSpecGenerator
 // **************************************************************************
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
-mixin _$MdDivider on Spec<MdDivider> {
-  static MdDivider from(MixData mix) {
-    return mix.attributeOf<MdDividerAttribute>()?.resolve(mix) ??
-        const MdDivider();
+mixin _$MdTextSpec on Spec<MdTextSpec> {
+  static MdTextSpec from(MixData mix) {
+    return mix.attributeOf<MdTextSpecAttribute>()?.resolve(mix) ??
+        const MdTextSpec();
   }
 
-  /// {@template md_divider_of}
-  /// Retrieves the [MdDivider] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template md_text_spec_of}
+  /// Retrieves the [MdTextSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdDivider] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdDivider].
+  /// given [BuildContext], and then retrieves the [MdTextSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdTextSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdDivider = MdDivider.of(context);
+  /// final mdTextSpec = MdTextSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdDivider of(BuildContext context) {
-    return _$MdDivider.from(Mix.of(context));
+  static MdTextSpec of(BuildContext context) {
+    return _$MdTextSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdDivider] but with the given fields
+  /// Creates a copy of this [MdTextSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdDivider copyWith({
-    double? dividerHeight,
-    Color? dividerColor,
-    double? dividerThickness,
+  MdTextSpec copyWith({
+    TextStyle? textStyle,
+    EdgeInsets? padding,
+    WrapAlignment? alignment,
   }) {
-    return MdDivider(
-      dividerHeight: dividerHeight ?? _$this.dividerHeight,
-      dividerColor: dividerColor ?? _$this.dividerColor,
-      dividerThickness: dividerThickness ?? _$this.dividerThickness,
+    return MdTextSpec(
+      textStyle: textStyle ?? _$this.textStyle,
+      padding: padding ?? _$this.padding,
+      alignment: alignment ?? _$this.alignment,
     );
   }
 
-  /// Linearly interpolates between this [MdDivider] and another [MdDivider] based on the given parameter [t].
+  /// Linearly interpolates between this [MdTextSpec] and another [MdTextSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdDivider] is returned. When [t] is 1.0, the [other] [MdDivider] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdDivider] is returned.
+  /// When [t] is 0.0, the current [MdTextSpec] is returned. When [t] is 1.0, the [other] [MdTextSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdTextSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdDivider] instance.
+  /// If [other] is null, this method returns the current [MdTextSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdDivider] using the appropriate
+  /// The interpolation is performed on each property of the [MdTextSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpDouble] for [dividerHeight] and [dividerThickness].
-  /// - [Color.lerp] for [dividerColor].
+  /// - [MixHelpers.lerpTextStyle] for [textStyle].
+  /// - [EdgeInsets.lerp] for [padding].
 
-  /// For , the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdDivider] is used. Otherwise, the value
-  /// from the [other] [MdDivider] is used.
+  /// For [alignment], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MdTextSpec] is used. Otherwise, the value
+  /// from the [other] [MdTextSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdDivider] configurations.
+  /// different [MdTextSpec] configurations.
   @override
-  MdDivider lerp(MdDivider? other, double t) {
+  MdTextSpec lerp(MdTextSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdDivider(
-      dividerHeight:
-          MixHelpers.lerpDouble(_$this.dividerHeight, other.dividerHeight, t),
-      dividerColor: Color.lerp(_$this.dividerColor, other.dividerColor, t),
-      dividerThickness: MixHelpers.lerpDouble(
-          _$this.dividerThickness, other.dividerThickness, t),
+    return MdTextSpec(
+      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
+      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
+      alignment: t < 0.5 ? _$this.alignment : other.alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdDivider].
+  /// The list of properties that constitute the state of this [MdTextSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdDivider] instances for equality.
+  /// compare two [MdTextSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.dividerHeight,
-        _$this.dividerColor,
-        _$this.dividerThickness,
+        _$this.textStyle,
+        _$this.padding,
+        _$this.alignment,
       ];
 
-  MdDivider get _$this => this as MdDivider;
+  MdTextSpec get _$this => this as MdTextSpec;
 }
 
-/// Represents the attributes of a [MdDivider].
+/// Represents the attributes of a [MdTextSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdDivider].
+/// appearance of a [MdTextSpec].
 ///
-/// Use this class to configure the attributes of a [MdDivider] and pass it to
-/// the [MdDivider] constructor.
-final class MdDividerAttribute extends SpecAttribute<MdDivider> {
-  final double? dividerHeight;
-  final ColorDto? dividerColor;
-  final double? dividerThickness;
+/// Use this class to configure the attributes of a [MdTextSpec] and pass it to
+/// the [MdTextSpec] constructor.
+final class MdTextSpecAttribute extends SpecAttribute<MdTextSpec> {
+  final TextStyleDto? textStyle;
+  final EdgeInsetsDto? padding;
+  final WrapAlignment? alignment;
 
-  const MdDividerAttribute({
-    this.dividerHeight,
-    this.dividerColor,
-    this.dividerThickness,
+  const MdTextSpecAttribute({
+    this.textStyle,
+    this.padding,
+    this.alignment,
   });
 
-  /// Resolves to [MdDivider] using the provided [MixData].
+  /// Resolves to [MdTextSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdDivider = MdDividerAttribute(...).resolve(mix);
+  /// final mdTextSpec = MdTextSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdDivider resolve(MixData mix) {
-    return MdDivider(
-      dividerHeight: dividerHeight,
-      dividerColor: dividerColor?.resolve(mix),
-      dividerThickness: dividerThickness,
+  MdTextSpec resolve(MixData mix) {
+    return MdTextSpec(
+      textStyle: textStyle?.resolve(mix),
+      padding: padding?.resolve(mix),
+      alignment: alignment,
     );
   }
 
-  /// Merges the properties of this [MdDividerAttribute] with the properties of [other].
+  /// Merges the properties of this [MdTextSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdDividerAttribute] with the properties of [other] taking precedence over
+  /// [MdTextSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdDividerAttribute merge(MdDividerAttribute? other) {
+  MdTextSpecAttribute merge(MdTextSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdDividerAttribute(
-      dividerHeight: other.dividerHeight ?? dividerHeight,
-      dividerColor:
-          dividerColor?.merge(other.dividerColor) ?? other.dividerColor,
-      dividerThickness: other.dividerThickness ?? dividerThickness,
+    return MdTextSpecAttribute(
+      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
+      padding: padding?.merge(other.padding) ?? other.padding,
+      alignment: other.alignment ?? alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdDividerAttribute].
+  /// The list of properties that constitute the state of this [MdTextSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdDividerAttribute] instances for equality.
+  /// compare two [MdTextSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        dividerHeight,
-        dividerColor,
-        dividerThickness,
+        textStyle,
+        padding,
+        alignment,
       ];
 }
 
-/// Utility class for configuring [MdDividerAttribute] properties.
+/// Utility class for configuring [MdTextSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdDividerAttribute].
-/// Use the methods of this class to configure specific properties of a [MdDividerAttribute].
-class MdDividerUtility<T extends Attribute>
-    extends SpecUtility<T, MdDividerAttribute> {
-  /// Utility for defining [MdDividerAttribute.dividerHeight]
-  late final height = DoubleUtility((v) => only(dividerHeight: v));
+/// This class provides methods to set individual properties of a [MdTextSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdTextSpecAttribute].
+class MdTextSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdTextSpecAttribute> {
+  /// Utility for defining [MdTextSpecAttribute.textStyle]
+  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdDividerAttribute.dividerColor]
-  late final color = ColorUtility((v) => only(dividerColor: v));
+  /// Utility for defining [MdTextSpecAttribute.padding]
+  late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdDividerAttribute.dividerThickness]
-  late final thickness = DoubleUtility((v) => only(dividerThickness: v));
+  /// Utility for defining [MdTextSpecAttribute.alignment]
+  late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
-  MdDividerUtility(super.builder);
+  MdTextSpecUtility(super.builder);
 
-  static final self = MdDividerUtility((v) => v);
+  static final self = MdTextSpecUtility((v) => v);
 
-  /// Returns a new [MdDividerAttribute] with the specified properties.
+  /// Returns a new [MdTextSpecAttribute] with the specified properties.
   @override
   T only({
-    double? dividerHeight,
-    ColorDto? dividerColor,
-    double? dividerThickness,
+    TextStyleDto? textStyle,
+    EdgeInsetsDto? padding,
+    WrapAlignment? alignment,
   }) {
-    return builder(MdDividerAttribute(
-      dividerHeight: dividerHeight,
-      dividerColor: dividerColor,
-      dividerThickness: dividerThickness,
+    return builder(MdTextSpecAttribute(
+      textStyle: textStyle,
+      padding: padding,
+      alignment: alignment,
     ));
   }
 }
 
-/// A tween that interpolates between two [MdDivider] instances.
+/// A tween that interpolates between two [MdTextSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdDivider] specifications.
-class MdDividerTween extends Tween<MdDivider?> {
-  MdDividerTween({
+/// different [MdTextSpec] specifications.
+class MdTextSpecTween extends Tween<MdTextSpec?> {
+  MdTextSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdDivider lerp(double t) {
-    if (begin == null && end == null) return const MdDivider();
-    if (begin == null) return end!;
+  MdTextSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdTextSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
-mixin _$MdTextStyle on Spec<MdTextStyle> {
-  static MdTextStyle from(MixData mix) {
-    return mix.attributeOf<MdTextStyleAttribute>()?.resolve(mix) ??
-        const MdTextStyle();
+mixin _$MdHeadingSpec on Spec<MdHeadingSpec> {
+  static MdHeadingSpec from(MixData mix) {
+    return mix.attributeOf<MdHeadingSpecAttribute>()?.resolve(mix) ??
+        const MdHeadingSpec();
   }
 
-  /// {@template md_text_style_of}
-  /// Retrieves the [MdTextStyle] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template md_heading_spec_of}
+  /// Retrieves the [MdHeadingSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdTextStyle] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdTextStyle].
+  /// given [BuildContext], and then retrieves the [MdHeadingSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdHeadingSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdTextStyle = MdTextStyle.of(context);
+  /// final mdHeadingSpec = MdHeadingSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdTextStyle of(BuildContext context) {
-    return _$MdTextStyle.from(Mix.of(context));
+  static MdHeadingSpec of(BuildContext context) {
+    return _$MdHeadingSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdTextStyle] but with the given fields
+  /// Creates a copy of this [MdHeadingSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdTextStyle copyWith({
+  MdHeadingSpec copyWith({
+    TextStyle? textStyle,
+    EdgeInsets? padding,
+    WrapAlignment? align,
+  }) {
+    return MdHeadingSpec(
+      textStyle: textStyle ?? _$this.textStyle,
+      padding: padding ?? _$this.padding,
+      align: align ?? _$this.align,
+    );
+  }
+
+  /// Linearly interpolates between this [MdHeadingSpec] and another [MdHeadingSpec] based on the given parameter [t].
+  ///
+  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
+  /// When [t] is 0.0, the current [MdHeadingSpec] is returned. When [t] is 1.0, the [other] [MdHeadingSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdHeadingSpec] is returned.
+  ///
+  /// If [other] is null, this method returns the current [MdHeadingSpec] instance.
+  ///
+  /// The interpolation is performed on each property of the [MdHeadingSpec] using the appropriate
+  /// interpolation method:
+  ///
+  /// - [MixHelpers.lerpTextStyle] for [textStyle].
+  /// - [EdgeInsets.lerp] for [padding].
+
+  /// For [align], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MdHeadingSpec] is used. Otherwise, the value
+  /// from the [other] [MdHeadingSpec] is used.
+  ///
+  /// This method is typically used in animations to smoothly transition between
+  /// different [MdHeadingSpec] configurations.
+  @override
+  MdHeadingSpec lerp(MdHeadingSpec? other, double t) {
+    if (other == null) return _$this;
+
+    return MdHeadingSpec(
+      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
+      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
+      align: t < 0.5 ? _$this.align : other.align,
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MdHeadingSpec].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MdHeadingSpec] instances for equality.
+  @override
+  List<Object?> get props => [
+        _$this.textStyle,
+        _$this.padding,
+        _$this.align,
+      ];
+
+  MdHeadingSpec get _$this => this as MdHeadingSpec;
+}
+
+/// Represents the attributes of a [MdHeadingSpec].
+///
+/// This class encapsulates properties defining the layout and
+/// appearance of a [MdHeadingSpec].
+///
+/// Use this class to configure the attributes of a [MdHeadingSpec] and pass it to
+/// the [MdHeadingSpec] constructor.
+final class MdHeadingSpecAttribute extends SpecAttribute<MdHeadingSpec> {
+  final TextStyleDto? textStyle;
+  final EdgeInsetsDto? padding;
+  final WrapAlignment? align;
+
+  const MdHeadingSpecAttribute({
+    this.textStyle,
+    this.padding,
+    this.align,
+  });
+
+  /// Resolves to [MdHeadingSpec] using the provided [MixData].
+  ///
+  /// If a property is null in the [MixData], it falls back to the
+  /// default value defined in the `defaultValue` for that property.
+  ///
+  /// ```dart
+  /// final mdHeadingSpec = MdHeadingSpecAttribute(...).resolve(mix);
+  /// ```
+  @override
+  MdHeadingSpec resolve(MixData mix) {
+    return MdHeadingSpec(
+      textStyle: textStyle?.resolve(mix),
+      padding: padding?.resolve(mix),
+      align: align,
+    );
+  }
+
+  /// Merges the properties of this [MdHeadingSpecAttribute] with the properties of [other].
+  ///
+  /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
+  /// [MdHeadingSpecAttribute] with the properties of [other] taking precedence over
+  /// the corresponding properties of this instance.
+  ///
+  /// Properties from [other] that are null will fall back
+  /// to the values from this instance.
+  @override
+  MdHeadingSpecAttribute merge(MdHeadingSpecAttribute? other) {
+    if (other == null) return this;
+
+    return MdHeadingSpecAttribute(
+      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
+      padding: padding?.merge(other.padding) ?? other.padding,
+      align: other.align ?? align,
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MdHeadingSpecAttribute].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MdHeadingSpecAttribute] instances for equality.
+  @override
+  List<Object?> get props => [
+        textStyle,
+        padding,
+        align,
+      ];
+}
+
+/// Utility class for configuring [MdHeadingSpecAttribute] properties.
+///
+/// This class provides methods to set individual properties of a [MdHeadingSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdHeadingSpecAttribute].
+class MdHeadingSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdHeadingSpecAttribute> {
+  /// Utility for defining [MdHeadingSpecAttribute.textStyle]
+  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
+
+  /// Utility for defining [MdHeadingSpecAttribute.padding]
+  late final padding = EdgeInsetsUtility((v) => only(padding: v));
+
+  /// Utility for defining [MdHeadingSpecAttribute.align]
+  late final align = WrapAlignmentUtility((v) => only(align: v));
+
+  MdHeadingSpecUtility(super.builder);
+
+  static final self = MdHeadingSpecUtility((v) => v);
+
+  /// Returns a new [MdHeadingSpecAttribute] with the specified properties.
+  @override
+  T only({
+    TextStyleDto? textStyle,
+    EdgeInsetsDto? padding,
+    WrapAlignment? align,
+  }) {
+    return builder(MdHeadingSpecAttribute(
+      textStyle: textStyle,
+      padding: padding,
+      align: align,
+    ));
+  }
+}
+
+/// A tween that interpolates between two [MdHeadingSpec] instances.
+///
+/// This class can be used in animations to smoothly transition between
+/// different [MdHeadingSpec] specifications.
+class MdHeadingSpecTween extends Tween<MdHeadingSpec?> {
+  MdHeadingSpecTween({
+    super.begin,
+    super.end,
+  });
+
+  @override
+  MdHeadingSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdHeadingSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
+
+    return begin!.lerp(end!, t);
+  }
+}
+
+mixin _$MdParagraphSpec on Spec<MdParagraphSpec> {
+  static MdParagraphSpec from(MixData mix) {
+    return mix.attributeOf<MdParagraphSpecAttribute>()?.resolve(mix) ??
+        const MdParagraphSpec();
+  }
+
+  /// {@template md_paragraph_spec_of}
+  /// Retrieves the [MdParagraphSpec] from the nearest [Mix] ancestor in the widget tree.
+  ///
+  /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
+  /// given [BuildContext], and then retrieves the [MdParagraphSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdParagraphSpec].
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// final mdParagraphSpec = MdParagraphSpec.of(context);
+  /// ```
+  /// {@endtemplate}
+  static MdParagraphSpec of(BuildContext context) {
+    return _$MdParagraphSpec.from(Mix.of(context));
+  }
+
+  /// Creates a copy of this [MdParagraphSpec] but with the given fields
+  /// replaced with the new values.
+  @override
+  MdParagraphSpec copyWith({
     TextStyle? textStyle,
     EdgeInsets? padding,
   }) {
-    return MdTextStyle(
+    return MdParagraphSpec(
       textStyle: textStyle ?? _$this.textStyle,
       padding: padding ?? _$this.padding,
     );
   }
 
-  /// Linearly interpolates between this [MdTextStyle] and another [MdTextStyle] based on the given parameter [t].
+  /// Linearly interpolates between this [MdParagraphSpec] and another [MdParagraphSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdTextStyle] is returned. When [t] is 1.0, the [other] [MdTextStyle] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdTextStyle] is returned.
+  /// When [t] is 0.0, the current [MdParagraphSpec] is returned. When [t] is 1.0, the [other] [MdParagraphSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdParagraphSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdTextStyle] instance.
+  /// If [other] is null, this method returns the current [MdParagraphSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdTextStyle] using the appropriate
+  /// The interpolation is performed on each property of the [MdParagraphSpec] using the appropriate
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpTextStyle] for [textStyle].
   /// - [EdgeInsets.lerp] for [padding].
 
   /// For , the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdTextStyle] is used. Otherwise, the value
-  /// from the [other] [MdTextStyle] is used.
+  /// If [t] is less than 0.5, the value from the current [MdParagraphSpec] is used. Otherwise, the value
+  /// from the [other] [MdParagraphSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdTextStyle] configurations.
+  /// different [MdParagraphSpec] configurations.
   @override
-  MdTextStyle lerp(MdTextStyle? other, double t) {
+  MdParagraphSpec lerp(MdParagraphSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdTextStyle(
+    return MdParagraphSpec(
       textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
       padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTextStyle].
+  /// The list of properties that constitute the state of this [MdParagraphSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTextStyle] instances for equality.
+  /// compare two [MdParagraphSpec] instances for equality.
   @override
   List<Object?> get props => [
         _$this.textStyle,
         _$this.padding,
       ];
 
-  MdTextStyle get _$this => this as MdTextStyle;
+  MdParagraphSpec get _$this => this as MdParagraphSpec;
 }
 
-/// Represents the attributes of a [MdTextStyle].
+/// Represents the attributes of a [MdParagraphSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdTextStyle].
+/// appearance of a [MdParagraphSpec].
 ///
-/// Use this class to configure the attributes of a [MdTextStyle] and pass it to
-/// the [MdTextStyle] constructor.
-final class MdTextStyleAttribute extends SpecAttribute<MdTextStyle> {
+/// Use this class to configure the attributes of a [MdParagraphSpec] and pass it to
+/// the [MdParagraphSpec] constructor.
+final class MdParagraphSpecAttribute extends SpecAttribute<MdParagraphSpec> {
   final TextStyleDto? textStyle;
   final EdgeInsetsDto? padding;
 
-  const MdTextStyleAttribute({
+  const MdParagraphSpecAttribute({
     this.textStyle,
     this.padding,
   });
 
-  /// Resolves to [MdTextStyle] using the provided [MixData].
+  /// Resolves to [MdParagraphSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdTextStyle = MdTextStyleAttribute(...).resolve(mix);
+  /// final mdParagraphSpec = MdParagraphSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdTextStyle resolve(MixData mix) {
-    return MdTextStyle(
+  MdParagraphSpec resolve(MixData mix) {
+    return MdParagraphSpec(
       textStyle: textStyle?.resolve(mix),
       padding: padding?.resolve(mix),
     );
   }
 
-  /// Merges the properties of this [MdTextStyleAttribute] with the properties of [other].
+  /// Merges the properties of this [MdParagraphSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdTextStyleAttribute] with the properties of [other] taking precedence over
+  /// [MdParagraphSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdTextStyleAttribute merge(MdTextStyleAttribute? other) {
+  MdParagraphSpecAttribute merge(MdParagraphSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdTextStyleAttribute(
+    return MdParagraphSpecAttribute(
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       padding: padding?.merge(other.padding) ?? other.padding,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTextStyleAttribute].
+  /// The list of properties that constitute the state of this [MdParagraphSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTextStyleAttribute] instances for equality.
+  /// compare two [MdParagraphSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
         textStyle,
@@ -420,1054 +640,1043 @@ final class MdTextStyleAttribute extends SpecAttribute<MdTextStyle> {
       ];
 }
 
-/// Utility class for configuring [MdTextStyleAttribute] properties.
+/// Utility class for configuring [MdParagraphSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdTextStyleAttribute].
-/// Use the methods of this class to configure specific properties of a [MdTextStyleAttribute].
-class MdTextStyleUtility<T extends Attribute>
-    extends SpecUtility<T, MdTextStyleAttribute> {
-  /// Utility for defining [MdTextStyleAttribute.textStyle]
+/// This class provides methods to set individual properties of a [MdParagraphSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdParagraphSpecAttribute].
+class MdParagraphSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdParagraphSpecAttribute> {
+  /// Utility for defining [MdParagraphSpecAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdTextStyleAttribute.padding]
+  /// Utility for defining [MdParagraphSpecAttribute.padding]
   late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  MdTextStyleUtility(super.builder);
+  MdParagraphSpecUtility(super.builder);
 
-  static final self = MdTextStyleUtility((v) => v);
+  static final self = MdParagraphSpecUtility((v) => v);
 
-  /// Returns a new [MdTextStyleAttribute] with the specified properties.
+  /// Returns a new [MdParagraphSpecAttribute] with the specified properties.
   @override
   T only({
     TextStyleDto? textStyle,
     EdgeInsetsDto? padding,
   }) {
-    return builder(MdTextStyleAttribute(
+    return builder(MdParagraphSpecAttribute(
       textStyle: textStyle,
       padding: padding,
     ));
   }
 }
 
-/// A tween that interpolates between two [MdTextStyle] instances.
+/// A tween that interpolates between two [MdParagraphSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdTextStyle] specifications.
-class MdTextStyleTween extends Tween<MdTextStyle?> {
-  MdTextStyleTween({
+/// different [MdParagraphSpec] specifications.
+class MdParagraphSpecTween extends Tween<MdParagraphSpec?> {
+  MdParagraphSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdTextStyle lerp(double t) {
-    if (begin == null && end == null) return const MdTextStyle();
-    if (begin == null) return end!;
+  MdParagraphSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdParagraphSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
-mixin _$MdList on Spec<MdList> {
-  static MdList from(MixData mix) {
-    return mix.attributeOf<MdListAttribute>()?.resolve(mix) ?? const MdList();
+mixin _$MdListSpec on Spec<MdListSpec> {
+  static MdListSpec from(MixData mix) {
+    return mix.attributeOf<MdListSpecAttribute>()?.resolve(mix) ??
+        const MdListSpec();
   }
 
-  /// {@template md_list_of}
-  /// Retrieves the [MdList] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template md_list_spec_of}
+  /// Retrieves the [MdListSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdList] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdList].
+  /// given [BuildContext], and then retrieves the [MdListSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdListSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdList = MdList.of(context);
+  /// final mdListSpec = MdListSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdList of(BuildContext context) {
-    return _$MdList.from(Mix.of(context));
+  static MdListSpec of(BuildContext context) {
+    return _$MdListSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdList] but with the given fields
+  /// Creates a copy of this [MdListSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdList copyWith({
-    TextStyle? list,
-    TextStyle? listItem,
-    TextStyle? listItemMarker,
-    double? listItemMarkerTrailingSpace,
-    double? listItemMinIndent,
+  MdListSpec copyWith({
+    double? indent,
+    TextStyle? bulletStyle,
+    EdgeInsets? bulletPadding,
+    WrapAlignment? orderedAlignment,
+    WrapAlignment? unorderedAlignment,
   }) {
-    return MdList(
-      list: list ?? _$this.list,
-      listItem: listItem ?? _$this.listItem,
-      listItemMarker: listItemMarker ?? _$this.listItemMarker,
-      listItemMarkerTrailingSpace:
-          listItemMarkerTrailingSpace ?? _$this.listItemMarkerTrailingSpace,
-      listItemMinIndent: listItemMinIndent ?? _$this.listItemMinIndent,
+    return MdListSpec(
+      indent: indent ?? _$this.indent,
+      bulletStyle: bulletStyle ?? _$this.bulletStyle,
+      bulletPadding: bulletPadding ?? _$this.bulletPadding,
+      orderedAlignment: orderedAlignment ?? _$this.orderedAlignment,
+      unorderedAlignment: unorderedAlignment ?? _$this.unorderedAlignment,
     );
   }
 
-  /// Linearly interpolates between this [MdList] and another [MdList] based on the given parameter [t].
+  /// Linearly interpolates between this [MdListSpec] and another [MdListSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdList] is returned. When [t] is 1.0, the [other] [MdList] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdList] is returned.
+  /// When [t] is 0.0, the current [MdListSpec] is returned. When [t] is 1.0, the [other] [MdListSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdListSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdList] instance.
+  /// If [other] is null, this method returns the current [MdListSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdList] using the appropriate
+  /// The interpolation is performed on each property of the [MdListSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpTextStyle] for [list] and [listItem] and [listItemMarker].
-  /// - [MixHelpers.lerpDouble] for [listItemMarkerTrailingSpace] and [listItemMinIndent].
+  /// - [MixHelpers.lerpDouble] for [indent].
+  /// - [MixHelpers.lerpTextStyle] for [bulletStyle].
+  /// - [EdgeInsets.lerp] for [bulletPadding].
 
-  /// For , the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdList] is used. Otherwise, the value
-  /// from the [other] [MdList] is used.
+  /// For [orderedAlignment] and [unorderedAlignment], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MdListSpec] is used. Otherwise, the value
+  /// from the [other] [MdListSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdList] configurations.
+  /// different [MdListSpec] configurations.
   @override
-  MdList lerp(MdList? other, double t) {
+  MdListSpec lerp(MdListSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdList(
-      list: MixHelpers.lerpTextStyle(_$this.list, other.list, t),
-      listItem: MixHelpers.lerpTextStyle(_$this.listItem, other.listItem, t),
-      listItemMarker: MixHelpers.lerpTextStyle(
-          _$this.listItemMarker, other.listItemMarker, t),
-      listItemMarkerTrailingSpace: MixHelpers.lerpDouble(
-          _$this.listItemMarkerTrailingSpace,
-          other.listItemMarkerTrailingSpace,
-          t),
-      listItemMinIndent: MixHelpers.lerpDouble(
-          _$this.listItemMinIndent, other.listItemMinIndent, t),
+    return MdListSpec(
+      indent: MixHelpers.lerpDouble(_$this.indent, other.indent, t),
+      bulletStyle:
+          MixHelpers.lerpTextStyle(_$this.bulletStyle, other.bulletStyle, t),
+      bulletPadding:
+          EdgeInsets.lerp(_$this.bulletPadding, other.bulletPadding, t),
+      orderedAlignment:
+          t < 0.5 ? _$this.orderedAlignment : other.orderedAlignment,
+      unorderedAlignment:
+          t < 0.5 ? _$this.unorderedAlignment : other.unorderedAlignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdList].
+  /// The list of properties that constitute the state of this [MdListSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdList] instances for equality.
+  /// compare two [MdListSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.list,
-        _$this.listItem,
-        _$this.listItemMarker,
-        _$this.listItemMarkerTrailingSpace,
-        _$this.listItemMinIndent,
+        _$this.indent,
+        _$this.bulletStyle,
+        _$this.bulletPadding,
+        _$this.orderedAlignment,
+        _$this.unorderedAlignment,
       ];
 
-  MdList get _$this => this as MdList;
+  MdListSpec get _$this => this as MdListSpec;
 }
 
-/// Represents the attributes of a [MdList].
+/// Represents the attributes of a [MdListSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdList].
+/// appearance of a [MdListSpec].
 ///
-/// Use this class to configure the attributes of a [MdList] and pass it to
-/// the [MdList] constructor.
-final class MdListAttribute extends SpecAttribute<MdList> {
-  final TextStyleDto? list;
-  final TextStyleDto? listItem;
-  final TextStyleDto? listItemMarker;
-  final double? listItemMarkerTrailingSpace;
-  final double? listItemMinIndent;
+/// Use this class to configure the attributes of a [MdListSpec] and pass it to
+/// the [MdListSpec] constructor.
+final class MdListSpecAttribute extends SpecAttribute<MdListSpec> {
+  final double? indent;
+  final TextStyleDto? bulletStyle;
+  final EdgeInsetsDto? bulletPadding;
+  final WrapAlignment? orderedAlignment;
+  final WrapAlignment? unorderedAlignment;
 
-  const MdListAttribute({
-    this.list,
-    this.listItem,
-    this.listItemMarker,
-    this.listItemMarkerTrailingSpace,
-    this.listItemMinIndent,
+  const MdListSpecAttribute({
+    this.indent,
+    this.bulletStyle,
+    this.bulletPadding,
+    this.orderedAlignment,
+    this.unorderedAlignment,
   });
 
-  /// Resolves to [MdList] using the provided [MixData].
+  /// Resolves to [MdListSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdList = MdListAttribute(...).resolve(mix);
+  /// final mdListSpec = MdListSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdList resolve(MixData mix) {
-    return MdList(
-      list: list?.resolve(mix),
-      listItem: listItem?.resolve(mix),
-      listItemMarker: listItemMarker?.resolve(mix),
-      listItemMarkerTrailingSpace: listItemMarkerTrailingSpace,
-      listItemMinIndent: listItemMinIndent,
+  MdListSpec resolve(MixData mix) {
+    return MdListSpec(
+      indent: indent,
+      bulletStyle: bulletStyle?.resolve(mix),
+      bulletPadding: bulletPadding?.resolve(mix),
+      orderedAlignment: orderedAlignment,
+      unorderedAlignment: unorderedAlignment,
     );
   }
 
-  /// Merges the properties of this [MdListAttribute] with the properties of [other].
+  /// Merges the properties of this [MdListSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdListAttribute] with the properties of [other] taking precedence over
+  /// [MdListSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdListAttribute merge(MdListAttribute? other) {
+  MdListSpecAttribute merge(MdListSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdListAttribute(
-      list: list?.merge(other.list) ?? other.list,
-      listItem: listItem?.merge(other.listItem) ?? other.listItem,
-      listItemMarker:
-          listItemMarker?.merge(other.listItemMarker) ?? other.listItemMarker,
-      listItemMarkerTrailingSpace:
-          other.listItemMarkerTrailingSpace ?? listItemMarkerTrailingSpace,
-      listItemMinIndent: other.listItemMinIndent ?? listItemMinIndent,
+    return MdListSpecAttribute(
+      indent: other.indent ?? indent,
+      bulletStyle: bulletStyle?.merge(other.bulletStyle) ?? other.bulletStyle,
+      bulletPadding:
+          bulletPadding?.merge(other.bulletPadding) ?? other.bulletPadding,
+      orderedAlignment: other.orderedAlignment ?? orderedAlignment,
+      unorderedAlignment: other.unorderedAlignment ?? unorderedAlignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdListAttribute].
+  /// The list of properties that constitute the state of this [MdListSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdListAttribute] instances for equality.
+  /// compare two [MdListSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        list,
-        listItem,
-        listItemMarker,
-        listItemMarkerTrailingSpace,
-        listItemMinIndent,
+        indent,
+        bulletStyle,
+        bulletPadding,
+        orderedAlignment,
+        unorderedAlignment,
       ];
 }
 
-/// Utility class for configuring [MdListAttribute] properties.
+/// Utility class for configuring [MdListSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdListAttribute].
-/// Use the methods of this class to configure specific properties of a [MdListAttribute].
-class MdListUtility<T extends Attribute>
-    extends SpecUtility<T, MdListAttribute> {
-  /// Utility for defining [MdListAttribute.list]
-  late final textStyle = TextStyleUtility((v) => only(list: v));
+/// This class provides methods to set individual properties of a [MdListSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdListSpecAttribute].
+class MdListSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdListSpecAttribute> {
+  /// Utility for defining [MdListSpecAttribute.indent]
+  late final indent = DoubleUtility((v) => only(indent: v));
 
-  /// Utility for defining [MdListAttribute.listItem]
-  late final itemTextStyle = TextStyleUtility((v) => only(listItem: v));
+  /// Utility for defining [MdListSpecAttribute.bulletStyle]
+  late final bulletStyle = TextStyleUtility((v) => only(bulletStyle: v));
 
-  /// Utility for defining [MdListAttribute.listItemMarker]
-  late final itemMarkerTextStyle =
-      TextStyleUtility((v) => only(listItemMarker: v));
+  /// Utility for defining [MdListSpecAttribute.bulletPadding]
+  late final bulletPadding = EdgeInsetsUtility((v) => only(bulletPadding: v));
 
-  /// Utility for defining [MdListAttribute.listItemMarkerTrailingSpace]
-  late final itemMarkerTrailingSpace =
-      DoubleUtility((v) => only(listItemMarkerTrailingSpace: v));
+  /// Utility for defining [MdListSpecAttribute.orderedAlignment]
+  late final orderedAlignment =
+      WrapAlignmentUtility((v) => only(orderedAlignment: v));
 
-  /// Utility for defining [MdListAttribute.listItemMinIndent]
-  late final itemMinIndent = DoubleUtility((v) => only(listItemMinIndent: v));
+  /// Utility for defining [MdListSpecAttribute.unorderedAlignment]
+  late final unorderedAlignment =
+      WrapAlignmentUtility((v) => only(unorderedAlignment: v));
 
-  MdListUtility(super.builder);
+  MdListSpecUtility(super.builder);
 
-  static final self = MdListUtility((v) => v);
+  static final self = MdListSpecUtility((v) => v);
 
-  /// Returns a new [MdListAttribute] with the specified properties.
+  /// Returns a new [MdListSpecAttribute] with the specified properties.
   @override
   T only({
-    TextStyleDto? list,
-    TextStyleDto? listItem,
-    TextStyleDto? listItemMarker,
-    double? listItemMarkerTrailingSpace,
-    double? listItemMinIndent,
+    double? indent,
+    TextStyleDto? bulletStyle,
+    EdgeInsetsDto? bulletPadding,
+    WrapAlignment? orderedAlignment,
+    WrapAlignment? unorderedAlignment,
   }) {
-    return builder(MdListAttribute(
-      list: list,
-      listItem: listItem,
-      listItemMarker: listItemMarker,
-      listItemMarkerTrailingSpace: listItemMarkerTrailingSpace,
-      listItemMinIndent: listItemMinIndent,
+    return builder(MdListSpecAttribute(
+      indent: indent,
+      bulletStyle: bulletStyle,
+      bulletPadding: bulletPadding,
+      orderedAlignment: orderedAlignment,
+      unorderedAlignment: unorderedAlignment,
     ));
   }
 }
 
-/// A tween that interpolates between two [MdList] instances.
+/// A tween that interpolates between two [MdListSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdList] specifications.
-class MdListTween extends Tween<MdList?> {
-  MdListTween({
+/// different [MdListSpec] specifications.
+class MdListSpecTween extends Tween<MdListSpec?> {
+  MdListSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdList lerp(double t) {
-    if (begin == null && end == null) return const MdList();
-    if (begin == null) return end!;
+  MdListSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdListSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
-mixin _$MdBlockQuote on Spec<MdBlockQuote> {
-  static MdBlockQuote from(MixData mix) {
-    return mix.attributeOf<MdBlockQuoteAttribute>()?.resolve(mix) ??
-        const MdBlockQuote();
+mixin _$MdTableSpec on Spec<MdTableSpec> {
+  static MdTableSpec from(MixData mix) {
+    return mix.attributeOf<MdTableSpecAttribute>()?.resolve(mix) ??
+        const MdTableSpec();
   }
 
-  /// {@template md_block_quote_of}
-  /// Retrieves the [MdBlockQuote] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template md_table_spec_of}
+  /// Retrieves the [MdTableSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdBlockQuote] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdBlockQuote].
+  /// given [BuildContext], and then retrieves the [MdTableSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdTableSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdBlockQuote = MdBlockQuote.of(context);
+  /// final mdTableSpec = MdTableSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdBlockQuote of(BuildContext context) {
-    return _$MdBlockQuote.from(Mix.of(context));
+  static MdTableSpec of(BuildContext context) {
+    return _$MdTableSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdBlockQuote] but with the given fields
+  /// Creates a copy of this [MdTableSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdBlockQuote copyWith({
-    TextStyle? blockquote,
-    BoxDecoration? blockquoteDecoration,
-    EdgeInsets? blockquotePadding,
-    EdgeInsets? blockquoteContentPadding,
+  MdTableSpec copyWith({
+    TextStyle? headStyle,
+    TextStyle? bodyStyle,
+    TextAlign? headAlignment,
+    EdgeInsets? padding,
+    TableBorder? border,
+    TableColumnWidth? columnWidth,
+    EdgeInsets? cellPadding,
+    BoxDecoration? cellDecoration,
+    TableCellVerticalAlignment? verticalAlignment,
   }) {
-    return MdBlockQuote(
-      blockquote: blockquote ?? _$this.blockquote,
-      blockquoteDecoration: blockquoteDecoration ?? _$this.blockquoteDecoration,
-      blockquotePadding: blockquotePadding ?? _$this.blockquotePadding,
-      blockquoteContentPadding:
-          blockquoteContentPadding ?? _$this.blockquoteContentPadding,
+    return MdTableSpec(
+      headStyle: headStyle ?? _$this.headStyle,
+      bodyStyle: bodyStyle ?? _$this.bodyStyle,
+      headAlignment: headAlignment ?? _$this.headAlignment,
+      padding: padding ?? _$this.padding,
+      border: border ?? _$this.border,
+      columnWidth: columnWidth ?? _$this.columnWidth,
+      cellPadding: cellPadding ?? _$this.cellPadding,
+      cellDecoration: cellDecoration ?? _$this.cellDecoration,
+      verticalAlignment: verticalAlignment ?? _$this.verticalAlignment,
     );
   }
 
-  /// Linearly interpolates between this [MdBlockQuote] and another [MdBlockQuote] based on the given parameter [t].
+  /// Linearly interpolates between this [MdTableSpec] and another [MdTableSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdBlockQuote] is returned. When [t] is 1.0, the [other] [MdBlockQuote] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdBlockQuote] is returned.
+  /// When [t] is 0.0, the current [MdTableSpec] is returned. When [t] is 1.0, the [other] [MdTableSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdTableSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdBlockQuote] instance.
+  /// If [other] is null, this method returns the current [MdTableSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdBlockQuote] using the appropriate
+  /// The interpolation is performed on each property of the [MdTableSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpTextStyle] for [blockquote].
-  /// - [BoxDecoration.lerp] for [blockquoteDecoration].
-  /// - [EdgeInsets.lerp] for [blockquotePadding] and [blockquoteContentPadding].
+  /// - [MixHelpers.lerpTextStyle] for [headStyle] and [bodyStyle].
+  /// - [EdgeInsets.lerp] for [padding] and [cellPadding].
+  /// - [TableBorder.lerp] for [border].
+  /// - [BoxDecoration.lerp] for [cellDecoration].
 
-  /// For , the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdBlockQuote] is used. Otherwise, the value
-  /// from the [other] [MdBlockQuote] is used.
+  /// For [headAlignment] and [columnWidth] and [verticalAlignment], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MdTableSpec] is used. Otherwise, the value
+  /// from the [other] [MdTableSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdBlockQuote] configurations.
+  /// different [MdTableSpec] configurations.
   @override
-  MdBlockQuote lerp(MdBlockQuote? other, double t) {
+  MdTableSpec lerp(MdTableSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdBlockQuote(
-      blockquote:
-          MixHelpers.lerpTextStyle(_$this.blockquote, other.blockquote, t),
-      blockquoteDecoration: BoxDecoration.lerp(
-          _$this.blockquoteDecoration, other.blockquoteDecoration, t),
-      blockquotePadding:
-          EdgeInsets.lerp(_$this.blockquotePadding, other.blockquotePadding, t),
-      blockquoteContentPadding: EdgeInsets.lerp(
-          _$this.blockquoteContentPadding, other.blockquoteContentPadding, t),
+    return MdTableSpec(
+      headStyle: MixHelpers.lerpTextStyle(_$this.headStyle, other.headStyle, t),
+      bodyStyle: MixHelpers.lerpTextStyle(_$this.bodyStyle, other.bodyStyle, t),
+      headAlignment: t < 0.5 ? _$this.headAlignment : other.headAlignment,
+      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
+      border: TableBorder.lerp(_$this.border, other.border, t),
+      columnWidth: t < 0.5 ? _$this.columnWidth : other.columnWidth,
+      cellPadding: EdgeInsets.lerp(_$this.cellPadding, other.cellPadding, t),
+      cellDecoration:
+          BoxDecoration.lerp(_$this.cellDecoration, other.cellDecoration, t),
+      verticalAlignment:
+          t < 0.5 ? _$this.verticalAlignment : other.verticalAlignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdBlockQuote].
+  /// The list of properties that constitute the state of this [MdTableSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdBlockQuote] instances for equality.
+  /// compare two [MdTableSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.blockquote,
-        _$this.blockquoteDecoration,
-        _$this.blockquotePadding,
-        _$this.blockquoteContentPadding,
+        _$this.headStyle,
+        _$this.bodyStyle,
+        _$this.headAlignment,
+        _$this.padding,
+        _$this.border,
+        _$this.columnWidth,
+        _$this.cellPadding,
+        _$this.cellDecoration,
+        _$this.verticalAlignment,
       ];
 
-  MdBlockQuote get _$this => this as MdBlockQuote;
+  MdTableSpec get _$this => this as MdTableSpec;
 }
 
-/// Represents the attributes of a [MdBlockQuote].
+/// Represents the attributes of a [MdTableSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdBlockQuote].
+/// appearance of a [MdTableSpec].
 ///
-/// Use this class to configure the attributes of a [MdBlockQuote] and pass it to
-/// the [MdBlockQuote] constructor.
-final class MdBlockQuoteAttribute extends SpecAttribute<MdBlockQuote> {
-  final TextStyleDto? blockquote;
-  final BoxDecorationDto? blockquoteDecoration;
-  final EdgeInsetsDto? blockquotePadding;
-  final EdgeInsetsDto? blockquoteContentPadding;
+/// Use this class to configure the attributes of a [MdTableSpec] and pass it to
+/// the [MdTableSpec] constructor.
+final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
+  final TextStyleDto? headStyle;
+  final TextStyleDto? bodyStyle;
+  final TextAlign? headAlignment;
+  final EdgeInsetsDto? padding;
+  final TableBorder? border;
+  final TableColumnWidth? columnWidth;
+  final EdgeInsetsDto? cellPadding;
+  final BoxDecorationDto? cellDecoration;
+  final TableCellVerticalAlignment? verticalAlignment;
 
-  const MdBlockQuoteAttribute({
-    this.blockquote,
-    this.blockquoteDecoration,
-    this.blockquotePadding,
-    this.blockquoteContentPadding,
+  const MdTableSpecAttribute({
+    this.headStyle,
+    this.bodyStyle,
+    this.headAlignment,
+    this.padding,
+    this.border,
+    this.columnWidth,
+    this.cellPadding,
+    this.cellDecoration,
+    this.verticalAlignment,
   });
 
-  /// Resolves to [MdBlockQuote] using the provided [MixData].
+  /// Resolves to [MdTableSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdBlockQuote = MdBlockQuoteAttribute(...).resolve(mix);
+  /// final mdTableSpec = MdTableSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdBlockQuote resolve(MixData mix) {
-    return MdBlockQuote(
-      blockquote: blockquote?.resolve(mix),
-      blockquoteDecoration: blockquoteDecoration?.resolve(mix),
-      blockquotePadding: blockquotePadding?.resolve(mix),
-      blockquoteContentPadding: blockquoteContentPadding?.resolve(mix),
+  MdTableSpec resolve(MixData mix) {
+    return MdTableSpec(
+      headStyle: headStyle?.resolve(mix),
+      bodyStyle: bodyStyle?.resolve(mix),
+      headAlignment: headAlignment,
+      padding: padding?.resolve(mix),
+      border: border,
+      columnWidth: columnWidth,
+      cellPadding: cellPadding?.resolve(mix),
+      cellDecoration: cellDecoration?.resolve(mix),
+      verticalAlignment: verticalAlignment,
     );
   }
 
-  /// Merges the properties of this [MdBlockQuoteAttribute] with the properties of [other].
+  /// Merges the properties of this [MdTableSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdBlockQuoteAttribute] with the properties of [other] taking precedence over
+  /// [MdTableSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdBlockQuoteAttribute merge(MdBlockQuoteAttribute? other) {
+  MdTableSpecAttribute merge(MdTableSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdBlockQuoteAttribute(
-      blockquote: blockquote?.merge(other.blockquote) ?? other.blockquote,
-      blockquoteDecoration:
-          blockquoteDecoration?.merge(other.blockquoteDecoration) ??
-              other.blockquoteDecoration,
-      blockquotePadding: blockquotePadding?.merge(other.blockquotePadding) ??
-          other.blockquotePadding,
-      blockquoteContentPadding:
-          blockquoteContentPadding?.merge(other.blockquoteContentPadding) ??
-              other.blockquoteContentPadding,
+    return MdTableSpecAttribute(
+      headStyle: headStyle?.merge(other.headStyle) ?? other.headStyle,
+      bodyStyle: bodyStyle?.merge(other.bodyStyle) ?? other.bodyStyle,
+      headAlignment: other.headAlignment ?? headAlignment,
+      padding: padding?.merge(other.padding) ?? other.padding,
+      border: other.border ?? border,
+      columnWidth: other.columnWidth ?? columnWidth,
+      cellPadding: cellPadding?.merge(other.cellPadding) ?? other.cellPadding,
+      cellDecoration:
+          cellDecoration?.merge(other.cellDecoration) ?? other.cellDecoration,
+      verticalAlignment: other.verticalAlignment ?? verticalAlignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdBlockQuoteAttribute].
+  /// The list of properties that constitute the state of this [MdTableSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdBlockQuoteAttribute] instances for equality.
+  /// compare two [MdTableSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        blockquote,
-        blockquoteDecoration,
-        blockquotePadding,
-        blockquoteContentPadding,
+        headStyle,
+        bodyStyle,
+        headAlignment,
+        padding,
+        border,
+        columnWidth,
+        cellPadding,
+        cellDecoration,
+        verticalAlignment,
       ];
 }
 
-/// Utility class for configuring [MdBlockQuoteAttribute] properties.
+/// Utility class for configuring [MdTableSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdBlockQuoteAttribute].
-/// Use the methods of this class to configure specific properties of a [MdBlockQuoteAttribute].
-class MdBlockQuoteUtility<T extends Attribute>
-    extends SpecUtility<T, MdBlockQuoteAttribute> {
-  /// Utility for defining [MdBlockQuoteAttribute.blockquote]
-  late final textStyle = TextStyleUtility((v) => only(blockquote: v));
+/// This class provides methods to set individual properties of a [MdTableSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdTableSpecAttribute].
+class MdTableSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdTableSpecAttribute> {
+  /// Utility for defining [MdTableSpecAttribute.headStyle]
+  late final headStyle = TextStyleUtility((v) => only(headStyle: v));
 
-  /// Utility for defining [MdBlockQuoteAttribute.blockquoteDecoration]
-  late final decoration =
-      BoxDecorationUtility((v) => only(blockquoteDecoration: v));
+  /// Utility for defining [MdTableSpecAttribute.bodyStyle]
+  late final bodyStyle = TextStyleUtility((v) => only(bodyStyle: v));
 
-  /// Utility for defining [MdBlockQuoteAttribute.blockquotePadding]
-  late final padding = EdgeInsetsUtility((v) => only(blockquotePadding: v));
+  /// Utility for defining [MdTableSpecAttribute.headAlignment]
+  late final headAlignment = TextAlignUtility((v) => only(headAlignment: v));
 
-  /// Utility for defining [MdBlockQuoteAttribute.blockquoteContentPadding]
-  late final contentPadding =
-      EdgeInsetsUtility((v) => only(blockquoteContentPadding: v));
+  /// Utility for defining [MdTableSpecAttribute.padding]
+  late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  MdBlockQuoteUtility(super.builder);
+  /// Utility for defining [MdTableSpecAttribute.border]
+  late final border = TableBorderUtility((v) => only(border: v));
 
-  static final self = MdBlockQuoteUtility((v) => v);
+  /// Utility for defining [MdTableSpecAttribute.columnWidth]
+  late final columnWidth = TableColumnWidthUtility((v) => only(columnWidth: v));
 
-  /// Returns a new [MdBlockQuoteAttribute] with the specified properties.
+  /// Utility for defining [MdTableSpecAttribute.cellPadding]
+  late final cellPadding = EdgeInsetsUtility((v) => only(cellPadding: v));
+
+  /// Utility for defining [MdTableSpecAttribute.cellDecoration]
+  late final cellDecoration =
+      BoxDecorationUtility((v) => only(cellDecoration: v));
+
+  /// Utility for defining [MdTableSpecAttribute.verticalAlignment]
+  late final verticalAlignment =
+      TableCellVerticalAlignmentUtility((v) => only(verticalAlignment: v));
+
+  MdTableSpecUtility(super.builder);
+
+  static final self = MdTableSpecUtility((v) => v);
+
+  /// Returns a new [MdTableSpecAttribute] with the specified properties.
   @override
   T only({
-    TextStyleDto? blockquote,
-    BoxDecorationDto? blockquoteDecoration,
-    EdgeInsetsDto? blockquotePadding,
-    EdgeInsetsDto? blockquoteContentPadding,
+    TextStyleDto? headStyle,
+    TextStyleDto? bodyStyle,
+    TextAlign? headAlignment,
+    EdgeInsetsDto? padding,
+    TableBorder? border,
+    TableColumnWidth? columnWidth,
+    EdgeInsetsDto? cellPadding,
+    BoxDecorationDto? cellDecoration,
+    TableCellVerticalAlignment? verticalAlignment,
   }) {
-    return builder(MdBlockQuoteAttribute(
-      blockquote: blockquote,
-      blockquoteDecoration: blockquoteDecoration,
-      blockquotePadding: blockquotePadding,
-      blockquoteContentPadding: blockquoteContentPadding,
+    return builder(MdTableSpecAttribute(
+      headStyle: headStyle,
+      bodyStyle: bodyStyle,
+      headAlignment: headAlignment,
+      padding: padding,
+      border: border,
+      columnWidth: columnWidth,
+      cellPadding: cellPadding,
+      cellDecoration: cellDecoration,
+      verticalAlignment: verticalAlignment,
     ));
   }
 }
 
-/// A tween that interpolates between two [MdBlockQuote] instances.
+/// A tween that interpolates between two [MdTableSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdBlockQuote] specifications.
-class MdBlockQuoteTween extends Tween<MdBlockQuote?> {
-  MdBlockQuoteTween({
+/// different [MdTableSpec] specifications.
+class MdTableSpecTween extends Tween<MdTableSpec?> {
+  MdTableSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdBlockQuote lerp(double t) {
-    if (begin == null && end == null) return const MdBlockQuote();
-    if (begin == null) return end!;
+  MdTableSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdTableSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
-mixin _$MdTable on Spec<MdTable> {
-  static MdTable from(MixData mix) {
-    return mix.attributeOf<MdTableAttribute>()?.resolve(mix) ?? const MdTable();
+mixin _$MdBlockquoteSpec on Spec<MdBlockquoteSpec> {
+  static MdBlockquoteSpec from(MixData mix) {
+    return mix.attributeOf<MdBlockquoteSpecAttribute>()?.resolve(mix) ??
+        const MdBlockquoteSpec();
   }
 
-  /// {@template md_table_of}
-  /// Retrieves the [MdTable] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template md_blockquote_spec_of}
+  /// Retrieves the [MdBlockquoteSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdTable] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdTable].
+  /// given [BuildContext], and then retrieves the [MdBlockquoteSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdBlockquoteSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdTable = MdTable.of(context);
+  /// final mdBlockquoteSpec = MdBlockquoteSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdTable of(BuildContext context) {
-    return _$MdTable.from(Mix.of(context));
+  static MdBlockquoteSpec of(BuildContext context) {
+    return _$MdBlockquoteSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdTable] but with the given fields
+  /// Creates a copy of this [MdBlockquoteSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdTable copyWith({
-    TextStyle? table,
-    TextStyle? tableHead,
-    TextStyle? tableBody,
-    TableBorder? tableBorder,
-    BoxDecoration? tableRowDecoration,
-    MarkdownAlternating? tableRowDecorationAlternating,
-    EdgeInsets? tableCellPadding,
-    TableColumnWidth? tableColumnWidth,
+  MdBlockquoteSpec copyWith({
+    TextStyle? textStyle,
+    EdgeInsets? padding,
+    BoxDecoration? decoration,
+    WrapAlignment? alignment,
   }) {
-    return MdTable(
-      table: table ?? _$this.table,
-      tableHead: tableHead ?? _$this.tableHead,
-      tableBody: tableBody ?? _$this.tableBody,
-      tableBorder: tableBorder ?? _$this.tableBorder,
-      tableRowDecoration: tableRowDecoration ?? _$this.tableRowDecoration,
-      tableRowDecorationAlternating:
-          tableRowDecorationAlternating ?? _$this.tableRowDecorationAlternating,
-      tableCellPadding: tableCellPadding ?? _$this.tableCellPadding,
-      tableColumnWidth: tableColumnWidth ?? _$this.tableColumnWidth,
+    return MdBlockquoteSpec(
+      textStyle: textStyle ?? _$this.textStyle,
+      padding: padding ?? _$this.padding,
+      decoration: decoration ?? _$this.decoration,
+      alignment: alignment ?? _$this.alignment,
     );
   }
 
-  /// Linearly interpolates between this [MdTable] and another [MdTable] based on the given parameter [t].
+  /// Linearly interpolates between this [MdBlockquoteSpec] and another [MdBlockquoteSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdTable] is returned. When [t] is 1.0, the [other] [MdTable] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdTable] is returned.
+  /// When [t] is 0.0, the current [MdBlockquoteSpec] is returned. When [t] is 1.0, the [other] [MdBlockquoteSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdBlockquoteSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdTable] instance.
+  /// If [other] is null, this method returns the current [MdBlockquoteSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdTable] using the appropriate
+  /// The interpolation is performed on each property of the [MdBlockquoteSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpTextStyle] for [table] and [tableHead] and [tableBody].
-  /// - [TableBorder.lerp] for [tableBorder].
-  /// - [BoxDecoration.lerp] for [tableRowDecoration].
-  /// - [EdgeInsets.lerp] for [tableCellPadding].
+  /// - [MixHelpers.lerpTextStyle] for [textStyle].
+  /// - [EdgeInsets.lerp] for [padding].
+  /// - [BoxDecoration.lerp] for [decoration].
 
-  /// For [tableRowDecorationAlternating] and [tableColumnWidth], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdTable] is used. Otherwise, the value
-  /// from the [other] [MdTable] is used.
+  /// For [alignment], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MdBlockquoteSpec] is used. Otherwise, the value
+  /// from the [other] [MdBlockquoteSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdTable] configurations.
+  /// different [MdBlockquoteSpec] configurations.
   @override
-  MdTable lerp(MdTable? other, double t) {
+  MdBlockquoteSpec lerp(MdBlockquoteSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdTable(
-      table: MixHelpers.lerpTextStyle(_$this.table, other.table, t),
-      tableHead: MixHelpers.lerpTextStyle(_$this.tableHead, other.tableHead, t),
-      tableBody: MixHelpers.lerpTextStyle(_$this.tableBody, other.tableBody, t),
-      tableBorder: TableBorder.lerp(_$this.tableBorder, other.tableBorder, t),
-      tableRowDecoration: BoxDecoration.lerp(
-          _$this.tableRowDecoration, other.tableRowDecoration, t),
-      tableRowDecorationAlternating: t < 0.5
-          ? _$this.tableRowDecorationAlternating
-          : other.tableRowDecorationAlternating,
-      tableCellPadding:
-          EdgeInsets.lerp(_$this.tableCellPadding, other.tableCellPadding, t),
-      tableColumnWidth:
-          t < 0.5 ? _$this.tableColumnWidth : other.tableColumnWidth,
+    return MdBlockquoteSpec(
+      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
+      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
+      decoration: BoxDecoration.lerp(_$this.decoration, other.decoration, t),
+      alignment: t < 0.5 ? _$this.alignment : other.alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTable].
+  /// The list of properties that constitute the state of this [MdBlockquoteSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTable] instances for equality.
+  /// compare two [MdBlockquoteSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.table,
-        _$this.tableHead,
-        _$this.tableBody,
-        _$this.tableBorder,
-        _$this.tableRowDecoration,
-        _$this.tableRowDecorationAlternating,
-        _$this.tableCellPadding,
-        _$this.tableColumnWidth,
+        _$this.textStyle,
+        _$this.padding,
+        _$this.decoration,
+        _$this.alignment,
       ];
 
-  MdTable get _$this => this as MdTable;
+  MdBlockquoteSpec get _$this => this as MdBlockquoteSpec;
 }
 
-/// Represents the attributes of a [MdTable].
+/// Represents the attributes of a [MdBlockquoteSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdTable].
+/// appearance of a [MdBlockquoteSpec].
 ///
-/// Use this class to configure the attributes of a [MdTable] and pass it to
-/// the [MdTable] constructor.
-final class MdTableAttribute extends SpecAttribute<MdTable> {
-  final TextStyleDto? table;
-  final TextStyleDto? tableHead;
-  final TextStyleDto? tableBody;
-  final TableBorder? tableBorder;
-  final BoxDecorationDto? tableRowDecoration;
-  final MarkdownAlternating? tableRowDecorationAlternating;
-  final EdgeInsetsDto? tableCellPadding;
-  final TableColumnWidth? tableColumnWidth;
+/// Use this class to configure the attributes of a [MdBlockquoteSpec] and pass it to
+/// the [MdBlockquoteSpec] constructor.
+final class MdBlockquoteSpecAttribute extends SpecAttribute<MdBlockquoteSpec> {
+  final TextStyleDto? textStyle;
+  final EdgeInsetsDto? padding;
+  final BoxDecorationDto? decoration;
+  final WrapAlignment? alignment;
 
-  const MdTableAttribute({
-    this.table,
-    this.tableHead,
-    this.tableBody,
-    this.tableBorder,
-    this.tableRowDecoration,
-    this.tableRowDecorationAlternating,
-    this.tableCellPadding,
-    this.tableColumnWidth,
+  const MdBlockquoteSpecAttribute({
+    this.textStyle,
+    this.padding,
+    this.decoration,
+    this.alignment,
   });
 
-  /// Resolves to [MdTable] using the provided [MixData].
+  /// Resolves to [MdBlockquoteSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdTable = MdTableAttribute(...).resolve(mix);
+  /// final mdBlockquoteSpec = MdBlockquoteSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdTable resolve(MixData mix) {
-    return MdTable(
-      table: table?.resolve(mix),
-      tableHead: tableHead?.resolve(mix),
-      tableBody: tableBody?.resolve(mix),
-      tableBorder: tableBorder,
-      tableRowDecoration: tableRowDecoration?.resolve(mix),
-      tableRowDecorationAlternating: tableRowDecorationAlternating,
-      tableCellPadding: tableCellPadding?.resolve(mix),
-      tableColumnWidth: tableColumnWidth,
+  MdBlockquoteSpec resolve(MixData mix) {
+    return MdBlockquoteSpec(
+      textStyle: textStyle?.resolve(mix),
+      padding: padding?.resolve(mix),
+      decoration: decoration?.resolve(mix),
+      alignment: alignment,
     );
   }
 
-  /// Merges the properties of this [MdTableAttribute] with the properties of [other].
+  /// Merges the properties of this [MdBlockquoteSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdTableAttribute] with the properties of [other] taking precedence over
+  /// [MdBlockquoteSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdTableAttribute merge(MdTableAttribute? other) {
+  MdBlockquoteSpecAttribute merge(MdBlockquoteSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdTableAttribute(
-      table: table?.merge(other.table) ?? other.table,
-      tableHead: tableHead?.merge(other.tableHead) ?? other.tableHead,
-      tableBody: tableBody?.merge(other.tableBody) ?? other.tableBody,
-      tableBorder: other.tableBorder ?? tableBorder,
-      tableRowDecoration: tableRowDecoration?.merge(other.tableRowDecoration) ??
-          other.tableRowDecoration,
-      tableRowDecorationAlternating:
-          other.tableRowDecorationAlternating ?? tableRowDecorationAlternating,
-      tableCellPadding: tableCellPadding?.merge(other.tableCellPadding) ??
-          other.tableCellPadding,
-      tableColumnWidth: other.tableColumnWidth ?? tableColumnWidth,
+    return MdBlockquoteSpecAttribute(
+      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
+      padding: padding?.merge(other.padding) ?? other.padding,
+      decoration: decoration?.merge(other.decoration) ?? other.decoration,
+      alignment: other.alignment ?? alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTableAttribute].
+  /// The list of properties that constitute the state of this [MdBlockquoteSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTableAttribute] instances for equality.
+  /// compare two [MdBlockquoteSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        table,
-        tableHead,
-        tableBody,
-        tableBorder,
-        tableRowDecoration,
-        tableRowDecorationAlternating,
-        tableCellPadding,
-        tableColumnWidth,
+        textStyle,
+        padding,
+        decoration,
+        alignment,
       ];
 }
 
-/// Utility class for configuring [MdTableAttribute] properties.
+/// Utility class for configuring [MdBlockquoteSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdTableAttribute].
-/// Use the methods of this class to configure specific properties of a [MdTableAttribute].
-class MdTableUtility<T extends Attribute>
-    extends SpecUtility<T, MdTableAttribute> {
-  /// Utility for defining [MdTableAttribute.table]
-  late final textStyle = TextStyleUtility((v) => only(table: v));
+/// This class provides methods to set individual properties of a [MdBlockquoteSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdBlockquoteSpecAttribute].
+class MdBlockquoteSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdBlockquoteSpecAttribute> {
+  /// Utility for defining [MdBlockquoteSpecAttribute.textStyle]
+  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdTableAttribute.tableHead]
-  late final headTextStyle = TextStyleUtility((v) => only(tableHead: v));
+  /// Utility for defining [MdBlockquoteSpecAttribute.padding]
+  late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdTableAttribute.tableBody]
-  late final bodyTextStyle = TextStyleUtility((v) => only(tableBody: v));
+  /// Utility for defining [MdBlockquoteSpecAttribute.decoration]
+  late final decoration = BoxDecorationUtility((v) => only(decoration: v));
 
-  /// Utility for defining [MdTableAttribute.tableBorder]
-  late final border = TableBorderUtility((v) => only(tableBorder: v));
+  /// Utility for defining [MdBlockquoteSpecAttribute.alignment]
+  late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
-  /// Utility for defining [MdTableAttribute.tableRowDecoration]
-  late final rowDecoration =
-      BoxDecorationUtility((v) => only(tableRowDecoration: v));
+  MdBlockquoteSpecUtility(super.builder);
 
-  /// Utility for defining [MdTableAttribute.tableRowDecorationAlternating]
-  late final rowDecorationAlternating =
-      MarkdownAlternatingUtility((v) => only(tableRowDecorationAlternating: v));
+  static final self = MdBlockquoteSpecUtility((v) => v);
 
-  /// Utility for defining [MdTableAttribute.tableCellPadding]
-  late final cellPadding = EdgeInsetsUtility((v) => only(tableCellPadding: v));
-
-  /// Utility for defining [MdTableAttribute.tableColumnWidth]
-  late final columnWidth =
-      TableColumnWidthUtility((v) => only(tableColumnWidth: v));
-
-  MdTableUtility(super.builder);
-
-  static final self = MdTableUtility((v) => v);
-
-  /// Returns a new [MdTableAttribute] with the specified properties.
+  /// Returns a new [MdBlockquoteSpecAttribute] with the specified properties.
   @override
   T only({
-    TextStyleDto? table,
-    TextStyleDto? tableHead,
-    TextStyleDto? tableBody,
-    TableBorder? tableBorder,
-    BoxDecorationDto? tableRowDecoration,
-    MarkdownAlternating? tableRowDecorationAlternating,
-    EdgeInsetsDto? tableCellPadding,
-    TableColumnWidth? tableColumnWidth,
+    TextStyleDto? textStyle,
+    EdgeInsetsDto? padding,
+    BoxDecorationDto? decoration,
+    WrapAlignment? alignment,
   }) {
-    return builder(MdTableAttribute(
-      table: table,
-      tableHead: tableHead,
-      tableBody: tableBody,
-      tableBorder: tableBorder,
-      tableRowDecoration: tableRowDecoration,
-      tableRowDecorationAlternating: tableRowDecorationAlternating,
-      tableCellPadding: tableCellPadding,
-      tableColumnWidth: tableColumnWidth,
+    return builder(MdBlockquoteSpecAttribute(
+      textStyle: textStyle,
+      padding: padding,
+      decoration: decoration,
+      alignment: alignment,
     ));
   }
 }
 
-/// A tween that interpolates between two [MdTable] instances.
+/// A tween that interpolates between two [MdBlockquoteSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdTable] specifications.
-class MdTableTween extends Tween<MdTable?> {
-  MdTableTween({
+/// different [MdBlockquoteSpec] specifications.
+class MdBlockquoteSpecTween extends Tween<MdBlockquoteSpec?> {
+  MdBlockquoteSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdTable lerp(double t) {
-    if (begin == null && end == null) return const MdTable();
-    if (begin == null) return end!;
+  MdBlockquoteSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdBlockquoteSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
-mixin _$MdCode on Spec<MdCode> {
-  static MdCode from(MixData mix) {
-    return mix.attributeOf<MdCodeAttribute>()?.resolve(mix) ?? const MdCode();
+mixin _$MdCodeblockSpec on Spec<MdCodeblockSpec> {
+  static MdCodeblockSpec from(MixData mix) {
+    return mix.attributeOf<MdCodeblockSpecAttribute>()?.resolve(mix) ??
+        const MdCodeblockSpec();
   }
 
-  /// {@template md_code_of}
-  /// Retrieves the [MdCode] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template md_codeblock_spec_of}
+  /// Retrieves the [MdCodeblockSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdCode] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdCode].
+  /// given [BuildContext], and then retrieves the [MdCodeblockSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MdCodeblockSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdCode = MdCode.of(context);
+  /// final mdCodeblockSpec = MdCodeblockSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdCode of(BuildContext context) {
-    return _$MdCode.from(Mix.of(context));
+  static MdCodeblockSpec of(BuildContext context) {
+    return _$MdCodeblockSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdCode] but with the given fields
+  /// Creates a copy of this [MdCodeblockSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdCode copyWith({
-    TextStyle? codeSpan,
-    EdgeInsets? codeblockPadding,
-    BoxDecoration? codeblockDecoration,
-    Color? copyIconColor,
-    TextStyle? codeBlock,
+  MdCodeblockSpec copyWith({
+    TextStyle? textStyle,
+    EdgeInsets? padding,
+    BoxDecoration? decoration,
+    WrapAlignment? alignment,
   }) {
-    return MdCode(
-      codeSpan: codeSpan ?? _$this.codeSpan,
-      codeblockPadding: codeblockPadding ?? _$this.codeblockPadding,
-      codeblockDecoration: codeblockDecoration ?? _$this.codeblockDecoration,
-      copyIconColor: copyIconColor ?? _$this.copyIconColor,
-      codeBlock: codeBlock ?? _$this.codeBlock,
+    return MdCodeblockSpec(
+      textStyle: textStyle ?? _$this.textStyle,
+      padding: padding ?? _$this.padding,
+      decoration: decoration ?? _$this.decoration,
+      alignment: alignment ?? _$this.alignment,
     );
   }
 
-  /// Linearly interpolates between this [MdCode] and another [MdCode] based on the given parameter [t].
+  /// Linearly interpolates between this [MdCodeblockSpec] and another [MdCodeblockSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdCode] is returned. When [t] is 1.0, the [other] [MdCode] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdCode] is returned.
+  /// When [t] is 0.0, the current [MdCodeblockSpec] is returned. When [t] is 1.0, the [other] [MdCodeblockSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MdCodeblockSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdCode] instance.
+  /// If [other] is null, this method returns the current [MdCodeblockSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdCode] using the appropriate
+  /// The interpolation is performed on each property of the [MdCodeblockSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpTextStyle] for [codeSpan] and [codeBlock].
-  /// - [EdgeInsets.lerp] for [codeblockPadding].
-  /// - [BoxDecoration.lerp] for [codeblockDecoration].
-  /// - [Color.lerp] for [copyIconColor].
+  /// - [MixHelpers.lerpTextStyle] for [textStyle].
+  /// - [EdgeInsets.lerp] for [padding].
+  /// - [BoxDecoration.lerp] for [decoration].
 
-  /// For , the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdCode] is used. Otherwise, the value
-  /// from the [other] [MdCode] is used.
+  /// For [alignment], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MdCodeblockSpec] is used. Otherwise, the value
+  /// from the [other] [MdCodeblockSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdCode] configurations.
+  /// different [MdCodeblockSpec] configurations.
   @override
-  MdCode lerp(MdCode? other, double t) {
+  MdCodeblockSpec lerp(MdCodeblockSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdCode(
-      codeSpan: MixHelpers.lerpTextStyle(_$this.codeSpan, other.codeSpan, t),
-      codeblockPadding:
-          EdgeInsets.lerp(_$this.codeblockPadding, other.codeblockPadding, t),
-      codeblockDecoration: BoxDecoration.lerp(
-          _$this.codeblockDecoration, other.codeblockDecoration, t),
-      copyIconColor: Color.lerp(_$this.copyIconColor, other.copyIconColor, t),
-      codeBlock: MixHelpers.lerpTextStyle(_$this.codeBlock, other.codeBlock, t),
+    return MdCodeblockSpec(
+      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
+      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
+      decoration: BoxDecoration.lerp(_$this.decoration, other.decoration, t),
+      alignment: t < 0.5 ? _$this.alignment : other.alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdCode].
+  /// The list of properties that constitute the state of this [MdCodeblockSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdCode] instances for equality.
+  /// compare two [MdCodeblockSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.codeSpan,
-        _$this.codeblockPadding,
-        _$this.codeblockDecoration,
-        _$this.copyIconColor,
-        _$this.codeBlock,
+        _$this.textStyle,
+        _$this.padding,
+        _$this.decoration,
+        _$this.alignment,
       ];
 
-  MdCode get _$this => this as MdCode;
+  MdCodeblockSpec get _$this => this as MdCodeblockSpec;
 }
 
-/// Represents the attributes of a [MdCode].
+/// Represents the attributes of a [MdCodeblockSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdCode].
+/// appearance of a [MdCodeblockSpec].
 ///
-/// Use this class to configure the attributes of a [MdCode] and pass it to
-/// the [MdCode] constructor.
-final class MdCodeAttribute extends SpecAttribute<MdCode> {
-  final TextStyleDto? codeSpan;
-  final EdgeInsetsDto? codeblockPadding;
-  final BoxDecorationDto? codeblockDecoration;
-  final ColorDto? copyIconColor;
-  final TextStyleDto? codeBlock;
+/// Use this class to configure the attributes of a [MdCodeblockSpec] and pass it to
+/// the [MdCodeblockSpec] constructor.
+final class MdCodeblockSpecAttribute extends SpecAttribute<MdCodeblockSpec> {
+  final TextStyleDto? textStyle;
+  final EdgeInsetsDto? padding;
+  final BoxDecorationDto? decoration;
+  final WrapAlignment? alignment;
 
-  const MdCodeAttribute({
-    this.codeSpan,
-    this.codeblockPadding,
-    this.codeblockDecoration,
-    this.copyIconColor,
-    this.codeBlock,
+  const MdCodeblockSpecAttribute({
+    this.textStyle,
+    this.padding,
+    this.decoration,
+    this.alignment,
   });
 
-  /// Resolves to [MdCode] using the provided [MixData].
+  /// Resolves to [MdCodeblockSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdCode = MdCodeAttribute(...).resolve(mix);
+  /// final mdCodeblockSpec = MdCodeblockSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdCode resolve(MixData mix) {
-    return MdCode(
-      codeSpan: codeSpan?.resolve(mix),
-      codeblockPadding: codeblockPadding?.resolve(mix),
-      codeblockDecoration: codeblockDecoration?.resolve(mix),
-      copyIconColor: copyIconColor?.resolve(mix),
-      codeBlock: codeBlock?.resolve(mix),
+  MdCodeblockSpec resolve(MixData mix) {
+    return MdCodeblockSpec(
+      textStyle: textStyle?.resolve(mix),
+      padding: padding?.resolve(mix),
+      decoration: decoration?.resolve(mix),
+      alignment: alignment,
     );
   }
 
-  /// Merges the properties of this [MdCodeAttribute] with the properties of [other].
+  /// Merges the properties of this [MdCodeblockSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdCodeAttribute] with the properties of [other] taking precedence over
+  /// [MdCodeblockSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdCodeAttribute merge(MdCodeAttribute? other) {
+  MdCodeblockSpecAttribute merge(MdCodeblockSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdCodeAttribute(
-      codeSpan: codeSpan?.merge(other.codeSpan) ?? other.codeSpan,
-      codeblockPadding: codeblockPadding?.merge(other.codeblockPadding) ??
-          other.codeblockPadding,
-      codeblockDecoration:
-          codeblockDecoration?.merge(other.codeblockDecoration) ??
-              other.codeblockDecoration,
-      copyIconColor:
-          copyIconColor?.merge(other.copyIconColor) ?? other.copyIconColor,
-      codeBlock: codeBlock?.merge(other.codeBlock) ?? other.codeBlock,
+    return MdCodeblockSpecAttribute(
+      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
+      padding: padding?.merge(other.padding) ?? other.padding,
+      decoration: decoration?.merge(other.decoration) ?? other.decoration,
+      alignment: other.alignment ?? alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdCodeAttribute].
+  /// The list of properties that constitute the state of this [MdCodeblockSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdCodeAttribute] instances for equality.
+  /// compare two [MdCodeblockSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        codeSpan,
-        codeblockPadding,
-        codeblockDecoration,
-        copyIconColor,
-        codeBlock,
+        textStyle,
+        padding,
+        decoration,
+        alignment,
       ];
 }
 
-/// Utility class for configuring [MdCodeAttribute] properties.
+/// Utility class for configuring [MdCodeblockSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdCodeAttribute].
-/// Use the methods of this class to configure specific properties of a [MdCodeAttribute].
-class MdCodeUtility<T extends Attribute>
-    extends SpecUtility<T, MdCodeAttribute> {
-  /// Utility for defining [MdCodeAttribute.codeSpan]
-  late final span = TextStyleUtility((v) => only(codeSpan: v));
+/// This class provides methods to set individual properties of a [MdCodeblockSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MdCodeblockSpecAttribute].
+class MdCodeblockSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MdCodeblockSpecAttribute> {
+  /// Utility for defining [MdCodeblockSpecAttribute.textStyle]
+  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdCodeAttribute.codeblockPadding]
-  late final padding = EdgeInsetsUtility((v) => only(codeblockPadding: v));
+  /// Utility for defining [MdCodeblockSpecAttribute.padding]
+  late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdCodeAttribute.codeblockDecoration]
-  late final decoration =
-      BoxDecorationUtility((v) => only(codeblockDecoration: v));
+  /// Utility for defining [MdCodeblockSpecAttribute.decoration]
+  late final decoration = BoxDecorationUtility((v) => only(decoration: v));
 
-  /// Utility for defining [MdCodeAttribute.copyIconColor]
-  late final copyIconColor = ColorUtility((v) => only(copyIconColor: v));
+  /// Utility for defining [MdCodeblockSpecAttribute.alignment]
+  late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
-  /// Utility for defining [MdCodeAttribute.codeBlock]
-  late final block = TextStyleUtility((v) => only(codeBlock: v));
+  MdCodeblockSpecUtility(super.builder);
 
-  MdCodeUtility(super.builder);
+  static final self = MdCodeblockSpecUtility((v) => v);
 
-  static final self = MdCodeUtility((v) => v);
-
-  /// Returns a new [MdCodeAttribute] with the specified properties.
+  /// Returns a new [MdCodeblockSpecAttribute] with the specified properties.
   @override
   T only({
-    TextStyleDto? codeSpan,
-    EdgeInsetsDto? codeblockPadding,
-    BoxDecorationDto? codeblockDecoration,
-    ColorDto? copyIconColor,
-    TextStyleDto? codeBlock,
+    TextStyleDto? textStyle,
+    EdgeInsetsDto? padding,
+    BoxDecorationDto? decoration,
+    WrapAlignment? alignment,
   }) {
-    return builder(MdCodeAttribute(
-      codeSpan: codeSpan,
-      codeblockPadding: codeblockPadding,
-      codeblockDecoration: codeblockDecoration,
-      copyIconColor: copyIconColor,
-      codeBlock: codeBlock,
+    return builder(MdCodeblockSpecAttribute(
+      textStyle: textStyle,
+      padding: padding,
+      decoration: decoration,
+      alignment: alignment,
     ));
   }
 }
 
-/// A tween that interpolates between two [MdCode] instances.
+/// A tween that interpolates between two [MdCodeblockSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdCode] specifications.
-class MdCodeTween extends Tween<MdCode?> {
-  MdCodeTween({
+/// different [MdCodeblockSpec] specifications.
+class MdCodeblockSpecTween extends Tween<MdCodeblockSpec?> {
+  MdCodeblockSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdCode lerp(double t) {
-    if (begin == null && end == null) return const MdCode();
-    if (begin == null) return end!;
+  MdCodeblockSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MdCodeblockSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }
 }
-
-// ignore_for_file: deprecated_member_use_from_same_package
 
 mixin _$SlideSpec on Spec<SlideSpec> {
   static SlideSpec from(MixData mix) {
@@ -1496,20 +1705,28 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// replaced with the new values.
   @override
   SlideSpec copyWith({
-    MdTextStyle? headline1,
-    MdTextStyle? headline2,
-    MdTextStyle? headline3,
-    MdTextStyle? headline4,
-    MdTextStyle? headline5,
-    MdTextStyle? headline6,
-    MdTextStyle? paragraph,
+    MdHeadingSpec? h1,
+    MdHeadingSpec? h2,
+    MdHeadingSpec? h3,
+    MdHeadingSpec? h4,
+    MdHeadingSpec? h5,
+    MdHeadingSpec? h6,
+    MdParagraphSpec? paragraph,
     TextStyle? link,
     double? blockSpacing,
-    MdDivider? divider,
-    MdBlockQuote? blockquote,
-    MdList? list,
-    MdTable? table,
-    MdCode? code,
+    MdBlockquoteSpec? blockquote,
+    MdListSpec? list,
+    MdTableSpec? table,
+    TextStyle? checkbox,
+    MdCodeblockSpec? code,
+    TextStyle? a,
+    TextStyle? em,
+    TextStyle? strong,
+    TextStyle? del,
+    WrapAlignment? textAlign,
+    TextStyle? img,
+    BoxDecoration? horizontalRuleDecoration,
+    TextScaler? textScaleFactor,
     BoxSpec? innerContainer,
     BoxSpec? outerContainer,
     BoxSpec? contentContainer,
@@ -1517,20 +1734,29 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     AnimatedData? animated,
   }) {
     return SlideSpec(
-      headline1: headline1 ?? _$this.headline1,
-      headline2: headline2 ?? _$this.headline2,
-      headline3: headline3 ?? _$this.headline3,
-      headline4: headline4 ?? _$this.headline4,
-      headline5: headline5 ?? _$this.headline5,
-      headline6: headline6 ?? _$this.headline6,
+      h1: h1 ?? _$this.h1,
+      h2: h2 ?? _$this.h2,
+      h3: h3 ?? _$this.h3,
+      h4: h4 ?? _$this.h4,
+      h5: h5 ?? _$this.h5,
+      h6: h6 ?? _$this.h6,
       paragraph: paragraph ?? _$this.paragraph,
       link: link ?? _$this.link,
       blockSpacing: blockSpacing ?? _$this.blockSpacing,
-      divider: divider ?? _$this.divider,
       blockquote: blockquote ?? _$this.blockquote,
       list: list ?? _$this.list,
       table: table ?? _$this.table,
+      checkbox: checkbox ?? _$this.checkbox,
       code: code ?? _$this.code,
+      a: a ?? _$this.a,
+      em: em ?? _$this.em,
+      strong: strong ?? _$this.strong,
+      del: del ?? _$this.del,
+      textAlign: textAlign ?? _$this.textAlign,
+      img: img ?? _$this.img,
+      horizontalRuleDecoration:
+          horizontalRuleDecoration ?? _$this.horizontalRuleDecoration,
+      textScaleFactor: textScaleFactor ?? _$this.textScaleFactor,
       innerContainer: innerContainer ?? _$this.innerContainer,
       outerContainer: outerContainer ?? _$this.outerContainer,
       contentContainer: contentContainer ?? _$this.contentContainer,
@@ -1550,12 +1776,11 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// The interpolation is performed on each property of the [SlideSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpTextStyle] for [link].
+  /// - [MixHelpers.lerpTextStyle] for [link] and [checkbox] and [a] and [em] and [strong] and [del] and [img].
   /// - [MixHelpers.lerpDouble] for [blockSpacing].
-  /// - [BoxSpec.lerp] for [innerContainer] and [outerContainer] and [contentContainer].
-  /// - [ImageSpec.lerp] for [image].
+  /// - [BoxDecoration.lerp] for [horizontalRuleDecoration].
 
-  /// For [headline1] and [headline2] and [headline3] and [headline4] and [headline5] and [headline6] and [paragraph] and [divider] and [blockquote] and [list] and [table] and [code] and [animated], the interpolation is performed using a step function.
+  /// For [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [paragraph] and [blockquote] and [list] and [table] and [code] and [textAlign] and [textScaleFactor] and [innerContainer] and [outerContainer] and [contentContainer] and [image] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [SlideSpec] is used. Otherwise, the value
   /// from the [other] [SlideSpec] is used.
   ///
@@ -1566,22 +1791,31 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     if (other == null) return _$this;
 
     return SlideSpec(
-      headline1: _$this.headline1?.lerp(other.headline1, t) ?? other.headline1,
-      headline2: _$this.headline2?.lerp(other.headline2, t) ?? other.headline2,
-      headline3: _$this.headline3?.lerp(other.headline3, t) ?? other.headline3,
-      headline4: _$this.headline4?.lerp(other.headline4, t) ?? other.headline4,
-      headline5: _$this.headline5?.lerp(other.headline5, t) ?? other.headline5,
-      headline6: _$this.headline6?.lerp(other.headline6, t) ?? other.headline6,
+      h1: _$this.h1?.lerp(other.h1, t) ?? other.h1,
+      h2: _$this.h2?.lerp(other.h2, t) ?? other.h2,
+      h3: _$this.h3?.lerp(other.h3, t) ?? other.h3,
+      h4: _$this.h4?.lerp(other.h4, t) ?? other.h4,
+      h5: _$this.h5?.lerp(other.h5, t) ?? other.h5,
+      h6: _$this.h6?.lerp(other.h6, t) ?? other.h6,
       paragraph: _$this.paragraph?.lerp(other.paragraph, t) ?? other.paragraph,
       link: MixHelpers.lerpTextStyle(_$this.link, other.link, t),
       blockSpacing:
           MixHelpers.lerpDouble(_$this.blockSpacing, other.blockSpacing, t),
-      divider: _$this.divider?.lerp(other.divider, t) ?? other.divider,
       blockquote:
           _$this.blockquote?.lerp(other.blockquote, t) ?? other.blockquote,
       list: _$this.list?.lerp(other.list, t) ?? other.list,
       table: _$this.table?.lerp(other.table, t) ?? other.table,
+      checkbox: MixHelpers.lerpTextStyle(_$this.checkbox, other.checkbox, t),
       code: _$this.code?.lerp(other.code, t) ?? other.code,
+      a: MixHelpers.lerpTextStyle(_$this.a, other.a, t),
+      em: MixHelpers.lerpTextStyle(_$this.em, other.em, t),
+      strong: MixHelpers.lerpTextStyle(_$this.strong, other.strong, t),
+      del: MixHelpers.lerpTextStyle(_$this.del, other.del, t),
+      textAlign: t < 0.5 ? _$this.textAlign : other.textAlign,
+      img: MixHelpers.lerpTextStyle(_$this.img, other.img, t),
+      horizontalRuleDecoration: BoxDecoration.lerp(
+          _$this.horizontalRuleDecoration, other.horizontalRuleDecoration, t),
+      textScaleFactor: t < 0.5 ? _$this.textScaleFactor : other.textScaleFactor,
       innerContainer: _$this.innerContainer.lerp(other.innerContainer, t),
       outerContainer: _$this.outerContainer.lerp(other.outerContainer, t),
       contentContainer: _$this.contentContainer.lerp(other.contentContainer, t),
@@ -1596,20 +1830,28 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// compare two [SlideSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.headline1,
-        _$this.headline2,
-        _$this.headline3,
-        _$this.headline4,
-        _$this.headline5,
-        _$this.headline6,
+        _$this.h1,
+        _$this.h2,
+        _$this.h3,
+        _$this.h4,
+        _$this.h5,
+        _$this.h6,
         _$this.paragraph,
         _$this.link,
         _$this.blockSpacing,
-        _$this.divider,
         _$this.blockquote,
         _$this.list,
         _$this.table,
+        _$this.checkbox,
         _$this.code,
+        _$this.a,
+        _$this.em,
+        _$this.strong,
+        _$this.del,
+        _$this.textAlign,
+        _$this.img,
+        _$this.horizontalRuleDecoration,
+        _$this.textScaleFactor,
         _$this.innerContainer,
         _$this.outerContainer,
         _$this.contentContainer,
@@ -1628,40 +1870,56 @@ mixin _$SlideSpec on Spec<SlideSpec> {
 /// Use this class to configure the attributes of a [SlideSpec] and pass it to
 /// the [SlideSpec] constructor.
 final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
-  final MdTextStyleAttribute? headline1;
-  final MdTextStyleAttribute? headline2;
-  final MdTextStyleAttribute? headline3;
-  final MdTextStyleAttribute? headline4;
-  final MdTextStyleAttribute? headline5;
-  final MdTextStyleAttribute? headline6;
-  final MdTextStyleAttribute? paragraph;
+  final MdHeadingSpecAttribute? h1;
+  final MdHeadingSpecAttribute? h2;
+  final MdHeadingSpecAttribute? h3;
+  final MdHeadingSpecAttribute? h4;
+  final MdHeadingSpecAttribute? h5;
+  final MdHeadingSpecAttribute? h6;
+  final MdParagraphSpecAttribute? paragraph;
   final TextStyleDto? link;
   final double? blockSpacing;
-  final MdDividerAttribute? divider;
-  final MdBlockQuoteAttribute? blockquote;
-  final MdListAttribute? list;
-  final MdTableAttribute? table;
-  final MdCodeAttribute? code;
+  final MdBlockquoteSpecAttribute? blockquote;
+  final MdListSpecAttribute? list;
+  final MdTableSpecAttribute? table;
+  final TextStyleDto? checkbox;
+  final MdCodeblockSpecAttribute? code;
+  final TextStyleDto? a;
+  final TextStyleDto? em;
+  final TextStyleDto? strong;
+  final TextStyleDto? del;
+  final WrapAlignment? textAlign;
+  final TextStyleDto? img;
+  final BoxDecorationDto? horizontalRuleDecoration;
+  final TextScaler? textScaleFactor;
   final BoxSpecAttribute? innerContainer;
   final BoxSpecAttribute? outerContainer;
   final BoxSpecAttribute? contentContainer;
   final ImageSpecAttribute? image;
 
   const SlideSpecAttribute({
-    this.headline1,
-    this.headline2,
-    this.headline3,
-    this.headline4,
-    this.headline5,
-    this.headline6,
+    this.h1,
+    this.h2,
+    this.h3,
+    this.h4,
+    this.h5,
+    this.h6,
     this.paragraph,
     this.link,
     this.blockSpacing,
-    this.divider,
     this.blockquote,
     this.list,
     this.table,
+    this.checkbox,
     this.code,
+    this.a,
+    this.em,
+    this.strong,
+    this.del,
+    this.textAlign,
+    this.img,
+    this.horizontalRuleDecoration,
+    this.textScaleFactor,
     this.innerContainer,
     this.outerContainer,
     this.contentContainer,
@@ -1680,20 +1938,28 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   @override
   SlideSpec resolve(MixData mix) {
     return SlideSpec(
-      headline1: headline1?.resolve(mix),
-      headline2: headline2?.resolve(mix),
-      headline3: headline3?.resolve(mix),
-      headline4: headline4?.resolve(mix),
-      headline5: headline5?.resolve(mix),
-      headline6: headline6?.resolve(mix),
+      h1: h1?.resolve(mix),
+      h2: h2?.resolve(mix),
+      h3: h3?.resolve(mix),
+      h4: h4?.resolve(mix),
+      h5: h5?.resolve(mix),
+      h6: h6?.resolve(mix),
       paragraph: paragraph?.resolve(mix),
       link: link?.resolve(mix),
       blockSpacing: blockSpacing,
-      divider: divider?.resolve(mix),
       blockquote: blockquote?.resolve(mix),
       list: list?.resolve(mix),
       table: table?.resolve(mix),
+      checkbox: checkbox?.resolve(mix),
       code: code?.resolve(mix),
+      a: a?.resolve(mix),
+      em: em?.resolve(mix),
+      strong: strong?.resolve(mix),
+      del: del?.resolve(mix),
+      textAlign: textAlign,
+      img: img?.resolve(mix),
+      horizontalRuleDecoration: horizontalRuleDecoration?.resolve(mix),
+      textScaleFactor: textScaleFactor,
       innerContainer: innerContainer?.resolve(mix),
       outerContainer: outerContainer?.resolve(mix),
       contentContainer: contentContainer?.resolve(mix),
@@ -1715,20 +1981,30 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     if (other == null) return this;
 
     return SlideSpecAttribute(
-      headline1: headline1?.merge(other.headline1) ?? other.headline1,
-      headline2: headline2?.merge(other.headline2) ?? other.headline2,
-      headline3: headline3?.merge(other.headline3) ?? other.headline3,
-      headline4: headline4?.merge(other.headline4) ?? other.headline4,
-      headline5: headline5?.merge(other.headline5) ?? other.headline5,
-      headline6: headline6?.merge(other.headline6) ?? other.headline6,
+      h1: h1?.merge(other.h1) ?? other.h1,
+      h2: h2?.merge(other.h2) ?? other.h2,
+      h3: h3?.merge(other.h3) ?? other.h3,
+      h4: h4?.merge(other.h4) ?? other.h4,
+      h5: h5?.merge(other.h5) ?? other.h5,
+      h6: h6?.merge(other.h6) ?? other.h6,
       paragraph: paragraph?.merge(other.paragraph) ?? other.paragraph,
       link: link?.merge(other.link) ?? other.link,
       blockSpacing: other.blockSpacing ?? blockSpacing,
-      divider: divider?.merge(other.divider) ?? other.divider,
       blockquote: blockquote?.merge(other.blockquote) ?? other.blockquote,
       list: list?.merge(other.list) ?? other.list,
       table: table?.merge(other.table) ?? other.table,
+      checkbox: checkbox?.merge(other.checkbox) ?? other.checkbox,
       code: code?.merge(other.code) ?? other.code,
+      a: a?.merge(other.a) ?? other.a,
+      em: em?.merge(other.em) ?? other.em,
+      strong: strong?.merge(other.strong) ?? other.strong,
+      del: del?.merge(other.del) ?? other.del,
+      textAlign: other.textAlign ?? textAlign,
+      img: img?.merge(other.img) ?? other.img,
+      horizontalRuleDecoration:
+          horizontalRuleDecoration?.merge(other.horizontalRuleDecoration) ??
+              other.horizontalRuleDecoration,
+      textScaleFactor: other.textScaleFactor ?? textScaleFactor,
       innerContainer:
           innerContainer?.merge(other.innerContainer) ?? other.innerContainer,
       outerContainer:
@@ -1746,20 +2022,28 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   /// compare two [SlideSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        headline1,
-        headline2,
-        headline3,
-        headline4,
-        headline5,
-        headline6,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
         paragraph,
         link,
         blockSpacing,
-        divider,
         blockquote,
         list,
         table,
+        checkbox,
         code,
+        a,
+        em,
+        strong,
+        del,
+        textAlign,
+        img,
+        horizontalRuleDecoration,
+        textScaleFactor,
         innerContainer,
         outerContainer,
         contentContainer,
@@ -1774,26 +2058,26 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
 /// Use the methods of this class to configure specific properties of a [SlideSpecAttribute].
 class SlideSpecUtility<T extends Attribute>
     extends SpecUtility<T, SlideSpecAttribute> {
-  /// Utility for defining [SlideSpecAttribute.headline1]
-  late final h1 = MdTextStyleUtility((v) => only(headline1: v));
+  /// Utility for defining [SlideSpecAttribute.h1]
+  late final h1 = MdHeadingSpecUtility((v) => only(h1: v));
 
-  /// Utility for defining [SlideSpecAttribute.headline2]
-  late final h2 = MdTextStyleUtility((v) => only(headline2: v));
+  /// Utility for defining [SlideSpecAttribute.h2]
+  late final h2 = MdHeadingSpecUtility((v) => only(h2: v));
 
-  /// Utility for defining [SlideSpecAttribute.headline3]
-  late final h3 = MdTextStyleUtility((v) => only(headline3: v));
+  /// Utility for defining [SlideSpecAttribute.h3]
+  late final h3 = MdHeadingSpecUtility((v) => only(h3: v));
 
-  /// Utility for defining [SlideSpecAttribute.headline4]
-  late final h4 = MdTextStyleUtility((v) => only(headline4: v));
+  /// Utility for defining [SlideSpecAttribute.h4]
+  late final h4 = MdHeadingSpecUtility((v) => only(h4: v));
 
-  /// Utility for defining [SlideSpecAttribute.headline5]
-  late final h5 = MdTextStyleUtility((v) => only(headline5: v));
+  /// Utility for defining [SlideSpecAttribute.h5]
+  late final h5 = MdHeadingSpecUtility((v) => only(h5: v));
 
-  /// Utility for defining [SlideSpecAttribute.headline6]
-  late final h6 = MdTextStyleUtility((v) => only(headline6: v));
+  /// Utility for defining [SlideSpecAttribute.h6]
+  late final h6 = MdHeadingSpecUtility((v) => only(h6: v));
 
   /// Utility for defining [SlideSpecAttribute.paragraph]
-  late final paragraph = MdTextStyleUtility((v) => only(paragraph: v));
+  late final paragraph = MdParagraphSpecUtility((v) => only(paragraph: v));
 
   /// Utility for defining [SlideSpecAttribute.link]
   late final link = TextStyleUtility((v) => only(link: v));
@@ -1801,20 +2085,46 @@ class SlideSpecUtility<T extends Attribute>
   /// Utility for defining [SlideSpecAttribute.blockSpacing]
   late final blockSpacing = DoubleUtility((v) => only(blockSpacing: v));
 
-  /// Utility for defining [SlideSpecAttribute.divider]
-  late final divider = MdDividerUtility((v) => only(divider: v));
-
   /// Utility for defining [SlideSpecAttribute.blockquote]
-  late final blockquote = MdBlockQuoteUtility((v) => only(blockquote: v));
+  late final blockquote = MdBlockquoteSpecUtility((v) => only(blockquote: v));
 
   /// Utility for defining [SlideSpecAttribute.list]
-  late final list = MdListUtility((v) => only(list: v));
+  late final list = MdListSpecUtility((v) => only(list: v));
 
   /// Utility for defining [SlideSpecAttribute.table]
-  late final table = MdTableUtility((v) => only(table: v));
+  late final table = MdTableSpecUtility((v) => only(table: v));
+
+  /// Utility for defining [SlideSpecAttribute.checkbox]
+  late final checkbox = TextStyleUtility((v) => only(checkbox: v));
 
   /// Utility for defining [SlideSpecAttribute.code]
-  late final code = MdCodeUtility((v) => only(code: v));
+  late final code = MdCodeblockSpecUtility((v) => only(code: v));
+
+  /// Utility for defining [SlideSpecAttribute.a]
+  late final a = TextStyleUtility((v) => only(a: v));
+
+  /// Utility for defining [SlideSpecAttribute.em]
+  late final em = TextStyleUtility((v) => only(em: v));
+
+  /// Utility for defining [SlideSpecAttribute.strong]
+  late final strong = TextStyleUtility((v) => only(strong: v));
+
+  /// Utility for defining [SlideSpecAttribute.del]
+  late final del = TextStyleUtility((v) => only(del: v));
+
+  /// Utility for defining [SlideSpecAttribute.textAlign]
+  late final textAlign = WrapAlignmentUtility((v) => only(textAlign: v));
+
+  /// Utility for defining [SlideSpecAttribute.img]
+  late final img = TextStyleUtility((v) => only(img: v));
+
+  /// Utility for defining [SlideSpecAttribute.horizontalRuleDecoration]
+  late final divider =
+      BoxDecorationUtility((v) => only(horizontalRuleDecoration: v));
+
+  /// Utility for defining [SlideSpecAttribute.textScaleFactor]
+  late final textScaleFactor =
+      TextScalerUtility((v) => only(textScaleFactor: v));
 
   /// Utility for defining [SlideSpecAttribute.innerContainer]
   late final innerContainer = BoxSpecUtility((v) => only(innerContainer: v));
@@ -1839,20 +2149,28 @@ class SlideSpecUtility<T extends Attribute>
   /// Returns a new [SlideSpecAttribute] with the specified properties.
   @override
   T only({
-    MdTextStyleAttribute? headline1,
-    MdTextStyleAttribute? headline2,
-    MdTextStyleAttribute? headline3,
-    MdTextStyleAttribute? headline4,
-    MdTextStyleAttribute? headline5,
-    MdTextStyleAttribute? headline6,
-    MdTextStyleAttribute? paragraph,
+    MdHeadingSpecAttribute? h1,
+    MdHeadingSpecAttribute? h2,
+    MdHeadingSpecAttribute? h3,
+    MdHeadingSpecAttribute? h4,
+    MdHeadingSpecAttribute? h5,
+    MdHeadingSpecAttribute? h6,
+    MdParagraphSpecAttribute? paragraph,
     TextStyleDto? link,
     double? blockSpacing,
-    MdDividerAttribute? divider,
-    MdBlockQuoteAttribute? blockquote,
-    MdListAttribute? list,
-    MdTableAttribute? table,
-    MdCodeAttribute? code,
+    MdBlockquoteSpecAttribute? blockquote,
+    MdListSpecAttribute? list,
+    MdTableSpecAttribute? table,
+    TextStyleDto? checkbox,
+    MdCodeblockSpecAttribute? code,
+    TextStyleDto? a,
+    TextStyleDto? em,
+    TextStyleDto? strong,
+    TextStyleDto? del,
+    WrapAlignment? textAlign,
+    TextStyleDto? img,
+    BoxDecorationDto? horizontalRuleDecoration,
+    TextScaler? textScaleFactor,
     BoxSpecAttribute? innerContainer,
     BoxSpecAttribute? outerContainer,
     BoxSpecAttribute? contentContainer,
@@ -1860,20 +2178,28 @@ class SlideSpecUtility<T extends Attribute>
     AnimatedDataDto? animated,
   }) {
     return builder(SlideSpecAttribute(
-      headline1: headline1,
-      headline2: headline2,
-      headline3: headline3,
-      headline4: headline4,
-      headline5: headline5,
-      headline6: headline6,
+      h1: h1,
+      h2: h2,
+      h3: h3,
+      h4: h4,
+      h5: h5,
+      h6: h6,
       paragraph: paragraph,
       link: link,
       blockSpacing: blockSpacing,
-      divider: divider,
       blockquote: blockquote,
       list: list,
       table: table,
+      checkbox: checkbox,
       code: code,
+      a: a,
+      em: em,
+      strong: strong,
+      del: del,
+      textAlign: textAlign,
+      img: img,
+      horizontalRuleDecoration: horizontalRuleDecoration,
+      textScaleFactor: textScaleFactor,
       innerContainer: innerContainer,
       outerContainer: outerContainer,
       contentContainer: contentContainer,
@@ -1895,8 +2221,13 @@ class SlideSpecTween extends Tween<SlideSpec?> {
 
   @override
   SlideSpec lerp(double t) {
-    if (begin == null && end == null) return const SlideSpec();
-    if (begin == null) return end!;
+    if (begin == null && end == null) {
+      return const SlideSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
 
     return begin!.lerp(end!, t);
   }

@@ -60,7 +60,7 @@ class SlideMarkdownPreview extends StatelessWidget {
     return SpecBuilder(
       style: defaultStyle.merge(
         Style(
-          s.code.span.fontSize(14),
+          s.code.textStyle.fontSize(14),
         ),
       ),
       builder: (mix) {

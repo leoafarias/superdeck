@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:markdown_viewer/markdown_viewer.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
@@ -41,59 +41,40 @@ class _AnimatedMarkdownViewerState
 
   @override
   Widget build(BuildContext context) {
-    return MarkdownViewer(
-      widget.content,
-      enableTaskList: true,
-      enableSuperscript: false,
-      enableSubscript: false,
-      enableFootnote: false,
-      enableImageSize: true,
-      enableKbd: false,
-      syntaxExtensions: const [],
-      elementBuilders: const [],
+    final spec = _styleTween!.evaluate(animation) ?? const SlideSpec();
+    return MarkdownBody(
+      data: widget.content,
+      extensionSet: md.ExtensionSet(
+        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+        <md.InlineSyntax>[
+          md.EmojiSyntax(),
+          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+        ],
+      ),
       imageBuilder: _imageBuilder,
-      onTapLink: (href, title) async {
-        // open link in the browser
-        if (href == null || href.isEmpty) return;
-        final url = Uri.parse(href);
-        await launchUrl(url);
+      builders: {
+        'code': CodeElementBuilder(spec.code),
       },
-      highlightBuilder: (text, language, infoString) {
-        return [
-          TextSpan(
-            style: _styleTween!.evaluate(animation).code?.codeSpan,
-            children: SyntaxHighlight.render(text, language),
-          ),
-        ];
+      bulletBuilder: (parameters) {
+        if (parameters.style == BulletStyle.orderedList) {
+          final index = parameters.index + 1;
+          return Text(
+            '$index .',
+            style: spec.list?.bulletStyle,
+          );
+        } else {
+          return Text('•', style: spec.list?.bulletStyle);
+        }
       },
-      copyIconBuilder: (bool copied) {
-        return const SizedBox();
-        // return Padding(
-        //   padding: const EdgeInsets.all(16.0),
-        //   child: Icon(
-        //     copied ? Icons.check : Icons.copy,
-        //     color: _styleTween!.evaluate(animation).code?.copyIconColor ??
-        //         Colors.grey,
-        //     size: 24,
-        //   ),
-        // );
-      },
-      styleSheet: _styleTween!.evaluate(animation).toStyle(),
+      styleSheet: _styleTween!.evaluate(animation)?.toStyle(),
     );
-  }
-}
-
-class SlideSpecTween extends Tween<SlideSpec> {
-  SlideSpecTween({super.begin, super.end});
-  @override
-  SlideSpec lerp(double t) {
-    return begin?.lerp(end!, t) ?? end ?? SlideSpec();
   }
 }
 
 Widget _imageBuilder(
   Uri uri,
-  MarkdownImageInfo info,
+  String? title,
+  String? alt,
 ) {
   return Builder(
     builder: (context) {
@@ -108,8 +89,8 @@ Widget _imageBuilder(
           url: uri.toString(),
           size: constraints.biggest,
           spec: imageSpec.copyWith(
-            width: info.width ?? imageSpec.width,
-            height: info.height ?? imageSpec.height,
+            width: imageSpec.width,
+            height: imageSpec.height,
           ),
         ),
       );
@@ -166,4 +147,74 @@ List<TextSpan> updateTextColor(
   }
 
   return updatedSpans;
+}
+
+class TextBuilder extends MarkdownElementBuilder {
+  final TextSpec? spec;
+  TextBuilder(this.spec);
+  @override
+  Widget visitText(md.Text text, TextStyle? preferredStyle) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        TextSpecWidget(text.text, spec: spec),
+      ],
+    );
+  }
+}
+
+final List<String> _kBlockTags = <String>[
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'li',
+  'blockquote',
+  'pre',
+  'ol',
+  'ul',
+  'hr',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'section',
+];
+
+const List<String> _kListTags = <String>['ul', 'ol'];
+
+class CodeElementBuilder extends MarkdownElementBuilder {
+  final MdCodeblockSpec? spec;
+  CodeElementBuilder(this.spec);
+  @override
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    var language = 'dart';
+
+    if (element.attributes['class'] != null) {
+      String lg = element.attributes['class'] as String;
+      language = lg.substring(9);
+    }
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: spec?.padding,
+            decoration: spec?.decoration,
+            child: RichText(
+              text: TextSpan(
+                style: spec?.textStyle,
+                children: SyntaxHighlight.render(
+                  element.textContent.trim(),
+                  language,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

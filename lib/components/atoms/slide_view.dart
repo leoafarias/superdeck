@@ -46,58 +46,54 @@ class SlideView extends StatelessWidget {
     return TransitionWidget(
       key: ValueKey(slide.transition?.copyWith(duration: duration)),
       transition: slide.transition,
-      child: Pressable(
-        onPress: () {},
-        autofocus: true,
-        child: SpecBuilder(
-          style: variantStyle,
-          builder: (context) {
-            final spec = SlideSpec.of(context);
-            return Builder(builder: (context) {
-              return AnimatedBoxSpecWidget(
-                spec: spec.outerContainer,
-                duration: duration ?? const Duration(milliseconds: 300),
-                child: Stack(
-                  children: [
-                    Positioned.fill(child: backgroundWidget),
-                    AnimatedBoxSpecWidget(
-                      spec: spec.innerContainer,
-                      duration: const Duration(milliseconds: 300),
-                      child: SlideProvider(
-                        slide: slide,
-                        spec: spec,
-                        examples: sdController.examples.watch(context),
-                        assets: sdController.assets.watch(context),
-                        isSnapshot: _isSnapshot,
-                        child: SlideConstraints(
-                          (_) {
-                            if (slide is SimpleSlide) {
-                              return SimpleSlideBuilder(config: slide);
-                            } else if (slide is WidgetSlide) {
-                              return WidgetSlideBuilder(config: slide);
-                            } else if (slide is ImageSlide) {
-                              return ImageSlideBuilder(config: slide);
-                            } else if (slide is TwoColumnSlide) {
-                              return TwoColumnSlideBuilder(config: slide);
-                            } else if (slide is TwoColumnHeaderSlide) {
-                              return TwoColumnHeaderSlideBuilder(config: slide);
-                            } else if (slide is InvalidSlide) {
-                              return InvalidSlideBuilder(config: slide);
-                            } else {
-                              throw UnimplementedError(
-                                'Slide config not implemented',
-                              );
-                            }
-                          },
-                        ),
+      child: SpecBuilder(
+        style: variantStyle,
+        builder: (context) {
+          final spec = SlideSpec.of(context);
+          return Builder(builder: (context) {
+            return AnimatedBoxSpecWidget(
+              spec: spec.outerContainer,
+              duration: duration ?? const Duration(milliseconds: 300),
+              child: Stack(
+                children: [
+                  Positioned.fill(child: backgroundWidget),
+                  AnimatedBoxSpecWidget(
+                    spec: spec.innerContainer,
+                    duration: const Duration(milliseconds: 300),
+                    child: SlideProvider(
+                      slide: slide,
+                      spec: spec,
+                      examples: sdController.examples.watch(context),
+                      assets: sdController.assets.watch(context),
+                      isSnapshot: _isSnapshot,
+                      child: SlideConstraints(
+                        (_) {
+                          if (slide is SimpleSlide) {
+                            return SimpleSlideBuilder(config: slide);
+                          } else if (slide is WidgetSlide) {
+                            return WidgetSlideBuilder(config: slide);
+                          } else if (slide is ImageSlide) {
+                            return ImageSlideBuilder(config: slide);
+                          } else if (slide is TwoColumnSlide) {
+                            return TwoColumnSlideBuilder(config: slide);
+                          } else if (slide is TwoColumnHeaderSlide) {
+                            return TwoColumnHeaderSlideBuilder(config: slide);
+                          } else if (slide is InvalidSlide) {
+                            return InvalidSlideBuilder(config: slide);
+                          } else {
+                            throw UnimplementedError(
+                              'Slide config not implemented',
+                            );
+                          }
+                        },
                       ),
                     ),
-                  ],
-                ),
-              );
-            });
-          },
-        ),
+                  ),
+                ],
+              ),
+            );
+          });
+        },
       ),
     );
   }

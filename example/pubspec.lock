@@ -193,14 +193,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.2"
-  dart_markdown:
-    dependency: transitive
-    description:
-      name: dart_markdown
-      sha256: b9b7e13733dd418bc83e6f4e68d79caebab6cd3a8b301e91d1bfd6ef5ef8e993
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.7"
   dart_style:
     dependency: transitive
     description:
@@ -270,6 +262,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  flutter_markdown:
+    dependency: transitive
+    description:
+      name: flutter_markdown
+      sha256: "2e8a801b1ded5ea001a4529c97b1f213dcb11c6b20668e081cafb23468593514"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -400,14 +400,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  markdown_viewer:
+  markdown:
     dependency: transitive
     description:
-      name: markdown_viewer
-      sha256: e819ea779eaeca933bb38228e02888ad72409aba922efb2e65abb2f8b046dc8e
+      name: markdown
+      sha256: ef2a1298144e3f985cc736b22e0ccdaf188b5b3970648f2d9dc13efd1d9df051
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.2"
+    version: "7.2.2"
   matcher:
     dependency: transitive
     description:
@@ -438,22 +438,22 @@ packages:
       path: "../../mix/packages/mix"
       relative: true
     source: path
-    version: "1.3.0"
+    version: "1.4.0"
   mix_annotations:
     dependency: transitive
     description:
       name: mix_annotations
-      sha256: ecad51935d9c422481ebc820e8d3edac001bfd8493ac3cf44d03c43cee196d7a
+      sha256: d8b9f063696aabdfb798af5c293ed75d532d12b219f155e8474579ae459717f6
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0+1"
+    version: "0.2.1"
   mix_generator:
     dependency: "direct overridden"
     description:
       path: "../../mix/packages/mix_generator"
       relative: true
     source: path
-    version: "0.2.1"
+    version: "0.2.2"
   octo_image:
     dependency: transitive
     description:

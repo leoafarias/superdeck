@@ -60,7 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final slides = superdeck.slides.watch(context);
 
     navigation.currentSlide.listen(context, () {
-      goToPage(navigation.currentSlide.value);
+      if (pageController.hasClients) {
+        goToPage(navigation.currentSlide.value);
+      }
     });
 
     return SplitView(

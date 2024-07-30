@@ -33,6 +33,7 @@ final _outerContainer = _util.outerContainer;
 final _contentContainer = _util.contentContainer;
 final _blockSpacing = _util.blockSpacing;
 final _textStyle = _util.textStyle;
+final _checkbox = _util.checkbox;
 
 Style get defaultStyle => Style.create([
       _outerContainer.color.black(),
@@ -56,31 +57,27 @@ Style get defaultStyle => Style.create([
       _paragraph.textStyle.as(baseTextStyle),
       _paragraph.padding.bottom(12),
       _link.color(const Color.fromARGB(255, 66, 82, 96)),
-      _list.textStyle.as(baseTextStyle),
-      _list.itemTextStyle.as(baseTextStyle),
-      _list.itemMarkerTextStyle.as(baseTextStyle),
-      _list.itemMarkerTrailingSpace(12),
-      _list.itemMinIndent(12),
-      _table.textStyle.as(baseTextStyle),
-      _table.headTextStyle
-          .as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
-      _table.bodyTextStyle.as(baseTextStyle),
+      _list.bulletStyle.as(baseTextStyle),
+      _checkbox.as(baseTextStyle),
+
+      _table.headStyle.as(baseTextStyle.copyWith(fontWeight: FontWeight.bold)),
+      _table.bodyStyle.as(baseTextStyle),
       _blockSpacing(20),
       _table.cellPadding.all(12),
       _table.border.all(color: Colors.grey, width: 2),
-      _table.rowDecoration.color(Colors.grey.withOpacity(0.1)),
-      _code.span.as(monoTextStyle),
+      _table.cellDecoration.color(Colors.grey.withOpacity(0.1)),
+      _code.textStyle.as(monoTextStyle),
       _code.padding.all(24),
       _code.decoration.color(const Color.fromARGB(255, 23, 23, 23)),
       _code.decoration.borderRadius.circular(10),
       _blockquote.textStyle.as(serifTextStyle),
       _blockquote.textStyle.fontSize(32),
       _blockquote.padding.bottom(12),
-      _blockquote.contentPadding.left(30),
+      _blockquote.padding.left(30),
       _blockquote.decoration.border.left.color(Colors.grey),
       _blockquote.decoration.border.left.width(4),
-      _divider.height(1),
+      _divider.border.width(2),
       _divider.color(Colors.grey),
-      _divider.thickness(2),
+
       _image.fit.cover(),
     ]);

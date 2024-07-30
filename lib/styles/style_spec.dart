@@ -1,202 +1,207 @@
 import 'package:flutter/material.dart';
-import 'package:markdown_viewer/markdown_viewer.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mix/mix.dart';
 import 'package:mix_annotations/mix_annotations.dart';
 
 part 'style_spec.g.dart';
 
-const _mdTextStyle = MixableFieldDto(type: 'MdTextStyleAttribute');
-const _mdCode = MixableFieldDto(type: 'MdCodeAttribute');
-const _mdList = MixableFieldDto(type: 'MdListAttribute');
-const _mdTable = MixableFieldDto(type: 'MdTableAttribute');
-const _mdDivider = MixableFieldDto(type: 'MdDividerAttribute');
-const _mdBlockQuote = MixableFieldDto(type: 'MdBlockQuoteAttribute');
+const _mdHeading = MixableFieldDto(type: 'MdHeadingSpecAttribute');
+const _mdParagraph = MixableFieldDto(type: 'MdParagraphSpecAttribute');
+const _mdCode = MixableFieldDto(type: 'MdCodeblockSpecAttribute');
+const _mdList = MixableFieldDto(type: 'MdListSpecAttribute');
+const _mdTable = MixableFieldDto(type: 'MdTableSpecAttribute');
+
+const _mdBlockQuote = MixableFieldDto(type: 'MdBlockquoteSpecAttribute');
 
 @MixableSpec()
-final class MdDivider extends Spec<MdDivider> with _$MdDivider {
-  @MixableProperty(utilities: [MixableUtility(alias: 'height')])
-  final double? dividerHeight;
-  @MixableProperty(utilities: [MixableUtility(alias: 'color')])
-  final Color? dividerColor;
-  @MixableProperty(utilities: [MixableUtility(alias: 'thickness')])
-  final double? dividerThickness;
+final class MdTextSpec extends Spec<MdTextSpec> with _$MdTextSpec {
+  final TextStyle? textStyle;
+  final EdgeInsets? padding;
+  final WrapAlignment? alignment;
 
-  const MdDivider({
-    this.dividerHeight,
-    this.dividerColor,
-    this.dividerThickness,
+  const MdTextSpec({
+    this.textStyle,
+    this.padding,
+    this.alignment,
   });
 }
 
 @MixableSpec()
-final class MdTextStyle extends Spec<MdTextStyle> with _$MdTextStyle {
+final class MdHeadingSpec extends Spec<MdHeadingSpec> with _$MdHeadingSpec {
   final TextStyle? textStyle;
+  final EdgeInsets? padding;
+  final WrapAlignment? align;
 
+  const MdHeadingSpec({
+    this.textStyle,
+    this.padding,
+    this.align,
+  });
+}
+
+@MixableSpec()
+final class MdParagraphSpec extends Spec<MdParagraphSpec>
+    with _$MdParagraphSpec {
+  final TextStyle? textStyle;
   final EdgeInsets? padding;
 
-  const MdTextStyle({
+  const MdParagraphSpec({
     this.textStyle,
     this.padding,
   });
 }
 
 @MixableSpec()
-final class MdList extends Spec<MdList> with _$MdList {
-  @MixableProperty(utilities: [MixableUtility(alias: 'textStyle')])
-  final TextStyle? list;
-  @MixableProperty(utilities: [MixableUtility(alias: 'itemTextStyle')])
-  final TextStyle? listItem;
-  @MixableProperty(utilities: [MixableUtility(alias: 'itemMarkerTextStyle')])
-  final TextStyle? listItemMarker;
-  @MixableProperty(
-      utilities: [MixableUtility(alias: 'itemMarkerTrailingSpace')])
-  final double? listItemMarkerTrailingSpace;
-  @MixableProperty(utilities: [MixableUtility(alias: 'itemMinIndent')])
-  final double? listItemMinIndent;
+final class MdListSpec extends Spec<MdListSpec> with _$MdListSpec {
+  final double? indent;
+  final TextStyle? bulletStyle;
+  final EdgeInsets? bulletPadding;
+  final WrapAlignment? orderedAlignment;
+  final WrapAlignment? unorderedAlignment;
 
-  const MdList({
-    this.list,
-    this.listItem,
-    this.listItemMarker,
-    this.listItemMarkerTrailingSpace,
-    this.listItemMinIndent,
+  const MdListSpec({
+    this.indent,
+    this.bulletStyle,
+    this.bulletPadding,
+    this.orderedAlignment,
+    this.unorderedAlignment,
   });
 }
 
 @MixableSpec()
-final class MdBlockQuote extends Spec<MdBlockQuote> with _$MdBlockQuote {
-  @MixableProperty(utilities: [MixableUtility(alias: 'textStyle')])
-  final TextStyle? blockquote;
-  @MixableProperty(utilities: [MixableUtility(alias: 'decoration')])
-  final BoxDecoration? blockquoteDecoration;
-  @MixableProperty(utilities: [MixableUtility(alias: 'padding')])
-  final EdgeInsets? blockquotePadding;
-  @MixableProperty(utilities: [MixableUtility(alias: 'contentPadding')])
-  final EdgeInsets? blockquoteContentPadding;
+final class MdTableSpec extends Spec<MdTableSpec> with _$MdTableSpec {
+  final TextStyle? headStyle;
+  final TextStyle? bodyStyle;
+  final TextAlign? headAlignment;
+  final EdgeInsets? padding;
+  final TableBorder? border;
+  final TableColumnWidth? columnWidth;
+  final EdgeInsets? cellPadding;
 
-  const MdBlockQuote({
-    this.blockquote,
-    this.blockquoteDecoration,
-    this.blockquotePadding,
-    this.blockquoteContentPadding,
+  final BoxDecoration? cellDecoration;
+  final TableCellVerticalAlignment? verticalAlignment;
+
+  const MdTableSpec({
+    this.headStyle,
+    this.bodyStyle,
+    this.headAlignment,
+    this.padding,
+    this.border,
+    this.columnWidth,
+    this.cellPadding,
+    this.cellDecoration,
+    this.verticalAlignment,
   });
 }
 
 @MixableSpec()
-final class MdTable extends Spec<MdTable> with _$MdTable {
-  @MixableProperty(utilities: [MixableUtility(alias: 'textStyle')])
-  final TextStyle? table;
-  @MixableProperty(utilities: [MixableUtility(alias: 'headTextStyle')])
-  final TextStyle? tableHead;
-  @MixableProperty(utilities: [MixableUtility(alias: 'bodyTextStyle')])
-  final TextStyle? tableBody;
-  @MixableProperty(utilities: [MixableUtility(alias: 'border')])
-  final TableBorder? tableBorder;
-  @MixableProperty(utilities: [MixableUtility(alias: 'rowDecoration')])
-  final BoxDecoration? tableRowDecoration;
-  @MixableProperty(
-      utilities: [MixableUtility(alias: 'rowDecorationAlternating')])
-  final MarkdownAlternating? tableRowDecorationAlternating;
-  @MixableProperty(
-    utilities: [
-      MixableUtility(
-        alias: 'cellPadding',
-      )
-    ],
-  )
-  final EdgeInsets? tableCellPadding;
-  @MixableProperty(utilities: [MixableUtility(alias: 'columnWidth')])
-  final TableColumnWidth? tableColumnWidth;
+final class MdBlockquoteSpec extends Spec<MdBlockquoteSpec>
+    with _$MdBlockquoteSpec {
+  final TextStyle? textStyle;
+  final EdgeInsets? padding;
+  final BoxDecoration? decoration;
+  final WrapAlignment? alignment;
 
-  const MdTable({
-    this.table,
-    this.tableHead,
-    this.tableBody,
-    this.tableBorder,
-    this.tableRowDecoration,
-    this.tableRowDecorationAlternating,
-    this.tableCellPadding,
-    this.tableColumnWidth,
+  const MdBlockquoteSpec({
+    this.textStyle,
+    this.padding,
+    this.decoration,
+    this.alignment,
   });
 }
 
 @MixableSpec()
-final class MdCode extends Spec<MdCode> with _$MdCode {
-  @MixableProperty(utilities: [MixableUtility(alias: 'span')])
-  final TextStyle? codeSpan;
-  @MixableProperty(utilities: [
-    MixableUtility(
-      alias: 'padding',
-    )
-  ])
-  final EdgeInsets? codeblockPadding;
-  @MixableProperty(utilities: [MixableUtility(alias: 'decoration')])
-  final BoxDecoration? codeblockDecoration;
-  @MixableProperty(utilities: [MixableUtility(alias: 'block')])
-  final TextStyle? codeBlock;
+final class MdCodeblockSpec extends Spec<MdCodeblockSpec>
+    with _$MdCodeblockSpec {
+  final TextStyle? textStyle;
+  final EdgeInsets? padding;
+  final BoxDecoration? decoration;
+  final WrapAlignment? alignment;
 
-  final Color? copyIconColor;
-
-  const MdCode({
-    this.codeSpan,
-    this.codeblockPadding,
-    this.codeblockDecoration,
-    this.copyIconColor,
-    this.codeBlock,
+  const MdCodeblockSpec({
+    this.textStyle,
+    this.padding,
+    this.decoration,
+    this.alignment,
   });
 }
 
 @MixableSpec()
 final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
-  @MixableProperty(dto: _mdTextStyle, utilities: [MixableUtility(alias: 'h1')])
-  final MdTextStyle? headline1;
-  @MixableProperty(dto: _mdTextStyle, utilities: [MixableUtility(alias: 'h2')])
-  final MdTextStyle? headline2;
-  @MixableProperty(dto: _mdTextStyle, utilities: [MixableUtility(alias: 'h3')])
-  final MdTextStyle? headline3;
-  @MixableProperty(dto: _mdTextStyle, utilities: [MixableUtility(alias: 'h4')])
-  final MdTextStyle? headline4;
-  @MixableProperty(dto: _mdTextStyle, utilities: [MixableUtility(alias: 'h5')])
-  final MdTextStyle? headline5;
-  @MixableProperty(dto: _mdTextStyle, utilities: [MixableUtility(alias: 'h6')])
-  final MdTextStyle? headline6;
-  @MixableProperty(dto: _mdTextStyle)
-  final MdTextStyle? paragraph;
+  final WrapAlignment? textAlign;
+  @MixableProperty(dto: _mdHeading)
+  final MdHeadingSpec? h1;
+
+  @MixableProperty(dto: _mdHeading)
+  final MdHeadingSpec? h2;
+
+  final TextStyle? a;
+  final TextStyle? em;
+  final TextStyle? strong;
+  final TextStyle? del;
+  final TextStyle? img;
+  @MixableProperty(utilities: [MixableUtility(alias: 'divider')])
+  final BoxDecoration? horizontalRuleDecoration;
+  final TextScaler? textScaleFactor;
+
+  @MixableProperty(dto: _mdHeading)
+  final MdHeadingSpec? h3;
+
+  @MixableProperty(dto: _mdHeading)
+  final MdHeadingSpec? h4;
+
+  @MixableProperty(dto: _mdHeading)
+  final MdHeadingSpec? h5;
+
+  @MixableProperty(dto: _mdHeading)
+  final MdHeadingSpec? h6;
+
+  @MixableProperty(dto: _mdParagraph)
+  final MdParagraphSpec? paragraph;
+
   final TextStyle? link;
   final double? blockSpacing;
-  @MixableProperty(dto: _mdDivider)
-  final MdDivider? divider;
+
   @MixableProperty(dto: _mdBlockQuote)
-  final MdBlockQuote? blockquote;
+  final MdBlockquoteSpec? blockquote;
   @MixableProperty(dto: _mdList)
-  final MdList? list;
+  final MdListSpec? list;
   @MixableProperty(dto: _mdTable)
-  final MdTable? table;
+  final MdTableSpec? table;
   @MixableProperty(dto: _mdCode)
-  final MdCode? code;
+  final MdCodeblockSpec? code;
   final BoxSpec innerContainer;
   final BoxSpec outerContainer;
   final BoxSpec contentContainer;
   final ImageSpec image;
+  final TextStyle? checkbox;
 
   static const of = _$SlideSpec.of;
   static const from = _$SlideSpec.from;
 
   const SlideSpec({
-    this.headline1,
-    this.headline2,
-    this.headline3,
-    this.headline4,
-    this.headline5,
-    this.headline6,
+    this.h1,
+    this.h2,
+    this.h3,
+    this.h4,
+    this.h5,
+    this.h6,
     this.paragraph,
     this.link,
     this.blockSpacing,
-    this.divider,
     this.blockquote,
     this.list,
     this.table,
+    this.checkbox,
     this.code,
+    this.a,
+    this.em,
+    this.strong,
+    this.del,
+    this.textAlign,
+    this.img,
+    this.horizontalRuleDecoration,
+    this.textScaleFactor,
     BoxSpec? innerContainer,
     BoxSpec? outerContainer,
     BoxSpec? contentContainer,
@@ -207,50 +212,55 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
         contentContainer = contentContainer ?? const BoxSpec(),
         image = image ?? const ImageSpec();
 
-  MarkdownStyle toStyle() {
-    return MarkdownStyle(
-      headline1: headline1?.textStyle,
-      h1Padding: headline1?.padding ?? EdgeInsets.zero,
-      headline2: headline2?.textStyle,
-      h2Padding: headline2?.padding ?? EdgeInsets.zero,
-      headline3: headline3?.textStyle,
-      h3Padding: headline3?.padding ?? EdgeInsets.zero,
-      headline4: headline4?.textStyle,
-      h4Padding: headline4?.padding ?? EdgeInsets.zero,
-      headline5: headline5?.textStyle,
-      h5Padding: headline5?.padding ?? EdgeInsets.zero,
-      headline6: headline6?.textStyle,
-      h6Padding: headline6?.padding ?? EdgeInsets.zero,
-      paragraph: paragraph?.textStyle,
-      paragraphPadding: paragraph?.padding ?? EdgeInsets.zero,
-      link: link,
-      dividerHeight: divider?.dividerHeight ?? 1.0,
-      dividerColor: divider?.dividerColor ?? Colors.black,
-      dividerThickness: divider?.dividerThickness ?? 1.0,
-      blockquote: blockquote?.blockquote,
-      blockquoteDecoration: blockquote?.blockquoteDecoration,
-      blockquotePadding: blockquote?.blockquotePadding ?? EdgeInsets.zero,
-      blockquoteContentPadding:
-          blockquote?.blockquoteContentPadding ?? EdgeInsets.zero,
-      list: list?.list,
-      listItem: list?.listItem,
-      listItemMarker: list?.listItemMarker,
-      listItemMarkerTrailingSpace: list?.listItemMarkerTrailingSpace ?? 4.0,
-      listItemMinIndent: list?.listItemMinIndent ?? 16.0,
-      table: table?.table,
-      tableHead: table?.tableHead,
-      tableBody: table?.tableBody,
-      tableBorder: table?.tableBorder,
-      tableRowDecoration: table?.tableRowDecoration,
-      tableRowDecorationAlternating: table?.tableRowDecorationAlternating,
-      tableCellPadding: table?.tableCellPadding,
-      tableColumnWidth: table?.tableColumnWidth,
-      codeSpan: code?.codeSpan,
-      codeBlock: code?.codeSpan,
-      codeblockPadding: code?.codeblockPadding,
-      codeblockDecoration: code?.codeblockDecoration,
-      blockSpacing: blockSpacing ?? 8,
-      copyIconColor: code?.copyIconColor ?? Colors.black,
+  MarkdownStyleSheet toStyle() {
+    return MarkdownStyleSheet(
+      a: link,
+      h1: h1?.textStyle,
+      h1Padding: h1?.padding,
+      h1Align: h1?.align ?? WrapAlignment.start,
+      h2: h2?.textStyle,
+      h2Padding: h2?.padding,
+      h2Align: h2?.align ?? WrapAlignment.start,
+      h3: h3?.textStyle,
+      h3Padding: h3?.padding,
+      h3Align: h3?.align ?? WrapAlignment.start,
+      h4: h4?.textStyle,
+      h4Padding: h4?.padding,
+      h4Align: h4?.align ?? WrapAlignment.start,
+      h5: h5?.textStyle,
+      h5Padding: h5?.padding,
+      h5Align: h5?.align ?? WrapAlignment.start,
+      h6: h6?.textStyle,
+      h6Padding: h6?.padding,
+      h6Align: h6?.align ?? WrapAlignment.start,
+      p: paragraph?.textStyle,
+      pPadding: paragraph?.padding,
+      textAlign: textAlign ?? WrapAlignment.start,
+      blockSpacing: blockSpacing,
+      blockquote: blockquote?.textStyle,
+      blockquotePadding: blockquote?.padding,
+      blockquoteDecoration: blockquote?.decoration,
+      blockquoteAlign: blockquote?.alignment ?? WrapAlignment.start,
+      listBullet: list?.bulletStyle,
+      listBulletPadding: list?.bulletPadding,
+      listIndent: list?.indent,
+      orderedListAlign: list?.orderedAlignment ?? WrapAlignment.start,
+      unorderedListAlign: list?.unorderedAlignment ?? WrapAlignment.start,
+      tableHead: table?.headStyle,
+      tableBody: table?.bodyStyle,
+      tableHeadAlign: table?.headAlignment,
+      tablePadding: table?.padding,
+      tableBorder: table?.border,
+      tableColumnWidth: table?.columnWidth,
+      tableCellsPadding: table?.cellPadding,
+      tableCellsDecoration: table?.cellDecoration,
+      tableVerticalAlignment:
+          table?.verticalAlignment ?? TableCellVerticalAlignment.middle,
+      code: code?.textStyle,
+      codeblockAlign: code?.alignment ?? WrapAlignment.start,
+      codeblockPadding: code?.padding,
+      codeblockDecoration: code?.decoration,
+      checkbox: checkbox,
     );
   }
 }
@@ -265,50 +275,31 @@ extension SlideSpecUtilityX<T extends Attribute> on SlideSpecUtility<T> {
   TextStyleUtility<T> get textStyle {
     return TextStyleUtility(
       (value) => only(
-        paragraph: MdTextStyleAttribute(textStyle: value),
-        headline1: MdTextStyleAttribute(textStyle: value),
-        headline2: MdTextStyleAttribute(textStyle: value),
-        headline3: MdTextStyleAttribute(textStyle: value),
-        headline4: MdTextStyleAttribute(textStyle: value),
-        headline5: MdTextStyleAttribute(textStyle: value),
-        headline6: MdTextStyleAttribute(textStyle: value),
-        list: MdListAttribute(list: value),
-        table: MdTableAttribute(table: value),
-        code: MdCodeAttribute(codeBlock: value),
-        blockquote: MdBlockQuoteAttribute(blockquote: value),
+        paragraph: MdParagraphSpecAttribute(textStyle: value),
+        h1: MdHeadingSpecAttribute(textStyle: value),
+        h2: MdHeadingSpecAttribute(textStyle: value),
+        h3: MdHeadingSpecAttribute(textStyle: value),
+        h4: MdHeadingSpecAttribute(textStyle: value),
+        h5: MdHeadingSpecAttribute(textStyle: value),
+        h6: MdHeadingSpecAttribute(textStyle: value),
+        list: MdListSpecAttribute(bulletStyle: value),
+        table: MdTableSpecAttribute(bodyStyle: value, headStyle: value),
+        code: MdCodeblockSpecAttribute(textStyle: value),
+        blockquote: MdBlockquoteSpecAttribute(textStyle: value),
       ),
     );
   }
 
-  MdTextStyleUtility<T> get headings {
-    return MdTextStyleUtility(
+  MdHeadingSpecUtility<T> get headings {
+    return MdHeadingSpecUtility(
       (value) => only(
-        headline1: value,
-        headline2: value,
-        headline3: value,
-        headline4: value,
-        headline5: value,
-        headline6: value,
+        h1: value,
+        h2: value,
+        h3: value,
+        h4: value,
+        h5: value,
+        h6: value,
       ),
     );
   }
-}
-
-@MixableEnumUtility(generateCallMethod: false)
-class MarkdownAlternatingUtility<T extends Attribute>
-    extends MixUtility<T, MarkdownAlternating>
-    with _$MarkdownAlternatingUtility<T> {
-  const MarkdownAlternatingUtility(super.builder);
-}
-
-@MixableClassUtility()
-class TableColumnWidthUtility<T extends Attribute>
-    extends MixUtility<T, TableColumnWidth> with _$TableColumnWidthUtility<T> {
-  const TableColumnWidthUtility(super.builder);
-}
-
-@MixableClassUtility()
-class TableBorderUtility<T extends Attribute> extends MixUtility<T, TableBorder>
-    with _$TableBorderUtility<T> {
-  const TableBorderUtility(super.builder);
 }

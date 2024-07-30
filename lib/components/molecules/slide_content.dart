@@ -24,12 +24,10 @@ class SlideContent extends StatelessWidget {
 
     final isExporting = SlideProvider.isSnapshotOf(context);
 
-    Widget child = IntrinsicWidth(
-      child: AnimatedMarkdownViewer(
-        content: data,
-        spec: spec,
-        duration: Durations.medium1,
-      ),
+    Widget child = AnimatedMarkdownViewer(
+      content: data,
+      spec: spec,
+      duration: Durations.medium1,
     );
 
     if (!isExporting) {
