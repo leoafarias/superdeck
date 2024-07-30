@@ -75,17 +75,17 @@ ImageProvider getImageProvider({
   required String url,
   required Size targetSize,
 }) {
-  final controller = SDController.instance;
   ImageProvider provider;
 
   SlideAsset? asset;
 
-  final firstOrNull = controller.assets.watch(context).firstWhereOrNull;
+  final assets = superdeckController.assets.watch(context);
 
   if (ProjectService.instance.isAssetFile(File(url))) {
-    asset = firstOrNull((e) => e.file.path == url);
+    asset = assets.firstWhereOrNull((e) => e.file.path == url);
   } else {
-    asset = firstOrNull((e) => e.file.path.contains(shortHashId(url)));
+    asset =
+        assets.firstWhereOrNull((e) => e.file.path.contains(shortHashId(url)));
   }
 
   url = asset?.file.path ?? url;

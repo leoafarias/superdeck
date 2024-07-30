@@ -70,8 +70,7 @@ class SlideConstraints extends StatefulWidget {
   }
 
   @override
-  // ignore: library_private_types_in_public_api
-  _SlideConstraintsState createState() => _SlideConstraintsState();
+  State createState() => _SlideConstraintsState();
 }
 
 class _SlideConstraintsState extends State<SlideConstraints> {
@@ -91,15 +90,14 @@ class _SlideConstraintsState extends State<SlideConstraints> {
         BoxConstraints constraints,
       ) {
         final size = _widgetSize == null ? constraints.biggest : _widgetSize!;
-        final constraintSize = BoxConstraints(
-          maxHeight: size.height,
-          maxWidth: size.width,
-        );
 
         return MeasureSize(
           onChange: _onWidgetSizeChange,
           child: SlideConstraintsProvider(
-            constraints: constraintSize,
+            constraints: BoxConstraints(
+              maxHeight: size.height,
+              maxWidth: size.width,
+            ),
             child: Builder(
               builder: (context) {
                 return widget.builder(size);

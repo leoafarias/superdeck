@@ -3,86 +3,6 @@
 part of 'style_spec.dart';
 
 // **************************************************************************
-// MixableClassUtilityGenerator
-// **************************************************************************
-
-/// {@template table_column_width_utility}
-/// A utility class for creating [Attribute] instances from [TableColumnWidth] values.
-///
-/// This class extends [MixUtility] and provides methods to create [Attribute] instances
-/// from predefined [TableColumnWidth] values.
-/// {@endtemplate}
-mixin _$TableColumnWidthUtility<T extends Attribute>
-    on MixUtility<T, TableColumnWidth> {
-  /// Creates an [Attribute] instance with the specified TableColumnWidth value.
-  T call(TableColumnWidth value) => builder(value);
-}
-
-/// {@template table_border_utility}
-/// A utility class for creating [Attribute] instances from [TableBorder] values.
-///
-/// This class extends [MixUtility] and provides methods to create [Attribute] instances
-/// from predefined [TableBorder] values.
-/// {@endtemplate}
-mixin _$TableBorderUtility<T extends Attribute> on MixUtility<T, TableBorder> {
-  /// Creates an [Attribute] instance using the [TableBorder.all] constructor.
-  T all(
-      {Color color = const Color(0xFF000000),
-      double width = 1.0,
-      BorderStyle style = BorderStyle.solid,
-      BorderRadius borderRadius = BorderRadius.zero}) {
-    return builder(TableBorder.all(
-        color: color, width: width, style: style, borderRadius: borderRadius));
-  }
-
-  /// Creates an [Attribute] instance using the [TableBorder.symmetric] constructor.
-  T symmetric(
-      {BorderSide inside = BorderSide.none,
-      BorderSide outside = BorderSide.none,
-      BorderRadius borderRadius = BorderRadius.zero}) {
-    return builder(TableBorder.symmetric(
-        inside: inside, outside: outside, borderRadius: borderRadius));
-  }
-
-  /// Creates an [Attribute] instance with the specified TableBorder value.
-  T call(TableBorder value) => builder(value);
-}
-
-// **************************************************************************
-// MixableEnumUtilityGenerator
-// **************************************************************************
-
-/// {@template table_cell_vertical_alignment_utility}
-/// A utility class for creating [Attribute] instances from [TableCellVerticalAlignment] values.
-///
-/// This class extends [MixUtility] and provides methods to create [Attribute] instances
-/// from predefined [TableCellVerticalAlignment] values.
-/// {@endtemplate}
-mixin _$TableCellVerticalAlignmentUtility<T extends Attribute>
-    on MixUtility<T, TableCellVerticalAlignment> {
-  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.top] value.
-  T top() => builder(TableCellVerticalAlignment.top);
-
-  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.middle] value.
-  T middle() => builder(TableCellVerticalAlignment.middle);
-
-  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.bottom] value.
-  T bottom() => builder(TableCellVerticalAlignment.bottom);
-
-  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.baseline] value.
-  T baseline() => builder(TableCellVerticalAlignment.baseline);
-
-  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.fill] value.
-  T fill() => builder(TableCellVerticalAlignment.fill);
-
-  /// Creates an [Attribute] instance with [TableCellVerticalAlignment.intrinsicHeight] value.
-  T intrinsicHeight() => builder(TableCellVerticalAlignment.intrinsicHeight);
-
-  /// Creates an [Attribute] instance with the specified TableCellVerticalAlignment value.
-  T call(TableCellVerticalAlignment value) => builder(value);
-}
-
-// **************************************************************************
 // MixableSpecGenerator
 // **************************************************************************
 
@@ -1779,8 +1699,10 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// - [MixHelpers.lerpTextStyle] for [link] and [checkbox] and [a] and [em] and [strong] and [del] and [img].
   /// - [MixHelpers.lerpDouble] for [blockSpacing].
   /// - [BoxDecoration.lerp] for [horizontalRuleDecoration].
+  /// - [BoxSpec.lerp] for [innerContainer] and [outerContainer] and [contentContainer].
+  /// - [ImageSpec.lerp] for [image].
 
-  /// For [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [paragraph] and [blockquote] and [list] and [table] and [code] and [textAlign] and [textScaleFactor] and [innerContainer] and [outerContainer] and [contentContainer] and [image] and [animated], the interpolation is performed using a step function.
+  /// For [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [paragraph] and [blockquote] and [list] and [table] and [code] and [textAlign] and [textScaleFactor] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [SlideSpec] is used. Otherwise, the value
   /// from the [other] [SlideSpec] is used.
   ///

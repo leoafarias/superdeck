@@ -95,7 +95,7 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           padding: const EdgeInsets.all(20),
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
-            SDController.instance.style.watch(context);
+            superdeckController.style.watch(context);
 
             return SlideThumbnail(
               index: idx,

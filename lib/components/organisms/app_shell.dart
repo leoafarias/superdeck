@@ -43,7 +43,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
       curve: Curves.ease,
     );
 
-    if (navigation.sideIsOpen.value) {
+    if (navigationController.sideIsOpen.value) {
       _animationController.forward();
     }
   }
@@ -54,11 +54,9 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
     super.dispose();
   }
 
-  final navigation = NavigationProvider.instance;
-
   void _onTap(BuildContext context, int index) {
     if (index == SideMenu.clearCache.index) {
-      sdController.clearGenerated();
+      superdeckController.clearGenerated();
       return;
     }
     // When navigating to a new branch, it's recommended to use the goBranch
@@ -76,10 +74,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
   @override
   Widget build(BuildContext context) {
-    final slides = sdController.slides.watch(context);
+    final slides = superdeckController.slides.watch(context);
 
-    navigation.sideIsOpen.listen(context, () {
-      if (navigation.sideIsOpen.value) {
+    navigationController.sideIsOpen.listen(context, () {
+      if (navigationController.sideIsOpen.value) {
         _animationController.forward();
       } else {
         _animationController.reverse();
@@ -92,19 +90,19 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
-      ): navigation.nextSlide,
+      ): navigationController.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
-      ): navigation.nextSlide,
+      ): navigationController.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.space,
-      ): navigation.nextSlide,
+      ): navigationController.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
-      ): navigation.previousSlide,
+      ): navigationController.previousSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
-      ): navigation.previousSlide,
+      ): navigationController.previousSlide,
     };
 
     void onTap(int index) {
@@ -151,7 +149,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
             ? FloatingActionButtonLocation.miniEndFloat
             : FloatingActionButtonLocation.miniStartFloat,
         floatingActionButton: FloatingActionButton.small(
-          onPressed: navigation.toggleSide,
+          onPressed: navigationController.toggleSide,
           child: Badge(
             label: Text(totalInvalid.toString()),
             isLabelVisible: totalInvalid != 0,

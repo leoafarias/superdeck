@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:watcher/watcher.dart';
 
-import '../helpers/config_model.dart';
 import '../helpers/constants.dart';
 import '../helpers/extensions.dart';
+import '../models/config_model.dart';
 import '../superdeck.dart';
 
 typedef DeckReferences = ({

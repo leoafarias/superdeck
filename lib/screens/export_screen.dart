@@ -35,21 +35,19 @@ class ExportScreen extends StatefulWidget {
 }
 
 class _ExportScreenState extends State<ExportScreen> {
-  final navigation = NavigationProvider.instance;
-
   late final _selectedQuality = createSignal(context, SnapshotQuality.good);
 
   Future<void> convertToPdf(BuildContext context) async {
-    final lastState = navigation.sideIsOpen.value;
+    final lastState = navigationController.sideIsOpen.value;
 
-    navigation.sideIsOpen.value = false;
+    navigationController.sideIsOpen.value = false;
 
     await Future.delayed(Duration.zero);
 
     late OverlayEntry entry;
     void handleOnComplete() {
       entry.remove();
-      navigation.sideIsOpen.value = lastState;
+      navigationController.sideIsOpen.value = lastState;
     }
 
     entry = OverlayEntry(
@@ -135,13 +133,12 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
   final _pageController = PageController();
   late List<Slide> _slides;
   late final _images = listSignal<Uint8List>([]);
-  late final superdeck = SDController.instance;
 
   @override
   void initState() {
     super.initState();
 
-    _slides = superdeck.slides.value;
+    _slides = superdeckController.slides.value;
 
     Future.delayed(Durations.medium1).then((value) => startConversion());
   }

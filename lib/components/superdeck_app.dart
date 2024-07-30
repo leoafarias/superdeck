@@ -57,7 +57,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   late final _initialize = futureSignal(() async {
     await SuperDeckApp.initialize();
 
-    return sdController.initialize(
+    return superdeckController.initialize(
       style: widget.style,
       examples: widget.examples,
     );

@@ -11,12 +11,15 @@ import '../services/project_service.dart';
 import '../styles/style_util.dart';
 import '../superdeck.dart';
 
-final sdController = SDController.instance;
+final superdeckController = SuperDeckController();
+final navigationController = NavigationController();
 
-class SDController {
-  SDController._();
+class SuperDeckController {
+  SuperDeckController._();
 
-  static final instance = SDController._();
+  static final _instance = SuperDeckController._();
+
+  factory SuperDeckController() => _instance;
 
   final _data = futureSignal(SlidesLoader.instance.loadDeck);
 
@@ -72,15 +75,15 @@ class SDController {
   }
 }
 
-class NavigationProvider {
+class NavigationController {
   List<EffectCleanup>? _cleanup;
-  NavigationProvider._() {
+  NavigationController._() {
     initialize();
   }
 
-  static NavigationProvider get instance => _instance;
+  static final _instance = NavigationController._();
 
-  static final _instance = NavigationProvider._();
+  factory NavigationController() => _instance;
 
   late final currentSlide = signal(0);
   late final sideIsOpen = signal(false);
@@ -110,7 +113,7 @@ class NavigationProvider {
   }
 
   void goToSlide(int slide) {
-    if (slide < 0 || slide >= sdController.slides.value.length) return;
+    if (slide < 0 || slide >= superdeckController.slides.value.length) return;
     currentSlide.value = slide;
   }
 

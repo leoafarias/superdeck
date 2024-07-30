@@ -28,7 +28,7 @@ class SlideView extends StatelessWidget {
   Widget build(BuildContext context) {
     final slide = this.slide;
     final variant = slide.styleVariant;
-    final style = sdController.style.watch(context);
+    final style = superdeckController.style.watch(context);
 
     final variantStyle = style.applyVariant(variant);
 
@@ -63,8 +63,8 @@ class SlideView extends StatelessWidget {
                     child: SlideProvider(
                       slide: slide,
                       spec: spec,
-                      examples: sdController.examples.watch(context),
-                      assets: sdController.assets.watch(context),
+                      examples: superdeckController.examples.watch(context),
+                      assets: superdeckController.assets.watch(context),
                       isSnapshot: _isSnapshot,
                       child: SlideConstraints(
                         (_) {

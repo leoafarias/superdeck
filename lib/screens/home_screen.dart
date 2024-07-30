@@ -17,13 +17,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final PageController pageController;
-  final superdeck = SDController.instance;
-  final navigation = NavigationProvider.instance;
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController(initialPage: navigation.currentSlide.value);
+    pageController =
+        PageController(initialPage: navigationController.currentSlide.value);
   }
 
   @override
@@ -33,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> goToPage(int page) async {
-    final slides = superdeck.slides;
+    final slides = superdeckController.slides;
     if (page < 0 || page >= slides.value.length) return;
 
     const duration = Duration(milliseconds: 300);
@@ -42,14 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
     // Return if already paged
     if (pageController.page == page) return;
 
-    if (page != navigation.currentSlide.value) {
+    if (page != navigationController.currentSlide.value) {
       await pageController.animateToPage(
         page,
         duration: duration,
         curve: curve,
       );
 
-      navigation.currentSlide.value = page;
+      navigationController.currentSlide.value = page;
     } else {
       pageController.jumpToPage(page);
     }
@@ -57,11 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final slides = superdeck.slides.watch(context);
+    final slides = superdeckController.slides.watch(context);
 
-    navigation.currentSlide.listen(context, () {
+    navigationController.currentSlide.listen(context, () {
       if (pageController.hasClients) {
-        goToPage(navigation.currentSlide.value);
+        goToPage(navigationController.currentSlide.value);
       }
     });
 

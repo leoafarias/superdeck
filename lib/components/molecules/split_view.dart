@@ -35,9 +35,6 @@ class _SplitViewState extends State<SplitView>
   late AnimationController _animationController;
   late Animation<double> _animation;
 
-  late final navigation = NavigationProvider.instance;
-  late final superdeck = SDController.instance;
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +49,7 @@ class _SplitViewState extends State<SplitView>
       ),
     );
 
-    if (navigation.sideIsOpen.value) {
+    if (navigationController.sideIsOpen.value) {
       _animationController.value = 1.0;
     }
   }
@@ -65,10 +62,10 @@ class _SplitViewState extends State<SplitView>
 
   @override
   Widget build(BuildContext context) {
-    final slides = superdeck.slides.watch(context);
+    final slides = superdeckController.slides.watch(context);
 
-    navigation.sideIsOpen.listen(context, () {
-      if (navigation.sideIsOpen.value) {
+    navigationController.sideIsOpen.listen(context, () {
+      if (navigationController.sideIsOpen.value) {
         _animationController.forward();
       } else {
         _animationController.reverse();
@@ -77,15 +74,15 @@ class _SplitViewState extends State<SplitView>
 
     final sideWidth = context.isMobileLandscape ? 200.0 : 400.0;
     const sideHeight = 200.0;
-    final currentSlide = navigation.currentSlide.watch(context);
-    final sideIsOpen = navigation.sideIsOpen.watch(context);
+    final currentSlide = navigationController.currentSlide.watch(context);
+    final sideIsOpen = navigationController.sideIsOpen.watch(context);
 
     final isSmall = context.isSmall || context.isMobileLandscape;
 
     final sidePanel = SlideThumbnailList(
       scrollDirection: isSmall ? Axis.horizontal : Axis.vertical,
       currentSlide: currentSlide,
-      onSelect: navigation.goToSlide,
+      onSelect: navigationController.goToSlide,
       slides: slides,
     );
 
