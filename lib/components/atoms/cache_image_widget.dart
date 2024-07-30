@@ -81,7 +81,7 @@ ImageProvider getImageProvider({
 
   final assets = superdeckController.assets.watch(context);
 
-  if (ProjectService.instance.isAssetFile(File(url))) {
+  if (isAssetFile(File(url))) {
     asset = assets.firstWhereOrNull((e) => e.file.path == url);
   } else {
     asset =

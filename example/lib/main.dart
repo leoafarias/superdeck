@@ -14,23 +14,7 @@ void main() async {
         home: SuperDeckApp(
           style: style,
           // ignore: prefer_const_literals_to_create_immutables
-          examples: [
-            Example(
-              name: 'demo',
-              schema: ExampleOptions.schema,
-              builder: (args) {
-                return Center(
-                  child: Container(
-                    height: args.height,
-                    width: args.width,
-                    color: Colors.blue,
-                    alignment: Alignment.center,
-                    child: Text(args.text),
-                  ),
-                );
-              },
-            ),
-          ],
+          examples: {'demo': mixExampleBuilder},
         ),
       );
     }),

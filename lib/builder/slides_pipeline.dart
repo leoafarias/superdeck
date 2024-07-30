@@ -186,7 +186,7 @@ class ImageCachingTask extends Task {
     final matches = imageRegex.allMatches(content);
 
     Future<void> saveAsset(String url) async {
-      if (ProjectService.instance.isAssetFile(File(url))) return;
+      if (isAssetFile(File(url))) return;
       // Look by hashcode to see if the asset is already cached
 
       final file = SlideAsset.cached(url);

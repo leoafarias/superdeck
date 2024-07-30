@@ -20,7 +20,7 @@ class SlideProvider extends InheritedModel<SlideProviderAspect> {
 
   // If slide is a snapshot for image generation
   final bool isSnapshot;
-  final Map<String, Example> examples;
+  final Map<String, ExampleBuilder> examples;
   final List<SlideAsset> assets;
 
   const SlideProvider({
@@ -88,7 +88,7 @@ class SlideProvider extends InheritedModel<SlideProviderAspect> {
   }
 
 // TODO: only get notified if the individual example changes
-  static Map<String, Example> examplesOf(BuildContext context) {
+  static Map<String, ExampleBuilder> examplesOf(BuildContext context) {
     return SlideProvider.of(context).examples;
   }
 }

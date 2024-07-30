@@ -6,6 +6,70 @@
 
 part of 'config_model.dart';
 
+class BaseConfigMapper extends ClassMapperBase<BaseConfig> {
+  BaseConfigMapper._();
+
+  static BaseConfigMapper? _instance;
+  static BaseConfigMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = BaseConfigMapper._());
+      ConfigMapper.ensureInitialized();
+      TransitionOptionsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'BaseConfig';
+
+  static String? _$background(BaseConfig v) => v.background;
+  static const Field<BaseConfig, String> _f$background =
+      Field('background', _$background);
+  static String? _$style(BaseConfig v) => v.style;
+  static const Field<BaseConfig, String> _f$style = Field('style', _$style);
+  static TransitionOptions? _$transition(BaseConfig v) => v.transition;
+  static const Field<BaseConfig, TransitionOptions> _f$transition =
+      Field('transition', _$transition);
+
+  @override
+  final MappableFields<BaseConfig> fields = const {
+    #background: _f$background,
+    #style: _f$style,
+    #transition: _f$transition,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static BaseConfig _instantiate(DecodingData data) {
+    throw MapperException.missingConstructor('BaseConfig');
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static BaseConfig fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<BaseConfig>(map);
+  }
+
+  static BaseConfig fromJson(String json) {
+    return ensureInitialized().decodeJson<BaseConfig>(json);
+  }
+}
+
+mixin BaseConfigMappable {
+  String toJson();
+  Map<String, dynamic> toMap();
+  BaseConfigCopyWith<BaseConfig, BaseConfig, BaseConfig> get copyWith;
+}
+
+abstract class BaseConfigCopyWith<$R, $In extends BaseConfig, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
+      get transition;
+  $R call({String? background, String? style, TransitionOptions? transition});
+  BaseConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
 class ConfigMapper extends ClassMapperBase<Config> {
   ConfigMapper._();
 
@@ -13,7 +77,7 @@ class ConfigMapper extends ClassMapperBase<Config> {
   static ConfigMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfigMapper._());
-      SDConfigMapper.ensureInitialized();
+      BaseConfigMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -30,18 +94,27 @@ class ConfigMapper extends ClassMapperBase<Config> {
   static TransitionOptions? _$transition(Config v) => v.transition;
   static const Field<Config, TransitionOptions> _f$transition =
       Field('transition', _$transition);
+  static bool? _$cacheRemoteAssets(Config v) => v.cacheRemoteAssets;
+  static const Field<Config, bool> _f$cacheRemoteAssets = Field(
+      'cacheRemoteAssets', _$cacheRemoteAssets,
+      key: 'cache_remote_assets', opt: true);
 
   @override
   final MappableFields<Config> fields = const {
     #background: _f$background,
     #style: _f$style,
     #transition: _f$transition,
+    #cacheRemoteAssets: _f$cacheRemoteAssets,
   };
   @override
   final bool ignoreNull = true;
 
   static Config _instantiate(DecodingData data) {
-    throw MapperException.missingConstructor('Config');
+    return Config(
+        background: data.dec(_f$background),
+        style: data.dec(_f$style),
+        transition: data.dec(_f$transition),
+        cacheRemoteAssets: data.dec(_f$cacheRemoteAssets));
   }
 
   @override
@@ -57,115 +130,39 @@ class ConfigMapper extends ClassMapperBase<Config> {
 }
 
 mixin ConfigMappable {
-  String toJson();
-  Map<String, dynamic> toMap();
-  ConfigCopyWith<Config, Config, Config> get copyWith;
-}
-
-abstract class ConfigCopyWith<$R, $In extends Config, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
-      get transition;
-  $R call({String? background, String? style, TransitionOptions? transition});
-  ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class SDConfigMapper extends ClassMapperBase<SDConfig> {
-  SDConfigMapper._();
-
-  static SDConfigMapper? _instance;
-  static SDConfigMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SDConfigMapper._());
-      ConfigMapper.ensureInitialized();
-      TransitionOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'SDConfig';
-
-  static String? _$background(SDConfig v) => v.background;
-  static const Field<SDConfig, String> _f$background =
-      Field('background', _$background);
-  static String? _$style(SDConfig v) => v.style;
-  static const Field<SDConfig, String> _f$style = Field('style', _$style);
-  static TransitionOptions? _$transition(SDConfig v) => v.transition;
-  static const Field<SDConfig, TransitionOptions> _f$transition =
-      Field('transition', _$transition);
-  static bool? _$cacheRemoteAssets(SDConfig v) => v.cacheRemoteAssets;
-  static const Field<SDConfig, bool> _f$cacheRemoteAssets = Field(
-      'cacheRemoteAssets', _$cacheRemoteAssets,
-      key: 'cache_remote_assets', opt: true);
-
-  @override
-  final MappableFields<SDConfig> fields = const {
-    #background: _f$background,
-    #style: _f$style,
-    #transition: _f$transition,
-    #cacheRemoteAssets: _f$cacheRemoteAssets,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static SDConfig _instantiate(DecodingData data) {
-    return SDConfig(
-        background: data.dec(_f$background),
-        style: data.dec(_f$style),
-        transition: data.dec(_f$transition),
-        cacheRemoteAssets: data.dec(_f$cacheRemoteAssets));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static SDConfig fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SDConfig>(map);
-  }
-
-  static SDConfig fromJson(String json) {
-    return ensureInitialized().decodeJson<SDConfig>(json);
-  }
-}
-
-mixin SDConfigMappable {
   String toJson() {
-    return SDConfigMapper.ensureInitialized()
-        .encodeJson<SDConfig>(this as SDConfig);
+    return ConfigMapper.ensureInitialized().encodeJson<Config>(this as Config);
   }
 
   Map<String, dynamic> toMap() {
-    return SDConfigMapper.ensureInitialized()
-        .encodeMap<SDConfig>(this as SDConfig);
+    return ConfigMapper.ensureInitialized().encodeMap<Config>(this as Config);
   }
 
-  SDConfigCopyWith<SDConfig, SDConfig, SDConfig> get copyWith =>
-      _SDConfigCopyWithImpl(this as SDConfig, $identity, $identity);
+  ConfigCopyWith<Config, Config, Config> get copyWith =>
+      _ConfigCopyWithImpl(this as Config, $identity, $identity);
   @override
   String toString() {
-    return SDConfigMapper.ensureInitialized().stringifyValue(this as SDConfig);
+    return ConfigMapper.ensureInitialized().stringifyValue(this as Config);
   }
 
   @override
   bool operator ==(Object other) {
-    return SDConfigMapper.ensureInitialized()
-        .equalsValue(this as SDConfig, other);
+    return ConfigMapper.ensureInitialized().equalsValue(this as Config, other);
   }
 
   @override
   int get hashCode {
-    return SDConfigMapper.ensureInitialized().hashValue(this as SDConfig);
+    return ConfigMapper.ensureInitialized().hashValue(this as Config);
   }
 }
 
-extension SDConfigValueCopy<$R, $Out> on ObjectCopyWith<$R, SDConfig, $Out> {
-  SDConfigCopyWith<$R, SDConfig, $Out> get $asSDConfig =>
-      $base.as((v, t, t2) => _SDConfigCopyWithImpl(v, t, t2));
+extension ConfigValueCopy<$R, $Out> on ObjectCopyWith<$R, Config, $Out> {
+  ConfigCopyWith<$R, Config, $Out> get $asConfig =>
+      $base.as((v, t, t2) => _ConfigCopyWithImpl(v, t, t2));
 }
 
-abstract class SDConfigCopyWith<$R, $In extends SDConfig, $Out>
-    implements ConfigCopyWith<$R, $In, $Out> {
+abstract class ConfigCopyWith<$R, $In extends Config, $Out>
+    implements BaseConfigCopyWith<$R, $In, $Out> {
   @override
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition;
@@ -175,17 +172,15 @@ abstract class SDConfigCopyWith<$R, $In extends SDConfig, $Out>
       String? style,
       TransitionOptions? transition,
       bool? cacheRemoteAssets});
-  SDConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _SDConfigCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SDConfig, $Out>
-    implements SDConfigCopyWith<$R, SDConfig, $Out> {
-  _SDConfigCopyWithImpl(super.value, super.then, super.then2);
+class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
+    implements ConfigCopyWith<$R, Config, $Out> {
+  _ConfigCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<SDConfig> $mapper =
-      SDConfigMapper.ensureInitialized();
+  late final ClassMapperBase<Config> $mapper = ConfigMapper.ensureInitialized();
   @override
   TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
       get transition =>
@@ -203,7 +198,7 @@ class _SDConfigCopyWithImpl<$R, $Out>
         if (cacheRemoteAssets != $none) #cacheRemoteAssets: cacheRemoteAssets
       }));
   @override
-  SDConfig $make(CopyWithData data) => SDConfig(
+  Config $make(CopyWithData data) => Config(
       background: data.get(#background, or: $value.background),
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
@@ -211,7 +206,6 @@ class _SDConfigCopyWithImpl<$R, $Out>
           data.get(#cacheRemoteAssets, or: $value.cacheRemoteAssets));
 
   @override
-  SDConfigCopyWith<$R2, SDConfig, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SDConfigCopyWithImpl($value, $cast, t);
+  ConfigCopyWith<$R2, Config, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ConfigCopyWithImpl($value, $cast, t);
 }

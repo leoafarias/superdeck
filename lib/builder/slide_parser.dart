@@ -4,7 +4,7 @@ import '../models/config_model.dart';
 import '../models/slide_model.dart';
 
 class SlideParser {
-  final SDConfig config;
+  final Config config;
 
   SlideParser({required this.config});
 

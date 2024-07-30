@@ -10,12 +10,12 @@ import '../schema/schema_values.dart';
 part 'config_model.mapper.dart';
 
 @MappableClass()
-abstract class Config with ConfigMappable {
+abstract class BaseConfig with BaseConfigMappable {
   final String? background;
   final String? style;
   final TransitionOptions? transition;
 
-  const Config({
+  const BaseConfig({
     required this.background,
     required this.style,
     required this.transition,
@@ -32,17 +32,17 @@ abstract class Config with ConfigMappable {
 }
 
 @MappableClass()
-class SDConfig extends Config with SDConfigMappable {
+class Config extends BaseConfig with ConfigMappable {
   final bool? cacheRemoteAssets;
 
-  const SDConfig({
+  const Config({
     required super.background,
     required super.style,
     required super.transition,
     this.cacheRemoteAssets,
   });
 
-  const SDConfig.empty()
+  const Config.empty()
       : this(
           cacheRemoteAssets: null,
           background: null,
@@ -50,11 +50,11 @@ class SDConfig extends Config with SDConfigMappable {
           transition: null,
         );
 
-  static const fromMap = SDConfigMapper.fromMap;
-  static const fromJson = SDConfigMapper.fromJson;
-  static SDConfig fromYaml(String yaml) => fromMap(converYamlToMap(yaml));
+  static const fromMap = ConfigMapper.fromMap;
+  static const fromJson = ConfigMapper.fromJson;
+  static Config fromYaml(String yaml) => fromMap(converYamlToMap(yaml));
 
-  static Future<SDConfig> load(File file) async {
+  static Future<Config> load(File file) async {
     final contents = await file.readAsString();
     return fromYaml(contents);
   }
@@ -65,7 +65,7 @@ class SDConfig extends Config with SDConfigMappable {
     return config;
   }
 
-  static final schema = Config.schema.merge(
+  static final schema = BaseConfig.schema.merge(
     {
       "cache_remote_assets": Schema.boolean.isOptional(),
       "markdown_file": Schema.string.isRequired().isPosixPath(),

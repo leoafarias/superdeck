@@ -2,21 +2,19 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
-import '../helpers/layout_builder.dart';
 import '../helpers/mappers.dart';
 import '../schema/schema_model.dart';
 import '../schema/schema_values.dart';
-import 'slide_model.dart';
 
 part 'options_model.mapper.dart';
 
 @MappableClass()
 class ContentOptions with ContentOptionsMappable {
   final ContentAlignment alignment;
-  final int flex;
+  final int? flex;
 
   const ContentOptions({
-    this.flex = 1,
+    this.flex,
     this.alignment = ContentAlignment.centerLeft,
   });
 
@@ -35,13 +33,18 @@ class ContentOptions with ContentOptionsMappable {
 
 @MappableClass()
 abstract class SplitOptions with SplitOptionsMappable {
-  final int flex;
-  final LayoutPosition position;
+  final int? _flex;
+  final LayoutPosition? _position;
 
   const SplitOptions({
-    this.flex = 1,
-    this.position = LayoutPosition.right,
-  });
+    int? flex,
+    LayoutPosition? position,
+  })  : _flex = flex,
+        _position = position;
+
+  int get flex => _flex ?? 1;
+
+  LayoutPosition get position => _position ?? LayoutPosition.left;
 
   static final schema = Schema(
     {
@@ -96,20 +99,21 @@ class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
 )
 class TransitionOptions with TransitionOptionsMappable {
   final TransitionType type;
-  final Duration duration;
-  final Duration delay;
-  final CurveType curve;
+  final Duration? duration;
+  final Duration? delay;
+  final CurveType? curve;
 
   const TransitionOptions({
     required this.type,
-    this.duration = const Duration(milliseconds: 200),
-    this.delay = const Duration(milliseconds: 0),
-    this.curve = CurveType.ease,
+    this.duration,
+    this.delay,
+    this.curve,
   });
 
   static const fromJson = TransitionOptionsMapper.fromJson;
 
-  Duration get totalAnimationDuration => duration + delay;
+  Duration get totalAnimationDuration =>
+      (duration ?? Duration.zero) + (delay ?? Duration.zero);
 
   TransitionOptions merge(TransitionOptions? other) {
     if (other == null) return this;
@@ -142,99 +146,7 @@ class ArgsSchema<T> {
   });
 }
 
-class Example<T> extends ExampleWidget {
-  final Widget Function(T) builder;
-
-  @override
-  final ArgsSchema<T>? schema;
-
-  const Example._({
-    required super.name,
-    required this.builder,
-    this.schema,
-  });
-
-  static Example device<T>({
-    required String name,
-    required Widget Function(T) builder,
-    ArgsSchema<T>? schema,
-  }) {
-    return Example<T>._(
-      name: name,
-      schema: schema,
-      builder: (args) {
-        return Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: builder(args),
-        );
-      },
-    );
-  }
-
-  factory Example({
-    required String name,
-    required Widget Function(T) builder,
-    ArgsSchema<T>? schema,
-  }) {
-    return Example._(
-      name: name,
-      schema: schema,
-      builder: builder,
-    );
-  }
-
-  @override
-  Widget build(args) {
-    return builder(args);
-  }
-}
-
-abstract class ExampleWidget<T> {
-  const ExampleWidget({
-    required this.name,
-  });
-
-  final String name;
-
-  T decode(Map<String, dynamic> args) {
-    if (schema?.decoder == null) {
-      return args as T;
-    } else {
-      return schema!.decoder(args);
-    }
-  }
-
-  ArgsSchema? get schema => null;
-
-  SchemaValidationResult _validate(Map<String, dynamic> args) {
-    if (schema?.validator == null) {
-      return SchemaValidationResult.valid(['widget', name]);
-    } else {
-      return schema!.validator.validate(['widget', name], args);
-    }
-  }
-
-  Widget call(Map<String, dynamic> args) {
-    final result = _validate(args);
-    if (!result.isValid) {
-      return Row(
-        children: [
-          Expanded(
-            child: Container(
-              color: Colors.red,
-              child: InvalidSlideBuilder(
-                config: InvalidSlide.schemaError(result),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-    return build(decode(args));
-  }
-
-  Widget build(T args);
-}
+typedef ExampleBuilder = Widget Function(BuildContext context);
 
 @MappableEnum()
 enum ImageFit {

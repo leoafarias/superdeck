@@ -13,7 +13,7 @@ class SlideMapper extends SubClassMapperBase<Slide> {
   static SlideMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideMapper._());
-      ConfigMapper.ensureInitialized().addSubMapper(_instance!);
+      BaseConfigMapper.ensureInitialized().addSubMapper(_instance!);
       SimpleSlideMapper.ensureInitialized();
       SplitSlideMapper.ensureInitialized();
       SectionsSlideMapper.ensureInitialized();
@@ -70,7 +70,7 @@ class SlideMapper extends SubClassMapperBase<Slide> {
   @override
   final dynamic discriminatorValue = 'Slide';
   @override
-  late final ClassMapperBase superMapper = ConfigMapper.ensureInitialized();
+  late final ClassMapperBase superMapper = BaseConfigMapper.ensureInitialized();
 
   static Slide _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
@@ -96,7 +96,7 @@ mixin SlideMappable {
 }
 
 abstract class SlideCopyWith<$R, $In extends Slide, $Out>
-    implements ConfigCopyWith<$R, $In, $Out> {
+    implements BaseConfigCopyWith<$R, $In, $Out> {
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;
   @override
@@ -139,7 +139,7 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(SimpleSlide v) => v.contentOptions;
   static const Field<SimpleSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content', opt: true);
   static String? _$style(SimpleSlide v) => v.style;
   static const Field<SimpleSlide, String> _f$style =
       Field('style', _$style, opt: true);

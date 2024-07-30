@@ -10,7 +10,7 @@ import 'config_model.dart';
 part 'slide_model.mapper.dart';
 
 @MappableClass(discriminatorKey: 'layout')
-abstract class Slide extends Config with SlideMappable {
+abstract class Slide extends BaseConfig with SlideMappable {
   final String? title;
   final String layout;
   final String data;
@@ -72,7 +72,7 @@ abstract class Slide extends Config with SlideMappable {
 
   static const fromJson = SlideMapper.fromJson;
 
-  static final schema = Config.schema.merge(
+  static final schema = BaseConfig.schema.merge(
     {
       "layout": Schema.string.isRequired(),
       "data": Schema.string.isRequired(),
@@ -88,7 +88,7 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
   SimpleSlide({
     super.title,
     super.background,
-    required super.contentOptions,
+    super.contentOptions,
     super.style,
     super.transition,
     required super.raw,

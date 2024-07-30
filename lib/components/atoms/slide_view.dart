@@ -67,24 +67,23 @@ class SlideView extends StatelessWidget {
                       assets: superdeckController.assets.watch(context),
                       isSnapshot: _isSnapshot,
                       child: SlideConstraints(
-                        (_) {
-                          if (slide is SimpleSlide) {
-                            return SimpleSlideBuilder(config: slide);
-                          } else if (slide is WidgetSlide) {
-                            return WidgetSlideBuilder(config: slide);
-                          } else if (slide is ImageSlide) {
-                            return ImageSlideBuilder(config: slide);
-                          } else if (slide is TwoColumnSlide) {
-                            return TwoColumnSlideBuilder(config: slide);
-                          } else if (slide is TwoColumnHeaderSlide) {
-                            return TwoColumnHeaderSlideBuilder(config: slide);
-                          } else if (slide is InvalidSlide) {
-                            return InvalidSlideBuilder(config: slide);
-                          } else {
-                            throw UnimplementedError(
+                        (_) => switch (slide) {
+                          (SimpleSlide slide) =>
+                            SimpleSlideBuilder(config: slide, spec: spec),
+                          (WidgetSlide slide) =>
+                            WidgetSlideBuilder(config: slide, spec: spec),
+                          (ImageSlide slide) =>
+                            ImageSlideBuilder(config: slide, spec: spec),
+                          (TwoColumnSlide slide) =>
+                            TwoColumnSlideBuilder(config: slide, spec: spec),
+                          (TwoColumnHeaderSlide slide) =>
+                            TwoColumnHeaderSlideBuilder(
+                                config: slide, spec: spec),
+                          (InvalidSlide slide) =>
+                            InvalidSlideBuilder(config: slide, spec: spec),
+                          (_) => throw UnimplementedError(
                               'Slide config not implemented',
-                            );
-                          }
+                            ),
                         },
                       ),
                     ),

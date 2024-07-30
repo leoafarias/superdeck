@@ -535,9 +535,9 @@ class ContentOptionsMapper extends ClassMapperBase<ContentOptions> {
   @override
   final String id = 'ContentOptions';
 
-  static int _$flex(ContentOptions v) => v.flex;
+  static int? _$flex(ContentOptions v) => v.flex;
   static const Field<ContentOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true, def: 1);
+      Field('flex', _$flex, opt: true);
   static ContentAlignment _$alignment(ContentOptions v) => v.alignment;
   static const Field<ContentOptions, ContentAlignment> _f$alignment = Field(
       'alignment', _$alignment,
@@ -623,9 +623,9 @@ class _ContentOptionsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ContentOptions> $mapper =
       ContentOptionsMapper.ensureInitialized();
   @override
-  $R call({int? flex, ContentAlignment? alignment}) =>
+  $R call({Object? flex = $none, ContentAlignment? alignment}) =>
       $apply(FieldCopyWithData({
-        if (flex != null) #flex: flex,
+        if (flex != $none) #flex: flex,
         if (alignment != null) #alignment: alignment
       }));
   @override
@@ -656,17 +656,17 @@ class SplitOptionsMapper extends ClassMapperBase<SplitOptions> {
   @override
   final String id = 'SplitOptions';
 
-  static int _$flex(SplitOptions v) => v.flex;
-  static const Field<SplitOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true, def: 1);
-  static LayoutPosition _$position(SplitOptions v) => v.position;
-  static const Field<SplitOptions, LayoutPosition> _f$position =
-      Field('position', _$position, opt: true, def: LayoutPosition.right);
+  static int? _$_flex(SplitOptions v) => v._flex;
+  static const Field<SplitOptions, int> _f$_flex =
+      Field('_flex', _$_flex, key: 'flex', opt: true);
+  static LayoutPosition? _$_position(SplitOptions v) => v._position;
+  static const Field<SplitOptions, LayoutPosition> _f$_position =
+      Field('_position', _$_position, key: 'position', opt: true);
 
   @override
   final MappableFields<SplitOptions> fields = const {
-    #flex: _f$flex,
-    #position: _f$position,
+    #_flex: _f$_flex,
+    #_position: _f$_position,
   };
   @override
   final bool ignoreNull = true;
@@ -721,19 +721,19 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
   static ImageFit? _$fit(ImageOptions v) => v.fit;
   static const Field<ImageOptions, ImageFit> _f$fit =
       Field('fit', _$fit, opt: true);
-  static int _$flex(ImageOptions v) => v.flex;
-  static const Field<ImageOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true, def: 1);
-  static LayoutPosition _$position(ImageOptions v) => v.position;
-  static const Field<ImageOptions, LayoutPosition> _f$position =
-      Field('position', _$position, opt: true, def: LayoutPosition.right);
+  static int? _$_flex(ImageOptions v) => v._flex;
+  static const Field<ImageOptions, int> _f$_flex =
+      Field('_flex', _$_flex, key: 'flex', opt: true);
+  static LayoutPosition? _$_position(ImageOptions v) => v._position;
+  static const Field<ImageOptions, LayoutPosition> _f$_position =
+      Field('_position', _$_position, key: 'position', opt: true);
 
   @override
   final MappableFields<ImageOptions> fields = const {
     #src: _f$src,
     #fit: _f$fit,
-    #flex: _f$flex,
-    #position: _f$position,
+    #_flex: _f$_flex,
+    #_position: _f$_position,
   };
   @override
   final bool ignoreNull = true;
@@ -742,8 +742,8 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
     return ImageOptions(
         src: data.dec(_f$src),
         fit: data.dec(_f$fit),
-        flex: data.dec(_f$flex),
-        position: data.dec(_f$position));
+        flex: data.dec(_f$_flex),
+        position: data.dec(_f$_position));
   }
 
   @override
@@ -815,20 +815,20 @@ class _ImageOptionsCopyWithImpl<$R, $Out>
   $R call(
           {String? src,
           Object? fit = $none,
-          int? flex,
-          LayoutPosition? position}) =>
+          Object? flex = $none,
+          Object? position = $none}) =>
       $apply(FieldCopyWithData({
         if (src != null) #src: src,
         if (fit != $none) #fit: fit,
-        if (flex != null) #flex: flex,
-        if (position != null) #position: position
+        if (flex != $none) #flex: flex,
+        if (position != $none) #position: position
       }));
   @override
   ImageOptions $make(CopyWithData data) => ImageOptions(
       src: data.get(#src, or: $value.src),
       fit: data.get(#fit, or: $value.fit),
-      flex: data.get(#flex, or: $value.flex),
-      position: data.get(#position, or: $value.position));
+      flex: data.get(#flex, or: $value._flex),
+      position: data.get(#position, or: $value._position));
 
   @override
   ImageOptionsCopyWith<$R2, ImageOptions, $Out2> $chain<$R2, $Out2>(
@@ -859,19 +859,19 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   static Map<String, dynamic> _$args(WidgetOptions v) => v.args;
   static const Field<WidgetOptions, Map<String, dynamic>> _f$args =
       Field('args', _$args, opt: true, def: const {});
-  static int _$flex(WidgetOptions v) => v.flex;
-  static const Field<WidgetOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true, def: 1);
-  static LayoutPosition _$position(WidgetOptions v) => v.position;
-  static const Field<WidgetOptions, LayoutPosition> _f$position =
-      Field('position', _$position, opt: true, def: LayoutPosition.right);
+  static int? _$_flex(WidgetOptions v) => v._flex;
+  static const Field<WidgetOptions, int> _f$_flex =
+      Field('_flex', _$_flex, key: 'flex', opt: true);
+  static LayoutPosition? _$_position(WidgetOptions v) => v._position;
+  static const Field<WidgetOptions, LayoutPosition> _f$_position =
+      Field('_position', _$_position, key: 'position', opt: true);
 
   @override
   final MappableFields<WidgetOptions> fields = const {
     #name: _f$name,
     #args: _f$args,
-    #flex: _f$flex,
-    #position: _f$position,
+    #_flex: _f$_flex,
+    #_position: _f$_position,
   };
   @override
   final bool ignoreNull = true;
@@ -880,8 +880,8 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
     return WidgetOptions(
         name: data.dec(_f$name),
         args: data.dec(_f$args),
-        flex: data.dec(_f$flex),
-        position: data.dec(_f$position));
+        flex: data.dec(_f$_flex),
+        position: data.dec(_f$_position));
   }
 
   @override
@@ -965,20 +965,20 @@ class _WidgetOptionsCopyWithImpl<$R, $Out, T>
   $R call(
           {String? name,
           Map<String, dynamic>? args,
-          int? flex,
-          LayoutPosition? position}) =>
+          Object? flex = $none,
+          Object? position = $none}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
-        if (flex != null) #flex: flex,
-        if (position != null) #position: position
+        if (flex != $none) #flex: flex,
+        if (position != $none) #position: position
       }));
   @override
   WidgetOptions<T> $make(CopyWithData data) => WidgetOptions(
       name: data.get(#name, or: $value.name),
       args: data.get(#args, or: $value.args),
-      flex: data.get(#flex, or: $value.flex),
-      position: data.get(#position, or: $value.position));
+      flex: data.get(#flex, or: $value._flex),
+      position: data.get(#position, or: $value._position));
 
   @override
   WidgetOptionsCopyWith<$R2, WidgetOptions<T>, $Out2, T> $chain<$R2, $Out2>(
@@ -1006,16 +1006,15 @@ class TransitionOptionsMapper extends ClassMapperBase<TransitionOptions> {
   static TransitionType _$type(TransitionOptions v) => v.type;
   static const Field<TransitionOptions, TransitionType> _f$type =
       Field('type', _$type);
-  static Duration _$duration(TransitionOptions v) => v.duration;
-  static const Field<TransitionOptions, Duration> _f$duration = Field(
-      'duration', _$duration,
-      opt: true, def: const Duration(milliseconds: 200));
-  static Duration _$delay(TransitionOptions v) => v.delay;
+  static Duration? _$duration(TransitionOptions v) => v.duration;
+  static const Field<TransitionOptions, Duration> _f$duration =
+      Field('duration', _$duration, opt: true);
+  static Duration? _$delay(TransitionOptions v) => v.delay;
   static const Field<TransitionOptions, Duration> _f$delay =
-      Field('delay', _$delay, opt: true, def: const Duration(milliseconds: 0));
-  static CurveType _$curve(TransitionOptions v) => v.curve;
+      Field('delay', _$delay, opt: true);
+  static CurveType? _$curve(TransitionOptions v) => v.curve;
   static const Field<TransitionOptions, CurveType> _f$curve =
-      Field('curve', _$curve, opt: true, def: CurveType.ease);
+      Field('curve', _$curve, opt: true);
 
   @override
   final MappableFields<TransitionOptions> fields = const {
@@ -1110,14 +1109,14 @@ class _TransitionOptionsCopyWithImpl<$R, $Out>
   @override
   $R call(
           {TransitionType? type,
-          Duration? duration,
-          Duration? delay,
-          CurveType? curve}) =>
+          Object? duration = $none,
+          Object? delay = $none,
+          Object? curve = $none}) =>
       $apply(FieldCopyWithData({
         if (type != null) #type: type,
-        if (duration != null) #duration: duration,
-        if (delay != null) #delay: delay,
-        if (curve != null) #curve: curve
+        if (duration != $none) #duration: duration,
+        if (delay != $none) #delay: delay,
+        if (curve != $none) #curve: curve
       }));
   @override
   TransitionOptions $make(CopyWithData data) => TransitionOptions(

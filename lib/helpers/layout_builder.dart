@@ -8,10 +8,13 @@ import '../superdeck.dart';
 import 'constants.dart';
 import 'measure_size.dart';
 
+const _defaultFlex = 1;
+
 abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
   final T config;
+  final SlideSpec spec;
 
-  const SlideBuilder({required this.config, super.key});
+  const SlideBuilder({required this.config, super.key, required this.spec});
 
   Widget buildContent() {
     return _buildContent(
@@ -22,26 +25,38 @@ abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
 
   @protected
   Widget _buildContent(String content, ContentOptions? options) {
-    return SlideContent(data: content, options: options);
+    return SlideContent(
+      data: content,
+      options: options,
+      spec: spec,
+    );
   }
 
   Widget buildContentSection(SectionData section) {
     return Expanded(
-      flex: section.options.flex,
+      flex: section.options.flex ?? _defaultFlex,
       child: _buildContent(section.content, section.options),
     );
   }
 }
 
 class SimpleSlideBuilder extends SlideBuilder<SimpleSlide> {
-  const SimpleSlideBuilder({required super.config, super.key});
+  const SimpleSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   @override
   Widget build(BuildContext context) => buildContent();
 }
 
 class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
-  const InvalidSlideBuilder({required super.config, super.key});
+  const InvalidSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +92,11 @@ class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
 }
 
 abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
-  const SplitSlideBuilder({required super.config, super.key});
+  const SplitSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   Widget buildSplitSlide(Widget side) {
     final position = config.options.position;
@@ -107,7 +126,11 @@ abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
 }
 
 class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
-  const WidgetSlideBuilder({required super.config, super.key});
+  const WidgetSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +138,7 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
 
     final examples = SlideProvider.examplesOf(context);
 
-    final builder = examples[options.name];
+    final exampleBuilder = examples[options.name];
 
     final side = SlideConstraints(
       (size) {
@@ -126,8 +149,9 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
               maxWidth: size.width,
               maxHeight: size.height,
             ),
-            child: CodePreview(
-              child: builder?.call(options.args),
+            child: ExamplePreview(
+              args: options.args,
+              builder: exampleBuilder!,
             ),
           ),
         );
@@ -139,7 +163,11 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
 }
 
 class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
-  const ImageSlideBuilder({required super.config, super.key});
+  const ImageSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -151,8 +179,7 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
     // THis slide breaks in half and I want to calculate the size based on if its in top or bottom
     // or left or right. Also there is a property called flex which is how much of the slide it takes
     // so I can use that to calculate the size of the canvas
-    final firstHalf =
-        config.contentOptions?.flex ?? const ContentOptions().flex;
+    final firstHalf = config.contentOptions?.flex ?? _defaultFlex;
     final imageHalf = config.options.flex;
 
 // available size const width = 1280.0;
@@ -196,7 +223,11 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
 }
 
 class TwoColumnSlideBuilder extends SlideBuilder<TwoColumnSlide> {
-  const TwoColumnSlideBuilder({required super.config, super.key});
+  const TwoColumnSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -216,13 +247,17 @@ class TwoColumnSlideBuilder extends SlideBuilder<TwoColumnSlide> {
 }
 
 class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
-  const TwoColumnHeaderSlideBuilder({required super.config, super.key});
+  const TwoColumnHeaderSlideBuilder({
+    required super.config,
+    super.key,
+    required super.spec,
+  });
 
   @override
   Widget build(BuildContext context) {
     final options = config.contentOptions ?? const ContentOptions();
     final alignment = options.alignment;
-    final flex = options.flex;
+    final flex = options.flex ?? _defaultFlex;
 
     final header = config.header;
 
@@ -231,7 +266,7 @@ class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
     return Column(
       children: [
         Expanded(
-          flex: header.options.flex,
+          flex: header.options.flex ?? _defaultFlex,
           child: Row(
             children: [
               buildContentSection((

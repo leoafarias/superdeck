@@ -30,7 +30,7 @@ class SuperDeckController {
   late final slides = computed(() => _data.value.value?.slides ?? []);
   late final assets = computed(() => _data.value.value?.assets ?? []);
 
-  final examples = mapSignal<String, Example>({});
+  final examples = mapSignal<String, ExampleBuilder>({});
 
   late final error = computed(
     () {
@@ -40,13 +40,13 @@ class SuperDeckController {
   );
 
   Future<void> initialize({
-    List<Example> examples = const [],
+    Map<String, ExampleBuilder> examples = const {},
     Style? style,
   }) async {
     // Unsubscribe to listeners in case its a retry
     batch(() {
       this.style.value = defaultStyle.merge(style);
-      this.examples.assign({for (var e in examples) e.name: e});
+      this.examples.assign(examples);
     });
 
     if (_data.isDone) {

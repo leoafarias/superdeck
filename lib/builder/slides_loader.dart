@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:watcher/watcher.dart';
 
 import '../helpers/constants.dart';
+import '../models/deck_reference_model.dart';
 import '../services/project_service.dart';
 import 'slide_parser.dart';
 import 'slides_pipeline.dart';
@@ -46,11 +47,13 @@ class SlidesLoader {
       }
     }
 
-    await Future.wait([
-      _projectService.saveConfigRef(deck.config),
-      _projectService.saveSlidesRef(result.slides),
-      _projectService.saveAssetsRef(result.neededAssets),
-    ]);
+    await _projectService.saveRef(
+      DeckReference(
+        config: deck.config,
+        slides: result.slides,
+        assets: await convertToAssets(result.neededAssets),
+      ),
+    );
   }
 
   void listen(
@@ -61,7 +64,7 @@ class SlidesLoader {
     _listenerSub = _projectService.watcher.events.listen((_) => onChange());
   }
 
-  Future<DeckReferences> loadDeck() async {
+  Future<DeckReference> loadDeck() async {
     if (kCanRunProcess) {
       await _generate();
     }

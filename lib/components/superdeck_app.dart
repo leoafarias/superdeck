@@ -23,11 +23,11 @@ class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
     super.key,
     this.style,
-    this.examples = const [],
+    this.examples = const <String, ExampleBuilder>{},
   });
 
   final Style? style;
-  final List<Example> examples;
+  final Map<String, ExampleBuilder> examples;
 
   static bool _isInitialized = false;
 
@@ -67,7 +67,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
-        !listEquals(widget.examples, oldWidget.examples)) {
+        !mapEquals(widget.examples, oldWidget.examples)) {
       _initialize.refresh();
     }
   }
@@ -101,6 +101,7 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
                   data: (_) => child!,
                   loading: () => const SizedBox(),
                   error: (error, _) {
+                    throw error;
                     return ExceptionWidget(
                       error,
                       onRetry: _initialize.reload,

@@ -10,16 +10,16 @@ class SlideContent extends StatelessWidget {
   const SlideContent({
     required this.data,
     required this.options,
+    required this.spec,
     super.key,
   });
 
   final String data;
   final ContentOptions? options;
+  final SlideSpec spec;
 
   @override
   Widget build(context) {
-    final spec = SlideSpec.of(context);
-
     final alignment = options?.alignment ?? ContentAlignment.center;
 
     final isExporting = SlideProvider.isSnapshotOf(context);

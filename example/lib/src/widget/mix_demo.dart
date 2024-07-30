@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:superdeck/components/molecules/code_preview.dart';
 import 'package:superdeck/schema/schema_model.dart';
 import 'package:superdeck/superdeck.dart';
 
@@ -99,32 +100,24 @@ class ExampleOptions {
   );
 }
 
-class MixExample extends ExampleWidget<ExampleOptions> {
-  MixExample() : super(name: 'mix');
-
-  @override
-  ExampleOptions decode(Map<String, dynamic> args) {
-    return ExampleOptions.fromMap(args);
-  }
-
-  @override
-  final schema = ExampleOptions.schema;
-
-  @override
-  Widget build(ExampleOptions args) {
-    return Builder(builder: (context) {
+Widget mixExampleBuilder(BuildContext context) {
+  final options = ExampleOptions.fromMap(context.args);
+  return Builder(
+    builder: (context) {
       return Center(
         child: Box(
           style: Style(
             _style(),
-            $box.height(args.height),
-            $box.width(args.width),
+            $box.height(options.height),
+            $box.width(options.width),
           ).animate(),
-          child: StyledText(args.text ?? 'Mix'),
+          child: StyledText(
+            options.text ?? 'Mix',
+          ),
         ),
       );
-    });
-  }
+    },
+  );
 }
 
 double _calculateDistance(Alignment alignment) {
