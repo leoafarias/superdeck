@@ -2,7 +2,7 @@
 
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
 import 'package:superdeck_cli/src/helpers/types.dart';
-import 'package:yaml/yaml.dart';
+import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
 
 class SlideParser {
   final Map<String, dynamic> config;
@@ -54,7 +54,7 @@ class SlideParser {
   RawSlide _runEach(String slideContents) {
     final frontMatter =
         _frontMatterRegex.firstMatch(slideContents)?.group(1) ?? '';
-    final options = loadYaml(frontMatter) as Map<String, dynamic>? ?? {};
+    final options = converYamlToMap(frontMatter);
 
     final content = slideContents
         .substring(_frontMatterRegex.matchAsPrefix(slideContents)?.end ?? 0)

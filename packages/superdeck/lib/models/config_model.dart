@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../helpers/utils.dart';
 import '../models/options_model.dart';
 import '../schema/schema_model.dart';
 import '../schema/schema_values.dart';
@@ -52,12 +49,6 @@ class Config extends BaseConfig with ConfigMappable {
 
   static const fromMap = ConfigMapper.fromMap;
   static const fromJson = ConfigMapper.fromJson;
-  static Config fromYaml(String yaml) => fromMap(converYamlToMap(yaml));
-
-  static Future<Config> load(File file) async {
-    final contents = await file.readAsString();
-    return fromYaml(contents);
-  }
 
   Map<String, dynamic> toSlideMap() {
     final config = toMap();

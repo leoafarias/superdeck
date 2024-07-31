@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
 import 'package:superdeck_cli/src/helpers/slide_parser.dart';
-import 'package:yaml/yaml.dart';
+import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
 
 import 'slides_pipeline.dart';
 
@@ -15,18 +15,18 @@ class SlidesLoader {
 
   static final instance = SlidesLoader._();
 
-  Future<void> _generate() async {
+  Future<void> generate() async {
     log('Generating slides...');
     await kMarkdownFile.ensureExists();
+    await kGeneratedAssetsDir.ensureExists();
     final markdownRaw = kMarkdownFile.readAsStringSync();
     final files = await _loadGeneratedFiles();
+
     await kSlideRef.ensureExists();
 
-    final config = loadYaml(kProjectConfigFile.readAsStringSync())
-            as Map<String, dynamic>? ??
-        {};
+    final config = converYamlToMap(kProjectConfigFile.readAsStringSync());
 
-    final parser = SlideParser(config);
+    final parser = SlideParser(Map<String, dynamic>.from(config));
     final slides = parser.run(markdownRaw);
 
     final pipeline = SlidesPipeline(

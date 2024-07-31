@@ -1,4 +1,5 @@
 import 'package:args/command_runner.dart';
+import 'package:superdeck_cli/src/slides_loader.dart';
 
 class BuildCommand extends Command {
   @override
@@ -7,20 +8,11 @@ class BuildCommand extends Command {
   @override
   final description = 'Builds the presentation';
 
-  BuildCommand() {
-    argParser.addOption(
-      'output',
-      abbr: 'o',
-      help: 'The output directory',
-      defaultsTo: 'build',
-      valueHelp: 'output',
-    );
-  }
+  BuildCommand();
 
   @override
   Future<void> run() async {
-    final output = argResults!['output'] as String;
-
-    print('Building presentation to $output');
+    print('Building the presentation...');
+    await SlidesLoader.instance.generate();
   }
 }
