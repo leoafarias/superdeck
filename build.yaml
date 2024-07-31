@@ -3,7 +3,7 @@ targets:
     builders:
       dart_mappable_builder:
         generate_for:
-          - lib/**/*_model.dart
+          - lib/**/*.dart
       mix_generator|spec:
         generate_for:
           - lib/**/*_spec.dart

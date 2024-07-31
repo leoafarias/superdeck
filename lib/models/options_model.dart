@@ -5,6 +5,7 @@ import 'package:recase/recase.dart';
 import '../helpers/mappers.dart';
 import '../schema/schema_model.dart';
 import '../schema/schema_values.dart';
+import '../schema/validators.dart';
 
 part 'options_model.mapper.dart';
 
@@ -23,10 +24,10 @@ class ContentOptions with ContentOptionsMappable {
     return copyWith.$merge(other);
   }
 
-  static final schema = Schema(
+  static final schema = SchemaShape(
     {
-      "alignment": ContentAlignment.schema.isOptional(),
-      "flex": Schema.integer.isOptional(),
+      "alignment": ContentAlignment.schema.optional(),
+      "flex": Schema.integer.optional(),
     },
   );
 }
@@ -46,10 +47,10 @@ abstract class SplitOptions with SplitOptionsMappable {
 
   LayoutPosition get position => _position ?? LayoutPosition.left;
 
-  static final schema = Schema(
+  static final schema = SchemaShape(
     {
-      "flex": Schema.integer.isOptional(),
-      "position": LayoutPosition.schema.isOptional(),
+      "flex": Schema.integer,
+      "position": LayoutPosition.schema,
     },
   );
 }
@@ -68,8 +69,8 @@ class ImageOptions extends SplitOptions with ImageOptionsMappable {
 
   static final schema = SplitOptions.schema.merge(
     {
-      "fit": ImageFit.schema.isOptional(),
-      "src": Schema.string.isRequired(),
+      "fit": ImageFit.schema,
+      "src": Schema.string.required(),
     },
   );
 }
@@ -88,8 +89,8 @@ class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
 
   static final schema = SplitOptions.schema.merge(
     {
-      "name": Schema.string.isRequired(),
-      "args": Schema.any.isOptional(),
+      "name": Schema.string.required(),
+      "args": Schema.any.optional(),
     },
   );
 }
@@ -120,12 +121,12 @@ class TransitionOptions with TransitionOptionsMappable {
     return copyWith.$merge(other);
   }
 
-  static final schema = Schema(
+  static final schema = SchemaShape(
     {
-      "type": TransitionType.schema.isRequired(),
-      "duration": Schema.integer.isOptional(),
-      "delay": Schema.integer.isOptional(),
-      "curve": CurveType.schema.isOptional()
+      "type": TransitionType.schema.required(),
+      "duration": Schema.integer.optional(),
+      "delay": Schema.integer.optional(),
+      "curve": CurveType.schema.optional(),
     },
   );
 }
@@ -137,7 +138,7 @@ T mapDecoder<T>(Map<String, dynamic> args) {
 }
 
 class ArgsSchema<T> {
-  final Schema validator;
+  final SchemaShape validator;
   final Decoder<T> decoder;
 
   const ArgsSchema({
@@ -158,9 +159,7 @@ enum ImageFit {
   none,
   scaleDown;
 
-  static final schema = EnumSchema(
-    values: ImageFit.values.map((e) => e.name.snakeCase).toList(),
-  );
+  static final schema = Schema.string.isEnum(values);
 
   BoxFit toBoxFit() {
     return switch (this) {
@@ -251,9 +250,7 @@ enum TransitionType {
   spinPerfect,
   swing;
 
-  static final schema = EnumSchema(
-    values: TransitionType.values.map((e) => e.name.snakeCase).toList(),
-  );
+  static final schema = Schema.string.isEnum(values);
 }
 
 @MappableEnum()
@@ -274,9 +271,7 @@ enum CurveType {
   slowMiddle,
   linearToEaseOut;
 
-  static final schema = EnumSchema(
-    values: values.map((e) => e.name.snakeCase).toList(),
-  );
+  static final schema = Schema.string.isEnum(values);
 }
 
 @MappableEnum()
@@ -286,9 +281,7 @@ enum LayoutPosition {
   top,
   bottom;
 
-  static final schema = EnumSchema(
-    values: LayoutPosition.values.map((e) => e.name.snakeCase).toList(),
-  );
+  static final schema = Schema.string.isEnum(values);
 
   bool isHorizontal() {
     return switch (this) {
@@ -299,9 +292,7 @@ enum LayoutPosition {
     };
   }
 
-  bool isVertical() {
-    return !isHorizontal();
-  }
+  bool isVertical() => !isHorizontal();
 }
 
 @MappableEnum()
@@ -316,9 +307,7 @@ enum ContentAlignment {
   bottomCenter,
   bottomRight;
 
-  static final schema = EnumSchema(
-    values: ContentAlignment.values.map((e) => e.name.snakeCase).toList(),
-  );
+  static final schema = Schema.string.isEnum(values);
 
   Alignment toAlignment() {
     return switch (this) {
@@ -332,5 +321,14 @@ enum ContentAlignment {
       ContentAlignment.bottomCenter => Alignment.bottomCenter,
       ContentAlignment.bottomRight => Alignment.bottomRight,
     };
+  }
+}
+
+extension on SchemaValue<String> {
+  SchemaValue<String> isEnum<T extends Enum>(List<T> values) {
+    return copyWith(validators: [
+      ...validators,
+      ArrayValidator(values.map((e) => e.name.snakeCase).toList()),
+    ]);
   }
 }

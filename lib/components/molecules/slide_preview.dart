@@ -53,9 +53,9 @@ class SlideMarkdownPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rawYaml = slide.raw;
+    final rawYaml = slide.rawMarkdown;
     final options = '#### Options\n```yaml\n${rawYaml.trim()}\n```\n';
-    final data = '#### Content\n```markdown\n${slide.data}\n```\n';
+    final data = '#### Content\n```markdown\n${slide.content}\n```\n';
     final s = SlideSpecUtility.self;
     return SpecBuilder(
       style: defaultStyle.merge(

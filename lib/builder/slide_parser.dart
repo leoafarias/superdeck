@@ -70,7 +70,7 @@ class SlideParser {
 
     final mergedOptions = deepMerge(
       config.toSlideMap(),
-      {...options, 'raw': slideRaw, 'data': content},
+      {...options, 'rawMarkdown': slideRaw, 'content': content},
     );
 
     return Slide.parse(mergedOptions);

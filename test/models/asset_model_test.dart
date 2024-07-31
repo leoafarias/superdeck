@@ -95,7 +95,7 @@ void main() {
 
     test('thumbnail should return correct file path', () {
       final slide = SimpleSlide(
-          contentOptions: const ContentOptions(), raw: '', data: '');
+          contentOptions: const ContentOptions(), rawMarkdown: '', content: '');
       final thumbnailFile = SlideAsset.thumbnail(slide);
       expect(thumbnailFile.path, endsWith('${slide.hashKey}.png'));
     });

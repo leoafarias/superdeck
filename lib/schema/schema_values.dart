@@ -1,31 +1,57 @@
-import 'schema_model.dart';
+import 'package:flutter/material.dart';
+
+import 'schema_validation.dart';
 import 'validators.dart';
 
-abstract class SchemaValue<V> {
+class SchemaValue<V> {
   const SchemaValue({
-    required this.optional,
-    required this.validators,
-  });
+    bool optional = true,
+    this.validators = const [],
+  }) : optionalValue = optional;
 
   SchemaValue<V> copyWith({
     bool? optional,
     List<Validator<V>>? validators,
-  });
+  }) {
+    return SchemaValue<V>(
+      optional: optional ?? this.optionalValue,
+      validators: validators ?? this.validators,
+    );
+  }
 
-  SchemaValue<V> isRequired() {
+  SchemaValue<V> required() {
     return copyWith(optional: false);
   }
 
-  SchemaValue<V> isOptional() {
+  SchemaValue<V> optional() {
     return copyWith(optional: true);
   }
 
-  final bool optional;
+  @protected
+  final bool optionalValue;
+
   final List<Validator<V>> validators;
 
-  bool get required => !optional;
+  bool get requiredValue => !optionalValue;
 
-  V? tryParse(Object value) => value as V?;
+  V? tryParse(Object? value) {
+    if (value is V) {
+      return value;
+    }
+    if (V is int) {
+      return _tryParseInt(value) as V?;
+    }
+
+    if (V is double) {
+      return _tryParseDouble(value) as V?;
+    }
+
+    if (V is bool) {
+      return _tryParseBool(value) as V?;
+    }
+
+    return null;
+  }
 
   void validateOrThrow(Object value) {
     final result = validate([], value);
@@ -36,7 +62,7 @@ abstract class SchemaValue<V> {
 
   SchemaValidationResult validate(List<String> path, Object? value) {
     if (value == null) {
-      return optional
+      return optionalValue
           ? SchemaValidationResult.valid(path)
           : SchemaValidationResult.requiredPropMissing(path);
     }
@@ -59,141 +85,49 @@ abstract class SchemaValue<V> {
 }
 
 /// Used to remove value from SchemaMap
-class NullSchema extends SchemaValue<Null> {
-  const NullSchema({super.optional = false, super.validators = const []});
 
-  @override
-  NullSchema copyWith({
-    bool? optional,
-    List<Validator<Null>>? validators,
-  }) {
-    return NullSchema(
-      optional: optional ?? this.optional,
-      validators: validators ?? this.validators,
-    );
+double? _tryParseDouble(Object? value) {
+  if (value is double) {
+    return value;
   }
 
-  @override
-  Null tryParse(Object? value) {
-    return value == null ? null : null;
+  if (value is int) {
+    return value.toDouble();
   }
+
+  if (value is String) {
+    return double.tryParse(value);
+  }
+
+  return null;
 }
 
-class DoubleSchema extends SchemaValue<double> {
-  const DoubleSchema({super.optional = false, super.validators = const []});
-
-  @override
-  DoubleSchema copyWith({
-    bool? optional,
-    List<Validator<double>>? validators,
-  }) {
-    return DoubleSchema(
-      optional: optional ?? this.optional,
-      validators: validators ?? this.validators,
-    );
+bool? _tryParseBool(Object? value) {
+  if (value is bool) {
+    return value;
   }
 
-  @override
-  double? tryParse(Object value) {
-    if (value is double) {
-      return value;
+  if (value is String) {
+    if (value.toLowerCase() == 'true') {
+      return true;
+    } else if (value.toLowerCase() == 'false') {
+      return false;
     }
-
-    if (value is int) {
-      return value.toDouble();
-    }
-
-    if (value is String) {
-      return double.tryParse(value);
-    }
-
-    return null;
   }
+
+  return null;
 }
 
-class EnumSchema extends StringSchema {
-  final List<String> values;
-  const EnumSchema({
-    required this.values,
-    super.optional = false,
-    super.validators = const [],
-  });
-
-  @override
-  EnumSchema copyWith({
-    List<String>? values,
-    bool? optional,
-    List<Validator<String>>? validators,
-  }) {
-    return EnumSchema(
-      values: values ?? this.values,
-      optional: optional ?? this.optional,
-      validators: validators ?? this.validators,
-    );
+int? _tryParseInt(Object? value) {
+  if (value is int) {
+    return value;
   }
 
-  @override
-  SchemaValidationResult validate(List<String> path, Object? value) {
-    final result = super.validate(path, value);
-
-    if (result.isValid) {
-      final parsedValue = tryParse(value);
-
-      if (parsedValue != null && !values.contains(parsedValue)) {
-        return SchemaValidationResult.enumViolated(path, parsedValue, values);
-      }
-    }
-
-    return result;
-  }
-}
-
-class StringSchema extends SchemaValue<String> {
-  const StringSchema({super.optional = false, super.validators = const []});
-
-  @override
-  StringSchema copyWith({
-    bool? optional,
-    List<Validator<String>>? validators,
-  }) {
-    return StringSchema(
-      optional: optional ?? this.optional,
-      validators: validators ?? this.validators,
-    );
+  if (value is String) {
+    return int.tryParse(value);
   }
 
-  @override
-  String? tryParse(Object? value) {
-    return value is String ? value : null;
-  }
-}
-
-class IntegerSchema extends SchemaValue<int> {
-  const IntegerSchema({super.optional = false, super.validators = const []});
-
-  @override
-  IntegerSchema copyWith({
-    bool? optional,
-    List<Validator<int>>? validators,
-  }) {
-    return IntegerSchema(
-      optional: optional ?? this.optional,
-      validators: validators ?? this.validators,
-    );
-  }
-
-  @override
-  int? tryParse(Object value) {
-    if (value is int) {
-      return value;
-    }
-
-    if (value is String) {
-      return int.tryParse(value);
-    }
-
-    return null;
-  }
+  return null;
 }
 
 class BooleanSchema extends SchemaValue<bool> {
@@ -205,7 +139,7 @@ class BooleanSchema extends SchemaValue<bool> {
     List<Validator<bool>>? validators,
   }) {
     return BooleanSchema(
-      optional: optional ?? this.optional,
+      optional: optional ?? optionalValue,
       validators: validators ?? this.validators,
     );
   }
@@ -247,6 +181,13 @@ extension StringSchemaExt on SchemaValue<String> {
     return copyWith(validators: [
       ...validators,
       const HexColorValidator(),
+    ]);
+  }
+
+  SchemaValue<String> isArray(List<String> values) {
+    return copyWith(validators: [
+      ...validators,
+      ArrayValidator(values),
     ]);
   }
 

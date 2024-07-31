@@ -116,7 +116,7 @@ class MermaidConverterTask extends Task {
   FutureOr<TaskController> run(controller) async {
     final slide = controller.slide;
 
-    final matches = _mermaidBlockRegex.allMatches(slide.data);
+    final matches = _mermaidBlockRegex.allMatches(slide.content);
 
     if (matches.isEmpty) return controller;
     final replacements = <({int start, int end, String markdown})>[];
@@ -149,7 +149,7 @@ class MermaidConverterTask extends Task {
       }
     }
 
-    var replacedData = slide.data;
+    var replacedData = slide.content;
 
     // Apply replacements in reverse order
     for (var replacement in replacements.reversed) {
@@ -163,7 +163,7 @@ class MermaidConverterTask extends Task {
     }
 
     return controller.copyWith(
-      slide: slide.copyWith(data: replacedData),
+      slide: slide.copyWith(content: replacedData),
     );
   }
 }
@@ -175,7 +175,7 @@ class ImageCachingTask extends Task {
   Future<TaskController> run(controller) async {
     final slide = controller.slide;
 
-    var content = slide.data;
+    var content = slide.content;
     // Do not cache remot edata if cacheRemoteAssets is false
 
     // Get any url of images that are in the markdown

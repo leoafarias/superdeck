@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:superdeck/helpers/memory_image_provider.dart';
+import 'package:superdeck/helpers/cache_memory_image.dart';
 
 void main() {
   group('CachedMemoryImage', () {

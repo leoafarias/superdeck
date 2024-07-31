@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
-import '../../helpers/template_builder.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
 import 'cache_image_widget.dart';
@@ -10,16 +9,17 @@ import 'transition_widget.dart';
 
 class SlideView extends StatelessWidget {
   // If SlideView is a snapshot for image generation
-  final bool _isSnapshot;
+  final bool isSnapshot;
   const SlideView(
     this.slide, {
     super.key,
-  }) : _isSnapshot = false;
+    this.isSnapshot = false,
+  });
 
   const SlideView.snapshot(
     this.slide, {
     super.key,
-  }) : _isSnapshot = true;
+  }) : isSnapshot = true;
 
   final Slide slide;
 
@@ -40,7 +40,7 @@ class SlideView extends StatelessWidget {
           )
         : const SizedBox();
 
-    final duration = _isSnapshot ? Duration.zero : null;
+    final duration = isSnapshot ? Duration.zero : null;
 
     return TransitionWidget(
       key: ValueKey(slide.transition?.copyWith(duration: duration)),
@@ -64,26 +64,7 @@ class SlideView extends StatelessWidget {
                       spec: spec,
                       examples: superdeckController.examples.watch(context),
                       assets: superdeckController.assets.watch(context),
-                      isSnapshot: _isSnapshot,
-                      builder: (config) {
-                        return switch (config) {
-                          (SlideModel<SimpleSlide> config) =>
-                            SimpleTemplate(config),
-                          (SlideModel<WidgetSlide> config) =>
-                            WidgetTemplate(config),
-                          (SlideModel<ImageSlide> config) =>
-                            ImageTemplate(config),
-                          (SlideModel<TwoColumnSlide> config) =>
-                            TwoColumnTemplate(config),
-                          (SlideModel<TwoColumnHeaderSlide> config) =>
-                            TwoColumnHeaderTemplate(config),
-                          (SlideModel<InvalidSlide> config) =>
-                            InvalidTemplate(config),
-                          (_) => throw UnimplementedError(
-                              'Slide config not implemented',
-                            ),
-                        } as TemplateBuilder;
-                      },
+                      isSnapshot: isSnapshot,
                     ),
                   ),
                 ],

@@ -630,7 +630,7 @@ packages:
       path: "../mix/packages/mix"
       relative: true
     source: path
-    version: "1.4.0"
+    version: "1.4.1"
   mix_annotations:
     dependency: "direct main"
     description:
@@ -644,7 +644,7 @@ packages:
       path: "../mix/packages/mix_generator"
       relative: true
     source: path
-    version: "0.2.2"
+    version: "0.2.2+1"
   mix_lint:
     dependency: "direct dev"
     description:

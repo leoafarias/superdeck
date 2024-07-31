@@ -1,155 +1,18 @@
-import 'package:dart_mappable/dart_mappable.dart';
-
+import 'schema_validation.dart';
 import 'schema_values.dart';
 import 'validators.dart';
 
-part 'schema_model.mapper.dart';
-
 typedef JSON = Map<String, dynamic>;
-
-class SchemaValidationException implements Exception {
-  final SchemaValidationResult result;
-
-  const SchemaValidationException(this.result);
-}
-
-class SchemaError {
-  const SchemaError._();
-  static const unallowedAdditionalProperty = 'unnalowed_additional_property';
-  static const enumViolated = 'enum_violated';
-  static const requiredPropMissing = 'required_property_missing';
-  static const invalidType = 'invalid_type';
-  static const constraints = 'constraints';
-  static const unknown = 'unknown';
-}
-
-@MappableClass()
-class SchemaValidationError with SchemaValidationErrorMappable {
-  final String type;
-  final String message;
-  const SchemaValidationError({
-    required this.type,
-    required this.message,
-  });
-
-  const SchemaValidationError.unknown()
-      : type = SchemaError.unknown,
-        message = 'Unknown error';
-
-  const SchemaValidationError.constraints(this.message)
-      : type = SchemaError.constraints;
-
-  const SchemaValidationError.unallowedAdditionalProperty(String property)
-      : type = SchemaError.unallowedAdditionalProperty,
-        message = 'Unallowed property: [$property]';
-
-  const SchemaValidationError.enumViolated(
-      String value, List<String> possibleValues)
-      : type = SchemaError.enumViolated,
-        message = 'Wrong value: [$value] \n\n Possible values: $possibleValues';
-
-  const SchemaValidationError.requiredPropMissing(String property)
-      : type = SchemaError.requiredPropMissing,
-        message = 'Missing prop: [$property]';
-
-  const SchemaValidationError.invalidType(String value, String expectedType)
-      : type = SchemaError.invalidType,
-        message = 'Invalid type: [$expectedType] got [$value]';
-
-  @override
-  String toString() {
-    return 'SchemaValidationError{type: $type, message: $message}';
-  }
-}
-
-@MappableClass()
-class SchemaValidationResult with SchemaValidationResultMappable {
-  final List<String> key;
-  final List<SchemaValidationError> errors;
-
-  const SchemaValidationResult({
-    required this.key,
-    required this.errors,
-  });
-
-  const SchemaValidationResult.valid(this.key) : errors = const [];
-
-  factory SchemaValidationResult.invalidType(
-    List<String> path,
-    Object value,
-    String expectedType,
-  ) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [
-        SchemaValidationError.invalidType(
-          value.runtimeType.toString(),
-          expectedType,
-        )
-      ],
-    );
-  }
-
-  factory SchemaValidationResult.unallowedAdditionalProperty(
-      List<String> path, String property) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaValidationError.unallowedAdditionalProperty(property)],
-    );
-  }
-
-  factory SchemaValidationResult.enumViolated(
-      List<String> path, String value, List<String> possibleValues) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaValidationError.enumViolated(value, possibleValues)],
-    );
-  }
-
-  factory SchemaValidationResult.requiredPropMissing(List<String> path) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaValidationError.requiredPropMissing(path.last)],
-    );
-  }
-
-  factory SchemaValidationResult.constraints(
-      List<String> path, String message) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaValidationError.constraints(message)],
-    );
-  }
-
-  @override
-  String toString() {
-    return '${errors.isEmpty ? 'VALID' : 'INVALID'}${errors.isEmpty ? ', Errors: $errors' : ''}';
-  }
-
-  bool get isValid => errors.isEmpty;
-
-  static const fromMap = SchemaValidationResultMapper.fromMap;
-  static const fromJson = SchemaValidationResultMapper.fromJson;
-}
 
 class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   final Map<String, SchemaValue> properties;
   final bool additionalProperties;
   const SchemaMap(
     this.properties, {
-    super.optional = false,
+    super.optional = true,
     this.additionalProperties = false,
     super.validators = const [],
   });
-
-  // optional constructor
-  const SchemaMap.optional(
-    this.properties, {
-    this.additionalProperties = false,
-  }) : super(
-          validators: const [],
-          optional: true,
-        );
 
   @override
   SchemaMap copyWith({
@@ -161,7 +24,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
     return SchemaMap(
       properties ?? this.properties,
       additionalProperties: additionalProperties ?? this.additionalProperties,
-      optional: optional ?? this.optional,
+      optional: optional ?? optionalValue,
       validators: validators ?? this.validators,
     );
   }
@@ -213,7 +76,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   @override
   SchemaValidationResult validate(List<String> path, Object? value) {
     if (value == null) {
-      return optional
+      return optionalValue
           ? SchemaValidationResult.valid(path)
           : SchemaValidationResult.requiredPropMissing(path);
     }
@@ -231,7 +94,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
     final keys = parsedValue.keys.toSet();
 
     final required = properties.entries
-        .where((entry) => !entry.value.optional)
+        .where((entry) => !entry.value.optionalValue)
         .map((entry) => entry.key);
 
     final requiredKeys = required.toSet();
@@ -241,7 +104,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
           key: path,
           errors: requiredKeys
               .difference(keys)
-              .map(SchemaValidationError.requiredPropMissing)
+              .map(SchemaError.requiredPropMissing)
               .toList());
     }
 
@@ -250,9 +113,8 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
       if (extraKeys.isNotEmpty) {
         return SchemaValidationResult(
           key: path,
-          errors: extraKeys
-              .map(SchemaValidationError.unallowedAdditionalProperty)
-              .toList(),
+          errors:
+              extraKeys.map(SchemaError.unallowedAdditionalProperty).toList(),
         );
       }
     }
@@ -263,9 +125,9 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
 
       if (prop == null) {
         return additionalProperties == false
-            ? SchemaValidationResult(key: path, errors: [
-                SchemaValidationError.unallowedAdditionalProperty(key)
-              ])
+            ? SchemaValidationResult(
+                key: path,
+                errors: [SchemaError.unallowedAdditionalProperty(key)])
             : SchemaValidationResult.valid(path);
       }
 
@@ -279,18 +141,22 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   }
 }
 
-class Schema extends SchemaMap {
-  const Schema(
+class SchemaShape extends SchemaMap {
+  const SchemaShape(
     super.properties, {
     super.additionalProperties = false,
   });
+}
 
-  static const string = StringSchema();
-  static const double = DoubleSchema();
-  static const integer = IntegerSchema();
-  static const boolean = BooleanSchema();
+typedef _DoubleType = double;
 
-  static const enumType = EnumSchema.new;
+class Schema {
+  const Schema._();
 
-  static const any = Schema({}, additionalProperties: true);
+  static const string = SchemaValue<String>();
+  static const map = SchemaShape.new;
+  static const double = SchemaValue<_DoubleType>();
+  static const integer = SchemaValue<int>();
+  static const boolean = SchemaValue<bool>();
+  static const any = SchemaShape({}, additionalProperties: true);
 }

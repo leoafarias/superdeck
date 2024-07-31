@@ -21,11 +21,11 @@ abstract class BaseConfig with BaseConfigMappable {
     required this.transition,
   });
 
-  static final schema = Schema(
+  static final schema = SchemaShape(
     {
-      "background": Schema.string.isOptional(),
-      "style": Schema.string.isOptional(),
-      "transition": TransitionOptions.schema.isOptional(),
+      "background": Schema.string,
+      "style": Schema.string,
+      "transition": TransitionOptions.schema.optional(),
     },
     additionalProperties: false,
   );
@@ -67,9 +67,9 @@ class Config extends BaseConfig with ConfigMappable {
 
   static final schema = BaseConfig.schema.merge(
     {
-      "cache_remote_assets": Schema.boolean.isOptional(),
-      "markdown_file": Schema.string.isRequired().isPosixPath(),
-      "assets_dir": Schema.string.isRequired().isPosixPath(),
+      "cache_remote_assets": Schema.boolean.optional(),
+      "markdown_file": Schema.string.required().isPosixPath(),
+      "assets_dir": Schema.string.required().isPosixPath(),
     },
   );
 }

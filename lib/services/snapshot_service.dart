@@ -36,7 +36,7 @@ class SnapshotService {
     required SnapshotQuality quality,
     required Slide slide,
   }) async {
-    final queueKey = shortHashId(slide.raw + quality.name);
+    final queueKey = shortHashId(slide.rawMarkdown + quality.name);
     try {
       while (_generationQueue.length > _maxConcurrentGenerations) {
         await Future.delayed(const Duration(milliseconds: 100));

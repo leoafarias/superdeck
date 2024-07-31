@@ -89,11 +89,11 @@ class ExampleOptions {
   }
 
   static final schema = ArgsSchema(
-    validator: Schema(
+    validator: SchemaShape(
       {
-        'height': Schema.double.isRequired(),
-        'width': Schema.double.isRequired(),
-        'text': Schema.string.isRequired(),
+        'height': Schema.double.required(),
+        'width': Schema.double.required(),
+        'text': Schema.string.required(),
       },
     ),
     decoder: fromMap,

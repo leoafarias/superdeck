@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 
 import '../helpers/measure_size.dart';
-import '../helpers/template_builder.dart';
 import '../models/asset_model.dart';
 import '../models/options_model.dart';
 import '../models/slide_model.dart';
 import '../styles/style_spec.dart';
+import '../templates/templates.dart';
 
 enum SlideProviderAspect {
   slide,
@@ -42,13 +42,13 @@ class SlideModel<T extends Slide> extends InheritedModel<SlideProviderAspect> {
     return config != oldWidget.config || spec != oldWidget.spec;
   }
 
-  static SlideModel of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SlideModel>()!;
+  static SlideModel<T> of<T extends Slide>(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SlideModel<T>>()!;
   }
 
   @override
   bool updateShouldNotifyDependent(
-    covariant SlideModel oldWidget,
+    covariant SlideModel<T> oldWidget,
     Set<SlideProviderAspect> dependencies,
   ) {
     if (dependencies.contains(SlideProviderAspect.slide) &&
@@ -75,8 +75,8 @@ class SlideModel<T extends Slide> extends InheritedModel<SlideProviderAspect> {
     return false;
   }
 
-  static Slide slideOf(BuildContext context) {
-    return SlideModel.of(context).config;
+  static T slideOf<T extends Slide>(BuildContext context) {
+    return SlideModel.of<T>(context).config;
   }
 
   static SlideSpec specOf(BuildContext context) {
@@ -102,10 +102,8 @@ class SlideModel<T extends Slide> extends InheritedModel<SlideProviderAspect> {
 }
 
 class SlideBuilder<T extends Slide> extends StatelessWidget {
-  final TemplateBuilder<T> Function(SlideModel<T>) builder;
   const SlideBuilder({
     super.key,
-    required this.builder,
     required this.config,
     required this.spec,
     required this.isSnapshot,
@@ -125,7 +123,7 @@ class SlideBuilder<T extends Slide> extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlideConstraints(
       child: Builder(builder: (context) {
-        return SlideModel(
+        return SlideModel<T>(
           constraints: SlideConstraints.of(context),
           config: config,
           spec: spec,
@@ -134,7 +132,8 @@ class SlideBuilder<T extends Slide> extends StatelessWidget {
           assets: assets,
           child: Builder(
             builder: (context) {
-              return builder(SlideModel.of<T>(context));
+              final model = SlideModel.of<T>(context);
+              return TemplateBuilder.buildTemplate(model);
             },
           ),
         );

@@ -3,6 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../helpers/section_tag.dart';
 import '../helpers/utils.dart';
 import '../schema/schema_model.dart';
+import '../schema/schema_validation.dart';
 import '../styles/style_util.dart';
 import '../superdeck.dart';
 import 'config_model.dart';
@@ -13,8 +14,8 @@ part 'slide_model.mapper.dart';
 abstract class Slide extends BaseConfig with SlideMappable {
   final String? title;
   final String layout;
-  final String data;
-  final String raw;
+  final String content;
+  final String rawMarkdown;
   final String hashKey;
 
   @MappableField(key: 'content')
@@ -22,14 +23,14 @@ abstract class Slide extends BaseConfig with SlideMappable {
 
   Slide({
     required this.layout,
-    required this.data,
-    required this.raw,
+    required this.content,
+    required this.rawMarkdown,
     required this.title,
     required this.contentOptions,
     required super.background,
     required super.style,
     required super.transition,
-  }) : hashKey = shortHashId(raw);
+  }) : hashKey = shortHashId(rawMarkdown);
 
   static Slide parse(Map<String, dynamic> map) {
     final layout = map['layout'] ??= LayoutType.simple;
@@ -74,11 +75,11 @@ abstract class Slide extends BaseConfig with SlideMappable {
 
   static final schema = BaseConfig.schema.merge(
     {
-      "layout": Schema.string.isRequired(),
-      "data": Schema.string.isRequired(),
-      "content": ContentOptions.schema.isOptional(),
-      "title": Schema.string.isOptional(),
-      "raw": Schema.string.isOptional(),
+      "layout": Schema.string.required(),
+      "data": Schema.string.required(),
+      "content": ContentOptions.schema,
+      "title": Schema.string,
+      "raw": Schema.string,
     },
   );
 }
@@ -91,8 +92,8 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
     super.contentOptions,
     super.style,
     super.transition,
-    required super.raw,
-    required super.data,
+    required super.rawMarkdown,
+    required super.content,
   }) : super(layout: LayoutType.simple);
 
   static const fromMap = SimpleSlideMapper.fromMap;
@@ -114,9 +115,9 @@ abstract class SplitSlide<T extends SplitOptions> extends Slide
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     required super.layout,
-    required super.raw,
+    required super.rawMarkdown,
   });
 }
 
@@ -128,9 +129,9 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
     super.background,
     required super.contentOptions,
     super.transition,
-    required super.data,
+    required super.content,
     required super.options,
-    required super.raw,
+    required super.rawMarkdown,
   }) : super(layout: LayoutType.image);
 
   static const fromMap = ImageSlideMapper.fromMap;
@@ -139,7 +140,7 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
 
   static final schema = Slide.schema.merge(
     {
-      'options': ImageOptions.schema.isRequired(),
+      'options': ImageOptions.schema.required(),
     },
   );
 }
@@ -153,8 +154,8 @@ class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
     super.background,
     required super.contentOptions,
     super.transition,
-    required super.data,
-    required super.raw,
+    required super.content,
+    required super.rawMarkdown,
   }) : super(layout: LayoutType.widget);
 
   static const fromMap = WidgetSlideMapper.fromMap;
@@ -163,7 +164,7 @@ class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
 
   static final schema = Slide.schema.merge(
     {
-      'options': WidgetOptions.schema.isRequired(),
+      'options': WidgetOptions.schema.required(),
     },
   );
 }
@@ -182,10 +183,10 @@ abstract class SectionsSlide extends Slide with SectionsSlideMappable {
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     this.sections = const {},
     required super.layout,
-    required super.raw,
+    required super.rawMarkdown,
   });
 
   Map<String, String>? _sectionCache;
@@ -193,7 +194,7 @@ abstract class SectionsSlide extends Slide with SectionsSlideMappable {
   Map<String, String> get _contentSections {
     if (_sectionCache != null) return _sectionCache!;
 
-    return _sectionCache = parseContentSections(data);
+    return _sectionCache = parseContentSections(content);
   }
 
   SectionData getSection(String section, [String? sectionFallback]) {
@@ -218,9 +219,9 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     super.sections,
-    required super.raw,
+    required super.rawMarkdown,
   }) : super(layout: LayoutType.twoColumn);
 
   SectionData get left => getSection(SectionTag.left, SectionTag.first);
@@ -232,9 +233,9 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
   static const fromJson = TwoColumnSlideMapper.fromJson;
 
   static final schema = Slide.schema.merge({
-    'sections': SchemaMap.optional({
-      'left': ContentOptions.schema.isOptional(),
-      'right': ContentOptions.schema.isOptional(),
+    'sections': SchemaMap({
+      'left': ContentOptions.schema.optional(),
+      'right': ContentOptions.schema.optional(),
     }),
   });
 }
@@ -248,9 +249,9 @@ class TwoColumnHeaderSlide extends SectionsSlide
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     super.sections,
-    required super.raw,
+    required super.rawMarkdown,
   }) : super(layout: LayoutType.twoColumnHeader);
 
   SectionData get header => getSection(SectionTag.header, SectionTag.first);
@@ -265,8 +266,8 @@ class TwoColumnHeaderSlide extends SectionsSlide
 
   static final schema = TwoColumnSlide.schema.merge(
     {
-      'sections': SchemaMap.optional({
-        'header': ContentOptions.schema.isOptional(),
+      'sections': SchemaMap({
+        'header': ContentOptions.schema.optional(),
       }),
     },
   );
@@ -280,19 +281,19 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
     super.background,
     super.style,
     super.transition,
-    required super.data,
-    required super.raw,
+    required super.content,
+    required super.rawMarkdown,
   }) : super(layout: LayoutType.invalid);
 
   InvalidSlide.message(String message)
       : super(
           layout: LayoutType.invalid,
           title: null,
-          data: message,
+          content: message,
           background: null,
           contentOptions: null,
           style: null,
-          raw: message,
+          rawMarkdown: message,
           transition: null,
         );
 
