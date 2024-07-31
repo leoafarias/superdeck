@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
-import '../../helpers/layout_builder.dart';
-import '../../helpers/measure_size.dart';
+import '../../helpers/template_builder.dart';
 import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
 import 'cache_image_widget.dart';
@@ -60,32 +59,31 @@ class SlideView extends StatelessWidget {
                   AnimatedBoxSpecWidget(
                     spec: spec.innerContainer,
                     duration: const Duration(milliseconds: 300),
-                    child: SlideProvider(
-                      slide: slide,
+                    child: SlideBuilder(
+                      config: slide,
                       spec: spec,
                       examples: superdeckController.examples.watch(context),
                       assets: superdeckController.assets.watch(context),
                       isSnapshot: _isSnapshot,
-                      child: SlideConstraints(
-                        (_) => switch (slide) {
-                          (SimpleSlide slide) =>
-                            SimpleSlideBuilder(config: slide, spec: spec),
-                          (WidgetSlide slide) =>
-                            WidgetSlideBuilder(config: slide, spec: spec),
-                          (ImageSlide slide) =>
-                            ImageSlideBuilder(config: slide, spec: spec),
-                          (TwoColumnSlide slide) =>
-                            TwoColumnSlideBuilder(config: slide, spec: spec),
-                          (TwoColumnHeaderSlide slide) =>
-                            TwoColumnHeaderSlideBuilder(
-                                config: slide, spec: spec),
-                          (InvalidSlide slide) =>
-                            InvalidSlideBuilder(config: slide, spec: spec),
+                      builder: (config) {
+                        return switch (config) {
+                          (SlideModel<SimpleSlide> config) =>
+                            SimpleTemplate(config),
+                          (SlideModel<WidgetSlide> config) =>
+                            WidgetTemplate(config),
+                          (SlideModel<ImageSlide> config) =>
+                            ImageTemplate(config),
+                          (SlideModel<TwoColumnSlide> config) =>
+                            TwoColumnTemplate(config),
+                          (SlideModel<TwoColumnHeaderSlide> config) =>
+                            TwoColumnHeaderTemplate(config),
+                          (SlideModel<InvalidSlide> config) =>
+                            InvalidTemplate(config),
                           (_) => throw UnimplementedError(
                               'Slide config not implemented',
                             ),
-                        },
-                      ),
+                        } as TemplateBuilder;
+                      },
                     ),
                   ),
                 ],

@@ -6,15 +6,20 @@ import '../components/molecules/slide_content.dart';
 import '../providers/slide_provider.dart';
 import '../superdeck.dart';
 import 'constants.dart';
-import 'measure_size.dart';
 
 const _defaultFlex = 1;
 
-abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
-  final T config;
-  final SlideSpec spec;
+abstract class TemplateBuilder<T extends Slide> extends StatelessWidget {
+  @protected
+  final SlideModel<T> _provider;
 
-  const SlideBuilder({required this.config, super.key, required this.spec});
+  T get config => _provider.config;
+  SlideSpec get spec => _provider.spec;
+
+  List<SlideAsset> get assets => _provider.assets;
+
+  const TemplateBuilder(SlideModel<T> provider, {super.key})
+      : _provider = provider;
 
   Widget buildContent() {
     return _buildContent(
@@ -29,33 +34,32 @@ abstract class SlideBuilder<T extends Slide> extends StatelessWidget {
       data: content,
       options: options,
       spec: spec,
+      isExporting: _provider.isSnapshot,
     );
   }
 
   Widget buildContentSection(SectionData section) {
     return Expanded(
-      flex: section.options.flex ?? _defaultFlex,
+      flex: section.options?.flex ?? _defaultFlex,
       child: _buildContent(section.content, section.options),
     );
   }
 }
 
-class SimpleSlideBuilder extends SlideBuilder<SimpleSlide> {
-  const SimpleSlideBuilder({
-    required super.config,
+class SimpleTemplate extends TemplateBuilder<SimpleSlide> {
+  const SimpleTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   @override
   Widget build(BuildContext context) => buildContent();
 }
 
-class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
-  const InvalidSlideBuilder({
-    required super.config,
+class InvalidTemplate extends TemplateBuilder<InvalidSlide> {
+  const InvalidTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   @override
@@ -91,11 +95,10 @@ class InvalidSlideBuilder extends SlideBuilder<InvalidSlide> {
   }
 }
 
-abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
-  const SplitSlideBuilder({
-    required super.config,
+abstract class SplitTemplate<T extends SplitSlide> extends TemplateBuilder<T> {
+  const SplitTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   Widget buildSplitSlide(Widget side) {
@@ -125,29 +128,27 @@ abstract class SplitSlideBuilder<T extends SplitSlide> extends SlideBuilder<T> {
   }
 }
 
-class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
-  const WidgetSlideBuilder({
-    required super.config,
+class WidgetTemplate extends SplitTemplate<WidgetSlide> {
+  const WidgetTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   @override
   Widget build(BuildContext context) {
     final options = config.options;
 
-    final examples = SlideProvider.examplesOf(context);
-
-    final exampleBuilder = examples[options.name];
+    final exampleBuilder = _provider.examples[options.name];
 
     final side = SlideConstraints(
-      (size) {
+      child: Builder(builder: (context) {
+        final constraints = SlideConstraints.of(context);
         return MediaQuery(
-          data: MediaQueryData(size: size),
+          data: MediaQueryData(size: constraints.biggest),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: size.width,
-              maxHeight: size.height,
+              maxWidth: constraints.biggest.width,
+              maxHeight: constraints.biggest.height,
             ),
             child: ExamplePreview(
               args: options.args,
@@ -155,24 +156,21 @@ class WidgetSlideBuilder extends SplitSlideBuilder<WidgetSlide> {
             ),
           ),
         );
-      },
+      }),
     );
 
     return buildSplitSlide(side);
   }
 }
 
-class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
-  const ImageSlideBuilder({
-    required super.config,
+class ImageTemplate extends SplitTemplate<ImageSlide> {
+  const ImageTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   @override
   Widget build(BuildContext context) {
-    final spec = SlideProvider.specOf(context);
-
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
 
@@ -222,11 +220,10 @@ class ImageSlideBuilder extends SplitSlideBuilder<ImageSlide> {
   }
 }
 
-class TwoColumnSlideBuilder extends SlideBuilder<TwoColumnSlide> {
-  const TwoColumnSlideBuilder({
-    required super.config,
+class TwoColumnTemplate extends TemplateBuilder<TwoColumnSlide> {
+  const TwoColumnTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   @override
@@ -246,11 +243,10 @@ class TwoColumnSlideBuilder extends SlideBuilder<TwoColumnSlide> {
   }
 }
 
-class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
-  const TwoColumnHeaderSlideBuilder({
-    required super.config,
+class TwoColumnHeaderTemplate extends TemplateBuilder<TwoColumnHeaderSlide> {
+  const TwoColumnHeaderTemplate(
+    super.provider, {
     super.key,
-    required super.spec,
   });
 
   @override
@@ -266,7 +262,7 @@ class TwoColumnHeaderSlideBuilder extends SlideBuilder<TwoColumnHeaderSlide> {
     return Column(
       children: [
         Expanded(
-          flex: header.options.flex ?? _defaultFlex,
+          flex: header.options?.flex ?? _defaultFlex,
           child: Row(
             children: [
               buildContentSection((

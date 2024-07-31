@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../helpers/measure_size.dart';
 import '../../helpers/utils.dart';
+import '../../providers/slide_provider.dart';
 import '../../styles/style_util.dart';
 import '../../superdeck.dart';
 import '../atoms/markdown_viewer.dart';
@@ -64,13 +64,13 @@ class SlideMarkdownPreview extends StatelessWidget {
         ),
       ),
       builder: (mix) {
-        return SlideConstraints((_) {
-          return AnimatedMarkdownViewer(
+        return SlideConstraints(
+          child: AnimatedMarkdownViewer(
             content: "$options\n$data\n",
             spec: SlideSpec.of(context),
             duration: Duration.zero,
-          );
-        });
+          ),
+        );
       },
     );
   }

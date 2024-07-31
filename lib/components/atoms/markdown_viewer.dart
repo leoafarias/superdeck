@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
 import '../../providers/slide_provider.dart';
@@ -80,9 +79,10 @@ Widget _imageBuilder(
     builder: (context) {
       final size = SlideConstraints.of(context).biggest;
 
-      final spec = SlideProvider.specOf(context);
-      final imageSpec = spec.image;
-      final constraints = calculateConstraints(size, spec.contentContainer);
+      final slide = SlideModel.of(context);
+      final imageSpec = slide.spec.image;
+      final constraints =
+          calculateConstraints(size, slide.spec.contentContainer);
       return ConstrainedBox(
         constraints: constraints,
         child: CacheImage(

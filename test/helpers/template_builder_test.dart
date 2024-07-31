@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:superdeck/components/molecules/slide_content.dart';
-import 'package:superdeck/helpers/layout_builder.dart';
+import 'package:superdeck/helpers/template_builder.dart';
 import 'package:superdeck/superdeck.dart';
 
 void main() {
@@ -14,7 +14,7 @@ void main() {
       const options = ContentOptions(flex: 2);
       final slide =
           SimpleSlide(data: content, contentOptions: options, raw: '');
-      final builder = SimpleSlideBuilder(config: slide, spec: spec);
+      final builder = SimpleTemplate(config: slide, spec: spec);
 
       await tester.pumpWidget(MaterialApp(home: Scaffold(body: builder)));
 
@@ -33,10 +33,9 @@ void main() {
       const options = ContentOptions(flex: 3);
       const section = (content: content, options: options);
       final slide = SimpleSlide(data: '', raw: '');
-      final builder = SimpleSlideBuilder(config: slide, spec: spec);
+      const builder = SimpleTemplate();
 
-      await tester
-          .pumpWidget(MaterialApp(home: builder.buildContentSection(section)));
+      await tester.pumpWidget(MaterialApp(home: builder.buildSection(section)));
 
       final expandedFinder = find.byType(Expanded);
       expect(expandedFinder, findsOneWidget);
@@ -61,7 +60,7 @@ void main() {
           data: 'Invalid slide content',
           raw: '',
           contentOptions: const ContentOptions());
-      final builder = InvalidSlideBuilder(
+      final builder = InvalidTemplate(
         config: slide,
         spec: const SlideSpec(),
       );

@@ -169,7 +169,7 @@ class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
 }
 
 @MappableRecord()
-typedef SectionData = ({String content, ContentOptions options});
+typedef SectionData = ({String content, ContentOptions? options});
 
 @MappableClass()
 abstract class SectionsSlide extends Slide with SectionsSlideMappable {
