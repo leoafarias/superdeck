@@ -1,5 +1,0 @@
-dependency_overrides:
-  mix_generator:
-    path: ../../mix/packages/mix_generator
-  mix:
-    path: ../../mix/packages/mix
