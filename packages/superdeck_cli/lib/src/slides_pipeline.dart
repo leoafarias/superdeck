@@ -37,22 +37,18 @@ class TaskController {
     )..neededAssets = neededAssets;
   }
 
-  void markFileAsNeeded(File file) {
-    final asset = _assets.firstWhereOrNull((f) => f.path == file.path);
+  Future<void> markFileAsNeeded(File file) async {
+    var asset = _assets.firstWhereOrNull((f) => f.path == file.path);
 
-    if (asset != null) {
-      markNeeded(asset);
-    } else {
-      img.decodePngFile(file.path).then((image) {
-        final asset = RawAsset(
-          path: file.path,
-          width: image!.width,
-          height: image.height,
-        );
-
-        markNeeded(asset);
-      });
+    if (asset == null) {
+      final image = await img.decodePngFile(file.path);
+      asset = RawAsset(
+        path: file.path,
+        width: image!.width,
+        height: image.height,
+      );
     }
+    markNeeded(asset);
   }
 
   void markNeeded(RawAsset asset) {
@@ -133,7 +129,7 @@ class SlideThumbnailTask extends Task {
     final file = buildAssetFile(controller.slide.key);
 
     if (await file.exists()) {
-      controller.markFileAsNeeded(file);
+      await controller.markFileAsNeeded(file);
     }
 
     return controller;
@@ -171,7 +167,7 @@ class MermaidConverterTask extends Task {
 
       // If file existeed or was create it then replace it
       if (await mermaidFile.exists()) {
-        controller.markFileAsNeeded(mermaidFile);
+        await controller.markFileAsNeeded(mermaidFile);
 
         replacements.add((
           start: match.start,

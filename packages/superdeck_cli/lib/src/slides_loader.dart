@@ -53,11 +53,12 @@ class SlidesLoader {
         }
       }
     }
+    print(result.neededAssets);
 
     await kSlideRef.writeAsString(jsonEncode({
       'config': config,
-      'slides': result.slides,
-      'assets': result.neededAssets,
+      'slides': result.slides.map((e) => e.toMap()).toList(),
+      'assets': result.neededAssets.map((e) => e.toMap()).toList(),
     }));
   }
 }

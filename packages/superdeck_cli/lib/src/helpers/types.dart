@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class RawSlide {
   final Map<String, dynamic> data;
 
@@ -20,7 +18,7 @@ class RawSlide {
     );
   }
 
-  String toJson() => jsonEncode(data);
+  Map<String, dynamic> toMap() => data;
 }
 
 class RawAsset {
@@ -42,9 +40,9 @@ class RawAsset {
     );
   }
 
-  String toJson() => jsonEncode({
+  Map<String, dynamic> toMap() => {
         'path': path,
         'width': width,
         'height': height,
-      });
+      };
 }
