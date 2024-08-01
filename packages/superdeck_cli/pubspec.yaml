@@ -6,14 +6,12 @@ version: 0.0.1
 environment:
   sdk: ">=3.3.0 <4.0.0"
 
-executables:
-  superdeck: main
-    
-
 dependencies:
   yaml: ^3.1.2
   args: ^2.5.0
   path: ^1.9.0
+  collection: ^1.18.0
+  image: ^4.2.0
 
 
 dev_dependencies:

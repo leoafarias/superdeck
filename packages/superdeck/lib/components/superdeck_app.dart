@@ -55,19 +55,27 @@ class SuperDeckApp extends StatefulWidget {
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
   late final _initialize = futureSignal(() async {
-    await SuperDeckApp.initialize();
+    try {
+      await SuperDeckApp.initialize();
 
-    return superdeckController.initialize(
-      style: widget.style,
-      examples: widget.examples,
-    );
+      await superdeckController.initialize(
+        style: widget.style,
+        examples: widget.examples,
+      );
+    } catch (e, stackTrace) {
+      print('Error initializing SuperDeckApp: $e');
+      print(stackTrace);
+    }
   });
 
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.style != oldWidget.style ||
-        !mapEquals(widget.examples, oldWidget.examples)) {
+        !mapEquals(
+          widget.examples,
+          oldWidget.examples,
+        )) {
       _initialize.refresh();
     }
   }
@@ -101,7 +109,6 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
                   data: (_) => child!,
                   loading: () => const SizedBox(),
                   error: (error, _) {
-                    throw error;
                     return ExceptionWidget(
                       error,
                       onRetry: _initialize.reload,

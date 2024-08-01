@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
+import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
@@ -10,35 +11,25 @@ import 'package:superdeck_cli/src/services/mermaid_service.dart';
 
 final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
 
-class PipelineAsset {
-  final File asset;
-  final Uint8List data;
-
-  PipelineAsset({
-    required this.asset,
-    required this.data,
-  });
-}
-
 typedef PipelineResult = ({
   List<RawSlide> slides,
-  List<File> neededAssets,
+  List<RawAsset> neededAssets,
 });
 
 class TaskController {
   final RawSlide slide;
-  final List<File> _assets;
+  final List<RawAsset> _assets;
 
   TaskController({
     required this.slide,
-    required List<File> assets,
+    required List<RawAsset> assets,
   }) : _assets = assets;
 
-  List<File> neededAssets = [];
+  List<RawAsset> neededAssets = [];
 
   TaskController copyWith({
     RawSlide? slide,
-    List<File>? assets,
+    List<RawAsset>? assets,
   }) {
     return TaskController(
       slide: slide ?? this.slide,
@@ -46,7 +37,25 @@ class TaskController {
     )..neededAssets = neededAssets;
   }
 
-  void markNeeded(File asset) {
+  void markFileAsNeeded(File file) {
+    final asset = _assets.firstWhereOrNull((f) => f.path == file.path);
+
+    if (asset != null) {
+      markNeeded(asset);
+    } else {
+      img.decodePngFile(file.path).then((image) {
+        final asset = RawAsset(
+          path: file.path,
+          width: image!.width,
+          height: image.height,
+        );
+
+        markNeeded(asset);
+      });
+    }
+  }
+
+  void markNeeded(RawAsset asset) {
     neededAssets.add(asset);
   }
 }
@@ -58,7 +67,7 @@ class SlidesPipeline {
 
   Future<PipelineResult> run(
     List<RawSlide> slides,
-    List<File> assets,
+    List<RawAsset> assets,
   ) async {
     final futures = <Future<TaskController>>[];
 
@@ -124,7 +133,7 @@ class SlideThumbnailTask extends Task {
     final file = buildAssetFile(controller.slide.key);
 
     if (await file.exists()) {
-      controller.markNeeded(file);
+      controller.markFileAsNeeded(file);
     }
 
     return controller;
@@ -162,7 +171,7 @@ class MermaidConverterTask extends Task {
 
       // If file existeed or was create it then replace it
       if (await mermaidFile.exists()) {
-        controller.markNeeded(mermaidFile);
+        controller.markFileAsNeeded(mermaidFile);
 
         replacements.add((
           start: match.start,

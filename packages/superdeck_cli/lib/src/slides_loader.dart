@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
 import 'package:superdeck_cli/src/helpers/slide_parser.dart';
+import 'package:superdeck_cli/src/helpers/types.dart';
 import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
 
 import 'slides_pipeline.dart';
@@ -24,6 +25,12 @@ class SlidesLoader {
 
     await kSlideRef.ensureExists();
 
+    final reference =
+        jsonDecode(kSlideRef.readAsStringSync()) as Map<String, dynamic>;
+    final rawAssets = ((reference['assets'] ?? []) as List<dynamic>)
+        .map((e) => RawAsset.fromJson(e))
+        .toList();
+
     final config = converYamlToMap(kProjectConfigFile.readAsStringSync());
 
     final parser = SlideParser(Map<String, dynamic>.from(config));
@@ -37,7 +44,7 @@ class SlidesLoader {
       ],
     );
 
-    final result = await pipeline.run(slides, files);
+    final result = await pipeline.run(slides, rawAssets);
 
     for (var file in files) {
       if (!result.neededAssets.any((element) => element.path == file.path)) {
@@ -50,7 +57,7 @@ class SlidesLoader {
     await kSlideRef.writeAsString(jsonEncode({
       'config': config,
       'slides': result.slides,
-      'assets': result.neededAssets.map((e) => e.path).toList(),
+      'assets': result.neededAssets,
     }));
   }
 }

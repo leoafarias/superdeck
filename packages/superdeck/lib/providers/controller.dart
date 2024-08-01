@@ -52,6 +52,7 @@ class SuperDeckController {
     } else {
       await _data.future;
     }
+    // ProjectService.instance.listen(_data.reload);
   }
 
   void dispose() {

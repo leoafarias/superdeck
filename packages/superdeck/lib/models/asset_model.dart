@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 
 import '../helpers/mappers.dart';
@@ -56,17 +55,19 @@ enum SlideAssetType {
   ],
 )
 final class SlideAsset with SlideAssetMappable {
-  final File file;
-  final Size dimensions;
+  final String path;
+  final int width;
+  final int height;
 
   SlideAsset({
-    required this.file,
-    required this.dimensions,
+    required this.path,
+    required this.width,
+    required this.height,
   });
 
-  String get extension => p.extension(file.path);
+  String get extension => p.extension(path);
 
-  bool get isPortrait => dimensions.height > dimensions.width;
+  bool get isPortrait => height > width;
 
   bool get isLandscape => !isPortrait;
 

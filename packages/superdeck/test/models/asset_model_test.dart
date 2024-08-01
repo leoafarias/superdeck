@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:superdeck/superdeck.dart';
 
@@ -69,12 +68,11 @@ void main() {
   group('SlideAsset', () {
     late SlideAsset asset;
     late File file;
-    late Size dimensions;
 
     setUp(() {
       file = File('test.png');
-      dimensions = const Size(800, 600);
-      asset = SlideAsset(file: file, dimensions: dimensions);
+
+      asset = SlideAsset(path: file.path, width: 800, height: 600);
     });
 
     test('extension should return correct file extension', () {
@@ -87,8 +85,7 @@ void main() {
 
     test('isLandscape should return true when width is greater than height',
         () {
-      dimensions = const Size(1200, 800);
-      asset = SlideAsset(file: file, dimensions: dimensions);
+      asset = SlideAsset(path: file.path, width: 1200, height: 800);
       expect(asset.isLandscape, isTrue);
     });
   });

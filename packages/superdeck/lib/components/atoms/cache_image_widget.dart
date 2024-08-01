@@ -50,9 +50,9 @@ class CacheImage extends StatelessWidget {
     // cache the smallest dimension of the image
     // So set the other dimension to null
     if (asset.isPortrait) {
-      cacheHeight = min(size.height, asset.dimensions.height).toInt();
+      cacheHeight = min(size.height, asset.height).toInt();
     } else {
-      cacheWidth = min(size.width, asset.dimensions.width).toInt();
+      cacheWidth = min(size.width, asset.width).toInt();
     }
   } else {
     // If no asset is available, set both cacheWidth and cacheHeight
@@ -76,17 +76,17 @@ ImageProvider getImageProvider({
 }) {
   ImageProvider provider;
 
-  SlideAsset? asset;
+  SlideAsset? assetUrl;
 
   final assets = superdeckController.assets.watch(context);
 
   if (isAssetFile(File(url))) {
-    asset = assets.firstWhereOrNull((e) => e.file.path == url);
+    assetUrl = assets.firstWhereOrNull((e) => e.path == url);
   } else {
-    asset = assets.firstWhereOrNull((e) => e.file.path.contains(url));
+    assetUrl = assets.firstWhereOrNull((e) => e.path.contains(url));
   }
 
-  url = asset?.file.path ?? url;
+  url = assetUrl?.path ?? url;
 
   //  check if its a local path or a network path
   if (url.startsWith('http')) {
@@ -100,7 +100,7 @@ ImageProvider getImageProvider({
     }
   }
 
-  final (:width, :height) = calculateImageSize(targetSize, asset);
+  final (:width, :height) = calculateImageSize(targetSize, assetUrl);
 
   return ResizeImage.resizeIfNeeded(
     width,

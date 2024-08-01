@@ -22,3 +22,29 @@ class RawSlide {
 
   String toJson() => jsonEncode(data);
 }
+
+class RawAsset {
+  final String path;
+  final int width;
+  final int height;
+
+  const RawAsset({
+    required this.path,
+    required this.width,
+    required this.height,
+  });
+
+  static RawAsset fromJson(Map<String, dynamic> json) {
+    return RawAsset(
+      path: json['path'] as String,
+      width: json['width'] as int,
+      height: json['height'] as int,
+    );
+  }
+
+  String toJson() => jsonEncode({
+        'path': path,
+        'width': width,
+        'height': height,
+      });
+}

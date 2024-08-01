@@ -129,23 +129,27 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   @override
   final String id = 'SlideAsset';
 
-  static File _$file(SlideAsset v) => v.file;
-  static const Field<SlideAsset, File> _f$file = Field('file', _$file);
-  static Size _$dimensions(SlideAsset v) => v.dimensions;
-  static const Field<SlideAsset, Size> _f$dimensions =
-      Field('dimensions', _$dimensions);
+  static String _$path(SlideAsset v) => v.path;
+  static const Field<SlideAsset, String> _f$path = Field('path', _$path);
+  static int _$width(SlideAsset v) => v.width;
+  static const Field<SlideAsset, int> _f$width = Field('width', _$width);
+  static int _$height(SlideAsset v) => v.height;
+  static const Field<SlideAsset, int> _f$height = Field('height', _$height);
 
   @override
   final MappableFields<SlideAsset> fields = const {
-    #file: _f$file,
-    #dimensions: _f$dimensions,
+    #path: _f$path,
+    #width: _f$width,
+    #height: _f$height,
   };
   @override
   final bool ignoreNull = true;
 
   static SlideAsset _instantiate(DecodingData data) {
     return SlideAsset(
-        file: data.dec(_f$file), dimensions: data.dec(_f$dimensions));
+        path: data.dec(_f$path),
+        width: data.dec(_f$width),
+        height: data.dec(_f$height));
   }
 
   @override
@@ -199,7 +203,7 @@ extension SlideAssetValueCopy<$R, $Out>
 
 abstract class SlideAssetCopyWith<$R, $In extends SlideAsset, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({File? file, Size? dimensions});
+  $R call({String? path, int? width, int? height});
   SlideAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -212,14 +216,16 @@ class _SlideAssetCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SlideAsset> $mapper =
       SlideAssetMapper.ensureInitialized();
   @override
-  $R call({File? file, Size? dimensions}) => $apply(FieldCopyWithData({
-        if (file != null) #file: file,
-        if (dimensions != null) #dimensions: dimensions
+  $R call({String? path, int? width, int? height}) => $apply(FieldCopyWithData({
+        if (path != null) #path: path,
+        if (width != null) #width: width,
+        if (height != null) #height: height
       }));
   @override
   SlideAsset $make(CopyWithData data) => SlideAsset(
-      file: data.get(#file, or: $value.file),
-      dimensions: data.get(#dimensions, or: $value.dimensions));
+      path: data.get(#path, or: $value.path),
+      width: data.get(#width, or: $value.width),
+      height: data.get(#height, or: $value.height));
 
   @override
   SlideAssetCopyWith<$R2, SlideAsset, $Out2> $chain<$R2, $Out2>(
