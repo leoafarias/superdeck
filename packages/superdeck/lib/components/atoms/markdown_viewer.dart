@@ -79,10 +79,9 @@ Widget _imageBuilder(
     builder: (context) {
       final size = SlideConstraints.of(context).biggest;
 
-      final slide = SlideModel.of(context);
-      final imageSpec = slide.spec.image;
-      final constraints =
-          calculateConstraints(size, slide.spec.contentContainer);
+      final spec = SlideSpec.of(context);
+      final imageSpec = spec.image;
+      final constraints = calculateConstraints(size, spec.contentContainer);
       return ConstrainedBox(
         constraints: constraints,
         child: CacheImage(

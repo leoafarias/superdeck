@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -6,7 +5,6 @@ import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../services/project_service.dart';
-import '../styles/style_util.dart';
 import '../superdeck.dart';
 
 final superdeckController = SuperDeckController();
@@ -19,48 +17,30 @@ class SuperDeckController {
 
   factory SuperDeckController() => _instance;
 
-  final _data = futureSignal(ProjectService.instance.loadDeck);
+  final data = futureSignal(ProjectService.instance.loadDeck, lazy: false);
 
   final style = signal(const Style.empty(), debugLabel: 'Style');
 
-  late final loading = computed(() => _data.value is AsyncLoading);
+  late final loading = computed(() => data.value is AsyncLoading);
 
-  late final slides = computed(() => _data.value.value?.slides ?? []);
-  late final assets = computed(() => _data.value.value?.assets ?? []);
+  late final slides = computed(() => data.value.value?.slides ?? []);
+  late final assets = computed(() => data.value.value?.assets ?? []);
 
   final examples = mapSignal<String, ExampleBuilder>({});
 
   late final error = computed(
     () {
-      final data = _data.value;
-      return data is AsyncError ? data.error : null;
+      final value = data.value;
+      return value is AsyncError ? value.error : null;
     },
   );
-
-  Future<void> initialize({
-    Map<String, ExampleBuilder> examples = const {},
-    Style? style,
-  }) async {
-    // Unsubscribe to listeners in case its a retry
-    batch(() {
-      this.style.value = defaultStyle.merge(style);
-      this.examples.assign(examples);
-    });
-
-    if (_data.isDone) {
-      await _data.reload();
-    } else {
-      await _data.future;
-    }
-    // ProjectService.instance.listen(_data.reload);
-  }
 
   void dispose() {
     style.dispose();
     error.dispose();
     assets.dispose();
     slides.dispose();
-    _data.dispose();
+    data.dispose();
     examples.dispose();
   }
 }

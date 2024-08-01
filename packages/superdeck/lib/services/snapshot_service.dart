@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
+import '../providers/snapshot_provider.dart';
 import '../superdeck.dart';
 
 enum SnapshotQuality {
@@ -44,7 +45,7 @@ class SnapshotService {
       _generationQueue.add(queueKey);
 
       final image = await _fromWidgetToImage(
-        SlideView.snapshot(slide),
+        SnapshotProvider(isSnapshot: true, child: SlideView(slide)),
         context: kAppKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,

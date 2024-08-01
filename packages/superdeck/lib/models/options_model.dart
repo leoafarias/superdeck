@@ -76,7 +76,7 @@ class ImageOptions extends SplitOptions with ImageOptionsMappable {
 }
 
 @MappableClass()
-class WidgetOptions<T> extends SplitOptions with WidgetOptionsMappable {
+class WidgetOptions extends SplitOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
 

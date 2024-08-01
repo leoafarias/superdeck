@@ -2,34 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../models/options_model.dart';
+import '../../providers/snapshot_provider.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/markdown_viewer.dart';
 
 class SlideContent extends StatelessWidget {
   const SlideContent({
-    required this.data,
+    required this.content,
     required this.options,
-    required this.spec,
-    required this.isExporting,
     super.key,
   });
 
-  final String data;
-  final bool isExporting;
+  final String content;
+
   final ContentOptions? options;
-  final SlideSpec spec;
 
   @override
   Widget build(context) {
     final alignment = options?.alignment ?? ContentAlignment.center;
+    final spec = SlideSpec.of(context);
+    final isSnapshot = SnapshotProvider.of(context);
 
     Widget child = AnimatedMarkdownViewer(
-      content: data,
+      content: content,
       spec: spec,
       duration: Durations.medium1,
     );
 
-    if (!isExporting) {
+    if (!isSnapshot) {
       child = SingleChildScrollView(
         child: child,
       );

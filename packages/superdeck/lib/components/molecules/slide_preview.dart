@@ -6,13 +6,13 @@ import '../atoms/slide_view.dart';
 import 'scaled_app.dart';
 import 'split_view.dart';
 
-class SlidePreview extends StatelessWidget {
+class SlidePreview<T extends Slide> extends StatelessWidget {
   const SlidePreview(
     this.slide, {
     super.key,
   });
 
-  final Slide slide;
+  final T slide;
 
   @override
   Widget build(BuildContext context) {

@@ -2,13 +2,12 @@ part of 'templates.dart';
 
 class TwoColumnTemplate extends TemplateBuilder<TwoColumnSlide> {
   const TwoColumnTemplate(
-    super.model, {
+    super.config, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final config = model.config;
     final options = config.contentOptions ?? const ContentOptions();
     final alignment = options.alignment;
 
@@ -26,13 +25,12 @@ class TwoColumnTemplate extends TemplateBuilder<TwoColumnSlide> {
 
 class TwoColumnHeaderTemplate extends TemplateBuilder<TwoColumnHeaderSlide> {
   const TwoColumnHeaderTemplate(
-    super.model, {
+    super.config, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final config = model.config;
     final options = config.contentOptions ?? const ContentOptions();
     final alignment = options.alignment;
     final flex = options.flex ?? defaultFlex;

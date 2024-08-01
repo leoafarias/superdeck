@@ -9,14 +9,14 @@ void main() {
     const rawMarkdown = '''
 # Hello
 ''';
-    final slideConfig = SimpleSlide(data: rawMarkdown, key: 'simple-slide');
+    final slideConfig = SimpleSlide(content: rawMarkdown, key: 'simple-slide');
     testWidgets('builds content', (WidgetTester tester) async {
-      await tester.pumpWithSlideBuilder(slideConfig);
+      await tester.pumpSlide(slideConfig);
       final finder = find.byType(SimpleTemplate);
       expect(finder, findsOneWidget);
       // Check if template model equals to slide model
       final template = tester.widget<SimpleTemplate>(finder);
-      expect(template.model.config, slideConfig);
+      expect(template.config, slideConfig);
     });
   });
 }

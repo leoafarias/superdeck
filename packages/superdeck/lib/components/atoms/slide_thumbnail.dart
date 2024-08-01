@@ -177,11 +177,11 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   }
 }
 
-class SlideThumbnailDynamic extends StatelessWidget {
+class SlideThumbnailDynamic<T extends Slide> extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
   final int index;
-  final Slide slide;
+  final T slide;
 
   const SlideThumbnailDynamic({
     super.key,

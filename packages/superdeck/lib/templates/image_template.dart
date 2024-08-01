@@ -8,8 +8,7 @@ class ImageTemplate extends SplitTemplateBuilder<ImageSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final config = model.config;
-    final spec = model.spec;
+    final spec = SlideSpec.of(context);
     final src = config.options.src;
     final boxFit = config.options.fit?.toBoxFit() ?? spec.image.fit;
 

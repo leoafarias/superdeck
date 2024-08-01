@@ -2,7 +2,7 @@ part of 'templates.dart';
 
 class InvalidTemplate extends TemplateBuilder<InvalidSlide> {
   const InvalidTemplate(
-    super.model, {
+    super.config, {
     super.key,
   });
 

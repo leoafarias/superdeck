@@ -21,6 +21,9 @@ style: cover
 
 ---
 layout: image
+content:
+  alignment: bottom_right
+  flex: 1
 style: show_sections
 options:
   src: https://picsum.photos/900/700?waves
@@ -35,6 +38,7 @@ Create beautiful slides with images that fit your content.
 
 ##### Options
 ```yaml
+content:
 options:
   src: https//www.url.com/image.jpg
   fit: cover

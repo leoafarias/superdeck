@@ -9,16 +9,19 @@
         "fit": "cover"
       },
       "content": "> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo Farias",
-      "key": "El8xDsu8"
+      "key": "DMiweBMq",
+      "content_options": { "alignment": "bottom_right" }
     },
     {
       "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24wb3V5cThlZ3ExY2NvY3czcmozang0bGQ1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XzWd8acQ37byKR4tmd/giphy.gif",
       "style": "cover",
-      "key": "aShu2Vm6",
+      "key": "bfnlriXq",
+      "content_options": null,
       "content": "# Complex layout"
     },
     {
       "layout": "image",
+      "content": "## Image Layout\n\nCreate beautiful slides with images that fit your content.\n\n##### Options\n```yaml\ncontent:\noptions:\n  src: https//www.url.com/image.jpg\n  fit: cover\n  position: left\n  flex: 1\n```\n\n> Define position fit and flex options for the image.",
       "style": "show_sections",
       "options": {
         "src": "https://picsum.photos/900/700?waves",
@@ -26,8 +29,8 @@
         "position": "left",
         "flex": 1
       },
-      "key": "vTFZwHyo",
-      "content": "## Image Layout\n\nCreate beautiful slides with images that fit your content.\n\n##### Options\n```yaml\noptions:\n  src: https//www.url.com/image.jpg\n  fit: cover\n  position: left\n  flex: 1\n```\n\n> Define position fit and flex options for the image."
+      "key": "9wPFDzIT",
+      "content_options": { "alignment": "bottom_right", "flex": 1 }
     },
     {
       "layout": "two_column",
@@ -36,7 +39,8 @@
         "left": { "flex": 2 },
         "right": { "alignment": "bottom_left" }
       },
-      "key": "2oTGEbqt",
+      "key": "zZ3F13ZY",
+      "content_options": null,
       "content": "::left::\n\n# Two Column\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n::right::\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n\n\n```yaml\nsections:\n  left:\n    flex: 2\n  right:\n    alignment: bottom_left\n```"
     },
     {
@@ -48,7 +52,8 @@
         "header": { "alignment": "bottom_left" }
       },
       "style": "show_sections",
-      "key": "rM1XbfdO"
+      "key": "SHmGSyUB",
+      "content_options": { "alignment": "center", "flex": 2 }
     },
     {
       "style": "rad",
@@ -58,12 +63,14 @@
         "left": null,
         "right": { "alignment": "bottom_left", "flex": 2 }
       },
-      "key": "bt3HCjyv"
+      "key": "Ad4sj9H3",
+      "content_options": { "alignment": "center" }
     },
     {
       "style": "cover",
       "background": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif",
-      "key": "zXfqPfVD",
+      "key": "J7Nbh0zk",
+      "content_options": null,
       "content": "# Markdown support"
     },
     {
@@ -71,18 +78,21 @@
       "layout": "two_column",
       "sections": null,
       "content": "::left::\n\n\n**Bold Text**\n\n*Italic Text*\n\n~~Strikethrough~~\n\n`Inline Code`\n\n[Link here](https://github.com/leoafarias/superdeck)\n\n::right::\n\nLists\n\n1. Ordered list item 1\n2. Ordered list item 2\n\n- Unordered list item 1\n- Unordered list item 2\n\nQuotes\n\n> If you want to go fast, go alone. \n> If you want to go far, go together.\n> ### African Proverb",
-      "key": "qH3zHQwf"
+      "key": "ZiBdgDuC",
+      "content_options": { "flex": 4 }
     },
     {
       "layout": "two_column",
-      "key": "9BHcUKBE",
+      "key": "segi4wcj",
+      "content_options": null,
       "content": "::left::\n\n\nCode\n```dart\nint factorial(int n) {\n   return n == 0 ? 1 : n * factorial(n - 1);\n}\n```\n\nTasks\n- [ ] Item 1\n- [x] Item 2\n\nSubtasks\n\n- [x] Item 1\n  - [ ] Subitem 1\n\n::right::\n\nImages\n![Unsplash Image](https://picsum.photos/300/200?landscape)\n\n\nTable\n\n| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1A  | Cell 1B  |\n| Cell 2A  | Cell 2B  |\n\nDivider\n\n___"
     },
     {
       "title": "Mermaid example",
       "layout": "two_column",
-      "key": "Bp7o6RCC",
-      "content": "::left::\n\n![Mermaid Diagram](superdeck/generated/sd_mermaid_wRACwsNb.png)\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation."
+      "key": "ElKv6elN",
+      "content_options": null,
+      "content": "::left::\n\n![Mermaid Diagram](superdeck/generated/sd_mermaid_s3Iic43G.png)\n  \n\n::right::\n\n## Mermaid Support\n\nSuperdeck allows you to use Mermaid diagrams in your slides. It automatically converts the code into a visual representation."
     },
     {
       "layout": "widget",
@@ -90,15 +100,16 @@
         "name": "demo",
         "args": { "text": "Hello, Superdeck!", "height": 200.0, "width": 300.0 }
       },
-      "key": "IrZnYqye",
+      "key": "7r83tgXu",
+      "content_options": null,
       "content": "## Showcase your widgets"
     }
   ],
   "assets": [
     {
-      "path": "superdeck/generated/sd_mermaid_wRACwsNb.png",
+      "path": "superdeck/generated/sd_mermaid_s3Iic43G.png",
       "width": 600,
-      "height": 860
+      "height": 866
     }
   ]
 }

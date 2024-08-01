@@ -29,15 +29,15 @@ class SlideMapper extends SubClassMapperBase<Slide> {
 
   static String _$layout(Slide v) => v.layout;
   static const Field<Slide, String> _f$layout = Field('layout', _$layout);
-  static String _$data(Slide v) => v.data;
-  static const Field<Slide, String> _f$data = Field('data', _$data);
+  static String _$content(Slide v) => v.content;
+  static const Field<Slide, String> _f$content = Field('content', _$content);
   static String _$key(Slide v) => v.key;
   static const Field<Slide, String> _f$key = Field('key', _$key);
   static String? _$title(Slide v) => v.title;
   static const Field<Slide, String> _f$title = Field('title', _$title);
   static ContentOptions? _$contentOptions(Slide v) => v.contentOptions;
   static const Field<Slide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static String? _$background(Slide v) => v.background;
   static const Field<Slide, String> _f$background =
       Field('background', _$background);
@@ -50,7 +50,7 @@ class SlideMapper extends SubClassMapperBase<Slide> {
   @override
   final MappableFields<Slide> fields = const {
     #layout: _f$layout,
-    #data: _f$data,
+    #content: _f$content,
     #key: _f$key,
     #title: _f$title,
     #contentOptions: _f$contentOptions,
@@ -100,7 +100,7 @@ abstract class SlideCopyWith<$R, $In extends Slide, $Out>
       get transition;
   @override
   $R call(
-      {String? data,
+      {String? content,
       String? key,
       String? title,
       ContentOptions? contentOptions,
@@ -134,8 +134,9 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
   static const Field<SimpleSlide, String> _f$background =
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(SimpleSlide v) => v.contentOptions;
-  static const Field<SimpleSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content', opt: true);
+  static const Field<SimpleSlide, ContentOptions> _f$contentOptions = Field(
+      'contentOptions', _$contentOptions,
+      key: 'content_options', opt: true);
   static String? _$style(SimpleSlide v) => v.style;
   static const Field<SimpleSlide, String> _f$style =
       Field('style', _$style, opt: true);
@@ -144,8 +145,9 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
       Field('transition', _$transition, opt: true);
   static String _$key(SimpleSlide v) => v.key;
   static const Field<SimpleSlide, String> _f$key = Field('key', _$key);
-  static String _$data(SimpleSlide v) => v.data;
-  static const Field<SimpleSlide, String> _f$data = Field('data', _$data);
+  static String _$content(SimpleSlide v) => v.content;
+  static const Field<SimpleSlide, String> _f$content =
+      Field('content', _$content);
   static String _$layout(SimpleSlide v) => v.layout;
   static const Field<SimpleSlide, String> _f$layout =
       Field('layout', _$layout, mode: FieldMode.member);
@@ -158,7 +160,7 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
     #style: _f$style,
     #transition: _f$transition,
     #key: _f$key,
-    #data: _f$data,
+    #content: _f$content,
     #layout: _f$layout,
   };
   @override
@@ -179,7 +181,7 @@ class SimpleSlideMapper extends SubClassMapperBase<SimpleSlide> {
         style: data.dec(_f$style),
         transition: data.dec(_f$transition),
         key: data.dec(_f$key),
-        data: data.dec(_f$data));
+        content: data.dec(_f$content));
   }
 
   @override
@@ -247,7 +249,7 @@ abstract class SimpleSlideCopyWith<$R, $In extends SimpleSlide, $Out>
       String? style,
       TransitionOptions? transition,
       String? key,
-      String? data});
+      String? content});
   SimpleSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -275,7 +277,7 @@ class _SimpleSlideCopyWithImpl<$R, $Out>
           Object? style = $none,
           Object? transition = $none,
           String? key,
-          String? data}) =>
+          String? content}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
         if (background != $none) #background: background,
@@ -283,7 +285,7 @@ class _SimpleSlideCopyWithImpl<$R, $Out>
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
         if (key != null) #key: key,
-        if (data != null) #data: data
+        if (content != null) #content: content
       }));
   @override
   SimpleSlide $make(CopyWithData data) => SimpleSlide(
@@ -293,7 +295,7 @@ class _SimpleSlideCopyWithImpl<$R, $Out>
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
       key: data.get(#key, or: $value.key),
-      data: data.get(#data, or: $value.data));
+      content: data.get(#content, or: $value.content));
 
   @override
   SimpleSlideCopyWith<$R2, SimpleSlide, $Out2> $chain<$R2, $Out2>(
@@ -335,15 +337,16 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(SplitSlide v) => v.contentOptions;
   static const Field<SplitSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static String? _$style(SplitSlide v) => v.style;
   static const Field<SplitSlide, String> _f$style =
       Field('style', _$style, opt: true);
   static TransitionOptions? _$transition(SplitSlide v) => v.transition;
   static const Field<SplitSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(SplitSlide v) => v.data;
-  static const Field<SplitSlide, String> _f$data = Field('data', _$data);
+  static String _$content(SplitSlide v) => v.content;
+  static const Field<SplitSlide, String> _f$content =
+      Field('content', _$content);
   static String _$layout(SplitSlide v) => v.layout;
   static const Field<SplitSlide, String> _f$layout = Field('layout', _$layout);
   static String _$key(SplitSlide v) => v.key;
@@ -357,7 +360,7 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
     #contentOptions: _f$contentOptions,
     #style: _f$style,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #layout: _f$layout,
     #key: _f$key,
   };
@@ -418,7 +421,7 @@ abstract class SplitSlideCopyWith<$R, $In extends SplitSlide<T>, $Out,
       ContentOptions? contentOptions,
       String? style,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       String? key});
   SplitSlideCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -452,12 +455,13 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(ImageSlide v) => v.contentOptions;
   static const Field<ImageSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static TransitionOptions? _$transition(ImageSlide v) => v.transition;
   static const Field<ImageSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(ImageSlide v) => v.data;
-  static const Field<ImageSlide, String> _f$data = Field('data', _$data);
+  static String _$content(ImageSlide v) => v.content;
+  static const Field<ImageSlide, String> _f$content =
+      Field('content', _$content);
   static ImageOptions _$options(ImageSlide v) => v.options;
   static const Field<ImageSlide, ImageOptions> _f$options =
       Field('options', _$options);
@@ -474,7 +478,7 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
     #background: _f$background,
     #contentOptions: _f$contentOptions,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #options: _f$options,
     #key: _f$key,
     #layout: _f$layout,
@@ -501,7 +505,7 @@ class ImageSlideMapper extends SubClassMapperBase<ImageSlide> {
         background: data.dec(_f$background),
         contentOptions: data.dec(_f$contentOptions),
         transition: data.dec(_f$transition),
-        data: data.dec(_f$data),
+        content: data.dec(_f$content),
         options: data.dec(_f$options),
         key: data.dec(_f$key));
   }
@@ -572,7 +576,7 @@ abstract class ImageSlideCopyWith<$R, $In extends ImageSlide, $Out>
       String? background,
       ContentOptions? contentOptions,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       ImageOptions? options,
       String? key});
   ImageSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -604,7 +608,7 @@ class _ImageSlideCopyWithImpl<$R, $Out>
           Object? background = $none,
           Object? contentOptions = $none,
           Object? transition = $none,
-          String? data,
+          String? content,
           ImageOptions? options,
           String? key}) =>
       $apply(FieldCopyWithData({
@@ -613,7 +617,7 @@ class _ImageSlideCopyWithImpl<$R, $Out>
         if (background != $none) #background: background,
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (transition != $none) #transition: transition,
-        if (data != null) #data: data,
+        if (content != null) #content: content,
         if (options != null) #options: options,
         if (key != null) #key: key
       }));
@@ -624,7 +628,7 @@ class _ImageSlideCopyWithImpl<$R, $Out>
       background: data.get(#background, or: $value.background),
       contentOptions: data.get(#contentOptions, or: $value.contentOptions),
       transition: data.get(#transition, or: $value.transition),
-      data: data.get(#data, or: $value.data),
+      content: data.get(#content, or: $value.content),
       options: data.get(#options, or: $value.options),
       key: data.get(#key, or: $value.key));
 
@@ -655,8 +659,8 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
   static String? _$title(WidgetSlide v) => v.title;
   static const Field<WidgetSlide, String> _f$title =
       Field('title', _$title, opt: true);
-  static WidgetOptions<dynamic> _$options(WidgetSlide v) => v.options;
-  static const Field<WidgetSlide, WidgetOptions<dynamic>> _f$options =
+  static WidgetOptions _$options(WidgetSlide v) => v.options;
+  static const Field<WidgetSlide, WidgetOptions> _f$options =
       Field('options', _$options);
   static String? _$style(WidgetSlide v) => v.style;
   static const Field<WidgetSlide, String> _f$style =
@@ -666,12 +670,13 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(WidgetSlide v) => v.contentOptions;
   static const Field<WidgetSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static TransitionOptions? _$transition(WidgetSlide v) => v.transition;
   static const Field<WidgetSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(WidgetSlide v) => v.data;
-  static const Field<WidgetSlide, String> _f$data = Field('data', _$data);
+  static String _$content(WidgetSlide v) => v.content;
+  static const Field<WidgetSlide, String> _f$content =
+      Field('content', _$content);
   static String _$key(WidgetSlide v) => v.key;
   static const Field<WidgetSlide, String> _f$key = Field('key', _$key);
   static String _$layout(WidgetSlide v) => v.layout;
@@ -686,7 +691,7 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
     #background: _f$background,
     #contentOptions: _f$contentOptions,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #key: _f$key,
     #layout: _f$layout,
   };
@@ -713,7 +718,7 @@ class WidgetSlideMapper extends SubClassMapperBase<WidgetSlide> {
         background: data.dec(_f$background),
         contentOptions: data.dec(_f$contentOptions),
         transition: data.dec(_f$transition),
-        data: data.dec(_f$data),
+        content: data.dec(_f$content),
         key: data.dec(_f$key));
   }
 
@@ -767,10 +772,9 @@ extension WidgetSlideValueCopy<$R, $Out>
 }
 
 abstract class WidgetSlideCopyWith<$R, $In extends WidgetSlide, $Out>
-    implements SplitSlideCopyWith<$R, $In, $Out, WidgetOptions<dynamic>> {
+    implements SplitSlideCopyWith<$R, $In, $Out, WidgetOptions> {
   @override
-  WidgetOptionsCopyWith<$R, WidgetOptions<dynamic>, WidgetOptions<dynamic>,
-      dynamic> get options;
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options;
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;
@@ -780,12 +784,12 @@ abstract class WidgetSlideCopyWith<$R, $In extends WidgetSlide, $Out>
   @override
   $R call(
       {String? title,
-      WidgetOptions<dynamic>? options,
+      WidgetOptions? options,
       String? style,
       String? background,
       ContentOptions? contentOptions,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       String? key});
   WidgetSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -799,9 +803,8 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
   late final ClassMapperBase<WidgetSlide> $mapper =
       WidgetSlideMapper.ensureInitialized();
   @override
-  WidgetOptionsCopyWith<$R, WidgetOptions<dynamic>, WidgetOptions<dynamic>,
-          dynamic>
-      get options => ($value.options as WidgetOptions<dynamic>)
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options =>
+      ($value.options as WidgetOptions)
           .copyWith
           .$chain((v) => call(options: v));
   @override
@@ -815,12 +818,12 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
   @override
   $R call(
           {Object? title = $none,
-          WidgetOptions<dynamic>? options,
+          WidgetOptions? options,
           Object? style = $none,
           Object? background = $none,
           Object? contentOptions = $none,
           Object? transition = $none,
-          String? data,
+          String? content,
           String? key}) =>
       $apply(FieldCopyWithData({
         if (title != $none) #title: title,
@@ -829,7 +832,7 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
         if (background != $none) #background: background,
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (transition != $none) #transition: transition,
-        if (data != null) #data: data,
+        if (content != null) #content: content,
         if (key != null) #key: key
       }));
   @override
@@ -840,7 +843,7 @@ class _WidgetSlideCopyWithImpl<$R, $Out>
       background: data.get(#background, or: $value.background),
       contentOptions: data.get(#contentOptions, or: $value.contentOptions),
       transition: data.get(#transition, or: $value.transition),
-      data: data.get(#data, or: $value.data),
+      content: data.get(#content, or: $value.content),
       key: data.get(#key, or: $value.key));
 
   @override
@@ -876,15 +879,16 @@ class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(SectionsSlide v) => v.contentOptions;
   static const Field<SectionsSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static String? _$style(SectionsSlide v) => v.style;
   static const Field<SectionsSlide, String> _f$style =
       Field('style', _$style, opt: true);
   static TransitionOptions? _$transition(SectionsSlide v) => v.transition;
   static const Field<SectionsSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(SectionsSlide v) => v.data;
-  static const Field<SectionsSlide, String> _f$data = Field('data', _$data);
+  static String _$content(SectionsSlide v) => v.content;
+  static const Field<SectionsSlide, String> _f$content =
+      Field('content', _$content);
   static Map<String, ContentOptions?> _$sections(SectionsSlide v) => v.sections;
   static const Field<SectionsSlide, Map<String, ContentOptions?>> _f$sections =
       Field('sections', _$sections, opt: true, def: const {});
@@ -901,7 +905,7 @@ class SectionsSlideMapper extends SubClassMapperBase<SectionsSlide> {
     #contentOptions: _f$contentOptions,
     #style: _f$style,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #sections: _f$sections,
     #layout: _f$layout,
     #key: _f$key,
@@ -957,7 +961,7 @@ abstract class SectionsSlideCopyWith<$R, $In extends SectionsSlide, $Out>
       ContentOptions? contentOptions,
       String? style,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       Map<String, ContentOptions?>? sections,
       String? key});
   SectionsSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -988,15 +992,16 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
       Field('background', _$background, opt: true);
   static ContentOptions? _$contentOptions(TwoColumnSlide v) => v.contentOptions;
   static const Field<TwoColumnSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static String? _$style(TwoColumnSlide v) => v.style;
   static const Field<TwoColumnSlide, String> _f$style =
       Field('style', _$style, opt: true);
   static TransitionOptions? _$transition(TwoColumnSlide v) => v.transition;
   static const Field<TwoColumnSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(TwoColumnSlide v) => v.data;
-  static const Field<TwoColumnSlide, String> _f$data = Field('data', _$data);
+  static String _$content(TwoColumnSlide v) => v.content;
+  static const Field<TwoColumnSlide, String> _f$content =
+      Field('content', _$content);
   static Map<String, ContentOptions?> _$sections(TwoColumnSlide v) =>
       v.sections;
   static const Field<TwoColumnSlide, Map<String, ContentOptions?>> _f$sections =
@@ -1014,7 +1019,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
     #contentOptions: _f$contentOptions,
     #style: _f$style,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #sections: _f$sections,
     #key: _f$key,
     #layout: _f$layout,
@@ -1037,7 +1042,7 @@ class TwoColumnSlideMapper extends SubClassMapperBase<TwoColumnSlide> {
         contentOptions: data.dec(_f$contentOptions),
         style: data.dec(_f$style),
         transition: data.dec(_f$transition),
-        data: data.dec(_f$data),
+        content: data.dec(_f$content),
         sections: data.dec(_f$sections),
         key: data.dec(_f$key));
   }
@@ -1111,7 +1116,7 @@ abstract class TwoColumnSlideCopyWith<$R, $In extends TwoColumnSlide, $Out>
       ContentOptions? contentOptions,
       String? style,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       Map<String, ContentOptions?>? sections,
       String? key});
   TwoColumnSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -1146,7 +1151,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
           Object? contentOptions = $none,
           Object? style = $none,
           Object? transition = $none,
-          String? data,
+          String? content,
           Map<String, ContentOptions?>? sections,
           String? key}) =>
       $apply(FieldCopyWithData({
@@ -1155,7 +1160,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
-        if (data != null) #data: data,
+        if (content != null) #content: content,
         if (sections != null) #sections: sections,
         if (key != null) #key: key
       }));
@@ -1166,7 +1171,7 @@ class _TwoColumnSlideCopyWithImpl<$R, $Out>
       contentOptions: data.get(#contentOptions, or: $value.contentOptions),
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
-      data: data.get(#data, or: $value.data),
+      content: data.get(#content, or: $value.content),
       sections: data.get(#sections, or: $value.sections),
       key: data.get(#key, or: $value.key));
 
@@ -1203,7 +1208,7 @@ class TwoColumnHeaderSlideMapper
   static ContentOptions? _$contentOptions(TwoColumnHeaderSlide v) =>
       v.contentOptions;
   static const Field<TwoColumnHeaderSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static String? _$style(TwoColumnHeaderSlide v) => v.style;
   static const Field<TwoColumnHeaderSlide, String> _f$style =
       Field('style', _$style, opt: true);
@@ -1211,9 +1216,9 @@ class TwoColumnHeaderSlideMapper
       v.transition;
   static const Field<TwoColumnHeaderSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(TwoColumnHeaderSlide v) => v.data;
-  static const Field<TwoColumnHeaderSlide, String> _f$data =
-      Field('data', _$data);
+  static String _$content(TwoColumnHeaderSlide v) => v.content;
+  static const Field<TwoColumnHeaderSlide, String> _f$content =
+      Field('content', _$content);
   static Map<String, ContentOptions?> _$sections(TwoColumnHeaderSlide v) =>
       v.sections;
   static const Field<TwoColumnHeaderSlide, Map<String, ContentOptions?>>
@@ -1231,7 +1236,7 @@ class TwoColumnHeaderSlideMapper
     #contentOptions: _f$contentOptions,
     #style: _f$style,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #sections: _f$sections,
     #key: _f$key,
     #layout: _f$layout,
@@ -1254,7 +1259,7 @@ class TwoColumnHeaderSlideMapper
         contentOptions: data.dec(_f$contentOptions),
         style: data.dec(_f$style),
         transition: data.dec(_f$transition),
-        data: data.dec(_f$data),
+        content: data.dec(_f$content),
         sections: data.dec(_f$sections),
         key: data.dec(_f$key));
   }
@@ -1332,7 +1337,7 @@ abstract class TwoColumnHeaderSlideCopyWith<
       ContentOptions? contentOptions,
       String? style,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       Map<String, ContentOptions?>? sections,
       String? key});
   TwoColumnHeaderSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -1367,7 +1372,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
           Object? contentOptions = $none,
           Object? style = $none,
           Object? transition = $none,
-          String? data,
+          String? content,
           Map<String, ContentOptions?>? sections,
           String? key}) =>
       $apply(FieldCopyWithData({
@@ -1376,7 +1381,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
         if (contentOptions != $none) #contentOptions: contentOptions,
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
-        if (data != null) #data: data,
+        if (content != null) #content: content,
         if (sections != null) #sections: sections,
         if (key != null) #key: key
       }));
@@ -1387,7 +1392,7 @@ class _TwoColumnHeaderSlideCopyWithImpl<$R, $Out>
       contentOptions: data.get(#contentOptions, or: $value.contentOptions),
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
-      data: data.get(#data, or: $value.data),
+      content: data.get(#content, or: $value.content),
       sections: data.get(#sections, or: $value.sections),
       key: data.get(#key, or: $value.key));
 
@@ -1416,7 +1421,7 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
 
   static ContentOptions? _$contentOptions(InvalidSlide v) => v.contentOptions;
   static const Field<InvalidSlide, ContentOptions> _f$contentOptions =
-      Field('contentOptions', _$contentOptions, key: 'content');
+      Field('contentOptions', _$contentOptions, key: 'content_options');
   static String? _$title(InvalidSlide v) => v.title;
   static const Field<InvalidSlide, String> _f$title =
       Field('title', _$title, opt: true);
@@ -1429,8 +1434,9 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
   static TransitionOptions? _$transition(InvalidSlide v) => v.transition;
   static const Field<InvalidSlide, TransitionOptions> _f$transition =
       Field('transition', _$transition, opt: true);
-  static String _$data(InvalidSlide v) => v.data;
-  static const Field<InvalidSlide, String> _f$data = Field('data', _$data);
+  static String _$content(InvalidSlide v) => v.content;
+  static const Field<InvalidSlide, String> _f$content =
+      Field('content', _$content);
   static String _$key(InvalidSlide v) => v.key;
   static const Field<InvalidSlide, String> _f$key = Field('key', _$key);
   static String _$layout(InvalidSlide v) => v.layout;
@@ -1444,7 +1450,7 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
     #background: _f$background,
     #style: _f$style,
     #transition: _f$transition,
-    #data: _f$data,
+    #content: _f$content,
     #key: _f$key,
     #layout: _f$layout,
   };
@@ -1465,7 +1471,7 @@ class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
         background: data.dec(_f$background),
         style: data.dec(_f$style),
         transition: data.dec(_f$transition),
-        data: data.dec(_f$data),
+        content: data.dec(_f$content),
         key: data.dec(_f$key));
   }
 
@@ -1534,7 +1540,7 @@ abstract class InvalidSlideCopyWith<$R, $In extends InvalidSlide, $Out>
       String? background,
       String? style,
       TransitionOptions? transition,
-      String? data,
+      String? content,
       String? key});
   InvalidSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -1562,7 +1568,7 @@ class _InvalidSlideCopyWithImpl<$R, $Out>
           Object? background = $none,
           Object? style = $none,
           Object? transition = $none,
-          String? data,
+          String? content,
           String? key}) =>
       $apply(FieldCopyWithData({
         if (contentOptions != $none) #contentOptions: contentOptions,
@@ -1570,7 +1576,7 @@ class _InvalidSlideCopyWithImpl<$R, $Out>
         if (background != $none) #background: background,
         if (style != $none) #style: style,
         if (transition != $none) #transition: transition,
-        if (data != null) #data: data,
+        if (content != null) #content: content,
         if (key != null) #key: key
       }));
   @override
@@ -1580,7 +1586,7 @@ class _InvalidSlideCopyWithImpl<$R, $Out>
       background: data.get(#background, or: $value.background),
       style: data.get(#style, or: $value.style),
       transition: data.get(#transition, or: $value.transition),
-      data: data.get(#data, or: $value.data),
+      content: data.get(#content, or: $value.content),
       key: data.get(#key, or: $value.key));
 
   @override

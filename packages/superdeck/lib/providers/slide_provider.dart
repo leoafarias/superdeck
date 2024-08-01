@@ -2,142 +2,53 @@
 import 'package:flutter/material.dart';
 
 import '../helpers/measure_size.dart';
-import '../models/asset_model.dart';
-import '../models/options_model.dart';
 import '../models/slide_model.dart';
-import '../styles/style_spec.dart';
 import '../templates/templates.dart';
 
 enum SlideProviderAspect {
   slide,
-  spec,
-  isSnapshot,
-  examples,
-  assets,
   constraints,
 }
 
-class SlideModel<T extends Slide> extends InheritedModel<SlideProviderAspect> {
-  final T config;
-  final SlideSpec spec;
-  final BoxConstraints constraints;
-  // If slide is a snapshot for image generation
-  final bool isSnapshot;
-  final Map<String, ExampleBuilder> examples;
-  final List<SlideAsset> assets;
-
-  const SlideModel({
+class SlideProvider<T extends Slide> extends InheritedWidget {
+  const SlideProvider({
     super.key,
-    required this.config,
-    required this.spec,
-    required this.constraints,
-    required this.isSnapshot,
-    required this.examples,
-    required this.assets,
+    required this.slide,
     required super.child,
   });
 
+  final T slide;
+
+  static T of<T extends Slide>(BuildContext context) {
+    final slideProvider =
+        context.dependOnInheritedWidgetOfExactType<SlideProvider<T>>();
+    if (slideProvider == null) {
+      throw Exception('SlideProvider not found in context');
+    }
+    return slideProvider.slide;
+  }
+
   @override
-  bool updateShouldNotify(covariant SlideModel oldWidget) {
-    return config != oldWidget.config || spec != oldWidget.spec;
-  }
-
-  static SlideModel<T> of<T extends Slide>(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SlideModel<T>>()!;
-  }
-
-  @override
-  bool updateShouldNotifyDependent(
-    covariant SlideModel<T> oldWidget,
-    Set<SlideProviderAspect> dependencies,
-  ) {
-    if (dependencies.contains(SlideProviderAspect.slide) &&
-        config != oldWidget.config) {
-      return true;
-    }
-    if (dependencies.contains(SlideProviderAspect.spec) &&
-        spec != oldWidget.spec) {
-      return true;
-    }
-
-    if (dependencies.contains(SlideProviderAspect.isSnapshot) &&
-        isSnapshot != oldWidget.isSnapshot) {
-      return true;
-    }
-    if (dependencies.contains(SlideProviderAspect.examples) &&
-        examples != oldWidget.examples) {
-      return true;
-    }
-    if (dependencies.contains(SlideProviderAspect.assets) &&
-        assets != oldWidget.assets) {
-      return true;
-    }
-    return false;
-  }
-
-  static T slideOf<T extends Slide>(BuildContext context) {
-    return SlideModel.of<T>(context).config;
-  }
-
-  static SlideSpec specOf(BuildContext context) {
-    return SlideModel.of(context).spec;
-  }
-
-  static bool isSnapshotOf(BuildContext context) {
-    return SlideModel.of(context).isSnapshot;
-  }
-
-  static List<SlideAsset> assetsOf(BuildContext context) {
-    return SlideModel.of(context).assets;
-  }
-
-// TODO: only get notified if the individual example changes
-  static Map<String, ExampleBuilder> examplesOf(BuildContext context) {
-    return SlideModel.of(context).examples;
-  }
-
-  static BoxConstraints constraintsOf(BuildContext context) {
-    return SlideModel.of(context).constraints;
+  bool updateShouldNotify(covariant SlideProvider<T> oldWidget) {
+    return oldWidget.slide != slide;
   }
 }
 
-class SlideBuilder<T extends Slide> extends StatelessWidget {
-  const SlideBuilder({
+class SlideBuilder extends StatelessWidget {
+  const SlideBuilder(
+    this.config, {
     super.key,
-    required this.config,
-    required this.spec,
-    required this.isSnapshot,
-    required this.examples,
-    required this.assets,
   });
 
-  final T config;
-  final SlideSpec spec;
-
-  // If slide is a snapshot for image generation
-  final bool isSnapshot;
-  final Map<String, ExampleBuilder> examples;
-  final List<SlideAsset> assets;
+  final Slide config;
 
   @override
   Widget build(BuildContext context) {
-    return SlideConstraints(
-      child: Builder(builder: (context) {
-        return SlideModel<T>(
-          constraints: SlideConstraints.of(context),
-          config: config,
-          spec: spec,
-          isSnapshot: isSnapshot,
-          examples: examples,
-          assets: assets,
-          child: Builder(
-            builder: (context) {
-              final model = SlideModel.of<T>(context);
-              return TemplateBuilder.buildTemplate(model);
-            },
-          ),
-        );
-      }),
+    return SlideProvider(
+      slide: config,
+      child: SlideConstraints(
+        child: TemplateBuilder.buildTemplate(config),
+      ),
     );
   }
 }

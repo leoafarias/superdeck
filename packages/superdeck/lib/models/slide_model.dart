@@ -13,16 +13,15 @@ part 'slide_model.mapper.dart';
 abstract class Slide extends BaseConfig with SlideMappable {
   final String? title;
   final String layout;
-  final String data;
+  final String content;
 
   final String key;
 
-  @MappableField(key: 'content')
   final ContentOptions? contentOptions;
 
   Slide({
     required this.layout,
-    required this.data,
+    required this.content,
     required this.key,
     required this.title,
     required this.contentOptions,
@@ -92,7 +91,7 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
     super.style,
     super.transition,
     required super.key,
-    required super.data,
+    required super.content,
   }) : super(layout: LayoutType.simple);
 
   static const fromMap = SimpleSlideMapper.fromMap;
@@ -114,7 +113,7 @@ abstract class SplitSlide<T extends SplitOptions> extends Slide
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     required super.layout,
     required super.key,
   });
@@ -128,7 +127,7 @@ class ImageSlide extends SplitSlide<ImageOptions> with ImageSlideMappable {
     super.background,
     required super.contentOptions,
     super.transition,
-    required super.data,
+    required super.content,
     required super.options,
     required super.key,
   }) : super(layout: LayoutType.image);
@@ -153,7 +152,7 @@ class WidgetSlide extends SplitSlide<WidgetOptions> with WidgetSlideMappable {
     super.background,
     required super.contentOptions,
     super.transition,
-    required super.data,
+    required super.content,
     required super.key,
   }) : super(layout: LayoutType.widget);
 
@@ -182,7 +181,7 @@ abstract class SectionsSlide extends Slide with SectionsSlideMappable {
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     this.sections = const {},
     required super.layout,
     required super.key,
@@ -193,7 +192,7 @@ abstract class SectionsSlide extends Slide with SectionsSlideMappable {
   Map<String, String> get _contentSections {
     if (_sectionCache != null) return _sectionCache!;
 
-    return _sectionCache = parseContentSections(data);
+    return _sectionCache = parseContentSections(content);
   }
 
   SectionData getSection(String section, [String? sectionFallback]) {
@@ -218,7 +217,7 @@ class TwoColumnSlide extends SectionsSlide with TwoColumnSlideMappable {
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     super.sections,
     required super.key,
   }) : super(layout: LayoutType.twoColumn);
@@ -248,7 +247,7 @@ class TwoColumnHeaderSlide extends SectionsSlide
     required super.contentOptions,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     super.sections,
     required super.key,
   }) : super(layout: LayoutType.twoColumnHeader);
@@ -280,7 +279,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
     super.background,
     super.style,
     super.transition,
-    required super.data,
+    required super.content,
     required super.key,
   }) : super(layout: LayoutType.invalid);
 
@@ -288,7 +287,7 @@ class InvalidSlide extends Slide with InvalidSlideMappable {
       : super(
           layout: LayoutType.invalid,
           title: null,
-          data: message,
+          content: message,
           background: null,
           contentOptions: null,
           style: null,

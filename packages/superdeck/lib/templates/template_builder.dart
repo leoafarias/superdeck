@@ -2,43 +2,37 @@ part of 'templates.dart';
 
 sealed class TemplateBuilder<T extends Slide> extends StatelessWidget {
   @visibleForTesting
-  final SlideModel<T> model;
+  final T config;
 
   int get defaultFlex => 1;
 
-  List<SlideAsset> get assets => model.assets;
+  const TemplateBuilder(this.config, {super.key});
 
-  const TemplateBuilder(this.model, {super.key});
-
-  static TemplateBuilder<T> buildTemplate<T extends Slide>(
-    SlideModel<T> model,
-  ) {
-    return switch (model) {
-      (SlideModel<SimpleSlide> m) => SimpleTemplate(m),
-      (SlideModel<WidgetSlide> m) => WidgetTemplate(m),
-      (SlideModel<ImageSlide> m) => ImageTemplate(m),
-      (SlideModel<TwoColumnSlide> m) => TwoColumnTemplate(m),
-      (SlideModel<TwoColumnHeaderSlide> m) => TwoColumnHeaderTemplate(m),
-      (SlideModel<InvalidSlide> m) => InvalidTemplate(m),
+  static TemplateBuilder<T> buildTemplate<T extends Slide>(T config) {
+    return switch (config) {
+      (SimpleSlide c) => SimpleTemplate(c),
+      (WidgetSlide c) => WidgetTemplate(c),
+      (ImageSlide c) => ImageTemplate(c),
+      (TwoColumnSlide c) => TwoColumnTemplate(c),
+      (TwoColumnHeaderSlide c) => TwoColumnHeaderTemplate(c),
+      (InvalidSlide c) => InvalidTemplate(c),
       _ => throw UnimplementedError(
-          'Slide config not implemented ${model.config.runtimeType}'),
+          'Slide config not implemented ${config.runtimeType}'),
     } as TemplateBuilder<T>;
   }
 
   Widget buildContent() {
     return _buildContent(
-      model.config.data,
-      model.config.contentOptions,
+      config.content,
+      config.contentOptions,
     );
   }
 
   @protected
   Widget _buildContent(String content, ContentOptions? options) {
     return SlideContent(
-      data: content,
+      content: content,
       options: options,
-      spec: model.spec,
-      isExporting: model.isSnapshot,
     );
   }
 
@@ -53,18 +47,18 @@ sealed class TemplateBuilder<T extends Slide> extends StatelessWidget {
 abstract class SplitTemplateBuilder<T extends SplitSlide>
     extends TemplateBuilder<T> {
   const SplitTemplateBuilder(
-    super.model, {
+    super.config, {
     super.key,
   });
 
   Widget buildSplitSlide(Widget side) {
-    final position = model.config.options.position;
-    final flex = model.config.options.flex;
+    final position = config.options.position;
+    final flex = config.options.flex;
 
     List<Widget> children = [
       buildContentSection((
-        content: model.config.data,
-        options: model.config.contentOptions ?? const ContentOptions(),
+        content: config.content,
+        options: config.contentOptions ?? const ContentOptions(),
       )),
       Expanded(flex: flex, child: side),
     ];

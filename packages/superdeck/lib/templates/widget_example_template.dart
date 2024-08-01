@@ -8,9 +8,9 @@ class WidgetTemplate extends SplitTemplateBuilder<WidgetSlide> {
 
   @override
   Widget build(BuildContext context) {
-    final options = model.config.options;
+    final options = config.options;
 
-    final exampleBuilder = model.examples[options.name];
+    final exampleBuilder = ExamplesProvider.of(context)[options.name];
 
     return buildSplitSlide(SlideConstraints(
       child: Builder(builder: (context) {

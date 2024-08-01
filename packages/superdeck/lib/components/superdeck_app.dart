@@ -11,6 +11,8 @@ import '../../helpers/syntax_highlighter.dart';
 import '../../superdeck.dart';
 import '../helpers/constants.dart';
 import '../helpers/theme.dart';
+import '../providers/examples_provider.dart';
+import '../providers/style_provider.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
 import 'atoms/loading_indicator.dart';
@@ -22,11 +24,11 @@ final _uniqueKey = UniqueKey();
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
     super.key,
-    this.style,
+    this.style = const Style.empty(),
     this.examples = const <String, ExampleBuilder>{},
   });
 
-  final Style? style;
+  final Style style;
   final Map<String, ExampleBuilder> examples;
 
   static bool _isInitialized = false;
@@ -55,17 +57,7 @@ class SuperDeckApp extends StatefulWidget {
 
 class _SuperDeckAppState extends State<SuperDeckApp> {
   late final _initialize = futureSignal(() async {
-    try {
-      await SuperDeckApp.initialize();
-
-      await superdeckController.initialize(
-        style: widget.style,
-        examples: widget.examples,
-      );
-    } catch (e, stackTrace) {
-      print('Error initializing SuperDeckApp: $e');
-      print(stackTrace);
-    }
+    await SuperDeckApp.initialize();
   });
 
   @override
@@ -91,32 +83,38 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
     return Theme(
       data: theme,
       child: Builder(builder: (context) {
-        return MixTheme(
-          data: MixThemeData.withMaterial(),
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: 'Superdeck',
-            routerConfig: _router,
-            theme: Theme.of(context),
-            key: kAppKey,
-            builder: (context, child) {
-              final result = _initialize.watch(context);
+        return StyleProvider(
+          style: widget.style,
+          child: ExamplesProvider(
+            examples: widget.examples,
+            child: MixTheme(
+              data: MixThemeData.withMaterial(),
+              child: MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                title: 'Superdeck',
+                routerConfig: _router,
+                theme: Theme.of(context),
+                key: kAppKey,
+                builder: (context, child) {
+                  final result = _initialize.watch(context);
 
-              return LoadingOverlay(
-                isLoading: result.isLoading,
-                key: _uniqueKey,
-                child: result.map(
-                  data: (_) => child!,
-                  loading: () => const SizedBox(),
-                  error: (error, _) {
-                    return ExceptionWidget(
-                      error,
-                      onRetry: _initialize.reload,
-                    );
-                  },
-                ),
-              );
-            },
+                  return LoadingOverlay(
+                    isLoading: result.isLoading,
+                    key: _uniqueKey,
+                    child: result.map(
+                      data: (_) => child!,
+                      loading: () => const SizedBox(),
+                      error: (error, _) {
+                        return ExceptionWidget(
+                          error,
+                          onRetry: _initialize.reload,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         );
       }),

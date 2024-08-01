@@ -1,15 +1,9 @@
 // lib/slide_parser.dart
 
-import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
-import 'package:superdeck_cli/src/helpers/types.dart';
-import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
+import 'package:superdeck_cli/src/helpers/raw_models.dart';
 
 class SlideParser {
-  final Map<String, dynamic> config;
-
-  SlideParser(this.config);
-
-  final _frontMatterRegex = RegExp(r'---([\s\S]*?)---');
+  SlideParser();
 
   List<String> _splitSlides(String content) {
     final lines = content.split('\n');
@@ -48,25 +42,7 @@ class SlideParser {
 
   List<RawSlide> run(String contents) {
     final markdownContents = _splitSlides(contents.trim());
-    return markdownContents.map((slide) => _runEach(slide)).toList();
-  }
-
-  RawSlide _runEach(String slideContents) {
-    final frontMatter =
-        _frontMatterRegex.firstMatch(slideContents)?.group(1) ?? '';
-    final options = converYamlToMap(frontMatter);
-
-    final content = slideContents
-        .substring(_frontMatterRegex.matchAsPrefix(slideContents)?.end ?? 0)
-        .trim();
-
-    return RawSlide(
-      {
-        ...options,
-        'key': shortHashId(slideContents),
-        'content': content,
-      },
-    );
+    return markdownContents.map(RawSlide.fromYaml).toList();
   }
 }
 

@@ -5,9 +5,8 @@ import 'dart:io';
 
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
+import 'package:superdeck_cli/src/helpers/raw_models.dart';
 import 'package:superdeck_cli/src/helpers/slide_parser.dart';
-import 'package:superdeck_cli/src/helpers/types.dart';
-import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
 
 import 'slides_pipeline.dart';
 
@@ -25,24 +24,17 @@ class SlidesLoader {
 
     await kSlideRef.ensureExists();
 
-    final reference =
-        jsonDecode(kSlideRef.readAsStringSync()) as Map<String, dynamic>;
-    final rawAssets = ((reference['assets'] ?? []) as List<dynamic>)
-        .map((e) => RawAsset.fromJson(e))
-        .toList();
+    final reference = RawReference.loadFile(kSlideRef);
+    final rawAssets = reference.assets;
+    final config = RawConfig.loadFile(kProjectConfigFile);
 
-    final config = converYamlToMap(kProjectConfigFile.readAsStringSync());
-
-    final parser = SlideParser(Map<String, dynamic>.from(config));
+    final parser = SlideParser();
     final slides = parser.run(markdownRaw);
 
-    final pipeline = SlidesPipeline(
-      [
-        // const ImageCachingTask(),
-        MermaidConverterTask(),
-        const SlideThumbnailTask(),
-      ],
-    );
+    final pipeline = TaskPipeline([
+      const MermaidConverterTask(),
+      const SlideThumbnailTask(),
+    ]);
 
     final result = await pipeline.run(slides, rawAssets);
 
@@ -53,10 +45,9 @@ class SlidesLoader {
         }
       }
     }
-    print(result.neededAssets);
 
     await kSlideRef.writeAsString(jsonEncode({
-      'config': config,
+      'config': config.toMap(),
       'slides': result.slides.map((e) => e.toMap()).toList(),
       'assets': result.neededAssets.map((e) => e.toMap()).toList(),
     }));

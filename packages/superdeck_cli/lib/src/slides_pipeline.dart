@@ -5,8 +5,8 @@ import 'package:collection/collection.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
 import 'package:superdeck_cli/src/constants.dart';
+import 'package:superdeck_cli/src/helpers/raw_models.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
-import 'package:superdeck_cli/src/helpers/types.dart';
 import 'package:superdeck_cli/src/services/mermaid_service.dart';
 
 final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
@@ -56,10 +56,10 @@ class TaskController {
   }
 }
 
-class SlidesPipeline {
+class TaskPipeline {
   final List<Task> processors;
 
-  SlidesPipeline(this.processors);
+  TaskPipeline(this.processors);
 
   Future<PipelineResult> run(
     List<RawSlide> slides,
@@ -137,8 +137,8 @@ class SlideThumbnailTask extends Task {
 }
 
 class MermaidConverterTask extends Task {
-  final _mermaidService = MermaidService();
-  MermaidConverterTask() : super('mermaid');
+  final _mermaidService = const MermaidService();
+  const MermaidConverterTask() : super('mermaid');
 
   @override
   FutureOr<TaskController> run(controller) async {
