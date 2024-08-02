@@ -31,6 +31,7 @@ dependencies:
   mix_annotations: ^0.2.1
   flutter_markdown: ^0.7.3
   markdown: ^7.2.2
+  flutter_hooks: ^0.20.5
   
   
   

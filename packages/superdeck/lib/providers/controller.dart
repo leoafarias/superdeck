@@ -4,20 +4,25 @@ import 'package:flutter/foundation.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:signals/signals_flutter.dart';
 
-import '../services/project_service.dart';
+import '../services/reference_service.dart';
 import '../superdeck.dart';
 
 final superdeckController = SuperDeckController();
 final navigationController = NavigationController();
 
 class SuperDeckController {
-  SuperDeckController._();
+  SuperDeckController._() {
+    ReferenceService.instance.listen(data.refresh);
+  }
 
   static final _instance = SuperDeckController._();
 
   factory SuperDeckController() => _instance;
 
-  final data = futureSignal(ProjectService.instance.loadDeck, lazy: false);
+  final data = futureSignal(
+    ReferenceService.instance.loadReference,
+    lazy: false,
+  );
 
   final style = signal(const Style.empty(), debugLabel: 'Style');
 

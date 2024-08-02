@@ -8,7 +8,10 @@ import 'package:flutter/services.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';
+import '../providers/assets_provider.dart';
+import '../providers/examples_provider.dart';
 import '../providers/snapshot_provider.dart';
+import '../providers/style_provider.dart';
 import '../superdeck.dart';
 
 enum SnapshotQuality {
@@ -45,7 +48,7 @@ class SnapshotService {
       _generationQueue.add(queueKey);
 
       final image = await _fromWidgetToImage(
-        SnapshotProvider(isSnapshot: true, child: SlideView(slide)),
+        SlideView(slide),
         context: kAppKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
@@ -85,15 +88,27 @@ class SnapshotService {
     try {
       Widget child = widget;
 
-      child = InheritedTheme.captureAll(
-        context,
-        MediaQuery(
-          data: MediaQuery.of(context),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: Theme.of(context),
-            color: Colors.transparent,
-            home: Scaffold(body: child),
+      child = StyleProvider.inherit(
+        context: context,
+        child: AssetsProvider.inherit(
+          context: context,
+          child: ExamplesProvider.inherit(
+            context: context,
+            child: SnapshotProvider(
+              isSnapshot: true,
+              child: InheritedTheme.captureAll(
+                context,
+                MediaQuery(
+                  data: MediaQuery.of(context),
+                  child: MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    theme: Theme.of(context),
+                    color: Colors.transparent,
+                    home: Scaffold(body: child),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       );

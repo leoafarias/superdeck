@@ -3,7 +3,8 @@
 import 'package:superdeck_cli/src/helpers/raw_models.dart';
 
 class SlideParser {
-  SlideParser();
+  final String contents;
+  SlideParser(this.contents);
 
   List<String> _splitSlides(String content) {
     final lines = content.split('\n');
@@ -40,7 +41,7 @@ class SlideParser {
     return slides;
   }
 
-  List<RawSlide> run(String contents) {
+  List<RawSlide> run() {
     final markdownContents = _splitSlides(contents.trim());
     return markdownContents.map(RawSlide.fromYaml).toList();
   }

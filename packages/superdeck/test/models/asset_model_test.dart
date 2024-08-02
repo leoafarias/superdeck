@@ -43,28 +43,6 @@ void main() {
     });
   });
 
-  group('SlideAssetType', () {
-    test('parse should return correct enum value', () {
-      expect(SlideAssetType.parse('cached'), SlideAssetType.cached);
-      expect(SlideAssetType.parse('thumb'), SlideAssetType.thumb);
-      expect(SlideAssetType.parse('mermaid'), SlideAssetType.mermaid);
-    });
-
-    test('parse should throw exception for invalid value', () {
-      expect(() => SlideAssetType.parse('invalid'), throwsException);
-    });
-
-    test('tryParse should return correct enum value', () {
-      expect(SlideAssetType.tryParse('cached'), SlideAssetType.cached);
-      expect(SlideAssetType.tryParse('thumb'), SlideAssetType.thumb);
-      expect(SlideAssetType.tryParse('mermaid'), SlideAssetType.mermaid);
-    });
-
-    test('tryParse should return null for invalid value', () {
-      expect(SlideAssetType.tryParse('invalid'), isNull);
-    });
-  });
-
   group('SlideAsset', () {
     late SlideAsset asset;
     late File file;

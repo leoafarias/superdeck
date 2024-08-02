@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
-import '../../services/project_service.dart';
 import '../../superdeck.dart';
 
 class CacheImage extends StatelessWidget {
@@ -76,15 +75,9 @@ ImageProvider getImageProvider({
 }) {
   ImageProvider provider;
 
-  SlideAsset? assetUrl;
-
   final assets = superdeckController.assets.watch(context);
 
-  if (isAssetFile(File(url))) {
-    assetUrl = assets.firstWhereOrNull((e) => e.path == url);
-  } else {
-    assetUrl = assets.firstWhereOrNull((e) => e.path.contains(url));
-  }
+  final assetUrl = assets.firstWhereOrNull((e) => e.path == url);
 
   url = assetUrl?.path ?? url;
 

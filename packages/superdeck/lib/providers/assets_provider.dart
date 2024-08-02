@@ -11,8 +11,18 @@ class AssetsProvider extends InheritedWidget {
 
   final List<SlideAsset> assets;
 
-  static AssetsProvider of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<AssetsProvider>()!;
+  static List<SlideAsset> of(BuildContext context) {
+    return context
+            .dependOnInheritedWidgetOfExactType<AssetsProvider>()
+            ?.assets ??
+        [];
+  }
+
+  static AssetsProvider inherit({
+    required BuildContext context,
+    required Widget child,
+  }) {
+    return AssetsProvider(assets: of(context), child: child);
   }
 
   @override

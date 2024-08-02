@@ -89,31 +89,33 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
             examples: widget.examples,
             child: MixTheme(
               data: MixThemeData.withMaterial(),
-              child: MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                title: 'Superdeck',
-                routerConfig: _router,
-                theme: Theme.of(context),
-                key: kAppKey,
-                builder: (context, child) {
-                  final result = _initialize.watch(context);
+              child: Builder(builder: (context) {
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Superdeck',
+                  routerConfig: _router,
+                  theme: Theme.of(context),
+                  key: kAppKey,
+                  builder: (context, child) {
+                    final result = _initialize.watch(context);
 
-                  return LoadingOverlay(
-                    isLoading: result.isLoading,
-                    key: _uniqueKey,
-                    child: result.map(
-                      data: (_) => child!,
-                      loading: () => const SizedBox(),
-                      error: (error, _) {
-                        return ExceptionWidget(
-                          error,
-                          onRetry: _initialize.reload,
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
+                    return LoadingOverlay(
+                      isLoading: result.isLoading,
+                      key: _uniqueKey,
+                      child: result.map(
+                        data: (_) => child!,
+                        loading: () => const SizedBox(),
+                        error: (error, _) {
+                          return ExceptionWidget(
+                            error,
+                            onRetry: _initialize.reload,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ),
         );

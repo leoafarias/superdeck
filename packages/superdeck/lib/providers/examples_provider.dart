@@ -11,14 +11,17 @@ class ExamplesProvider extends InheritedWidget {
 
   final Map<String, ExampleBuilder> examples;
 
-  static ExamplesProvider of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ExamplesProvider>()!;
+  static Map<String, ExampleBuilder> of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<ExamplesProvider>()!
+        .examples;
   }
 
-  operator [](String key) {
-    final example = examples[key];
-    assert(example != null, 'Example $key not found');
-    return example!;
+  static ExamplesProvider inherit({
+    required BuildContext context,
+    required Widget child,
+  }) {
+    return ExamplesProvider(examples: of(context), child: child);
   }
 
   @override

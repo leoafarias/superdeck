@@ -5,34 +5,50 @@ import 'package:collection/collection.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
 import 'package:superdeck_cli/src/constants.dart';
+import 'package:superdeck_cli/src/helpers/extensions.dart';
+import 'package:superdeck_cli/src/helpers/pretty_json.dart';
 import 'package:superdeck_cli/src/helpers/raw_models.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
-import 'package:superdeck_cli/src/services/mermaid_service.dart';
+import 'package:superdeck_cli/src/helpers/slide_parser.dart';
 
-final _mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+typedef MarkdownReplacement = ({
+  Pattern pattern,
+  String replacement,
+});
 
 typedef PipelineResult = ({
   List<RawSlide> slides,
   List<RawAsset> neededAssets,
+  List<MarkdownReplacement> markdownReplacements,
 });
 
 class TaskController {
   final RawSlide slide;
   final List<RawAsset> _assets;
+  final List<MarkdownReplacement> markdownReplacements;
+
+  TaskController._({
+    required this.slide,
+    required List<RawAsset> assets,
+    required this.markdownReplacements,
+  }) : _assets = assets;
 
   TaskController({
     required this.slide,
     required List<RawAsset> assets,
-  }) : _assets = assets;
+  })  : _assets = assets,
+        markdownReplacements = [];
 
   List<RawAsset> neededAssets = [];
 
   TaskController copyWith({
     RawSlide? slide,
     List<RawAsset>? assets,
+    List<MarkdownReplacement>? markdownReplacements,
   }) {
-    return TaskController(
+    return TaskController._(
       slide: slide ?? this.slide,
+      markdownReplacements: markdownReplacements ?? this.markdownReplacements,
       assets: assets ?? _assets,
     )..neededAssets = neededAssets;
   }
@@ -57,26 +73,39 @@ class TaskController {
 }
 
 class TaskPipeline {
-  final List<Task> processors;
+  final List<Task> builders;
 
-  TaskPipeline(this.processors);
+  TaskPipeline(
+    this.builders,
+  );
 
-  Future<PipelineResult> run(
-    List<RawSlide> slides,
+  Future<TaskController> _runEachSlide(
+    RawSlide slide,
     List<RawAsset> assets,
   ) async {
+    var controller = TaskController(slide: slide, assets: assets);
+    for (var task in builders) {
+      controller = await task.run(controller);
+    }
+    return controller;
+  }
+
+  Future<PipelineResult> run() async {
+    await kMarkdownFile.ensureExists();
+    await kGeneratedAssetsDir.ensureExists();
+    await kReferenceFile.ensureExists();
+    final markdownRaw = kMarkdownFile.readAsStringSync();
+
+    final reference = RawReference.loadFile(kReferenceFile);
+    final rawAssets = reference.assets;
+
+    final parser = SlideParser(markdownRaw);
+    final slides = parser.run();
+
     final futures = <Future<TaskController>>[];
 
-    Future<TaskController> runEachSlide(RawSlide slide) async {
-      var controller = TaskController(slide: slide, assets: assets);
-      for (var task in processors) {
-        controller = await task.run(controller);
-      }
-      return controller;
-    }
-
     for (var slide in slides) {
-      futures.add(runEachSlide(slide));
+      futures.add(_runEachSlide(slide, rawAssets));
     }
 
     final controllers = await Future.wait(futures);
@@ -84,10 +113,53 @@ class TaskPipeline {
     final result = (
       slides: controllers.map((e) => e.slide).toList(),
       neededAssets: controllers.expand((e) => e.neededAssets).toList(),
+      markdownReplacements:
+          controllers.expand((e) => e.markdownReplacements).toList(),
     );
+
+    await _applyResults(result);
 
     return result;
   }
+}
+
+Future<void> _applyResults(PipelineResult result) async {
+  final config = RawConfig.loadFile(kProjectConfigFile);
+  await _applyMarkdownReplacements(result.markdownReplacements);
+  await _cleanupGeneratedFiles(result.neededAssets);
+  await kReferenceFile.writeAsString(
+    prettyJson(
+      {
+        'config': config.toMap(),
+        'slides': result.slides.map((e) => e.toMap()).toList(),
+        'assets': result.neededAssets.map((e) => e.toMap()).toList(),
+      },
+    ),
+  );
+}
+
+Future<void> _cleanupGeneratedFiles(List<RawAsset> assets) async {
+  final files = await _loadGeneratedFiles();
+
+  for (var file in files) {
+    if (!assets.any((element) => element.path == file.path)) {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+  }
+}
+
+Future<void> _applyMarkdownReplacements(
+  List<MarkdownReplacement> replacements,
+) async {
+  var markdownRaw = await kMarkdownFile.readAsString();
+
+  for (final entry in replacements) {
+    markdownRaw = markdownRaw.replaceAll(entry.pattern, entry.replacement);
+  }
+
+  await kMarkdownFile.writeAsString(markdownRaw);
 }
 
 abstract class Task {
@@ -106,92 +178,24 @@ abstract class Task {
     if (p.extension(assetName).isEmpty) {
       assetName = '$assetName.png';
     }
-    final updatedFileName = ('sd_${taskName}_$assetName');
+    final updatedFileName = ('${taskName}_$assetName');
     return File(p.join(kGeneratedAssetsDir.path, updatedFileName));
   }
 
   bool isAssetFile(File file) {
     // check if file name starts with sd_
-    if (!file.path.startsWith(kGeneratedAssetsDir.path)) {
-      return false;
-    }
-
-    final fileName = p.basename(file.path);
-    return fileName.startsWith('sd_');
+    return file.path.contains(kGeneratedAssetsDir.path);
   }
 }
 
-class SlideThumbnailTask extends Task {
-  const SlideThumbnailTask() : super('thumbnail');
+Future<List<File>> _loadGeneratedFiles() async {
+  final files = <File>[];
 
-  @override
-  FutureOr<TaskController> run(controller) async {
-    final file = buildAssetFile(controller.slide.key);
-
-    if (await file.exists()) {
-      await controller.markFileAsNeeded(file);
+  await for (var entity in kGeneratedAssetsDir.list()) {
+    if (entity is File) {
+      files.add(entity);
     }
-
-    return controller;
   }
-}
 
-class MermaidConverterTask extends Task {
-  final _mermaidService = const MermaidService();
-  const MermaidConverterTask() : super('mermaid');
-
-  @override
-  FutureOr<TaskController> run(controller) async {
-    final slide = controller.slide;
-
-    final matches = _mermaidBlockRegex.allMatches(slide.content);
-
-    if (matches.isEmpty) return controller;
-    final replacements = <({int start, int end, String markdown})>[];
-
-    for (final Match match in matches) {
-      final mermaidSyntax = match.group(1);
-
-      if (mermaidSyntax == null) continue;
-
-      final mermaidFile = buildAssetFile(buildReferenceName(mermaidSyntax));
-
-      if (!await mermaidFile.exists()) {
-        // Process the mermaid syntax to generate an image file
-        final imageData = await _mermaidService.generateImage(mermaidSyntax);
-
-        if (imageData != null) {
-          await mermaidFile.writeAsBytes(imageData);
-        }
-      }
-
-      // If file existeed or was create it then replace it
-      if (await mermaidFile.exists()) {
-        await controller.markFileAsNeeded(mermaidFile);
-
-        replacements.add((
-          start: match.start,
-          end: match.end,
-          markdown: '![Mermaid Diagram](${mermaidFile.path})',
-        ));
-      }
-    }
-
-    var replacedData = slide.content;
-
-    // Apply replacements in reverse order
-    for (var replacement in replacements.reversed) {
-      final (
-        :start,
-        :end,
-        :markdown,
-      ) = replacement;
-
-      replacedData = replacedData.replaceRange(start, end, markdown);
-    }
-
-    return controller.copyWith(
-      slide: slide.copyWith(content: replacedData),
-    );
-  }
+  return files;
 }

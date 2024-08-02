@@ -1,14 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-
-/// Formats [json]
-String prettyJson(dynamic json) {
-  var spaces = ' ' * 2;
-  var encoder = JsonEncoder.withIndent(spaces);
-  return encoder.convert(json);
-}
 
 BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
   final padding = spec.padding ?? EdgeInsets.zero;

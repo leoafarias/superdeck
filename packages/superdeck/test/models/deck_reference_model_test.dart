@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:superdeck/models/deck_reference_model.dart';
+import 'package:superdeck/models/reference_model.dart';
 
 void main() {
   group('DeckReference', () {
@@ -12,7 +12,7 @@ void main() {
       final contents = await fixture.readAsString();
 
       final stopwatch = Stopwatch()..start();
-      DeckReference.fromJson(contents);
+      SuperDeckReference.fromJson(contents);
       stopwatch.stop();
 
       // Use Isolate.compute to run the parsing in a separate isolate
@@ -20,7 +20,7 @@ void main() {
 
       final stopwatch2 = Stopwatch()..start();
 
-      await compute(DeckReference.fromJson, contents);
+      await compute(SuperDeckReference.fromJson, contents);
 
       stopwatch2.stop();
 
@@ -32,7 +32,7 @@ void main() {
     test('parses a json deck reference', () async {
       final fixture = File('test/fixtures/deck_reference.json');
       final contents = await fixture.readAsString();
-      final deckReference = DeckReference.fromJson(contents);
+      final deckReference = SuperDeckReference.fromJson(contents);
 
       expect(deckReference, isNotNull);
       expect(deckReference.config, isNotNull);

@@ -38,9 +38,7 @@ class _LoadingOverlayState extends State<LoadingOverlay>
         setState(() {});
       });
     } else if (widget.isLoading && !oldWidget.isLoading) {
-      _animationController.reverse().then((_) {
-        setState(() {});
-      });
+      _animationController.reverse().then((_) => setState(() {}));
     }
   }
 
@@ -71,9 +69,13 @@ class _LoadingOverlayState extends State<LoadingOverlay>
 }
 
 class IsometricLoading extends StatefulWidget {
-  const IsometricLoading({super.key, this.color = Colors.white});
+  const IsometricLoading({
+    super.key,
+    this.color = Colors.white,
+  });
 
   final Color color;
+
   @override
   _IsometricLoadingState createState() => _IsometricLoadingState();
 }
@@ -118,20 +120,26 @@ class _IsometricLoadingState extends State<IsometricLoading>
         return Transform.scale(
           scale: 0.2,
           child: CustomPaint(
-              painter: IsometricLoadingPainter(
-            colors: List.generate(4, (index) {
-              final startColorIndex =
-                  ((_animation.value * _colors.length).floor() + index) %
-                      _colors.length;
-              final endColorIndex = (startColorIndex == _colors.length - 1)
-                  ? 0
-                  : startColorIndex + 1;
-              final startColor = _colors[startColorIndex];
-              final endColor = _colors[endColorIndex];
-              final colorProgress = (_animation.value * _colors.length) % 1.0;
-              return Color.lerp(startColor, endColor, colorProgress)!;
-            }),
-          )),
+            painter: IsometricLoadingPainter(
+              colors: List.generate(
+                4,
+                (index) {
+                  final startColorIndex =
+                      ((_animation.value * _colors.length).floor() + index) %
+                          _colors.length;
+                  final endColorIndex = (startColorIndex == _colors.length - 1)
+                      ? 0
+                      : startColorIndex + 1;
+                  final startColor = _colors[startColorIndex];
+                  final endColor = _colors[endColorIndex];
+                  final colorProgress =
+                      (_animation.value * _colors.length) % 1.0;
+                  return Color.lerp(startColor, endColor, colorProgress)!;
+                },
+              ),
+            ),
+            child: const SizedBox(width: 200, height: 200),
+          ),
         );
       },
     );

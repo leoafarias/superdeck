@@ -197,6 +197,7 @@ VariantAttribute get radStyle {
     ),
   );
 }
+
 ```
 
 ---
@@ -254,8 +255,9 @@ layout: two_column
 Code
 ```dart
 int factorial(int n) {
-   return n == 0 ? 1 : n * factorial(n - 1);
+  return n == 0 ? 1 : n * factorial(n - 1);
 }
+
 ```
 
 Tasks

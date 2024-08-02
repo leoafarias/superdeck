@@ -16,6 +16,13 @@ class StyleProvider extends InheritedWidget {
     return context.dependOnInheritedWidgetOfExactType<StyleProvider>()!.style;
   }
 
+  static StyleProvider inherit({
+    required BuildContext context,
+    required Widget child,
+  }) {
+    return StyleProvider(style: of(context), child: child);
+  }
+
   @override
   bool updateShouldNotify(covariant StyleProvider oldWidget) {
     return style != oldWidget.style;

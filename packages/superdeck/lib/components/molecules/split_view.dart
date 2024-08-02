@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/utils.dart';
@@ -17,7 +18,7 @@ final SlidePreviewBox = Style(
   ),
 ).box;
 
-class SplitView extends StatefulWidget {
+class SplitView extends HookWidget {
   final Widget child;
 
   const SplitView({
@@ -26,49 +27,22 @@ class SplitView extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _SplitViewState createState() => _SplitViewState();
-}
-
-class _SplitViewState extends State<SplitView>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Durations.medium1,
-    );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.ease,
-      ),
-    );
-
-    if (navigationController.sideIsOpen.value) {
-      _animationController.value = 1.0;
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final slides = superdeckController.slides.watch(context);
+    final animationController = useAnimationController(
+      duration: Durations.medium1,
+    );
+
+    final animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.ease,
+    );
 
     navigationController.sideIsOpen.listen(context, () {
       if (navigationController.sideIsOpen.value) {
-        _animationController.forward();
+        animationController.forward();
       } else {
-        _animationController.reverse();
+        animationController.reverse();
       }
     });
 
@@ -89,10 +63,11 @@ class _SplitViewState extends State<SplitView>
     return LayoutBuilder(
       builder: (context, constraints) {
         return AnimatedBuilder(
-          animation: _animation,
+          animation: animation,
+          child: child,
           builder: (context, child) {
-            final animatedWidth = _animation.value * sideWidth;
-            final animatedHeight = _animation.value * sideHeight;
+            final animatedWidth = animation.value * sideWidth;
+            final animatedHeight = animation.value * sideHeight;
 
             Offset offset;
             if (isSmall) {
@@ -128,18 +103,18 @@ class _SplitViewState extends State<SplitView>
               );
             }
 
-            final child = SplitViewProvider(
+            final current = SplitViewProvider(
               panelSize: panelSize,
               isOpen: sideIsOpen,
               size: constraints.biggest,
               child: Padding(
                 padding: padding,
-                child: widget.child,
+                child: child,
               ),
             );
 
             return Stack(
-              children: [child, drawer],
+              children: [current, drawer],
             );
           },
         );

@@ -64,56 +64,6 @@ extension AssetFileTypeMapperExtension on AssetFileType {
   }
 }
 
-class SlideAssetTypeMapper extends EnumMapper<SlideAssetType> {
-  SlideAssetTypeMapper._();
-
-  static SlideAssetTypeMapper? _instance;
-  static SlideAssetTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SlideAssetTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static SlideAssetType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  SlideAssetType decode(dynamic value) {
-    switch (value) {
-      case 'cached':
-        return SlideAssetType.cached;
-      case 'thumb':
-        return SlideAssetType.thumb;
-      case 'mermaid':
-        return SlideAssetType.mermaid;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(SlideAssetType self) {
-    switch (self) {
-      case SlideAssetType.cached:
-        return 'cached';
-      case SlideAssetType.thumb:
-        return 'thumb';
-      case SlideAssetType.mermaid:
-        return 'mermaid';
-    }
-  }
-}
-
-extension SlideAssetTypeMapperExtension on SlideAssetType {
-  String toValue() {
-    SlideAssetTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<SlideAssetType>(this) as String;
-  }
-}
-
 class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   SlideAssetMapper._();
 

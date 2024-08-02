@@ -26,5 +26,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - superdeck/
-    - superdeck/generated/
+    - .superdeck/
+    - .superdeck/generated/

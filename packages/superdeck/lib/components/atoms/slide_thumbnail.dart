@@ -5,30 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
+import '../../services/reference_service.dart';
 import '../../services/snapshot_service.dart';
 import '../../superdeck.dart';
 import '../molecules/scaled_app.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
 import 'slide_view.dart';
-
-final _previewStyle = AnimatedStyle(
-  Style(
-    $box.color.grey.shade900(),
-    $box.margin.all(8),
-    $box.border.all.width(2),
-    $box.shadow(
-      color: Colors.black.withOpacity(0.5),
-      blurRadius: 4,
-      spreadRadius: 1,
-    ),
-  ),
-  duration: const Duration(milliseconds: 300),
-  curve: Curves.ease,
-);
-
-// ignore: non_constant_identifier_names
-final PreviewBox = _previewStyle.box;
 
 class SlideThumbnail extends StatefulWidget {
   final bool selected;
@@ -49,8 +32,8 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final imageGenerator = SnapshotService.instance;
-  late File _thumbnailFile = File('');
+  final snapshotService = SnapshotService.instance;
+  final referenceService = ReferenceService.instance;
 
   late final _thumbnailLoader = futureSignal(() {
     return kCanRunProcess
@@ -69,29 +52,29 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   void didUpdateWidget(SlideThumbnail oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.slide.key != widget.slide.key) {
-      _thumbnailFile = File('');
       _thumbnailLoader.refresh();
     }
   }
 
-  String _getLocalAsset() {
-    return _thumbnailFile.path;
+  File _getLocalAsset() {
+    return referenceService.getAssetFile('thumbnail_${widget.slide.key}.png');
   }
 
-  Future<String> _generateThumbnail() async {
-    if (await _thumbnailFile.exists()) {
-      return _getLocalAsset();
+  Future<File> _generateThumbnail() async {
+    final thumbnailFile = _getLocalAsset();
+    if (await thumbnailFile.exists()) {
+      return thumbnailFile;
     }
 
-    final imageData = await imageGenerator.generate(
+    final imageData = await snapshotService.generate(
       // ignore: use_build_context_synchronously
       quality: SnapshotQuality.low,
       slide: widget.slide,
     );
 
-    await _thumbnailFile.writeAsBytes(imageData);
+    await thumbnailFile.writeAsBytes(imageData);
 
-    return _getLocalAsset();
+    return thumbnailFile;
   }
 
   @override
@@ -104,11 +87,11 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
       final child = LoadingOverlay(
         isLoading: result.isLoading,
         child: result.map(
-          data: (path) {
+          data: (file) {
             return Image(
               image: getImageProvider(
                 context: context,
-                url: path,
+                url: file.path,
                 targetSize: constraints.biggest,
               ),
             );
@@ -128,10 +111,8 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
       return GestureDetector(
         onTap: widget.onTap,
-        child: PreviewBox(
-          style: Style(
-            $box.border.all.color(selectedColor),
-          ),
+        child: _PreviewContainer(
+          selectedColor: selectedColor,
           child: AbsorbPointer(
             child: AspectRatio(
               aspectRatio: kAspectRatio,
@@ -197,20 +178,50 @@ class SlideThumbnailDynamic<T extends Slide> extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: PreviewBox(
-        style: Style(
-          $box.border.all.color(selectedColor),
-        ),
+      child: _PreviewContainer(
+        selectedColor: selectedColor,
         child: AbsorbPointer(
           child: AspectRatio(
-              aspectRatio: kAspectRatio,
-              child: ScaledWidget(
-                child: SlideView(
-                  slide,
-                ),
-              )),
+            aspectRatio: kAspectRatio,
+            child: ScaledWidget(
+              child: SlideView(
+                slide,
+              ),
+            ),
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _PreviewContainer extends StatelessWidget {
+  final Color selectedColor;
+  final Widget child;
+
+  const _PreviewContainer({
+    required this.selectedColor,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Style(
+      $box.color.grey.shade900(),
+      $box.margin.all(8),
+      $box.border.width(2),
+      $box.shadow(
+        color: Colors.black.withOpacity(0.5),
+        blurRadius: 4,
+        spreadRadius: 1,
+      ),
+    );
+
+    return Box(
+      style: style.add(
+        $box.border.color(selectedColor),
+      ),
+      child: child,
     );
   }
 }

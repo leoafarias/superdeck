@@ -60,22 +60,20 @@ class RawConfig {
 }
 
 class RawSlide {
+  final String key;
   final Json _map;
 
-  const RawSlide(this._map);
+  RawSlide(this._map) : key = shortHashId(_map.toString());
 
   String get content => (_map['content'] ?? '') as String;
 
-  String get key => (_map['key'] ?? '') as String;
-
   static RawSlide fromYaml(String yamlString) {
     final (:content, :options) = parseSlideMarkdown(yamlString);
-
     return RawSlide({
       ...options,
-      'key': shortHashId(yamlString),
+
       // Change from content on the frontMatter to content options in on the map
-      'content_options': options['content'],
+      if (options['content'] != null) 'content_options': options['content'],
       'content': content,
     });
   }
@@ -91,7 +89,10 @@ class RawSlide {
     );
   }
 
-  Json toMap() => _map;
+  Json toMap() => {
+        ..._map,
+        'key': key,
+      };
 
   static RawSlide fromJson(String json) {
     return RawSlide(jsonDecode(json));

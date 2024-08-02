@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:signals/signals_flutter.dart';
@@ -27,17 +28,11 @@ enum ExportProcessStatus {
   bool get isComplete => this == ExportProcessStatus.complete;
 }
 
-class ExportScreen extends StatefulWidget {
+class ExportScreen extends HookWidget {
   const ExportScreen({super.key});
 
-  @override
-  State<ExportScreen> createState() => _ExportScreenState();
-}
-
-class _ExportScreenState extends State<ExportScreen> {
-  late final _selectedQuality = createSignal(context, SnapshotQuality.good);
-
-  Future<void> convertToPdf(BuildContext context) async {
+  Future<void> convertToPdf(
+      BuildContext context, SnapshotQuality quality) async {
     final lastState = navigationController.sideIsOpen.value;
 
     navigationController.sideIsOpen.value = false;
@@ -55,7 +50,7 @@ class _ExportScreenState extends State<ExportScreen> {
       builder: (context) {
         return ExportingProcessScreen(
           onComplete: handleOnComplete,
-          quality: _selectedQuality.value,
+          quality: quality,
         );
       },
     );
@@ -63,22 +58,19 @@ class _ExportScreenState extends State<ExportScreen> {
     Overlay.of(context).insert(entry);
   }
 
-  void setQuality(SnapshotQuality? quality) {
-    if (quality == null) throw Exception('Quality cannot be null');
-    _selectedQuality.value = quality;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final selectedQuality = _selectedQuality.watch(context);
+    final selectedQuality = useState(SnapshotQuality.good);
 
     List<RadioListTile<SnapshotQuality>> buildRadioList() {
       return SnapshotQuality.values.map((e) {
         return RadioListTile<SnapshotQuality>.adaptive(
           title: Text(e.label),
           value: e,
-          groupValue: selectedQuality,
-          onChanged: setQuality,
+          groupValue: selectedQuality.value,
+          onChanged: (value) {
+            selectedQuality.value = value!;
+          },
         );
       }).toList();
     }
@@ -103,7 +95,7 @@ class _ExportScreenState extends State<ExportScreen> {
               ...buildRadioList(),
               const SizedBox(height: 24.0),
               ElevatedButton(
-                onPressed: () => convertToPdf(context),
+                onPressed: () => convertToPdf(context, selectedQuality.value),
                 child: const Text('Save'),
               ),
             ],
@@ -247,6 +239,7 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
     _images.listen(
       context,
       () {
+        if (!_pageController.hasClients) return;
         int page;
         if (_images.length == _slides.length) {
           page = 0;

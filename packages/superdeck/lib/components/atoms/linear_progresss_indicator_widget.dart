@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class AnimatedLinearProgressIndicator extends StatefulWidget {
+class AnimatedLinearProgressIndicator extends HookWidget {
   final double progress;
 
   const AnimatedLinearProgressIndicator({
@@ -9,60 +10,26 @@ class AnimatedLinearProgressIndicator extends StatefulWidget {
   });
 
   @override
-  _AnimatedLinearProgressIndicatorState createState() =>
-      _AnimatedLinearProgressIndicatorState();
-}
-
-class _AnimatedLinearProgressIndicatorState
-    extends State<AnimatedLinearProgressIndicator>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
+  Widget build(BuildContext context) {
+    final animationController = useAnimationController(
       duration: const Duration(milliseconds: 100),
     );
-    _animation = Tween<double>(begin: 0.0, end: widget.progress)
-        .animate(_animationController);
-    _animationController.forward();
-  }
 
-  @override
-  void didUpdateWidget(covariant AnimatedLinearProgressIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.progress != oldWidget.progress) {
-      _animation = Tween<double>(
-        begin: _animation.value,
-        end: widget.progress,
-      ).animate(_animationController);
+    final animation =
+        Tween<double>(begin: 0.0, end: progress).animate(animationController);
 
-      if (_animationController.isAnimating) {
-        _animationController.forward();
-      } else {
-        _animationController.forward(from: 0.0);
-      }
-    }
-  }
+    useEffect(() {
+      animationController.forward();
+      return null;
+    }, []);
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animation,
+      animation: animation,
       builder: (context, child) {
         return LinearProgressIndicator(
           minHeight: 10,
           borderRadius: BorderRadius.circular(10),
-          value: _animation.value,
+          value: animation.value,
         );
       },
     );

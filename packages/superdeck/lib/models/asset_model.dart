@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:path/path.dart' as p;
@@ -32,21 +30,6 @@ enum AssetFileType {
   bool isGif() => this == AssetFileType.gif;
 }
 
-@MappableEnum()
-enum SlideAssetType {
-  cached,
-  thumb,
-  mermaid;
-
-  static SlideAssetType parse(String value) {
-    return values.firstWhereOrNull((e) => e.name == value) ??
-        (throw Exception('Invalid asset type: $value'));
-  }
-
-  static SlideAssetType? tryParse(String value) {
-    return values.firstWhereOrNull((e) => value.startsWith(e.name));
-  }
-}
 
 @MappableClass(
   includeCustomMappers: [

@@ -2,22 +2,43 @@ import 'dart:async';
 import 'dart:io';
 
 class FileWatcher {
-  final String filePath;
-  StreamSubscription<FileSystemEvent>? _subscription;
+  final File file;
+  Timer? _timer;
+  DateTime? _lastModified;
 
-  FileWatcher(this.filePath);
+  FileWatcher(this.file);
 
   /// Starts watching the file for changes
   void start(void Function() onFileChange) {
-    final file = File(filePath);
-    _subscription = file.watch().listen((_) => onFileChange());
+    _timer = Timer.periodic(const Duration(seconds: 2), (_) async {
+      final hasChanged = await _checkFileChanges(file);
+
+      if (hasChanged) {
+        onFileChange();
+      }
+    });
   }
 
   /// Stops watching the file
   void stop() {
-    _subscription?.cancel();
+    _timer?.cancel();
   }
 
   /// Checks if the file is currently being watched
-  bool get isWatching => _subscription != null;
+  bool get isWatching => _timer != null;
+
+  Future<bool> _checkFileChanges(File file) async {
+    final currentLastModified = await file.lastModified();
+
+    if (_lastModified == null) {
+      _lastModified = currentLastModified;
+      return false;
+    }
+
+    final result = currentLastModified != _lastModified;
+
+    _lastModified = currentLastModified;
+
+    return result;
+  }
 }
