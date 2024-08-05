@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:signals/signals_flutter.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../helpers/constants.dart';
@@ -34,16 +33,23 @@ class ExportScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedQuality = useState(SnapshotQuality.good);
-    final sideIsOpen = useSideIsOpen();
+
+    final navigation = useNavigation();
     final convertToPdf = useCallback(() async {
-      superdeckController.sideIsOpen.value = false;
+      final lastState = navigation.sideIsOpen;
+
+      navigation.closeSide();
 
       await Future.delayed(Duration.zero);
 
       late OverlayEntry entry;
       void handleOnComplete() {
         entry.remove();
-        superdeckController.sideIsOpen.value = sideIsOpen;
+        if (lastState) {
+          navigation.openSide();
+        } else {
+          navigation.closeSide();
+        }
       }
 
       entry = OverlayEntry(
@@ -57,7 +63,7 @@ class ExportScreen extends HookWidget {
       );
       if (!context.mounted) return;
       Overlay.of(context).insert(entry);
-    }, [sideIsOpen, selectedQuality]);
+    }, [navigation, selectedQuality]);
 
     List<RadioListTile<SnapshotQuality>> buildRadioList() {
       return SnapshotQuality.values.map((e) {
@@ -103,7 +109,7 @@ class ExportScreen extends HookWidget {
   }
 }
 
-class ExportingProcessScreen extends StatefulWidget {
+class ExportingProcessScreen extends HookWidget {
   const ExportingProcessScreen({
     super.key,
     required this.onComplete,
@@ -112,96 +118,6 @@ class ExportingProcessScreen extends StatefulWidget {
 
   final void Function() onComplete;
   final SnapshotQuality quality;
-
-  @override
-  State<ExportingProcessScreen> createState() => _ExportingProcessScreenState();
-}
-
-class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
-  late final _status = createSignal(context, ExportProcessStatus.idle);
-  final _pageController = PageController();
-  late List<Slide> _slides;
-  late final _images = listSignal<Uint8List>([]);
-
-  @override
-  void initState() {
-    super.initState();
-
-    _slides = superdeckController.slides.value;
-
-    Future.delayed(Durations.medium1).then((value) => startConversion());
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  Future<void> startConversion() async {
-    try {
-      final generator = SnapshotService.instance;
-      _status.value = ExportProcessStatus.converting;
-
-      List<Future<Uint8List>> futures = [];
-
-      Future<Uint8List> convertSlide(Slide slide) async {
-        final convertedImage = await generator.generate(
-          quality: widget.quality,
-          slide: slide,
-        );
-        _images.add(convertedImage);
-
-        return convertedImage;
-      }
-
-      for (var slide in _slides) {
-        futures.add(convertSlide(slide));
-      }
-
-      final images = await Future.wait(futures);
-
-      await Future.delayed(Durations.short1);
-      _status.value = ExportProcessStatus.creatingPdf;
-      await Future.delayed(Durations.short1);
-
-      final pdf = await buildPdf(images);
-
-      _status.value = ExportProcessStatus.complete;
-      await Future.delayed(Durations.short1);
-
-      if (kIsWeb) {
-        // Create a Blob from the PDF bytes
-        final blob = html.Blob([pdf], 'application/pdf');
-
-        // Create a URL for the Blob
-        final url = html.Url.createObjectUrlFromBlob(blob);
-
-        html.AnchorElement(href: url)
-          ..setAttribute('download', 'superdeck.pdf')
-          ..click();
-
-        return;
-      }
-
-      final outputFile = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save PDF',
-        fileName: 'superdeck.pdf',
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-
-      if (outputFile != null) {
-        File file = File(outputFile);
-
-        await file.writeAsBytes(pdf);
-      }
-    } on Exception catch (e) {
-      log(e.toString());
-    } finally {
-      widget.onComplete();
-    }
-  }
 
   Future<Uint8List> buildPdf(List<Uint8List> images) async {
     final pdf = pw.Document();
@@ -233,112 +149,180 @@ class _ExportingProcessScreenState extends State<ExportingProcessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _images.listen(
-      context,
-      () {
-        if (!_pageController.hasClients) return;
-        int page;
-        if (_images.length == _slides.length) {
-          page = 0;
-        } else {
-          page = _images.length - 1;
-        }
-        _pageController.jumpToPage(page);
-      },
-    );
+    final status = useState(ExportProcessStatus.idle);
+    final images = useState(<Uint8List>[]);
+    final pageController = usePageController();
+    final slides = useSlides();
 
-    return Watch.builder(builder: (context) {
-      final totalSlides = _slides.length;
-      final totalImages = _images.length;
+    final startConversion = useCallback(() async {
+      try {
+        final generator = SnapshotService.instance;
+        status.value = ExportProcessStatus.converting;
 
-      final statusLabel = switch (_status.value) {
-        ExportProcessStatus.idle => 'Idle',
-        ExportProcessStatus.converting => 'Converting',
-        ExportProcessStatus.creatingPdf => 'Creating PDF',
-        ExportProcessStatus.complete => 'Done',
-      };
+        List<Future<Uint8List>> futures = [];
 
-      List<Widget> buildChildren() {
-        if (_status.value.isComplete) {
-          return [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 48,
-                ),
-                SizedBox(width: 16),
-                Text(
-                  'Done',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            )
-          ];
+        Future<Uint8List> convertSlide(Slide slide) async {
+          final convertedImage = await generator.generate(
+            quality: quality,
+            slide: slide,
+          );
+          images.value.add(convertedImage);
+
+          return convertedImage;
         }
 
+        for (var slide in slides) {
+          futures.add(convertSlide(slide));
+        }
+
+        final imageResults = await Future.wait(futures);
+
+        await Future.delayed(Durations.short1);
+        status.value = ExportProcessStatus.creatingPdf;
+        await Future.delayed(Durations.short1);
+
+        final pdf = await buildPdf(imageResults);
+
+        status.value = ExportProcessStatus.complete;
+        await Future.delayed(Durations.short1);
+
+        if (kIsWeb) {
+          // Create a Blob from the PDF bytes
+          final blob = html.Blob([pdf], 'application/pdf');
+
+          // Create a URL for the Blob
+          final url = html.Url.createObjectUrlFromBlob(blob);
+
+          html.AnchorElement(href: url)
+            ..setAttribute('download', 'superdeck.pdf')
+            ..click();
+
+          return;
+        }
+
+        final outputFile = await FilePicker.platform.saveFile(
+          dialogTitle: 'Save PDF',
+          fileName: 'superdeck.pdf',
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+
+        if (outputFile != null) {
+          File file = File(outputFile);
+
+          await file.writeAsBytes(pdf);
+        }
+      } on Exception catch (e) {
+        log(e.toString());
+      } finally {
+        onComplete();
+      }
+    }, []);
+
+    useEffect(() {
+      startConversion();
+      return null;
+    }, []);
+
+    useEffect(() {
+      if (images.value.length == slides.length) {
+        pageController.jumpToPage(0);
+      } else {
+        pageController.jumpToPage(images.value.length - 1);
+      }
+      return null;
+    }, [images, slides]);
+
+    final totalSlides = slides.length;
+    final totalImages = images.value.length;
+
+    final statusLabel = switch (status.value) {
+      ExportProcessStatus.idle => 'Idle',
+      ExportProcessStatus.converting => 'Converting',
+      ExportProcessStatus.creatingPdf => 'Creating PDF',
+      ExportProcessStatus.complete => 'Done',
+    };
+
+    List<Widget> buildChildren() {
+      if (status.value.isComplete) {
         return [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.black,
-            ),
-            height: 225,
-            width: 400,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _images.length,
-              itemBuilder: (context, index) {
-                return ScaledWidget(
-                  child: SlideView(
-                    _slides[index],
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 26),
-          Text(
-            statusLabel,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 16),
-          Row(
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: AnimatedLinearProgressIndicator(
-                  progress: totalImages / totalSlides,
-                ),
+              Icon(
+                Icons.check_circle,
+                color: Colors.green,
+                size: 48,
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Text(
-                '$totalImages/$totalSlides',
-                style: Theme.of(context).textTheme.bodyLarge,
+                'Done',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           )
         ];
       }
 
-      return Stack(
-        children: [
-          Container(
-            color: Theme.of(context).colorScheme.surface,
+      return [
+        Container(
+          decoration: const BoxDecoration(
+            color: Colors.black,
           ),
-          Container(
-            color: Colors.black.withOpacity(0.8),
-            padding: const EdgeInsets.all(200),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: buildChildren(),
+          height: 225,
+          width: 400,
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: images.value.length,
+            itemBuilder: (context, index) {
+              return ScaledWidget(
+                child: SlideView(
+                  slides[index],
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 26),
+        Text(
+          statusLabel,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: AnimatedLinearProgressIndicator(
+                progress: totalImages / totalSlides,
+              ),
             ),
+            const SizedBox(width: 16),
+            Text(
+              '$totalImages/$totalSlides',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
+        )
+      ];
+    }
+
+    return Stack(
+      children: [
+        Container(
+          color: Theme.of(context).colorScheme.surface,
+        ),
+        Container(
+          color: Colors.black.withOpacity(0.8),
+          padding: const EdgeInsets.all(200),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: buildChildren(),
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 }

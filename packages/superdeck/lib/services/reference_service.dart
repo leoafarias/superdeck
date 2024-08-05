@@ -32,7 +32,7 @@ class ReferenceService {
     return File(p.join(_generatedDir.path, fileName));
   }
 
-  void listen(Function() callback) {
+  void listen(VoidCallback callback) {
     if (kCanRunProcess) {
       if (!_watcher.isWatching) {
         _watcher.start(callback);

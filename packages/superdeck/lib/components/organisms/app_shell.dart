@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../helpers/constants.dart';
+import '../../helpers/hooks.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
 import 'drawer.dart';
@@ -39,44 +42,43 @@ class ScaffoldWithNavBar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isSmall = context.isSmall;
+    final navigation = useNavigation();
     final animationController = useAnimationController(
       duration: Durations.short3,
     );
 
-    final sideIsOpen = useSideIsOpen();
-
-    final animation = CurvedAnimation(
+    final animation = useAnimation(CurvedAnimation(
       parent: animationController,
       curve: Curves.ease,
-    );
+    ));
 
-    useEffect(() {
-      if (sideIsOpen) {
+    useLayoutEffect(() {
+      if (navigation.sideIsOpen) {
         animationController.forward();
       } else {
         animationController.reverse();
       }
-      return null;
-    }, [sideIsOpen]);
+      return;
+    }, [navigation.sideIsOpen]);
 
     final invalidSlides = useInvalidSlides();
 
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
-      ): superdeckController.nextSlide,
+      ): navigation.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
-      ): superdeckController.nextSlide,
+      ): navigation.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.space,
-      ): superdeckController.nextSlide,
+      ): navigation.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
-      ): superdeckController.previousSlide,
+      ): navigation.previousSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
-      ): superdeckController.previousSlide,
+      ): navigation.previousSlide,
     };
 
     void onTap(int index) {
@@ -101,15 +103,10 @@ class ScaffoldWithNavBar extends HookWidget {
     );
 
     final sideNavBar = !isSmall
-        ? AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              return SizeTransition(
-                sizeFactor: animation,
-                axis: Axis.horizontal,
-                child: navigationRail,
-              );
-            })
+        ? _SizeTransition(
+            sizeFactor: animation,
+            child: navigationRail,
+          )
         : null;
 
     return CallbackShortcuts(
@@ -121,7 +118,7 @@ class ScaffoldWithNavBar extends HookWidget {
             ? FloatingActionButtonLocation.miniEndFloat
             : FloatingActionButtonLocation.miniStartFloat,
         floatingActionButton: FloatingActionButton.small(
-          onPressed: superdeckController.toggleSide,
+          onPressed: navigation.toggleSide,
           child: Badge(
             label: Text(invalidSlides.length.toString()),
             isLabelVisible: invalidSlides.isNotEmpty,
@@ -136,6 +133,29 @@ class ScaffoldWithNavBar extends HookWidget {
                   Expanded(child: navigationShell),
                 ],
               ),
+      ),
+    );
+  }
+}
+
+class _SizeTransition extends StatelessWidget {
+  const _SizeTransition({
+    required this.sizeFactor,
+    this.child,
+  });
+
+  final double sizeFactor;
+
+  final Widget? child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: Align(
+        alignment: const AlignmentDirectional(0.0, -1.0),
+        heightFactor: null,
+        widthFactor: math.max(sizeFactor, 0.0),
+        child: child,
       ),
     );
   }

@@ -13,7 +13,7 @@ extension AsyncSnapshotX<T> on AsyncSnapshot<T> {
       return error(error, stackTrace);
     }
 
-    if (!hasData) {
+    if (isLoading) {
       return loading();
     }
 

@@ -1,139 +1,161 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:signals/signals_flutter.dart';
+import 'package:localstorage/localstorage.dart';
 
-import '../helpers/value_notifiers.dart';
 import '../models/asset_model.dart';
 import '../models/slide_model.dart';
 import '../services/reference_service.dart';
 
-final superdeckController = SuperDeckController();
+final superdeckController = SuperDeckController.instance;
 
-class SuperDeckController {
+class SuperDeckController extends ChangeNotifier {
   SuperDeckController._() {
     _loadData();
+    ReferenceService.instance.listen(_loadData);
   }
+  bool _loading = false;
+  Object? _error;
+  List<Slide> _slides = [];
+  List<SlideAsset> _assets = [];
+  bool _completed = false;
+  bool _isRefreshing = false;
 
-  final loading = ValueNotifier(false);
-  final error = ValueNotifier<Object?>(null);
-  final slides = ListNotifier<Slide>([]);
-  final assets = ListNotifier<SlideAsset>([]);
-  final completed = ValueNotifier(false);
-  final isRefreshing = ValueNotifier(false);
+  bool get loading => _loading;
+  Object? get error => _error;
+  List<Slide> get slides => _slides;
+  List<SlideAsset> get assets => _assets;
+  bool get completed => _completed;
+  bool get isRefreshing => _isRefreshing;
 
-  /// Navigation
-  final currentSlide = StoredValueNotifier('current-slide', 0);
-  final sideIsOpen = StoredValueNotifier('side-is-open', false);
-  final currentScreen = StoredValueNotifier('current-screen', 0);
-
-  static final _instance = SuperDeckController._();
-
-  factory SuperDeckController() => _instance;
+  static final instance = SuperDeckController._();
 
   Future<void> _loadData() async {
-    loading.value = true;
-    error.value = null;
-    completed.value = false;
+    _loading = true;
+    _error = null;
+    _completed = false;
+    notifyListeners();
 
     try {
       final data = await ReferenceService.instance.loadReference();
 
-      slides.value = data.slides;
-      assets.value = data.assets;
+      _slides = data.slides;
+      _assets = data.assets;
     } catch (e) {
-      error.value = e;
+      _error = e;
     } finally {
-      completed.value = true;
-      loading.value = false;
-      isRefreshing.value = false;
+      _completed = true;
+      _loading = false;
+      _isRefreshing = false;
+      notifyListeners();
     }
   }
 
   Future<void> refresh() async {
-    isRefreshing.value = true;
+    _isRefreshing = true;
     await _loadData();
-  }
-
-  void toggleSide() {
-    batch(() {
-      if (sideIsOpen.value) {
-        currentScreen.value = 0;
-      }
-      sideIsOpen.value = !sideIsOpen.value;
-    });
-  }
-
-  void goToSlide(int slide) {
-    if (slide < 0 || slide >= superdeckController.slides.length) return;
-    currentSlide.value = slide;
-  }
-
-  void nextSlide() {
-    goToSlide(currentSlide.value + 1);
-  }
-
-  void previousSlide() {
-    goToSlide(currentSlide.value - 1);
-  }
-
-  void goToScreen(int screen) {
-    currentScreen.value = screen;
-  }
-
-  void dispose() {
-    loading.dispose();
-    error.dispose();
-    slides.dispose();
-    assets.dispose();
-    completed.dispose();
-    isRefreshing.dispose();
-    currentSlide.dispose();
-    sideIsOpen.dispose();
-    currentScreen.dispose();
   }
 }
 
 List<Slide> useSlides() {
-  return useListenable(superdeckController.slides).value;
+  return useListenableSelector(
+    superdeckController,
+    () => superdeckController.slides,
+  );
 }
 
 List<InvalidSlide> useInvalidSlides() {
-  return useSlides().whereType<InvalidSlide>().toList();
+  return useListenableSelector(
+    superdeckController,
+    () => superdeckController.slides.whereType<InvalidSlide>().toList(),
+  );
 }
 
-int useCurrentSlide() {
-  return useListenable(superdeckController.currentSlide).value;
+NavigationController useNavigation() {
+  return useListenable(NavigationController.instance);
 }
 
-bool useSideIsOpen() {
-  return useListenable(superdeckController.sideIsOpen).value;
+T useNavigationSelector<T>(T Function(NavigationController) selector) {
+  return useListenableSelector(
+    NavigationController.instance,
+    () => selector(NavigationController.instance),
+  );
 }
 
-void useOnSideIsOpenChanged(void Function(bool) callback) {
-  _useOnValueChanged(superdeckController.sideIsOpen, (_) {
-    callback(superdeckController.sideIsOpen.value);
-  });
-}
+class NavigationController extends ChangeNotifier {
+  NavigationController._() {
+    _initialize();
+  }
 
-void useOnSlideChange(void Function(int) callback) {
-  _useOnValueChanged(superdeckController.currentSlide, (_) {
-    callback(superdeckController.currentSlide.value);
-  });
-}
+  static final instance = NavigationController._();
 
-void _useOnValueChanged<T>(
-  ValueListenable<T> listenable,
-  void Function(T) callback,
-) {
-  useEffect(() {
-    listener() {
-      callback(listenable.value);
+  void _initialize() {
+    _currentSlide = _getStoredValue('currentSlide', 0);
+    _sideIsOpen = _getStoredValue('sideIsOpen', false);
+    _currentScreen = _getStoredValue('currentScreen', 0);
+
+    addListener(() {
+      _setStoredValue('currentSlide', _currentSlide);
+      _setStoredValue('sideIsOpen', _sideIsOpen);
+      _setStoredValue('currentScreen', _currentScreen);
+    });
+  }
+
+  int _currentSlide = 0;
+  bool _sideIsOpen = false;
+  int _currentScreen = 0;
+
+  int get currentSlide => _currentSlide;
+  bool get sideIsOpen => _sideIsOpen;
+  int get currentScreen => _currentScreen;
+
+  void openSide() {
+    _sideIsOpen = true;
+    notifyListeners();
+  }
+
+  void closeSide() {
+    _sideIsOpen = false;
+    notifyListeners();
+  }
+
+  void toggleSide() {
+    if (_sideIsOpen) {
+      _currentScreen = 0;
     }
+    _sideIsOpen = !_sideIsOpen;
+    notifyListeners();
+  }
 
-    listenable.addListener(listener);
+  void goToSlide(int slide) {
+    if (slide < 0 || slide >= superdeckController.slides.length) {
+      return;
+    }
+    _currentSlide = slide;
 
-    return () {
-      listenable.removeListener(listener);
-    };
-  }, [listenable, callback]);
+    notifyListeners();
+  }
+
+  void nextSlide() {
+    goToSlide(currentSlide + 1);
+  }
+
+  void previousSlide() {
+    goToSlide(currentSlide - 1);
+  }
+
+  void goToScreen(int screen) {
+    _currentScreen = screen;
+    notifyListeners();
+  }
+}
+
+T _getStoredValue<T>(String key, T defaultValue) {
+  final stringValue = localStorage.getItem(key);
+  return stringValue == null ? defaultValue : jsonDecode(stringValue) as T;
+}
+
+void _setStoredValue<T>(String key, T value) {
+  localStorage.setItem(key, jsonEncode(value));
 }

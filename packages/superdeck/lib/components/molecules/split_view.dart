@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../helpers/hooks.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
 import 'slide_thumbnail_list.dart';
@@ -28,24 +29,25 @@ class SplitView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final slides = useSlides();
-    final currentSlide = useCurrentSlide();
-    final sideIsOpen = useSideIsOpen();
+    final navigation = useNavigation();
+
     final animationController = useAnimationController(
       duration: Durations.medium1,
     );
 
-    final animation = CurvedAnimation(
+    final animation = useAnimation(CurvedAnimation(
       parent: animationController,
       curve: Curves.ease,
-    );
+    ));
 
-    useOnSideIsOpenChanged((value) {
-      if (value) {
+    useLayoutEffect(() {
+      if (navigation.sideIsOpen) {
         animationController.forward();
       } else {
         animationController.reverse();
       }
-    });
+      return;
+    }, [navigation.sideIsOpen]);
 
     final sideWidth = context.isMobileLandscape ? 200.0 : 400.0;
     const sideHeight = 200.0;
@@ -54,68 +56,59 @@ class SplitView extends HookWidget {
 
     final sidePanel = SlideThumbnailList(
       scrollDirection: isSmall ? Axis.horizontal : Axis.vertical,
-      currentSlide: currentSlide,
-      onSelect: superdeckController.goToSlide,
-      slides: slides,
     );
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return AnimatedBuilder(
-          animation: animation,
-          child: child,
-          builder: (context, child) {
-            final animatedWidth = animation.value * sideWidth;
-            final animatedHeight = animation.value * sideHeight;
+        final animatedWidth = animation * sideWidth;
+        final animatedHeight = animation * sideHeight;
 
-            Offset offset;
-            if (isSmall) {
-              offset = Offset(0, -(animatedHeight - sideHeight));
-            } else {
-              offset = Offset(animatedWidth - sideWidth, 0);
-            }
+        Offset offset;
+        if (isSmall) {
+          offset = Offset(0, -(animatedHeight - sideHeight));
+        } else {
+          offset = Offset(animatedWidth - sideWidth, 0);
+        }
 
-            EdgeInsets padding;
+        EdgeInsets padding;
 
-            if (isSmall) {
-              padding = EdgeInsets.only(bottom: animatedHeight);
-            } else {
-              padding = EdgeInsets.only(left: animatedWidth);
-            }
+        if (isSmall) {
+          padding = EdgeInsets.only(bottom: animatedHeight);
+        } else {
+          padding = EdgeInsets.only(left: animatedWidth);
+        }
 
-            final panelSize = isSmall ? animatedHeight : animatedWidth;
+        final panelSize = isSmall ? animatedHeight : animatedWidth;
 
-            Widget drawer = Transform.translate(
-              offset: offset,
-              child: SizedBox(
-                width: isSmall ? null : sideWidth,
-                height: isSmall ? sideHeight : null,
-                child: sidePanel,
-              ),
-            );
+        Widget drawer = Transform.translate(
+          offset: offset,
+          child: SizedBox(
+            width: isSmall ? null : sideWidth,
+            height: isSmall ? sideHeight : null,
+            child: sidePanel,
+          ),
+        );
 
-            // Align at the bottom if its a small screen
-            if (isSmall) {
-              drawer = Align(
-                alignment: Alignment.bottomCenter,
-                child: drawer,
-              );
-            }
+        // Align at the bottom if its a small screen
+        if (isSmall) {
+          drawer = Align(
+            alignment: Alignment.bottomCenter,
+            child: drawer,
+          );
+        }
 
-            final current = SplitViewProvider(
-              panelSize: panelSize,
-              isOpen: sideIsOpen,
-              size: constraints.biggest,
-              child: Padding(
-                padding: padding,
-                child: child,
-              ),
-            );
+        final current = SplitViewProvider(
+          panelSize: panelSize,
+          isOpen: navigation.sideIsOpen,
+          size: constraints.biggest,
+          child: Padding(
+            padding: padding,
+            child: child,
+          ),
+        );
 
-            return Stack(
-              children: [current, drawer],
-            );
-          },
+        return Stack(
+          children: [current, drawer],
         );
       },
     );
