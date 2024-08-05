@@ -92,14 +92,12 @@ class ScaffoldWithNavBar extends HookWidget {
       minWidth: 80,
       leading: const SizedBox(height: 20),
       labelType: NavigationRailLabelType.none,
-      destinations: menuItems.map(
-        (e) {
-          return NavigationRailDestination(
-            icon: Icon(e.icon, size: 20),
-            label: Text(e.label),
-          );
-        },
-      ).toList(),
+      destinations: menuItems
+          .map((e) => NavigationRailDestination(
+                icon: Icon(e.icon, size: 20),
+                label: Text(e.label),
+              ))
+          .toList(),
     );
 
     final sideNavBar = !isSmall
