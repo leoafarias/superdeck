@@ -6,21 +6,37 @@ import '../superdeck.dart';
 class StyleProvider extends InheritedWidget {
   StyleProvider({
     super.key,
-    required Style style,
+    Style? baseStyle,
+    this.styles = const <String, Style>{},
     required super.child,
-  }) : style = defaultStyle.merge(style);
+  }) : style = defaultStyle.merge(baseStyle);
 
   final Style style;
+  final Map<String, Style> styles;
 
-  static Style of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<StyleProvider>()!.style;
+  static StyleProvider _of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<StyleProvider>()!;
+  }
+
+  static Style of(BuildContext context, String? styleName) {
+    final provider = _of(context);
+    if (styleName != null) {
+      final style = provider.styles[styleName];
+      assert(style != null, 'No Style for $styleName found.');
+      return provider.style.merge(style);
+    }
+    return _of(context).style;
   }
 
   static StyleProvider inherit({
     required BuildContext context,
     required Widget child,
   }) {
-    return StyleProvider(style: of(context), child: child);
+    return StyleProvider(
+      baseStyle: _of(context).style,
+      styles: _of(context).styles,
+      child: child,
+    );
   }
 
   @override

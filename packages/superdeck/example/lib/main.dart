@@ -12,7 +12,14 @@ void main() async {
         title: 'Superdeck',
         debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
-          style: style,
+          styles: {
+            'rad': radStyle,
+            'custom': customStyle,
+            'cover': coverStyle,
+            'announcement': announcementStyle,
+            'quote': quoteStyle,
+            'show_sections': showSectionsStyle,
+          },
           // ignore: prefer_const_literals_to_create_immutables
           examples: {'demo': mixExampleBuilder},
         ),

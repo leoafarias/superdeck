@@ -24,12 +24,14 @@ final _uniqueKey = UniqueKey();
 class SuperDeckApp extends StatefulWidget {
   const SuperDeckApp({
     super.key,
-    this.style = const Style.empty(),
+    this.baseStyle = const Style.empty(),
+    this.styles = const <String, Style>{},
     this.examples = const <String, ExampleBuilder>{},
   });
 
-  final Style style;
+  final Style baseStyle;
   final Map<String, ExampleBuilder> examples;
+  final Map<String, Style> styles;
 
   static bool _isInitialized = false;
 
@@ -63,11 +65,17 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
   @override
   void didUpdateWidget(SuperDeckApp oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.style != oldWidget.style ||
-        !mapEquals(
-          widget.examples,
-          oldWidget.examples,
-        )) {
+    final baseStyleChanged = widget.baseStyle != oldWidget.baseStyle;
+    final examplesChanged = !mapEquals(
+      widget.examples,
+      oldWidget.examples,
+    );
+
+    final stylesChanged = !mapEquals(
+      widget.styles,
+      oldWidget.styles,
+    );
+    if (baseStyleChanged || examplesChanged || stylesChanged) {
       _initialize.refresh();
     }
   }
@@ -84,7 +92,8 @@ class _SuperDeckAppState extends State<SuperDeckApp> {
       data: theme,
       child: Builder(builder: (context) {
         return StyleProvider(
-          style: widget.style,
+          baseStyle: widget.baseStyle,
+          styles: widget.styles,
           child: ExamplesProvider(
             examples: widget.examples,
             child: MixTheme(

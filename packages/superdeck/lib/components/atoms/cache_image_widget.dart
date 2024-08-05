@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
 import '../../superdeck.dart';
@@ -29,7 +28,6 @@ class CacheImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedImageSpecWidget(
       image: getImageProvider(
-        context: context,
         url: url,
         targetSize: size,
       ),
@@ -69,13 +67,12 @@ class CacheImage extends StatelessWidget {
 }
 
 ImageProvider getImageProvider({
-  required BuildContext context,
   required String url,
   required Size targetSize,
 }) {
   ImageProvider provider;
 
-  final assets = superdeckController.assets.watch(context);
+  final assets = superdeckController.assets.value;
 
   final assetUrl = assets.firstWhereOrNull((e) => e.path == url);
 

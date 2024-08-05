@@ -19,11 +19,9 @@ class SlideView<T extends Slide> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final slide = this.slide;
-    final variant = slide.styleVariant;
-    final style = StyleProvider.of(context);
-    final isSnapshot = SnapshotProvider.of(context);
 
-    final variantStyle = style.applyVariant(variant);
+    final variantStyle = StyleProvider.of(context, slide.style);
+    final isSnapshot = SnapshotProvider.of(context);
 
     final backgroundWidget = slide.background != null
         ? CacheImage(

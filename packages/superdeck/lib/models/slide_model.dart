@@ -3,7 +3,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import '../helpers/section_tag.dart';
 import '../schema/schema_model.dart';
 import '../schema/schema_validation.dart';
-import '../styles/style_util.dart';
 import '../superdeck.dart';
 import 'config_model.dart';
 
@@ -61,10 +60,6 @@ abstract class Slide extends BaseConfig with SlideMappable {
     } catch (e) {
       return InvalidSlide.message('# Unknown Error \n $e');
     }
-  }
-
-  SlideVariant? get styleVariant {
-    return style == null ? null : SlideVariant(style!);
   }
 
   static const fromMap = SlideMapper.fromMap;

@@ -23,7 +23,7 @@ extension WidgetTesterX on WidgetTester {
       SnapshotProvider(
         isSnapshot: isSnapshot,
         child: StyleProvider(
-          style: style,
+          baseStyle: style,
           child: AssetsProvider(
             assets: assets,
             child: ExamplesProvider(

@@ -1,10 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../models/slide_model.dart';
-import '../../providers/controller.dart';
 import '../atoms/slide_thumbnail.dart';
 
 class SlideThumbnailList extends StatefulWidget {
@@ -95,7 +93,6 @@ class _SlideThumbnailListState extends State<SlideThumbnailList> {
           padding: const EdgeInsets.all(20),
           itemBuilder: (context, idx) {
             final slide = widget.slides[idx];
-            superdeckController.style.watch(context);
 
             return SlideThumbnail(
               index: idx,

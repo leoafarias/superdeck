@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/constants.dart';
 import '../../helpers/utils.dart';
@@ -12,7 +12,7 @@ final scaffoldKey = GlobalKey<ScaffoldState>();
 
 /// Builds the "shell" for the app by building a Scaffold with a
 /// BottomNavigationBar, where [child] is placed in the body of the Scaffold.
-class ScaffoldWithNavBar extends StatefulWidget {
+class ScaffoldWithNavBar extends HookWidget {
   /// Constructs an [ScaffoldWithNavBar].
   const ScaffoldWithNavBar({
     required this.navigationShell,
@@ -22,43 +22,11 @@ class ScaffoldWithNavBar extends StatefulWidget {
   /// The navigation shell and container for the branch Navigators.
   final StatefulNavigationShell navigationShell;
 
-  @override
-  State<ScaffoldWithNavBar> createState() => _ScaffoldWithNavBarState();
-}
-
-class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Durations.short3,
-    );
-    _animation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.ease,
-    );
-
-    if (navigationController.sideIsOpen.value) {
-      _animationController.forward();
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
   void _onTap(BuildContext context, int index) {
     // When navigating to a new branch, it's recommended to use the goBranch
     // method, as doing so makes sure the last navigation state of the
     // Navigator for the branch is restored.
-    widget.navigationShell.goBranch(
+    navigationShell.goBranch(
       index,
       // A common pattern when using bottom navigation bars is to support
       // navigating to the initial location when tapping the item that is
@@ -70,35 +38,45 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
   @override
   Widget build(BuildContext context) {
-    final slides = superdeckController.slides.watch(context);
-
-    navigationController.sideIsOpen.listen(context, () {
-      if (navigationController.sideIsOpen.value) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
-    });
     final isSmall = context.isSmall;
+    final animationController = useAnimationController(
+      duration: Durations.short3,
+    );
 
-    final totalInvalid = slides.whereType<InvalidSlide>().length;
+    final sideIsOpen = useSideIsOpen();
+
+    final animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.ease,
+    );
+
+    useEffect(() {
+      if (sideIsOpen) {
+        animationController.forward();
+      } else {
+        animationController.reverse();
+      }
+      return null;
+    }, [sideIsOpen]);
+
+    final invalidSlides = useInvalidSlides();
 
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
-      ): navigationController.nextSlide,
+      ): superdeckController.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
-      ): navigationController.nextSlide,
+      ): superdeckController.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.space,
-      ): navigationController.nextSlide,
+      ): superdeckController.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
-      ): navigationController.previousSlide,
+      ): superdeckController.previousSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
-      ): navigationController.previousSlide,
+      ): superdeckController.previousSlide,
     };
 
     void onTap(int index) {
@@ -109,7 +87,7 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
     final navigationRail = NavigationRail(
       extended: false,
-      selectedIndex: widget.navigationShell.currentIndex,
+      selectedIndex: navigationShell.currentIndex,
       onDestinationSelected: onTap,
       minWidth: 80,
       leading: const SizedBox(height: 20),
@@ -126,10 +104,10 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
 
     final sideNavBar = !isSmall
         ? AnimatedBuilder(
-            animation: _animation,
+            animation: animation,
             builder: (context, child) {
               return SizeTransition(
-                sizeFactor: _animation,
+                sizeFactor: animation,
                 axis: Axis.horizontal,
                 child: navigationRail,
               );
@@ -145,19 +123,19 @@ class _ScaffoldWithNavBarState extends State<ScaffoldWithNavBar>
             ? FloatingActionButtonLocation.miniEndFloat
             : FloatingActionButtonLocation.miniStartFloat,
         floatingActionButton: FloatingActionButton.small(
-          onPressed: navigationController.toggleSide,
+          onPressed: superdeckController.toggleSide,
           child: Badge(
-            label: Text(totalInvalid.toString()),
-            isLabelVisible: totalInvalid != 0,
+            label: Text(invalidSlides.length.toString()),
+            isLabelVisible: invalidSlides.isNotEmpty,
             child: const Icon(Icons.menu),
           ),
         ),
         body: isSmall
-            ? widget.navigationShell
+            ? navigationShell
             : Row(
                 children: [
                   sideNavBar ?? Container(),
-                  Expanded(child: widget.navigationShell),
+                  Expanded(child: navigationShell),
                 ],
               ),
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:superdeck/styles/style_util.dart';
 import 'package:superdeck/superdeck.dart';
 
 final _util = SlideSpecUtility.self;
@@ -21,8 +20,8 @@ final _contentContainer = _util.contentContainer;
 final _textStyle = _util.textStyle;
 final _innerContainer = _util.innerContainer;
 
-VariantAttribute get radStyle {
-  return const SlideVariant('rad')(
+Style get radStyle {
+  return Style(
     _h1.textStyle.as(GoogleFonts.poppins()),
     _h1.textStyle.fontSize(140),
     _code.decoration.border.all(
@@ -74,8 +73,8 @@ VariantAttribute get radStyle {
   );
 }
 
-VariantAttribute get customStyle {
-  return const SlideVariant('custom')(
+Style get customStyle {
+  return Style(
     _textStyle.as(GoogleFonts.poppins()),
     _h1.textStyle.as(GoogleFonts.smooch()),
     _h1.textStyle.fontSize(200),
@@ -115,8 +114,8 @@ VariantAttribute get customStyle {
   );
 }
 
-VariantAttribute get coverStyle {
-  return const SlideVariant('cover')(
+Style get coverStyle {
+  return Style(
     _h1.textStyle.as(GoogleFonts.poppins()),
     _h1.textStyle.fontSize(100),
     _contentContainer.gradient.linear(
@@ -130,8 +129,8 @@ VariantAttribute get coverStyle {
   );
 }
 
-VariantAttribute get announcementStyle {
-  return const SlideVariant('announcement')(
+Style get announcementStyle {
+  return Style(
     _textStyle.height(0.6),
     _h1.textStyle.fontSize(140),
     _h1.textStyle.bold(),
@@ -151,8 +150,8 @@ VariantAttribute get announcementStyle {
   );
 }
 
-VariantAttribute get quoteStyle {
-  return const SlideVariant('quote')(
+Style get quoteStyle {
+  return Style(
     _blockquote.textStyle.as(GoogleFonts.notoSerif()),
     _blockquote.decoration.border.left(
       width: 4,
@@ -164,26 +163,13 @@ VariantAttribute get quoteStyle {
   );
 }
 
-VariantAttribute get showSectionsStyle {
-  return const SlideVariant('show_sections')(
+Style get showSectionsStyle {
+  return Style(
     _contentContainer.border.all(
       color: Colors.blue,
       width: 2,
     ),
   );
-}
-
-Style get style {
-  return Style(
-    _textStyle.as(GoogleFonts.poppins()),
-    _code.textStyle.as(GoogleFonts.sourceCodePro()),
-    customStyle,
-    quoteStyle,
-    showSectionsStyle,
-    coverStyle,
-    announcementStyle,
-    radStyle,
-  ).animate();
 }
 
 Matrix4 _transformMatrix(Alignment alignment) {

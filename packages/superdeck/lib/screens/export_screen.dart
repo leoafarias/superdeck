@@ -31,36 +31,33 @@ enum ExportProcessStatus {
 class ExportScreen extends HookWidget {
   const ExportScreen({super.key});
 
-  Future<void> convertToPdf(
-      BuildContext context, SnapshotQuality quality) async {
-    final lastState = navigationController.sideIsOpen.value;
-
-    navigationController.sideIsOpen.value = false;
-
-    await Future.delayed(Duration.zero);
-
-    late OverlayEntry entry;
-    void handleOnComplete() {
-      entry.remove();
-      navigationController.sideIsOpen.value = lastState;
-    }
-
-    entry = OverlayEntry(
-      maintainState: true,
-      builder: (context) {
-        return ExportingProcessScreen(
-          onComplete: handleOnComplete,
-          quality: quality,
-        );
-      },
-    );
-    if (!context.mounted) return;
-    Overlay.of(context).insert(entry);
-  }
-
   @override
   Widget build(BuildContext context) {
     final selectedQuality = useState(SnapshotQuality.good);
+    final sideIsOpen = useSideIsOpen();
+    final convertToPdf = useCallback(() async {
+      superdeckController.sideIsOpen.value = false;
+
+      await Future.delayed(Duration.zero);
+
+      late OverlayEntry entry;
+      void handleOnComplete() {
+        entry.remove();
+        superdeckController.sideIsOpen.value = sideIsOpen;
+      }
+
+      entry = OverlayEntry(
+        maintainState: true,
+        builder: (context) {
+          return ExportingProcessScreen(
+            onComplete: handleOnComplete,
+            quality: selectedQuality.value,
+          );
+        },
+      );
+      if (!context.mounted) return;
+      Overlay.of(context).insert(entry);
+    }, [sideIsOpen, selectedQuality]);
 
     List<RadioListTile<SnapshotQuality>> buildRadioList() {
       return SnapshotQuality.values.map((e) {
@@ -95,7 +92,7 @@ class ExportScreen extends HookWidget {
               ...buildRadioList(),
               const SizedBox(height: 24.0),
               ElevatedButton(
-                onPressed: () => convertToPdf(context, selectedQuality.value),
+                onPressed: convertToPdf,
                 child: const Text('Save'),
               ),
             ],

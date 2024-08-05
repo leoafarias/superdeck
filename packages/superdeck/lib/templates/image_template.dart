@@ -39,7 +39,6 @@ class ImageTemplate extends SplitTemplateBuilder<ImageSlide> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: getImageProvider(
-            context: context,
             url: src,
             targetSize: Size(
               width,

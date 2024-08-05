@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:signals/signals_flutter.dart';
 
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
@@ -28,7 +27,9 @@ class SplitView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slides = superdeckController.slides.watch(context);
+    final slides = useSlides();
+    final currentSlide = useCurrentSlide();
+    final sideIsOpen = useSideIsOpen();
     final animationController = useAnimationController(
       duration: Durations.medium1,
     );
@@ -38,8 +39,8 @@ class SplitView extends HookWidget {
       curve: Curves.ease,
     );
 
-    navigationController.sideIsOpen.listen(context, () {
-      if (navigationController.sideIsOpen.value) {
+    useOnSideIsOpenChanged((value) {
+      if (value) {
         animationController.forward();
       } else {
         animationController.reverse();
@@ -48,15 +49,13 @@ class SplitView extends HookWidget {
 
     final sideWidth = context.isMobileLandscape ? 200.0 : 400.0;
     const sideHeight = 200.0;
-    final currentSlide = navigationController.currentSlide.watch(context);
-    final sideIsOpen = navigationController.sideIsOpen.watch(context);
 
     final isSmall = context.isSmall || context.isMobileLandscape;
 
     final sidePanel = SlideThumbnailList(
       scrollDirection: isSmall ? Axis.horizontal : Axis.vertical,
       currentSlide: currentSlide,
-      onSelect: navigationController.goToSlide,
+      onSelect: superdeckController.goToSlide,
       slides: slides,
     );
 
