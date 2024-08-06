@@ -123,7 +123,12 @@ class ScaffoldWithNavBar extends HookWidget {
       bindings: bindings,
       child: Scaffold(
         bottomNavigationBar: null,
+        extendBodyBehindAppBar: true,
+        extendBody: true,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          toolbarOpacity: animation,
           actions: [
             IconButton(
               onPressed: () {},
@@ -153,17 +158,16 @@ class ScaffoldWithNavBar extends HookWidget {
             child: const Icon(Icons.menu),
           ),
         ),
-        body: isSmall
-            ? navigationShell
-            : Row(
-                children: [
-                  _SizeTransition(
-                    sizeFactor: animation,
-                    child: navigationRail,
-                  ),
-                  Expanded(child: navigationShell),
-                ],
-              ),
+        body: Row(
+          children: [
+            _SizeTransition(
+              sizeFactor: animation,
+              direction: Axis.horizontal,
+              child: navigationRail,
+            ),
+            Expanded(child: navigationShell),
+          ],
+        ),
       ),
     );
   }
@@ -173,19 +177,29 @@ class _SizeTransition extends StatelessWidget {
   const _SizeTransition({
     required this.sizeFactor,
     this.child,
+    this.direction = Axis.horizontal,
   });
 
   final double sizeFactor;
+  final Axis direction;
 
   final Widget? child;
 
   @override
   Widget build(BuildContext context) {
+    AlignmentDirectional alignment;
+    if (direction == Axis.horizontal) {
+      alignment = const AlignmentDirectional(0.0, -1.0);
+    } else {
+      alignment = const AlignmentDirectional(-1.0, 0.0);
+    }
     return ClipRect(
       child: Align(
-        alignment: const AlignmentDirectional(0.0, -1.0),
-        heightFactor: null,
-        widthFactor: math.max(sizeFactor, 0.0),
+        alignment: alignment,
+        heightFactor:
+            direction == Axis.vertical ? math.max(sizeFactor, 0.0) : 1.0,
+        widthFactor:
+            direction == Axis.horizontal ? math.max(sizeFactor, 0.0) : 1.0,
         child: child,
       ),
     );

@@ -28,7 +28,6 @@ class SplitView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slides = useSlides();
     final navigation = useNavigation();
 
     final animationController = useAnimationController(
