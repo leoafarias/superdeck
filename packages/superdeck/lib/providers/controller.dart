@@ -8,10 +8,10 @@ import '../models/asset_model.dart';
 import '../models/slide_model.dart';
 import '../services/reference_service.dart';
 
-final $superdeck = SuperDeckController.instance;
+final $superdeck = SuperDeckController();
 
 class SuperDeckController extends ChangeNotifier {
-  SuperDeckController._() {
+  SuperDeckController() {
     _loadData();
     ReferenceService.instance.listen(_loadData);
   }
@@ -28,8 +28,6 @@ class SuperDeckController extends ChangeNotifier {
   List<SlideAsset> get assets => _assets;
   bool get completed => _completed;
   bool get isRefreshing => _isRefreshing;
-
-  static final instance = SuperDeckController._();
 
   Future<void> _loadData() async {
     _loading = true;
@@ -58,17 +56,17 @@ class SuperDeckController extends ChangeNotifier {
   }
 }
 
+T useSuperdeckSelector<T>(T Function(SuperDeckController) selector) {
+  return useListenableSelector(
+    $superdeck,
+    () => selector($superdeck),
+  );
+}
+
 List<Slide> useSlides() {
   return useListenableSelector(
     $superdeck,
     () => $superdeck.slides,
-  );
-}
-
-List<InvalidSlide> useInvalidSlides() {
-  return useListenableSelector(
-    $superdeck,
-    () => $superdeck.slides.whereType<InvalidSlide>().toList(),
   );
 }
 
@@ -116,26 +114,11 @@ class NavigationController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSide() {
-    if (_sideIsOpen) {
-      _screen = 0;
-    }
-    _sideIsOpen = !_sideIsOpen;
-    notifyListeners();
-  }
-
   void goToPage(int slide) {
-    if (slide < 0 || slide >= $superdeck.slides.length) {
-      return;
-    }
     _page = slide;
 
     notifyListeners();
   }
-
-  void nextSlide() => goToPage(page + 1);
-
-  void previousSlide() => goToPage(page - 1);
 
   void goToScreen(int screen) {
     _screen = screen;

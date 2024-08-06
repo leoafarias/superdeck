@@ -19,8 +19,8 @@ class ScaffoldWithNavBar extends HookWidget {
   /// Constructs an [ScaffoldWithNavBar].
   const ScaffoldWithNavBar({
     required this.navigationShell,
-    Key? key,
-  }) : super(key: key ?? const ValueKey<String>('ScaffoldWithNavBar'));
+    super.key = const ValueKey<String>('ScaffoldWithNavBar'),
+  });
 
   /// The navigation shell and container for the branch Navigators.
   final StatefulNavigationShell navigationShell;
@@ -43,6 +43,8 @@ class ScaffoldWithNavBar extends HookWidget {
   Widget build(BuildContext context) {
     final isSmall = context.isSmall;
     final navigation = useNavigation();
+    final slides = useSlides();
+    final invalidSlides = slides.whereType<InvalidSlide>().toList();
     final animationController = useAnimationController(
       duration: Durations.short3,
     );
@@ -52,33 +54,48 @@ class ScaffoldWithNavBar extends HookWidget {
       curve: Curves.ease,
     ));
 
+    final handlePrevious = useCallback(() {
+      if (navigation.page == 0) return;
+      navigation.goToPage(navigation.page - 1);
+    }, [navigation]);
+
+    final handleNext = useCallback(() {
+      if (navigation.page == slides.length - 1) return;
+      navigation.goToPage(navigation.page + 1);
+    }, [navigation, slides.length]);
+
+    final handleToggleSide = useCallback(() {
+      if (navigation.sideIsOpen) {
+        navigation.closeSide();
+      } else {
+        navigation.openSide();
+      }
+    }, [navigation.sideIsOpen]);
+
     usePostFrameEffect(() {
       if (navigation.sideIsOpen) {
         animationController.forward();
       } else {
         animationController.reverse();
       }
-      return;
     }, [navigation.sideIsOpen]);
-
-    final invalidSlides = useInvalidSlides();
 
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
-      ): navigation.nextSlide,
+      ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
-      ): navigation.nextSlide,
+      ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.space,
-      ): navigation.nextSlide,
+      ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
-      ): navigation.previousSlide,
+      ): handlePrevious,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
-      ): navigation.previousSlide,
+      ): handlePrevious,
     };
 
     void onTap(int index) {
@@ -102,23 +119,34 @@ class ScaffoldWithNavBar extends HookWidget {
           .toList(),
     );
 
-    final sideNavBar = !isSmall
-        ? _SizeTransition(
-            sizeFactor: animation,
-            child: navigationRail,
-          )
-        : null;
-
     return CallbackShortcuts(
       bindings: bindings,
       child: Scaffold(
         bottomNavigationBar: null,
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.picture_as_pdf,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: handlePrevious,
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward),
+              onPressed: handleNext,
+            ),
+          ],
+        ),
         key: scaffoldKey,
         floatingActionButtonLocation: isSmall
             ? FloatingActionButtonLocation.miniEndFloat
             : FloatingActionButtonLocation.miniStartFloat,
         floatingActionButton: FloatingActionButton.small(
-          onPressed: navigation.toggleSide,
+          onPressed: handleToggleSide,
           child: Badge(
             label: Text(invalidSlides.length.toString()),
             isLabelVisible: invalidSlides.isNotEmpty,
@@ -129,7 +157,10 @@ class ScaffoldWithNavBar extends HookWidget {
             ? navigationShell
             : Row(
                 children: [
-                  sideNavBar ?? Container(),
+                  _SizeTransition(
+                    sizeFactor: animation,
+                    child: navigationRail,
+                  ),
                   Expanded(child: navigationShell),
                 ],
               ),

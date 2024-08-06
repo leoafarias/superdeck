@@ -46,7 +46,6 @@ class SplitView extends HookWidget {
       } else {
         animationController.reverse();
       }
-      return;
     }, [navigation.sideIsOpen]);
 
     final sideWidth = context.isMobileLandscape ? 200.0 : 400.0;
