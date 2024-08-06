@@ -57,21 +57,49 @@ class SlideThumbnailList extends HookWidget {
       return;
     }, [currentSlide, slides]);
 
-    return Container(
-      color: const Color.fromARGB(108, 0, 0, 0),
-      child: ScrollablePositionedList.builder(
-          scrollDirection: context.isSmall ? Axis.horizontal : Axis.vertical,
-          itemCount: slides.length,
-          itemPositionsListener: controller.itemPositionsListener,
-          itemScrollController: controller.itemScrollController,
-          padding: const EdgeInsets.all(20),
-          itemBuilder: (context, index) {
-            return SlideThumbnail(
-              index: index,
-              onTap: () => navigation.goToPage(index),
-              slide: slides[index],
-            );
-          }),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(0),
+        child: Container(
+          height: 30,
+          color: Colors.black,
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_back),
+            label: 'Previous',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.arrow_forward),
+            label: 'Next',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            navigation.goToPage(currentSlide - 1);
+          } else {
+            navigation.goToPage(currentSlide + 1);
+          }
+        },
+      ),
+      body: Container(
+        color: const Color.fromARGB(108, 0, 0, 0),
+        child: ScrollablePositionedList.builder(
+            scrollDirection: context.isSmall ? Axis.horizontal : Axis.vertical,
+            itemCount: slides.length,
+            itemPositionsListener: controller.itemPositionsListener,
+            itemScrollController: controller.itemScrollController,
+            padding: const EdgeInsets.all(20),
+            itemBuilder: (context, index) {
+              return SlideThumbnail(
+                index: index,
+                onTap: () => navigation.goToPage(index),
+                slide: slides[index],
+              );
+            }),
+      ),
     );
   }
 }

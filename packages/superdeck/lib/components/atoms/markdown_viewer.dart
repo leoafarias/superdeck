@@ -5,7 +5,6 @@ import 'package:markdown/markdown.dart' as md;
 import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
-import '../../providers/slide_provider.dart';
 import '../../superdeck.dart';
 import 'cache_image_widget.dart';
 
@@ -120,28 +119,6 @@ List<TextSpan> updateTextColor(
   }
 
   return updatedSpans;
-}
-
-Widget _imageBuilder2(
-  Uri uri,
-  String? title,
-  String? alt,
-) {
-  return Builder(builder: (context) {
-    final slideSpec = SlideSpec.of(context);
-    final size = SlideConstraints.of(context).biggest;
-
-    Widget image = CacheImage(
-      url: uri.toString(),
-      spec: slideSpec.image,
-    );
-
-    final constraints = calculateConstraints(size, slideSpec);
-    return ConstrainedBox(
-      constraints: constraints,
-      child: image,
-    );
-  });
 }
 
 Widget _imageBuilder(
