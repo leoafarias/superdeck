@@ -62,21 +62,14 @@ class SplitView extends HookWidget {
         final animatedHeight = animation * sideHeight;
 
         Offset offset;
+        EdgeInsets padding;
         if (isSmall) {
           offset = Offset(0, -(animatedHeight - sideHeight));
-        } else {
-          offset = Offset(animatedWidth - sideWidth, 0);
-        }
-
-        EdgeInsets padding;
-
-        if (isSmall) {
           padding = EdgeInsets.only(bottom: animatedHeight);
         } else {
+          offset = Offset(animatedWidth - sideWidth, 0);
           padding = EdgeInsets.only(left: animatedWidth);
         }
-
-        final panelSize = isSmall ? animatedHeight : animatedWidth;
 
         Widget drawer = Transform.translate(
           offset: offset,
@@ -95,12 +88,10 @@ class SplitView extends HookWidget {
           );
         }
 
-        final current = SplitViewProvider(
-          panelSize: panelSize,
-          isOpen: navigation.sideIsOpen,
-          size: constraints.biggest,
+        final current = Padding(
+          padding: padding,
           child: Padding(
-            padding: padding,
+            padding: EdgeInsets.all(20 * animation),
             child: child,
           ),
         );
@@ -110,66 +101,5 @@ class SplitView extends HookWidget {
         );
       },
     );
-  }
-}
-
-enum SplitViewProviderAspect {
-  panelSize,
-  isOpen,
-  size,
-}
-
-class SplitViewProvider extends InheritedModel<SplitViewProviderAspect> {
-  final double panelSize;
-  final bool isOpen;
-  final Size size;
-
-  const SplitViewProvider({
-    super.key,
-    required this.panelSize,
-    required this.isOpen,
-    required this.size,
-    required super.child,
-  });
-
-  @override
-  bool updateShouldNotify(covariant SplitViewProvider oldWidget) {
-    return panelSize != oldWidget.panelSize ||
-        isOpen != oldWidget.isOpen ||
-        size != oldWidget.size;
-  }
-
-  @override
-  bool updateShouldNotifyDependent(covariant SplitViewProvider oldWidget,
-      Set<SplitViewProviderAspect> dependencies) {
-    if (dependencies.contains(SplitViewProviderAspect.panelSize) &&
-        panelSize != oldWidget.panelSize) {
-      return true;
-    }
-    if (dependencies.contains(SplitViewProviderAspect.isOpen) &&
-        isOpen != oldWidget.isOpen) {
-      return true;
-    }
-    if (dependencies.contains(SplitViewProviderAspect.size) &&
-        size != oldWidget.size) {
-      return true;
-    }
-    return false;
-  }
-
-  static SplitViewProvider of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SplitViewProvider>()!;
-  }
-
-  static Size sizeOf(BuildContext context) {
-    return SplitViewProvider.of(context).size;
-  }
-
-  static double panelSizeOf(BuildContext context) {
-    return SplitViewProvider.of(context).panelSize;
-  }
-
-  static bool isOpenOf(BuildContext context) {
-    return SplitViewProvider.of(context).isOpen;
   }
 }

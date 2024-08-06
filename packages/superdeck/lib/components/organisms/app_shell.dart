@@ -1,15 +1,11 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../helpers/constants.dart';
 import '../../helpers/hooks.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
-import 'drawer.dart';
 
 final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -98,27 +94,6 @@ class ScaffoldWithNavBar extends HookWidget {
       ): handlePrevious,
     };
 
-    void onTap(int index) {
-      _onTap(context, index);
-    }
-
-    final menuItems = kCanRunProcess ? SideMenu.devMenu : SideMenu.prodMenu;
-
-    final navigationRail = NavigationRail(
-      extended: false,
-      selectedIndex: navigationShell.currentIndex,
-      onDestinationSelected: onTap,
-      minWidth: 80,
-      leading: const SizedBox(height: 20),
-      labelType: NavigationRailLabelType.none,
-      destinations: menuItems
-          .map((e) => NavigationRailDestination(
-                icon: Icon(e.icon, size: 20),
-                label: Text(e.label),
-              ))
-          .toList(),
-    );
-
     return CallbackShortcuts(
       bindings: bindings,
       child: Scaffold(
@@ -158,49 +133,7 @@ class ScaffoldWithNavBar extends HookWidget {
             child: const Icon(Icons.menu),
           ),
         ),
-        body: Row(
-          children: [
-            _SizeTransition(
-              sizeFactor: animation,
-              direction: Axis.horizontal,
-              child: navigationRail,
-            ),
-            Expanded(child: navigationShell),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SizeTransition extends StatelessWidget {
-  const _SizeTransition({
-    required this.sizeFactor,
-    this.child,
-    this.direction = Axis.horizontal,
-  });
-
-  final double sizeFactor;
-  final Axis direction;
-
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    AlignmentDirectional alignment;
-    if (direction == Axis.horizontal) {
-      alignment = const AlignmentDirectional(0.0, -1.0);
-    } else {
-      alignment = const AlignmentDirectional(-1.0, 0.0);
-    }
-    return ClipRect(
-      child: Align(
-        alignment: alignment,
-        heightFactor:
-            direction == Axis.vertical ? math.max(sizeFactor, 0.0) : 1.0,
-        widthFactor:
-            direction == Axis.horizontal ? math.max(sizeFactor, 0.0) : 1.0,
-        child: child,
+        body: navigationShell,
       ),
     );
   }

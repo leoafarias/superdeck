@@ -28,8 +28,7 @@ class HomeScreen extends HookWidget {
     }, [page]);
 
     return SplitView(
-      child: Container(
-        alignment: Alignment.center,
+      child: Center(
         child: PageView.builder(
           controller: pageController,
           itemCount: slides.length,
