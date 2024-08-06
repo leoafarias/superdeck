@@ -8,7 +8,7 @@ import '../models/asset_model.dart';
 import '../models/slide_model.dart';
 import '../services/reference_service.dart';
 
-final superdeckController = SuperDeckController.instance;
+final $superdeck = SuperDeckController.instance;
 
 class SuperDeckController extends ChangeNotifier {
   SuperDeckController._() {
@@ -60,15 +60,15 @@ class SuperDeckController extends ChangeNotifier {
 
 List<Slide> useSlides() {
   return useListenableSelector(
-    superdeckController,
-    () => superdeckController.slides,
+    $superdeck,
+    () => $superdeck.slides,
   );
 }
 
 List<InvalidSlide> useInvalidSlides() {
   return useListenableSelector(
-    superdeckController,
-    () => superdeckController.slides.whereType<InvalidSlide>().toList(),
+    $superdeck,
+    () => $superdeck.slides.whereType<InvalidSlide>().toList(),
   );
 }
 
@@ -85,30 +85,26 @@ T useNavigationSelector<T>(T Function(NavigationController) selector) {
 
 class NavigationController extends ChangeNotifier {
   NavigationController._() {
-    _initialize();
+    _page = _getStoredValue('page', 0);
+    _sideIsOpen = _getStoredValue('sideIsOpen', false);
+    _screen = _getStoredValue('screen', 0);
+
+    addListener(() {
+      _setStoredValue('page', _page);
+      _setStoredValue('sideIsOpen', _sideIsOpen);
+      _setStoredValue('screen', _screen);
+    });
   }
 
   static final instance = NavigationController._();
 
-  void _initialize() {
-    _currentSlide = _getStoredValue('currentSlide', 0);
-    _sideIsOpen = _getStoredValue('sideIsOpen', false);
-    _currentScreen = _getStoredValue('currentScreen', 0);
-
-    addListener(() {
-      _setStoredValue('currentSlide', _currentSlide);
-      _setStoredValue('sideIsOpen', _sideIsOpen);
-      _setStoredValue('currentScreen', _currentScreen);
-    });
-  }
-
-  int _currentSlide = 0;
+  int _page = 0;
   bool _sideIsOpen = false;
-  int _currentScreen = 0;
+  int _screen = 0;
 
-  int get currentSlide => _currentSlide;
+  int get page => _page;
   bool get sideIsOpen => _sideIsOpen;
-  int get currentScreen => _currentScreen;
+  int get screen => _screen;
 
   void openSide() {
     _sideIsOpen = true;
@@ -122,31 +118,27 @@ class NavigationController extends ChangeNotifier {
 
   void toggleSide() {
     if (_sideIsOpen) {
-      _currentScreen = 0;
+      _screen = 0;
     }
     _sideIsOpen = !_sideIsOpen;
     notifyListeners();
   }
 
-  void goToSlide(int slide) {
-    if (slide < 0 || slide >= superdeckController.slides.length) {
+  void goToPage(int slide) {
+    if (slide < 0 || slide >= $superdeck.slides.length) {
       return;
     }
-    _currentSlide = slide;
+    _page = slide;
 
     notifyListeners();
   }
 
-  void nextSlide() {
-    goToSlide(currentSlide + 1);
-  }
+  void nextSlide() => goToPage(page + 1);
 
-  void previousSlide() {
-    goToSlide(currentSlide - 1);
-  }
+  void previousSlide() => goToPage(page - 1);
 
   void goToScreen(int screen) {
-    _currentScreen = screen;
+    _screen = screen;
     notifyListeners();
   }
 }

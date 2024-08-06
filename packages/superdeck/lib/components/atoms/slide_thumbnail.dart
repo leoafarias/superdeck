@@ -35,7 +35,7 @@ class SlideThumbnail extends HookWidget {
     );
     return LayoutBuilder(builder: (context, constraints) {
       final selectedColor =
-          index == navigation.currentSlide ? Colors.blue : Colors.transparent;
+          index == navigation.page ? Colors.blue : Colors.transparent;
 
       final child = LoadingOverlay(
         isLoading: processThumbnail.isLoading,

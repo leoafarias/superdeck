@@ -15,18 +15,19 @@ class SlideThumbnailList extends HookWidget {
 
   final Axis scrollDirection;
 
+  final _duration = const Duration(milliseconds: 300);
+  final _curve = Curves.easeInOutCubic;
+
   @override
   Widget build(BuildContext context) {
     final navigation = useNavigation();
-    final currentSlide = navigation.currentSlide;
+    final currentSlide = navigation.page;
     final slides = useSlides();
-    final (:visibleItems, :itemScrollController, :itemPositionsListener) =
-        useScrollControllerWithVisibleItems();
+    final controller = useScrollVisibleController();
+    final visibleItems = controller.visibleItems;
 
-    useLayoutEffect(() {
+    usePostFrameEffect(() {
       if (visibleItems.isEmpty) return;
-      const duration = Duration(milliseconds: 300);
-      const curve = Curves.easeInOutCubic;
 
       final visibleItem =
           visibleItems.firstWhereOrNull((e) => e.index == currentSlide);
@@ -36,7 +37,7 @@ class SlideThumbnailList extends HookWidget {
       if (visibleItem == null) {
         final isBeginning = visibleItems.first.index > currentSlide;
 
-        alignment = isBeginning ? 0 : 0.75;
+        alignment = isBeginning ? 0 : 0.7;
       } else {
         if (visibleItem.itemTrailingEdge > 1) {
           final totalSpace =
@@ -48,11 +49,11 @@ class SlideThumbnailList extends HookWidget {
           alignment = visibleItem.itemLeadingEdge;
         }
       }
-      itemScrollController.scrollTo(
+      controller.itemScrollController.scrollTo(
         index: currentSlide,
         alignment: alignment,
-        duration: duration,
-        curve: curve,
+        duration: _duration,
+        curve: _curve,
       );
 
       return;
@@ -63,14 +64,14 @@ class SlideThumbnailList extends HookWidget {
       child: ScrollablePositionedList.builder(
           scrollDirection: scrollDirection,
           itemCount: slides.length,
-          itemPositionsListener: itemPositionsListener,
-          itemScrollController: itemScrollController,
+          itemPositionsListener: controller.itemPositionsListener,
+          itemScrollController: controller.itemScrollController,
           padding: const EdgeInsets.all(20),
-          itemBuilder: (context, idx) {
+          itemBuilder: (context, index) {
             return SlideThumbnail(
-              index: idx,
-              onTap: () => navigation.goToSlide(idx),
-              slide: slides[idx],
+              index: index,
+              onTap: () => navigation.goToPage(index),
+              slide: slides[index],
             );
           }),
     );

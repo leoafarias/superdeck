@@ -19,6 +19,7 @@ import 'atoms/loading_indicator.dart';
 
 final kAppKey = GlobalKey();
 final _uniqueKey = UniqueKey();
+var _initialized = false;
 
 class SuperDeckApp extends HookWidget {
   const SuperDeckApp({
@@ -32,11 +33,9 @@ class SuperDeckApp extends HookWidget {
   final Map<String, ExampleBuilder> examples;
   final Map<String, Style> styles;
 
-  static bool _isInitialized = false;
-
   static Future<void> initialize() async {
     // Return if its initialized
-    if (SuperDeckApp._isInitialized) return;
+    if (_initialized) return;
 
     WidgetsFlutterBinding.ensureInitialized();
 
@@ -46,7 +45,7 @@ class SuperDeckApp extends HookWidget {
       _initializeWindowManager(),
     ]);
 
-    SuperDeckApp._isInitialized = true;
+    _initialized = true;
   }
 
   @override
@@ -62,7 +61,7 @@ class SuperDeckApp extends HookWidget {
               child: ExamplesProvider(
                 examples: examples,
                 child: ListenableBuilder(
-                    listenable: SuperDeckController.instance,
+                    listenable: $superdeck,
                     builder: (context, snapshot) {
                       return MixTheme(
                         data: MixThemeData.withMaterial(),
@@ -74,9 +73,15 @@ class SuperDeckApp extends HookWidget {
                           key: kAppKey,
                           builder: (context, child) {
                             return LoadingOverlay(
-                              isLoading: SuperDeckController.instance.loading,
+                              isLoading: $superdeck.loading,
                               key: _uniqueKey,
-                              child: child!,
+                              child: Builder(
+                                builder: (context) {
+                                  return $superdeck.completed
+                                      ? child!
+                                      : const SizedBox();
+                                },
+                              ),
                             );
                           },
                         ),

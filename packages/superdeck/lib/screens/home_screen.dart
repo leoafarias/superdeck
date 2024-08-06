@@ -7,42 +7,25 @@ import '../helpers/hooks.dart';
 import '../superdeck.dart';
 
 class HomeScreen extends HookWidget {
-  const HomeScreen({
-    super.key,
-  });
+  const HomeScreen({super.key});
+
+  final _duration = const Duration(milliseconds: 300);
+  final _curve = Curves.easeInOutCubic;
 
   @override
   Widget build(BuildContext context) {
-    final navigation = useNavigation();
-    final currentSlide = navigation.currentSlide;
-    final pageController = usePageController(initialPage: currentSlide);
+    final page = useNavigationSelector((c) => c.page);
+
+    final pageController = usePageController(initialPage: page);
     final slides = useSlides();
 
-    useLayoutEffect(() {
-      const duration = Duration(milliseconds: 300);
-      const curve = Curves.easeInOutCubic;
-      final currentPage = pageController.page?.toInt() ?? 0;
-
-      // Return if already paged
-      if (currentPage == currentSlide) return;
-
-      // // Check if the current Page is more than 1 page away
-      // final isFarAway = (currentPage - currentSlide).abs() > 1;
-
-      // if (isFarAway) {
-      //   //  fire this after layout
-
-      //   pageController.jumpToPage(currentSlide);
-      // } else {
-      // }
+    useUpdateEffect(() {
       pageController.animateToPage(
-        currentSlide,
-        duration: duration,
-        curve: curve,
+        page,
+        duration: _duration,
+        curve: _curve,
       );
-
-      return;
-    }, [currentSlide]);
+    }, [page]);
 
     return SplitView(
       child: Container(
@@ -50,9 +33,8 @@ class HomeScreen extends HookWidget {
         child: PageView.builder(
           controller: pageController,
           itemCount: slides.length,
-          itemBuilder: (context, idx) {
-            final slide = slides[idx];
-            return SlidePreview(slide);
+          itemBuilder: (_, index) {
+            return SlidePreview(slides[index]);
           },
         ),
       ),

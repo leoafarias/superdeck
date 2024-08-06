@@ -52,7 +52,7 @@ class ScaffoldWithNavBar extends HookWidget {
       curve: Curves.ease,
     ));
 
-    useLayoutEffect(() {
+    usePostFrameEffect(() {
       if (navigation.sideIsOpen) {
         animationController.forward();
       } else {

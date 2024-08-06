@@ -72,7 +72,7 @@ ImageProvider getImageProvider({
 }) {
   ImageProvider provider;
 
-  final assets = superdeckController.assets;
+  final assets = $superdeck.assets;
 
   final assetUrl = assets.firstWhereOrNull((e) => e.path == url);
 

@@ -5,6 +5,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     invalid_annotation_target: ignore
+    body_might_complete_normally_nullable: ignore
   plugins:
     - custom_lint
   exclude:
@@ -16,4 +17,3 @@ linter:
     always_use_package_imports: false
     prefer_relative_imports: true
     library_private_types_in_public_api: false
-
