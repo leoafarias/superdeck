@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../helpers/hooks.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
+import '../atoms/sized_transition.dart';
 import 'slide_thumbnail_list.dart';
 
 // ignore: non_constant_identifier_names
@@ -26,9 +27,14 @@ class SplitView extends HookWidget {
     required this.child,
   });
 
+  final _maxWidth = 450.0;
+  final _minWidth = 300.0;
+
   @override
   Widget build(BuildContext context) {
     final navigation = useNavigation();
+    final sideSize = useState(context.isMobileLandscape ? 200.0 : _maxWidth);
+    final isDragging = useState(false);
 
     final animationController = useAnimationController(
       duration: Durations.medium1,
@@ -47,46 +53,65 @@ class SplitView extends HookWidget {
       }
     }, [navigation.sideIsOpen]);
 
-    final sideWidth = context.isMobileLandscape ? 200.0 : 400.0;
+    final handleUpdateSize = useCallback((DragUpdateDetails details) {
+      sideSize.value =
+          (sideSize.value + details.delta.dx).clamp(_minWidth, _maxWidth);
+    }, [sideSize.value]);
+
     const sideHeight = 200.0;
 
     final isSmall = context.isSmall || context.isMobileLandscape;
 
     final sidePanel = SlideThumbnailList(
+      key: ValueKey(isSmall ? Axis.horizontal : Axis.vertical),
       scrollDirection: isSmall ? Axis.horizontal : Axis.vertical,
     );
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final animatedWidth = animation * sideWidth;
+        final animatedWidth = animation * sideSize.value;
         final animatedHeight = animation * sideHeight;
 
-        Offset offset;
         EdgeInsets padding;
         if (isSmall) {
-          offset = Offset(0, -(animatedHeight - sideHeight));
           padding = EdgeInsets.only(bottom: animatedHeight);
         } else {
-          offset = Offset(animatedWidth - sideWidth, 0);
           padding = EdgeInsets.only(left: animatedWidth);
         }
 
-        Widget drawer = Transform.translate(
-          offset: offset,
-          child: SizedBox(
-            width: isSmall ? null : sideWidth,
-            height: isSmall ? sideHeight : null,
-            child: sidePanel,
+        final divider = MouseRegion(
+          cursor: SystemMouseCursors.resizeColumn,
+          child: GestureDetector(
+            onHorizontalDragUpdate: handleUpdateSize,
+            onHorizontalDragStart: (_) {
+              isDragging.value = true;
+            },
+            onHorizontalDragEnd: (_) {
+              isDragging.value = false;
+            },
+            child: Container(
+              color: Colors.black,
+              width: 8,
+            ),
           ),
         );
 
-        // Align at the bottom if its a small screen
-        if (isSmall) {
-          drawer = Align(
-            alignment: Alignment.bottomCenter,
-            child: drawer,
-          );
-        }
+        final drawer = Align(
+          alignment: isSmall ? Alignment.bottomCenter : Alignment.centerLeft,
+          child: SizedTransition(
+            sizeFactor: animation,
+            child: SizedBox(
+              width: isSmall ? null : sideSize.value,
+              height: isSmall ? sideHeight : null,
+              child: Row(
+                children: [
+                  Expanded(child: isDragging.value ? Container() : sidePanel),
+                  divider,
+                ],
+              ),
+            ),
+          ),
+        );
 
         final current = Padding(
           padding: padding,
