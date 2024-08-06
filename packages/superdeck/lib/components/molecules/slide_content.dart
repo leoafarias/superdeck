@@ -34,11 +34,9 @@ class SlideContent extends StatelessWidget {
         child: child,
       );
     } else {
-      child = Wrap(
+      child = Container(
         clipBehavior: Clip.hardEdge,
-        children: [
-          child,
-        ],
+        child: child,
       );
     }
 

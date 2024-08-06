@@ -43,3 +43,46 @@ class MeasureSize extends SingleChildRenderObjectWidget {
     renderObject.onChange = onChange;
   }
 }
+
+class MeasureSingleWidgetSize extends StatefulWidget {
+  final Widget child;
+  final void Function(Size) onChange;
+
+  const MeasureSingleWidgetSize(
+      {super.key, required this.child, required this.onChange});
+
+  @override
+  _MeasureSingleWidgetSizeState createState() =>
+      _MeasureSingleWidgetSizeState();
+}
+
+class _MeasureSingleWidgetSizeState extends State<MeasureSingleWidgetSize> {
+  final GlobalKey _childKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(_measureHeight);
+  }
+
+  void _measureHeight(Duration _) async {
+    final renderBox =
+        _childKey.currentContext?.findRenderObject() as RenderBox?;
+    final size = renderBox?.size;
+
+    if (size == null || size == Size.zero) {
+      WidgetsBinding.instance.addPostFrameCallback(_measureHeight);
+      return;
+    }
+
+    widget.onChange(size);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: _childKey,
+      child: widget.child,
+    );
+  }
+}

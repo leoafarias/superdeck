@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../helpers/constants.dart';
 import '../../providers/slide_provider.dart';
 import '../../providers/snapshot_provider.dart';
 import '../../providers/style_provider.dart';
@@ -27,7 +26,6 @@ class SlideView<T extends Slide> extends StatelessWidget {
         ? CacheImage(
             url: slide.background!,
             fit: BoxFit.cover,
-            size: kResolution,
             alignment: Alignment.center,
           )
         : const SizedBox();
@@ -60,29 +58,5 @@ class SlideView<T extends Slide> extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class SlideConstraintsProvider extends InheritedWidget {
-  const SlideConstraintsProvider({
-    required this.constraints,
-    required super.child,
-    super.key,
-  });
-
-  final BoxConstraints constraints;
-
-  static BoxConstraints of(BuildContext context) {
-    final slideConstraints =
-        context.dependOnInheritedWidgetOfExactType<SlideConstraintsProvider>();
-    if (slideConstraints == null) {
-      throw Exception('SlideConstraints not found in context');
-    }
-    return slideConstraints.constraints;
-  }
-
-  @override
-  bool updateShouldNotify(SlideConstraintsProvider oldWidget) {
-    return oldWidget.constraints != constraints;
   }
 }

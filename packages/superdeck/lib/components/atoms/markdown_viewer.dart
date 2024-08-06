@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
 import '../../providers/slide_provider.dart';
@@ -70,33 +71,6 @@ class _AnimatedMarkdownViewerState
   }
 }
 
-Widget _imageBuilder(
-  Uri uri,
-  String? title,
-  String? alt,
-) {
-  return Builder(
-    builder: (context) {
-      final size = SlideConstraints.of(context).biggest;
-
-      final spec = SlideSpec.of(context);
-      final imageSpec = spec.image;
-      final constraints = calculateConstraints(size, spec.contentContainer);
-      return ConstrainedBox(
-        constraints: constraints,
-        child: CacheImage(
-          url: uri.toString(),
-          size: constraints.biggest,
-          spec: imageSpec.copyWith(
-            width: imageSpec.width,
-            height: imageSpec.height,
-          ),
-        ),
-      );
-    },
-  );
-}
-
 List<TextSpan> updateTextColor(
   List<TextSpan> originalSpans,
   List<int> targetLines,
@@ -148,17 +122,62 @@ List<TextSpan> updateTextColor(
   return updatedSpans;
 }
 
+Widget _imageBuilder2(
+  Uri uri,
+  String? title,
+  String? alt,
+) {
+  return Builder(builder: (context) {
+    final slideSpec = SlideSpec.of(context);
+    final size = SlideConstraints.of(context).biggest;
+
+    Widget image = CacheImage(
+      url: uri.toString(),
+      spec: slideSpec.image,
+    );
+
+    final constraints = calculateConstraints(size, slideSpec);
+    return ConstrainedBox(
+      constraints: constraints,
+      child: image,
+    );
+  });
+}
+
+Widget _imageBuilder(
+  Uri uri,
+  String? title,
+  String? alt,
+) {
+  Size? size;
+  return StatefulBuilder(builder: (context, setState) {
+    final slideSpec = SlideSpec.of(context);
+
+    Widget image = CacheImage(
+      url: uri.toString(),
+      spec: slideSpec.image,
+    );
+
+    if (size != null) {
+      return ConstrainedBox(
+        constraints: calculateConstraints(size!, slideSpec),
+        child: image,
+      );
+    } else {
+      return MeasureSingleWidgetSize(
+        onChange: (newSize) => setState(() => size = newSize),
+        child: image,
+      );
+    }
+  });
+}
+
 class TextBuilder extends MarkdownElementBuilder {
   final TextSpec? spec;
   TextBuilder(this.spec);
   @override
   Widget visitText(md.Text text, TextStyle? preferredStyle) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextSpecWidget(text.text, spec: spec),
-      ],
-    );
+    return TextSpecWidget(text.text, spec: spec);
   }
 }
 

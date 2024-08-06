@@ -40,10 +40,6 @@ class ImageTemplate extends SplitTemplateBuilder<ImageSlide> {
         image: DecorationImage(
           image: getImageProvider(
             url: src,
-            targetSize: Size(
-              width,
-              height,
-            ),
           ),
           centerSlice: spec.image.centerSlice,
           repeat: spec.image.repeat ?? ImageRepeat.noRepeat,

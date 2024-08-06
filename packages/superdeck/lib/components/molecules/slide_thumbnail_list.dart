@@ -4,16 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../helpers/hooks.dart';
+import '../../helpers/utils.dart';
 import '../../providers/controller.dart';
 import '../atoms/slide_thumbnail.dart';
 
 class SlideThumbnailList extends HookWidget {
   const SlideThumbnailList({
     super.key,
-    required this.scrollDirection,
   });
-
-  final Axis scrollDirection;
 
   final _duration = const Duration(milliseconds: 300);
   final _curve = Curves.easeInOutCubic;
@@ -62,7 +60,7 @@ class SlideThumbnailList extends HookWidget {
     return Container(
       color: const Color.fromARGB(108, 0, 0, 0),
       child: ScrollablePositionedList.builder(
-          scrollDirection: scrollDirection,
+          scrollDirection: context.isSmall ? Axis.horizontal : Axis.vertical,
           itemCount: slides.length,
           itemPositionsListener: controller.itemPositionsListener,
           itemScrollController: controller.itemScrollController,

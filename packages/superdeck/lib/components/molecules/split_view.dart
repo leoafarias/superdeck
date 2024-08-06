@@ -7,17 +7,7 @@ import '../../superdeck.dart';
 import '../atoms/sized_transition.dart';
 import 'slide_thumbnail_list.dart';
 
-// ignore: non_constant_identifier_names
-final SlidePreviewBox = Style(
-  $box.color.grey.shade900(),
-  $box.margin.all(8),
-  $box.maxHeight(140),
-  $box.shadow(
-    color: Colors.black.withOpacity(0.5),
-    blurRadius: 4,
-    spreadRadius: 1,
-  ),
-).box;
+final _valueKey = GlobalKey();
 
 class SplitView extends HookWidget {
   final Widget child;
@@ -62,11 +52,6 @@ class SplitView extends HookWidget {
 
     final isSmall = context.isSmall || context.isMobileLandscape;
 
-    final sidePanel = SlideThumbnailList(
-      key: ValueKey(isSmall ? Axis.horizontal : Axis.vertical),
-      scrollDirection: isSmall ? Axis.horizontal : Axis.vertical,
-    );
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final animatedWidth = animation * sideSize.value;
@@ -105,7 +90,9 @@ class SplitView extends HookWidget {
               height: isSmall ? sideHeight : null,
               child: Row(
                 children: [
-                  Expanded(child: isDragging.value ? Container() : sidePanel),
+                  const Expanded(
+                    child: SlideThumbnailList(),
+                  ),
                   divider,
                 ],
               ),

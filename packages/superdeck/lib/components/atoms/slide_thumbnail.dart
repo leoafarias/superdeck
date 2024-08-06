@@ -42,9 +42,9 @@ class SlideThumbnail extends HookWidget {
         child: processThumbnail.when(
           data: (file) {
             return Image(
+              gaplessPlayback: true,
               image: getImageProvider(
                 url: file.path,
-                targetSize: constraints.biggest,
               ),
             );
           },

@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 
-BoxConstraints calculateConstraints(Size size, BoxSpec spec) {
-  final padding = spec.padding ?? EdgeInsets.zero;
-  final margin = spec.margin ?? EdgeInsets.zero;
+import '../styles/style_spec.dart';
 
-  double horizontalBorder = 0.0;
-  double verticalBorder = 0.0;
+BoxConstraints calculateConstraints(Size size, SlideSpec spec) {
+  // final outerContainer = spec.outerContainer;
+  // final innerContainer = spec.innerContainer;
+  final contentContainer = spec.contentContainer;
 
-  if (spec.decoration is BoxDecoration) {
-    final border = (spec.decoration as BoxDecoration).border;
-    if (border != null) {
-      horizontalBorder = border.dimensions.horizontal;
-      verticalBorder = border.dimensions.vertical;
+  double horizontalSpacing = 0.0;
+  double verticalSpacing = 0.0;
+
+  for (final container in [contentContainer]) {
+    final padding = container.padding ?? EdgeInsets.zero;
+    final margin = container.margin ?? EdgeInsets.zero;
+
+    double horizontalBorder = 0.0;
+    double verticalBorder = 0.0;
+
+    if (container.decoration is BoxDecoration) {
+      final border = (container.decoration as BoxDecoration).border;
+      if (border != null) {
+        horizontalBorder = border.dimensions.horizontal;
+        verticalBorder = border.dimensions.vertical;
+      }
     }
-  }
 
-  final horizontalSpacing =
-      padding.horizontal + margin.horizontal + horizontalBorder;
-  final verticalSpacing = padding.vertical + margin.vertical + verticalBorder;
+    horizontalSpacing +=
+        padding.horizontal + margin.horizontal + horizontalBorder;
+    verticalSpacing += padding.vertical + margin.vertical + verticalBorder;
+  }
 
   return BoxConstraints(
     maxHeight: size.height - verticalSpacing,

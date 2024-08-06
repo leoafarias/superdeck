@@ -13,14 +13,12 @@ class CacheImage extends StatelessWidget {
   final BoxFit? fit;
   final ImageSpec spec;
   final Alignment? alignment;
-  final Size size;
 
   const CacheImage({
     required this.url,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
     this.spec = const ImageSpec(),
-    required this.size,
     super.key,
   });
 
@@ -29,7 +27,6 @@ class CacheImage extends StatelessWidget {
     return AnimatedImageSpecWidget(
       image: getImageProvider(
         url: url,
-        targetSize: size,
       ),
       spec: spec.copyWith(
         fit: fit,
@@ -68,7 +65,6 @@ class CacheImage extends StatelessWidget {
 
 ImageProvider getImageProvider({
   required String url,
-  required Size targetSize,
 }) {
   ImageProvider provider;
 
@@ -90,7 +86,7 @@ ImageProvider getImageProvider({
     }
   }
 
-  final (:width, :height) = calculateImageSize(targetSize, assetUrl);
+  final (:width, :height) = calculateImageSize(kResolution, assetUrl);
 
   return ResizeImage.resizeIfNeeded(
     width,

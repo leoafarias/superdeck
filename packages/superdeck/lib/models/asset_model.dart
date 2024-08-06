@@ -30,7 +30,6 @@ enum AssetFileType {
   bool isGif() => this == AssetFileType.gif;
 }
 
-
 @MappableClass(
   includeCustomMappers: [
     FileMapper(),
@@ -50,7 +49,7 @@ final class SlideAsset with SlideAssetMappable {
 
   String get extension => p.extension(path);
 
-  bool get isPortrait => height > width;
+  bool get isPortrait => height >= width;
 
   bool get isLandscape => !isPortrait;
 
