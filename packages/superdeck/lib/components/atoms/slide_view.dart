@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../providers/slide_provider.dart';
-import '../../providers/snapshot_provider.dart';
 import '../../providers/style_provider.dart';
 import '../../superdeck.dart';
 import 'cache_image_widget.dart';
@@ -20,7 +19,6 @@ class SlideView<T extends Slide> extends StatelessWidget {
     final slide = this.slide;
 
     final variantStyle = StyleProvider.of(context, slide.style);
-    final isSnapshot = SnapshotProvider.of(context);
 
     final backgroundWidget = slide.background != null
         ? CacheImage(
@@ -30,10 +28,8 @@ class SlideView<T extends Slide> extends StatelessWidget {
           )
         : const SizedBox();
 
-    final duration = isSnapshot ? Duration.zero : null;
-
     return TransitionWidget(
-      key: ValueKey(slide.transition?.copyWith(duration: duration)),
+      key: ValueKey(slide.transition),
       transition: slide.transition,
       child: SpecBuilder(
         style: variantStyle,
@@ -42,7 +38,7 @@ class SlideView<T extends Slide> extends StatelessWidget {
           return Builder(builder: (context) {
             return AnimatedBoxSpecWidget(
               spec: spec.outerContainer,
-              duration: duration ?? const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               child: Stack(
                 children: [
                   Positioned.fill(child: backgroundWidget),

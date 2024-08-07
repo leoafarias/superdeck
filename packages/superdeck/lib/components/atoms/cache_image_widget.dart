@@ -25,9 +25,7 @@ class CacheImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedImageSpecWidget(
-      image: getImageProvider(
-        url: url,
-      ),
+      image: getImageProvider(url),
       spec: spec.copyWith(
         fit: fit,
         alignment: alignment,
@@ -63,9 +61,7 @@ class CacheImage extends StatelessWidget {
   return (width: cacheWidth, height: cacheHeight);
 }
 
-ImageProvider getImageProvider({
-  required String url,
-}) {
+ImageProvider getImageProvider(String url) {
   ImageProvider provider;
 
   final assets = $superdeck.assets;

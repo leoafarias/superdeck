@@ -43,9 +43,7 @@ class SlideThumbnail extends HookWidget {
           data: (file) {
             return Image(
               gaplessPlayback: true,
-              image: getImageProvider(
-                url: file.path,
-              ),
+              image: getImageProvider(file.path),
             );
           },
           loading: () {

@@ -106,7 +106,7 @@ class ScaffoldWithNavBar extends HookWidget {
           toolbarOpacity: animation,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => context.go('/export'),
               icon: const Icon(
                 Icons.picture_as_pdf,
               ),

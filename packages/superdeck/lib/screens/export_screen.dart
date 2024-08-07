@@ -1,19 +1,18 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:js_interop';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:web/web.dart' as web;
 
 import '../../helpers/constants.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
 import '../components/molecules/scaled_app.dart';
+import '../helpers/hooks.dart';
 import '../services/snapshot_service.dart';
 import '../superdeck.dart';
 
@@ -157,13 +156,12 @@ class ExportingProcessScreen extends HookWidget {
 
     final startConversion = useCallback(() async {
       try {
-        final generator = SnapshotService.instance;
         status.value = ExportProcessStatus.converting;
 
         List<Future<Uint8List>> futures = [];
 
         Future<Uint8List> convertSlide(Slide slide) async {
-          final convertedImage = await generator.generate(
+          final convertedImage = await SnapshotService.instance.generate(
             quality: quality,
             slide: slide,
           );
@@ -187,27 +185,29 @@ class ExportingProcessScreen extends HookWidget {
         status.value = ExportProcessStatus.complete;
         await Future.delayed(Durations.short1);
 
-        if (kIsWeb) {
-          // Create a Blob from the PDF bytes
-          final blob = web.Blob(
-              [pdf.toJS].toJS, web.BlobPropertyBag(type: 'application/pdf'));
+        final pdfFileName = 'superdeck';
 
-          // Create a URL for the Blob
-          final url = web.URL.createObjectURL(blob);
+        // if (kIsWeb) {
+        //   // Create a Blob from the PDF bytes
+        //   final blob = web.Blob(<JSUint8Array>[pdf.toJS].toJS,
+        //       web.BlobPropertyBag(type: 'application/pdf'));
 
-          web.HTMLAnchorElement()
-            ..href = url
-            ..setAttribute('download', 'superdeck.pdf')
-            ..click();
+        //   // Create a URL for the Blob
+        //   final url = web.URL.createObjectURL(blob);
 
-          return;
-        }
+        //   web.HTMLAnchorElement()
+        //     ..href = url
+        //     ..setAttribute('download', pdfFileName)
+        //     ..click();
 
-        final outputFile = await FilePicker.platform.saveFile(
-          dialogTitle: 'Save PDF',
-          fileName: 'superdeck.pdf',
-          type: FileType.custom,
-          allowedExtensions: ['pdf'],
+        //   return;
+        // }
+
+        final outputFile = await FileSaver.instance.saveAs(
+          name: pdfFileName,
+          bytes: pdf,
+          ext: 'pdf',
+          mimeType: MimeType.pdf,
         );
 
         if (outputFile != null) {
@@ -222,12 +222,12 @@ class ExportingProcessScreen extends HookWidget {
       }
     }, []);
 
-    useEffect(() {
+    usePostFrameEffect(() {
       startConversion();
       return null;
     }, []);
 
-    useEffect(() {
+    useUpdateEffect(() {
       if (images.value.length == slides.length) {
         pageController.jumpToPage(0);
       } else {
@@ -272,9 +272,7 @@ class ExportingProcessScreen extends HookWidget {
 
       return [
         Container(
-          decoration: const BoxDecoration(
-            color: Colors.black,
-          ),
+          color: Colors.black,
           height: 225,
           width: 400,
           child: PageView.builder(

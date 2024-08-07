@@ -19,7 +19,7 @@ class SlideThumbnailList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final navigation = useNavigation();
-    final currentSlide = navigation.page;
+    final currentPage = navigation.page;
     final slides = useSlides();
     final controller = useScrollVisibleController();
     final visibleItems = controller.visibleItems;
@@ -28,12 +28,12 @@ class SlideThumbnailList extends HookWidget {
       if (visibleItems.isEmpty) return;
 
       final visibleItem =
-          visibleItems.firstWhereOrNull((e) => e.index == currentSlide);
+          visibleItems.firstWhereOrNull((e) => e.index == currentPage);
 
       double alignment;
 
       if (visibleItem == null) {
-        final isBeginning = visibleItems.first.index > currentSlide;
+        final isBeginning = visibleItems.first.index > currentPage;
 
         alignment = isBeginning ? 0 : 0.7;
       } else {
@@ -48,14 +48,14 @@ class SlideThumbnailList extends HookWidget {
         }
       }
       controller.itemScrollController.scrollTo(
-        index: currentSlide,
+        index: currentPage,
         alignment: alignment,
         duration: _duration,
         curve: _curve,
       );
 
       return;
-    }, [currentSlide, slides]);
+    }, [currentPage, slides]);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -78,9 +78,9 @@ class SlideThumbnailList extends HookWidget {
         ],
         onTap: (index) {
           if (index == 0) {
-            navigation.goToPage(currentSlide - 1);
+            navigation.goToPage(currentPage - 1);
           } else {
-            navigation.goToPage(currentSlide + 1);
+            navigation.goToPage(currentPage + 1);
           }
         },
       ),

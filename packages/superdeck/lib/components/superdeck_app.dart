@@ -12,12 +12,12 @@ import '../../superdeck.dart';
 import '../helpers/constants.dart';
 import '../helpers/theme.dart';
 import '../providers/examples_provider.dart';
+import '../providers/snapshot_provider.dart';
 import '../providers/style_provider.dart';
 import '../screens/export_screen.dart';
 import '../screens/home_screen.dart';
 import 'atoms/loading_indicator.dart';
 
-final kAppKey = GlobalKey();
 final _uniqueKey = UniqueKey();
 var _initialized = false;
 
@@ -70,17 +70,18 @@ class SuperDeckApp extends HookWidget {
                           title: 'Superdeck',
                           routerConfig: _router,
                           theme: Theme.of(context),
-                          key: kAppKey,
                           builder: (context, child) {
-                            return LoadingOverlay(
-                              isLoading: $superdeck.loading,
-                              key: _uniqueKey,
-                              child: Builder(
-                                builder: (context) {
-                                  return $superdeck.completed
-                                      ? child!
-                                      : const SizedBox();
-                                },
+                            return SnapshotProvider(
+                              child: LoadingOverlay(
+                                isLoading: $superdeck.loading,
+                                key: _uniqueKey,
+                                child: Builder(
+                                  builder: (context) {
+                                    return $superdeck.completed
+                                        ? child!
+                                        : const SizedBox();
+                                  },
+                                ),
                               ),
                             );
                           },

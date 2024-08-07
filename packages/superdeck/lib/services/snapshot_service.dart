@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -41,24 +42,25 @@ class SnapshotService {
   }) async {
     final queueKey = '${slide.key}_${quality.name.toLowerCase()}';
     try {
-      while (_generationQueue.length > _maxConcurrentGenerations) {
-        await Future.delayed(const Duration(milliseconds: 100));
+      while (_generationQueue.length >= _maxConcurrentGenerations) {
+        await Future.delayed(Duration(
+          milliseconds: math.Random().nextInt(100),
+        ));
       }
 
       _generationQueue.add(queueKey);
+      print('Generating image for slide: ${slide.key}');
 
-      final image = await _fromWidgetToImage(
+      return await _fromWidgetToImage(
         SlideView(slide),
-        context: kAppKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
       );
-
-      return _imageToUint8List(image);
     } catch (e, stackTrace) {
       log('Error generating image: $e', stackTrace: stackTrace);
       rethrow;
     } finally {
+      print('Finished generating image for slide: ${slide.key}');
       _generationQueue.remove(queueKey);
     }
   }
@@ -79,117 +81,137 @@ class SnapshotService {
     return byteData!.buffer.asUint8List();
   }
 
-  Future<ui.Image> _fromWidgetToImage(
+  Future<Uint8List> _fromWidgetToImage(
     Widget widget, {
     required double pixelRatio,
-    required BuildContext context,
     Size? targetSize,
   }) async {
-    try {
-      Widget child = widget;
+    return offStage(
+      widget,
+      context: SnapshotRef.instance.context,
+      pixelRatio: pixelRatio,
+    );
+  }
+}
 
-      child = StyleProvider.inherit(
+Future<Uint8List> offStage(
+  Widget widget, {
+  Duration? wait,
+  double? pixelRatio,
+  required BuildContext context,
+}) async {
+  /// finding the widget in the current context by the key.
+  final repaintBoundary = RenderRepaintBoundary();
+
+  bool _needsUpdate = false;
+
+  /// create a new pipeline owner
+  final pipelineOwner = PipelineOwner(
+    onNeedVisualUpdate: () => _needsUpdate = true,
+  );
+
+  /// create a new build owner
+  final buildOwner = BuildOwner(focusManager: FocusManager());
+
+  final logicalSize =
+      View.of(context).physicalSize / View.of(context).devicePixelRatio;
+  pixelRatio ??= View.of(context).devicePixelRatio;
+
+  final renderView = RenderView(
+    view: View.of(context),
+    child: RenderPositionedBox(
+        alignment: Alignment.center, child: repaintBoundary),
+    configuration: ViewConfiguration(
+      logicalConstraints: BoxConstraints(
+        maxWidth: logicalSize.width,
+        maxHeight: logicalSize.height,
+      ),
+      physicalConstraints: BoxConstraints(
+        maxWidth: logicalSize.width,
+        maxHeight: logicalSize.height,
+      ),
+      devicePixelRatio: 1.0,
+    ),
+  );
+
+  /// setting the rootNode to the renderview of the widget
+  pipelineOwner.rootNode = renderView;
+
+  /// setting the renderView to prepareInitialFrame
+  renderView.prepareInitialFrame();
+
+  /// setting the rootElement with the widget that has to be captured
+  final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
+    container: repaintBoundary,
+    child: Directionality(
+      textDirection: TextDirection.ltr,
+      child: StyleProvider.inherit(
         context: context,
         child: AssetsProvider.inherit(
           context: context,
           child: ExamplesProvider.inherit(
             context: context,
-            child: SnapshotProvider(
-              isSnapshot: true,
-              child: InheritedTheme.captureAll(
-                context,
-                MediaQuery(
-                  data: MediaQuery.of(context),
-                  child: MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    theme: Theme.of(context),
-                    color: Colors.transparent,
-                    home: Scaffold(body: child),
-                  ),
+            child: InheritedTheme.captureAll(
+              context,
+              MediaQuery(
+                data: MediaQuery.of(context),
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: Theme.of(context),
+                  color: Colors.transparent,
+                  home: Scaffold(body: widget),
                 ),
               ),
             ),
           ),
         ),
-      );
+      ),
+    ),
+  ).attachToRenderTree(buildOwner);
 
-      final repaintBoundary = RenderRepaintBoundary();
-      final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
+  ///adding the rootElement to the buildScope
+  buildOwner.buildScope(rootElement);
 
-      final view = View.maybeOf(context) ?? platformDispatcher.views.first;
-      final logicalSize =
-          targetSize ?? view.physicalSize / view.devicePixelRatio;
+  /// finialize the buildOwner
+  buildOwner.finalizeTree();
 
-      int retryCount = 10;
-      bool isDirty = false;
+  ///Flush Layout
+  pipelineOwner.flushLayout();
 
-      final renderView = RenderView(
-        view: view,
-        child: RenderPositionedBox(
-          alignment: Alignment.center,
-          child: repaintBoundary,
-        ),
-        configuration: ViewConfiguration(
-          logicalConstraints: BoxConstraints(
-            maxWidth: logicalSize.width,
-            maxHeight: logicalSize.height,
-          ),
-          devicePixelRatio: pixelRatio,
-        ),
-      );
+  /// Flush Compositing Bits
+  pipelineOwner.flushCompositingBits();
 
-      final pipelineOwner = PipelineOwner(
-        onNeedVisualUpdate: () {
-          isDirty = true;
-        },
-      );
+  pipelineOwner.flushSemantics();
 
-      final buildOwner = BuildOwner(
-        focusManager: FocusManager(),
-        onBuildScheduled: () {
-          isDirty = true;
-        },
-      );
+  /// Flush paint
+  pipelineOwner.flushPaint();
 
-      pipelineOwner.rootNode = renderView;
-      renderView.prepareInitialFrame();
-
-      final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
-        container: repaintBoundary,
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: child,
-        ),
-      ).attachToRenderTree(buildOwner);
-
-      while (retryCount > 0) {
-        isDirty = false;
-        buildOwner.buildScope(rootElement);
-        buildOwner.finalizeTree();
-        pipelineOwner.flushLayout();
-        pipelineOwner.flushCompositingBits();
-        pipelineOwner.flushPaint();
-
-        await Future.delayed(const Duration(milliseconds: 250));
-
-        if (!isDirty) {
-          log('Image generation completed.');
-          break;
-        }
-
-        log('Image generation.. waiting...');
-
-        retryCount--;
-      }
-
-      final image = await repaintBoundary.toImage(pixelRatio: pixelRatio);
-
-      buildOwner.finalizeTree();
-
-      return image;
-    } catch (e) {
-      log('Error finalizing tree: $e');
-      rethrow;
-    }
+  await Future.delayed(const Duration(milliseconds: 100));
+  while (_needsUpdate) {
+    _needsUpdate = false;
+    await Future.delayed(const Duration(milliseconds: 250));
   }
+
+  /// we start the createImageProcess once we have the repaintBoundry of
+  /// the widget we attached to the widget tree.
+  return await _createImageProcess(
+    repaintBoundary: repaintBoundary,
+    pixelRatio: pixelRatio,
+  );
+}
+
+/// create image process
+Future<Uint8List> _createImageProcess({
+  required RenderRepaintBoundary repaintBoundary,
+  double? pixelRatio,
+}) async {
+  // the boundary is converted to Image.
+
+  final image = await repaintBoundary.toImage(pixelRatio: pixelRatio!);
+
+  /// The raw image is converted to byte data.
+  final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+  /// The byteData is converted to uInt8List image aka memory Image.
+  return byteData!.buffer.asUint8List();
 }

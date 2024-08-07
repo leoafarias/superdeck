@@ -1,23 +1,32 @@
 import 'package:flutter/widgets.dart';
 
-class SnapshotProvider extends InheritedWidget {
-  const SnapshotProvider({
-    super.key,
-    required this.isSnapshot,
-    required super.child,
-  });
+class SnapshotRef {
+  BuildContext? _context;
 
-  final bool isSnapshot;
+  SnapshotRef._();
 
-  static bool of(BuildContext context) {
-    return context
-            .dependOnInheritedWidgetOfExactType<SnapshotProvider>()
-            ?.isSnapshot ??
-        false;
+  static final SnapshotRef instance = SnapshotRef._();
+
+  void setContext(BuildContext context) {
+    Scrollable.ensureVisible(context);
+    _context = context;
   }
 
-  @override
-  bool updateShouldNotify(covariant SnapshotProvider oldWidget) {
-    return isSnapshot != oldWidget.isSnapshot;
+  BuildContext get context {
+    assert(_context != null, '$runtimeType has not updated its context');
+    return _context!;
+  }
+}
+
+class SnapshotProvider extends StatelessWidget {
+  final Widget child;
+
+  const SnapshotProvider({
+    required this.child,
+  });
+
+  Widget build(BuildContext context) {
+    SnapshotRef.instance.setContext(context);
+    return child;
   }
 }
