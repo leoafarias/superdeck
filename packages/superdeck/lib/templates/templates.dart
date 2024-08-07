@@ -5,7 +5,6 @@ import '../components/molecules/code_preview.dart';
 import '../components/molecules/slide_content.dart';
 import '../helpers/constants.dart';
 import '../providers/examples_provider.dart';
-import '../providers/slide_provider.dart';
 import '../superdeck.dart';
 
 part 'image_template.dart';

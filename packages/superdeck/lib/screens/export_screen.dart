@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:js_interop';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:universal_html/html.dart' as html;
+import 'package:web/web.dart' as web;
 
 import '../../helpers/constants.dart';
 import '../components/atoms/linear_progresss_indicator_widget.dart';
@@ -188,12 +189,14 @@ class ExportingProcessScreen extends HookWidget {
 
         if (kIsWeb) {
           // Create a Blob from the PDF bytes
-          final blob = html.Blob([pdf], 'application/pdf');
+          final blob = web.Blob(
+              [pdf.toJS].toJS, web.BlobPropertyBag(type: 'application/pdf'));
 
           // Create a URL for the Blob
-          final url = html.Url.createObjectUrlFromBlob(blob);
+          final url = web.URL.createObjectURL(blob);
 
-          html.AnchorElement(href: url)
+          web.HTMLAnchorElement()
+            ..href = url
             ..setAttribute('download', 'superdeck.pdf')
             ..click();
 
