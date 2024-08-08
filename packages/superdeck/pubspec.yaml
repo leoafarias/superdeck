@@ -3,6 +3,8 @@ description: Presentation slides for Flutter with Flutter
 version: 0.0.4
 homepage: https://github.com/leoafarias/superdeck
 
+publish_to: none
+
 environment:
   sdk: ">=3.3.0 <4.0.0"
 
@@ -34,6 +36,10 @@ dependencies:
   web: ^0.5.1
   file_saver: ^0.2.13
   render: ^0.0.1
+  remix:
+    path: ../../../mix/packages/remix
+  go_router_paths: ^0.2.2
+
   
 dev_dependencies:
   flutter_test:

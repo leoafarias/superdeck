@@ -6,16 +6,16 @@ targets:
           - lib/**/*.dart
       mix_generator|spec:
         generate_for:
-          - lib/**/*_spec.dart
+          - lib/**/*.dart
       mix_generator|dto:
         generate_for:
-          - lib/**/*_spec.dart
+          - lib/**/*.dart
       mix_generator|enum_utility:
         generate_for:
-          - lib/**/*_spec.dart
+          - lib/**/*.dart
       mix_generator|class_utility:
         generate_for:
-          - lib/**/*_spec.dart
+          - lib/**/*.dart
       
 global_options:
   dart_mappable_builder:

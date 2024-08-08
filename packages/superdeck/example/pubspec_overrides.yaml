@@ -5,6 +5,6 @@ dependency_overrides:
   # mix:
   #   path: ../../mix/packages/mix
   superdeck:
-    path: ..
+    path: ../
   superdeck_cli:
     path: ../../superdeck_cli

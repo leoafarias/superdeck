@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../components/molecules/slide_preview.dart';
-import '../components/molecules/split_view.dart';
 import '../helpers/hooks.dart';
 import '../superdeck.dart';
 
-class HomeScreen extends HookWidget {
-  const HomeScreen({super.key});
+class PresentationScreen extends HookWidget {
+  const PresentationScreen({super.key});
 
   final _duration = const Duration(milliseconds: 300);
   final _curve = Curves.easeInOutCubic;
@@ -27,15 +26,13 @@ class HomeScreen extends HookWidget {
       );
     }, [page]);
 
-    return SplitView(
-      child: Center(
-        child: PageView.builder(
-          controller: pageController,
-          itemCount: slides.length,
-          itemBuilder: (_, index) {
-            return SlidePreview(slides[index]);
-          },
-        ),
+    return Center(
+      child: PageView.builder(
+        controller: pageController,
+        itemCount: slides.length,
+        itemBuilder: (_, index) {
+          return SlidePreview(slides[index]);
+        },
       ),
     );
   }

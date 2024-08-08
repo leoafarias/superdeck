@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:superdeck/superdeck.dart';
 
 import 'src/style.dart';
 import 'src/widget/mix_demo.dart';
 
 void main() async {
-  debugRepaintRainbowEnabled = true;
   await SuperDeckApp.initialize();
   runApp(
     Builder(builder: (context) {

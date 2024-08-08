@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../helpers/hooks.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
 import '../atoms/sized_transition.dart';
+import 'navigation_rail.dart';
 import 'slide_thumbnail_list.dart';
-
-final _valueKey = GlobalKey();
 
 class SplitView extends HookWidget {
   final Widget child;
@@ -17,14 +17,20 @@ class SplitView extends HookWidget {
     required this.child,
   });
 
-  final _maxWidth = 450.0;
-  final _minWidth = 300.0;
+  final _maxWidth = 400.0;
 
   @override
   Widget build(BuildContext context) {
     final navigation = useNavigation();
     final sideSize = useState(context.isMobileLandscape ? 200.0 : _maxWidth);
-    final isDragging = useState(false);
+    final location = useRouteLocation();
+
+    final locationIndex = switch (location) {
+      '/' => 0,
+      '/export' => 1,
+      '/settings' => 2,
+      _ => 0,
+    };
 
     final animationController = useAnimationController(
       duration: Durations.medium1,
@@ -43,11 +49,6 @@ class SplitView extends HookWidget {
       }
     }, [navigation.sideIsOpen]);
 
-    final handleUpdateSize = useCallback((DragUpdateDetails details) {
-      sideSize.value =
-          (sideSize.value + details.delta.dx).clamp(_minWidth, _maxWidth);
-    }, [sideSize.value]);
-
     const sideHeight = 200.0;
 
     final isSmall = context.isSmall || context.isMobileLandscape;
@@ -64,23 +65,6 @@ class SplitView extends HookWidget {
           padding = EdgeInsets.only(left: animatedWidth);
         }
 
-        final divider = MouseRegion(
-          cursor: SystemMouseCursors.resizeColumn,
-          child: GestureDetector(
-            onHorizontalDragUpdate: handleUpdateSize,
-            onHorizontalDragStart: (_) {
-              isDragging.value = true;
-            },
-            onHorizontalDragEnd: (_) {
-              isDragging.value = false;
-            },
-            child: Container(
-              color: Colors.black,
-              width: 8,
-            ),
-          ),
-        );
-
         final drawer = Align(
           alignment: isSmall ? Alignment.bottomCenter : Alignment.centerLeft,
           child: SizedTransition(
@@ -90,10 +74,35 @@ class SplitView extends HookWidget {
               height: isSmall ? sideHeight : null,
               child: Row(
                 children: [
+                  CustomNavigationRail(
+                    selectedIndex: locationIndex,
+                    onDestinationSelected: (value) {
+                      return switch (value) {
+                        0 => context.go('/'),
+                        1 => context.push('/export'),
+                        2 => context.go('/settings'),
+                        _ => null,
+                      };
+                    },
+                    leading: 20,
+                    destinations: [
+                      CustomNavigationRailDestination(
+                        icon: Icons.view_carousel,
+                        label: 'Home',
+                      ),
+                      CustomNavigationRailDestination(
+                        icon: Icons.save_alt,
+                        label: 'Export',
+                      ),
+                      CustomNavigationRailDestination(
+                        icon: Icons.settings,
+                        label: 'Settings',
+                      ),
+                    ],
+                  ),
                   const Expanded(
                     child: SlideThumbnailList(),
                   ),
-                  divider,
                 ],
               ),
             ),

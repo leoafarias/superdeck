@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 ThemeData get theme => ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.cyan,
+        seedColor: Colors.black,
+        dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+        contrastLevel: 1,
         error: Colors.red,
-        onTertiary: Colors.orange,
+        onTertiary: Colors.cyan,
         brightness: Brightness.dark,
       ),
     );

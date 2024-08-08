@@ -5,6 +5,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -78,32 +79,30 @@ class ExportScreen extends HookWidget {
       }).toList();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Export'),
-      ),
-      body: Center(
-        child: SizedBox(
-          width: 300,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Select Quality:',
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              ...buildRadioList(),
-              const SizedBox(height: 24.0),
-              ElevatedButton(
-                onPressed: convertToPdf,
-                child: const Text('Save'),
-              ),
-            ],
+    return SizedBox(
+      width: 300,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Select Quality:',
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
           ),
-        ),
+          ...buildRadioList(),
+          const SizedBox(height: 24.0),
+          ElevatedButton(
+            onPressed: convertToPdf,
+            child: const Text('Save'),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: Text('Close'))
+        ],
       ),
     );
   }

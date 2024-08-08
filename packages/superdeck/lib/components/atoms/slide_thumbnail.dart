@@ -3,40 +3,36 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:remix/remix.dart';
 
 import '../../helpers/constants.dart';
 import '../../helpers/extensions.dart';
 import '../../services/reference_service.dart';
 import '../../services/snapshot_service.dart';
 import '../../superdeck.dart';
-import '../molecules/scaled_app.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
-import 'slide_view.dart';
 
 class SlideThumbnail extends HookWidget {
   final VoidCallback onTap;
-  final int index;
+  final bool selected;
   final Slide slide;
+  final int page;
 
   const SlideThumbnail({
     super.key,
-    required this.index,
+    required this.selected,
     required this.onTap,
     required this.slide,
+    required this.page,
   });
 
   @override
   Widget build(BuildContext context) {
-    final navigation = useNavigation();
-
     final processThumbnail = useFuture(
       useMemoized(() => _generateThumbnail(slide), [slide]),
     );
     return LayoutBuilder(builder: (context, constraints) {
-      final selectedColor =
-          index == navigation.page ? Colors.blue : Colors.transparent;
-
       final child = LoadingOverlay(
         isLoading: processThumbnail.isLoading,
         child: processThumbnail.when(
@@ -62,44 +58,42 @@ class SlideThumbnail extends HookWidget {
       return GestureDetector(
         onTap: onTap,
         child: _PreviewContainer(
-          selectedColor: selectedColor,
-          child: AbsorbPointer(
-            child: AspectRatio(
-              aspectRatio: kAspectRatio,
-              child: Stack(
-                children: [
-                  child,
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    left: 0,
-                    child: SizedBox(
-                      child: processThumbnail.isRefreshing
-                          ? const LinearProgressIndicator(
-                              minHeight: 3,
-                              backgroundColor: Colors.transparent,
-                            )
-                          : null,
-                    ),
+          selected: selected,
+          child: AspectRatio(
+            aspectRatio: kAspectRatio,
+            child: Stack(
+              children: [
+                child,
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  left: 0,
+                  child: SizedBox(
+                    child: processThumbnail.isRefreshing
+                        ? const LinearProgressIndicator(
+                            minHeight: 3,
+                            backgroundColor: Colors.transparent,
+                          )
+                        : null,
                   ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                      margin: const EdgeInsets.all(1),
-                      color: Colors.black.withOpacity(0.5),
-                      child: Text(
-                        '${index + 1}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                    margin: const EdgeInsets.all(1),
+                    color: Colors.black.withOpacity(0.5),
+                    child: Text(
+                      '$page',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -108,67 +102,36 @@ class SlideThumbnail extends HookWidget {
   }
 }
 
-class SlideThumbnailDynamic<T extends Slide> extends StatelessWidget {
-  final bool selected;
-  final VoidCallback onTap;
-  final int index;
-  final T slide;
-
-  const SlideThumbnailDynamic({
-    super.key,
-    required this.selected,
-    required this.index,
-    required this.onTap,
-    required this.slide,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedColor = selected ? Colors.blue : Colors.transparent;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: _PreviewContainer(
-        selectedColor: selectedColor,
-        child: AbsorbPointer(
-          child: AspectRatio(
-            aspectRatio: kAspectRatio,
-            child: ScaledWidget(
-              child: SlideView(slide),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _PreviewContainer extends StatelessWidget {
-  final Color selectedColor;
   final Widget child;
+  final bool selected;
 
   const _PreviewContainer({
-    required this.selectedColor,
+    required this.selected,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     final style = Style(
-      $box.color.grey.shade900(),
+      $box.color.$neutral(2),
       $box.margin.all(8),
       $box.border.width(2),
       $box.shadow(
-        color: Colors.black.withOpacity(0.5),
         blurRadius: 4,
         spreadRadius: 1,
       ),
-    );
+
+      selected ? $box.wrap.scale(1.05) : $box.wrap.scale(1),
+      selected ? $box.wrap.opacity(1) : $box.wrap.opacity(0.5),
+      selected ? $box.border.color.$accent() : $box.border.color.transparent(),
+      // $on.hover(
+      //   $box.wrap.opacity(1),
+      // ),
+    ).animate();
 
     return Box(
-      style: style.add(
-        $box.border.color(selectedColor),
-      ),
+      style: style,
       child: child,
     );
   }

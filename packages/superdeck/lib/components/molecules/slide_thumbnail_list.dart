@@ -57,49 +57,28 @@ class SlideThumbnailList extends HookWidget {
       return;
     }, [currentPage, slides]);
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: Container(
-          height: 30,
-          color: Colors.black,
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_back),
-            label: 'Previous',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.arrow_forward),
-            label: 'Next',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            navigation.goToPage(currentPage - 1);
-          } else {
-            navigation.goToPage(currentPage + 1);
-          }
-        },
-      ),
-      body: Container(
-        color: const Color.fromARGB(108, 0, 0, 0),
-        child: ScrollablePositionedList.builder(
-            scrollDirection: context.isSmall ? Axis.horizontal : Axis.vertical,
-            itemCount: slides.length,
-            itemPositionsListener: controller.itemPositionsListener,
-            itemScrollController: controller.itemScrollController,
-            padding: const EdgeInsets.all(20),
-            itemBuilder: (context, index) {
-              return SlideThumbnail(
-                index: index,
+    return Container(
+      color: Colors.black,
+      child: ScrollablePositionedList.builder(
+          scrollDirection: context.isSmall ? Axis.horizontal : Axis.vertical,
+          itemCount: slides.length,
+          itemPositionsListener: controller.itemPositionsListener,
+          itemScrollController: controller.itemScrollController,
+          padding: const EdgeInsets.all(20),
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 10,
+              ),
+              child: SlideThumbnail(
+                page: index + 1,
+                selected: currentPage == index,
                 onTap: () => navigation.goToPage(index),
                 slide: slides[index],
-              );
-            }),
-      ),
+              ),
+            );
+          }),
     );
   }
 }

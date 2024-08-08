@@ -8,13 +8,22 @@ import '../models/asset_model.dart';
 import '../models/slide_model.dart';
 import '../services/reference_service.dart';
 
-final $superdeck = SuperDeckController();
+final $superdeck = SuperDeckController.instance;
 
 class SuperDeckController extends ChangeNotifier {
-  SuperDeckController() {
-    _loadData();
-    ReferenceService.instance.listen(_loadData);
+  SuperDeckController._();
+
+  static final instance = SuperDeckController._();
+
+  bool _initialized = false;
+
+  static Future<void> initialize() async {
+    if (instance._initialized) return;
+    instance._initialized = true;
+    await instance._loadData();
+    ReferenceService.instance.listen(instance._loadData);
   }
+
   bool _loading = false;
   Object? _error;
   List<Slide> _slides = [];
@@ -95,6 +104,8 @@ class NavigationController extends ChangeNotifier {
   }
 
   static final instance = NavigationController._();
+
+  static Future<void> initialize() => initLocalStorage();
 
   int _page = 0;
   bool _sideIsOpen = false;
