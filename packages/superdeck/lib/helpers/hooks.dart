@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 void useMount(VoidCallback fn) {
@@ -114,8 +113,3 @@ T? useDistinct<T>(T value, [Predicate<T>? compare]) {
 }
 
 typedef Predicate<T> = bool Function(T prev, T next);
-
-GoRouter useGoRouter() {
-  final context = useContext();
-  return GoRouter.of(context);
-}

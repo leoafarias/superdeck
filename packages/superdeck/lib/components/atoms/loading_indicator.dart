@@ -153,6 +153,27 @@ class IsometricLoadingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final canvasHeight = size.height;
+    final canvasWidth = size.width;
+
+    // Calculate the minimum and maximum Y-coordinates from the path data
+    // Assuming the minimum Y-coordinate is 0
+    final minY = 0.0;
+    // Based on the maximum Y-coordinate value in the path data
+    final maxY = 226.45;
+
+    // Calculate the height of the paths
+    final pathHeight = maxY - minY;
+
+    // Calculate the scale factor based on the canvas size and path height
+    final scaleFactor = canvasHeight / pathHeight;
+
+    // Translate the canvas to center the paths
+    canvas.translate(canvasWidth / 2 - 100.003 * scaleFactor, 0);
+
+    // Scale the canvas based on the calculated scale factor
+    canvas.scale(scaleFactor);
+
     final path1 = Path()
       ..moveTo(92.2116, 119.9706)
       ..lineTo(0, 66.7358)

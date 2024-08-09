@@ -40,3 +40,16 @@ class DialogPage<T> extends Page<T> {
     );
   }
 }
+
+class ModalPage<T> extends Page<T> {
+  const ModalPage({required this.child});
+
+  final Widget child;
+
+  @override
+  Route<T> createRoute(BuildContext context) => ModalBottomSheetRoute<T>(
+        settings: this,
+        builder: (context) => child,
+        isScrollControlled: false,
+      );
+}

@@ -3,21 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:go_router_paths/go_router_paths.dart';
 
 import '../../superdeck.dart';
-import '../helpers/dialog_page.dart';
 import '../screens/export_screen.dart';
 import '../screens/presentation_screen.dart';
 
 class SDPaths {
   static Path get home => Path('/');
   static ExportPath get export => ExportPath();
-
-  static SlidesPath get slides => SlidesPath();
-}
-
-class SlidesPath extends Path<SlidesPath> {
-  SlidesPath() : super('slides');
-
-  SlidePageIndexPath get _pageIndex => SlidePageIndexPath(this);
 }
 
 class ExportPath extends Path<ExportPath> {
@@ -29,53 +20,60 @@ class ExportPath extends Path<ExportPath> {
   Path get best => Path('best', parent: this);
 }
 
-class SlidePageIndexPath extends Param<SlidePageIndexPath> {
-  SlidePageIndexPath(SlidesPath parent)
-      : super.only('pageIndex', parent: parent);
+class QueryParams {
+  static const drawer = 'drawer';
+  static const slide = 'slide';
 }
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
-final _sectionANavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'sectionANav');
+final kRootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+
+Map<String, String> _previousQueryParams = {};
 
 final goRouterConfig = GoRouter(
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: kRootNavigatorKey,
   initialLocation: SDPaths.home.goRoute,
+  restorationScopeId: 'root',
   routes: <RouteBase>[
     StatefulShellRoute.indexedStack(
+      redirect: (context, state) {
+        // Get the previous route's state from the navigation history
+
+        // Extract current query parameters
+        final currentQueryParams = state.uri.queryParameters;
+
+        final openDrawerParam = _previousQueryParams[QueryParams.drawer];
+        final slideParam = _previousQueryParams[QueryParams.slide];
+
+        // Add any additional query parameters if needed
+        final allQueryParams = {
+          if (openDrawerParam != null) QueryParams.drawer: openDrawerParam,
+          if (slideParam != null) QueryParams.slide: slideParam,
+          ...currentQueryParams,
+        };
+
+        _previousQueryParams = allQueryParams;
+
+        // Construct the target URI with query parameters
+        final uri = state.uri.replace(
+          queryParameters: allQueryParams.isEmpty ? null : allQueryParams,
+        );
+
+        return uri.toString();
+      },
+      restorationScopeId: 'shell1',
+      parentNavigatorKey: kRootNavigatorKey,
       builder: (context, state, navigationShell) {
         return AppShell(navigationShell: navigationShell);
       },
       branches: [
         StatefulShellBranch(
-          navigatorKey: _sectionANavigatorKey,
           routes: [
             GoRoute(
               path: SDPaths.home.goRoute,
-              builder: (context, state) {
-                return PresentationScreen(slideIndex: 0);
-              },
-            ),
-            GoRoute(
-              path: SDPaths.slides.goRoute,
-              // Dynamic path for slides/pageNumber
-              builder: (context, state) {
-                return PresentationScreen();
-              },
-              routes: [
-                GoRoute(
-                  path: SDPaths.slides._pageIndex.goRoute,
-                  builder: (context, state) {
-                    // Extract the page number
-                    final slideIndex = int.tryParse(state
-                                .pathParameters[SDPaths.slides._pageIndex.id] ??
-                            '0') ??
-                        0;
-
-                    return PresentationScreen(slideIndex: slideIndex);
-                  },
-                ),
-              ],
+              pageBuilder: (context, state) => _getPage(
+                PresentationScreen(),
+                state,
+              ),
             ),
           ],
         ),
@@ -84,13 +82,7 @@ final goRouterConfig = GoRouter(
             GoRoute(
               path: SDPaths.export.goRoute,
               pageBuilder: (context, state) {
-                return DialogPage(
-                  builder: (_) => Dialog(
-                    child: ExportScreen(),
-                  ),
-                  barrierColor: Colors.black54, // Optional, as it's the default
-                  barrierDismissible: true, // Optional, as it's the default
-                );
+                return _getPage(ExportScreen(), state);
               },
             ),
           ],
@@ -100,37 +92,22 @@ final goRouterConfig = GoRouter(
   ],
 );
 
+MaterialPage _getPage(Widget child, GoRouterState state) {
+  return MaterialPage(key: state.pageKey, child: child);
+}
+
 extension BuildContextRoutesX on BuildContext {
-  int get currentSlideIndex {
-    final currentPath = GoRouterState.of(this).uri.toString();
-    final slidesPath = SDPaths.slides.path;
-    final match = RegExp("$slidesPath" + r'/(\d+)').firstMatch(currentPath);
+  int get currentSlidePage => int.parse(_slidePage ?? '1');
 
-    if (match == null) {
-      return 0;
-    }
-
-    return int.parse(match.group(1)!);
-  }
-
-  void goToSlide(int index) {
-    go(SDPaths.slides._pageIndex
-        .define('$index')
-        .query(_drawerQueryParam)
-        .path);
-  }
-
-  void nextSlide() {
-    goToSlide(currentSlideIndex + 1);
-  }
+  void goToSlide(int page) => go(_replaceQueryParam('slide', '$page'));
 
   String get currentPath {
     return GoRouterState.of(this).uri.toString();
   }
 
-  void previousSlide() {
-    goToSlide(currentSlideIndex - 1);
-  }
+  void nextSlide() => goToSlide(currentSlidePage + 1);
+
+  void previousSlide() => goToSlide(currentSlidePage - 1);
 
   String _replaceQueryParam(String key, String value) {
     final uri = GoRouterState.of(this).uri;
@@ -139,13 +116,9 @@ extension BuildContextRoutesX on BuildContext {
     return uri.replace(queryParameters: queryParameters).toString();
   }
 
-  void openDrawer() {
-    go(_replaceQueryParam('drawer', 'open'));
-  }
+  void openDrawer() => go(_replaceQueryParam(QueryParams.drawer, '1'));
 
-  void closeDrawer() {
-    go(_replaceQueryParam('drawer', 'close'));
-  }
+  void closeDrawer() => go(_replaceQueryParam(QueryParams.drawer, '0'));
 
   void toggleDrawer() {
     if (isDrawerOpen) {
@@ -155,19 +128,21 @@ extension BuildContextRoutesX on BuildContext {
     }
   }
 
-  bool get isDrawerOpen {
-    return GoRouterState.of(this).uri.queryParameters['drawer'] == 'open';
+  Map<String, String> get _queryParams {
+    return GoRouterState.of(this).uri.queryParameters;
   }
 
-  Map<String, String> get _drawerQueryParam {
-    return {'drawer': isDrawerOpen ? 'open' : 'close'};
-  }
+  String? get _drawerParam => _queryParams[QueryParams.drawer];
+
+  String? get _slidePage => _queryParams[QueryParams.slide];
+
+  bool get isDrawerOpen => _drawerParam == '1';
 
   void goPath(Path path) {
-    go(path.query(_drawerQueryParam).path);
+    go(path.path);
   }
 
   void pushPath(Path path) {
-    push(path.query(_drawerQueryParam).path);
+    push(path.path);
   }
 }

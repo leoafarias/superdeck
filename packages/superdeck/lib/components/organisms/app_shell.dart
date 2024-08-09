@@ -8,14 +8,14 @@ import '../../helpers/utils.dart';
 import '../../superdeck.dart';
 import '../molecules/split_view.dart';
 
-final scaffoldKey = GlobalKey<ScaffoldState>();
+final kScaffoldKey = GlobalKey<ScaffoldState>();
 
 /// Builds the "shell" for the app by building a Scaffold with a
 /// BottomNavigationBar, where [child] is placed in the body of the Scaffold.
 class AppShell extends HookWidget {
   const AppShell({
     required this.navigationShell,
-    super.key = const ValueKey<String>('ScaffoldWithNavBar'),
+    super.key = const ValueKey<String>('app_shell'),
   });
 
   /// The navigation shell and container for the branch Navigators.
@@ -29,22 +29,34 @@ class AppShell extends HookWidget {
 
     final invalidSlides = slides.whereType<InvalidSlide>().toList();
 
+    final handleNext = useCallback(() {
+      if (context.currentSlidePage < slides.length) {
+        context.nextSlide();
+      }
+    }, [slides]);
+
+    final handlePrevious = useCallback(() {
+      if (context.currentSlidePage > 1) {
+        context.previousSlide();
+      }
+    }, [slides]);
+
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
-      ): context.nextSlide,
+      ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
-      ): context.nextSlide,
+      ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.space,
-      ): context.nextSlide,
+      ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
-      ): context.previousSlide,
+      ): handlePrevious,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
-      ): context.previousSlide,
+      ): handlePrevious,
     };
 
     return CallbackShortcuts(
@@ -54,7 +66,7 @@ class AppShell extends HookWidget {
         bottomNavigationBar: null,
         extendBodyBehindAppBar: true,
         extendBody: true,
-        key: scaffoldKey,
+        key: kScaffoldKey,
         floatingActionButtonLocation: isSmall
             ? FloatingActionButtonLocation.miniEndFloat
             : FloatingActionButtonLocation.miniStartFloat,
@@ -66,7 +78,9 @@ class AppShell extends HookWidget {
             child: const Icon(Icons.menu),
           ),
         ),
-        body: SplitView(child: navigationShell),
+        body: SplitView(
+          navigationShell: navigationShell,
+        ),
       ),
     );
   }

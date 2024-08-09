@@ -33,26 +33,21 @@ class SlideThumbnail extends HookWidget {
       useMemoized(() => _generateThumbnail(slide), [slide]),
     );
     return LayoutBuilder(builder: (context, constraints) {
-      final child = LoadingOverlay(
-        isLoading: processThumbnail.isLoading,
-        child: processThumbnail.when(
-          data: (file) {
-            return Image(
-              gaplessPlayback: true,
-              image: getImageProvider(file.path),
-            );
-          },
-          loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-          error: (error, _) {
-            return const Center(
-              child: Text('Error loading image'),
-            );
-          },
-        ),
+      final child = processThumbnail.when(
+        data: (file) {
+          return Image(
+            gaplessPlayback: true,
+            image: getImageProvider(file.path),
+          );
+        },
+        loading: () {
+          return IsometricLoading();
+        },
+        error: (error, _) {
+          return const Center(
+            child: Text('Error loading image'),
+          );
+        },
       );
 
       return GestureDetector(
@@ -63,7 +58,10 @@ class SlideThumbnail extends HookWidget {
             aspectRatio: kAspectRatio,
             child: Stack(
               children: [
-                child,
+                AspectRatio(
+                  aspectRatio: kAspectRatio,
+                  child: child,
+                ),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -82,8 +80,7 @@ class SlideThumbnail extends HookWidget {
                   bottom: 0,
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                    margin: const EdgeInsets.all(1),
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.9),
                     child: Text(
                       '$page',
                       style: const TextStyle(

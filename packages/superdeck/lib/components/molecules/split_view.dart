@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../helpers/hooks.dart';
 import '../../helpers/routes.dart';
@@ -9,29 +10,28 @@ import 'navigation_rail.dart';
 import 'slide_thumbnail_list.dart';
 
 class SplitView extends HookWidget {
-  final Widget child;
+  final StatefulNavigationShell navigationShell;
 
   const SplitView({
     super.key,
-    required this.child,
+    required this.navigationShell,
   });
 
   final _maxWidth = 400.0;
 
   @override
   Widget build(BuildContext context) {
-    final sideSize = useState(context.isMobileLandscape ? 200.0 : _maxWidth);
+    final sideSize = useState(0.0);
 
-    int locationIndex() {
-      final currentPath = context.currentPath;
-      if (currentPath.startsWith(SDPaths.home.path)) {
-        return 0;
+    useEffect(() {
+      if (context.isMobileLandscape) {
+        sideSize.value = 200.0;
+      } else {
+        navigationShell.currentIndex == 0
+            ? sideSize.value = _maxWidth
+            : sideSize.value = _maxWidth - 300;
       }
-      if (currentPath.startsWith(SDPaths.export.path)) {
-        return 1;
-      }
-      return 0;
-    }
+    }, [navigationShell.currentIndex]);
 
     final animationController = useAnimationController(
       duration: Durations.medium1,
@@ -41,7 +41,7 @@ class SplitView extends HookWidget {
       parent: animationController,
       curve: Curves.ease,
     ));
-    print('Drawer is open: ${context.isDrawerOpen}');
+
     usePostFrameEffect(() {
       if (context.isDrawerOpen) {
         animationController.forward();
@@ -76,13 +76,9 @@ class SplitView extends HookWidget {
               child: Row(
                 children: [
                   CustomNavigationRail(
-                    selectedIndex: locationIndex(),
+                    selectedIndex: navigationShell.currentIndex,
                     onDestinationSelected: (value) {
-                      return switch (value) {
-                        0 => context.goPath(SDPaths.home),
-                        1 => context.pushPath(SDPaths.export),
-                        _ => null,
-                      };
+                      navigationShell.goBranch(value);
                     },
                     leading: 20,
                     destinations: [
@@ -96,9 +92,12 @@ class SplitView extends HookWidget {
                       ),
                     ],
                   ),
-                  const Expanded(
-                    child: SlideThumbnailList(),
-                  ),
+                  navigationShell.currentIndex == 0
+                      ? const SizedBox(
+                          width: 300,
+                          child: SlideThumbnailList(),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -109,7 +108,7 @@ class SplitView extends HookWidget {
           padding: padding,
           child: Padding(
             padding: EdgeInsets.all(20 * animation),
-            child: child,
+            child: navigationShell,
           ),
         );
 
