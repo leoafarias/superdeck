@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 extension AsyncSnapshotX<T> on AsyncSnapshot<T> {
   bool get isLoading => connectionState == ConnectionState.waiting;
@@ -19,4 +19,10 @@ extension AsyncSnapshotX<T> on AsyncSnapshot<T> {
 
     return data(this.data as T);
   }
+}
+
+extension BuildContextX on BuildContext {
+  ThemeData get theme => Theme.of(this);
+  TextTheme get textTheme => theme.textTheme;
+  ColorScheme get colorScheme => theme.colorScheme;
 }
