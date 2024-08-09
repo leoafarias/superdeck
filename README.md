@@ -1,4 +1,6 @@
-![Superdeck logo](./assets/logo.png)
+
+![Superdeck logo](./assets/logo-dark.png#gh-dark-mode-only)
+![Superdeck logo](./assets/logo-light.png#gh-light-mode-only)
 
 SuperDeck enables you to craft visually appealing and interactive presentations directly within your Flutter apps, using the simplicity and power of Markdown.
 
@@ -7,8 +9,6 @@ SuperDeck enables you to craft visually appealing and interactive presentations 
 ### [View demo here](https://superdeck-dev.web.app)
 
 ### [Example code](https://github.com/leoafarias/superdeck/blob/main/example/slides.md)
-
-
 
 ## Getting Started
 
@@ -26,7 +26,8 @@ Follow these steps to integrate SuperDeck into your Flutter project:
    import 'package:superdeck/superdeck.dart';
    ```
 
-3. Initialize SuperDeck and run the app. 
+3. Initialize SuperDeck and run the app.
+
    ```dart
    void main() {
      runApp(const SuperDeckApp());
@@ -44,49 +45,39 @@ Follow these steps to integrate SuperDeck into your Flutter project:
        - assets/images/
    ```
 
-The `assets` directory is used to slide and asset references, while the `assets/images` directory is specifically used for storing images used in your presentations.
+   The `assets` directory is used to slide and asset references, while the `assets/images` directory is specifically used for storing images used in your presentations.
 
 6. Configure your app
 
-MacOS
+   MacOS
 
-Change your `Release.entitlements`
+   Change your `Release.entitlements`
 
-```xml
-<dict>
-   <key>com.apple.security.app-sandbox</key>
-   <false/>
-   <key>com.apple.security.network.client</key>
-   <true/>
-</dict>
-```
+   ```xml
+   <dict>
+      <key>com.apple.security.app-sandbox</key>
+      <false/>
+      <key>com.apple.security.network.client</key>
+      <true/>
+   </dict>
+   ```
 
-Change `DebugProfile.entitlements`
+   Change `DebugProfile.entitlements`
 
-```xml
-<dict>
-   <key>com.apple.security.app-sandbox</key>
-   <false/>
-   <key>com.apple.security.cs.allow-jit</key>
-   <true/>
-   <key>com.apple.security.network.server</key>
-   <true/>
-   <key>com.apple.security.network.client</key>
-   <true/>
-</dict>
-```
+   ```xml
+   <dict>
+      <key>com.apple.security.app-sandbox</key>
+      <false/>
+      <key>com.apple.security.cs.allow-jit</key>
+      <true/>
+      <key>com.apple.security.network.server</key>
+      <true/>
+      <key>com.apple.security.network.client</key>
+      <true/>
+   </dict>
+   ```
 
-
-
-
-
-
-
-
-
-
-
-6. Start building your slides in the `slides.md` file using Markdown syntax and SuperDeck's slide templates and configurations.
+7. Start building your slides in the `slides.md` file using Markdown syntax and SuperDeck's slide templates and configurations.
 
 ### SuperDeck Options
 
@@ -113,6 +104,7 @@ SuperDeckApp(
 ```
 
 ### Shared Slide Options
+
 Some shared options can be applied by adding them to a `superdeck.yaml` file in the root of your project. These options will be applied to all slides unless overridden by slide-specific options.
 
 ### Slide Options
@@ -245,9 +237,9 @@ layout: two_column_header
 
 #### Sections
 
--  `::header::`: The content that will be placed in the header section.
--  `::left::`: The content that will be placed in the left column.
--  `::right::`: The content that will be placed in the right column.
+- `::header::`: The content that will be placed in the header section.
+- `::left::`: The content that will be placed in the left column.
+- `::right::`: The content that will be placed in the right column.
 
 If the first tag that is found is `::left::`, everything before this tag will be placed in the `::header::` section.
 
@@ -269,6 +261,7 @@ sections:
 Keep in mind that you can also control the flex of the `left` and `right` sections by using the `content` property.
 
 Read more about it in the [content options](#content) section.
+
 ### Image Template
 
 Display an image alongside the slide content.
@@ -322,4 +315,3 @@ The `options` property specifies the widget to be embedded. It has the following
 - `position`: The position of the widget relative to the slide content.
 - `flex`: The flex value of the widget.
 - `args`: Additional arguments to be passed to the widget.
-
