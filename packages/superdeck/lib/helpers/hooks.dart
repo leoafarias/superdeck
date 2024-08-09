@@ -119,16 +119,3 @@ GoRouter useGoRouter() {
   final context = useContext();
   return GoRouter.of(context);
 }
-
-String useRouteLocation() {
-  final router = useGoRouter();
-  final uri = useState(router.routeInformationProvider.value.uri);
-
-  useEffect(() {
-    router.routerDelegate.addListener(() {
-      uri.value = router.routeInformationProvider.value.uri;
-    });
-  }, [router.routerDelegate]);
-
-  return uri.value.toString();
-}

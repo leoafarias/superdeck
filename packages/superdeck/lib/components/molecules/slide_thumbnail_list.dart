@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../helpers/hooks.dart';
+import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
 import '../../providers/controller.dart';
 import '../atoms/slide_thumbnail.dart';
@@ -18,8 +19,8 @@ class SlideThumbnailList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigation = useNavigation();
-    final currentPage = navigation.page;
+    final currentSlideIndex = context.currentSlideIndex;
+
     final slides = useSlides();
     final controller = useScrollVisibleController();
     final visibleItems = controller.visibleItems;
@@ -28,12 +29,12 @@ class SlideThumbnailList extends HookWidget {
       if (visibleItems.isEmpty) return;
 
       final visibleItem =
-          visibleItems.firstWhereOrNull((e) => e.index == currentPage);
+          visibleItems.firstWhereOrNull((e) => e.index == currentSlideIndex);
 
       double alignment;
 
       if (visibleItem == null) {
-        final isBeginning = visibleItems.first.index > currentPage;
+        final isBeginning = visibleItems.first.index > currentSlideIndex;
 
         alignment = isBeginning ? 0 : 0.7;
       } else {
@@ -48,14 +49,14 @@ class SlideThumbnailList extends HookWidget {
         }
       }
       controller.itemScrollController.scrollTo(
-        index: currentPage,
+        index: currentSlideIndex,
         alignment: alignment,
         duration: _duration,
         curve: _curve,
       );
 
       return;
-    }, [currentPage, slides]);
+    }, [currentSlideIndex, slides]);
 
     return Container(
       color: Colors.black,
@@ -73,8 +74,8 @@ class SlideThumbnailList extends HookWidget {
               ),
               child: SlideThumbnail(
                 page: index + 1,
-                selected: currentPage == index,
-                onTap: () => navigation.goToPage(index),
+                selected: currentSlideIndex == index,
+                onTap: () => context.goToSlide(index),
                 slide: slides[index],
               ),
             );

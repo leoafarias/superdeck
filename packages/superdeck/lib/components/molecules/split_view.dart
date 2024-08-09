@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../helpers/hooks.dart';
+import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
-import '../../superdeck.dart';
 import '../atoms/sized_transition.dart';
 import 'navigation_rail.dart';
 import 'slide_thumbnail_list.dart';
@@ -21,16 +20,18 @@ class SplitView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigation = useNavigation();
     final sideSize = useState(context.isMobileLandscape ? 200.0 : _maxWidth);
-    final location = useRouteLocation();
 
-    final locationIndex = switch (location) {
-      '/' => 0,
-      '/export' => 1,
-      '/settings' => 2,
-      _ => 0,
-    };
+    int locationIndex() {
+      final currentPath = context.currentPath;
+      if (currentPath.startsWith(SDPaths.home.path)) {
+        return 0;
+      }
+      if (currentPath.startsWith(SDPaths.export.path)) {
+        return 1;
+      }
+      return 0;
+    }
 
     final animationController = useAnimationController(
       duration: Durations.medium1,
@@ -40,14 +41,14 @@ class SplitView extends HookWidget {
       parent: animationController,
       curve: Curves.ease,
     ));
-
+    print('Drawer is open: ${context.isDrawerOpen}');
     usePostFrameEffect(() {
-      if (navigation.sideIsOpen) {
+      if (context.isDrawerOpen) {
         animationController.forward();
       } else {
         animationController.reverse();
       }
-    }, [navigation.sideIsOpen]);
+    }, [context.isDrawerOpen]);
 
     const sideHeight = 200.0;
 
@@ -75,12 +76,11 @@ class SplitView extends HookWidget {
               child: Row(
                 children: [
                   CustomNavigationRail(
-                    selectedIndex: locationIndex,
+                    selectedIndex: locationIndex(),
                     onDestinationSelected: (value) {
                       return switch (value) {
-                        0 => context.go('/'),
-                        1 => context.push('/export'),
-                        2 => context.go('/settings'),
+                        0 => context.goPath(SDPaths.home),
+                        1 => context.pushPath(SDPaths.export),
                         _ => null,
                       };
                     },
@@ -93,10 +93,6 @@ class SplitView extends HookWidget {
                       CustomNavigationRailDestination(
                         icon: Icons.save_alt,
                         label: 'Export',
-                      ),
-                      CustomNavigationRailDestination(
-                        icon: Icons.settings,
-                        label: 'Settings',
                       ),
                     ],
                   ),

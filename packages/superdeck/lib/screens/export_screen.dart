@@ -14,6 +14,7 @@ import '../components/atoms/linear_progresss_indicator_widget.dart';
 import '../components/atoms/slide_view.dart';
 import '../components/molecules/scaled_app.dart';
 import '../helpers/hooks.dart';
+import '../helpers/routes.dart';
 import '../services/snapshot_service.dart';
 import '../superdeck.dart';
 
@@ -35,11 +36,10 @@ class ExportScreen extends HookWidget {
   Widget build(BuildContext context) {
     final selectedQuality = useState(SnapshotQuality.good);
 
-    final navigation = useNavigation();
     final convertToPdf = useCallback(() async {
-      final lastState = navigation.sideIsOpen;
+      final lastState = context.isDrawerOpen;
 
-      navigation.closeSide();
+      context.closeDrawer();
 
       await Future.delayed(Duration.zero);
 
@@ -47,9 +47,9 @@ class ExportScreen extends HookWidget {
       void handleOnComplete() {
         entry.remove();
         if (lastState) {
-          navigation.openSide();
+          context.openDrawer();
         } else {
-          navigation.closeSide();
+          context.closeDrawer();
         }
       }
 
@@ -64,7 +64,7 @@ class ExportScreen extends HookWidget {
       );
       if (!context.mounted) return;
       Overlay.of(context).insert(entry);
-    }, [navigation, selectedQuality]);
+    }, [selectedQuality]);
 
     List<RadioListTile<SnapshotQuality>> buildRadioList() {
       return SnapshotQuality.values.map((e) {

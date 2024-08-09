@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:localstorage/localstorage.dart';
 
 import '../models/asset_model.dart';
 import '../models/slide_model.dart';
@@ -77,71 +74,4 @@ List<Slide> useSlides() {
     $superdeck,
     () => $superdeck.slides,
   );
-}
-
-NavigationController useNavigation() {
-  return useListenable(NavigationController.instance);
-}
-
-T useNavigationSelector<T>(T Function(NavigationController) selector) {
-  return useListenableSelector(
-    NavigationController.instance,
-    () => selector(NavigationController.instance),
-  );
-}
-
-class NavigationController extends ChangeNotifier {
-  NavigationController._() {
-    _page = _getStoredValue('page', 0);
-    _sideIsOpen = _getStoredValue('sideIsOpen', false);
-    _screen = _getStoredValue('screen', 0);
-
-    addListener(() {
-      _setStoredValue('page', _page);
-      _setStoredValue('sideIsOpen', _sideIsOpen);
-      _setStoredValue('screen', _screen);
-    });
-  }
-
-  static final instance = NavigationController._();
-
-  static Future<void> initialize() => initLocalStorage();
-
-  int _page = 0;
-  bool _sideIsOpen = false;
-  int _screen = 0;
-
-  int get page => _page;
-  bool get sideIsOpen => _sideIsOpen;
-  int get screen => _screen;
-
-  void openSide() {
-    _sideIsOpen = true;
-    notifyListeners();
-  }
-
-  void closeSide() {
-    _sideIsOpen = false;
-    notifyListeners();
-  }
-
-  void goToPage(int slide) {
-    _page = slide;
-
-    notifyListeners();
-  }
-
-  void goToScreen(int screen) {
-    _screen = screen;
-    notifyListeners();
-  }
-}
-
-T _getStoredValue<T>(String key, T defaultValue) {
-  final stringValue = localStorage.getItem(key);
-  return stringValue == null ? defaultValue : jsonDecode(stringValue) as T;
-}
-
-void _setStoredValue<T>(String key, T value) {
-  localStorage.setItem(key, jsonEncode(value));
 }

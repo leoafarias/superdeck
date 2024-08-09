@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
 import '../../superdeck.dart';
 import '../molecules/split_view.dart';
@@ -23,44 +24,27 @@ class AppShell extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isSmall = context.isSmall;
-    final navigation = useNavigation();
+
     final slides = useSlides();
+
     final invalidSlides = slides.whereType<InvalidSlide>().toList();
-
-    final handlePrevious = useCallback(() {
-      if (navigation.page == 0) return;
-      navigation.goToPage(navigation.page - 1);
-    }, [navigation]);
-
-    final handleNext = useCallback(() {
-      if (navigation.page == slides.length - 1) return;
-      navigation.goToPage(navigation.page + 1);
-    }, [navigation, slides.length]);
-
-    final handleToggleSide = useCallback(() {
-      if (navigation.sideIsOpen) {
-        navigation.closeSide();
-      } else {
-        navigation.openSide();
-      }
-    }, [navigation.sideIsOpen]);
 
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
-      ): handleNext,
+      ): context.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
-      ): handleNext,
+      ): context.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.space,
-      ): handleNext,
+      ): context.nextSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
-      ): handlePrevious,
+      ): context.previousSlide,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
-      ): handlePrevious,
+      ): context.previousSlide,
     };
 
     return CallbackShortcuts(
@@ -75,7 +59,7 @@ class AppShell extends HookWidget {
             ? FloatingActionButtonLocation.miniEndFloat
             : FloatingActionButtonLocation.miniStartFloat,
         floatingActionButton: FloatingActionButton.small(
-          onPressed: handleToggleSide,
+          onPressed: context.toggleDrawer,
           child: Badge(
             label: Text(invalidSlides.length.toString()),
             isLabelVisible: invalidSlides.isNotEmpty,
