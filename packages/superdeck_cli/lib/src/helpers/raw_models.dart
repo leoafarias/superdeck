@@ -101,6 +101,7 @@ class RawSlide {
 
 class RawAsset {
   final String path;
+  final String? reference;
   final int width;
   final int height;
 
@@ -108,11 +109,13 @@ class RawAsset {
     required this.path,
     required this.width,
     required this.height,
+    required this.reference,
   });
 
   static RawAsset fromMap(Json json) {
     return RawAsset(
       path: json['path'] as String,
+      reference: json['reference'] as String?,
       width: json['width'] as int,
       height: json['height'] as int,
     );
@@ -126,5 +129,6 @@ class RawAsset {
         'path': path,
         'width': width,
         'height': height,
+        if (reference != null) 'reference': reference,
       };
 }

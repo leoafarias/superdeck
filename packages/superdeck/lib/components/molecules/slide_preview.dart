@@ -17,7 +17,7 @@ class SlidePreview<T extends Slide> extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: const Color.fromARGB(255, 68, 60, 60),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),

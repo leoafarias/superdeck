@@ -38,7 +38,7 @@ class ImageTemplate extends SplitTemplateBuilder<ImageSlide> {
       alignment: spec.image.alignment,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: getImageProvider(src),
+          image: getImageProvider(src, targetSize: Size(width, height)),
           centerSlice: spec.image.centerSlice,
           repeat: spec.image.repeat ?? ImageRepeat.noRepeat,
           filterQuality: spec.image.filterQuality ?? FilterQuality.low,

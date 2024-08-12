@@ -50,7 +50,8 @@ void main() {
     setUp(() {
       file = File('test.png');
 
-      asset = SlideAsset(path: file.path, width: 800, height: 600);
+      asset = SlideAsset(
+          path: file.path, width: 800, height: 600, reference: 'test');
     });
 
     test('extension should return correct file extension', () {
@@ -63,7 +64,8 @@ void main() {
 
     test('isLandscape should return true when width is greater than height',
         () {
-      asset = SlideAsset(path: file.path, width: 1200, height: 800);
+      asset = SlideAsset(
+          path: file.path, width: 1200, height: 800, reference: 'test');
       expect(asset.isLandscape, isTrue);
     });
   });

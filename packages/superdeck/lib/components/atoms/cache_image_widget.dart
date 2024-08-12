@@ -61,12 +61,22 @@ class CacheImage extends StatelessWidget {
   return (width: cacheWidth, height: cacheHeight);
 }
 
-ImageProvider getImageProvider(String url) {
+ImageProvider getImageProvider(String url, {Size? targetSize}) {
   ImageProvider provider;
 
   final assets = $superdeck.assets;
 
-  final assetUrl = assets.firstWhereOrNull((e) => e.path == url);
+  final assetUrl = assets.firstWhereOrNull((e) {
+    if (e.path == url) {
+      return true;
+    }
+
+    if (e.reference == url) {
+      return true;
+    }
+
+    return false;
+  });
 
   url = assetUrl?.path ?? url;
 
@@ -82,7 +92,8 @@ ImageProvider getImageProvider(String url) {
     }
   }
 
-  final (:width, :height) = calculateImageSize(kResolution, assetUrl);
+  final (:width, :height) =
+      calculateImageSize(targetSize ?? kResolution, assetUrl);
 
   return ResizeImage.resizeIfNeeded(
     width,

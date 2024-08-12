@@ -40,11 +40,13 @@ final class SlideAsset with SlideAssetMappable {
   final String path;
   final int width;
   final int height;
+  final String? reference;
 
   SlideAsset({
     required this.path,
     required this.width,
     required this.height,
+    required this.reference,
   });
 
   String get extension => p.extension(path);

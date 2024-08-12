@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../../helpers/constants.dart';
 import '../../helpers/measure_size.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../helpers/utils.dart';
@@ -28,6 +29,7 @@ class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
 class _AnimatedMarkdownViewerState
     extends AnimatedWidgetBaseState<AnimatedMarkdownViewer> {
   SlideSpecTween? _styleTween;
+  Size? _size;
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
@@ -41,31 +43,40 @@ class _AnimatedMarkdownViewerState
   @override
   Widget build(BuildContext context) {
     final spec = _styleTween!.evaluate(animation) ?? const SlideSpec();
-    return MarkdownBody(
-      data: widget.content,
-      extensionSet: md.ExtensionSet(
-        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-        <md.InlineSyntax>[
-          md.EmojiSyntax(),
-          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-        ],
+    return MeasureSingleWidgetSize(
+      onChange: (size) {
+        setState(() {
+          _size = size;
+        });
+      },
+      child: MarkdownBody(
+        data: widget.content,
+        extensionSet: md.ExtensionSet(
+          md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+          <md.InlineSyntax>[
+            md.EmojiSyntax(),
+            ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+          ],
+        ),
+        imageBuilder: (uri, title, alt) {
+          return _imageBuilder(uri, title, alt, size: _size ?? kResolution);
+        },
+        builders: {
+          'code': CodeElementBuilder(spec.code),
+        },
+        bulletBuilder: (parameters) {
+          if (parameters.style == BulletStyle.orderedList) {
+            final index = parameters.index + 1;
+            return Text(
+              '$index .',
+              style: spec.list?.bulletStyle,
+            );
+          } else {
+            return Text('•', style: spec.list?.bulletStyle);
+          }
+        },
+        styleSheet: _styleTween!.evaluate(animation)?.toStyle(),
       ),
-      imageBuilder: _imageBuilder,
-      builders: {
-        'code': CodeElementBuilder(spec.code),
-      },
-      bulletBuilder: (parameters) {
-        if (parameters.style == BulletStyle.orderedList) {
-          final index = parameters.index + 1;
-          return Text(
-            '$index .',
-            style: spec.list?.bulletStyle,
-          );
-        } else {
-          return Text('•', style: spec.list?.bulletStyle);
-        }
-      },
-      styleSheet: _styleTween!.evaluate(animation)?.toStyle(),
     );
   }
 }
@@ -124,28 +135,19 @@ List<TextSpan> updateTextColor(
 Widget _imageBuilder(
   Uri uri,
   String? title,
-  String? alt,
-) {
-  Size? size;
-  return StatefulBuilder(builder: (context, setState) {
+  String? alt, {
+  required Size size,
+}) {
+  return Builder(builder: (context) {
     final slideSpec = SlideSpec.of(context);
 
-    Widget image = CacheImage(
-      url: uri.toString(),
-      spec: slideSpec.image,
+    return ConstrainedBox(
+      constraints: calculateConstraints(size, slideSpec),
+      child: CacheImage(
+        url: uri.toString(),
+        spec: slideSpec.image,
+      ),
     );
-
-    if (size != null) {
-      return ConstrainedBox(
-        constraints: calculateConstraints(size!, slideSpec),
-        child: image,
-      );
-    } else {
-      return MeasureSingleWidgetSize(
-        onChange: (newSize) => setState(() => size = newSize),
-        child: image,
-      );
-    }
   });
 }
 
@@ -157,29 +159,6 @@ class TextBuilder extends MarkdownElementBuilder {
     return TextSpecWidget(text.text, spec: spec);
   }
 }
-
-final List<String> _kBlockTags = <String>[
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'li',
-  'blockquote',
-  'pre',
-  'ol',
-  'ul',
-  'hr',
-  'table',
-  'thead',
-  'tbody',
-  'tr',
-  'section',
-];
-
-const List<String> _kListTags = <String>['ul', 'ol'];
 
 class CodeElementBuilder extends MarkdownElementBuilder {
   final MdCodeblockSpec? spec;

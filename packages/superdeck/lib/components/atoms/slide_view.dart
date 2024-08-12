@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../providers/slide_provider.dart';
+import '../../providers/snapshot_provider.dart';
 import '../../providers/style_provider.dart';
 import '../../superdeck.dart';
 import 'cache_image_widget.dart';
@@ -20,6 +21,10 @@ class SlideView<T extends Slide> extends StatelessWidget {
 
     final variantStyle = StyleProvider.of(context, slide.style);
 
+    final isCapturing = SnapshotProvider.isCapturingOf(context);
+    final duration =
+        isCapturing ? Duration.zero : const Duration(milliseconds: 300);
+
     final backgroundWidget = slide.background != null
         ? CacheImage(
             url: slide.background!,
@@ -38,13 +43,13 @@ class SlideView<T extends Slide> extends StatelessWidget {
           return Builder(builder: (context) {
             return AnimatedBoxSpecWidget(
               spec: spec.outerContainer,
-              duration: const Duration(milliseconds: 300),
+              duration: duration,
               child: Stack(
                 children: [
                   Positioned.fill(child: backgroundWidget),
                   AnimatedBoxSpecWidget(
                     spec: spec.innerContainer,
-                    duration: const Duration(milliseconds: 300),
+                    duration: duration,
                     child: SlideBuilder(slide),
                   ),
                 ],

@@ -30,7 +30,7 @@ class SlideThumbnail extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final processThumbnail = useFuture(
-      useMemoized(() => _generateThumbnail(slide), [slide]),
+      useMemoized(() => _generateThumbnail(slide, context), [slide]),
     );
     return LayoutBuilder(builder: (context, constraints) {
       final child = processThumbnail.when(
@@ -134,15 +134,15 @@ class _PreviewContainer extends StatelessWidget {
   }
 }
 
-Future<File> _generateThumbnail(Slide slide) async {
+Future<File> _generateThumbnail(Slide slide, BuildContext context) async {
   final thumbnailFile =
       ReferenceService.instance.getAssetFile('thumbnail_${slide.key}.png');
-  if (!kCanRunProcess) {
-    return thumbnailFile;
-  }
-  if (await thumbnailFile.exists()) {
-    return thumbnailFile;
-  }
+  // if (!kCanRunProcess) {
+  //   return thumbnailFile;
+  // }
+  // if (await thumbnailFile.exists()) {
+  //   return thumbnailFile;
+  // }
 
   final imageData = await SnapshotService.instance.generate(
     // ignore: use_build_context_synchronously

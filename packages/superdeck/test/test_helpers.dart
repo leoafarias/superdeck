@@ -21,6 +21,7 @@ extension WidgetTesterX on WidgetTester {
   }) async {
     return pumpWithScaffold(
       SnapshotProvider(
+        isCapturing: isSnapshot,
         child: StyleProvider(
           baseStyle: style,
           child: AssetsProvider(

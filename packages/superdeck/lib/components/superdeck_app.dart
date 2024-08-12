@@ -68,6 +68,7 @@ class SuperDeckApp extends HookWidget {
                       theme: theme,
                       builder: (context, child) {
                         return SnapshotProvider(
+                          isCapturing: true,
                           child: LoadingOverlay(
                             isLoading: $superdeck.loading,
                             key: _uniqueKey,

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/tasks/dart_formatter_task.dart';
+import 'package:superdeck_cli/src/tasks/image_cache_task.dart';
 import 'package:superdeck_cli/src/tasks/mermaid_task.dart';
 import 'package:superdeck_cli/src/tasks/slide_thumbnail_task.dart';
 import 'package:watcher/watcher.dart';
@@ -34,6 +35,7 @@ class SlidesLoader {
       const MermaidConverterTask(),
       const DartFormatterTask(),
       const SlideThumbnailTask(),
+      const ImageCachingTask(),
     ]);
 
     await pipeline.run();

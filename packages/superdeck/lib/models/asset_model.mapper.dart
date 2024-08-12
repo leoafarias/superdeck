@@ -85,12 +85,16 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   static const Field<SlideAsset, int> _f$width = Field('width', _$width);
   static int _$height(SlideAsset v) => v.height;
   static const Field<SlideAsset, int> _f$height = Field('height', _$height);
+  static String? _$reference(SlideAsset v) => v.reference;
+  static const Field<SlideAsset, String> _f$reference =
+      Field('reference', _$reference);
 
   @override
   final MappableFields<SlideAsset> fields = const {
     #path: _f$path,
     #width: _f$width,
     #height: _f$height,
+    #reference: _f$reference,
   };
   @override
   final bool ignoreNull = true;
@@ -99,7 +103,8 @@ class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
     return SlideAsset(
         path: data.dec(_f$path),
         width: data.dec(_f$width),
-        height: data.dec(_f$height));
+        height: data.dec(_f$height),
+        reference: data.dec(_f$reference));
   }
 
   @override
@@ -153,7 +158,7 @@ extension SlideAssetValueCopy<$R, $Out>
 
 abstract class SlideAssetCopyWith<$R, $In extends SlideAsset, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? path, int? width, int? height});
+  $R call({String? path, int? width, int? height, String? reference});
   SlideAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -166,16 +171,19 @@ class _SlideAssetCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SlideAsset> $mapper =
       SlideAssetMapper.ensureInitialized();
   @override
-  $R call({String? path, int? width, int? height}) => $apply(FieldCopyWithData({
+  $R call({String? path, int? width, int? height, Object? reference = $none}) =>
+      $apply(FieldCopyWithData({
         if (path != null) #path: path,
         if (width != null) #width: width,
-        if (height != null) #height: height
+        if (height != null) #height: height,
+        if (reference != $none) #reference: reference
       }));
   @override
   SlideAsset $make(CopyWithData data) => SlideAsset(
       path: data.get(#path, or: $value.path),
       width: data.get(#width, or: $value.width),
-      height: data.get(#height, or: $value.height));
+      height: data.get(#height, or: $value.height),
+      reference: data.get(#reference, or: $value.reference));
 
   @override
   SlideAssetCopyWith<$R2, SlideAsset, $Out2> $chain<$R2, $Out2>(

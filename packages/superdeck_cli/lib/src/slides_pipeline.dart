@@ -41,6 +41,11 @@ class TaskController {
 
   List<RawAsset> neededAssets = [];
 
+  RawAsset? checkAssetExists(String assetName) {
+    return _assets
+        .firstWhereOrNull((element) => element.path.contains(assetName));
+  }
+
   TaskController copyWith({
     RawSlide? slide,
     List<RawAsset>? assets,
@@ -53,16 +58,26 @@ class TaskController {
     )..neededAssets = neededAssets;
   }
 
-  Future<void> markFileAsNeeded(File file) async {
+  Future<void> markFileAsNeeded(File file, [String? reference]) async {
     var asset = _assets.firstWhereOrNull((f) => f.path == file.path);
 
     if (asset == null) {
-      final image = await img.decodePngFile(file.path);
+      print(file.path);
+      final image = await img.decodeImageFile(file.path);
+      if (image == null) {
+        throw Exception('Could not decode image');
+      }
+
       asset = RawAsset(
         path: file.path,
-        width: image!.width,
+        width: image.width,
         height: image.height,
+        reference: reference,
       );
+    } else {
+      if (!await file.exists()) {
+        throw Exception('File does not exist');
+      }
     }
     markNeeded(asset);
   }

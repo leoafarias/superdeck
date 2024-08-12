@@ -135,9 +135,20 @@
   ],
   "assets": [
     {
+      "path": ".superdeck/generated/thumbnail_HR8xUsF0.png",
+      "width": 512,
+      "height": 288
+    },
+    {
       "path": ".superdeck/generated/thumbnail_RiJb4GGG.png",
       "width": 512,
       "height": 288
+    },
+    {
+      "path": ".superdeck/generated/image_caching_woxVKegn.gif",
+      "width": 500,
+      "height": 500,
+      "reference": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGt1MnQ5N2k3cXVma24wb3V5cThlZ3ExY2NvY3czcmozang0bGQ1ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XzWd8acQ37byKR4tmd/giphy.gif"
     },
     {
       "path": ".superdeck/generated/thumbnail_hhnMdIWj.png",
@@ -163,6 +174,12 @@
       "path": ".superdeck/generated/thumbnail_q6arHVVz.png",
       "width": 512,
       "height": 288
+    },
+    {
+      "path": ".superdeck/generated/image_caching_c5tnibJL.gif",
+      "width": 270,
+      "height": 480,
+      "reference": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGswdWJvY2oxazJoY3g2Y2poNHBvZXlpYmd5YTg0Z2g0ODRrbng4MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oB6KlAvOuaLtxYy8l4/giphy.gif"
     },
     {
       "path": ".superdeck/generated/thumbnail_shPxXVHO.png",
