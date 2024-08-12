@@ -5,6 +5,7 @@ import 'package:go_router_paths/go_router_paths.dart';
 import '../../superdeck.dart';
 import '../screens/export_screen.dart';
 import '../screens/presentation_screen.dart';
+import 'dialog_page.dart';
 
 class SDPaths {
   static Path get home => Path('/');
@@ -96,8 +97,13 @@ MaterialPage _getPage(Widget child, GoRouterState state) {
   return MaterialPage(key: state.pageKey, child: child);
 }
 
+DialogPage _getDialogPage(Widget child, GoRouterState state) {
+  return DialogPage(key: state.pageKey, builder: (_) => Dialog(child: child));
+}
+
 extension BuildContextRoutesX on BuildContext {
   int get currentSlidePage => int.parse(_slidePage ?? '1');
+  int get currentSlideIndex => currentSlidePage - 1;
 
   void goToSlide(int page) => go(_replaceQueryParam('slide', '$page'));
 

@@ -35,6 +35,8 @@ class SuperDeckApp extends HookWidget {
     // Return if its initialized
     if (_initialized) return;
 
+    _initialized = true;
+
     WidgetsFlutterBinding.ensureInitialized();
 
     await Future.wait([
@@ -42,8 +44,6 @@ class SuperDeckApp extends HookWidget {
       SyntaxHighlight.initialize(),
       _initializeWindowManager(),
     ]);
-
-    _initialized = true;
   }
 
   @override

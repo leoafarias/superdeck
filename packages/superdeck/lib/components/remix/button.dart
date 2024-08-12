@@ -21,7 +21,55 @@ class SDButton extends StatelessWidget {
       onPressed: onPressed,
       type: ButtonVariant.surface,
       iconLeft: icon,
-      label: '',
+      label: label,
+    );
+  }
+}
+
+class SDButtonSolid extends StatelessWidget {
+  const SDButtonSolid({
+    required this.onPressed,
+    super.key,
+    required this.label,
+    this.icon,
+  });
+
+  final VoidCallback onPressed;
+  final String label;
+
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return RxButton(
+      onPressed: onPressed,
+      type: ButtonVariant.solid,
+      iconLeft: icon,
+      label: label,
+    );
+  }
+}
+
+class SDOutlinedButton extends StatelessWidget {
+  const SDOutlinedButton({
+    required this.onPressed,
+    super.key,
+    required this.label,
+    this.icon,
+  });
+
+  final VoidCallback onPressed;
+  final String label;
+
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return RxButton(
+      onPressed: onPressed,
+      type: ButtonVariant.outline,
+      iconLeft: icon,
+      label: label,
     );
   }
 }

@@ -1,166 +1,134 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../helpers/constants.dart';
-import '../components/atoms/linear_progresss_indicator_widget.dart';
+import '../components/remix/button.dart';
 import '../helpers/extensions.dart';
+import '../helpers/routes.dart';
+import '../services/export_service.dart';
 import '../services/snapshot_service.dart';
 import '../superdeck.dart';
 
-class ExportScreen extends StatefulHookWidget {
+class ExportScreen extends HookWidget {
   const ExportScreen({super.key});
 
   @override
-  State<ExportScreen> createState() => _ExportScreenState();
+  Widget build(BuildContext context) {
+    final slides = useSlides();
+    final currentSlideIndex = useValueNotifier(
+        context.currentSlideIndex, [context.currentSlideIndex]);
+
+    final export = usePdfExportController(
+      slides: slides,
+      slideIndex: currentSlideIndex.value,
+    );
+
+    final inProgress = export.inProgress;
+
+    return Stack(
+      children: [
+        Center(
+          child: export.render(),
+        ),
+        Positioned.fill(
+            child: Container(
+          color: const Color.fromARGB(255, 14, 14, 14).withOpacity(0.9),
+        )),
+        inProgress ? _ProgressDialog(export) : ExportDialog(export),
+      ],
+    );
+  }
 }
 
-class _ExportScreenState extends State<ExportScreen> {
-  late final PDFExportController _pdfExportController;
+class _ProgressDialog extends StatelessWidget {
+  const _ProgressDialog(this.controller);
 
-  @override
-  void initState() {
-    super.initState();
-    _pdfExportController = PDFExportController();
-  }
+  final PdfExportController controller;
 
   @override
   Widget build(BuildContext context) {
-    final selectedQuality = useState(SnapshotQuality.good);
-    final slides = useSlides();
-
-    useEffect(() {
-      _pdfExportController.slides = slides;
-    }, [slides]);
-
-    return Scaffold(
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Select Quality:',
-                    style: context.textTheme.displaySmall,
-                  ),
-                  const SizedBox(height: 16.0),
-                  ...SnapshotQuality.values.map((e) {
-                    return RadioListTile.adaptive(
-                      title: Text(e.label),
-                      value: e,
-                      groupValue: selectedQuality.value,
-                      onChanged: (value) => selectedQuality.value = value!,
-                    );
-                  }).toList(),
-                  const SizedBox(height: 24.0),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _pdfExportController.start(),
-                        child: const Text('Export'),
-                      ),
-                      const SizedBox(width: 16.0),
-                    ],
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 32.0,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            controller.isComplete
+                ? Icon(
+                    Icons.check_circle,
+                    color: context.colorScheme.primary,
+                    size: 42,
                   )
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: _pdfExportController.render(),
-          ),
-        ],
+                : SizedBox(
+                    height: 42,
+                    width: 42,
+                    child: CircularProgressIndicator(
+                      color: context.colorScheme.primary,
+                      value: controller.isBuilding ? null : controller.progress,
+                    ),
+                  ),
+            const SizedBox(height: 16.0),
+            Text(controller.progressText),
+          ],
+        ),
       ),
     );
   }
 }
 
-List<Widget> _renderComplete() {
-  return [
-    const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.check_circle,
-          color: Colors.green,
-          size: 48,
-        ),
-        SizedBox(width: 16),
-        Text(
-          'Done',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    )
-  ];
-}
-
-class ExportProgress extends StatelessWidget {
-  ExportProgress({
+class ExportDialog extends HookWidget {
+  const ExportDialog(
+    this.controller, {
     super.key,
-    required this.controller,
   });
-
-  final PDFExportController controller;
-
+  final PdfExportController controller;
   @override
   Widget build(BuildContext context) {
-    List<Widget> buildChildren() {
-      return [
-        AspectRatio(
-          aspectRatio: kAspectRatio,
-          child: controller.render(),
+    final dropdownItems = SnapshotQuality.values.map(
+      (quality) => DropdownMenuItem(
+        value: quality,
+        child: Text(
+          quality.name.capitalize(),
         ),
-        const SizedBox(height: 26),
-        Text(
-          controller.status.name,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: AnimatedLinearProgressIndicator(
-                progress: controller.progress,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              controller.progressText,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
-        )
-      ];
-    }
+      ),
+    );
 
-    return ListenableBuilder(
-        listenable: controller,
-        builder: (context, _) {
-          return Stack(
-            children: [
-              Container(
-                color: Theme.of(context).colorScheme.surface,
-              ),
-              Container(
-                color: Colors.black.withOpacity(0.8),
-                padding: const EdgeInsets.all(200),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: controller.isComplete
-                      ? _renderComplete()
-                      : buildChildren(),
+    return Dialog(
+      backgroundColor: Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Select export quality:'),
+            const SizedBox(height: 16.0),
+            Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-              ),
-            ],
-          );
-        });
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButton(
+                      isDense: true,
+                      value: controller.quality,
+                      focusColor: Colors.transparent,
+                      underline: const SizedBox.shrink(),
+                      onChanged: (value) => controller.quality = value!,
+                      items: dropdownItems.toList(),
+                    ),
+                    SizedBox(width: 10),
+                    SDButtonSolid(
+                      label: 'Export',
+                      onPressed: () => controller.start(),
+                    ),
+                  ],
+                )),
+          ],
+        ),
+      ),
+    );
   }
 }

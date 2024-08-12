@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../superdeck.dart';
+
 /// A dialog page with Material entrance and exit animations, modal barrier color,
 /// and modal barrier behavior (dialog is dismissible with a tap on the barrier).
 class DialogPage<T> extends Page<T> {
@@ -28,7 +30,7 @@ class DialogPage<T> extends Page<T> {
   @override
   Route<T> createRoute(BuildContext context) {
     return DialogRoute<T>(
-      context: context,
+      context: kScaffoldKey.currentContext!,
       settings: this,
       builder: builder,
       anchorPoint: anchorPoint,

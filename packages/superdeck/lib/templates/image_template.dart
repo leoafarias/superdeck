@@ -33,8 +33,8 @@ class ImageTemplate extends SplitTemplateBuilder<ImageSlide> {
     }
 
     final side = Container(
-      height: spec.image.height,
-      width: spec.image.width,
+      height: spec.image.height ?? height,
+      width: spec.image.width ?? width,
       alignment: spec.image.alignment,
       decoration: BoxDecoration(
         image: DecorationImage(

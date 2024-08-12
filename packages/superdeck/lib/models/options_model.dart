@@ -1,7 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:recase/recase.dart';
 
+import '../helpers/extensions.dart';
 import '../helpers/mappers.dart';
 import '../schema/schema_model.dart';
 import '../schema/schema_values.dart';
@@ -328,7 +328,7 @@ extension on SchemaValue<String> {
   SchemaValue<String> isEnum<T extends Enum>(List<T> values) {
     return copyWith(validators: [
       ...validators,
-      ArrayValidator(values.map((e) => e.name.snakeCase).toList()),
+      ArrayValidator(values.map((e) => e.name.snakeCase()).toList()),
     ]);
   }
 }

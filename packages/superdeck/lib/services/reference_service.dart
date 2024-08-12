@@ -43,7 +43,11 @@ class ReferenceService {
   Future<SuperDeckReference> loadReference() async {
     final slidesJson = await loadString(_slideRef.path);
     try {
-      return compute(SuperDeckReference.fromJson, slidesJson);
+      if (kCanRunProcess) {
+        return compute(SuperDeckReference.fromJson, slidesJson);
+      } else {
+        return SuperDeckReference.fromJson(slidesJson);
+      }
     } catch (e) {
       log('Error loading deck: $e');
       return const SuperDeckReference.empty();

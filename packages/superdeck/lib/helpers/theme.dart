@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-ThemeData get theme => ThemeData(
+ThemeData get theme => ThemeData.dark().copyWith(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.black,
         dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
-        contrastLevel: 1,
-        error: Colors.red,
-        onTertiary: Colors.cyan,
+        seedColor: Colors.indigo,
         brightness: Brightness.dark,
       ),
+      dialogBackgroundColor: Colors.black,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
     );
+
+
+// dark cupertino theme

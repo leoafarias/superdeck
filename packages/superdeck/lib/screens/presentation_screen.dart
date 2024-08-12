@@ -14,7 +14,7 @@ class PresentationScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slideIndex = context.currentSlidePage - 1;
+    final slideIndex = context.currentSlideIndex;
     final pageController = usePageController(initialPage: slideIndex);
     final slides = useSlides();
 

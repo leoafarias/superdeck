@@ -2,12 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-void useMount(VoidCallback fn) {
-  return usePostFrameEffect(() {
-    fn();
-  });
-}
-
 void useEffectOnce(void Function()? Function() effect) {
   useEffect(effect, []);
 }
@@ -78,7 +72,7 @@ class _ScrollVisibleControllerState
   String get debugLabel => 'useScrollVisibleController';
 }
 
-bool useFirstMount() {
+bool useIsFirstMount() {
   final first = useRef(true);
 
   if (first.value) {
@@ -91,7 +85,7 @@ bool useFirstMount() {
 }
 
 void useUpdateEffect(Dispose? Function() effect, [List<Object?>? keys]) {
-  final isFirstMount = useFirstMount();
+  final isFirstMount = useIsFirstMount();
 
   useEffect(() {
     if (!isFirstMount) {
@@ -113,3 +107,33 @@ T? useDistinct<T>(T value, [Predicate<T>? compare]) {
 }
 
 typedef Predicate<T> = bool Function(T prev, T next);
+
+OverlayPortalController useOverlayPortalController() {
+  return use(
+    _OverlayPortalController(),
+  );
+}
+
+class _OverlayPortalController extends Hook<OverlayPortalController> {
+  const _OverlayPortalController();
+
+  @override
+  HookState<OverlayPortalController, Hook<OverlayPortalController>>
+      createState() => _OverlayPortalControllerState();
+}
+
+class _OverlayPortalControllerState
+    extends HookState<OverlayPortalController, _OverlayPortalController> {
+  late final controller = OverlayPortalController();
+
+  @override
+  OverlayPortalController build(BuildContext context) => controller;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  String get debugLabel => 'useOverlayPortalController';
+}

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,7 @@ import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
 import '../atoms/sized_transition.dart';
 import 'navigation_rail.dart';
-import 'slide_thumbnail_list.dart';
+import 'presentation_side_bar.dart';
 
 class SplitView extends HookWidget {
   final StatefulNavigationShell navigationShell;
@@ -18,6 +19,7 @@ class SplitView extends HookWidget {
   });
 
   final _maxWidth = 400.0;
+  final _thumbnailWidth = 300.0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +29,7 @@ class SplitView extends HookWidget {
       if (context.isMobileLandscape) {
         sideSize.value = 200.0;
       } else {
-        navigationShell.currentIndex == 0
-            ? sideSize.value = _maxWidth
-            : sideSize.value = _maxWidth - 300;
+        sideSize.value = _maxWidth;
       }
     }, [navigationShell.currentIndex]);
 
@@ -50,29 +50,20 @@ class SplitView extends HookWidget {
       }
     }, [context.isDrawerOpen]);
 
-    const sideHeight = 200.0;
-
-    final isSmall = context.isSmall || context.isMobileLandscape;
-
     return LayoutBuilder(
       builder: (context, constraints) {
-        final animatedWidth = animation * sideSize.value;
-        final animatedHeight = animation * sideHeight;
+        final sidebar = switch (navigationShell.currentIndex) {
+          0 => SizedBox(
+              width: _thumbnailWidth,
+              child: const PresentationSideBar(),
+            ),
+          _ => const SizedBox.shrink(),
+        };
 
-        EdgeInsets padding;
-        if (isSmall) {
-          padding = EdgeInsets.only(bottom: animatedHeight);
-        } else {
-          padding = EdgeInsets.only(left: animatedWidth);
-        }
-
-        final drawer = Align(
-          alignment: isSmall ? Alignment.bottomCenter : Alignment.centerLeft,
-          child: SizedTransition(
-            sizeFactor: animation,
-            child: SizedBox(
-              width: isSmall ? null : sideSize.value,
-              height: isSmall ? sideHeight : null,
+        return Row(
+          children: [
+            SizedTransition(
+              sizeFactor: animation,
               child: Row(
                 children: [
                   CustomNavigationRail(
@@ -86,34 +77,19 @@ class SplitView extends HookWidget {
                         icon: Icons.view_carousel,
                         label: 'Home',
                       ),
-                      CustomNavigationRailDestination(
-                        icon: Icons.save_alt,
-                        label: 'Export',
-                      ),
+                      if (!kIsWeb)
+                        CustomNavigationRailDestination(
+                          icon: Icons.settings,
+                          label: 'Settings',
+                        ),
                     ],
                   ),
-                  navigationShell.currentIndex == 0
-                      ? const SizedBox(
-                          width: 300,
-                          child: SlideThumbnailList(),
-                        )
-                      : const SizedBox(),
+                  sidebar
                 ],
               ),
             ),
-          ),
-        );
-
-        final current = Padding(
-          padding: padding,
-          child: Padding(
-            padding: EdgeInsets.all(20 * animation),
-            child: navigationShell,
-          ),
-        );
-
-        return Stack(
-          children: [current, drawer],
+            Expanded(child: navigationShell)
+          ],
         );
       },
     );

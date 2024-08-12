@@ -3,168 +3,17 @@ import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../components/atoms/slide_view.dart';
-import '../components/molecules/scaled_app.dart';
 import '../helpers/constants.dart';
 import '../providers/assets_provider.dart';
 import '../providers/examples_provider.dart';
 import '../providers/snapshot_provider.dart';
 import '../providers/style_provider.dart';
 import '../superdeck.dart';
-
-class PDFExportController extends ChangeNotifier {
-  SnapshotQuality _quality = SnapshotQuality.good;
-  _ExportProcessStatus _status = _ExportProcessStatus.idle;
-  List<Uint8List> _images = [];
-  final scrollController = ItemScrollController();
-
-  /// Create a map for keys and GlobalKey for each slide
-  Map<String, GlobalKey> _slideKeys = {};
-
-  List<Slide> _slides = [];
-
-  bool get isComplete => _status == _ExportProcessStatus.complete;
-
-  PDFExportController();
-
-  Map<String, GlobalKey> get keys => _slideKeys;
-
-  List<Slide> get slides => _slides;
-
-  void set slides(List<Slide> slides) {
-    _slideKeys = {for (var slide in slides) slide.key: GlobalKey()};
-    _slides = slides;
-    notifyListeners();
-  }
-
-  double get progress => _images.length / _slides.length;
-
-  String get progressText => '${_images.length} / ${_slides.length}';
-
-  SnapshotQuality get quality => _quality;
-
-  set quality(SnapshotQuality value) {
-    _quality = value;
-    notifyListeners();
-  }
-
-  _ExportProcessStatus get status => _status;
-
-  Future<void> start() async {
-    _status = _ExportProcessStatus.capturing;
-    notifyListeners();
-
-    for (var i = 0; i < _slides.length; i++) {
-      final isLast = i == _slides.length - 1;
-      scrollController.jumpTo(
-        index: i,
-        // duration: Durations.short1,
-        alignment: isLast ? 0.5 : 0,
-      );
-
-      await _convertSlide(i);
-    }
-
-    _status = _ExportProcessStatus.creating;
-    notifyListeners();
-
-    await Future.delayed(Durations.medium1);
-    final pdf = await _buildPdf();
-
-    _status = _ExportProcessStatus.complete;
-    notifyListeners();
-    await _savePdf(pdf);
-  }
-
-  Future<void> _convertSlide(int index) async {
-    final slide = _slides[index];
-    // Ensure the slide is fully rendered
-
-    final image = await SnapshotService.instance.generateWithKey(
-      quality: _quality,
-      key: _slideKeys[slide.key]!,
-    );
-    _images = [..._images, image];
-    notifyListeners();
-  }
-
-  Future<void> _savePdf(Uint8List pdf) async {
-    final pdfFileName = 'superdeck';
-
-    await FileSaver.instance.saveAs(
-      name: pdfFileName,
-      bytes: pdf,
-      ext: 'pdf',
-      mimeType: MimeType.pdf,
-    );
-  }
-
-  Future<Uint8List> _buildPdf() async {
-    final pdf = pw.Document();
-
-    for (final imageData in _images) {
-      final image = pw.MemoryImage(imageData);
-
-      final pdfImage = pw.Image(
-        image,
-        width: kResolution.width,
-        height: kResolution.height,
-      );
-
-      pdf.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat(
-            kResolution.width,
-            kResolution.height,
-          ),
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pdfImage,
-            );
-          },
-        ),
-      );
-    }
-
-    return pdf.save();
-  }
-
-  Widget render() {
-    return ScrollablePositionedList.builder(
-      itemScrollController: scrollController,
-      itemBuilder: (context, index) {
-        final slide = _slides[index];
-        return RepaintBoundary(
-          key: keys[slide.key],
-          child: ScaledWidget(
-            child: SlideView(slide),
-          ),
-        );
-      },
-      itemCount: _slides.length,
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-}
-
-enum _ExportProcessStatus {
-  idle,
-  capturing,
-  creating,
-  complete,
-}
 
 enum SnapshotQuality {
   low('Low', pixelRatio: 0.4),
@@ -228,8 +77,9 @@ class SnapshotService {
     //  adjust the pixel ratio based on the ideal size which is kResolution
     final pixelRatio = kResolution.width / boundarySize.width;
 
-    final image =
-        await boundary.toImage(pixelRatio: quality.pixelRatio * pixelRatio);
+    final image = await boundary.toImage(
+      pixelRatio: quality.pixelRatio * pixelRatio,
+    );
     return _imageToUint8List(image);
   }
 
