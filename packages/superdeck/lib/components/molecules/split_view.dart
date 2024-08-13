@@ -7,8 +7,9 @@ import '../../helpers/hooks.dart';
 import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
 import '../atoms/sized_transition.dart';
+import '../organisms/chat_panel.dart';
+import '../organisms/presentation_side_panel.dart';
 import 'navigation_rail.dart';
-import 'presentation_side_bar.dart';
 
 class SplitView extends HookWidget {
   final StatefulNavigationShell navigationShell;
@@ -55,7 +56,11 @@ class SplitView extends HookWidget {
         final sidebar = switch (navigationShell.currentIndex) {
           0 => SizedBox(
               width: _thumbnailWidth,
-              child: const PresentationSideBar(),
+              child: const PresentationSidePanel(),
+            ),
+          1 => SizedBox(
+              width: _thumbnailWidth,
+              child: const ChatScreen(),
             ),
           _ => const SizedBox.shrink(),
         };
@@ -77,10 +82,14 @@ class SplitView extends HookWidget {
                         icon: Icons.view_carousel,
                         label: 'Home',
                       ),
+                      CustomNavigationRailDestination(
+                        icon: Icons.chat,
+                        label: 'Chat',
+                      ),
                       if (!kIsWeb)
                         CustomNavigationRailDestination(
-                          icon: Icons.settings,
-                          label: 'Settings',
+                          icon: Icons.picture_as_pdf,
+                          label: 'Export',
                         ),
                     ],
                   ),

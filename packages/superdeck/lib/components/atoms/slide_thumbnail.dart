@@ -137,15 +137,12 @@ class _PreviewContainer extends StatelessWidget {
 Future<File> _generateThumbnail(Slide slide, BuildContext context) async {
   final thumbnailFile =
       ReferenceService.instance.getAssetFile('thumbnail_${slide.key}.png');
-  // if (!kCanRunProcess) {
-  //   return thumbnailFile;
-  // }
-  // if (await thumbnailFile.exists()) {
-  //   return thumbnailFile;
-  // }
+
+  if (!kCanRunProcess || await thumbnailFile.exists()) {
+    return thumbnailFile;
+  }
 
   final imageData = await SnapshotService.instance.generate(
-    // ignore: use_build_context_synchronously
     quality: SnapshotQuality.low,
     slide: slide,
   );

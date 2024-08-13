@@ -16,6 +16,7 @@ class PresentationScreen extends HookWidget {
   Widget build(BuildContext context) {
     final slideIndex = context.currentSlideIndex;
     final pageController = usePageController(initialPage: slideIndex);
+
     final slides = useSlides();
 
     usePostFrameEffect(() {

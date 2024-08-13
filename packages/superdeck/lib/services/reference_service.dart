@@ -13,6 +13,7 @@ import '../models/reference_model.dart';
 final _assetDir = Directory(p.join('.superdeck'));
 final _slideRef = File(p.join(_assetDir.path, 'slides.json'));
 final _generatedDir = Directory(p.join(_assetDir.path, 'generated'));
+final _markdown = File('slides.md');
 
 class ReferenceService {
   final _watcher = FileWatcher(_slideRef);
@@ -26,6 +27,23 @@ class ReferenceService {
     } else {
       return rootBundle.loadString(path);
     }
+  }
+
+  Future<String> loadMarkdown() async {
+    return _markdown.readAsString();
+  }
+
+  Future<ByteData> loadBytes(String path) async {
+    if (kCanRunProcess) {
+      final bytes = await File(path).readAsBytes();
+      return ByteData.view(Uint8List.fromList(bytes).buffer);
+    } else {
+      return await rootBundle.load(path);
+    }
+  }
+
+  Future<void> saveMarkdown(String data) async {
+    await _markdown.writeAsString(data);
   }
 
   File getAssetFile(String fileName) {

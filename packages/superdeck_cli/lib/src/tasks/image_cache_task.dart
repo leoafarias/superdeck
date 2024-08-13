@@ -78,13 +78,7 @@ class ImageCachingTask extends Task {
           print('Image saved to: ${url}');
 
           await controller.markFileAsNeeded(file, url);
-
-          print('Image saved successfully!');
-        } else {
-          print(url);
-          print(
-              'Failed to fetch the image. Status code: ${response.statusCode}');
-        }
+        } else {}
       } catch (e) {
         print('Error: $e');
       }

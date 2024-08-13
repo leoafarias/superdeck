@@ -28,7 +28,6 @@ class AppShell extends HookWidget {
     final slides = useSlides();
 
     final invalidSlides = slides.whereType<InvalidSlide>().toList();
-
     final handleNext = useCallback(() {
       if (context.currentSlidePage < slides.length) {
         context.nextSlide();
@@ -44,18 +43,23 @@ class AppShell extends HookWidget {
     final bindings = {
       const SingleActivator(
         LogicalKeyboardKey.arrowRight,
+        meta: true,
       ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.arrowDown,
+        meta: true,
       ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.space,
+        meta: true,
       ): handleNext,
       const SingleActivator(
         LogicalKeyboardKey.arrowLeft,
+        meta: true,
       ): handlePrevious,
       const SingleActivator(
         LogicalKeyboardKey.arrowUp,
+        meta: true,
       ): handlePrevious,
     };
 

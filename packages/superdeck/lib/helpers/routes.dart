@@ -8,17 +8,17 @@ import '../screens/presentation_screen.dart';
 import 'dialog_page.dart';
 
 class SDPaths {
-  static Path get home => Path('/');
+  static Path get root => Path('/');
   static ExportPath get export => ExportPath();
+  static ChatPath get chat => ChatPath();
 }
 
 class ExportPath extends Path<ExportPath> {
   ExportPath() : super('export');
+}
 
-  Path get low => Path('low', parent: this);
-  Path get good => Path('good', parent: this);
-  Path get better => Path('better', parent: this);
-  Path get best => Path('best', parent: this);
+class ChatPath extends Path<ChatPath> {
+  ChatPath() : super('chat');
 }
 
 class QueryParams {
@@ -32,7 +32,7 @@ Map<String, String> _previousQueryParams = {};
 
 final goRouterConfig = GoRouter(
   navigatorKey: kRootNavigatorKey,
-  initialLocation: SDPaths.home.goRoute,
+  initialLocation: SDPaths.root.goRoute,
   restorationScopeId: 'root',
   routes: <RouteBase>[
     StatefulShellRoute.indexedStack(
@@ -70,7 +70,18 @@ final goRouterConfig = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: SDPaths.home.goRoute,
+              path: SDPaths.root.goRoute,
+              pageBuilder: (context, state) => _getPage(
+                PresentationScreen(),
+                state,
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: SDPaths.chat.goRoute,
               pageBuilder: (context, state) => _getPage(
                 PresentationScreen(),
                 state,
@@ -94,7 +105,7 @@ final goRouterConfig = GoRouter(
 );
 
 MaterialPage _getPage(Widget child, GoRouterState state) {
-  return MaterialPage(key: state.pageKey, child: child);
+  return MaterialPage(key: state.pageKey, child: child, maintainState: false);
 }
 
 DialogPage _getDialogPage(Widget child, GoRouterState state) {

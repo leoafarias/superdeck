@@ -192,3 +192,39 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     );
   }
 }
+
+class SampleCodeElementBuilder extends MarkdownElementBuilder {
+  final MdCodeblockSpec? spec;
+  SampleCodeElementBuilder(this.spec);
+  @override
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    var language = 'dart';
+
+    if (element.attributes['class'] != null) {
+      String lg = element.attributes['class'] as String;
+      language = lg.substring(9);
+    }
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: RichText(
+              text: TextSpan(
+                style: spec?.textStyle,
+                children: SyntaxHighlight.render(
+                  element.textContent.trim(),
+                  language,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -38,6 +38,10 @@ dependencies:
     path: ../../../mix/packages/remix
   go_router_paths: ^0.2.2
   visibility_detector: ^0.4.0+2
+  flutter_chat_ui: ^1.6.15
+  image_picker: ^1.1.2
+  open_filex: ^4.5.0
+  google_generative_ai: ^0.4.4
   
 dev_dependencies:
   flutter_test:
