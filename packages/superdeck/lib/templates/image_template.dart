@@ -15,7 +15,7 @@ class ImageTemplate extends SplitTemplateBuilder<ImageSlide> {
     // THis slide breaks in half and I want to calculate the size based on if its in top or bottom
     // or left or right. Also there is a property called flex which is how much of the slide it takes
     // so I can use that to calculate the size of the canvas
-    final firstHalf = config.contentOptions?.flex ?? defaultFlex;
+    final firstHalf = config.contentOptions?.flex ?? 1;
     final imageHalf = config.options.flex;
 
 // available size const width = 1280.0;

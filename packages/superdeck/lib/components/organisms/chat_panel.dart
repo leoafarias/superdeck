@@ -11,7 +11,7 @@ import '../../helpers/extensions.dart';
 import '../../services/reference_service.dart';
 import '../atoms/markdown_viewer.dart';
 
-const _apiKey = '';
+const _apiKey = 'AIzaSyD37mFwHkiMeArz_hp1hnRwysOsqqgnhPQ';
 
 final _geminiFlash = 'gemini-1.5-flash-latest';
 final _geminiPro = 'gemini-1.5-pro';

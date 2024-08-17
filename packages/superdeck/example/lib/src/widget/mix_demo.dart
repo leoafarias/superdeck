@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import 'package:superdeck/components/molecules/code_preview.dart';
 import 'package:superdeck/schema/schema_model.dart';
 import 'package:superdeck/superdeck.dart';

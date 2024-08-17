@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.2.0
+  mix: ^1.4.5
   superdeck:
     path: ../
 

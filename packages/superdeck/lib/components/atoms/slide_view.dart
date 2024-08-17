@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
+import '../../models/slide_model.dart';
 import '../../providers/slide_provider.dart';
 import '../../providers/snapshot_provider.dart';
 import '../../providers/style_provider.dart';
-import '../../superdeck.dart';
+import '../../styles/style_spec.dart';
 import 'cache_image_widget.dart';
 import 'transition_widget.dart';
 

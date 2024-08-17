@@ -9,12 +9,11 @@ void main() {
     });
 
     test('merge returns new instance with merged values', () {
-      const options1 =
-          ContentOptions(flex: 2, alignment: ContentAlignment.topLeft);
-      const options2 = ContentOptions(alignment: ContentAlignment.bottomRight);
+      const options1 = ContentOptions(flex: 2, align: ContentAlignment.topLeft);
+      const options2 = ContentOptions(align: ContentAlignment.bottomRight);
       final merged = options1.merge(options2);
       expect(merged.flex, options1.flex);
-      expect(merged.alignment, options2.alignment);
+      expect(merged.align, options2.align);
     });
   });
 

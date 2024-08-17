@@ -1,6 +1,7 @@
 // Create a SlideProvider that extends an Inherited widget
 import 'package:flutter/material.dart';
 
+import '../helpers/constants.dart';
 import '../models/slide_model.dart';
 import '../templates/templates.dart';
 
@@ -45,7 +46,10 @@ class SlideBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlideProvider(
       slide: config,
-      child: TemplateBuilder.buildTemplate(config),
+      child: ConstrainedBox(
+        constraints: BoxConstraints.tight(kResolution),
+        child: TemplateBuilder.buildTemplate(config),
+      ),
     );
   }
 }

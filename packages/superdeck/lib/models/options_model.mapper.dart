@@ -538,22 +538,20 @@ class ContentOptionsMapper extends ClassMapperBase<ContentOptions> {
   static int? _$flex(ContentOptions v) => v.flex;
   static const Field<ContentOptions, int> _f$flex =
       Field('flex', _$flex, opt: true);
-  static ContentAlignment _$alignment(ContentOptions v) => v.alignment;
-  static const Field<ContentOptions, ContentAlignment> _f$alignment = Field(
-      'alignment', _$alignment,
-      opt: true, def: ContentAlignment.centerLeft);
+  static ContentAlignment? _$align(ContentOptions v) => v.align;
+  static const Field<ContentOptions, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
 
   @override
   final MappableFields<ContentOptions> fields = const {
     #flex: _f$flex,
-    #alignment: _f$alignment,
+    #align: _f$align,
   };
   @override
   final bool ignoreNull = true;
 
   static ContentOptions _instantiate(DecodingData data) {
-    return ContentOptions(
-        flex: data.dec(_f$flex), alignment: data.dec(_f$alignment));
+    return ContentOptions(flex: data.dec(_f$flex), align: data.dec(_f$align));
   }
 
   @override
@@ -609,7 +607,7 @@ extension ContentOptionsValueCopy<$R, $Out>
 
 abstract class ContentOptionsCopyWith<$R, $In extends ContentOptions, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? flex, ContentAlignment? alignment});
+  $R call({int? flex, ContentAlignment? align});
   ContentOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -623,15 +621,13 @@ class _ContentOptionsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ContentOptions> $mapper =
       ContentOptionsMapper.ensureInitialized();
   @override
-  $R call({Object? flex = $none, ContentAlignment? alignment}) =>
-      $apply(FieldCopyWithData({
-        if (flex != $none) #flex: flex,
-        if (alignment != null) #alignment: alignment
-      }));
+  $R call({Object? flex = $none, Object? align = $none}) =>
+      $apply(FieldCopyWithData(
+          {if (flex != $none) #flex: flex, if (align != $none) #align: align}));
   @override
   ContentOptions $make(CopyWithData data) => ContentOptions(
       flex: data.get(#flex, or: $value.flex),
-      alignment: data.get(#alignment, or: $value.alignment));
+      align: data.get(#align, or: $value.align));
 
   @override
   ContentOptionsCopyWith<$R2, ContentOptions, $Out2> $chain<$R2, $Out2>(

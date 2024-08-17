@@ -19,7 +19,7 @@ class SlideContent extends StatelessWidget {
 
   @override
   Widget build(context) {
-    final alignment = options?.alignment ?? ContentAlignment.center;
+    final alignment = options?.align ?? ContentAlignment.center;
     final spec = SlideSpec.of(context);
     final isCapturing = SnapshotProvider.isCapturingOf(context);
 

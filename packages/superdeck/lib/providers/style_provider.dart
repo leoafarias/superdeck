@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:mix/mix.dart';
 
 import '../styles/style_util.dart';
-import '../superdeck.dart';
 
 class StyleProvider extends InheritedWidget {
   StyleProvider({

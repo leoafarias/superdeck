@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 
 import '../../helpers/constants.dart';
@@ -54,44 +55,41 @@ class SlideThumbnail extends HookWidget {
         onTap: onTap,
         child: _PreviewContainer(
           selected: selected,
-          child: AspectRatio(
-            aspectRatio: kAspectRatio,
-            child: Stack(
-              children: [
-                AspectRatio(
-                  aspectRatio: kAspectRatio,
-                  child: child,
+          child: Stack(
+            children: [
+              AspectRatio(
+                aspectRatio: kAspectRatio,
+                child: child,
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                left: 0,
+                child: SizedBox(
+                  child: processThumbnail.isRefreshing
+                      ? const LinearProgressIndicator(
+                          minHeight: 3,
+                          backgroundColor: Colors.transparent,
+                        )
+                      : null,
                 ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: SizedBox(
-                    child: processThumbnail.isRefreshing
-                        ? const LinearProgressIndicator(
-                            minHeight: 3,
-                            backgroundColor: Colors.transparent,
-                          )
-                        : null,
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                    color: Colors.black.withOpacity(0.9),
-                    child: Text(
-                      '$page',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                  color: Colors.black.withOpacity(0.9),
+                  child: Text(
+                    '$page',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -129,7 +127,7 @@ class _PreviewContainer extends StatelessWidget {
 
     return Box(
       style: style,
-      child: child,
+      child: AspectRatio(aspectRatio: kAspectRatio, child: child),
     );
   }
 }

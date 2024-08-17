@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
 import 'package:window_manager/window_manager.dart';
 

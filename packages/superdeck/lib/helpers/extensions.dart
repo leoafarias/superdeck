@@ -43,3 +43,8 @@ extension StringX on String {
         .replaceAll(RegExp(r'^_|_$'), '');
   }
 }
+
+extension ListX<T> on List<T> {
+  T? get tryFirst => isNotEmpty ? first : null;
+  T? get tryLast => isNotEmpty ? last : null;
+}

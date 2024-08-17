@@ -4,8 +4,6 @@ sealed class TemplateBuilder<T extends Slide> extends StatelessWidget {
   @visibleForTesting
   final T config;
 
-  int get defaultFlex => 1;
-
   const TemplateBuilder(this.config, {super.key});
 
   static TemplateBuilder<T> buildTemplate<T extends Slide>(T config) {
@@ -13,12 +11,35 @@ sealed class TemplateBuilder<T extends Slide> extends StatelessWidget {
       (SimpleSlide c) => SimpleTemplate(c),
       (WidgetSlide c) => WidgetTemplate(c),
       (ImageSlide c) => ImageTemplate(c),
-      (TwoColumnSlide c) => TwoColumnTemplate(c),
-      (TwoColumnHeaderSlide c) => TwoColumnHeaderTemplate(c),
       (InvalidSlide c) => InvalidTemplate(c),
       _ => throw UnimplementedError(
           'Slide config not implemented ${config.runtimeType}'),
     } as TemplateBuilder<T>;
+  }
+
+  Widget render() {
+    final sections = parseSections(config.content);
+
+    return Column(
+      children: sections.map((section) {
+        final sectionFlex = section.flex;
+
+        return Expanded(
+          flex: sectionFlex,
+          child: Row(
+            children: section.contentParts.map((part) {
+              return Expanded(
+                flex: part.options.flex ?? 1,
+                child: SlideContent(
+                  content: part.content,
+                  options: part.options,
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      }).toList(),
+    );
   }
 
   Widget buildContent() {
@@ -35,13 +56,6 @@ sealed class TemplateBuilder<T extends Slide> extends StatelessWidget {
       options: options,
     );
   }
-
-  Widget buildContentSection(SectionData section) {
-    return Expanded(
-      flex: section.options?.flex ?? defaultFlex,
-      child: _buildContent(section.content, section.options),
-    );
-  }
 }
 
 abstract class SplitTemplateBuilder<T extends SplitSlide>
@@ -56,10 +70,7 @@ abstract class SplitTemplateBuilder<T extends SplitSlide>
     final flex = config.options.flex;
 
     List<Widget> children = [
-      buildContentSection((
-        content: config.content,
-        options: config.contentOptions ?? const ContentOptions(),
-      )),
+      Expanded(child: render()),
       Expanded(flex: flex, child: side),
     ];
 

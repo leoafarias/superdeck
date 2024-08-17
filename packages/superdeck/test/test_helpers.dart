@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mix/mix.dart';
 import 'package:superdeck/components/atoms/slide_view.dart';
 import 'package:superdeck/providers/assets_provider.dart';
 import 'package:superdeck/providers/examples_provider.dart';

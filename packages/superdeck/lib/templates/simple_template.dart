@@ -7,5 +7,7 @@ class SimpleTemplate extends TemplateBuilder<SimpleSlide> {
   });
 
   @override
-  Widget build(BuildContext context) => buildContent();
+  Widget build(BuildContext context) {
+    return render();
+  }
 }

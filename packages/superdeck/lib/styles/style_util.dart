@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
-import '../superdeck.dart';
+import 'style_spec.dart';
 
 class SlideVariant extends Variant {
   const SlideVariant(super.name);

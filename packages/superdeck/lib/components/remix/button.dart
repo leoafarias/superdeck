@@ -19,7 +19,6 @@ class SDButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RxButton(
       onPressed: onPressed,
-      type: ButtonVariant.surface,
       iconLeft: icon,
       label: label,
     );
@@ -43,7 +42,6 @@ class SDButtonSolid extends StatelessWidget {
   Widget build(BuildContext context) {
     return RxButton(
       onPressed: onPressed,
-      type: ButtonVariant.solid,
       iconLeft: icon,
       label: label,
     );
@@ -67,7 +65,6 @@ class SDOutlinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RxButton(
       onPressed: onPressed,
-      type: ButtonVariant.outline,
       iconLeft: icon,
       label: label,
     );
@@ -91,9 +88,7 @@ class SDIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RxButton(
       onPressed: onPressed,
-      type: selected ? ButtonVariant.surface : ButtonVariant.ghost,
       iconLeft: icon,
-      size: ButtonSize.large,
       label: '',
     );
   }

@@ -11,12 +11,12 @@ part 'options_model.mapper.dart';
 
 @MappableClass()
 class ContentOptions with ContentOptionsMappable {
-  final ContentAlignment alignment;
+  final ContentAlignment? align;
   final int? flex;
 
   const ContentOptions({
     this.flex,
-    this.alignment = ContentAlignment.centerLeft,
+    this.align,
   });
 
   ContentOptions merge(ContentOptions? other) {
@@ -26,7 +26,7 @@ class ContentOptions with ContentOptionsMappable {
 
   static final schema = SchemaShape(
     {
-      "alignment": ContentAlignment.schema.optional(),
+      "align": ContentAlignment.schema.optional(),
       "flex": Schema.integer.optional(),
     },
   );

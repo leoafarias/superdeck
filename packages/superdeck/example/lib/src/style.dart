@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mix/mix.dart';
 import 'package:superdeck/superdeck.dart';
 
 final _util = SlideSpecUtility.self;
