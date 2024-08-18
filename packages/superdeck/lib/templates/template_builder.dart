@@ -18,23 +18,26 @@ sealed class TemplateBuilder<T extends Slide> extends StatelessWidget {
   }
 
   Widget render() {
-    final sections = parseSections(config.content);
+    final sections = parseSections(config.content, config.contentOptions);
 
     return Column(
       children: sections.map((section) {
-        final sectionFlex = section.flex;
+        final sectionFlex = section.options.flex ?? 1;
 
         return Expanded(
           flex: sectionFlex,
           child: Row(
-            children: section.contentParts.map((part) {
-              return Expanded(
-                flex: part.options.flex ?? 1,
-                child: SlideContent(
-                  content: part.content,
-                  options: part.options,
-                ),
-              );
+            children: section.subSections.map((part) {
+              if (part is ContentPart) {
+                return Expanded(
+                  flex: part.options.flex ?? 1,
+                  child: SlideContent(
+                    content: part.content,
+                    options: part.options,
+                  ),
+                );
+              }
+              return Container();
             }).toList(),
           ),
         );

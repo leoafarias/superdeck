@@ -2,10 +2,6 @@
 style: quote
 ---
 
-
-
-
-
 {.content flex: 2}
 > Create your Flutter presentations faster and easier than ever.
 > You can quote me on that
@@ -17,6 +13,8 @@ style: show_sections
 ---
 
 {.content flex:2}
+
+{.image }
 
 # Two Column
 

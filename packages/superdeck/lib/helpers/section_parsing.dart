@@ -1,237 +1,307 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:yaml/yaml.dart';
 
 import '../models/options_model.dart';
 
-enum Section {
+abstract class Part {
+  const Part();
+}
+
+enum SectionPartType {
+  root,
   header,
   body,
   footer;
 
-  String get _prefix => '{.';
-  String get _suffix => '}';
-
-  String get tag => '${_prefix}${name}${_suffix}';
-
-  int get startIndex => '$_prefix$name'.length;
-
-  static Section? getLocation(String line) {
-    return Section.values
-        .firstWhereOrNull((e) => line.startsWith(e._prefix + e.name));
-  }
-
-  static bool isLocationTag(String line) {
-    return getLocation(line) != null;
-  }
-
-  String getContents(String line) {
-    return line.substring(startIndex, line.indexOf(_suffix));
-  }
+  String get tag => '.$name';
 }
 
-abstract class Part<T> {
+enum SubSectionPartType {
+  content,
+  image;
+
+  String get tag => '.$name';
+}
+
+sealed class SubSectionPart<T> extends Part {
   final T options;
-  const Part({required this.options});
-}
 
-class ImagePart extends Part<ImageOptions> {
-  static const tag = '.image';
-  const ImagePart({
-    required super.options,
+  SubSectionPart({
+    required this.options,
   });
 }
 
-class ContentPart extends Part<ContentOptions> {
+class ContentPart extends SubSectionPart<ContentOptions> {
   static const tag = '.content';
-  String content = '';
+  final String content;
 
   ContentPart({
+    required this.content,
     required super.options,
   });
 
-  // I woul dlike to parse the following as if it were a yaml
-  // {.content align:center flex:2}
-  // {.content align:bottom_center }
-  // {.content flex:2}
-  // {.content}
-
-  static ContentPart? parse(String line) {
-    // Check if it starts with {+ ContentPart.tag
-    //  if not return null
-    // if so remove {+ ContentPart.tag + }
-    final cleanedLine = line
-        .trim()
-        .replaceAll(RegExp(r'[{}]'), '')
-        .replaceAll(ContentPart.tag, '');
-
+  ContentPart copyWith({
+    String? content,
+  }) {
     return ContentPart(
-      options: ContentOptionsMapper.fromMap(_converYamlToMap(cleanedLine)),
+      content: content ?? this.content,
+      options: this.options,
     );
   }
 }
 
-class SectionPart {
-  final Section location;
-  final int flex;
-  final List<ContentPart> contentParts;
-
-  SectionPart({
-    required this.location,
-    required this.contentParts,
-    required this.flex,
+class ImagePart extends Part {
+  static const tag = '.image';
+  final ImageOptions options;
+  const ImagePart({
+    required this.options,
   });
 }
 
-typedef LayoutPartInfo = ({Section location, ContentOptions options});
+Part? parsePart(String line) {
+  if (!_isSyntax(line)) {
+    return null;
+  }
 
-List<SectionPart> parseSections(String markdown) {
+  final tagContents = _getTagContents(line);
+
+  final sectionName = SectionPartType.values.firstWhereOrNull(
+    (part) => tagContents.startsWith(part.tag),
+  );
+
+  if (sectionName != null) {
+    return SectionPart.build(
+      sectionName,
+      ContentOptionsMapper.fromMap(
+        getOptionsMapFromLine(sectionName.tag, tagContents),
+      ),
+    );
+  }
+
+  final subSectionName = SubSectionPartType.values.firstWhereOrNull(
+    (part) => tagContents.startsWith(part.tag),
+  );
+
+  if (subSectionName != null) {
+    final options = getOptionsMapFromLine(subSectionName.tag, tagContents);
+
+    switch (subSectionName) {
+      case SubSectionPartType.content:
+        return ContentPart(
+          content: '',
+          options: ContentOptionsMapper.fromMap(options),
+        );
+      case SubSectionPartType.image:
+        return ImagePart(
+          options: ImageOptionsMapper.fromMap(options),
+        );
+    }
+  }
+  return null;
+}
+
+sealed class SectionPart extends Part {
+  final SectionPartType type;
+  final ContentOptions options;
+  List<SubSectionPart> subSections = [];
+
+  SectionPart({
+    required this.type,
+    required this.options,
+  });
+
+  factory SectionPart.build(
+    SectionPartType type,
+    ContentOptions options,
+  ) {
+    return switch (type) {
+      SectionPartType.header => HeaderLayoutPart(options),
+      SectionPartType.body => BodyLayoutPart(options),
+      SectionPartType.footer => FooterLayoutPart(options),
+      SectionPartType.root => RootLayoutPart(options),
+    };
+  }
+
+  String get name => type.name;
+
+  void concatLine(String content) {
+    final lastPart = subSections.lastOrNull;
+
+    if (lastPart is ContentPart) {
+      final contentPart = lastPart;
+
+      subSections.last = contentPart.copyWith(
+        content: contentPart.content + '\n' + content,
+      );
+    } else {
+      subSections.add(ContentPart(
+        content: content,
+        options: ContentOptions(),
+      ));
+    }
+  }
+}
+
+class RootLayoutPart extends SectionPart {
+  RootLayoutPart(ContentOptions options)
+      : super(type: SectionPartType.root, options: options);
+}
+
+class HeaderLayoutPart extends SectionPart {
+  HeaderLayoutPart(ContentOptions options)
+      : super(type: SectionPartType.header, options: options);
+}
+
+class BodyLayoutPart extends SectionPart {
+  BodyLayoutPart(ContentOptions options)
+      : super(type: SectionPartType.body, options: options);
+}
+
+class FooterLayoutPart extends SectionPart {
+  FooterLayoutPart(ContentOptions options)
+      : super(type: SectionPartType.footer, options: options);
+}
+
+List<SectionPart> parseSections(String markdown, [ContentOptions? options]) {
   final lines = markdown.split('\n');
 
-  final sectionFlex = ({
-    Section.header: 1,
-    Section.body: 1,
-    Section.footer: 1,
-  });
+  final rootSection = RootLayoutPart(options ?? ContentOptions());
 
-  final sectionParts = ({
-    Section.header: <ContentPart>[],
-    Section.body: <ContentPart>[],
-    Section.footer: <ContentPart>[],
-  });
+  final layoutParts = <SectionPart>{rootSection};
 
-  Section? currentLocation = null;
+  // Start with the header
+  SectionPart currentSection = rootSection;
 
   int lineIndex = 0;
+
   for (final line in lines) {
     lineIndex++;
     final trimmedLine = line.trim();
     // Skip empty lines
     if (trimmedLine.isEmpty) {
       continue;
-    } else if (Section.isLocationTag(trimmedLine)) {
-      final location = Section.getLocation(trimmedLine)!;
+    }
 
-      if (currentLocation != null) {
-        if (location.index <= currentLocation.index) {
+    if (trimmedLine.startsWith('{') && !trimmedLine.endsWith('}')) {
+      throw Exception(
+        'Invalid syntax on line ${lineIndex}. Missing closing tag',
+      );
+    }
+
+    if (!_isSyntax(trimmedLine)) {
+      currentSection.concatLine(line);
+      continue;
+    }
+
+    final part = parsePart(line);
+
+    if (part == null) {
+      continue;
+    }
+
+    if (part is SectionPart) {
+      if (part.type.index <= currentSection.type.index) {
+        throw Exception(
+          'Invalid location tag on line ${lineIndex}. ${part.type.tag} cannot be before ${currentSection.type.tag}',
+        );
+      }
+
+      if (currentSection is RootLayoutPart) {
+        if (currentSection.subSections.isNotEmpty) {
+          // throw error that says if to use any section wrapping all the content of the markdown
           throw Exception(
-            'Invalid location tag on line ${lineIndex}. ${location.tag} cannot be before ${currentLocation.tag}',
+            'Invalid location tag on line ${lineIndex}. ${part.type.tag} cannot be before ${currentSection.type.tag}',
           );
         }
       }
+      // Save current section before setting as current
+      layoutParts.add(currentSection);
+      currentSection = part;
+    } else if (part is SubSectionPart) {
+      // final lastSubSection = currentSection.subSections.lastOrNull;
+      // if (part is ContentPart && lastSubSection is ContentPart) {
+      //   // If last section is empty it should just replace it
+      //   if (lastSubSection.content.isEmpty) {
+      //     currentSection.subSections.last = part;
+      //   } else {
+      //     currentSection.subSections.add(part);
+      //   }
+      // }
 
-      currentLocation = location;
-      sectionFlex[location] = _getFlexAttributeFromLine(line);
-    } else {
-      if (currentLocation == null) {
-        currentLocation = Section.body;
-      }
-
-      final contentPart = ContentPart.parse(line);
-
-      if (contentPart != null) {
-        // If previous content is empty there is no need to create a column
-        sectionParts[currentLocation]!.add(contentPart);
-      } else {
-        if (sectionParts[currentLocation]!.isEmpty) {
-          sectionParts[currentLocation]!.add(
-            ContentPart(
-              options: ContentOptions(),
-            ),
-          );
-        }
-
-        final lastPart = sectionParts[currentLocation]!.last;
-
-        sectionParts[currentLocation]!.last = lastPart
-          ..content = (lastPart.content += line + '\n');
-      }
+      currentSection.subSections.add(part);
     }
   }
 
-  Section.values.forEach((section) {
-    final contentParts = sectionParts[section]!;
-    if (contentParts.isEmpty) {
-      sectionParts.remove(section);
-    } else {
-      sectionParts[section] =
-          contentParts.where((part) => !part.content.isEmpty).toList();
-    }
-  });
+  layoutParts.add(currentSection);
 
   // Return the parsed sections
   //  remove all sections that have empty parts
-  return sectionParts.entries.map((entry) {
-    final location = entry.key;
-    final parts = entry.value;
-    final options = sectionFlex[location]!;
-
-    return SectionPart(
-      location: location,
-      contentParts: parts,
-      flex: options,
-    );
+  return layoutParts.where((part) {
+    return part.subSections.isNotEmpty;
   }).toList();
 }
 
-int _getFlexAttributeFromLine(String line) {
-  final attributes = extractAttributesFromLine(line);
-  final flex = attributes['flex'];
-
-  if (flex == null) {
-    return 1;
-  }
-
-  final parsed = int.tryParse(flex);
-  if (parsed == null) {
-    throw Exception('Flex value must be an integer. Found: $flex');
-  }
-
-  return parsed;
-}
-
-ContentAlignment? _getAlignmentAttributeFromLine(String value) {
-  final attributes = extractAttributesFromLine(value);
-  final alignment = attributes['align'];
-
-  if (alignment == null) {
-    return null;
-  }
-
-  try {
-    return ContentAlignmentMapper.fromValue(alignment);
-  } catch (e) {
-    throw Exception('Invalid alignment value: $alignment');
-  }
-}
-
-@visibleForTesting
-Map<String, String> extractAttributesFromLine(String line) {
-  final cleanedLine = line.trim().replaceAll(RegExp(r'[{}]'), '');
-
-  final regex = RegExp(r'(\w+):([^\s]+)');
-  final matches = regex.allMatches(cleanedLine);
-
-  final attributes = <String, String>{};
-
-  for (final match in matches) {
-    final key = match.group(1);
-    final value = match.group(2);
-
-    if (key != null && value != null) {
-      attributes[key] = value;
-    }
-  }
-
-  return attributes;
-}
-
 Map<String, dynamic> _converYamlToMap(String yamlString) {
+  if (yamlString.isEmpty) {
+    return {};
+  }
   final yamlMap = loadYaml(yamlString) as YamlMap? ?? YamlMap();
 
   final yaml = jsonEncode(yamlMap);
 
   return jsonDecode(yaml);
+}
+
+bool _isSyntax(String line) {
+  final trimmedLine = line.trim();
+  return trimmedLine.startsWith('{') && trimmedLine.endsWith('}');
+}
+
+@visibleForTesting
+Map<String, dynamic> getOptionsMapFromLine(
+  String tag,
+  String contents,
+) {
+  var rawString = contents.substring(tag.length).trim();
+
+  if (rawString.isEmpty) {
+    return {};
+  }
+
+  // I would like to replace any value with ":" and any number of spaces after with just ":"
+  final regex = RegExp(r':\s+');
+
+  // this will turn "key: value" into "key:value"
+  final values = rawString.replaceAll(regex, ':');
+
+  print('Values: $values');
+  // Add space to is easier to separate just in case
+  // final values = rawString.replaceAll(': ', ':');
+
+  // Now I want to split every value into value also with space, and combine
+  // the key and value back together
+  final pairs = values.split(' ');
+
+  // Join the formatted pairs back into a string
+  final formattedString = pairs.join('\n').replaceAll(':', ': ');
+
+  try {
+    return _converYamlToMap(formattedString);
+  } catch (e) {
+    throw FormatException('Error parsing tags: $formattedString');
+  }
+}
+
+String _getTagContents(String line) {
+  final regex = RegExp(r'{(.*?)}');
+  final match = regex.firstMatch(line);
+
+  if (match != null) {
+    return match.group(1)?.trim() ?? '';
+  }
+
+  return '';
 }
