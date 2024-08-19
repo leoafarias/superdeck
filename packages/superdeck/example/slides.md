@@ -2,25 +2,32 @@
 style: quote
 ---
 
-{.content flex: 2}
+{@content flex: 2}
 > Create your Flutter presentations faster and easier than ever.
 > You can quote me on that
 > ### Leo 
+
+{@content }
 
 
 ---
 style: show_sections
 ---
 
-{.content flex:2}
+{@header}
+{@image src: https://picsum.photos/900/700?waves | flex: 2 | align: bottom_left | fit: cover}
 
-{.image }
+{@body}
 
-# Two Column
+  
+
+
+
+# Two Column HGoes here
 
 This is a two-column layout. You can use it to compare two different concepts or ideas.
 
-{.content}
+{@content}
 
 ### Section Options
 
@@ -34,24 +41,24 @@ Use front matter to define the layout of each section
 style: show_sections
 ---
 
-{.header}
-{.content align:bottom_right}
+{@header}
+{@content align: bottom_right}
 
 ## First
 
-{.content}  
+{@content}  
 
 
 ## Header
 
-{.body flex:2}
+{@body flex: 2}
 
 ### Left Section
 Easily customize the content of each section to suit your needs.
 
 Use front matter to define the layout of each section
 
-{.content}
+{@content}
 
 #### Section Options
 

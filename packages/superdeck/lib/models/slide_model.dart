@@ -91,8 +91,7 @@ class SimpleSlide extends Slide with SimpleSlideMappable {
 }
 
 @MappableClass()
-abstract class SplitSlide<T extends SplitOptions> extends Slide
-    with SplitSlideMappable<T> {
+abstract class SplitSlide<T> extends Slide with SplitSlideMappable<T> {
   final T options;
 
   SplitSlide({

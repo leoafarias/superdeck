@@ -8,13 +8,13 @@ void main() {
     group('Successful cases', () {
       test('Header with columns', () {
         const markdown = '''
-{.header}
+{@header}
 # Header Title
 
-{.content}
+{@content}
 Header content column 1.
 
-{.content}
+{@content}
 Header content column 2.
 
 ''';
@@ -34,11 +34,11 @@ Header content column 2.
 
       test('Body with columns', () {
         const markdown = '''
-{.body}
-{.content}
+{@body}
+{@content}
 Body content column 1.
 
-{.content}
+{@content}
 Body content column 2.
 
 ''';
@@ -56,11 +56,11 @@ Body content column 2.
 
       test('Footer with columns', () {
         const markdown = '''
-{.footer}
-{.content}
+{@footer}
+{@content}
 Footer content column 1.
 
-{.content}
+{@content}
 Footer content column 2.
 
 ''';
@@ -78,10 +78,10 @@ Footer content column 2.
 
       test('Only columns without header, body, or footer', () {
         const markdown = '''
-{.content}
+{@content}
 Content column 1.
 
-{.content}
+{@content}
 Content column 2.
 
 ''';
@@ -99,21 +99,21 @@ Content column 2.
 
       test('Header, body, and footer with columns', () {
         const markdown = '''
-{.header}
+{@header}
 # Header Title
 
-{.content}
+{@content}
 Header content column.
 
-{.body}
-{.content}
+{@body}
+{@content}
 Body content column 1.
 
-{.content}
+{@content}
 Body content column 2.
 
-{.footer}
-{.content}
+{@footer}
+{@content}
 Footer content column.
 
 ''';
@@ -142,13 +142,13 @@ Footer content column.
         const markdown = '''
 # Regular Markdown
 
-{.content}
+{@content}
 This is some regular markdown content.
 
-{.header}
+{@header}
 ## Header Title
 
-{.content}
+{@content}
 Content inside the header.
 
 ''';
@@ -158,16 +158,16 @@ Content inside the header.
 
       test('Fail case - Header appears after body', () {
         const markdown = '''
-{.body}
+{@body}
 # Body Title
 
-{.content}
+{@content}
 Content in the body.
 
-{.header}
+{@header}
 ## Header Title
 
-{.content}
+{@content}
 Content in the header.
 
 ''';
@@ -177,16 +177,16 @@ Content in the header.
 
       test('Fail case - Body appears after footer', () {
         const markdown = '''
-{.footer}
+{@footer}
 # Footer Title
 
-{.content}
+{@content}
 Content in the footer.
 
-{.body}
+{@body}
 ## Body Title
 
-{.content}
+{@content}
 Content in the body.
 
 ''';
@@ -199,11 +199,11 @@ Content in the body.
   group('ContentPart - Attribute Testing', () {
     test('Header with columns and flex attribute', () {
       const markdown = '''
-{.header}
-{.content flex:1 }
+{@header}
+{@content flex:1 }
 Header content column 1.
 
-{.content flex:2}
+{@content flex:2}
 Header content column 2.
 
 ''';
@@ -226,11 +226,11 @@ Header content column 2.
 
     test('Body with columns and alignment attribute in snake case', () {
       const markdown = '''
-{.body}
-{.content align:center}
+{@body}
+{@content align:center}
 Body content column 1.
 
-{.content align:bottom_right}
+{@content align:bottom_right}
 Body content column 2.
 
 ''';
@@ -256,11 +256,11 @@ Body content column 2.
     test('Footer with columns, flex, and alignment attributes in snake case',
         () {
       const markdown = '''
-{.footer}
-{.content flex:3 align:top_left}
+{@footer}
+{@content flex:3 | align:top_left}
 Footer content column 1.
 
-{.content flex:1 align:center_right}
+{@content flex:1 | align:center_right}
 Footer content column 2.
 
 ''';
@@ -288,19 +288,19 @@ Footer content column 2.
 
     test('Mixed header, body, and footer with columns and attributes', () {
       const markdown = '''
-{.header}
-{.content flex:1 align:center}
+{@header}
+{@content flex:1 | align:center}
 Header content.
 
-{.body}
-{.content flex:2 align:center_left}
+{@body}
+{@content flex:2 | align:center_left}
 Body content column 1.
 
-{.content flex:1 align:center_right}
+{@content flex:1 | align:center_right}
 Body content column 2.
 
-{.footer}
-{.content flex:1 align:bottom_center}
+{@footer}
+{@content flex:1 | align:bottom_center}
 Footer content.
 
 ''';
@@ -341,13 +341,13 @@ Footer content.
       const markdown = '''
 # Regular Markdown
 
-{.content flex:1}
+{@content flex:1}
 This is some regular markdown content.
 
-{.header}
+{@header}
 ## Header Title
 
-{.content}
+{@content}
 Content inside the header.
 
 ''';
@@ -357,8 +357,8 @@ Content inside the header.
 
     test('Fail case - Invalid flex attribute format', () {
       const markdown = '''
-{.header}
-{.content flex:invalid}
+{@header}
+{@content flex:invalid}
 Header content.
 
 ''';
@@ -368,8 +368,8 @@ Header content.
 
     test('Fail case - Invalid alignment attribute value', () {
       const markdown = '''
-{.header}
-{.content align:invalid_alignment}
+{@header}
+{@content align:invalid_alignment}
 Header content.
 
 ''';
@@ -382,16 +382,16 @@ Header content.
   group('ContentPart - Inheritance', () {
     test('Columns inherit options from the parent', () {
       const markdown = '''
-{.header align:center}
-{.content}
+{@header align:center}
+{@content}
 Header content.
 
-{.body align:top_left flex:2}
-{.content flex:3}
+{@body align:top_left | flex:2}
+{@content flex:3}
 Body content.
 
-{.footer align:bottom_right flex:1}
-{.content align:bottom_right}
+{@footer align:bottom_right | flex:1}
+{@content align:bottom_right}
 Footer content.
 
 ''';
@@ -417,52 +417,87 @@ Footer content.
     });
   });
 
-  // getOptionsMapFromLine
   group(
-    'getOptionsMapFromLine',
+    'getTagContents',
     () {
       test('Empty string', () {
-        final result = getOptionsMapFromLine('tag', 'tag');
-        expect(result, equals({}));
+        final result = getTagContents('{@tag}');
+        expect(result.tag, equals('tag'));
+        expect(result.options, isEmpty);
       });
 
       test('Single key-value pair', () {
-        final result = getOptionsMapFromLine('tag', 'tag key1: value1');
-        expect(result, equals({'key1': 'value1'}));
+        final result = getTagContents('{@tag key1: value1}');
+        expect(result.tag, equals('tag'));
+        expect(result.options, equals({'key1': 'value1'}));
       });
 
       test('Multiple key-value pairs', () {
-        final result =
-            getOptionsMapFromLine('tag', 'tag key1: value1 key2: value2');
-        expect(result, equals({'key1': 'value1', 'key2': 'value2'}));
+        final result = getTagContents('{@tag key1: value1 | key2: value2}');
+        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       test('Extra spaces', () {
-        final result =
-            getOptionsMapFromLine('tag', 'tag  key1:  value1  key2:  value2 ');
-        expect(result, equals({'key1': 'value1', 'key2': 'value2'}));
+        final result = getTagContents('{@tag  key1:  value1 |  key2:  value2}');
+        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       test('Empty value', () {
-        final result = getOptionsMapFromLine('tag', 'tag key1: ');
-        expect(result, equals({'key1': null}));
+        final result = getTagContents('{@tag key1:}');
+        expect(result.options, equals({'key1': null}));
       });
 
       test('Missing value', () {
-        final result = getOptionsMapFromLine('tag', 'tag key1:');
-        expect(result, equals({'key1': null}));
+        final result = getTagContents('{@tag key1}');
+        expect(result.options, equals({'key1': true}));
       });
 
-      test('Invalid pair', () {
-        expect(() => getOptionsMapFromLine('tag', 'tag key1'), throwsException);
+      test('Invalid tag format', () {
+        expect(() => getTagContents('{@tag key1:'), throwsException);
+      });
+
+      test('Returns contents of the first tag when multiple tags are present',
+          () {
+        final result = getTagContents('{@first firstTag} {@second tag}');
+        expect(result.tag, equals('first'));
+        expect(result.options, equals({'firstTag': true}));
       });
 
       test('Mixed valid and invalid pairs', () {
+        final result =
+            getTagContents('{@tag key1: value1 | single | key2: value2}');
         expect(
-          () => getOptionsMapFromLine(
-              'tag', 'tag key1: value1 invalid key2: value2'),
-          throwsException,
+          result.tag,
+          equals('tag'),
         );
+
+        expect(result.options,
+            equals({'key1': 'value1', 'single': true, 'key2': 'value2'}));
+      });
+
+      // Test falsy value
+      test('Falsy value', () {
+        final result = getTagContents('{@tag key1: false}');
+        final result2 = getTagContents('{@tag key1: "false" | key2: true}');
+        expect(result.options, equals({'key1': false}));
+        expect(result2.options, equals({'key1': 'false', 'key2': true}));
+      });
+
+      test('Returns contents of the first tag when multiple tags are present',
+          () {
+        final result = getTagContents('{@first firstTag} {@second tag}');
+        expect(result.tag, equals('first'));
+        expect(result.options, equals({'firstTag': true}));
+      });
+
+      test('Trims leading and trailing whitespace from tag contents', () {
+        final result = getTagContents('{@tag key1: value1 | key2: value2 }');
+        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
+      });
+
+      test('Handles nested curly braces correctly', () {
+        expect(() => getTagContents('{@tag key1: {nested: value} }'),
+            throwsException);
       });
     },
   );

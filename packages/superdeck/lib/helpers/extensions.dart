@@ -47,4 +47,11 @@ extension StringX on String {
 extension ListX<T> on List<T> {
   T? get tryFirst => isNotEmpty ? first : null;
   T? get tryLast => isNotEmpty ? last : null;
+  T? tryElementAt(int index) {
+    if (index < 0 || index >= length) {
+      return null;
+    }
+
+    return elementAt(index);
+  }
 }

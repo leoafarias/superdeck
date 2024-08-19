@@ -20,15 +20,14 @@ void main() {
   group('ImageOptions', () {
     test('constructor sets properties correctly', () {
       const options = ImageOptions(
-        src: 'image.png',
-        fit: ImageFit.cover,
-        flex: 3,
-        position: LayoutPosition.left,
-      );
+          src: 'image.png',
+          fit: ImageFit.cover,
+          flex: 3,
+          align: ContentAlignment.center);
       expect(options.src, 'image.png');
       expect(options.fit, ImageFit.cover);
       expect(options.flex, 3);
-      expect(options.position, LayoutPosition.left);
+      expect(options.align, ContentAlignment.center);
     });
   });
 
@@ -38,12 +37,12 @@ void main() {
         name: 'MyWidget',
         args: {'key': 'value'},
         flex: 2,
-        position: LayoutPosition.top,
+        align: ContentAlignment.topCenter,
       );
       expect(options.name, 'MyWidget');
       expect(options.args, {'key': 'value'});
       expect(options.flex, 2);
-      expect(options.position, LayoutPosition.top);
+      expect(options.align, ContentAlignment.topCenter);
     });
   });
 

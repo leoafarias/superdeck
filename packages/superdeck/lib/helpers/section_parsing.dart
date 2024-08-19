@@ -5,9 +5,25 @@ import 'package:flutter/foundation.dart';
 import 'package:yaml/yaml.dart';
 
 import '../models/options_model.dart';
+import 'extensions.dart';
+
+const _tagMarker = '@';
+
+const _startAsTag = '{' + _tagMarker;
+
+final _regexMatchTagContents = RegExp('{$_tagMarker(.*?)}');
 
 abstract class Part {
   const Part();
+}
+
+T? _findEnumValue<T extends Enum>(
+  List<T> values,
+  String value,
+) {
+  return values.firstWhereOrNull(
+    (element) => element.name == value,
+  );
 }
 
 enum SectionPartType {
@@ -15,33 +31,30 @@ enum SectionPartType {
   header,
   body,
   footer;
-
-  String get tag => '.$name';
 }
 
 enum SubSectionPartType {
   content,
   image;
-
-  String get tag => '.$name';
 }
 
-sealed class SubSectionPart<T> extends Part {
+sealed class SubSectionPart<T extends ContentOptions> extends Part {
+  final SubSectionPartType type;
   final T options;
 
   SubSectionPart({
+    required this.type,
     required this.options,
   });
 }
 
 class ContentPart extends SubSectionPart<ContentOptions> {
-  static const tag = '.content';
   final String content;
 
   ContentPart({
     required this.content,
     required super.options,
-  });
+  }) : super(type: SubSectionPartType.content);
 
   ContentPart copyWith({
     String? content,
@@ -53,12 +66,10 @@ class ContentPart extends SubSectionPart<ContentOptions> {
   }
 }
 
-class ImagePart extends Part {
-  static const tag = '.image';
-  final ImageOptions options;
-  const ImagePart({
-    required this.options,
-  });
+class ImagePart extends SubSectionPart<ImageOptions> {
+  ImagePart({
+    required super.options,
+  }) : super(type: SubSectionPartType.image);
 }
 
 Part? parsePart(String line) {
@@ -66,28 +77,28 @@ Part? parsePart(String line) {
     return null;
   }
 
-  final tagContents = _getTagContents(line);
+  final (:tag, :options) = getTagContents(line);
 
-  final sectionName = SectionPartType.values.firstWhereOrNull(
-    (part) => tagContents.startsWith(part.tag),
+  final sectionName = _findEnumValue(
+    SectionPartType.values,
+    tag,
   );
 
   if (sectionName != null) {
     return SectionPart.build(
       sectionName,
       ContentOptionsMapper.fromMap(
-        getOptionsMapFromLine(sectionName.tag, tagContents),
+        options,
       ),
     );
   }
 
-  final subSectionName = SubSectionPartType.values.firstWhereOrNull(
-    (part) => tagContents.startsWith(part.tag),
+  final subSectionName = _findEnumValue(
+    SubSectionPartType.values,
+    tag,
   );
 
   if (subSectionName != null) {
-    final options = getOptionsMapFromLine(subSectionName.tag, tagContents);
-
     switch (subSectionName) {
       case SubSectionPartType.content:
         return ContentPart(
@@ -185,7 +196,8 @@ List<SectionPart> parseSections(String markdown, [ContentOptions? options]) {
       continue;
     }
 
-    if (trimmedLine.startsWith('{') && !trimmedLine.endsWith('}')) {
+    if (trimmedLine.startsWith(_startAsTag) &&
+        _regexMatchTagContents.firstMatch(trimmedLine) == null) {
       throw Exception(
         'Invalid syntax on line ${lineIndex}. Missing closing tag',
       );
@@ -205,7 +217,7 @@ List<SectionPart> parseSections(String markdown, [ContentOptions? options]) {
     if (part is SectionPart) {
       if (part.type.index <= currentSection.type.index) {
         throw Exception(
-          'Invalid location tag on line ${lineIndex}. ${part.type.tag} cannot be before ${currentSection.type.tag}',
+          'Invalid location tag on line ${lineIndex}. ${part.type.name} cannot be before ${currentSection.type.name}',
         );
       }
 
@@ -213,7 +225,7 @@ List<SectionPart> parseSections(String markdown, [ContentOptions? options]) {
         if (currentSection.subSections.isNotEmpty) {
           // throw error that says if to use any section wrapping all the content of the markdown
           throw Exception(
-            'Invalid location tag on line ${lineIndex}. ${part.type.tag} cannot be before ${currentSection.type.tag}',
+            'Invalid location tag on line ${lineIndex}. ${part.type.name} cannot be before ${currentSection.type.name}',
           );
         }
       }
@@ -256,52 +268,74 @@ Map<String, dynamic> _converYamlToMap(String yamlString) {
 }
 
 bool _isSyntax(String line) {
-  final trimmedLine = line.trim();
-  return trimmedLine.startsWith('{') && trimmedLine.endsWith('}');
+  return _regexMatchTagContents.hasMatch(line.trim());
 }
 
 @visibleForTesting
 Map<String, dynamic> getOptionsMapFromLine(
-  String tag,
   String contents,
 ) {
-  var rawString = contents.substring(tag.length).trim();
-
-  if (rawString.isEmpty) {
+  if (contents.isEmpty) {
     return {};
   }
-
-  // I would like to replace any value with ":" and any number of spaces after with just ":"
-  final regex = RegExp(r':\s+');
-
-  // this will turn "key: value" into "key:value"
-  final values = rawString.replaceAll(regex, ':');
-
-  print('Values: $values');
-  // Add space to is easier to separate just in case
-  // final values = rawString.replaceAll(': ', ':');
-
-  // Now I want to split every value into value also with space, and combine
-  // the key and value back together
-  final pairs = values.split(' ');
-
-  // Join the formatted pairs back into a string
-  final formattedString = pairs.join('\n').replaceAll(':', ': ');
-
   try {
+    final params = contents.split('|').map((e) {
+      if (e.isEmpty) {
+        return '';
+      }
+      final isKeyValue = e.contains(':');
+      final parts = e.split(': ').map((e) => e.trim()).toList();
+
+      Object? tryBooleanValue(String value) {
+        final lowercase = value.toLowerCase();
+        if (lowercase == 'true') {
+          return true;
+        } else if (lowercase == 'false') {
+          return false;
+        }
+        return value;
+      }
+
+      final key = parts.first;
+      // Treat as a boolean if no value is provided
+      final value = isKeyValue ? tryBooleanValue(parts.last) : true;
+
+      return '$key: $value';
+    });
+
+    // Join the formatted pairs back into a string
+    final formattedString = params.join('\n');
     return _converYamlToMap(formattedString);
-  } catch (e) {
-    throw FormatException('Error parsing tags: $formattedString');
+  } on Exception catch (e) {
+    throw FormatException('Error parsing tags: ${e}');
   }
 }
 
-String _getTagContents(String line) {
-  final regex = RegExp(r'{(.*?)}');
-  final match = regex.firstMatch(line);
+@visibleForTesting
+({String tag, Map<String, dynamic> options}) getTagContents(String line) {
+  if (!_isSyntax(line)) {
+    throw FormatException('Error parsing tags: $line');
+  }
+  final match = _regexMatchTagContents.firstMatch(line);
+
+  final separator = '|||superdeck|||';
+
+  String tag = '';
+  Map<String, dynamic> options = {};
 
   if (match != null) {
-    return match.group(1)?.trim() ?? '';
+    final result = match.group(1)?.trim() ?? '';
+
+    final parts = result.replaceFirst(' ', separator).split(separator);
+
+    tag = parts.tryElementAt(0) ?? '';
+    final optionsPart = parts.tryElementAt(1) ?? '';
+
+    options = getOptionsMapFromLine(optionsPart);
   }
 
-  return '';
+  return (
+    tag: tag,
+    options: options,
+  );
 }

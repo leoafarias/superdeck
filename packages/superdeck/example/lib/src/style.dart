@@ -166,7 +166,7 @@ Style get quoteStyle {
 
 Style get showSectionsStyle {
   return Style(
-    _contentContainer.border.all(
+    _innerContainer.border.all(
       color: Colors.blue,
       width: 2,
     ),

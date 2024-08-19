@@ -314,7 +314,6 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
       WidgetSlideMapper.ensureInitialized();
       ContentOptionsMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
-      SplitOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -322,11 +321,11 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
   @override
   final String id = 'SplitSlide';
   @override
-  Function get typeFactory => <T extends SplitOptions>(f) => f<SplitSlide<T>>();
+  Function get typeFactory => <T>(f) => f<SplitSlide<T>>();
 
-  static SplitOptions _$options(SplitSlide v) => v.options;
-  static dynamic _arg$options<T extends SplitOptions>(f) => f<T>();
-  static const Field<SplitSlide, SplitOptions> _f$options =
+  static dynamic _$options(SplitSlide v) => v.options;
+  static dynamic _arg$options<T>(f) => f<T>();
+  static const Field<SplitSlide, dynamic> _f$options =
       Field('options', _$options, arg: _arg$options);
   static String? _$title(SplitSlide v) => v.title;
   static const Field<SplitSlide, String> _f$title =
@@ -375,10 +374,10 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
 
   @override
   DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => [SplitOptions]);
+    return context.inherit(args: () => [dynamic]);
   }
 
-  static SplitSlide<T> _instantiate<T extends SplitOptions>(DecodingData data) {
+  static SplitSlide<T> _instantiate<T>(DecodingData data) {
     throw MapperException.missingSubclass(
         'SplitSlide', 'layout', '${data.value['layout']}');
   }
@@ -386,26 +385,24 @@ class SplitSlideMapper extends SubClassMapperBase<SplitSlide> {
   @override
   final Function instantiate = _instantiate;
 
-  static SplitSlide<T> fromMap<T extends SplitOptions>(
-      Map<String, dynamic> map) {
+  static SplitSlide<T> fromMap<T>(Map<String, dynamic> map) {
     return ensureInitialized().decodeMap<SplitSlide<T>>(map);
   }
 
-  static SplitSlide<T> fromJson<T extends SplitOptions>(String json) {
+  static SplitSlide<T> fromJson<T>(String json) {
     return ensureInitialized().decodeJson<SplitSlide<T>>(json);
   }
 }
 
-mixin SplitSlideMappable<T extends SplitOptions> {
+mixin SplitSlideMappable<T> {
   String toJson();
   Map<String, dynamic> toMap();
   SplitSlideCopyWith<SplitSlide<T>, SplitSlide<T>, SplitSlide<T>, T>
       get copyWith;
 }
 
-abstract class SplitSlideCopyWith<$R, $In extends SplitSlide<T>, $Out,
-    T extends SplitOptions> implements SlideCopyWith<$R, $In, $Out> {
-  SplitOptionsCopyWith<$R, SplitOptions, T> get options;
+abstract class SplitSlideCopyWith<$R, $In extends SplitSlide<T>, $Out, T>
+    implements SlideCopyWith<$R, $In, $Out> {
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>?
       get contentOptions;

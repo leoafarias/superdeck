@@ -527,6 +527,8 @@ class ContentOptionsMapper extends ClassMapperBase<ContentOptions> {
   static ContentOptionsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ContentOptionsMapper._());
+      ImageOptionsMapper.ensureInitialized();
+      WidgetOptionsMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
@@ -635,66 +637,6 @@ class _ContentOptionsCopyWithImpl<$R, $Out>
       _ContentOptionsCopyWithImpl($value, $cast, t);
 }
 
-class SplitOptionsMapper extends ClassMapperBase<SplitOptions> {
-  SplitOptionsMapper._();
-
-  static SplitOptionsMapper? _instance;
-  static SplitOptionsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SplitOptionsMapper._());
-      ImageOptionsMapper.ensureInitialized();
-      WidgetOptionsMapper.ensureInitialized();
-      LayoutPositionMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'SplitOptions';
-
-  static int? _$_flex(SplitOptions v) => v._flex;
-  static const Field<SplitOptions, int> _f$_flex =
-      Field('_flex', _$_flex, key: 'flex', opt: true);
-  static LayoutPosition? _$_position(SplitOptions v) => v._position;
-  static const Field<SplitOptions, LayoutPosition> _f$_position =
-      Field('_position', _$_position, key: 'position', opt: true);
-
-  @override
-  final MappableFields<SplitOptions> fields = const {
-    #_flex: _f$_flex,
-    #_position: _f$_position,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static SplitOptions _instantiate(DecodingData data) {
-    throw MapperException.missingConstructor('SplitOptions');
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static SplitOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SplitOptions>(map);
-  }
-
-  static SplitOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<SplitOptions>(json);
-  }
-}
-
-mixin SplitOptionsMappable {
-  String toJson();
-  Map<String, dynamic> toMap();
-  SplitOptionsCopyWith<SplitOptions, SplitOptions, SplitOptions> get copyWith;
-}
-
-abstract class SplitOptionsCopyWith<$R, $In extends SplitOptions, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? flex, LayoutPosition? position});
-  SplitOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
 class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
   ImageOptionsMapper._();
 
@@ -702,9 +644,9 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
   static ImageOptionsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ImageOptionsMapper._());
-      SplitOptionsMapper.ensureInitialized();
+      ContentOptionsMapper.ensureInitialized();
       ImageFitMapper.ensureInitialized();
-      LayoutPositionMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -717,19 +659,19 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
   static ImageFit? _$fit(ImageOptions v) => v.fit;
   static const Field<ImageOptions, ImageFit> _f$fit =
       Field('fit', _$fit, opt: true);
-  static int? _$_flex(ImageOptions v) => v._flex;
-  static const Field<ImageOptions, int> _f$_flex =
-      Field('_flex', _$_flex, key: 'flex', opt: true);
-  static LayoutPosition? _$_position(ImageOptions v) => v._position;
-  static const Field<ImageOptions, LayoutPosition> _f$_position =
-      Field('_position', _$_position, key: 'position', opt: true);
+  static int? _$flex(ImageOptions v) => v.flex;
+  static const Field<ImageOptions, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(ImageOptions v) => v.align;
+  static const Field<ImageOptions, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
 
   @override
   final MappableFields<ImageOptions> fields = const {
     #src: _f$src,
     #fit: _f$fit,
-    #_flex: _f$_flex,
-    #_position: _f$_position,
+    #flex: _f$flex,
+    #align: _f$align,
   };
   @override
   final bool ignoreNull = true;
@@ -738,8 +680,8 @@ class ImageOptionsMapper extends ClassMapperBase<ImageOptions> {
     return ImageOptions(
         src: data.dec(_f$src),
         fit: data.dec(_f$fit),
-        flex: data.dec(_f$_flex),
-        position: data.dec(_f$_position));
+        flex: data.dec(_f$flex),
+        align: data.dec(_f$align));
   }
 
   @override
@@ -793,9 +735,9 @@ extension ImageOptionsValueCopy<$R, $Out>
 }
 
 abstract class ImageOptionsCopyWith<$R, $In extends ImageOptions, $Out>
-    implements SplitOptionsCopyWith<$R, $In, $Out> {
+    implements ContentOptionsCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? src, ImageFit? fit, int? flex, LayoutPosition? position});
+  $R call({String? src, ImageFit? fit, int? flex, ContentAlignment? align});
   ImageOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -812,19 +754,19 @@ class _ImageOptionsCopyWithImpl<$R, $Out>
           {String? src,
           Object? fit = $none,
           Object? flex = $none,
-          Object? position = $none}) =>
+          Object? align = $none}) =>
       $apply(FieldCopyWithData({
         if (src != null) #src: src,
         if (fit != $none) #fit: fit,
         if (flex != $none) #flex: flex,
-        if (position != $none) #position: position
+        if (align != $none) #align: align
       }));
   @override
   ImageOptions $make(CopyWithData data) => ImageOptions(
       src: data.get(#src, or: $value.src),
       fit: data.get(#fit, or: $value.fit),
-      flex: data.get(#flex, or: $value._flex),
-      position: data.get(#position, or: $value._position));
+      flex: data.get(#flex, or: $value.flex),
+      align: data.get(#align, or: $value.align));
 
   @override
   ImageOptionsCopyWith<$R2, ImageOptions, $Out2> $chain<$R2, $Out2>(
@@ -839,8 +781,8 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   static WidgetOptionsMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = WidgetOptionsMapper._());
-      SplitOptionsMapper.ensureInitialized();
-      LayoutPositionMapper.ensureInitialized();
+      ContentOptionsMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -853,19 +795,19 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
   static Map<String, dynamic> _$args(WidgetOptions v) => v.args;
   static const Field<WidgetOptions, Map<String, dynamic>> _f$args =
       Field('args', _$args, opt: true, def: const {});
-  static int? _$_flex(WidgetOptions v) => v._flex;
-  static const Field<WidgetOptions, int> _f$_flex =
-      Field('_flex', _$_flex, key: 'flex', opt: true);
-  static LayoutPosition? _$_position(WidgetOptions v) => v._position;
-  static const Field<WidgetOptions, LayoutPosition> _f$_position =
-      Field('_position', _$_position, key: 'position', opt: true);
+  static int? _$flex(WidgetOptions v) => v.flex;
+  static const Field<WidgetOptions, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(WidgetOptions v) => v.align;
+  static const Field<WidgetOptions, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
 
   @override
   final MappableFields<WidgetOptions> fields = const {
     #name: _f$name,
     #args: _f$args,
-    #_flex: _f$_flex,
-    #_position: _f$_position,
+    #flex: _f$flex,
+    #align: _f$align,
   };
   @override
   final bool ignoreNull = true;
@@ -874,8 +816,8 @@ class WidgetOptionsMapper extends ClassMapperBase<WidgetOptions> {
     return WidgetOptions(
         name: data.dec(_f$name),
         args: data.dec(_f$args),
-        flex: data.dec(_f$_flex),
-        position: data.dec(_f$_position));
+        flex: data.dec(_f$flex),
+        align: data.dec(_f$align));
   }
 
   @override
@@ -930,7 +872,7 @@ extension WidgetOptionsValueCopy<$R, $Out>
 }
 
 abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions, $Out>
-    implements SplitOptionsCopyWith<$R, $In, $Out> {
+    implements ContentOptionsCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get args;
   @override
@@ -938,7 +880,7 @@ abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions, $Out>
       {String? name,
       Map<String, dynamic>? args,
       int? flex,
-      LayoutPosition? position});
+      ContentAlignment? align});
   WidgetOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -959,19 +901,19 @@ class _WidgetOptionsCopyWithImpl<$R, $Out>
           {String? name,
           Map<String, dynamic>? args,
           Object? flex = $none,
-          Object? position = $none}) =>
+          Object? align = $none}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
         if (flex != $none) #flex: flex,
-        if (position != $none) #position: position
+        if (align != $none) #align: align
       }));
   @override
   WidgetOptions $make(CopyWithData data) => WidgetOptions(
       name: data.get(#name, or: $value.name),
       args: data.get(#args, or: $value.args),
-      flex: data.get(#flex, or: $value._flex),
-      position: data.get(#position, or: $value._position));
+      flex: data.get(#flex, or: $value.flex),
+      align: data.get(#align, or: $value.align));
 
   @override
   WidgetOptionsCopyWith<$R2, WidgetOptions, $Out2> $chain<$R2, $Out2>(

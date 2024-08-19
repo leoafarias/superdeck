@@ -49,11 +49,7 @@ class SlideView<T extends Slide> extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(child: backgroundWidget),
-                  AnimatedBoxSpecWidget(
-                    spec: spec.innerContainer,
-                    duration: duration,
-                    child: SlideBuilder(slide),
-                  ),
+                  SlideBuilder(slide),
                 ],
               ),
             );

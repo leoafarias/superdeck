@@ -33,30 +33,7 @@ class ContentOptions with ContentOptionsMappable {
 }
 
 @MappableClass()
-abstract class SplitOptions with SplitOptionsMappable {
-  final int? _flex;
-  final LayoutPosition? _position;
-
-  const SplitOptions({
-    int? flex,
-    LayoutPosition? position,
-  })  : _flex = flex,
-        _position = position;
-
-  int get flex => _flex ?? 1;
-
-  LayoutPosition get position => _position ?? LayoutPosition.left;
-
-  static final schema = SchemaShape(
-    {
-      "flex": Schema.integer,
-      "position": LayoutPosition.schema,
-    },
-  );
-}
-
-@MappableClass()
-class ImageOptions extends SplitOptions with ImageOptionsMappable {
+class ImageOptions extends ContentOptions with ImageOptionsMappable {
   final String src;
   final ImageFit? fit;
 
@@ -64,10 +41,10 @@ class ImageOptions extends SplitOptions with ImageOptionsMappable {
     required this.src,
     this.fit,
     super.flex,
-    super.position,
+    super.align,
   });
 
-  static final schema = SplitOptions.schema.merge(
+  static final schema = ContentOptions.schema.merge(
     {
       "fit": ImageFit.schema,
       "src": Schema.string.required(),
@@ -76,7 +53,7 @@ class ImageOptions extends SplitOptions with ImageOptionsMappable {
 }
 
 @MappableClass()
-class WidgetOptions extends SplitOptions with WidgetOptionsMappable {
+class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
 
@@ -84,10 +61,10 @@ class WidgetOptions extends SplitOptions with WidgetOptionsMappable {
     required this.name,
     this.args = const {},
     super.flex,
-    super.position,
+    super.align,
   });
 
-  static final schema = SplitOptions.schema.merge(
+  static final schema = ContentOptions.schema.merge(
     {
       "name": Schema.string.required(),
       "args": Schema.any.optional(),

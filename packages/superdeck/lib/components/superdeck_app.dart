@@ -13,7 +13,6 @@ import '../helpers/constants.dart';
 import '../helpers/routes.dart';
 import '../helpers/theme.dart';
 import '../providers/examples_provider.dart';
-import '../providers/snapshot_provider.dart';
 import '../providers/style_provider.dart';
 import 'atoms/loading_indicator.dart';
 
@@ -68,15 +67,11 @@ class SuperDeckApp extends HookWidget {
                       routerConfig: goRouterConfig,
                       theme: theme,
                       builder: (context, child) {
-                        return SnapshotProvider(
-                          isCapturing: true,
-                          child: LoadingOverlay(
-                            isLoading: $superdeck.loading,
-                            key: _uniqueKey,
-                            child: $superdeck.completed
-                                ? child!
-                                : const SizedBox(),
-                          ),
+                        return LoadingOverlay(
+                          isLoading: $superdeck.loading,
+                          key: _uniqueKey,
+                          child:
+                              $superdeck.completed ? child! : const SizedBox(),
                         );
                       },
                     ),

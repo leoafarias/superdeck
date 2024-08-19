@@ -12,10 +12,10 @@ void main() {
     final slideConfig = SimpleSlide(content: rawMarkdown, key: 'simple-slide');
     testWidgets('builds content', (WidgetTester tester) async {
       await tester.pumpSlide(slideConfig);
-      final finder = find.byType(SimpleTemplate);
+      final finder = find.byType(BaseTemplate);
       expect(finder, findsOneWidget);
       // Check if template model equals to slide model
-      final template = tester.widget<SimpleTemplate>(finder);
+      final template = tester.widget<BaseTemplate>(finder);
       expect(template.config, slideConfig);
     });
   });

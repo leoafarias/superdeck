@@ -43,6 +43,7 @@ dependencies:
   open_filex: ^4.5.0
   google_generative_ai: ^0.4.4
   meta: ^1.15.0
+  auto_size_text: ^3.0.0
   
 dev_dependencies:
   flutter_test:

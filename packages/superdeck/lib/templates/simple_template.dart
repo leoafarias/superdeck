@@ -1,7 +1,7 @@
 part of 'templates.dart';
 
-class SimpleTemplate extends TemplateBuilder<SimpleSlide> {
-  const SimpleTemplate(
+class BaseTemplate extends TemplateBuilder<SimpleSlide> {
+  const BaseTemplate(
     super.config, {
     super.key,
   });

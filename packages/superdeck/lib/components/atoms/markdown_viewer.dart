@@ -1,7 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:mix/mix.dart';
 
 import '../../helpers/constants.dart';
 import '../../helpers/measure_size.dart';
@@ -153,11 +153,38 @@ Widget _imageBuilder(
 }
 
 class TextBuilder extends MarkdownElementBuilder {
-  final TextSpec? spec;
+  final MdTextSpec? spec;
   TextBuilder(this.spec);
   @override
   Widget visitText(md.Text text, TextStyle? preferredStyle) {
-    return TextSpecWidget(text.text, spec: spec);
+    return Padding(
+      padding: spec?.padding ?? EdgeInsets.zero,
+      child: Text(
+        text.text,
+        style: spec?.textStyle,
+      ),
+    );
+  }
+}
+
+class HeadingTextBuilder extends MarkdownElementBuilder {
+  final MdHeadingSpec? spec;
+  HeadingTextBuilder(this.spec);
+  @override
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    final level = int.parse(element.tag.substring(1));
+    final style = spec?.textStyle;
+
+    return Padding(
+      padding: spec?.padding ?? EdgeInsets.zero,
+      child: AutoSizeText(
+        element.textContent,
+        style: style?.copyWith(
+          fontSize: style.fontSize! + (6 - level) * 4,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 }
 
