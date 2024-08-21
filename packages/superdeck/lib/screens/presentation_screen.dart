@@ -34,14 +34,12 @@ class PresentationScreen extends HookWidget {
       );
     }, [slideIndex, slides.length]);
 
-    return Center(
-      child: PageView.builder(
-        controller: pageController,
-        itemCount: slides.length,
-        itemBuilder: (_, index) {
-          return SlidePreview(slides[index]);
-        },
-      ),
+    return PageView.builder(
+      controller: pageController,
+      itemCount: slides.length,
+      itemBuilder: (_, index) {
+        return SlidePreview(slides[index]);
+      },
     );
   }
 }

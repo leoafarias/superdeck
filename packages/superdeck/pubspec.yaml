@@ -42,6 +42,7 @@ dependencies:
   meta: ^1.15.0
   auto_size_text: ^3.0.0
   signals: ^5.4.0
+  material_symbols_icons: ^4.2780.0
   
 dev_dependencies:
   flutter_test:

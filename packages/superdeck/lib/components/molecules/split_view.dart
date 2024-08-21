@@ -57,17 +57,6 @@ class SplitView extends HookWidget {
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 9, 9, 9),
-      bottomNavigationBar: SizeTransition(
-          sizeFactor: CurvedAnimation(
-            parent: bottomAnimation,
-            curve: Curves.easeIn,
-          ),
-          child: SizedBox(
-            height: FloatingBottomBar.height,
-            child: FloatingBottomBar(
-              isVisible: true,
-            ),
-          )),
       key: kScaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       floatingActionButton: !context.isPresenterMenuOpen
@@ -76,20 +65,31 @@ class SplitView extends HookWidget {
               child: const Icon(Icons.arrow_forward),
             )
           : null,
-      body: Row(
+      body: Stack(
         children: [
-          SizeTransition(
-            axis: Axis.horizontal,
-            sizeFactor: CurvedAnimation(
-              parent: sideAnimation,
-              curve: Curves.easeInOut,
-            ),
-            child: SizedBox(
-              width: _thumbnailWidth,
-              child: const SlideThumbnailList(),
+          Row(
+            children: [
+              SizeTransition(
+                axis: Axis.horizontal,
+                sizeFactor: CurvedAnimation(
+                  parent: sideAnimation,
+                  curve: Curves.easeInOut,
+                ),
+                child: SizedBox(
+                  width: _thumbnailWidth,
+                  child: const SlideThumbnailList(),
+                ),
+              ),
+              Expanded(child: navigationShell)
+            ],
+          ),
+          AnimatedPositioned(
+            duration: Durations.short2,
+            bottom: isBottomOpen ? 0 : -FloatingBottomBar.height,
+            child: FloatingBottomBar(
+              isVisible: true,
             ),
           ),
-          Expanded(child: navigationShell)
         ],
       ),
     );
