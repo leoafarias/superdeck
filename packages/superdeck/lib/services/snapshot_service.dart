@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../components/atoms/slide_view.dart';
+import '../components/molecules/split_view.dart';
 import '../helpers/constants.dart';
 import '../providers/assets_provider.dart';
 import '../providers/examples_provider.dart';

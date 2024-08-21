@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
+
+final _button = ButtonSpecUtility.self;
+
+Style get _buttonStyle => Style(
+      _button.container.padding.all(8),
+    );
 
 class SDButton extends StatelessWidget {
   const SDButton({
@@ -18,6 +25,7 @@ class SDButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return XButton(
+      style: _buttonStyle,
       onPressed: onPressed,
       iconLeft: icon,
       label: label,
@@ -86,9 +94,9 @@ class SDIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return XButton(
+    return SDButton(
       onPressed: onPressed,
-      iconLeft: icon,
+      icon: icon,
       label: '',
     );
   }

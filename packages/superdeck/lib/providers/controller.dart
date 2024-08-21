@@ -22,12 +22,12 @@ class SuperDeckController {
     ReferenceService.instance.listen(instance._getData.refresh);
   }
 
-  late final _getData = futureSignal(_loadData);
+  late final _getData = futureSignal(_loadData, lazy: false);
 
-  late final isLoading = computed(() => _getData.value.isLoading);
-  late final isRefreshing = computed(() => _getData.value.isRefreshing);
-  late final hasError = computed(() => _getData.value.hasError);
-  late final isDone = computed(() => _getData.value.hasValue);
+  late final isLoading = _getData.select((s) => s.value.isLoading);
+  late final isRefreshing = _getData.select((s) => s.value.isRefreshing);
+  late final hasError = _getData.select((s) => s.value.hasError);
+  late final isDone = _getData.select((s) => s.value.hasValue);
 
   final slides = signal<List<Slide>>([]);
   final assets = signal<List<SlideAsset>>([]);
@@ -52,14 +52,9 @@ extension on Signal<List> {
 }
 
 T useSignal<T>(Signal<T> signal) {
-  final state = useState<T>(signal.value);
   final context = useContext();
-  useEffect(() {
-    signal.listen(context, () {
-      state.value = signal.value;
-    });
-  }, [signal]);
-  return state.value;
+
+  return signal.watch(context);
 }
 
 final useSlides = () => useSignal(superDeckController.slides);
@@ -71,3 +66,46 @@ extension SignalX<T> on Signal<T> {
     );
   }
 }
+
+// coverage:ignore-start
+/// Logs all signals and computed changes to the console.
+class LoggingSignalsObserver extends SignalsObserver {
+  @override
+  void onComputedCreated(Computed instance) {
+    log('computed created: [${instance.globalId}|${instance.debugLabel}]');
+  }
+
+  @override
+  void onComputedUpdated(Computed instance, value) {
+    log('computed updated: [${instance.globalId}|${instance.debugLabel}] => $value');
+  }
+
+  @override
+  void onSignalCreated(Signal instance) {
+    log('signal created: [${instance.globalId}|${instance.debugLabel}] => ${instance.peek()}');
+  }
+
+  @override
+  void onSignalUpdated(Signal instance, value) {
+    log('signal updated: [${instance.globalId}|${instance.debugLabel}] => $value');
+  }
+
+  @override
+  void onEffectCreated(Effect instance) {
+    log('effect created: [${instance.globalId}|${instance.debugLabel}]');
+  }
+
+  @override
+  void onEffectCalled(Effect instance) {
+    log('effect called: [${instance.globalId}|${instance.debugLabel}]');
+  }
+
+  @override
+  void onEffectRemoved(Effect instance) {
+    log('effect removed: [${instance.globalId}|${instance.debugLabel}]');
+  }
+
+  /// Logs a message to the console.
+  void log(String message) => log(message);
+}
+// coverage:ignore-end

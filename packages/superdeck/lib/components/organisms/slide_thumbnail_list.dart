@@ -9,8 +9,8 @@ import '../../helpers/utils.dart';
 import '../../providers/controller.dart';
 import '../atoms/slide_thumbnail.dart';
 
-class PresentationSidePanel extends HookWidget {
-  const PresentationSidePanel({
+class SlideThumbnailList extends HookWidget {
+  const SlideThumbnailList({
     super.key,
   });
 

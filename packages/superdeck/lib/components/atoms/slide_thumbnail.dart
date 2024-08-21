@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
@@ -13,6 +10,15 @@ import '../../services/reference_service.dart';
 import '../../services/snapshot_service.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
+
+enum _PopMenuAction {
+  refreshThumbnail('Refresh Thumbnail', Icons.refresh);
+
+  const _PopMenuAction(this.label, this.icon);
+
+  final String label;
+  final IconData icon;
+}
 
 class SlideThumbnail extends StatefulWidget {
   final VoidCallback onTap;
@@ -33,16 +39,37 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final thumbnailRequest = futureSignal(
-    () => _generateThumbnail(widget.slide),
-  );
+  bool _shouldRegenerate = false;
+  late final thumbnailRequest = futureSignal(() async {
+    final thumbnailFile = ReferenceService.instance
+        .getAssetFile('thumbnail_${widget.slide.key}.png');
+
+    if ((!kCanRunProcess || await thumbnailFile.exists()) &&
+        !_shouldRegenerate) {
+      return thumbnailFile;
+    }
+
+    try {
+      if (!context.mounted) {
+        return thumbnailFile;
+      }
+      final imageData = await SnapshotService.instance.generate(
+        quality: SnapshotQuality.low,
+        slide: widget.slide,
+      );
+
+      return await thumbnailFile.writeAsBytes(imageData, flush: true);
+    } finally {
+      _shouldRegenerate = false;
+    }
+  });
 
   @override
   void didUpdateWidget(covariant SlideThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (oldWidget.slide != widget.slide) {
       thumbnailRequest.refresh();
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -69,9 +96,44 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
         },
       );
     });
-
     return GestureDetector(
       onTap: widget.onTap,
+      onSecondaryTapDown: (details) {
+        final overlay =
+            Overlay.of(context).context.findRenderObject() as RenderBox;
+        final menuItem =
+            (_PopMenuAction action) => PopupMenuItem<_PopMenuAction>(
+                value: action,
+                onTap: () {
+                  switch (action) {
+                    case _PopMenuAction.refreshThumbnail:
+                      _shouldRegenerate = true;
+                      thumbnailRequest.reset(AsyncState.loading());
+                      thumbnailRequest.reload();
+                      break;
+                  }
+                },
+                mouseCursor: SystemMouseCursors.click,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(action.icon),
+                    const SizedBox(width: 8),
+                    Text(action.label),
+                  ],
+                ));
+        showMenu(
+          context: context,
+          menuPadding: EdgeInsets.zero,
+          items: [
+            menuItem(_PopMenuAction.refreshThumbnail),
+          ],
+          position: RelativeRect.fromSize(
+            details.globalPosition & Size.zero,
+            overlay.size,
+          ),
+        );
+      },
       child: _PreviewContainer(
         selected: widget.selected,
         child: Stack(
@@ -150,22 +212,4 @@ class _PreviewContainer extends StatelessWidget {
       child: AspectRatio(aspectRatio: kAspectRatio, child: child),
     );
   }
-}
-
-Future<File> _generateThumbnail(Slide slide) async {
-  final thumbnailFile =
-      ReferenceService.instance.getAssetFile('thumbnail_${slide.key}.png');
-
-  if (!kCanRunProcess || await thumbnailFile.exists()) {
-    return thumbnailFile;
-  }
-
-  final imageData = await SnapshotService.instance.generate(
-    quality: SnapshotQuality.low,
-    slide: slide,
-  );
-
-  await thumbnailFile.writeAsBytes(imageData);
-
-  return thumbnailFile;
 }

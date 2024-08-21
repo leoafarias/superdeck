@@ -24,6 +24,7 @@ class ChatPath extends Path<ChatPath> {
 class QueryParams {
   static const drawer = 'drawer';
   static const slide = 'slide';
+  static const presenterMenu = 'isPresenter';
 }
 
 final kRootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -137,6 +138,22 @@ extension BuildContextRoutesX on BuildContext {
 
   void closeDrawer() => go(_replaceQueryParam(QueryParams.drawer, '0'));
 
+  bool get isPresenterMenuOpen => _presenterMenuParam == '1';
+
+  void openPresenterMenu() =>
+      go(_replaceQueryParam(QueryParams.presenterMenu, '1'));
+
+  void closePresenterMenu() =>
+      go(_replaceQueryParam(QueryParams.presenterMenu, '0'));
+
+  void togglePresenterMenu() {
+    if (isPresenterMenuOpen) {
+      closePresenterMenu();
+    } else {
+      openPresenterMenu();
+    }
+  }
+
   void toggleDrawer() {
     if (isDrawerOpen) {
       closeDrawer();
@@ -149,7 +166,11 @@ extension BuildContextRoutesX on BuildContext {
     return GoRouterState.of(this).uri.queryParameters;
   }
 
+  // listen to the drawer query parameter
+
   String? get _drawerParam => _queryParams[QueryParams.drawer];
+
+  String? get _presenterMenuParam => _queryParams[QueryParams.presenterMenu];
 
   String? get _slidePage => _queryParams[QueryParams.slide];
 

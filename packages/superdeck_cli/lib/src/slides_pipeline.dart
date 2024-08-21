@@ -80,7 +80,6 @@ class TaskController {
     var asset = _assets.firstWhereOrNull((f) => f.path == file.path);
 
     if (asset == null) {
-      print(file.path);
       final image = await img.decodeImageFile(file.path);
 
       if (image == null) {

@@ -1,13 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../helpers/utils.dart';
-import '../atoms/sized_transition.dart';
-import '../organisms/chat_panel.dart';
-import '../organisms/presentation_side_panel.dart';
-import 'navigation_rail.dart';
+import '../../helpers/hooks.dart';
+import '../../helpers/routes.dart';
+import '../organisms/slide_thumbnail_list.dart';
+import 'floating_bottom_bar.dart';
+
+final kScaffoldKey = GlobalKey<ScaffoldState>();
 
 class SplitView extends HookWidget {
   final StatefulNavigationShell navigationShell;
@@ -17,88 +17,81 @@ class SplitView extends HookWidget {
     required this.navigationShell,
   });
 
-  final _maxWidth = 400.0;
   final _thumbnailWidth = 300.0;
+  final _duration = const Duration(milliseconds: 200);
 
   @override
   Widget build(BuildContext context) {
-    final sideSize = useState(0.0);
-
-    useEffect(() {
-      if (context.isMobileLandscape) {
-        sideSize.value = 200.0;
-      } else {
-        sideSize.value = _maxWidth;
-      }
-    }, [navigationShell.currentIndex]);
-
-    final animationController = useAnimationController(
-      duration: Durations.medium1,
+    final isBottomOpen = context.isPresenterMenuOpen;
+    final isSideOpen = context.isDrawerOpen;
+    final sideAnimation = useAnimationController(
+      duration: _duration,
+      initialValue: isSideOpen && isBottomOpen ? 1.0 : 0.0,
+    );
+    final bottomAnimation = useAnimationController(
+      duration: _duration,
+      initialValue: isBottomOpen ? 1.0 : 0.0,
     );
 
-    final animation = useAnimation(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.ease,
-    ));
+    usePostFrameEffect(() {
+      if (isBottomOpen) {
+        bottomAnimation.forward();
+        if (isSideOpen) {
+          sideAnimation.forward();
+        } else {
+          sideAnimation.reverse();
+        }
+      } else {
+        sideAnimation.reverse();
+        bottomAnimation.reverse();
+      }
+    }, [isBottomOpen, isSideOpen]);
 
     // usePostFrameEffect(() {
-    //   if (context.isDrawerOpen) {
-    //     animationController.forward();
+    //   if (isSideOpen) {
+    //     sideAnimation.forward();
     //   } else {
-    //     animationController.reverse();
+    //     sideAnimation.reverse();
     //   }
-    // }, [context.isDrawerOpen]);
+    // }, [isSideOpen]);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final sidebar = switch (navigationShell.currentIndex) {
-          0 => SizedBox(
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 9, 9, 9),
+      bottomNavigationBar: SizeTransition(
+          sizeFactor: CurvedAnimation(
+            parent: bottomAnimation,
+            curve: Curves.easeIn,
+          ),
+          child: SizedBox(
+            height: FloatingBottomBar.height,
+            child: FloatingBottomBar(
+              isVisible: true,
+            ),
+          )),
+      key: kScaffoldKey,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      floatingActionButton: !context.isPresenterMenuOpen
+          ? FloatingActionButton(
+              onPressed: () => context.togglePresenterMenu(),
+              child: const Icon(Icons.arrow_forward),
+            )
+          : null,
+      body: Row(
+        children: [
+          SizeTransition(
+            axis: Axis.horizontal,
+            sizeFactor: CurvedAnimation(
+              parent: sideAnimation,
+              curve: Curves.easeInOut,
+            ),
+            child: SizedBox(
               width: _thumbnailWidth,
-              child: const PresentationSidePanel(),
+              child: const SlideThumbnailList(),
             ),
-          1 => SizedBox(
-              width: _thumbnailWidth,
-              child: const ChatScreen(),
-            ),
-          _ => const SizedBox.shrink(),
-        };
-
-        return Row(
-          children: [
-            SizedTransition(
-              sizeFactor: 1,
-              child: Row(
-                children: [
-                  CustomNavigationRail(
-                    selectedIndex: navigationShell.currentIndex,
-                    onDestinationSelected: (value) {
-                      navigationShell.goBranch(value);
-                    },
-                    leading: 20,
-                    destinations: [
-                      CustomNavigationRailDestination(
-                        icon: Icons.view_carousel,
-                        label: 'Home',
-                      ),
-                      CustomNavigationRailDestination(
-                        icon: Icons.chat,
-                        label: 'Chat',
-                      ),
-                      if (!kIsWeb)
-                        CustomNavigationRailDestination(
-                          icon: Icons.picture_as_pdf,
-                          label: 'Export',
-                        ),
-                    ],
-                  ),
-                  sidebar
-                ],
-              ),
-            ),
-            Expanded(child: navigationShell)
-          ],
-        );
-      },
+          ),
+          Expanded(child: navigationShell)
+        ],
+      ),
     );
   }
 }
