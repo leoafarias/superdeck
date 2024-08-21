@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:superdeck/components/molecules/code_preview.dart';
+import 'package:superdeck/superdeck.dart';
 
 const purpleAccent = Color.fromARGB(255, 95, 44, 188);
 const purple = Color.fromARGB(255, 66, 19, 152);
@@ -64,18 +64,18 @@ Style get _style => Style(
       ),
     );
 
-class ExampleOptions {
+class _DemoOptions {
   final double? height;
   final double? width;
   final String? text;
-  const ExampleOptions({
+  const _DemoOptions({
     required this.height,
     required this.width,
     this.text,
   });
 
-  static ExampleOptions fromMap(Map<String, dynamic> map) {
-    return ExampleOptions(
+  static _DemoOptions fromMap(Map<String, dynamic> map) {
+    return _DemoOptions(
       height: map['height'] as double?,
       width: map['width'] as double?,
       text: map['text'] as String?,
@@ -83,18 +83,18 @@ class ExampleOptions {
   }
 }
 
-Widget mixExampleBuilder(BuildContext context) {
-  final options = ExampleOptions.fromMap(context.args);
+Widget mixExampleBuilder(BuildContext context, WidgetOptions options) {
+  final mappedOptions = _DemoOptions.fromMap(options.args);
   return Builder(
     builder: (context) {
       return Center(
         child: SizedBox(
-          height: options.height,
-          width: options.width,
+          height: mappedOptions.height,
+          width: mappedOptions.width,
           child: Box(
             style: _style.animate(),
             child: StyledText(
-              options.text ?? 'Mix',
+              mappedOptions.text ?? 'Mix',
             ),
           ),
         ),

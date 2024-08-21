@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:collection/collection.dart';
-import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 const _tagMarker = '@';
@@ -55,10 +51,12 @@ SlidePart? parseBlock(String line) {
         );
       case SubSectionPartType.image:
         return ImagePart(
+          content: '',
           options: ImageOptionsMapper.fromMap(options),
         );
       case SubSectionPartType.widget:
         return WidgetPart(
+          content: '',
           options: WidgetOptionsMapper.fromMap(options),
         );
     }
@@ -112,7 +110,7 @@ List<SectionPart> parseSections(String slideMarkdown) {
       }
 
       if (currentSection is RootLayoutPart) {
-        if (currentSection.subSections.isNotEmpty) {
+        if (currentSection.contentSections.isNotEmpty) {
           // throw error that says if to use any section wrapping all the content of the markdown
           throw Exception(
             'Invalid location tag on line ${lineIndex}. ${part.type.name} cannot be before ${currentSection.type.name}',
@@ -122,8 +120,8 @@ List<SectionPart> parseSections(String slideMarkdown) {
       // Save current section before setting as current
       layoutParts.add(currentSection);
       currentSection = part;
-    } else if (part is SubSectionPart) {
-      currentSection.subSections.add(part);
+    } else if (part is ContentSectionPart) {
+      currentSection.addSubSection(part);
     }
   }
 
@@ -131,23 +129,9 @@ List<SectionPart> parseSections(String slideMarkdown) {
 
   // Return the parsed sections
   //  remove all sections that have empty parts
-  final parts = layoutParts.where((part) {
-    return part.subSections.isNotEmpty;
+  return layoutParts.where((part) {
+    return part.contentSections.isNotEmpty;
   }).toList();
-
-  parts.forEach((part) {
-    part.subSections = part.subSections.where((subPart) {
-      if (subPart is ContentPart) {
-        print('Content: ${subPart.content}');
-      }
-      return true;
-    }).toList();
-  });
-
-  File('TESTTEST_${shortHashId(parts.toString())}.json')
-      .writeAsStringSync(jsonEncode(parts.map((e) => e.toMap()).toList()));
-
-  return parts;
 }
 
 bool _isSyntax(String line) {

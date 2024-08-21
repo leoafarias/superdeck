@@ -123,6 +123,7 @@ class SectionPartMapper extends ClassMapperBase<SectionPart> {
       FooterLayoutPartMapper.ensureInitialized();
       SectionPartTypeMapper.ensureInitialized();
       ContentOptionsMapper.ensureInitialized();
+      ContentSectionPartMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -136,17 +137,18 @@ class SectionPartMapper extends ClassMapperBase<SectionPart> {
   static ContentOptions _$options(SectionPart v) => v.options;
   static const Field<SectionPart, ContentOptions> _f$options =
       Field('options', _$options);
-  static List<SubSectionPart<ContentOptions>> _$subSections(SectionPart v) =>
-      v.subSections;
-  static const Field<SectionPart, List<SubSectionPart<ContentOptions>>>
-      _f$subSections = Field('subSections', _$subSections,
-          key: 'sub_sections', mode: FieldMode.member);
+  static List<ContentSectionPart<ContentOptions>> _$contentSections(
+          SectionPart v) =>
+      v.contentSections;
+  static const Field<SectionPart, List<ContentSectionPart<ContentOptions>>>
+      _f$contentSections = Field('contentSections', _$contentSections,
+          key: 'content_sections', opt: true, def: const []);
 
   @override
   final MappableFields<SectionPart> fields = const {
     #type: _f$type,
     #options: _f$options,
-    #subSections: _f$subSections,
+    #contentSections: _f$contentSections,
   };
   @override
   final bool ignoreNull = true;
@@ -181,13 +183,13 @@ abstract class SectionPartCopyWith<$R, $In extends SectionPart, $Out>
   SectionPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class SubSectionPartMapper extends ClassMapperBase<SubSectionPart> {
-  SubSectionPartMapper._();
+class ContentSectionPartMapper extends ClassMapperBase<ContentSectionPart> {
+  ContentSectionPartMapper._();
 
-  static SubSectionPartMapper? _instance;
-  static SubSectionPartMapper ensureInitialized() {
+  static ContentSectionPartMapper? _instance;
+  static ContentSectionPartMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SubSectionPartMapper._());
+      MapperContainer.globals.use(_instance = ContentSectionPartMapper._());
       ContentPartMapper.ensureInitialized();
       WidgetPartMapper.ensureInitialized();
       ImagePartMapper.ensureInitialized();
@@ -198,58 +200,62 @@ class SubSectionPartMapper extends ClassMapperBase<SubSectionPart> {
   }
 
   @override
-  final String id = 'SubSectionPart';
+  final String id = 'ContentSectionPart';
   @override
   Function get typeFactory =>
-      <T extends ContentOptions>(f) => f<SubSectionPart<T>>();
+      <T extends ContentOptions>(f) => f<ContentSectionPart<T>>();
 
-  static SubSectionPartType _$type(SubSectionPart v) => v.type;
-  static const Field<SubSectionPart, SubSectionPartType> _f$type =
+  static SubSectionPartType _$type(ContentSectionPart v) => v.type;
+  static const Field<ContentSectionPart, SubSectionPartType> _f$type =
       Field('type', _$type);
-  static ContentOptions _$options(SubSectionPart v) => v.options;
+  static String _$content(ContentSectionPart v) => v.content;
+  static const Field<ContentSectionPart, String> _f$content =
+      Field('content', _$content, hook: EmptyToNullHook());
+  static ContentOptions _$options(ContentSectionPart v) => v.options;
   static dynamic _arg$options<T extends ContentOptions>(f) => f<T>();
-  static const Field<SubSectionPart, ContentOptions> _f$options =
+  static const Field<ContentSectionPart, ContentOptions> _f$options =
       Field('options', _$options, arg: _arg$options);
 
   @override
-  final MappableFields<SubSectionPart> fields = const {
+  final MappableFields<ContentSectionPart> fields = const {
     #type: _f$type,
+    #content: _f$content,
     #options: _f$options,
   };
   @override
   final bool ignoreNull = true;
 
-  static SubSectionPart<T> _instantiate<T extends ContentOptions>(
+  static ContentSectionPart<T> _instantiate<T extends ContentOptions>(
       DecodingData data) {
     throw MapperException.missingSubclass(
-        'SubSectionPart', 'type', '${data.value['type']}');
+        'ContentSectionPart', 'type', '${data.value['type']}');
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static SubSectionPart<T> fromMap<T extends ContentOptions>(
+  static ContentSectionPart<T> fromMap<T extends ContentOptions>(
       Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SubSectionPart<T>>(map);
+    return ensureInitialized().decodeMap<ContentSectionPart<T>>(map);
   }
 
-  static SubSectionPart<T> fromJson<T extends ContentOptions>(String json) {
-    return ensureInitialized().decodeJson<SubSectionPart<T>>(json);
+  static ContentSectionPart<T> fromJson<T extends ContentOptions>(String json) {
+    return ensureInitialized().decodeJson<ContentSectionPart<T>>(json);
   }
 }
 
-mixin SubSectionPartMappable<T extends ContentOptions> {
+mixin ContentSectionPartMappable<T extends ContentOptions> {
   String toJson();
   Map<String, dynamic> toMap();
-  SubSectionPartCopyWith<SubSectionPart<T>, SubSectionPart<T>,
-      SubSectionPart<T>, T> get copyWith;
+  ContentSectionPartCopyWith<ContentSectionPart<T>, ContentSectionPart<T>,
+      ContentSectionPart<T>, T> get copyWith;
 }
 
-abstract class SubSectionPartCopyWith<$R, $In extends SubSectionPart<T>, $Out,
-    T extends ContentOptions> implements ClassCopyWith<$R, $In, $Out> {
+abstract class ContentSectionPartCopyWith<$R, $In extends ContentSectionPart<T>,
+    $Out, T extends ContentOptions> implements ClassCopyWith<$R, $In, $Out> {
   ContentOptionsCopyWith<$R, ContentOptions, T> get options;
-  $R call({T? options});
-  SubSectionPartCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+  $R call({String? content, T? options});
+  ContentSectionPartCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
 
@@ -260,7 +266,7 @@ class ContentPartMapper extends SubClassMapperBase<ContentPart> {
   static ContentPartMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ContentPartMapper._());
-      SubSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
+      ContentSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
       ContentOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -271,7 +277,7 @@ class ContentPartMapper extends SubClassMapperBase<ContentPart> {
 
   static String _$content(ContentPart v) => v.content;
   static const Field<ContentPart, String> _f$content =
-      Field('content', _$content);
+      Field('content', _$content, hook: EmptyToNullHook());
   static ContentOptions _$options(ContentPart v) => v.options;
   static const Field<ContentPart, ContentOptions> _f$options =
       Field('options', _$options);
@@ -291,10 +297,10 @@ class ContentPartMapper extends SubClassMapperBase<ContentPart> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = SubSectionPartType.content;
+  final dynamic discriminatorValue = 'content';
   @override
   late final ClassMapperBase superMapper =
-      SubSectionPartMapper.ensureInitialized();
+      ContentSectionPartMapper.ensureInitialized();
 
   @override
   DecodingContext inherit(DecodingContext context) {
@@ -356,7 +362,7 @@ extension ContentPartValueCopy<$R, $Out>
 }
 
 abstract class ContentPartCopyWith<$R, $In extends ContentPart, $Out>
-    implements SubSectionPartCopyWith<$R, $In, $Out, ContentOptions> {
+    implements ContentSectionPartCopyWith<$R, $In, $Out, ContentOptions> {
   @override
   ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
   @override
@@ -401,7 +407,7 @@ class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
   static WidgetPartMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = WidgetPartMapper._());
-      SubSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
+      ContentSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
       WidgetOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -413,6 +419,9 @@ class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
   static WidgetOptions _$options(WidgetPart v) => v.options;
   static const Field<WidgetPart, WidgetOptions> _f$options =
       Field('options', _$options);
+  static String _$content(WidgetPart v) => v.content;
+  static const Field<WidgetPart, String> _f$content =
+      Field('content', _$content, hook: EmptyToNullHook());
   static SubSectionPartType _$type(WidgetPart v) => v.type;
   static const Field<WidgetPart, SubSectionPartType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
@@ -420,6 +429,7 @@ class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
   @override
   final MappableFields<WidgetPart> fields = const {
     #options: _f$options,
+    #content: _f$content,
     #type: _f$type,
   };
   @override
@@ -431,7 +441,7 @@ class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
   final dynamic discriminatorValue = 'widget';
   @override
   late final ClassMapperBase superMapper =
-      SubSectionPartMapper.ensureInitialized();
+      ContentSectionPartMapper.ensureInitialized();
 
   @override
   DecodingContext inherit(DecodingContext context) {
@@ -439,7 +449,8 @@ class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
   }
 
   static WidgetPart _instantiate(DecodingData data) {
-    return WidgetPart(options: data.dec(_f$options));
+    return WidgetPart(
+        options: data.dec(_f$options), content: data.dec(_f$content));
   }
 
   @override
@@ -492,11 +503,11 @@ extension WidgetPartValueCopy<$R, $Out>
 }
 
 abstract class WidgetPartCopyWith<$R, $In extends WidgetPart, $Out>
-    implements SubSectionPartCopyWith<$R, $In, $Out, WidgetOptions> {
+    implements ContentSectionPartCopyWith<$R, $In, $Out, WidgetOptions> {
   @override
   WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options;
   @override
-  $R call({WidgetOptions? options});
+  $R call({WidgetOptions? options, String? content});
   WidgetPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -514,11 +525,15 @@ class _WidgetPartCopyWithImpl<$R, $Out>
           .copyWith
           .$chain((v) => call(options: v));
   @override
-  $R call({WidgetOptions? options}) =>
-      $apply(FieldCopyWithData({if (options != null) #options: options}));
+  $R call({WidgetOptions? options, String? content}) =>
+      $apply(FieldCopyWithData({
+        if (options != null) #options: options,
+        if (content != null) #content: content
+      }));
   @override
-  WidgetPart $make(CopyWithData data) =>
-      WidgetPart(options: data.get(#options, or: $value.options));
+  WidgetPart $make(CopyWithData data) => WidgetPart(
+      options: data.get(#options, or: $value.options),
+      content: data.get(#content, or: $value.content));
 
   @override
   WidgetPartCopyWith<$R2, WidgetPart, $Out2> $chain<$R2, $Out2>(
@@ -533,7 +548,7 @@ class ImagePartMapper extends SubClassMapperBase<ImagePart> {
   static ImagePartMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ImagePartMapper._());
-      SubSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
+      ContentSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
       ImageOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -545,6 +560,9 @@ class ImagePartMapper extends SubClassMapperBase<ImagePart> {
   static ImageOptions _$options(ImagePart v) => v.options;
   static const Field<ImagePart, ImageOptions> _f$options =
       Field('options', _$options);
+  static String _$content(ImagePart v) => v.content;
+  static const Field<ImagePart, String> _f$content =
+      Field('content', _$content, hook: EmptyToNullHook());
   static SubSectionPartType _$type(ImagePart v) => v.type;
   static const Field<ImagePart, SubSectionPartType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
@@ -552,6 +570,7 @@ class ImagePartMapper extends SubClassMapperBase<ImagePart> {
   @override
   final MappableFields<ImagePart> fields = const {
     #options: _f$options,
+    #content: _f$content,
     #type: _f$type,
   };
   @override
@@ -563,7 +582,7 @@ class ImagePartMapper extends SubClassMapperBase<ImagePart> {
   final dynamic discriminatorValue = 'image';
   @override
   late final ClassMapperBase superMapper =
-      SubSectionPartMapper.ensureInitialized();
+      ContentSectionPartMapper.ensureInitialized();
 
   @override
   DecodingContext inherit(DecodingContext context) {
@@ -571,7 +590,8 @@ class ImagePartMapper extends SubClassMapperBase<ImagePart> {
   }
 
   static ImagePart _instantiate(DecodingData data) {
-    return ImagePart(options: data.dec(_f$options));
+    return ImagePart(
+        options: data.dec(_f$options), content: data.dec(_f$content));
   }
 
   @override
@@ -623,11 +643,11 @@ extension ImagePartValueCopy<$R, $Out> on ObjectCopyWith<$R, ImagePart, $Out> {
 }
 
 abstract class ImagePartCopyWith<$R, $In extends ImagePart, $Out>
-    implements SubSectionPartCopyWith<$R, $In, $Out, ImageOptions> {
+    implements ContentSectionPartCopyWith<$R, $In, $Out, ImageOptions> {
   @override
   ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options;
   @override
-  $R call({ImageOptions? options});
+  $R call({ImageOptions? options, String? content});
   ImagePartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -643,11 +663,15 @@ class _ImagePartCopyWithImpl<$R, $Out>
   ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options =>
       ($value.options as ImageOptions).copyWith.$chain((v) => call(options: v));
   @override
-  $R call({ImageOptions? options}) =>
-      $apply(FieldCopyWithData({if (options != null) #options: options}));
+  $R call({ImageOptions? options, String? content}) =>
+      $apply(FieldCopyWithData({
+        if (options != null) #options: options,
+        if (content != null) #content: content
+      }));
   @override
-  ImagePart $make(CopyWithData data) =>
-      ImagePart(options: data.get(#options, or: $value.options));
+  ImagePart $make(CopyWithData data) => ImagePart(
+      options: data.get(#options, or: $value.options),
+      content: data.get(#content, or: $value.content));
 
   @override
   ImagePartCopyWith<$R2, ImagePart, $Out2> $chain<$R2, $Out2>(
@@ -677,17 +701,18 @@ class RootLayoutPartMapper extends SubClassMapperBase<RootLayoutPart> {
   static SectionPartType _$type(RootLayoutPart v) => v.type;
   static const Field<RootLayoutPart, SectionPartType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
-  static List<SubSectionPart<ContentOptions>> _$subSections(RootLayoutPart v) =>
-      v.subSections;
-  static const Field<RootLayoutPart, List<SubSectionPart<ContentOptions>>>
-      _f$subSections = Field('subSections', _$subSections,
-          key: 'sub_sections', mode: FieldMode.member);
+  static List<ContentSectionPart<ContentOptions>> _$contentSections(
+          RootLayoutPart v) =>
+      v.contentSections;
+  static const Field<RootLayoutPart, List<ContentSectionPart<ContentOptions>>>
+      _f$contentSections =
+      Field('contentSections', _$contentSections, key: 'content_sections');
 
   @override
   final MappableFields<RootLayoutPart> fields = const {
     #options: _f$options,
     #type: _f$type,
-    #subSections: _f$subSections,
+    #contentSections: _f$contentSections,
   };
   @override
   final bool ignoreNull = true;
@@ -811,18 +836,18 @@ class HeaderLayoutPartMapper extends SubClassMapperBase<HeaderLayoutPart> {
   static SectionPartType _$type(HeaderLayoutPart v) => v.type;
   static const Field<HeaderLayoutPart, SectionPartType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
-  static List<SubSectionPart<ContentOptions>> _$subSections(
+  static List<ContentSectionPart<ContentOptions>> _$contentSections(
           HeaderLayoutPart v) =>
-      v.subSections;
-  static const Field<HeaderLayoutPart, List<SubSectionPart<ContentOptions>>>
-      _f$subSections = Field('subSections', _$subSections,
-          key: 'sub_sections', mode: FieldMode.member);
+      v.contentSections;
+  static const Field<HeaderLayoutPart, List<ContentSectionPart<ContentOptions>>>
+      _f$contentSections =
+      Field('contentSections', _$contentSections, key: 'content_sections');
 
   @override
   final MappableFields<HeaderLayoutPart> fields = const {
     #options: _f$options,
     #type: _f$type,
-    #subSections: _f$subSections,
+    #contentSections: _f$contentSections,
   };
   @override
   final bool ignoreNull = true;
@@ -947,17 +972,18 @@ class BodyLayoutPartMapper extends SubClassMapperBase<BodyLayoutPart> {
   static SectionPartType _$type(BodyLayoutPart v) => v.type;
   static const Field<BodyLayoutPart, SectionPartType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
-  static List<SubSectionPart<ContentOptions>> _$subSections(BodyLayoutPart v) =>
-      v.subSections;
-  static const Field<BodyLayoutPart, List<SubSectionPart<ContentOptions>>>
-      _f$subSections = Field('subSections', _$subSections,
-          key: 'sub_sections', mode: FieldMode.member);
+  static List<ContentSectionPart<ContentOptions>> _$contentSections(
+          BodyLayoutPart v) =>
+      v.contentSections;
+  static const Field<BodyLayoutPart, List<ContentSectionPart<ContentOptions>>>
+      _f$contentSections =
+      Field('contentSections', _$contentSections, key: 'content_sections');
 
   @override
   final MappableFields<BodyLayoutPart> fields = const {
     #options: _f$options,
     #type: _f$type,
-    #subSections: _f$subSections,
+    #contentSections: _f$contentSections,
   };
   @override
   final bool ignoreNull = true;
@@ -1081,18 +1107,18 @@ class FooterLayoutPartMapper extends SubClassMapperBase<FooterLayoutPart> {
   static SectionPartType _$type(FooterLayoutPart v) => v.type;
   static const Field<FooterLayoutPart, SectionPartType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
-  static List<SubSectionPart<ContentOptions>> _$subSections(
+  static List<ContentSectionPart<ContentOptions>> _$contentSections(
           FooterLayoutPart v) =>
-      v.subSections;
-  static const Field<FooterLayoutPart, List<SubSectionPart<ContentOptions>>>
-      _f$subSections = Field('subSections', _$subSections,
-          key: 'sub_sections', mode: FieldMode.member);
+      v.contentSections;
+  static const Field<FooterLayoutPart, List<ContentSectionPart<ContentOptions>>>
+      _f$contentSections =
+      Field('contentSections', _$contentSections, key: 'content_sections');
 
   @override
   final MappableFields<FooterLayoutPart> fields = const {
     #options: _f$options,
     #type: _f$type,
-    #subSections: _f$subSections,
+    #contentSections: _f$contentSections,
   };
   @override
   final bool ignoreNull = true;

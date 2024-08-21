@@ -102,7 +102,7 @@ class SnapshotService {
           context: context,
           child: AssetsProvider.inherit(
             context: context,
-            child: ExamplesProvider.inherit(
+            child: WidgetExamplesProvider.inherit(
               context: context,
               child: MediaQuery(
                 data: MediaQuery.of(context),

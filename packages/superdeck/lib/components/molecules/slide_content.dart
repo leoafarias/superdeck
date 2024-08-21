@@ -8,8 +8,8 @@ import '../../styles/style_spec.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 
-class SlideContent extends StatelessWidget {
-  const SlideContent({
+class ContentBlock extends StatelessWidget {
+  const ContentBlock({
     required this.content,
     required this.options,
     super.key,
@@ -58,8 +58,8 @@ class SlideContent extends StatelessWidget {
   }
 }
 
-class ImageContent extends StatelessWidget {
-  const ImageContent({
+class ImageBlock extends StatelessWidget {
+  const ImageBlock({
     required this.options,
     super.key,
   });
@@ -89,8 +89,8 @@ class ImageContent extends StatelessWidget {
   }
 }
 
-class WidgetContent extends StatelessWidget {
-  const WidgetContent({
+class WidgetBlock extends StatelessWidget {
+  const WidgetBlock({
     required this.options,
     super.key,
   });
@@ -102,7 +102,7 @@ class WidgetContent extends StatelessWidget {
     final spec = SlideSpec.of(context);
     final alignment = options.align ?? ContentAlignment.center;
 
-    final examples = ExamplesProvider.of(context);
+    final examples = WidgetExamplesProvider.of(context);
     final widgetBuilder = examples[options.name];
 
     if (widgetBuilder == null) {
@@ -117,7 +117,7 @@ class WidgetContent extends StatelessWidget {
       child: Container(
         alignment: toAlignment(alignment),
         child: Builder(
-          builder: widgetBuilder,
+          builder: (context) => widgetBuilder(context, options),
         ),
       ),
     );

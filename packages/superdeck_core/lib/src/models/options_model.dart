@@ -29,6 +29,8 @@ class ContentOptions with ContentOptionsMappable {
       "flex": Schema.integer.optional(),
     },
   );
+
+  bool get isEmpty => flex == null && align == null;
 }
 
 @MappableClass()
@@ -51,7 +53,7 @@ class ImageOptions extends ContentOptions with ImageOptionsMappable {
   );
 }
 
-@MappableClass()
+@MappableClass(hook: UnmappedPropertiesHook('args'))
 class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
@@ -66,8 +68,8 @@ class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
   static final schema = ContentOptions.schema.merge(
     {
       "name": Schema.string.required(),
-      "args": Schema.any.optional(),
     },
+    additionalProperties: true,
   );
 }
 

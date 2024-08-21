@@ -54,7 +54,7 @@ class SuperDeckApp extends HookWidget {
         return StyleProvider(
           baseStyle: baseStyle,
           styles: styles,
-          child: ExamplesProvider(
+          child: WidgetExamplesProvider(
             examples: examples,
             child: ListenableBuilder(
                 listenable: $superdeck,

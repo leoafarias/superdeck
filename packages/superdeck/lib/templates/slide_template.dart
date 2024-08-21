@@ -19,18 +19,18 @@ class SlideTemplate extends StatelessWidget {
         return Expanded(
           flex: sectionFlex,
           child: Row(
-            children: section.subSections.map((part) {
+            children: section.contentSections.map((part) {
               return Expanded(
                 flex: part.options.flex ?? 1,
                 child: switch (part) {
-                  (ImagePart p) => ImageContent(
+                  (ImagePart p) => ImageBlock(
                       options: p.options,
                     ),
-                  (ContentPart p) => SlideContent(
+                  (ContentPart p) => ContentBlock(
                       content: p.content,
                       options: p.options,
                     ),
-                  (WidgetPart p) => WidgetContent(
+                  (WidgetPart p) => WidgetBlock(
                       options: p.options,
                     ),
                 },

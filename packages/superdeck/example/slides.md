@@ -3,7 +3,7 @@
 {@content}
 ## This is an example of a widget
 
-{@widget name: demo }
+{@widget name: demo | size: 2 | super_name: car }
 
 ---
 ---

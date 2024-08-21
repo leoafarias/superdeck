@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
-typedef ExampleBuilder = Widget Function(BuildContext context);
+typedef ExampleBuilder = Widget Function(
+  BuildContext context,
+  WidgetOptions options,
+);
 
-class ExamplesProvider extends InheritedWidget {
-  const ExamplesProvider({
+class WidgetExamplesProvider extends InheritedWidget {
+  const WidgetExamplesProvider({
     super.key,
     required this.examples,
     required super.child,
@@ -13,19 +17,19 @@ class ExamplesProvider extends InheritedWidget {
 
   static Map<String, ExampleBuilder> of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<ExamplesProvider>()!
+        .dependOnInheritedWidgetOfExactType<WidgetExamplesProvider>()!
         .examples;
   }
 
-  static ExamplesProvider inherit({
+  static WidgetExamplesProvider inherit({
     required BuildContext context,
     required Widget child,
   }) {
-    return ExamplesProvider(examples: of(context), child: child);
+    return WidgetExamplesProvider(examples: of(context), child: child);
   }
 
   @override
-  bool updateShouldNotify(covariant ExamplesProvider oldWidget) {
+  bool updateShouldNotify(covariant WidgetExamplesProvider oldWidget) {
     return examples != oldWidget.examples;
   }
 }

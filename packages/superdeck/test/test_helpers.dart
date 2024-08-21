@@ -27,7 +27,7 @@ extension WidgetTesterX on WidgetTester {
           baseStyle: style,
           child: AssetsProvider(
             assets: assets,
-            child: ExamplesProvider(
+            child: WidgetExamplesProvider(
               examples: examples,
               child: SlideView(slide),
             ),

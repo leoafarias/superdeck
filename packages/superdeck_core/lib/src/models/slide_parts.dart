@@ -25,12 +25,15 @@ interface class SlidePart {
 @MappableClass(discriminatorKey: 'type')
 sealed class SectionPart extends SlidePart with SectionPartMappable {
   final SectionPartType type;
+
   final ContentOptions options;
-  List<SubSectionPart> subSections = [];
+  @MappableField(key: 'content_sections')
+  List<ContentSectionPart> contentSections;
 
   SectionPart({
     required this.type,
     required this.options,
+    this.contentSections = const [],
   });
 
   factory SectionPart.build(
@@ -48,56 +51,65 @@ sealed class SectionPart extends SlidePart with SectionPartMappable {
   String get name => type.name;
 
   void concatLine(String content) {
-    final lastPart = subSections.lastOrNull;
+    final lastPart = contentSections.lastOrNull;
+    final subSectionsCopy = [...contentSections];
 
     if (lastPart is ContentPart) {
-      subSections.last = lastPart.copyWith(
+      subSectionsCopy.last = lastPart.copyWith(
         content: lastPart.content + '\n' + content,
       );
     } else {
-      subSections.add(ContentPart(
+      subSectionsCopy.add(ContentPart(
         content: content,
         options: ContentOptions(),
       ));
     }
+
+    contentSections = subSectionsCopy;
+  }
+
+  void addSubSection(ContentSectionPart part) {
+    contentSections = [...contentSections, part];
   }
 }
 
 @MappableClass(discriminatorKey: 'type')
-sealed class SubSectionPart<T extends ContentOptions> extends SlidePart
-    with SubSectionPartMappable {
+sealed class ContentSectionPart<T extends ContentOptions> extends SlidePart
+    with ContentSectionPartMappable {
+  @MappableField(hook: EmptyToNullHook())
+  final String content;
   final SubSectionPartType type;
+
   final T options;
 
-  SubSectionPart({
+  ContentSectionPart({
     required this.type,
+    required this.content,
     required this.options,
   });
 }
 
-@MappableClass(discriminatorValue: SubSectionPartType.content)
-class ContentPart extends SubSectionPart<ContentOptions>
+@MappableClass(discriminatorValue: 'content')
+class ContentPart extends ContentSectionPart<ContentOptions>
     with ContentPartMappable {
-  final String content;
-
   ContentPart({
-    required this.content,
+    required super.content,
     required super.options,
   }) : super(type: SubSectionPartType.content);
 }
 
 @MappableClass(discriminatorValue: 'widget')
-class WidgetPart extends SubSectionPart<WidgetOptions> with WidgetPartMappable {
-  WidgetPart({
-    required super.options,
-  }) : super(type: SubSectionPartType.widget);
+class WidgetPart extends ContentSectionPart<WidgetOptions>
+    with WidgetPartMappable {
+  WidgetPart({required super.options, required super.content})
+      : super(type: SubSectionPartType.widget);
 }
 
 @MappableClass(discriminatorValue: 'image')
-class ImagePart extends SubSectionPart<ImageOptions> with ImagePartMappable {
-  ImagePart({
-    required super.options,
-  }) : super(type: SubSectionPartType.image);
+class ImagePart extends ContentSectionPart<ImageOptions>
+    with ImagePartMappable {
+  ImagePart({required super.options, required super.content})
+      : super(type: SubSectionPartType.image);
 }
 
 @MappableClass(discriminatorValue: 'root')

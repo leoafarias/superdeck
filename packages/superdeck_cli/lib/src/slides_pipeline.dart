@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -32,8 +31,6 @@ class TaskController {
 
   Slide extractSlide() {
     final sections = parseSections(slide.content);
-    File('testest.json')
-        .writeAsStringSync(jsonEncode(sections.map((e) => e.toMap()).toList()));
 
     final newSlide = Slide(
       content: slide.content,
@@ -179,7 +176,7 @@ class TaskPipeline {
       assets: result.neededAssets,
     );
 
-    await kReferenceFile.writeAsString(reference.toJson());
+    await kReferenceFile.writeAsString(prettyJson(reference.toMap()));
 
     return reference;
   }

@@ -828,6 +828,8 @@ class WidgetOptionsMapper extends SubClassMapperBase<WidgetOptions> {
   late final ClassMapperBase superMapper =
       ContentOptionsMapper.ensureInitialized();
 
+  @override
+  final MappingHook hook = const UnmappedPropertiesHook('args');
   static WidgetOptions _instantiate(DecodingData data) {
     return WidgetOptions(
         name: data.dec(_f$name),
