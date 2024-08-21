@@ -1,9 +1,9 @@
 // Create a SlideProvider that extends an Inherited widget
 import 'package:flutter/material.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../helpers/constants.dart';
-import '../models/slide_model.dart';
-import '../templates/templates.dart';
+import '../templates/slide_template.dart';
 
 enum SlideProviderAspect {
   slide,
@@ -48,7 +48,7 @@ class SlideBuilder extends StatelessWidget {
       slide: config,
       child: ConstrainedBox(
         constraints: BoxConstraints.tight(kResolution),
-        child: TemplateBuilder.buildTemplate(config),
+        child: SlideTemplate(config),
       ),
     );
   }

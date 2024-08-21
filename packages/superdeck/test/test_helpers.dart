@@ -6,7 +6,7 @@ import 'package:superdeck/providers/assets_provider.dart';
 import 'package:superdeck/providers/examples_provider.dart';
 import 'package:superdeck/providers/snapshot_provider.dart';
 import 'package:superdeck/providers/style_provider.dart';
-import 'package:superdeck/superdeck.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 extension WidgetTesterX on WidgetTester {
   Future<void> pumpWithScaffold(Widget widget) async {

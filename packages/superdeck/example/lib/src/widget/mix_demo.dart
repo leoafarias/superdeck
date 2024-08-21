@@ -3,16 +3,13 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck/components/molecules/code_preview.dart';
-import 'package:superdeck/schema/schema_model.dart';
-import 'package:superdeck/superdeck.dart';
 
 const purpleAccent = Color.fromARGB(255, 95, 44, 188);
 const purple = Color.fromARGB(255, 66, 19, 152);
 
 Style get _style => Style(
       // Box
-      $box.height(250),
-      $box.width(250),
+
       $box.borderRadius.circular(10),
       $box.alignment.center(),
       $box.shadow(
@@ -53,10 +50,6 @@ Style get _style => Style(
         );
       }),
 
-      $on.hover(
-        $box.color.black(),
-      ),
-
       ($on.press | $on.longPress)(
         $box.shadow(
           blurRadius: 5,
@@ -72,8 +65,8 @@ Style get _style => Style(
     );
 
 class ExampleOptions {
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final String? text;
   const ExampleOptions({
     required this.height,
@@ -83,22 +76,11 @@ class ExampleOptions {
 
   static ExampleOptions fromMap(Map<String, dynamic> map) {
     return ExampleOptions(
-      height: map['height'] as double,
-      width: map['width'] as double,
+      height: map['height'] as double?,
+      width: map['width'] as double?,
       text: map['text'] as String?,
     );
   }
-
-  static final schema = ArgsSchema(
-    validator: SchemaShape(
-      {
-        'height': Schema.double.required(),
-        'width': Schema.double.required(),
-        'text': Schema.string.required(),
-      },
-    ),
-    decoder: fromMap,
-  );
 }
 
 Widget mixExampleBuilder(BuildContext context) {
@@ -106,14 +88,14 @@ Widget mixExampleBuilder(BuildContext context) {
   return Builder(
     builder: (context) {
       return Center(
-        child: Box(
-          style: Style(
-            _style(),
-            $box.height(options.height),
-            $box.width(options.width),
-          ).animate(),
-          child: StyledText(
-            options.text ?? 'Mix',
+        child: SizedBox(
+          height: options.height,
+          width: options.width,
+          child: Box(
+            style: _style.animate(),
+            child: StyledText(
+              options.text ?? 'Mix',
+            ),
           ),
         ),
       );

@@ -13,7 +13,6 @@ void main() async {
         debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
           styles: {
-            'rad': radStyle,
             'custom': customStyle,
             'cover': coverStyle,
             'announcement': announcementStyle,

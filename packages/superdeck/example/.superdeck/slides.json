@@ -1,37 +1,65 @@
 {
   "config": {
-    "transition": {
-      "type": "fade_in",
-      "duration": 0
-    }
+    "transition": { "type": "fade_in", "duration": 0 },
+    "type": "Config"
   },
   "slides": [
     {
-      "style": "quote",
+      "content": "{@content}\n## This is an example of a widget\n\n{@widget name: demo }",
+      "key": "vDGo8e8t",
+      "options": {},
+      "sections": [
+        { "options": {}, "type": "root" },
+        { "options": {}, "type": "root" }
+      ]
+    },
+    {
+      "content": "![Mermaid Diagram](.superdeck/generated/mermaid_spzwggdT.png)\n\n{@content}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n\n<!-- Notes go here -->",
+      "key": "xUhI9Z6w",
+      "options": {},
+      "sections": [
+        { "options": {}, "type": "root" },
+        { "options": {}, "type": "root" }
+      ]
+    },
+    {
       "content": "{@content flex: 2}\n> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo \n\n{@content }",
-      "key": "twbS3z13"
+      "key": "dk6NgW8O",
+      "options": { "style": "quote" },
+      "sections": [
+        { "options": {}, "type": "root" },
+        { "options": {}, "type": "root" }
+      ]
     },
     {
-      "style": "show_sections",
-      "content": "{@header}\n{@image src: https://picsum.photos/900/700?waves | flex: 2 | align: bottom_left | fit: cover}\n\n{@body}\n\n  \n\n\n\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n{@content}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
-      "key": "i0RprPGe"
+      "content": "{@header}\n{@image src: https://picsum.photos/1200/1200?waves | align: bottom_left | fit: cover}\n\n{@body flex: 2}\n{@content flex: 2}\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n\n{@content}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
+      "key": "MGrRVh3m",
+      "options": { "style": "show_sections" },
+      "sections": [
+        { "options": {}, "type": "header" },
+        { "options": { "flex": 2 }, "type": "body" }
+      ]
     },
     {
-      "style": "show_sections",
       "content": "{@header}\n{@content align: bottom_right}\n\n## First\n\n{@content}  \n\n\n## Header\n\n{@body flex: 2}\n\n### Left Section\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n\n{@content}\n\n#### Section Options\n\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
-      "key": "buKIeKag"
+      "key": "3thjboPz",
+      "options": { "style": "show_sections" },
+      "sections": [
+        { "options": {}, "type": "header" },
+        { "options": { "flex": 2 }, "type": "body" }
+      ]
     }
   ],
   "assets": [
     {
-      "path": ".superdeck/generated/thumbnail_twbS3z13.png",
-      "width": 512,
-      "height": 288
+      "path": ".superdeck/generated/mermaid_spzwggdT.png",
+      "width": 313,
+      "height": 449
     },
     {
-      "path": ".superdeck/generated/thumbnail_buKIeKag.png",
-      "width": 512,
-      "height": 288
+      "path": ".superdeck/generated/mermaid_BTVEzSEg.png",
+      "width": 650,
+      "height": 171
     }
   ]
 }

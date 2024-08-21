@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/options_model.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 class TransitionWidget extends StatelessWidget {
   final TransitionOptions? transition;

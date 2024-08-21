@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../helpers/constants.dart';

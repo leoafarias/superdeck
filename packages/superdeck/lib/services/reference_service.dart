@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../helpers/constants.dart';
 import '../helpers/watcher.dart';
-import '../models/reference_model.dart';
 
 final _assetDir = Directory(p.join('.superdeck'));
 final _slideRef = File(p.join(_assetDir.path, 'slides.json'));

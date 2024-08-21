@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
-import '../models/asset_model.dart';
-import '../models/slide_model.dart';
 import '../services/reference_service.dart';
 
 final $superdeck = SuperDeckController.instance;
@@ -18,7 +17,7 @@ class SuperDeckController extends ChangeNotifier {
     if (instance._initialized) return;
     instance._initialized = true;
     await instance._loadData();
-    ReferenceService.instance.listen(instance._loadData);
+    ReferenceService.instance.listen(instance.refresh);
   }
 
   bool _loading = false;
@@ -36,7 +35,7 @@ class SuperDeckController extends ChangeNotifier {
   bool get isRefreshing => _isRefreshing;
 
   Future<void> _loadData() async {
-    _loading = true;
+    _loading = _isRefreshing ? false : true;
     _error = null;
     _completed = false;
     notifyListeners();

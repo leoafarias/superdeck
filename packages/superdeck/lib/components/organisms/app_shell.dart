@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';

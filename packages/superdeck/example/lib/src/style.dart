@@ -21,59 +21,6 @@ final _contentContainer = _util.contentContainer;
 final _textStyle = _util.textStyle;
 final _innerContainer = _util.innerContainer;
 
-Style get radStyle {
-  return Style(
-    _h1.textStyle.as(GoogleFonts.poppins()),
-    _h1.textStyle.fontSize(140),
-    _code.decoration.border.all(
-      color: Colors.white,
-      width: 1,
-    ),
-    _code.decoration.color.black(),
-    _code.padding.all(40),
-    _outerContainer.margin.all(60),
-    _innerContainer.borderRadius(25),
-    _innerContainer.shadow(
-      blurRadius: 0,
-      spreadRadius: 10,
-      color: Colors.red.withOpacity(1),
-    ),
-    _innerContainer.gradient.radial(
-      stops: [0.0, 1.0],
-      radius: 0.7,
-      colors: [Colors.purple, Colors.deepPurple],
-    ),
-    $on.focus(
-      _innerContainer.color.yellow(),
-    ),
-    $on.hover.event((e) {
-      if (e == null) return const Style.empty();
-      final position = e.position;
-      final dx = position.x * 10;
-      final dy = position.y * 10;
-
-      return Style(
-        _innerContainer.transform(_transformMatrix(position)),
-        _innerContainer.shadow.offset(dx, dy),
-        _innerContainer.gradient.radial(
-          center: position,
-        ),
-      );
-    }),
-    ($on.press | $on.longPress)(
-      _innerContainer.shadow(
-        blurRadius: 5,
-        spreadRadius: 1,
-        offset: Offset.zero,
-        color: Colors.purpleAccent,
-      ),
-      _innerContainer.border.all(color: Colors.white, width: 1),
-      _innerContainer.gradient.radial
-          .colors([Colors.purpleAccent, Colors.purpleAccent]),
-    ),
-  );
-}
-
 Style get customStyle {
   return Style(
     _textStyle.as(GoogleFonts.poppins()),
@@ -170,14 +117,6 @@ Style get showSectionsStyle {
       color: Colors.blue,
       width: 2,
     ),
+    _innerContainer.borderRadius(10),
   );
-}
-
-Matrix4 _transformMatrix(Alignment alignment) {
-  final double rotateX = alignment.y * 0.2;
-  final double rotateY = -alignment.x * 0.2;
-  return Matrix4.identity()
-    ..rotateX(rotateX)
-    ..rotateY(rotateY)
-    ..translate(0.0, 0.0, 100.0);
 }

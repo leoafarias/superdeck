@@ -1,13 +1,113 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:path/path.dart' as p;
+import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/slides_pipeline.dart';
 
+// ---
+// title: Hello Title
+// config:
+//   theme: base
+//   themeVariables:
+//     primaryColor: "#00ff00"
+// ---
+
+Future<String> _generateMermaidGraph(
+  Browser browser,
+  String graphDefinition,
+) async {
+  print('Generating mermaid graph...');
+  final page = await browser.newPage();
+
+  await page.setContent('''
+    <html>
+      <body>
+        <pre class="mermaid">
+          $graphDefinition
+        </pre>
+        <script type="module">
+          import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+          });
+          mermaid.run({
+            querySelector: 'pre.mermaid',
+          });
+        </script>
+      </body>
+    </html>
+  ''');
+
+  await page.waitForSelector('pre.mermaid > svg');
+  final element = await page.$('pre.mermaid > svg');
+  final svgContent = await element.evaluate('el => el.outerHTML');
+
+  await page.close();
+  return svgContent;
+}
+
+Future<String> _convertToRoughDraft(Browser browser, String svgContent) async {
+  print('Converting to rough draft...');
+  final page = await browser.newPage();
+
+  await page.setContent('''
+    <html>
+      <body>
+        <div class="svg-container">$svgContent</div>
+        <div class="sketch-container"></div>
+        <script src="https://unpkg.com/svg2roughjs/dist/svg2roughjs.umd.min.js"></script>
+        <script>
+          const svgElement = document.querySelector('.svg-container > svg');
+          const svgConverter = new svg2roughjs.Svg2Roughjs('.sketch-container');
+          svgConverter.svg = svgElement;
+          svgConverter.sketch();
+        </script>
+      </body>
+    </html>
+  ''');
+
+  await page.waitForSelector('.sketch-container > svg');
+  final element = await page.$('.sketch-container > svg');
+
+  final output = await element.evaluate('el => el.outerHTML');
+
+  await page.close();
+
+  return output;
+}
+
+Future<List<int>> _convertSvgToImage(Browser browser, String svgContent) async {
+  final page = await browser.newPage();
+
+  await page.setContent('''
+    <html>
+      <body>
+        <div class="svg-container">$svgContent</div>
+      </body>
+    </html>
+  ''');
+
+  final element = await page.$('.svg-container > svg');
+
+  final screenshot = await element.screenshot(
+    format: ScreenshotFormat.png,
+    omitBackground: true,
+  );
+
+  await page.close();
+
+  return screenshot;
+}
+
+Future<List<int>> generateRoughMermaidGraph(
+    Browser browser, String graphDefinition) async {
+  final svgContent = await _generateMermaidGraph(browser, graphDefinition);
+  // final roughDraft = await _convertToRoughDraft(browser, svgContent);
+
+  return _convertSvgToImage(browser, svgContent);
+}
+
 class MermaidConverterTask extends Task {
-  final _mermaidService = const MermaidService();
   const MermaidConverterTask() : super('mermaid');
 
   @override
@@ -25,15 +125,18 @@ class MermaidConverterTask extends Task {
 
       if (mermaidSyntax == null) continue;
 
-      final mermaidFile = buildAssetFile(buildReferenceName(mermaidSyntax));
+      final mermaidFile = buildAssetFile(
+        buildReferenceName(mermaidSyntax),
+        'png',
+      );
 
-      if (!await mermaidFile.exists()) {
-        // Process the mermaid syntax to generate an image file
-        final imageData = await _mermaidService.generateImage(mermaidSyntax);
+      if (true) {
+        final browser = await controller.pipeline.getBrowser();
 
-        if (imageData != null) {
-          await mermaidFile.writeAsBytes(imageData);
-        }
+        final imageData =
+            await generateRoughMermaidGraph(browser, mermaidSyntax);
+
+        await mermaidFile.writeAsBytes(imageData);
       }
 
       // If file existeed or was create it then replace it
@@ -64,67 +167,5 @@ class MermaidConverterTask extends Task {
     return controller.copyWith(
       slide: slide.copyWith(content: replacedData),
     );
-  }
-}
-
-class MermaidService {
-  const MermaidService();
-
-  Future<Uint8List?> generateImage(String mermaidSyntax) async {
-    final fileName = mermaidSyntax.hashCode;
-
-    final tempDir = Directory('.tmp_superdeck');
-
-    final tempFile = File(p.join(tempDir.path, '$fileName.mmd'));
-    final outputFile = File(p.join(tempDir.path, '$fileName.png'));
-
-    if (!await tempDir.exists()) {
-      await tempDir.create(recursive: true);
-    }
-
-    try {
-      mermaidSyntax = mermaidSyntax.trim().replaceAll(r'\n', '\n');
-
-      await tempFile.writeAsString(mermaidSyntax);
-
-      // Check if can execute mmdc before executing command
-      final mmdcResult = await Process.run('mmdc', ['--version']);
-
-      if (mmdcResult.exitCode != 0) {
-        log(
-          '"mmdc" not found. You need mermaid cli installed to process mermaid syntax',
-        );
-
-        return null;
-      }
-
-      final params = [
-        '-t dark',
-        '-b transparent',
-        '-i ${tempFile.path}',
-        '-o ${outputFile.path}',
-        '--scale 2'
-      ];
-
-      final result = await Process.run(
-        'mmdc',
-        params.expand((e) => e.split(' ')).toList(),
-      );
-
-      if (result.exitCode != 0) {
-        log('Error while processing mermaid syntax');
-        log(result.stderr);
-        return null;
-      }
-
-      return outputFile.readAsBytes();
-    } catch (e) {
-      log('Error while processing mermaid syntax: $e');
-      return null;
-    } finally {
-      if (await tempDir.exists()) {
-        await tempDir.delete(recursive: true);
-      }
-    }
   }
 }

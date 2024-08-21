@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../superdeck.dart';
+typedef ExampleBuilder = Widget Function(BuildContext context);
 
 class ExamplesProvider extends InheritedWidget {
   const ExamplesProvider({

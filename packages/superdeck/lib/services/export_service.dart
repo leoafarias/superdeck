@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../components/molecules/slide_preview.dart';
 import '../helpers/constants.dart';
-import '../superdeck.dart';
 import 'snapshot_service.dart';
 
 enum PdfExportStatus {

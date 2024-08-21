@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../models/slide_model.dart';
 import '../../providers/slide_provider.dart';
 import '../../providers/snapshot_provider.dart';
 import '../../providers/style_provider.dart';
@@ -9,35 +9,37 @@ import '../../styles/style_spec.dart';
 import 'cache_image_widget.dart';
 import 'transition_widget.dart';
 
-class SlideView<T extends Slide> extends StatelessWidget {
+class SlideView extends StatelessWidget {
   const SlideView(
     this.slide, {
     super.key,
   });
 
-  final T slide;
+  final Slide slide;
 
   @override
   Widget build(BuildContext context) {
     final slide = this.slide;
+    final background = slide.options?.background;
+    final transition = slide.options?.transition;
 
-    final variantStyle = StyleProvider.of(context, slide.style);
+    final variantStyle = StyleProvider.of(context, slide.options?.style);
 
     final isCapturing = SnapshotProvider.isCapturingOf(context);
     final duration =
         isCapturing ? Duration.zero : const Duration(milliseconds: 300);
 
-    final backgroundWidget = slide.background != null
+    final backgroundWidget = background != null
         ? CacheImage(
-            url: slide.background!,
+            url: background,
             fit: BoxFit.cover,
             alignment: Alignment.center,
           )
         : const SizedBox();
 
     return TransitionWidget(
-      key: ValueKey(slide.transition),
-      transition: slide.transition,
+      key: ValueKey(transition),
+      transition: transition,
       child: SpecBuilder(
         style: variantStyle,
         builder: (context) {

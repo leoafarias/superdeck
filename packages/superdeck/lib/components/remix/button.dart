@@ -17,7 +17,7 @@ class SDButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RxButton(
+    return XButton(
       onPressed: onPressed,
       iconLeft: icon,
       label: label,
@@ -40,7 +40,7 @@ class SDButtonSolid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RxButton(
+    return XButton(
       onPressed: onPressed,
       iconLeft: icon,
       label: label,
@@ -63,7 +63,7 @@ class SDOutlinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RxButton(
+    return XButton(
       onPressed: onPressed,
       iconLeft: icon,
       label: label,
@@ -86,7 +86,7 @@ class SDIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RxButton(
+    return XButton(
       onPressed: onPressed,
       iconLeft: icon,
       label: '',

@@ -1,15 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
+import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
-import 'package:superdeck_cli/src/helpers/pretty_json.dart';
-import 'package:superdeck_cli/src/helpers/raw_models.dart';
+import 'package:superdeck_cli/src/helpers/section_parsing.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
 import 'package:superdeck_cli/src/helpers/slide_parser.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 typedef MarkdownReplacement = ({
   Pattern pattern,
@@ -17,42 +19,61 @@ typedef MarkdownReplacement = ({
 });
 
 typedef PipelineResult = ({
-  List<RawSlide> slides,
-  List<RawAsset> neededAssets,
+  List<Slide> slides,
+  List<SlideAsset> neededAssets,
   List<MarkdownReplacement> markdownReplacements,
 });
 
 class TaskController {
-  final RawSlide slide;
-  final List<RawAsset> _assets;
+  final Slide slide;
+  final List<SlideAsset> _assets;
+  final TaskPipeline pipeline;
   final List<MarkdownReplacement> markdownReplacements;
+
+  Slide extractSlide() {
+    final sections = parseSections(slide.content);
+    File('testest.json')
+        .writeAsStringSync(jsonEncode(sections.map((e) => e.toMap()).toList()));
+
+    final newSlide = Slide(
+      content: slide.content,
+      key: slide.key,
+      options: slide.options,
+      sections: sections,
+    );
+
+    return newSlide;
+  }
 
   TaskController._({
     required this.slide,
-    required List<RawAsset> assets,
+    required List<SlideAsset> assets,
+    required this.pipeline,
     required this.markdownReplacements,
   }) : _assets = assets;
 
   TaskController({
     required this.slide,
-    required List<RawAsset> assets,
+    required this.pipeline,
+    required List<SlideAsset> assets,
   })  : _assets = assets,
         markdownReplacements = [];
 
-  List<RawAsset> neededAssets = [];
+  List<SlideAsset> neededAssets = [];
 
-  RawAsset? checkAssetExists(String assetName) {
+  SlideAsset? checkAssetExists(String assetName) {
     return _assets
         .firstWhereOrNull((element) => element.path.contains(assetName));
   }
 
   TaskController copyWith({
-    RawSlide? slide,
-    List<RawAsset>? assets,
+    Slide? slide,
+    List<SlideAsset>? assets,
     List<MarkdownReplacement>? markdownReplacements,
   }) {
     return TaskController._(
       slide: slide ?? this.slide,
+      pipeline: pipeline,
       markdownReplacements: markdownReplacements ?? this.markdownReplacements,
       assets: assets ?? _assets,
     )..neededAssets = neededAssets;
@@ -64,11 +85,12 @@ class TaskController {
     if (asset == null) {
       print(file.path);
       final image = await img.decodeImageFile(file.path);
+
       if (image == null) {
-        throw Exception('Could not decode image');
+        throw Exception('Image could not be decoded');
       }
 
-      asset = RawAsset(
+      asset = SlideAsset(
         path: file.path,
         width: image.width,
         height: image.height,
@@ -82,7 +104,7 @@ class TaskController {
     markNeeded(asset);
   }
 
-  void markNeeded(RawAsset asset) {
+  void markNeeded(SlideAsset asset) {
     neededAssets.add(asset);
   }
 }
@@ -90,29 +112,41 @@ class TaskController {
 class TaskPipeline {
   final List<Task> builders;
 
+  Browser? _browser;
+
   TaskPipeline(
     this.builders,
   );
 
+  Future<Browser> getBrowser() async {
+    if (_browser == null) {
+      _browser = await puppeteer.launch();
+    }
+    return _browser!;
+  }
+
   Future<TaskController> _runEachSlide(
-    RawSlide slide,
-    List<RawAsset> assets,
+    Slide slide,
+    List<SlideAsset> assets,
   ) async {
-    var controller = TaskController(slide: slide, assets: assets);
+    var controller = TaskController(
+      slide: slide,
+      assets: assets,
+      pipeline: this,
+    );
     for (var task in builders) {
       controller = await task.run(controller);
     }
     return controller;
   }
 
-  Future<PipelineResult> run() async {
+  Future<SuperDeckReference> run() async {
     await kMarkdownFile.ensureExists();
     await kGeneratedAssetsDir.ensureExists();
     await kReferenceFile.ensureExists();
     final markdownRaw = kMarkdownFile.readAsStringSync();
 
-    final reference = RawReference.loadFile(kReferenceFile);
-    final rawAssets = reference.assets;
+    final loadedReference = SuperDeckReference.loadFile(kReferenceFile);
 
     final parser = SlideParser(markdownRaw);
     final slides = parser.run();
@@ -120,40 +154,38 @@ class TaskPipeline {
     final futures = <Future<TaskController>>[];
 
     for (var slide in slides) {
-      futures.add(_runEachSlide(slide, rawAssets));
+      futures.add(_runEachSlide(slide, loadedReference.assets));
     }
 
     final controllers = await Future.wait(futures);
 
     final result = (
-      slides: controllers.map((e) => e.slide).toList(),
+      slides: controllers.map((e) => e.extractSlide()).toList(),
       neededAssets: controllers.expand((e) => e.neededAssets).toList(),
       markdownReplacements:
           controllers.expand((e) => e.markdownReplacements).toList(),
     );
+    await _applyMarkdownReplacements(result.markdownReplacements);
 
-    await _applyResults(result);
+    await _cleanupGeneratedFiles(result.neededAssets);
 
-    return result;
+    builders.forEach((builder) async => await builder.dispose());
+
+    _browser?.close();
+
+    final reference = SuperDeckReference(
+      config: Config.loadFile(kProjectConfigFile),
+      slides: result.slides,
+      assets: result.neededAssets,
+    );
+
+    await kReferenceFile.writeAsString(reference.toJson());
+
+    return reference;
   }
 }
 
-Future<void> _applyResults(PipelineResult result) async {
-  final config = RawConfig.loadFile(kProjectConfigFile);
-  await _applyMarkdownReplacements(result.markdownReplacements);
-  await _cleanupGeneratedFiles(result.neededAssets);
-  await kReferenceFile.writeAsString(
-    prettyJson(
-      {
-        'config': config.toMap(),
-        'slides': result.slides.map((e) => e.toMap()).toList(),
-        'assets': result.neededAssets.map((e) => e.toMap()).toList(),
-      },
-    ),
-  );
-}
-
-Future<void> _cleanupGeneratedFiles(List<RawAsset> assets) async {
+Future<void> _cleanupGeneratedFiles(List<SlideAsset> assets) async {
   final files = await _loadGeneratedFiles();
 
   for (var file in files) {
@@ -177,6 +209,12 @@ Future<void> _applyMarkdownReplacements(
   await kMarkdownFile.writeAsString(markdownRaw);
 }
 
+enum AssetExtension {
+  png,
+
+  svg,
+}
+
 abstract class Task {
   final String taskName;
   const Task(this.taskName);
@@ -189,11 +227,15 @@ abstract class Task {
     return shortHashId(content);
   }
 
-  File buildAssetFile(String assetName) {
-    if (p.extension(assetName).isEmpty) {
-      assetName = '$assetName.png';
+  File buildAssetFile(String assetName, String extension) {
+    if (p.extension(assetName).isNotEmpty) {
+      throw Exception('Asset name should not have an extension');
     }
-    final updatedFileName = ('${taskName}_$assetName');
+
+    if (!extension.startsWith('.')) {
+      extension = '.$extension';
+    }
+    final updatedFileName = ('${taskName}_$assetName$extension');
     return File(p.join(kGeneratedAssetsDir.path, updatedFileName));
   }
 
@@ -201,6 +243,9 @@ abstract class Task {
     // check if file name starts with sd_
     return file.path.contains(kGeneratedAssetsDir.path);
   }
+
+  // Dispose or anything here
+  FutureOr<void> dispose() {}
 }
 
 Future<List<File>> _loadGeneratedFiles() async {

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mix/mix.dart';
 import 'package:remix/remix.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/constants.dart';
 import '../../helpers/extensions.dart';
 import '../../services/reference_service.dart';
 import '../../services/snapshot_service.dart';
-import '../../superdeck.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
 

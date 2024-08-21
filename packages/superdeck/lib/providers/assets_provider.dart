@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-
-import '../superdeck.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 class AssetsProvider extends InheritedWidget {
   const AssetsProvider({

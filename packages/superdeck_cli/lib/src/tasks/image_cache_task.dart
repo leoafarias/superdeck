@@ -70,7 +70,10 @@ class ImageCachingTask extends Task {
           final extension = contentType?.split('/').last;
 
           // Create a file with the appropriate extension
-          final file = buildAssetFile(buildReferenceName(url) + '.$extension');
+          final file = buildAssetFile(
+            buildReferenceName(url),
+            extension ?? 'jpg',
+          );
 
           // Write the image data to the file
           await file.writeAsBytes(response.bodyBytes);

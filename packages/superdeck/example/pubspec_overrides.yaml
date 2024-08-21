@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: superdeck,superdeck_cli
+# melos_managed_dependency_overrides: superdeck,superdeck_cli,superdeck_core
 dependency_overrides:
   # mix_generator:
   #   path: ../../mix/packages/mix_generator
@@ -8,3 +8,5 @@ dependency_overrides:
     path: ..
   superdeck_cli:
     path: ../../superdeck_cli
+  superdeck_core:
+    path: ../../superdeck_core

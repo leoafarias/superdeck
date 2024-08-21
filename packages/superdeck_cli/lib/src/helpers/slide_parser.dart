@@ -1,6 +1,8 @@
 // lib/slide_parser.dart
 
-import 'package:superdeck_cli/src/helpers/raw_models.dart';
+import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
+import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 class SlideParser {
   final String contents;
@@ -41,9 +43,18 @@ class SlideParser {
     return slides;
   }
 
-  List<RawSlide> run() {
+  List<Slide> run() {
     final markdownContents = _splitSlides(contents.trim());
-    return markdownContents.map(RawSlide.fromYaml).toList();
+
+    final slideRaws = markdownContents.map(parseSlideMarkdown).toList();
+
+    return slideRaws.map((raw) {
+      return Slide(
+        content: raw.content,
+        key: shortHashId(raw.toString()),
+        options: SlideOptions.fromMap(raw.options),
+      );
+    }).toList();
   }
 }
 
