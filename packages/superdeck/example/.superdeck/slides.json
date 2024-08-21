@@ -8,51 +8,28 @@
   },
   "slides": [
     {
-      "content": "{@content}\n## This is an example of a widget\n\n{@widget name: demo | size: 2 | super_name: car }",
-      "key": "bviQ6Lzw",
+      "content": "{@body}\n{@content}\n## This is an example of a widgets\n\n{@widget name: demo }",
+      "key": "BEcskpQr",
       "options": {},
       "sections": [
         {
           "options": {},
           "content_sections": [
             {
-              "content": "\n## This is an example of a widget",
+              "content": "\n## This is an example of a widgets",
               "options": {},
               "type": "content"
             },
             {
               "options": {
                 "name": "demo",
-                "type": "WidgetOptions",
-                "size": 2,
-                "super_name": "car"
+                "type": "WidgetOptions"
               },
               "content": "",
               "type": "widget"
             }
           ],
-          "type": "root"
-        },
-        {
-          "options": {},
-          "content_sections": [
-            {
-              "content": "\n## This is an example of a widget",
-              "options": {},
-              "type": "content"
-            },
-            {
-              "options": {
-                "name": "demo",
-                "type": "WidgetOptions",
-                "size": 2,
-                "super_name": "car"
-              },
-              "content": "",
-              "type": "widget"
-            }
-          ],
-          "type": "root"
+          "type": "body"
         }
       ]
     },
@@ -61,22 +38,6 @@
       "key": "xUhI9Z6w",
       "options": {},
       "sections": [
-        {
-          "options": {},
-          "content_sections": [
-            {
-              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_spzwggdT.png)",
-              "options": {},
-              "type": "content"
-            },
-            {
-              "content": "\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n<!-- Notes go here -->",
-              "options": {},
-              "type": "content"
-            }
-          ],
-          "type": "root"
-        },
         {
           "options": {},
           "content_sections": [
@@ -102,24 +63,6 @@
         "style": "quote"
       },
       "sections": [
-        {
-          "options": {},
-          "content_sections": [
-            {
-              "content": "\n> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo ",
-              "options": {
-                "flex": 2
-              },
-              "type": "content"
-            },
-            {
-              "content": "",
-              "options": {},
-              "type": "content"
-            }
-          ],
-          "type": "root"
-        },
         {
           "options": {},
           "content_sections": [
@@ -241,6 +184,26 @@
       "path": ".superdeck/generated/mermaid_BTVEzSEg.png",
       "width": 650,
       "height": 171
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_xUhI9Z6w.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_dk6NgW8O.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_MGrRVh3m.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_3thjboPz.png",
+      "width": 512,
+      "height": 288
     }
   ]
 }

@@ -50,7 +50,7 @@ class ReferenceService {
     return File(p.join(_generatedDir.path, fileName));
   }
 
-  void listen(VoidCallback callback) {
+  void listen(FutureOr<void> Function() callback) {
     if (kCanRunProcess) {
       if (!_watcher.isWatching) {
         _watcher.start(callback);

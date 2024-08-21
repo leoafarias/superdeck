@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../helpers/hooks.dart';
-import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
 import '../atoms/sized_transition.dart';
 import '../organisms/chat_panel.dart';
@@ -43,13 +41,13 @@ class SplitView extends HookWidget {
       curve: Curves.ease,
     ));
 
-    usePostFrameEffect(() {
-      if (context.isDrawerOpen) {
-        animationController.forward();
-      } else {
-        animationController.reverse();
-      }
-    }, [context.isDrawerOpen]);
+    // usePostFrameEffect(() {
+    //   if (context.isDrawerOpen) {
+    //     animationController.forward();
+    //   } else {
+    //     animationController.reverse();
+    //   }
+    // }, [context.isDrawerOpen]);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -68,7 +66,7 @@ class SplitView extends HookWidget {
         return Row(
           children: [
             SizedTransition(
-              sizeFactor: animation,
+              sizeFactor: 1,
               child: Row(
                 children: [
                   CustomNavigationRail(

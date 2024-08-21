@@ -6,7 +6,7 @@ import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/routes.dart';
 import '../../helpers/utils.dart';
-import '../../superdeck.dart';
+import '../../providers/controller.dart';
 import '../molecules/split_view.dart';
 
 final kScaffoldKey = GlobalKey<ScaffoldState>();

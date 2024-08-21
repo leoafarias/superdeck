@@ -5,16 +5,23 @@ class FileWatcher {
   final File file;
   Timer? _timer;
   DateTime? _lastModified;
+  bool _isProcessing = false;
 
   FileWatcher(this.file);
 
   /// Starts watching the file for changes
-  void start(void Function() onFileChange) {
-    _timer = Timer.periodic(const Duration(seconds: 2), (_) async {
+  void start(FutureOr<void> Function() onFileChange) {
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+      if (_isProcessing) return;
       final hasChanged = await _checkFileChanges(file);
 
       if (hasChanged) {
-        onFileChange();
+        try {
+          _isProcessing = true;
+          await onFileChange();
+        } finally {
+          _isProcessing = false;
+        }
       }
     });
   }

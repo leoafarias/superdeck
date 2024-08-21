@@ -22,13 +22,13 @@ interface class SlidePart {
   const SlidePart();
 }
 
-@MappableClass(discriminatorKey: 'type')
-sealed class SectionPart extends SlidePart with SectionPartMappable {
+@MappableClass()
+abstract class SectionPart extends SlidePart with SectionPartMappable {
   final SectionPartType type;
 
   final ContentOptions options;
-  @MappableField(key: 'content_sections')
-  List<ContentSectionPart> contentSections;
+
+  final List<ContentSectionPart> contentSections;
 
   SectionPart({
     required this.type,
@@ -37,20 +37,21 @@ sealed class SectionPart extends SlidePart with SectionPartMappable {
   });
 
   factory SectionPart.build(
-    SectionPartType type,
-    ContentOptions options,
-  ) {
+    SectionPartType type, {
+    ContentOptions? options,
+  }) {
+    options ??= ContentOptions();
     return switch (type) {
-      SectionPartType.header => HeaderLayoutPart(options),
-      SectionPartType.body => BodyLayoutPart(options),
-      SectionPartType.footer => FooterLayoutPart(options),
-      SectionPartType.root => RootLayoutPart(options),
+      SectionPartType.header => HeaderLayoutPart(options: options),
+      SectionPartType.body => BodyLayoutPart(options: options),
+      SectionPartType.footer => FooterLayoutPart(options: options),
+      SectionPartType.root => RootLayoutPart(options: options),
     };
   }
 
   String get name => type.name;
 
-  void concatLine(String content) {
+  SectionPart addLine(String content) {
     final lastPart = contentSections.lastOrNull;
     final subSectionsCopy = [...contentSections];
 
@@ -65,18 +66,18 @@ sealed class SectionPart extends SlidePart with SectionPartMappable {
       ));
     }
 
-    contentSections = subSectionsCopy;
+    return copyWith(contentSections: subSectionsCopy);
   }
 
-  void addSubSection(ContentSectionPart part) {
-    contentSections = [...contentSections, part];
+  SectionPart addSubSection(ContentSectionPart part) {
+    return copyWith(contentSections: [...contentSections, part]);
   }
 }
 
 @MappableClass(discriminatorKey: 'type')
 sealed class ContentSectionPart<T extends ContentOptions> extends SlidePart
     with ContentSectionPartMappable {
-  @MappableField(hook: EmptyToNullHook())
+  @MappableField()
   final String content;
   final SubSectionPartType type;
 
@@ -101,37 +102,57 @@ class ContentPart extends ContentSectionPart<ContentOptions>
 @MappableClass(discriminatorValue: 'widget')
 class WidgetPart extends ContentSectionPart<WidgetOptions>
     with WidgetPartMappable {
-  WidgetPart({required super.options, required super.content})
-      : super(type: SubSectionPartType.widget);
+  WidgetPart({
+    required super.options,
+    required super.content,
+  }) : super(type: SubSectionPartType.widget);
 }
 
 @MappableClass(discriminatorValue: 'image')
 class ImagePart extends ContentSectionPart<ImageOptions>
     with ImagePartMappable {
-  ImagePart({required super.options, required super.content})
-      : super(type: SubSectionPartType.image);
+  ImagePart({
+    required super.options,
+    required super.content,
+  }) : super(type: SubSectionPartType.image);
 }
 
 @MappableClass(discriminatorValue: 'root')
 class RootLayoutPart extends SectionPart with RootLayoutPartMappable {
-  RootLayoutPart(ContentOptions options)
-      : super(type: SectionPartType.root, options: options);
+  RootLayoutPart({
+    required super.options,
+    super.contentSections = const [],
+  }) : super(
+          type: SectionPartType.root,
+        );
 }
 
 @MappableClass(discriminatorValue: 'header')
 class HeaderLayoutPart extends SectionPart with HeaderLayoutPartMappable {
-  HeaderLayoutPart(ContentOptions options)
-      : super(type: SectionPartType.header, options: options);
+  HeaderLayoutPart({
+    required super.options,
+    super.contentSections = const [],
+  }) : super(
+          type: SectionPartType.header,
+        );
 }
 
 @MappableClass(discriminatorValue: 'body')
 class BodyLayoutPart extends SectionPart with BodyLayoutPartMappable {
-  BodyLayoutPart(ContentOptions options)
-      : super(type: SectionPartType.body, options: options);
+  BodyLayoutPart({
+    required super.options,
+    super.contentSections = const [],
+  }) : super(
+          type: SectionPartType.body,
+        );
 }
 
 @MappableClass(discriminatorValue: 'footer')
 class FooterLayoutPart extends SectionPart with FooterLayoutPartMappable {
-  FooterLayoutPart(ContentOptions options)
-      : super(type: SectionPartType.footer, options: options);
+  FooterLayoutPart({
+    required super.options,
+    super.contentSections = const [],
+  }) : super(
+          type: SectionPartType.footer,
+        );
 }

@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/constants.dart';
 import '../../superdeck.dart';
@@ -66,7 +65,7 @@ class CacheImage extends StatelessWidget {
 ImageProvider getImageProvider(String url, {Size? targetSize}) {
   ImageProvider provider;
 
-  final assets = $superdeck.assets;
+  final assets = superDeckController.assets.value;
 
   final assetUrl = assets.firstWhereOrNull((e) {
     if (e.path == url) {

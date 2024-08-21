@@ -1,9 +1,10 @@
 ---
 ---
+{@body}
 {@content}
-## This is an example of a widget
+## This is an example of a widgets
 
-{@widget name: demo | size: 2 | super_name: car }
+{@widget name: demo }
 
 ---
 ---

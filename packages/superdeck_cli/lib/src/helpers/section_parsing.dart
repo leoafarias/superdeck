@@ -31,9 +31,7 @@ SlidePart? parseBlock(String line) {
   if (sectionName != null) {
     return SectionPart.build(
       sectionName,
-      ContentOptionsMapper.fromMap(
-        options,
-      ),
+      options: ContentOptionsMapper.fromMap(options),
     );
   }
 
@@ -67,7 +65,7 @@ SlidePart? parseBlock(String line) {
 List<SectionPart> parseSections(String slideMarkdown) {
   final lines = slideMarkdown.split('\n');
 
-  final rootSection = RootLayoutPart(ContentOptions());
+  final rootSection = SectionPart.build(SectionPartType.root);
 
   final layoutParts = <SectionPart>{rootSection};
 
@@ -92,7 +90,7 @@ List<SectionPart> parseSections(String slideMarkdown) {
     }
 
     if (!_isSyntax(trimmedLine)) {
-      currentSection.concatLine(line);
+      currentSection = currentSection.addLine(line);
       continue;
     }
 
@@ -121,7 +119,7 @@ List<SectionPart> parseSections(String slideMarkdown) {
       layoutParts.add(currentSection);
       currentSection = part;
     } else if (part is ContentSectionPart) {
-      currentSection.addSubSection(part);
+      currentSection = currentSection.addSubSection(part);
     }
   }
 

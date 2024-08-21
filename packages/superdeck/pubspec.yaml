@@ -41,6 +41,7 @@ dependencies:
   google_generative_ai: ^0.4.4
   meta: ^1.15.0
   auto_size_text: ^3.0.0
+  signals: ^5.4.0
   
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,7 @@ dev_dependencies:
   mix_generator: ^0.2.2
   custom_lint: ^0.6.4
   mix_lint: ^0.1.1
+  
   
   
 flutter:
