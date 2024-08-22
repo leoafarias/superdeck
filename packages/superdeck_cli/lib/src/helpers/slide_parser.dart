@@ -1,15 +1,12 @@
 // lib/slide_parser.dart
 
 import 'package:collection/collection.dart';
-import 'package:superdeck_cli/src/helpers/logger.dart';
+import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/yaml_to_map.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 class SlideParser {
-  final String contents;
-  SlideParser(this.contents);
-
-  List<String> _splitSlides(String content) {
+  static List<String> _splitSlides(String content) {
     final lines = content.split('\n');
     final slides = <String>[];
     final buffer = StringBuffer();
@@ -44,39 +41,30 @@ class SlideParser {
     return slides;
   }
 
-  List<Slide> run() {
-    final markdownContents = _splitSlides(contents.trim());
+  static List<Slide> run(String contents) {
+    try {
+      final markdownContents = _splitSlides(contents.trim());
 
-    final slideRaws = markdownContents.map(parseSlideMarkdown).map((e) {
-      return {
-        'content': e.content,
-        'options': e.options,
-        'key': e.key,
-      };
-    });
+      final slideRaws = markdownContents.map(parseSlideMarkdown).map((e) {
+        return {
+          'content': e.content,
+          'options': e.options,
+          'key': e.key,
+        };
+      });
 
-    slideRaws.forEachIndexed((index, raw) {
-      try {
-        Slide.schema.validateOrThrow(raw);
-      } on SchemaValidationException catch (e) {
-        final keyPath = e.result.key.join(' | ');
-        final errorMessages = e.result.errors.map((e) => e.message).join(', ');
-        logger
-          ..newLine()
-          ..alert(
-            'Slide schema validation failed',
-          )
-          ..newLine()
-          ..info(
-            'slide ${index + 1}: > $keyPath > $errorMessages',
-          )
-          ..newLine();
+      slideRaws.forEachIndexed((index, raw) {
+        try {
+          Slide.schema.validateOrThrow(raw);
+        } on SchemaValidationException catch (e) {
+          throw SDMarkdownParsingException(e, index + 1);
+        }
+      });
 
-        throw Exception('Slide schema validation failed');
-      }
-    });
-
-    return slideRaws.map(Slide.fromMap).toList();
+      return slideRaws.map(Slide.fromMap).toList();
+    } on FormatException catch (e) {
+      throw SDFormatException(e.message, contents, e.offset);
+    }
   }
 }
 

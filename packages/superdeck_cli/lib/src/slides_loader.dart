@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:superdeck_cli/src/constants.dart';
+import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/tasks/dart_formatter_task.dart';
 import 'package:superdeck_cli/src/tasks/image_cache_task.dart';
@@ -16,21 +17,30 @@ class SlidesLoader {
   SlidesLoader();
 
   Future<void> watch() async {
-    print('Watching for changes...');
+    final watchingLabel = 'Watching for changes...';
+    logger
+      ..newLine()
+      ..info(watchingLabel);
     final watcher = FileWatcher(kMarkdownFile.path);
     await for (final event in watcher.events) {
       if (event.type == ChangeType.MODIFY) {
         final newContents = await kMarkdownFile.readAsString();
         if (newContents != _markdownContents) {
           _markdownContents = newContents;
-          await generate();
+          try {
+            await generate();
+          } finally {
+            logger
+              ..newLine()
+              ..info(watchingLabel);
+          }
         }
       }
     }
   }
 
   Future<void> generate() async {
-    print('Generating slides...');
+    final progress = logger.progress('Generating slides...');
 
     final pipeline = TaskPipeline([
       const MermaidConverterTask(),
@@ -39,10 +49,39 @@ class SlidesLoader {
       const ImageCachingTask(),
     ]);
     try {
-      await pipeline.run();
-    } catch (e, stackTrace) {
-      logger.detail('Exception: $e');
+      final references = await pipeline.run();
+      progress.complete('Generated ${references.slides.length} slides.');
+    } on Exception catch (e, stackTrace) {
+      progress.fail();
+      _handleException(e);
+
       logger.detail(stackTrace.toString());
     }
+  }
+}
+
+void _handleException(Exception e) {
+  if (e is SDTaskException) {
+    logger
+      ..err('slide: ${e.controller.position}')
+      ..err('Task error: ${e.taskName}');
+
+    _handleException(e.exception);
+  } else if (e is SDFormatException) {
+    logger.formatError(e);
+  } else if (e is SDMarkdownParsingException) {
+    final errorMessages = e.messages.join('\n');
+    logger
+      ..newLine()
+      ..warn(
+        'Slide schema validation failed',
+      )
+      ..newLine()
+      ..info(
+        'slide ${e.slideLocation}: > ${e.location} > $errorMessages',
+      )
+      ..newLine();
+  } else {
+    logger.err(e.toString());
   }
 }

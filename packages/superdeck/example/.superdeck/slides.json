@@ -8,8 +8,8 @@
   },
   "slides": [
     {
-      "content": "{@content}\n## This is an example of a widgets\n\n{@widget name: demo }\n\n{@content}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
-      "key": "hzjE0REi",
+      "content": "{@content}\n## This is an example of a widgets\n\n{@widget name: demo  }\n\n{@content}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
+      "key": "jyRrvnQW",
       "options": {
         "style": "custom"
       },

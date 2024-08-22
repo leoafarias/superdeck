@@ -1,3 +1,38 @@
+import 'package:superdeck_cli/src/slides_pipeline.dart';
+import 'package:superdeck_core/superdeck_core.dart';
+
+class SDMarkdownParsingException implements Exception {
+  final SchemaValidationException exception;
+  final int slideLocation;
+
+  SDMarkdownParsingException(this.exception, this.slideLocation);
+
+  String get location => exception.result.key.join(' | ');
+
+  List<String> get messages {
+    return exception.result.errors.map((e) => e.message).toList();
+  }
+}
+
+class SDTaskException implements Exception {
+  final String taskName;
+  final TaskController controller;
+  final Exception exception;
+
+  SDTaskException(
+    this.taskName,
+    this.controller,
+    this.exception,
+  );
+
+  String get message {
+    return 'Error running task on slide ${controller.position}';
+  }
+
+  @override
+  String toString() => message;
+}
+
 class SDFormatException implements Exception {
   final String message;
   final int? offset;

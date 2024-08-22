@@ -9,10 +9,6 @@ final logger = Logger(
 );
 
 extension LoggerX on Logger {
-  // void formatError(String message) {
-  //   info(message, style: _formatErrorStyle);
-  // }
-
   void formatError(SDFormatException exception) {
     final message = exception.message;
     final source = exception.source;
@@ -31,15 +27,27 @@ extension LoggerX on Logger {
     }
 
     // Print the error message with the source code
-
-    warn('Formatting Error: $message');
+    newLine();
+    alert('Formatting Error:');
+    newLine();
+    err('$message on line ${exception.lineNumber}, column ${exception.columnNumber}');
     newLine();
     _formatCodeBlock(padline(''));
+
+    final exceptionLineNumber = exception.lineNumber ?? 0;
+
+    // Calculate only 4 lines before and after the error line
+    final start = (exceptionLineNumber - 5).clamp(0, splitLines.length);
+    final end = (exceptionLineNumber + 5).clamp(0, splitLines.length);
 
     for (int i = 0; i < splitLines.length; i++) {
       final lineNumber = i + 1;
       final currentLineContent = splitLines[i];
       final isErrorLine = lineNumber == exception.lineNumber;
+
+      if (lineNumber < start || lineNumber > end) {
+        continue;
+      }
 
       if (isErrorLine) {
         info(padline(currentLineContent), style: _highlightLine);

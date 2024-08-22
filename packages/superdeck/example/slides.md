@@ -1,11 +1,12 @@
 ---
 style: custom
+sdf
 ---
 
 {@content}
 ## This is an example of a widgets
 
-{@widget name: demo }
+{@widget name: demo  }
 
 {@content}
 

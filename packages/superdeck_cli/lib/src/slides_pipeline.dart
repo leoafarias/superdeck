@@ -7,6 +7,7 @@ import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
 import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/constants.dart';
+import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
 import 'package:superdeck_cli/src/helpers/section_parsing.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
@@ -127,18 +128,10 @@ class TaskPipeline {
   }
 
   Future<TaskController> _runEachSlide(
-    int position,
-    Slide slide,
-    List<SlideAsset> assets,
+    TaskController controller,
   ) async {
-    var controller = TaskController(
-      position: position,
-      slide: slide,
-      assets: assets,
-      pipeline: this,
-    );
     for (var task in builders) {
-      controller = await task.run(controller);
+      controller = await task.build(controller);
     }
     return controller;
   }
@@ -151,14 +144,18 @@ class TaskPipeline {
 
     final loadedReference = SuperDeckReference.loadFile(kReferenceFile);
 
-    final parser = SlideParser(markdownRaw);
-    final slides = parser.run();
+    final slides = SlideParser.run(markdownRaw);
 
     final futures = <Future<TaskController>>[];
-    int position = 0;
-    for (var slide in slides) {
-      position++;
-      futures.add(_runEachSlide(position, slide, loadedReference.assets));
+
+    for (var i = 0; i < slides.length; i++) {
+      final controller = TaskController(
+        position: i,
+        slide: slides[i],
+        assets: loadedReference.assets,
+        pipeline: this,
+      );
+      futures.add(_runEachSlide(controller));
     }
 
     final controllers = await Future.wait(futures);
@@ -226,6 +223,14 @@ abstract class Task {
   FutureOr<TaskController> run(
     TaskController controller,
   );
+
+  FutureOr<TaskController> build(TaskController controller) {
+    try {
+      return run(controller);
+    } on Exception catch (e) {
+      throw SDTaskException(taskName, controller, e);
+    }
+  }
 
   String buildReferenceName(String content) {
     return shortHashId(content);
