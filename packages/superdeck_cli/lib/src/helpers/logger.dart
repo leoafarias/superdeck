@@ -22,17 +22,18 @@ extension LoggerX on Logger {
       return element.length > prev ? element.length : prev;
     });
 
-    String padline(String line) {
-      return '  ' + line.padRight(longestLine + 2);
+    String padline(String line, [int? index]) {
+      final pageNumber = index != null ? '${index + 1}' : ' ';
+      return ' $pageNumber | ' + line.padRight(longestLine + 2);
     }
 
     // Print the error message with the source code
     newLine();
-    alert('Formatting Error:');
+    err('Formatting Error:');
     newLine();
-    err('$message on line ${exception.lineNumber}, column ${exception.columnNumber}');
+    info(
+        '$message on line ${exception.lineNumber}, column ${exception.columnNumber}');
     newLine();
-    _formatCodeBlock(padline(''));
 
     final exceptionLineNumber = exception.lineNumber ?? 0;
 
@@ -50,10 +51,10 @@ extension LoggerX on Logger {
       }
 
       if (isErrorLine) {
-        info(padline(currentLineContent), style: _highlightLine);
+        info(padline(currentLineContent, i), style: _highlightLine);
         info(padline(arrow), style: _highlightLine);
       } else {
-        _formatCodeBlock(padline(currentLineContent));
+        _formatCodeBlock(padline(currentLineContent, i));
       }
     }
   }
@@ -70,9 +71,9 @@ String _createArrow(int column) {
 }
 
 String? _formatErrorStyle(String? m) {
-  return backgroundLightGray.wrap(styleBold.wrap(black.wrap(m)));
+  return backgroundDefault.wrap(styleBold.wrap(white.wrap(m)));
 }
 
 String? _highlightLine(String? m) {
-  return backgroundRed.wrap(styleBold.wrap(black.wrap(m)));
+  return backgroundDefault.wrap(styleBold.wrap(yellow.wrap(m)));
 }
