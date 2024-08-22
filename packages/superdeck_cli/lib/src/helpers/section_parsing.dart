@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 const _tagMarker = '@';
@@ -29,6 +30,7 @@ SlidePart? parseBlock(String line) {
   );
 
   if (sectionName != null) {
+    ContentOptions.schema.validateOrThrow(options);
     return SectionPart.build(
       sectionName,
       options: ContentOptionsMapper.fromMap(options),
@@ -43,16 +45,19 @@ SlidePart? parseBlock(String line) {
   if (subSectionName != null) {
     switch (subSectionName) {
       case SubSectionPartType.content:
+        ContentOptions.schema.validateOrThrow(options);
         return ContentPart(
           content: '',
           options: ContentOptionsMapper.fromMap(options),
         );
       case SubSectionPartType.image:
+        ImageOptions.schema.validateOrThrow(options);
         return ImagePart(
           content: '',
           options: ImageOptionsMapper.fromMap(options),
         );
       case SubSectionPartType.widget:
+        WidgetOptions.schema.validateOrThrow(options);
         return WidgetPart(
           content: '',
           options: WidgetOptionsMapper.fromMap(options),
@@ -94,7 +99,16 @@ List<SectionPart> parseSections(String slideMarkdown) {
       continue;
     }
 
-    final part = parseBlock(line);
+    SlidePart? part;
+    try {
+      part = parseBlock(line);
+    } on SchemaValidationException catch (e) {
+      final message = e.result.errors.map((e) => e.message).join('\n');
+      // get all lines before this one
+      final previousLines = lines.sublist(0, lineIndex);
+      final getOffset = previousLines.join('\n').length;
+      throw SDFormatException(message, slideMarkdown, getOffset);
+    }
 
     if (part == null) {
       continue;

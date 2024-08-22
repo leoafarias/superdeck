@@ -63,7 +63,7 @@ class SlidesLoader {
 void _handleException(Exception e) {
   if (e is SDTaskException) {
     logger
-      ..err('slide: ${e.controller.position}')
+      ..err('slide: ${e.controller.slide.index}')
       ..err('Task error: ${e.taskName}');
 
     _handleException(e.exception);
@@ -73,11 +73,11 @@ void _handleException(Exception e) {
     final errorMessages = e.messages.join('\n');
     logger
       ..newLine()
-      ..warn(
+      ..alert(
         'Slide schema validation failed',
       )
       ..newLine()
-      ..info(
+      ..err(
         'slide ${e.slideLocation}: > ${e.location} > $errorMessages',
       )
       ..newLine();

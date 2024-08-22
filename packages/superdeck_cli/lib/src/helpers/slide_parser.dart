@@ -45,25 +45,21 @@ class SlideParser {
     try {
       final markdownContents = _splitSlides(contents.trim());
 
-      final slideRaws = markdownContents.map(parseSlideMarkdown).map((e) {
+      final slideRaws =
+          markdownContents.map(parseSlideMarkdown).mapIndexed((index, e) {
         return {
+          'index': index,
           'content': e.content,
           'options': e.options,
           'key': e.key,
         };
       });
 
-      slideRaws.forEachIndexed((index, raw) {
-        try {
-          Slide.schema.validateOrThrow(raw);
-        } on SchemaValidationException catch (e) {
-          throw SDMarkdownParsingException(e, index + 1);
-        }
-      });
-
       return slideRaws.map(Slide.fromMap).toList();
     } on FormatException catch (e) {
       throw SDFormatException(e.message, contents, e.offset);
+    } on SchemaValidationException catch (e) {
+      throw SDMarkdownParsingException(e, 0);
     }
   }
 }

@@ -1,9 +1,8 @@
 ---
 style: custom
-sdf
 ---
 
-{@content}
+{@content blue: car}
 ## This is an example of a widgets
 
 {@widget name: demo  }

@@ -13,7 +13,6 @@ class SlideMapper extends ClassMapperBase<Slide> {
   static SlideMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideMapper._());
-      InvalidSlideMapper.ensureInitialized();
       SlideOptionsMapper.ensureInitialized();
       SectionPartMapper.ensureInitialized();
     }
@@ -23,6 +22,8 @@ class SlideMapper extends ClassMapperBase<Slide> {
   @override
   final String id = 'Slide';
 
+  static int _$index(Slide v) => v.index;
+  static const Field<Slide, int> _f$index = Field('index', _$index);
   static String _$content(Slide v) => v.content;
   static const Field<Slide, String> _f$content = Field('content', _$content);
   static String _$key(Slide v) => v.key;
@@ -36,6 +37,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
 
   @override
   final MappableFields<Slide> fields = const {
+    #index: _f$index,
     #content: _f$content,
     #key: _f$key,
     #options: _f$options,
@@ -46,6 +48,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
 
   static Slide _instantiate(DecodingData data) {
     return Slide(
+        index: data.dec(_f$index),
         content: data.dec(_f$content),
         key: data.dec(_f$key),
         options: data.dec(_f$options),
@@ -98,7 +101,15 @@ extension SlideValueCopy<$R, $Out> on ObjectCopyWith<$R, Slide, $Out> {
 
 abstract class SlideCopyWith<$R, $In extends Slide, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? content});
+  SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options;
+  ListCopyWith<$R, SectionPart, ObjectCopyWith<$R, SectionPart, SectionPart>>
+      get sections;
+  $R call(
+      {int? index,
+      String? content,
+      String? key,
+      SlideOptions? options,
+      List<SectionPart>? sections});
   SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -109,10 +120,29 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
   @override
   late final ClassMapperBase<Slide> $mapper = SlideMapper.ensureInitialized();
   @override
-  $R call({String? content}) =>
-      $apply(FieldCopyWithData({if (content != null) #content: content}));
+  SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options =>
+      $value.options?.copyWith.$chain((v) => call(options: v));
+  @override
+  ListCopyWith<$R, SectionPart, ObjectCopyWith<$R, SectionPart, SectionPart>>
+      get sections => ListCopyWith($value.sections,
+          (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(sections: v));
+  @override
+  $R call(
+          {int? index,
+          String? content,
+          String? key,
+          Object? options = $none,
+          List<SectionPart>? sections}) =>
+      $apply(FieldCopyWithData({
+        if (index != null) #index: index,
+        if (content != null) #content: content,
+        if (key != null) #key: key,
+        if (options != $none) #options: options,
+        if (sections != null) #sections: sections
+      }));
   @override
   Slide $make(CopyWithData data) => Slide(
+      index: data.get(#index, or: $value.index),
       content: data.get(#content, or: $value.content),
       key: data.get(#key, or: $value.key),
       options: data.get(#options, or: $value.options),
@@ -121,133 +151,6 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
   @override
   SlideCopyWith<$R2, Slide, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
       _SlideCopyWithImpl($value, $cast, t);
-}
-
-class InvalidSlideMapper extends SubClassMapperBase<InvalidSlide> {
-  InvalidSlideMapper._();
-
-  static InvalidSlideMapper? _instance;
-  static InvalidSlideMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = InvalidSlideMapper._());
-      SlideMapper.ensureInitialized().addSubMapper(_instance!);
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'InvalidSlide';
-
-  static String _$content(InvalidSlide v) => v.content;
-  static const Field<InvalidSlide, String> _f$content =
-      Field('content', _$content, key: 'message');
-  static String _$key(InvalidSlide v) => v.key;
-  static const Field<InvalidSlide, String> _f$key =
-      Field('key', _$key, mode: FieldMode.member);
-  static List<SectionPart> _$sections(InvalidSlide v) => v.sections;
-  static const Field<InvalidSlide, List<SectionPart>> _f$sections =
-      Field('sections', _$sections, mode: FieldMode.member);
-  static SlideOptions? _$options(InvalidSlide v) => v.options;
-  static const Field<InvalidSlide, SlideOptions> _f$options =
-      Field('options', _$options, mode: FieldMode.member);
-
-  @override
-  final MappableFields<InvalidSlide> fields = const {
-    #content: _f$content,
-    #key: _f$key,
-    #sections: _f$sections,
-    #options: _f$options,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'InvalidSlide';
-  @override
-  late final ClassMapperBase superMapper = SlideMapper.ensureInitialized();
-
-  static InvalidSlide _instantiate(DecodingData data) {
-    return InvalidSlide(data.dec(_f$content));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static InvalidSlide fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<InvalidSlide>(map);
-  }
-
-  static InvalidSlide fromJson(String json) {
-    return ensureInitialized().decodeJson<InvalidSlide>(json);
-  }
-}
-
-mixin InvalidSlideMappable {
-  String toJson() {
-    return InvalidSlideMapper.ensureInitialized()
-        .encodeJson<InvalidSlide>(this as InvalidSlide);
-  }
-
-  Map<String, dynamic> toMap() {
-    return InvalidSlideMapper.ensureInitialized()
-        .encodeMap<InvalidSlide>(this as InvalidSlide);
-  }
-
-  InvalidSlideCopyWith<InvalidSlide, InvalidSlide, InvalidSlide> get copyWith =>
-      _InvalidSlideCopyWithImpl(this as InvalidSlide, $identity, $identity);
-  @override
-  String toString() {
-    return InvalidSlideMapper.ensureInitialized()
-        .stringifyValue(this as InvalidSlide);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return InvalidSlideMapper.ensureInitialized()
-        .equalsValue(this as InvalidSlide, other);
-  }
-
-  @override
-  int get hashCode {
-    return InvalidSlideMapper.ensureInitialized()
-        .hashValue(this as InvalidSlide);
-  }
-}
-
-extension InvalidSlideValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, InvalidSlide, $Out> {
-  InvalidSlideCopyWith<$R, InvalidSlide, $Out> get $asInvalidSlide =>
-      $base.as((v, t, t2) => _InvalidSlideCopyWithImpl(v, t, t2));
-}
-
-abstract class InvalidSlideCopyWith<$R, $In extends InvalidSlide, $Out>
-    implements SlideCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? content});
-  InvalidSlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _InvalidSlideCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, InvalidSlide, $Out>
-    implements InvalidSlideCopyWith<$R, InvalidSlide, $Out> {
-  _InvalidSlideCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<InvalidSlide> $mapper =
-      InvalidSlideMapper.ensureInitialized();
-  @override
-  $R call({String? content}) =>
-      $apply(FieldCopyWithData({if (content != null) #content: content}));
-  @override
-  InvalidSlide $make(CopyWithData data) =>
-      InvalidSlide(data.get(#content, or: $value.content));
-
-  @override
-  InvalidSlideCopyWith<$R2, InvalidSlide, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _InvalidSlideCopyWithImpl($value, $cast, t);
 }
 
 class SectionDataMapper extends RecordMapperBase<SectionData> {

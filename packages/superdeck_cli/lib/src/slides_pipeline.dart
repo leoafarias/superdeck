@@ -26,7 +26,6 @@ typedef PipelineResult = ({
 });
 
 class TaskController {
-  final int position;
   final Slide slide;
   final List<SlideAsset> _assets;
   final TaskPipeline pipeline;
@@ -36,6 +35,7 @@ class TaskController {
     final sections = parseSections(slide.content);
 
     final newSlide = Slide(
+      index: slide.index,
       content: slide.content,
       key: slide.key,
       options: slide.options,
@@ -46,7 +46,6 @@ class TaskController {
   }
 
   TaskController._({
-    required this.position,
     required this.slide,
     required List<SlideAsset> assets,
     required this.pipeline,
@@ -54,7 +53,6 @@ class TaskController {
   }) : _assets = assets;
 
   TaskController({
-    required this.position,
     required this.slide,
     required this.pipeline,
     required List<SlideAsset> assets,
@@ -74,7 +72,6 @@ class TaskController {
     List<MarkdownReplacement>? markdownReplacements,
   }) {
     return TaskController._(
-      position: position,
       slide: slide ?? this.slide,
       pipeline: pipeline,
       markdownReplacements: markdownReplacements ?? this.markdownReplacements,
@@ -150,7 +147,6 @@ class TaskPipeline {
 
     for (var i = 0; i < slides.length; i++) {
       final controller = TaskController(
-        position: i,
         slide: slides[i],
         assets: loadedReference.assets,
         pipeline: this,
