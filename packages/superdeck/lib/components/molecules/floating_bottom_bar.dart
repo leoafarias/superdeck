@@ -33,7 +33,7 @@ class _FloatingBottomBarState extends State<FloatingBottomBar> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             height: 60,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(98, 0, 0, 0),
+              color: const Color.fromARGB(171, 0, 0, 0),
               border: Border(
                 top: BorderSide(
                   color: Colors.white10,

@@ -11,3 +11,5 @@ export 'src/models/options_model.dart';
 export 'src/models/reference_model.dart';
 export 'src/models/slide_model.dart';
 export 'src/models/slide_parts.dart';
+export 'src/schema/schema_model.dart';
+export 'src/schema/schema_validation.dart';

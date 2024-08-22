@@ -2,8 +2,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 
 part 'schema_validation.mapper.dart';
 
-typedef JSON = Map<String, dynamic>;
-
 class SchemaValidationException implements Exception {
   final SchemaValidationResult result;
 

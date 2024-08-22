@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -24,6 +25,7 @@ typedef PipelineResult = ({
 });
 
 class TaskController {
+  final int position;
   final Slide slide;
   final List<SlideAsset> _assets;
   final TaskPipeline pipeline;
@@ -43,6 +45,7 @@ class TaskController {
   }
 
   TaskController._({
+    required this.position,
     required this.slide,
     required List<SlideAsset> assets,
     required this.pipeline,
@@ -50,6 +53,7 @@ class TaskController {
   }) : _assets = assets;
 
   TaskController({
+    required this.position,
     required this.slide,
     required this.pipeline,
     required List<SlideAsset> assets,
@@ -69,6 +73,7 @@ class TaskController {
     List<MarkdownReplacement>? markdownReplacements,
   }) {
     return TaskController._(
+      position: position,
       slide: slide ?? this.slide,
       pipeline: pipeline,
       markdownReplacements: markdownReplacements ?? this.markdownReplacements,
@@ -122,10 +127,12 @@ class TaskPipeline {
   }
 
   Future<TaskController> _runEachSlide(
+    int position,
     Slide slide,
     List<SlideAsset> assets,
   ) async {
     var controller = TaskController(
+      position: position,
       slide: slide,
       assets: assets,
       pipeline: this,
@@ -148,9 +155,10 @@ class TaskPipeline {
     final slides = parser.run();
 
     final futures = <Future<TaskController>>[];
-
+    int position = 0;
     for (var slide in slides) {
-      futures.add(_runEachSlide(slide, loadedReference.assets));
+      position++;
+      futures.add(_runEachSlide(position, slide, loadedReference.assets));
     }
 
     final controllers = await Future.wait(futures);
@@ -221,6 +229,23 @@ abstract class Task {
 
   String buildReferenceName(String content) {
     return shortHashId(content);
+  }
+
+  Future<String> dartProcess(String code) async {
+    final process = await Process.start('dart', ['format', '--fix'],
+        mode: ProcessStartMode.inheritStdio);
+
+    process.stdin.writeln(code);
+    process.stdin.close();
+
+    final output = await process.stdout.transform(utf8.decoder).join();
+    final error = await process.stderr.transform(utf8.decoder).join();
+
+    if (error.isNotEmpty) {
+      throw Exception('Error formatting dart code: $error');
+    }
+
+    return output;
   }
 
   File buildAssetFile(String assetName, String extension) {

@@ -1,10 +1,25 @@
 ---
+style: custom
 ---
-{@body}
+
 {@content}
 ## This is an example of a widgets
 
 {@widget name: demo }
+
+{@content}
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  final style = Style(
+    $box.padding.all(),
+    $box.border.all(),
+  );
+}
+
+```
 
 ---
 ---
@@ -16,11 +31,11 @@ graph TD
     C --> D[Keep]
     C --> E[Edit Definition]
     E --> B
-    D --> F[Save Image and Code]
+    D --> F[Save Image and Car]
     F --> B  
 ```
 
-{@content}
+{@content flex: 3}
 
 ```mermaid
 sequenceDiagram
@@ -36,12 +51,20 @@ sequenceDiagram
 style: quote
 ---
 
-{@content flex: 2}
+{@header}
+{@content align: bottom_right | flex: 3}
+# This presentation will be great
+
+{@content}
+
+{@body}
+
+
+{@content }
+{@content flex: 2 | align: top_right}
 > Create your Flutter presentations faster and easier than ever.
 > You can quote me on that
 > ### Leo 
-
-{@content }
 
 
 ---
@@ -49,7 +72,7 @@ style: show_sections
 ---
 
 {@header}
-{@image src: https://picsum.photos/1200/1200?waves | align: bottom_left | fit: cover}
+{@image src: https://picsum.photos/1200/1200?waves | align: top_left | fit: cover}
 
 {@body flex: 2}
 {@content flex: 2}

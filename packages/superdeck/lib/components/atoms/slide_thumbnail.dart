@@ -198,13 +198,9 @@ class _PreviewContainer extends StatelessWidget {
         blurRadius: 4,
         spreadRadius: 1,
       ),
-
       selected ? $box.wrap.scale(1.05) : $box.wrap.scale(1),
       selected ? $box.wrap.opacity(1) : $box.wrap.opacity(0.5),
       selected ? $box.border.color.$accent() : $box.border.color.transparent(),
-      // $on.hover(
-      //   $box.wrap.opacity(1),
-      // ),
     ).animate();
 
     return Box(

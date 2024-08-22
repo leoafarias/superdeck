@@ -11,6 +11,7 @@ import 'package:window_manager/window_manager.dart';
 import '../../helpers/syntax_highlighter.dart';
 import '../../superdeck.dart';
 import '../helpers/constants.dart';
+import '../helpers/dependency_injection.dart';
 import '../helpers/routes.dart';
 import '../helpers/theme.dart';
 import '../providers/examples_provider.dart';
@@ -39,9 +40,9 @@ class SuperDeckApp extends HookWidget {
     _initialized = true;
 
     WidgetsFlutterBinding.ensureInitialized();
+    setupDependencyInjection();
 
     await Future.wait([
-      SuperDeckController.initialize(),
       SyntaxHighlight.initialize(),
       _initializeWindowManager(),
     ]);

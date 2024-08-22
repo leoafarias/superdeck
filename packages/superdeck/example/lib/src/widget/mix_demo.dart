@@ -85,21 +85,17 @@ class _DemoOptions {
 
 Widget mixExampleBuilder(BuildContext context, WidgetOptions options) {
   final mappedOptions = _DemoOptions.fromMap(options.args);
-  return Builder(
-    builder: (context) {
-      return Center(
-        child: SizedBox(
-          height: mappedOptions.height,
-          width: mappedOptions.width,
-          child: Box(
-            style: _style.animate(),
-            child: StyledText(
-              mappedOptions.text ?? 'Mix',
-            ),
-          ),
+  return Center(
+    child: SizedBox(
+      height: mappedOptions.height,
+      width: mappedOptions.width,
+      child: Box(
+        style: _style.animate(),
+        child: StyledText(
+          mappedOptions.text ?? 'Hello',
         ),
-      );
-    },
+      ),
+    ),
   );
 }
 

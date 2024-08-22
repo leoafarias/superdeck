@@ -1,9 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../schema/schema_model.dart';
-import '../schema/schema_validation.dart';
-
 part 'slide_model.mapper.dart';
 
 @MappableClass()
@@ -39,6 +36,7 @@ class Slide with SlideMappable {
 
   static final schema = SchemaShape(
     {
+      "key": Schema.string.required(),
       "content": Schema.string.required(),
       "title": Schema.string,
       'options': SlideOptions.schema.optional(),

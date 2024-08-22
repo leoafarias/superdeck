@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:dart_style/dart_style.dart';
+import 'package:superdeck_cli/src/helpers/dart_process.dart';
+import 'package:superdeck_cli/src/helpers/exceptions.dart';
+import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/slides_pipeline.dart';
 
 class DartFormatterTask extends Task {
@@ -22,8 +24,19 @@ class DartFormatterTask extends Task {
     final markdown = controller.slide.content;
     return markdown.replaceAllMapped(codeBlockRegex, (match) {
       final code = match.group(1)!;
-      final formatter = DartFormatter();
-      final formattedCode = formatter.format(code);
+      // Analyze the code
+      String formattedCode;
+      try {
+        formattedCode = DartProcess.format(code);
+      } on SDFormatException catch (e) {
+        logger
+          ..newLine()
+          ..warn('slide position: ${controller.position}')
+          ..formatError(e)
+          ..newLine();
+
+        throw Exception('Failed to format the code block');
+      }
 
       final replacement = '```dart\n$formattedCode\n```';
 

@@ -25,6 +25,8 @@ Style get customStyle {
   return Style(
     _textStyle.as(GoogleFonts.poppins()),
     _h1.textStyle.as(GoogleFonts.smooch()),
+    _code.textStyle.as(GoogleFonts.firaCode()),
+    _code.decoration.color(Colors.black),
     _h1.textStyle.fontSize(200),
     _h1.textStyle.height(0),
     _h1.textStyle.shadow(

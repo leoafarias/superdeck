@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:superdeck_cli/src/constants.dart';
+import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/tasks/dart_formatter_task.dart';
 import 'package:superdeck_cli/src/tasks/image_cache_task.dart';
 import 'package:superdeck_cli/src/tasks/mermaid_task.dart';
@@ -37,7 +38,11 @@ class SlidesLoader {
       const SlideThumbnailTask(),
       const ImageCachingTask(),
     ]);
-
-    await pipeline.run();
+    try {
+      await pipeline.run();
+    } catch (e, stackTrace) {
+      logger.detail('Exception: $e');
+      logger.detail(stackTrace.toString());
+    }
   }
 }

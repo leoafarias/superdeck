@@ -33,14 +33,14 @@ class ReferenceService {
     return _markdown.readAsString();
   }
 
-  Future<ByteData> loadBytes(String path) async {
-    if (kCanRunProcess) {
-      final bytes = await File(path).readAsBytes();
-      return ByteData.view(Uint8List.fromList(bytes).buffer);
-    } else {
-      return await rootBundle.load(path);
-    }
-  }
+  // Future<ByteData> loadBytes(String path) async {
+  //   if (kCanRunProcess) {
+  //     final bytes = await File(path).readAsBytes();
+  //     return ByteData.view(Uint8List.fromList(bytes).buffer);
+  //   } else {
+  //     return await rootBundle.load(path);
+  //   }
+  // }
 
   Future<void> saveMarkdown(String data) async {
     await _markdown.writeAsString(data);

@@ -4,22 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../helpers/dependency_injection.dart';
 import '../services/reference_service.dart';
 
-final superDeckController = SuperDeckController.instance;
+final superDeckController = getIt.get<SuperDeckController>();
 
 class SuperDeckController {
-  SuperDeckController._();
-
-  static final instance = SuperDeckController._();
-
-  bool _initialized = false;
-
-  static Future<void> initialize() async {
-    if (instance._initialized) return;
-    instance._initialized = true;
-    await instance._loadData();
-    ReferenceService.instance.listen(instance._getData.refresh);
+  SuperDeckController() {
+    ReferenceService.instance.listen(_getData.refresh);
   }
 
   late final _getData = futureSignal(_loadData, lazy: false);

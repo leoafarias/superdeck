@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:puppeteer/puppeteer.dart';
+import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/slides_pipeline.dart';
 
 // ---
@@ -15,7 +16,12 @@ Future<String> _generateMermaidGraph(
   Browser browser,
   String graphDefinition,
 ) async {
-  print('Generating mermaid graph...');
+  logger
+    ..detail('')
+    ..detail('Generating mermaid graph...')
+    ..detail(graphDefinition)
+    ..detail('');
+
   final page = await browser.newPage();
 
   await page.setContent('''
@@ -130,7 +136,7 @@ class MermaidConverterTask extends Task {
         'png',
       );
 
-      if (true) {
+      if (!await mermaidFile.exists()) {
         final browser = await controller.pipeline.getBrowser();
 
         final imageData =
