@@ -7,7 +7,7 @@ class SDMarkdownParsingException implements Exception {
 
   SDMarkdownParsingException(this.exception, this.slideLocation);
 
-  String get location => exception.result.key.join(' | ');
+  String get location => exception.result.path.join(' | ');
 
   List<String> get messages {
     return exception.result.errors.map((e) => e.message).toList();

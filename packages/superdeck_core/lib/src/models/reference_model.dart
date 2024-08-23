@@ -1,12 +1,4 @@
-import 'dart:io';
-
-import 'package:dart_mappable/dart_mappable.dart';
-
-import 'asset_model.dart';
-import 'config_model.dart';
-import 'slide_model.dart';
-
-part 'reference_model.mapper.dart';
+part of 'models.dart';
 
 @MappableClass()
 class SuperDeckReference with SuperDeckReferenceMappable {

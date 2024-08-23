@@ -1,12 +1,4 @@
-import 'dart:io';
-
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:superdeck_core/superdeck_core.dart';
-
-import '../schema/schema_model.dart';
-import '../schema/schema_values.dart';
-
-part 'config_model.mapper.dart';
+part of 'models.dart';
 
 @MappableClass()
 class SlideOptions with SlideOptionsMappable {

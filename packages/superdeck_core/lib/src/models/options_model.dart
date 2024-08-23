@@ -1,12 +1,4 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:superdeck_core/src/helpers/extensions.dart';
-
-import '../helpers/mappers.dart';
-import '../schema/schema_model.dart';
-import '../schema/schema_values.dart';
-import '../schema/validators.dart';
-
-part 'options_model.mapper.dart';
+part of 'models.dart';
 
 @MappableClass()
 class ContentOptions with ContentOptionsMappable {

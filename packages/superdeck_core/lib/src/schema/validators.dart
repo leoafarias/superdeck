@@ -1,9 +1,9 @@
-import 'schema_validation.dart';
+part of 'schema.dart';
 
 abstract class Validator<T> {
   const Validator();
 
-  SchemaError? validate(T value);
+  ValidationError? validate(T value);
 }
 
 class ArrayValidator extends Validator<String> {
@@ -11,16 +11,13 @@ class ArrayValidator extends Validator<String> {
   const ArrayValidator(this.values);
 
   @override
-  SchemaError? validate(Object? value) {
+  ValidationError? validate(Object? value) {
     if (value is String) {
       if (values.contains(value)) {
         return null;
       }
     }
-    return SchemaError.enumViolated(
-      '$value',
-      values,
-    );
+    return EnumViolatedValidationError(value: '$value', possibleValues: values);
   }
 }
 
@@ -72,9 +69,9 @@ class RegexValidator extends Validator<String> {
   });
 
   @override
-  SchemaError? validate(String value) {
+  ValidationError? validate(String value) {
     if (!RegExp(pattern).hasMatch(value)) {
-      return SchemaError.constraints(
+      return ConstraintsValidationError(
         'String does is not $name. Example: $example',
       );
     }
@@ -87,10 +84,10 @@ class IsEmptyValidator extends Validator<String> {
   const IsEmptyValidator();
 
   @override
-  SchemaError? validate(String value) {
+  ValidationError? validate(String value) {
     return value.isEmpty
         ? null
-        : const SchemaError.constraints('String is not empty');
+        : const ConstraintsValidationError('String is not empty');
   }
 }
 
@@ -99,10 +96,10 @@ class MinLengthValidator extends Validator<String> {
   const MinLengthValidator(this.min);
 
   @override
-  SchemaError? validate(String value) {
+  ValidationError? validate(String value) {
     return value.length >= min
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'String length is less than the minimum required length: $min',
           );
   }
@@ -113,10 +110,10 @@ class MaxLengthValidator extends Validator<String> {
   const MaxLengthValidator(this.max);
 
   @override
-  SchemaError? validate(String value) {
+  ValidationError? validate(String value) {
     return value.length <= max
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'String length is greater than the maximum required length: $max',
           );
   }
@@ -127,10 +124,10 @@ class MinValueValidator extends Validator<num> {
   const MinValueValidator(this.min);
 
   @override
-  SchemaError? validate(num value) {
+  ValidationError? validate(num value) {
     return value >= min
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'Value is less than the minimum required value: $min',
           );
   }
@@ -141,10 +138,10 @@ class MaxValueValidator extends Validator<num> {
   const MaxValueValidator(this.max);
 
   @override
-  SchemaError? validate(num value) {
+  ValidationError? validate(num value) {
     return value <= max
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'Value is greater than the maximum required value: $max',
           );
   }
@@ -156,10 +153,10 @@ class RangeValidator extends Validator<num> {
   const RangeValidator(this.min, this.max);
 
   @override
-  SchemaError? validate(num value) {
+  ValidationError? validate(num value) {
     return value >= min && value <= max
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'Value is not within the required range: $min - $max',
           );
   }
@@ -169,8 +166,10 @@ class RequiredValidator<T> extends Validator<T> {
   const RequiredValidator();
 
   @override
-  SchemaError? validate(value) {
-    return value != null ? null : const SchemaError.constraints('is required');
+  ValidationError? validate(value) {
+    return value != null
+        ? null
+        : const ConstraintsValidationError('is required');
   }
 }
 
@@ -179,11 +178,11 @@ class UniqueItemsValidator<T> extends Validator<List<T>> {
   const UniqueItemsValidator();
 
   @override
-  SchemaError? validate(List<T> value) {
+  ValidationError? validate(List<T> value) {
     final unique = value.toSet().toList();
     return unique.length == value.length
         ? null
-        : const SchemaError.constraints('List items are not unique');
+        : const ConstraintsValidationError('List items are not unique');
   }
 }
 
@@ -193,10 +192,10 @@ class MinItemsValidator<T> extends Validator<List<T>> {
   const MinItemsValidator(this.min);
 
   @override
-  SchemaError? validate(List<T> value) {
+  ValidationError? validate(List<T> value) {
     return value.length >= min
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'List length is less than the minimum required length: $min',
           );
   }
@@ -208,10 +207,10 @@ class MaxItemsValidator<T> extends Validator<List<T>> {
   const MaxItemsValidator(this.max);
 
   @override
-  SchemaError? validate(List<T> value) {
+  ValidationError? validate(List<T> value) {
     return value.length <= max
         ? null
-        : SchemaError.constraints(
+        : ConstraintsValidationError(
             'List length is greater than the maximum required length: $max',
           );
   }

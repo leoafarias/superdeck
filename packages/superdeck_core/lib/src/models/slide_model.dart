@@ -1,14 +1,11 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:superdeck_core/superdeck_core.dart';
-
-part 'slide_model.mapper.dart';
+part of 'models.dart';
 
 @MappableClass()
 class Slide with SlideMappable {
   final int index;
   final String content;
   final String key;
-  final List<SectionPart> sections;
+  final List<SectionDto> sections;
   final SlideOptions? options;
 
   Slide({

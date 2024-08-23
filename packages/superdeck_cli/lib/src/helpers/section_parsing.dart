@@ -17,7 +17,7 @@ T? _findEnumValue<T extends Enum>(
   );
 }
 
-SlidePart? parseBlock(String line) {
+PartDto? parseBlock(String line) {
   if (!_isSyntax(line)) {
     return null;
   }
@@ -25,38 +25,38 @@ SlidePart? parseBlock(String line) {
   final (:tag, :options) = getTagContents(line);
 
   final sectionName = _findEnumValue(
-    SectionPartType.values,
+    SectionType.values,
     tag,
   );
 
   if (sectionName != null) {
     ContentOptions.schema.validateOrThrow(options);
-    return SectionPart.build(
+    return SectionDto.build(
       sectionName,
       options: ContentOptionsMapper.fromMap(options),
     );
   }
 
   final subSectionName = _findEnumValue(
-    SubSectionPartType.values,
+    SubSectionType.values,
     tag,
   );
 
   if (subSectionName != null) {
     switch (subSectionName) {
-      case SubSectionPartType.content:
+      case SubSectionType.content:
         ContentOptions.schema.validateOrThrow(options);
         return ContentPart(
           content: '',
           options: ContentOptionsMapper.fromMap(options),
         );
-      case SubSectionPartType.image:
+      case SubSectionType.image:
         ImageOptions.schema.validateOrThrow(options);
         return ImagePart(
           content: '',
           options: ImageOptionsMapper.fromMap(options),
         );
-      case SubSectionPartType.widget:
+      case SubSectionType.widget:
         WidgetOptions.schema.validateOrThrow(options);
         return WidgetPart(
           content: '',
@@ -67,15 +67,15 @@ SlidePart? parseBlock(String line) {
   return null;
 }
 
-List<SectionPart> parseSections(String slideMarkdown) {
+List<SectionDto> parseSections(String slideMarkdown) {
   final lines = slideMarkdown.split('\n');
 
-  final rootSection = SectionPart.build(SectionPartType.root);
+  final rootSection = SectionDto.build(SectionType.root);
 
-  final layoutParts = <SectionPart>{rootSection};
+  final layoutParts = <SectionDto>{rootSection};
 
   // Start with the header
-  SectionPart currentSection = rootSection;
+  SectionDto currentSection = rootSection;
 
   int lineIndex = 0;
 
@@ -99,7 +99,7 @@ List<SectionPart> parseSections(String slideMarkdown) {
       continue;
     }
 
-    SlidePart? part;
+    PartDto? part;
     try {
       part = parseBlock(line);
     } on SchemaValidationException catch (e) {
@@ -114,7 +114,7 @@ List<SectionPart> parseSections(String slideMarkdown) {
       continue;
     }
 
-    if (part is SectionPart) {
+    if (part is SectionDto) {
       if (part.type.index <= currentSection.type.index) {
         throw Exception(
           'Invalid location tag on line ${lineIndex}. ${part.type.name} cannot be before ${currentSection.type.name}',
@@ -189,28 +189,53 @@ Map<String, dynamic> getOptionsMapFromLine(
   }
 }
 
+/// The separator used to split the tag from its options.
+const _TAG_OPTION_SEPARATOR = ' ';
+
+/// Parses a line containing a tag and its options.
 ({String tag, Map<String, dynamic> options}) getTagContents(String line) {
+  // Remove any leading or trailing whitespace from the input line
+  line = line.trim();
+
+  // Check if the line matches the expected syntax
   if (!_isSyntax(line)) {
-    throw FormatException('Error parsing tags: $line');
+    // If not, throw an exception with a descriptive error message
+    throw FormatException('Invalid tag syntax: $line');
   }
+
+  // Use a regular expression to match the contents of the tag
   final match = _regexMatchTagContents.firstMatch(line);
 
-  final separator = '|||superdeck|||';
-
-  String tag = '';
-  Map<String, dynamic> options = {};
-
-  if (match != null) {
-    final result = match.group(1)?.trim() ?? '';
-
-    final parts = result.replaceFirst(' ', separator).split(separator);
-
-    tag = parts.tryElementAt(0) ?? '';
-    final optionsPart = parts.tryElementAt(1) ?? '';
-
-    options = getOptionsMapFromLine(optionsPart);
+  // If no match is found, throw an exception
+  if (match == null) {
+    throw FormatException('Failed to extract tag contents: $line');
   }
 
+  // Extract the first capturing group from the regex match and trim any whitespace
+  // If the group is null or empty, use an empty string
+  final result = match.group(1)?.trim() ?? '';
+
+  // Split the result into parts using the defined separator
+  final parts = result.split(_TAG_OPTION_SEPARATOR);
+
+  // Extract the tag (first part of the split result)
+  // If parts is empty, use an empty string
+  final tag = parts.isNotEmpty ? parts.first : '';
+
+  // Join the remaining parts (if any) back into a string for options parsing
+  // If there's only one part (just the tag), use an empty string
+  final optionsPart =
+      parts.length > 1 ? parts.sublist(1).join(_TAG_OPTION_SEPARATOR) : '';
+
+  // Parse the options string into a Map using a helper function
+  final options = getOptionsMapFromLine(optionsPart);
+
+  // If the extracted tag is empty, throw an exception
+  if (tag.isEmpty) {
+    throw FormatException('Empty tag extracted: $line');
+  }
+
+  // Return a record containing the tag and options
   return (
     tag: tag,
     options: options,

@@ -1,9 +1,7 @@
-import 'package:dart_mappable/dart_mappable.dart';
-
-part 'schema_validation.mapper.dart';
+part of 'schema.dart';
 
 class SchemaValidationException implements Exception {
-  final SchemaValidationResult result;
+  final ValidationResult result;
 
   const SchemaValidationException(this.result);
 }
@@ -17,106 +15,80 @@ enum SchemaErrorType {
   unknown;
 }
 
-@MappableClass()
-class SchemaError with SchemaErrorMappable {
-  final SchemaErrorType type;
-  final String message;
+sealed class ValidationError {
+  String get message;
 
-  const SchemaError.unknown()
-      : type = SchemaErrorType.unknown,
-        message = 'Unknown error';
-
-  const SchemaError.constraints(this.message)
-      : type = SchemaErrorType.constraints;
-
-  const SchemaError.unallowedAdditionalProperty(String property)
-      : type = SchemaErrorType.unallowedAdditionalProperty,
-        message = 'Unallowed property: [$property]';
-
-  const SchemaError.enumViolated(String value, List<String> possibleValues)
-      : type = SchemaErrorType.enumViolated,
-        message = 'Wrong value: [$value] \n\n Possible values: $possibleValues';
-
-  const SchemaError.requiredPropMissing(String property)
-      : type = SchemaErrorType.requiredPropMissing,
-        message = 'Missing prop: [$property]';
-
-  const SchemaError.invalidType(Type value, String expectedType)
-      : type = SchemaErrorType.invalidType,
-        message = 'Invalid type: [$expectedType] got [$value]';
-
-  @override
-  String toString() {
-    return 'SchemaValidationError{type: $type, message: $message}';
-  }
+  const ValidationError();
 }
 
-@MappableClass()
-class SchemaValidationResult with SchemaValidationResultMappable {
-  final List<String> key;
-  final List<SchemaError> errors;
+class UnalowedAdditionalPropertyValidationError extends ValidationError {
+  final String property;
 
-  const SchemaValidationResult({
-    required this.key,
+  const UnalowedAdditionalPropertyValidationError({
+    required this.property,
+  });
+
+  String get message => 'Unallowed property: [$property]';
+}
+
+class EnumViolatedValidationError extends ValidationError {
+  final String value;
+  final List<String> possibleValues;
+
+  const EnumViolatedValidationError({
+    required this.value,
+    required this.possibleValues,
+  });
+
+  String get message =>
+      'Wrong value: [$value] \n\n Possible values: $possibleValues';
+}
+
+class RequiredPropMissingValidationError extends ValidationError {
+  final String property;
+
+  const RequiredPropMissingValidationError({
+    required this.property,
+  });
+
+  String get message => 'Missing prop: [$property]';
+}
+
+class InvalidTypeValidationError extends ValidationError {
+  final Type value;
+  final Type expectedType;
+
+  const InvalidTypeValidationError({
+    required this.value,
+    required this.expectedType,
+  });
+
+  String get message => 'Invalid type: [$expectedType] got [$value]';
+}
+
+class ConstraintsValidationError extends ValidationError {
+  final String _message;
+  const ConstraintsValidationError(this._message);
+
+  String get message => 'Constraints: $_message';
+}
+
+class UnknownValidationError extends ValidationError {
+  const UnknownValidationError();
+
+  String get message => 'Unknown Validation error';
+}
+
+class ValidationResult {
+  final List<String> path;
+  final List<ValidationError> errors;
+
+  const ValidationResult({
+    required this.path,
     required this.errors,
   });
 
-  const SchemaValidationResult.valid(this.key) : errors = const [];
-
-  factory SchemaValidationResult.invalidType(
-    List<String> path,
-    Object value,
-    String expectedType,
-  ) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [
-        SchemaError.invalidType(
-          value.runtimeType,
-          expectedType,
-        )
-      ],
-    );
-  }
-
-  factory SchemaValidationResult.unallowedAdditionalProperty(
-      List<String> path, String property) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaError.unallowedAdditionalProperty(property)],
-    );
-  }
-
-  factory SchemaValidationResult.enumViolated(
-      List<String> path, String value, List<String> possibleValues) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaError.enumViolated(value, possibleValues)],
-    );
-  }
-
-  factory SchemaValidationResult.requiredPropMissing(List<String> path) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaError.requiredPropMissing(path.last)],
-    );
-  }
-
-  factory SchemaValidationResult.constraints(
-      List<String> path, String message) {
-    return SchemaValidationResult(
-      key: path,
-      errors: [SchemaError.constraints(message)],
-    );
-  }
-
-  @override
-  String toString() {
-    return '${errors.isEmpty ? 'VALID' : 'INVALID'}${errors.isEmpty ? ', Errors: $errors' : ''}';
-  }
-
   bool get isValid => errors.isEmpty;
 
-  static const fromMap = SchemaValidationResultMapper.fromMap;
-  static const fromJson = SchemaValidationResultMapper.fromJson;
+  const ValidationResult.valid(this.path) : errors = const [];
 }

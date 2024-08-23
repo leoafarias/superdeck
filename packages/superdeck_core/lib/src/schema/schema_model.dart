@@ -1,6 +1,4 @@
-import 'schema_validation.dart';
-import 'schema_values.dart';
-import 'validators.dart';
+part of 'schema.dart';
 
 typedef JSON = Map<String, dynamic>;
 
@@ -74,70 +72,63 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   }
 
   @override
-  SchemaValidationResult validate(List<String> path, Object? value) {
-    if (value == null) {
-      return optionalValue
-          ? SchemaValidationResult.valid(path)
-          : SchemaValidationResult.requiredPropMissing(path);
-    }
+  ValidationResult validate(List<String> path, Object? value) {
+    try {
+      if (value == null) {
+        return optionalValue
+            ? ValidationResult.valid(path)
+            : throw RequiredPropMissingValidationError(property: path.last);
+      }
 
-    final parsedValue = tryParse(value);
+      final parsedValue = tryParse(value);
 
-    if (parsedValue == null) {
-      return SchemaValidationResult.invalidType(
-        path,
-        value,
-        <String, dynamic>{}.toString(),
-      );
-    }
-
-    final keys = parsedValue.keys.toSet();
-
-    final required = properties.entries
-        .where((entry) => !entry.value.optionalValue)
-        .map((entry) => entry.key);
-
-    final requiredKeys = required.toSet();
-
-    if (!keys.containsAll(requiredKeys)) {
-      return SchemaValidationResult(
-          key: path,
-          errors: requiredKeys
-              .difference(keys)
-              .map(SchemaError.requiredPropMissing)
-              .toList());
-    }
-
-    if (additionalProperties == false) {
-      final extraKeys = keys.difference(properties.keys.toSet());
-      if (extraKeys.isNotEmpty) {
-        return SchemaValidationResult(
-          key: path,
-          errors:
-              extraKeys.map(SchemaError.unallowedAdditionalProperty).toList(),
+      if (parsedValue == null) {
+        throw InvalidTypeValidationError(
+          value: value.runtimeType,
+          expectedType: Map<String, dynamic>,
         );
       }
-    }
 
-    for (final entry in parsedValue.entries) {
-      final key = entry.key;
-      final prop = properties[key];
+      final keys = parsedValue.keys.toSet();
 
-      if (prop == null) {
-        return additionalProperties == false
-            ? SchemaValidationResult(
-                key: path,
-                errors: [SchemaError.unallowedAdditionalProperty(key)])
-            : SchemaValidationResult.valid(path);
+      final required = properties.entries
+          .where((entry) => !entry.value.optionalValue)
+          .map((entry) => entry.key);
+
+      final requiredKeys = required.toSet();
+
+      for (final key in requiredKeys.difference(keys)) {
+        throw RequiredPropMissingValidationError(property: key);
       }
 
-      final result = prop.validate([...path, key], entry.value);
-      if (!result.isValid) {
-        return result;
+      if (additionalProperties == false) {
+        final extraKeys = keys.difference(properties.keys.toSet());
+        if (extraKeys.isNotEmpty) {
+          for (final key in extraKeys) {
+            throw UnalowedAdditionalPropertyValidationError(property: key);
+          }
+        }
       }
-    }
+      for (final entry in parsedValue.entries) {
+        final key = entry.key;
+        final prop = properties[key];
 
-    return SchemaValidationResult.valid(path);
+        if (prop == null) {
+          if (additionalProperties == false) {
+            throw UnalowedAdditionalPropertyValidationError(property: key);
+          }
+        } else {
+          final result = prop.validate([...path, key], entry.value);
+          if (!result.isValid) {
+            return result;
+          }
+        }
+      }
+
+      return ValidationResult.valid(path);
+    } on ValidationError catch (e) {
+      return ValidationResult(path: path, errors: [e]);
+    }
   }
 }
 

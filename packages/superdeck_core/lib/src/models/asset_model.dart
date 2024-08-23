@@ -1,8 +1,4 @@
-import 'package:collection/collection.dart';
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:path/path.dart' as p;
-
-part 'asset_model.mapper.dart';
+part of 'models.dart';
 
 @MappableEnum()
 enum AssetFileType {

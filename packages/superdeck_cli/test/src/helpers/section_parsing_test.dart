@@ -508,12 +508,12 @@ Footer content.
   );
 }
 
-extension on List<SectionPart> {
-  SectionPart? get root => firstWhereOrNull((part) => part.type.name == 'root');
-  SectionPart? get header =>
+extension on List<SectionDto> {
+  SectionDto? get root => firstWhereOrNull((part) => part.type.name == 'root');
+  SectionDto? get header =>
       firstWhereOrNull((part) => part.type.name == 'header');
-  SectionPart? get body => firstWhereOrNull((part) => part.type.name == 'body');
-  SectionPart? get footer =>
+  SectionDto? get body => firstWhereOrNull((part) => part.type.name == 'body');
+  SectionDto? get footer =>
       firstWhereOrNull((part) => part.type.name == 'footer');
 }
 

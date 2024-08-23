@@ -1,5 +1,4 @@
-import 'schema_validation.dart';
-import 'validators.dart';
+part of 'schema.dart';
 
 class SchemaValue<V> {
   const SchemaValue({
@@ -57,27 +56,35 @@ class SchemaValue<V> {
     }
   }
 
-  SchemaValidationResult validate(List<String> path, Object? value) {
-    if (value == null) {
-      return optionalValue
-          ? SchemaValidationResult.valid(path)
-          : SchemaValidationResult.requiredPropMissing(path);
-    }
-
-    final valueType = tryParse(value);
-
-    if (valueType == null) {
-      return SchemaValidationResult.invalidType(path, value, V.toString());
-    }
-
-    for (final validator in validators) {
-      final error = validator.validate(valueType);
-      if (error != null) {
-        return SchemaValidationResult.constraints(path, error.message);
+  ValidationResult validate(List<String> path, Object? value) {
+    try {
+      if (value == null) {
+        return optionalValue
+            ? ValidationResult.valid(path)
+            : throw RequiredPropMissingValidationError(
+                property: value.toString());
       }
-    }
 
-    return SchemaValidationResult.valid(path);
+      final valueType = tryParse(value);
+
+      if (valueType == null) {
+        throw InvalidTypeValidationError(
+          value: value.runtimeType,
+          expectedType: V,
+        );
+      }
+
+      for (final validator in validators) {
+        final error = validator.validate(valueType);
+        if (error != null) {
+          throw ConstraintsValidationError(error.message);
+        }
+      }
+
+      return ValidationResult.valid(path);
+    } on ValidationError catch (e) {
+      return ValidationResult(path: path, errors: [e]);
+    }
   }
 }
 
