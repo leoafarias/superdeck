@@ -1,155 +1,141 @@
 part of 'models.dart';
 
 @MappableEnum()
-enum SectionType {
-  root,
-  header,
-  body,
-  footer,
-}
-
-@MappableEnum()
-enum SubSectionType {
-  content,
+enum BlockType {
+  section,
+  column,
   image,
   widget,
 }
 
-interface class PartDto {
-  const PartDto();
+abstract class BlockDto<T extends ContentOptions> {
+  const BlockDto();
 }
 
-@MappableClass()
-abstract class SectionDto extends PartDto with SectionDtoMappable {
-  final SectionType type;
+@MappableClass(
+  includeCustomMappers: [OptionsMapper()],
+  // hook: BlockMappingHook(),
+)
+class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
+  final ContentOptions? options;
+  final List<SubSectionBlockDto> subSections;
 
-  final ContentOptions options;
-
-  final List<ContentSectionPart> contentSections;
-
-  SectionDto({
-    required this.type,
-    required this.options,
-    this.contentSections = const [],
+  SectionBlockDto({
+    this.options,
+    this.subSections = const [],
   });
 
-  factory SectionDto.build(
-    SectionType type, {
-    ContentOptions? options,
-  }) {
-    options ??= ContentOptions();
-    return switch (type) {
-      SectionType.header => HeaderLayoutPart(options: options),
-      SectionType.body => BodyLayoutPart(options: options),
-      SectionType.footer => FooterLayoutPart(options: options),
-      SectionType.root => RootLayoutPart(options: options),
-    };
-  }
+  SectionBlockDto addLine(String content) {
+    final lastPart = subSections.lastOrNull;
+    final subSectionsCopy = [...subSections];
 
-  String get name => type.name;
-
-  SectionDto addLine(String content) {
-    final lastPart = contentSections.lastOrNull;
-    final subSectionsCopy = [...contentSections];
-
-    if (lastPart is ContentPart) {
+    if (lastPart is ColumnBlockDto) {
       subSectionsCopy.last = lastPart.copyWith(
-        content: lastPart.content + '\n' + content,
+        content: '${lastPart.content}\n$content',
       );
     } else {
-      subSectionsCopy.add(ContentPart(
+      subSectionsCopy.add(ColumnBlockDto(
         content: content,
-        options: ContentOptions(),
       ));
     }
 
-    return copyWith(contentSections: subSectionsCopy);
+    return copyWith(subSections: subSectionsCopy);
   }
 
-  SectionDto addSubSection(ContentSectionPart part) {
-    return copyWith(contentSections: [...contentSections, part]);
+  SectionBlockDto addSubSection(SubSectionBlockDto part) {
+    return copyWith(subSections: [...subSections, part]);
   }
 }
 
-@MappableClass(discriminatorKey: 'type')
-sealed class ContentSectionPart<T extends ContentOptions> extends PartDto
-    with ContentSectionPartMappable {
-  @MappableField()
+@MappableClass(
+  discriminatorKey: 'type',
+  includeCustomMappers: [OptionsMapper()],
+  // hook: BlockMappingHook(),
+)
+sealed class SubSectionBlockDto<T extends ContentOptions> extends BlockDto
+    with SubSectionBlockDtoMappable {
   final String content;
-  final SubSectionType type;
 
-  final T options;
+  T? get options;
 
-  ContentSectionPart({
-    required this.type,
-    required this.content,
-    required this.options,
+  SubSectionBlockDto({
+    this.content = '',
   });
 }
 
-@MappableClass(discriminatorValue: 'content')
-class ContentPart extends ContentSectionPart<ContentOptions>
-    with ContentPartMappable {
-  ContentPart({
-    required super.content,
-    required super.options,
-  }) : super(type: SubSectionType.content);
+@MappableClass(discriminatorValue: 'column')
+class ColumnBlockDto extends SubSectionBlockDto<ContentOptions>
+    with ColumnBlockDtoMappable {
+  @override
+  final ContentOptions? options;
+
+  ColumnBlockDto({
+    super.content,
+    this.options,
+  });
 }
 
 @MappableClass(discriminatorValue: 'widget')
-class WidgetPart extends ContentSectionPart<WidgetOptions>
-    with WidgetPartMappable {
-  WidgetPart({
-    required super.options,
-    required super.content,
-  }) : super(type: SubSectionType.widget);
+class WidgetBlockDto extends SubSectionBlockDto<WidgetOptions>
+    with WidgetBlockDtoMappable {
+  @override
+  final WidgetOptions? options;
+
+  WidgetBlockDto({
+    this.options,
+    super.content,
+  });
 }
 
 @MappableClass(discriminatorValue: 'image')
-class ImagePart extends ContentSectionPart<ImageOptions>
-    with ImagePartMappable {
-  ImagePart({
-    required super.options,
-    required super.content,
-  }) : super(type: SubSectionType.image);
+class ImageBlockDto extends SubSectionBlockDto<ImageOptions>
+    with ImageBlockDtoMappable {
+  @override
+  final ImageOptions? options;
+
+  ImageBlockDto({
+    this.options,
+    super.content,
+  });
 }
 
-@MappableClass(discriminatorValue: 'root')
-class RootLayoutPart extends SectionDto with RootLayoutPartMappable {
-  RootLayoutPart({
-    required super.options,
-    super.contentSections = const [],
-  }) : super(
-          type: SectionType.root,
-        );
-}
+// class BlockMappingHook extends MappingHook {
+//   const BlockMappingHook();
 
-@MappableClass(discriminatorValue: 'header')
-class HeaderLayoutPart extends SectionDto with HeaderLayoutPartMappable {
-  HeaderLayoutPart({
-    required super.options,
-    super.contentSections = const [],
-  }) : super(
-          type: SectionType.header,
-        );
-}
+//   @override
+//   Object? afterEncode(Object? value) {
+//     if (value is Map<dynamic, dynamic>) {
+//       if (value.isEmpty) {
+//         return null;
+//       } else {
+//         final valueCopy = {...value};
+//         for (var key in value.keys) {
+//           if (value[key] == null) {
+//             valueCopy.remove(key);
+//           }
+//         }
+//         return valueCopy;
+//       }
+//     }
 
-@MappableClass(discriminatorValue: 'body')
-class BodyLayoutPart extends SectionDto with BodyLayoutPartMappable {
-  BodyLayoutPart({
-    required super.options,
-    super.contentSections = const [],
-  }) : super(
-          type: SectionType.body,
-        );
-}
+//     return value;
+//   }
+// }
 
-@MappableClass(discriminatorValue: 'footer')
-class FooterLayoutPart extends SectionDto with FooterLayoutPartMappable {
-  FooterLayoutPart({
-    required super.options,
-    super.contentSections = const [],
-  }) : super(
-          type: SectionType.footer,
-        );
+class OptionsMapper extends SimpleMapper<ContentOptions> {
+  const OptionsMapper();
+
+  @override
+  ContentOptions decode(dynamic value) {
+    return ContentOptionsMapper.fromMap(value);
+  }
+
+  @override
+  dynamic encode(ContentOptions self) {
+    final map = self.toMap();
+    if (map.isEmpty) {
+      return null;
+    }
+    return map;
+  }
 }

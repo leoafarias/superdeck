@@ -10,6 +10,5 @@ global_options:
     options:
       caseStyle: snakeCase
       enumCaseStyle: snakeCase
-      discriminatorKey: type
       ignoreNull: true
       generateMethods: [decode, encode, copy, stringify, equals]

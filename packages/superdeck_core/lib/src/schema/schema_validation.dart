@@ -63,7 +63,7 @@ class InvalidTypeValidationError extends ValidationError {
     required this.expectedType,
   });
 
-  String get message => 'Invalid type: [$expectedType] got [$value]';
+  String get message => 'Invalid type: expected [$expectedType] got [$value]';
 }
 
 class ConstraintsValidationError extends ValidationError {

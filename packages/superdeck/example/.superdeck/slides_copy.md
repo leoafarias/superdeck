@@ -1,7 +1,6 @@
 ---
-style: custom
+style: 'custom'
 ---
-
 {@column}
 ## This is an example of a widgets
 
@@ -22,35 +21,20 @@ void main() {
 ```
 
 ---
+null
 ---
-
-```mermaid
-graph TD
-    A[Enter Chart Definition] --> B(Preview)
-    B --> C{decide}
-    C --> D[Keep]
-    C --> E[Edit Definition]
-    E --> B
-    D --> F[Save Image and Car]
-    F --> B  
-```
+![Mermaid Diagram](.superdeck/generated/mermaid_llAVsepR.png)
 
 {@column flex: 3}
 
-```mermaid
-sequenceDiagram
-    participant Customer as 🧑 Customer
-    participant Barista as ☕ Barista
-    participant CoffeeMachine as 🏭 Coffee Machine
-```
+![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
 
 
 <!-- Notes go here -->
 
 ---
-style: quote
+style: 'quote'
 ---
-
 {@section}
 {@column align: bottom_right flex: 3}
 # This presentation will be great
@@ -64,13 +48,11 @@ style: quote
 {@column flex: 2 align: top_right}
 > Create your Flutter presentations faster and easier than ever.
 > You can quote me on that
-> ### Leo 
-
+> ### Leo
 
 ---
-style: show_sections
+style: 'show_sections'
 ---
-
 {@section}
 {@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}
 
@@ -90,9 +72,8 @@ Easily customize the content of each section to suit your needs.
 Use front matter to define the layout of each section
 
 ---
-style: show_sections
+style: 'show_sections'
 ---
-
 {@section}
 {@column align: bottom_right}
 
@@ -124,4 +105,4 @@ sections:
   header:
     alignment: bottom_left
 ```
- 
+

@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:superdeck_cli/src/generator_pipeline.dart';
 import 'package:superdeck_cli/src/helpers/dart_process.dart';
-import 'package:superdeck_cli/src/slides_pipeline.dart';
 
 class DartFormatterTask extends Task {
   const DartFormatterTask() : super('dart_formatter');

@@ -1,4 +1,4 @@
-import 'package:superdeck_cli/src/slides_pipeline.dart';
+import 'package:superdeck_cli/src/generator_pipeline.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 class SDMarkdownParsingException implements Exception {

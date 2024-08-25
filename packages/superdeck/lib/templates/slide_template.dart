@@ -14,23 +14,23 @@ class SlideTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: config.sections.map((section) {
-        final sectionFlex = section.options.flex ?? 1;
+        final sectionFlex = section.options?.flex ?? 1;
 
         return Expanded(
           flex: sectionFlex,
           child: Row(
-            children: section.contentSections.map((part) {
+            children: section.subSections.map((part) {
               return Expanded(
                 flex: part.options.flex ?? 1,
                 child: switch (part) {
-                  (ImagePart p) => ImageBlock(
+                  (ImageBlockDto p) => ImageBlock(
                       options: p.options,
                     ),
-                  (ContentPart p) => ContentBlock(
+                  (ColumnBlockDto p) => ContentBlock(
                       content: p.content,
                       options: p.options,
                     ),
-                  (WidgetPart p) => WidgetBlock(
+                  (WidgetBlockDto p) => WidgetBlock(
                       options: p.options,
                     ),
                 },

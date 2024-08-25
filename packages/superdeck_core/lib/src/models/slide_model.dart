@@ -3,22 +3,18 @@ part of 'models.dart';
 @MappableClass()
 class Slide with SlideMappable {
   final int index;
-  final String content;
   final String key;
-  final List<SectionDto> sections;
   final SlideOptions? options;
+  final String content;
+  final List<SectionBlockDto> sections;
 
   Slide({
     required this.index,
-    required this.content,
     required this.key,
     this.options,
+    required this.content,
     this.sections = const [],
   });
-
-  static Slide parse(Map<String, dynamic> map) {
-    return Slide.fromMap(map);
-  }
 
   static Slide fromMap(Map<String, dynamic> map) {
     Slide.schema.validateOrThrow(map);
@@ -38,6 +34,3 @@ class Slide with SlideMappable {
     additionalProperties: false,
   );
 }
-
-@MappableRecord()
-typedef SectionData = ({String content, ContentOptions? options});

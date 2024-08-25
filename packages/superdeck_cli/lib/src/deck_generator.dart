@@ -9,14 +9,15 @@ import 'package:superdeck_cli/src/tasks/mermaid_task.dart';
 import 'package:superdeck_cli/src/tasks/slide_thumbnail_task.dart';
 import 'package:watcher/watcher.dart';
 
-import 'slides_pipeline.dart';
+import 'generator_pipeline.dart';
 
-String _markdownContents = '';
+String _previousMarkdownContents = '';
 
 class SlidesLoader {
   SlidesLoader();
 
   Future<void> watch() async {
+    await generate();
     final watchingLabel = 'Watching for changes...';
     logger
       ..newLine()
@@ -25,8 +26,8 @@ class SlidesLoader {
     await for (final event in watcher.events) {
       if (event.type == ChangeType.MODIFY) {
         final newContents = await kMarkdownFile.readAsString();
-        if (newContents != _markdownContents) {
-          _markdownContents = newContents;
+        if (newContents != _previousMarkdownContents) {
+          _previousMarkdownContents = newContents;
           try {
             await generate();
           } finally {

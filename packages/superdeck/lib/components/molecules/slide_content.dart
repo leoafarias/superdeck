@@ -108,6 +108,9 @@ class WidgetBlock extends StatelessWidget {
     if (widgetBuilder == null) {
       return Container(
         color: Colors.red,
+        child: Center(
+          child: Text('Widget not found: ${options.name}'),
+        ),
       );
     }
 

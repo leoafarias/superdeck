@@ -29,30 +29,3 @@ class DurationMapper extends SimpleMapper<Duration> {
     return self.inMilliseconds;
   }
 }
-
-class EmptyIterableToNullHook extends MappingHook {
-  const EmptyIterableToNullHook();
-  dynamic afterEncode(Object? value) {
-    if (value is Iterable && value.isEmpty) {
-      return null;
-    }
-
-    if (value is Map && value.isEmpty) {
-      return null;
-    }
-
-    if (value is String && value.isEmpty) {
-      return null;
-    }
-
-    if (value is List && value.isEmpty) {
-      return null;
-    }
-
-    if (value is Set && value.isEmpty) {
-      return null;
-    }
-
-    return value;
-  }
-}

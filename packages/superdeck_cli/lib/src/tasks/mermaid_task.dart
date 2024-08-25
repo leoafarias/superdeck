@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/helpers/logger.dart';
-import 'package:superdeck_cli/src/slides_pipeline.dart';
+import 'package:superdeck_cli/src/generator_pipeline.dart';
 
 // ---
 // title: Hello Title

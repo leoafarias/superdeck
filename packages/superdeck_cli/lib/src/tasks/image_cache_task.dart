@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:superdeck_cli/src/slides_pipeline.dart';
+import 'package:superdeck_cli/src/generator_pipeline.dart';
 
 class ImageCachingTask extends Task {
   const ImageCachingTask() : super('image_caching');
@@ -78,7 +78,7 @@ class ImageCachingTask extends Task {
           // Write the image data to the file
           await file.writeAsBytes(response.bodyBytes);
 
-          print('Image saved to: ${url}');
+          print('Image saved to: $url');
 
           await controller.markFileAsNeeded(file, url);
         } else {}

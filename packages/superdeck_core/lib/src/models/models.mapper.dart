@@ -795,14 +795,14 @@ extension CurveTypeMapperExtension on CurveType {
   }
 }
 
-class ConfigMapper extends SubClassMapperBase<Config> {
+class ConfigMapper extends ClassMapperBase<Config> {
   ConfigMapper._();
 
   static ConfigMapper? _instance;
   static ConfigMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ConfigMapper._());
-      SlideOptionsMapper.ensureInitialized().addSubMapper(_instance!);
+      SlideOptionsMapper.ensureInitialized();
       TransitionOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -837,14 +837,6 @@ class ConfigMapper extends SubClassMapperBase<Config> {
   };
   @override
   final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'Config';
-  @override
-  late final ClassMapperBase superMapper =
-      SlideOptionsMapper.ensureInitialized();
 
   static Config _instantiate(DecodingData data) {
     return Config(
@@ -1300,7 +1292,7 @@ class ImageOptionsMapper extends SubClassMapperBase<ImageOptions> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'ImageOptions';
+  final dynamic discriminatorValue = 'image';
   @override
   late final ClassMapperBase superMapper =
       ContentOptionsMapper.ensureInitialized();
@@ -1444,7 +1436,7 @@ class WidgetOptionsMapper extends SubClassMapperBase<WidgetOptions> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'WidgetOptions';
+  final dynamic discriminatorValue = 'widget_options';
   @override
   late final ClassMapperBase superMapper =
       ContentOptionsMapper.ensureInitialized();
@@ -1560,13 +1552,13 @@ class _WidgetOptionsCopyWithImpl<$R, $Out>
       _WidgetOptionsCopyWithImpl($value, $cast, t);
 }
 
-class SuperDeckReferenceMapper extends ClassMapperBase<SuperDeckReference> {
-  SuperDeckReferenceMapper._();
+class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {
+  ReferenceDtoMapper._();
 
-  static SuperDeckReferenceMapper? _instance;
-  static SuperDeckReferenceMapper ensureInitialized() {
+  static ReferenceDtoMapper? _instance;
+  static ReferenceDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SuperDeckReferenceMapper._());
+      MapperContainer.globals.use(_instance = ReferenceDtoMapper._());
       ConfigMapper.ensureInitialized();
       SlideMapper.ensureInitialized();
       SlideAssetMapper.ensureInitialized();
@@ -1575,20 +1567,20 @@ class SuperDeckReferenceMapper extends ClassMapperBase<SuperDeckReference> {
   }
 
   @override
-  final String id = 'SuperDeckReference';
+  final String id = 'ReferenceDto';
 
-  static Config _$config(SuperDeckReference v) => v.config;
-  static const Field<SuperDeckReference, Config> _f$config =
+  static Config _$config(ReferenceDto v) => v.config;
+  static const Field<ReferenceDto, Config> _f$config =
       Field('config', _$config);
-  static List<Slide> _$slides(SuperDeckReference v) => v.slides;
-  static const Field<SuperDeckReference, List<Slide>> _f$slides =
+  static List<Slide> _$slides(ReferenceDto v) => v.slides;
+  static const Field<ReferenceDto, List<Slide>> _f$slides =
       Field('slides', _$slides);
-  static List<SlideAsset> _$assets(SuperDeckReference v) => v.assets;
-  static const Field<SuperDeckReference, List<SlideAsset>> _f$assets =
+  static List<SlideAsset> _$assets(ReferenceDto v) => v.assets;
+  static const Field<ReferenceDto, List<SlideAsset>> _f$assets =
       Field('assets', _$assets);
 
   @override
-  final MappableFields<SuperDeckReference> fields = const {
+  final MappableFields<ReferenceDto> fields = const {
     #config: _f$config,
     #slides: _f$slides,
     #assets: _f$assets,
@@ -1596,8 +1588,8 @@ class SuperDeckReferenceMapper extends ClassMapperBase<SuperDeckReference> {
   @override
   final bool ignoreNull = true;
 
-  static SuperDeckReference _instantiate(DecodingData data) {
-    return SuperDeckReference(
+  static ReferenceDto _instantiate(DecodingData data) {
+    return ReferenceDto(
         config: data.dec(_f$config),
         slides: data.dec(_f$slides),
         assets: data.dec(_f$assets));
@@ -1606,75 +1598,71 @@ class SuperDeckReferenceMapper extends ClassMapperBase<SuperDeckReference> {
   @override
   final Function instantiate = _instantiate;
 
-  static SuperDeckReference fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SuperDeckReference>(map);
+  static ReferenceDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ReferenceDto>(map);
   }
 
-  static SuperDeckReference fromJson(String json) {
-    return ensureInitialized().decodeJson<SuperDeckReference>(json);
+  static ReferenceDto fromJson(String json) {
+    return ensureInitialized().decodeJson<ReferenceDto>(json);
   }
 }
 
-mixin SuperDeckReferenceMappable {
+mixin ReferenceDtoMappable {
   String toJson() {
-    return SuperDeckReferenceMapper.ensureInitialized()
-        .encodeJson<SuperDeckReference>(this as SuperDeckReference);
+    return ReferenceDtoMapper.ensureInitialized()
+        .encodeJson<ReferenceDto>(this as ReferenceDto);
   }
 
   Map<String, dynamic> toMap() {
-    return SuperDeckReferenceMapper.ensureInitialized()
-        .encodeMap<SuperDeckReference>(this as SuperDeckReference);
+    return ReferenceDtoMapper.ensureInitialized()
+        .encodeMap<ReferenceDto>(this as ReferenceDto);
   }
 
-  SuperDeckReferenceCopyWith<SuperDeckReference, SuperDeckReference,
-          SuperDeckReference>
-      get copyWith => _SuperDeckReferenceCopyWithImpl(
-          this as SuperDeckReference, $identity, $identity);
+  ReferenceDtoCopyWith<ReferenceDto, ReferenceDto, ReferenceDto> get copyWith =>
+      _ReferenceDtoCopyWithImpl(this as ReferenceDto, $identity, $identity);
   @override
   String toString() {
-    return SuperDeckReferenceMapper.ensureInitialized()
-        .stringifyValue(this as SuperDeckReference);
+    return ReferenceDtoMapper.ensureInitialized()
+        .stringifyValue(this as ReferenceDto);
   }
 
   @override
   bool operator ==(Object other) {
-    return SuperDeckReferenceMapper.ensureInitialized()
-        .equalsValue(this as SuperDeckReference, other);
+    return ReferenceDtoMapper.ensureInitialized()
+        .equalsValue(this as ReferenceDto, other);
   }
 
   @override
   int get hashCode {
-    return SuperDeckReferenceMapper.ensureInitialized()
-        .hashValue(this as SuperDeckReference);
+    return ReferenceDtoMapper.ensureInitialized()
+        .hashValue(this as ReferenceDto);
   }
 }
 
-extension SuperDeckReferenceValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, SuperDeckReference, $Out> {
-  SuperDeckReferenceCopyWith<$R, SuperDeckReference, $Out>
-      get $asSuperDeckReference =>
-          $base.as((v, t, t2) => _SuperDeckReferenceCopyWithImpl(v, t, t2));
+extension ReferenceDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ReferenceDto, $Out> {
+  ReferenceDtoCopyWith<$R, ReferenceDto, $Out> get $asReferenceDto =>
+      $base.as((v, t, t2) => _ReferenceDtoCopyWithImpl(v, t, t2));
 }
 
-abstract class SuperDeckReferenceCopyWith<$R, $In extends SuperDeckReference,
-    $Out> implements ClassCopyWith<$R, $In, $Out> {
+abstract class ReferenceDtoCopyWith<$R, $In extends ReferenceDto, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
   ConfigCopyWith<$R, Config, Config> get config;
   ListCopyWith<$R, Slide, SlideCopyWith<$R, Slide, Slide>> get slides;
   ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
       get assets;
   $R call({Config? config, List<Slide>? slides, List<SlideAsset>? assets});
-  SuperDeckReferenceCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+  ReferenceDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _SuperDeckReferenceCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SuperDeckReference, $Out>
-    implements SuperDeckReferenceCopyWith<$R, SuperDeckReference, $Out> {
-  _SuperDeckReferenceCopyWithImpl(super.value, super.then, super.then2);
+class _ReferenceDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ReferenceDto, $Out>
+    implements ReferenceDtoCopyWith<$R, ReferenceDto, $Out> {
+  _ReferenceDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<SuperDeckReference> $mapper =
-      SuperDeckReferenceMapper.ensureInitialized();
+  late final ClassMapperBase<ReferenceDto> $mapper =
+      ReferenceDtoMapper.ensureInitialized();
   @override
   ConfigCopyWith<$R, Config, Config> get config =>
       $value.config.copyWith.$chain((v) => call(config: v));
@@ -1694,15 +1682,15 @@ class _SuperDeckReferenceCopyWithImpl<$R, $Out>
         if (assets != null) #assets: assets
       }));
   @override
-  SuperDeckReference $make(CopyWithData data) => SuperDeckReference(
+  ReferenceDto $make(CopyWithData data) => ReferenceDto(
       config: data.get(#config, or: $value.config),
       slides: data.get(#slides, or: $value.slides),
       assets: data.get(#assets, or: $value.assets));
 
   @override
-  SuperDeckReferenceCopyWith<$R2, SuperDeckReference, $Out2> $chain<$R2, $Out2>(
+  ReferenceDtoCopyWith<$R2, ReferenceDto, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _SuperDeckReferenceCopyWithImpl($value, $cast, t);
+      _ReferenceDtoCopyWithImpl($value, $cast, t);
 }
 
 class SlideMapper extends ClassMapperBase<Slide> {
@@ -1713,7 +1701,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideMapper._());
       SlideOptionsMapper.ensureInitialized();
-      SectionDtoMapper.ensureInitialized();
+      SectionBlockDtoMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1723,23 +1711,23 @@ class SlideMapper extends ClassMapperBase<Slide> {
 
   static int _$index(Slide v) => v.index;
   static const Field<Slide, int> _f$index = Field('index', _$index);
-  static String _$content(Slide v) => v.content;
-  static const Field<Slide, String> _f$content = Field('content', _$content);
   static String _$key(Slide v) => v.key;
   static const Field<Slide, String> _f$key = Field('key', _$key);
   static SlideOptions? _$options(Slide v) => v.options;
   static const Field<Slide, SlideOptions> _f$options =
       Field('options', _$options, opt: true);
-  static List<SectionDto> _$sections(Slide v) => v.sections;
-  static const Field<Slide, List<SectionDto>> _f$sections =
+  static String _$content(Slide v) => v.content;
+  static const Field<Slide, String> _f$content = Field('content', _$content);
+  static List<SectionBlockDto> _$sections(Slide v) => v.sections;
+  static const Field<Slide, List<SectionBlockDto>> _f$sections =
       Field('sections', _$sections, opt: true, def: const []);
 
   @override
   final MappableFields<Slide> fields = const {
     #index: _f$index,
-    #content: _f$content,
     #key: _f$key,
     #options: _f$options,
+    #content: _f$content,
     #sections: _f$sections,
   };
   @override
@@ -1748,9 +1736,9 @@ class SlideMapper extends ClassMapperBase<Slide> {
   static Slide _instantiate(DecodingData data) {
     return Slide(
         index: data.dec(_f$index),
-        content: data.dec(_f$content),
         key: data.dec(_f$key),
         options: data.dec(_f$options),
+        content: data.dec(_f$content),
         sections: data.dec(_f$sections));
   }
 
@@ -1801,14 +1789,15 @@ extension SlideValueCopy<$R, $Out> on ObjectCopyWith<$R, Slide, $Out> {
 abstract class SlideCopyWith<$R, $In extends Slide, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options;
-  ListCopyWith<$R, SectionDto, SectionDtoCopyWith<$R, SectionDto, SectionDto>>
+  ListCopyWith<$R, SectionBlockDto,
+          SectionBlockDtoCopyWith<$R, SectionBlockDto, SectionBlockDto>>
       get sections;
   $R call(
       {int? index,
-      String? content,
       String? key,
       SlideOptions? options,
-      List<SectionDto>? sections});
+      String? content,
+      List<SectionBlockDto>? sections});
   SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -1822,29 +1811,30 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
   SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options =>
       $value.options?.copyWith.$chain((v) => call(options: v));
   @override
-  ListCopyWith<$R, SectionDto, SectionDtoCopyWith<$R, SectionDto, SectionDto>>
+  ListCopyWith<$R, SectionBlockDto,
+          SectionBlockDtoCopyWith<$R, SectionBlockDto, SectionBlockDto>>
       get sections => ListCopyWith($value.sections,
           (v, t) => v.copyWith.$chain(t), (v) => call(sections: v));
   @override
   $R call(
           {int? index,
-          String? content,
           String? key,
           Object? options = $none,
-          List<SectionDto>? sections}) =>
+          String? content,
+          List<SectionBlockDto>? sections}) =>
       $apply(FieldCopyWithData({
         if (index != null) #index: index,
-        if (content != null) #content: content,
         if (key != null) #key: key,
         if (options != $none) #options: options,
+        if (content != null) #content: content,
         if (sections != null) #sections: sections
       }));
   @override
   Slide $make(CopyWithData data) => Slide(
       index: data.get(#index, or: $value.index),
-      content: data.get(#content, or: $value.content),
       key: data.get(#key, or: $value.key),
       options: data.get(#options, or: $value.options),
+      content: data.get(#content, or: $value.content),
       sections: data.get(#sections, or: $value.sections));
 
   @override
@@ -1852,397 +1842,299 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
       _SlideCopyWithImpl($value, $cast, t);
 }
 
-class SectionDtoMapper extends ClassMapperBase<SectionDto> {
-  SectionDtoMapper._();
+class SectionBlockDtoMapper extends ClassMapperBase<SectionBlockDto> {
+  SectionBlockDtoMapper._();
 
-  static SectionDtoMapper? _instance;
-  static SectionDtoMapper ensureInitialized() {
+  static SectionBlockDtoMapper? _instance;
+  static SectionBlockDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SectionDtoMapper._());
-      RootLayoutPartMapper.ensureInitialized();
-      HeaderLayoutPartMapper.ensureInitialized();
-      BodyLayoutPartMapper.ensureInitialized();
-      FooterLayoutPartMapper.ensureInitialized();
-      SectionTypeMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = SectionBlockDtoMapper._());
+      MapperContainer.globals.useAll([OptionsMapper()]);
       ContentOptionsMapper.ensureInitialized();
-      ContentSectionPartMapper.ensureInitialized();
+      SubSectionBlockDtoMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'SectionDto';
+  final String id = 'SectionBlockDto';
 
-  static SectionType _$type(SectionDto v) => v.type;
-  static const Field<SectionDto, SectionType> _f$type = Field('type', _$type);
-  static ContentOptions _$options(SectionDto v) => v.options;
-  static const Field<SectionDto, ContentOptions> _f$options =
-      Field('options', _$options);
-  static List<ContentSectionPart<ContentOptions>> _$contentSections(
-          SectionDto v) =>
-      v.contentSections;
-  static const Field<SectionDto, List<ContentSectionPart<ContentOptions>>>
-      _f$contentSections = Field('contentSections', _$contentSections,
-          key: 'content_sections', opt: true, def: const []);
+  static ContentOptions? _$options(SectionBlockDto v) => v.options;
+  static const Field<SectionBlockDto, ContentOptions> _f$options =
+      Field('options', _$options, opt: true);
+  static List<SubSectionBlockDto<ContentOptions>> _$subSections(
+          SectionBlockDto v) =>
+      v.subSections;
+  static const Field<SectionBlockDto, List<SubSectionBlockDto<ContentOptions>>>
+      _f$subSections = Field('subSections', _$subSections,
+          key: 'sub_sections', opt: true, def: const []);
 
   @override
-  final MappableFields<SectionDto> fields = const {
-    #type: _f$type,
+  final MappableFields<SectionBlockDto> fields = const {
     #options: _f$options,
-    #contentSections: _f$contentSections,
+    #subSections: _f$subSections,
   };
   @override
   final bool ignoreNull = true;
 
-  static SectionDto _instantiate(DecodingData data) {
-    throw MapperException.missingSubclass(
-        'SectionDto', 'type', '${data.value['type']}');
+  static SectionBlockDto _instantiate(DecodingData data) {
+    return SectionBlockDto(
+        options: data.dec(_f$options), subSections: data.dec(_f$subSections));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static SectionDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SectionDto>(map);
+  static SectionBlockDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SectionBlockDto>(map);
   }
 
-  static SectionDto fromJson(String json) {
-    return ensureInitialized().decodeJson<SectionDto>(json);
+  static SectionBlockDto fromJson(String json) {
+    return ensureInitialized().decodeJson<SectionBlockDto>(json);
   }
 }
 
-mixin SectionDtoMappable {
-  String toJson();
-  Map<String, dynamic> toMap();
-  SectionDtoCopyWith<SectionDto, SectionDto, SectionDto> get copyWith;
+mixin SectionBlockDtoMappable {
+  String toJson() {
+    return SectionBlockDtoMapper.ensureInitialized()
+        .encodeJson<SectionBlockDto>(this as SectionBlockDto);
+  }
+
+  Map<String, dynamic> toMap() {
+    return SectionBlockDtoMapper.ensureInitialized()
+        .encodeMap<SectionBlockDto>(this as SectionBlockDto);
+  }
+
+  SectionBlockDtoCopyWith<SectionBlockDto, SectionBlockDto, SectionBlockDto>
+      get copyWith => _SectionBlockDtoCopyWithImpl(
+          this as SectionBlockDto, $identity, $identity);
+  @override
+  String toString() {
+    return SectionBlockDtoMapper.ensureInitialized()
+        .stringifyValue(this as SectionBlockDto);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return SectionBlockDtoMapper.ensureInitialized()
+        .equalsValue(this as SectionBlockDto, other);
+  }
+
+  @override
+  int get hashCode {
+    return SectionBlockDtoMapper.ensureInitialized()
+        .hashValue(this as SectionBlockDto);
+  }
 }
 
-abstract class SectionDtoCopyWith<$R, $In extends SectionDto, $Out>
+extension SectionBlockDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, SectionBlockDto, $Out> {
+  SectionBlockDtoCopyWith<$R, SectionBlockDto, $Out> get $asSectionBlockDto =>
+      $base.as((v, t, t2) => _SectionBlockDtoCopyWithImpl(v, t, t2));
+}
+
+abstract class SectionBlockDtoCopyWith<$R, $In extends SectionBlockDto, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
+  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get options;
   ListCopyWith<
       $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections;
+      SubSectionBlockDto<ContentOptions>,
+      SubSectionBlockDtoCopyWith<$R, SubSectionBlockDto<ContentOptions>,
+          SubSectionBlockDto<ContentOptions>, ContentOptions>> get subSections;
   $R call(
       {ContentOptions? options,
-      List<ContentSectionPart<ContentOptions>>? contentSections});
-  SectionDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class SectionTypeMapper extends EnumMapper<SectionType> {
-  SectionTypeMapper._();
-
-  static SectionTypeMapper? _instance;
-  static SectionTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SectionTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static SectionType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  SectionType decode(dynamic value) {
-    switch (value) {
-      case 'root':
-        return SectionType.root;
-      case 'header':
-        return SectionType.header;
-      case 'body':
-        return SectionType.body;
-      case 'footer':
-        return SectionType.footer;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(SectionType self) {
-    switch (self) {
-      case SectionType.root:
-        return 'root';
-      case SectionType.header:
-        return 'header';
-      case SectionType.body:
-        return 'body';
-      case SectionType.footer:
-        return 'footer';
-    }
-  }
-}
-
-extension SectionTypeMapperExtension on SectionType {
-  String toValue() {
-    SectionTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<SectionType>(this) as String;
-  }
-}
-
-class ContentSectionPartMapper extends ClassMapperBase<ContentSectionPart> {
-  ContentSectionPartMapper._();
-
-  static ContentSectionPartMapper? _instance;
-  static ContentSectionPartMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ContentSectionPartMapper._());
-      ContentPartMapper.ensureInitialized();
-      WidgetPartMapper.ensureInitialized();
-      ImagePartMapper.ensureInitialized();
-      SubSectionTypeMapper.ensureInitialized();
-      ContentOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'ContentSectionPart';
-  @override
-  Function get typeFactory =>
-      <T extends ContentOptions>(f) => f<ContentSectionPart<T>>();
-
-  static SubSectionType _$type(ContentSectionPart v) => v.type;
-  static const Field<ContentSectionPart, SubSectionType> _f$type =
-      Field('type', _$type);
-  static String _$content(ContentSectionPart v) => v.content;
-  static const Field<ContentSectionPart, String> _f$content =
-      Field('content', _$content);
-  static ContentOptions _$options(ContentSectionPart v) => v.options;
-  static dynamic _arg$options<T extends ContentOptions>(f) => f<T>();
-  static const Field<ContentSectionPart, ContentOptions> _f$options =
-      Field('options', _$options, arg: _arg$options);
-
-  @override
-  final MappableFields<ContentSectionPart> fields = const {
-    #type: _f$type,
-    #content: _f$content,
-    #options: _f$options,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static ContentSectionPart<T> _instantiate<T extends ContentOptions>(
-      DecodingData data) {
-    throw MapperException.missingSubclass(
-        'ContentSectionPart', 'type', '${data.value['type']}');
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static ContentSectionPart<T> fromMap<T extends ContentOptions>(
-      Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ContentSectionPart<T>>(map);
-  }
-
-  static ContentSectionPart<T> fromJson<T extends ContentOptions>(String json) {
-    return ensureInitialized().decodeJson<ContentSectionPart<T>>(json);
-  }
-}
-
-mixin ContentSectionPartMappable<T extends ContentOptions> {
-  String toJson();
-  Map<String, dynamic> toMap();
-  ContentSectionPartCopyWith<ContentSectionPart<T>, ContentSectionPart<T>,
-      ContentSectionPart<T>, T> get copyWith;
-}
-
-abstract class ContentSectionPartCopyWith<$R, $In extends ContentSectionPart<T>,
-    $Out, T extends ContentOptions> implements ClassCopyWith<$R, $In, $Out> {
-  ContentOptionsCopyWith<$R, ContentOptions, T> get options;
-  $R call({String? content, T? options});
-  ContentSectionPartCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+      List<SubSectionBlockDto<ContentOptions>>? subSections});
+  SectionBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
 
-class SubSectionTypeMapper extends EnumMapper<SubSectionType> {
-  SubSectionTypeMapper._();
+class _SectionBlockDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, SectionBlockDto, $Out>
+    implements SectionBlockDtoCopyWith<$R, SectionBlockDto, $Out> {
+  _SectionBlockDtoCopyWithImpl(super.value, super.then, super.then2);
 
-  static SubSectionTypeMapper? _instance;
-  static SubSectionTypeMapper ensureInitialized() {
+  @override
+  late final ClassMapperBase<SectionBlockDto> $mapper =
+      SectionBlockDtoMapper.ensureInitialized();
+  @override
+  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get options =>
+      $value.options?.copyWith.$chain((v) => call(options: v));
+  @override
+  ListCopyWith<
+      $R,
+      SubSectionBlockDto<ContentOptions>,
+      SubSectionBlockDtoCopyWith<
+          $R,
+          SubSectionBlockDto<ContentOptions>,
+          SubSectionBlockDto<ContentOptions>,
+          ContentOptions>> get subSections => ListCopyWith($value.subSections,
+      (v, t) => v.copyWith.$chain(t), (v) => call(subSections: v));
+  @override
+  $R call(
+          {Object? options = $none,
+          List<SubSectionBlockDto<ContentOptions>>? subSections}) =>
+      $apply(FieldCopyWithData({
+        if (options != $none) #options: options,
+        if (subSections != null) #subSections: subSections
+      }));
+  @override
+  SectionBlockDto $make(CopyWithData data) => SectionBlockDto(
+      options: data.get(#options, or: $value.options),
+      subSections: data.get(#subSections, or: $value.subSections));
+
+  @override
+  SectionBlockDtoCopyWith<$R2, SectionBlockDto, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _SectionBlockDtoCopyWithImpl($value, $cast, t);
+}
+
+class SubSectionBlockDtoMapper extends ClassMapperBase<SubSectionBlockDto> {
+  SubSectionBlockDtoMapper._();
+
+  static SubSectionBlockDtoMapper? _instance;
+  static SubSectionBlockDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SubSectionTypeMapper._());
+      MapperContainer.globals.use(_instance = SubSectionBlockDtoMapper._());
+      MapperContainer.globals.useAll([OptionsMapper()]);
+      ColumnBlockDtoMapper.ensureInitialized();
+      WidgetBlockDtoMapper.ensureInitialized();
+      ImageBlockDtoMapper.ensureInitialized();
+      ContentOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
 
-  static SubSectionType fromValue(dynamic value) {
+  @override
+  final String id = 'SubSectionBlockDto';
+  @override
+  Function get typeFactory =>
+      <T extends ContentOptions>(f) => f<SubSectionBlockDto<T>>();
+
+  static String _$content(SubSectionBlockDto v) => v.content;
+  static const Field<SubSectionBlockDto, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+
+  @override
+  final MappableFields<SubSectionBlockDto> fields = const {
+    #content: _f$content,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static SubSectionBlockDto<T> _instantiate<T extends ContentOptions>(
+      DecodingData data) {
+    throw MapperException.missingSubclass(
+        'SubSectionBlockDto', 'type', '${data.value['type']}');
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static SubSectionBlockDto<T> fromMap<T extends ContentOptions>(
+      Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SubSectionBlockDto<T>>(map);
+  }
+
+  static SubSectionBlockDto<T> fromJson<T extends ContentOptions>(String json) {
+    return ensureInitialized().decodeJson<SubSectionBlockDto<T>>(json);
+  }
+}
+
+mixin SubSectionBlockDtoMappable<T extends ContentOptions> {
+  String toJson();
+  Map<String, dynamic> toMap();
+  SubSectionBlockDtoCopyWith<SubSectionBlockDto<T>, SubSectionBlockDto<T>,
+      SubSectionBlockDto<T>, T> get copyWith;
+}
+
+abstract class SubSectionBlockDtoCopyWith<$R, $In extends SubSectionBlockDto<T>,
+    $Out, T extends ContentOptions> implements ClassCopyWith<$R, $In, $Out> {
+  $R call({String? content});
+  SubSectionBlockDtoCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class BlockTypeMapper extends EnumMapper<BlockType> {
+  BlockTypeMapper._();
+
+  static BlockTypeMapper? _instance;
+  static BlockTypeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = BlockTypeMapper._());
+    }
+    return _instance!;
+  }
+
+  static BlockType fromValue(dynamic value) {
     ensureInitialized();
     return MapperContainer.globals.fromValue(value);
   }
 
   @override
-  SubSectionType decode(dynamic value) {
+  BlockType decode(dynamic value) {
     switch (value) {
-      case 'content':
-        return SubSectionType.content;
+      case 'section':
+        return BlockType.section;
+      case 'column':
+        return BlockType.column;
       case 'image':
-        return SubSectionType.image;
+        return BlockType.image;
       case 'widget':
-        return SubSectionType.widget;
+        return BlockType.widget;
       default:
         throw MapperException.unknownEnumValue(value);
     }
   }
 
   @override
-  dynamic encode(SubSectionType self) {
+  dynamic encode(BlockType self) {
     switch (self) {
-      case SubSectionType.content:
-        return 'content';
-      case SubSectionType.image:
+      case BlockType.section:
+        return 'section';
+      case BlockType.column:
+        return 'column';
+      case BlockType.image:
         return 'image';
-      case SubSectionType.widget:
+      case BlockType.widget:
         return 'widget';
     }
   }
 }
 
-extension SubSectionTypeMapperExtension on SubSectionType {
+extension BlockTypeMapperExtension on BlockType {
   String toValue() {
-    SubSectionTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<SubSectionType>(this) as String;
+    BlockTypeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<BlockType>(this) as String;
   }
 }
 
-class SectionDataMapper extends RecordMapperBase<SectionData> {
-  static SectionDataMapper? _instance;
-  SectionDataMapper._();
+class ColumnBlockDtoMapper extends SubClassMapperBase<ColumnBlockDto> {
+  ColumnBlockDtoMapper._();
 
-  static SectionDataMapper ensureInitialized() {
+  static ColumnBlockDtoMapper? _instance;
+  static ColumnBlockDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SectionDataMapper._());
-      MapperBase.addType(<A, B>(f) => f<({A content, B options})>());
-    }
-    return _instance!;
-  }
-
-  static String _$content(SectionData v) => v.content;
-  static const Field<SectionData, String> _f$content =
-      Field('content', _$content);
-  static ContentOptions? _$options(SectionData v) => v.options;
-  static const Field<SectionData, ContentOptions> _f$options =
-      Field('options', _$options);
-
-  @override
-  final MappableFields<SectionData> fields = const {
-    #content: _f$content,
-    #options: _f$options,
-  };
-
-  @override
-  Function get typeFactory => (f) => f<SectionData>();
-
-  @override
-  List<Type> apply(MappingContext context) {
-    return [];
-  }
-
-  static SectionData _instantiate(DecodingData<SectionData> data) {
-    return (content: data.dec(_f$content), options: data.dec(_f$options));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static SectionData fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SectionData>(map);
-  }
-
-  static SectionData fromJson(String json) {
-    return ensureInitialized().decodeJson<SectionData>(json);
-  }
-}
-
-extension SectionDataMappable on SectionData {
-  Map<String, dynamic> toMap() {
-    return SectionDataMapper.ensureInitialized().encodeMap(this);
-  }
-
-  String toJson() {
-    return SectionDataMapper.ensureInitialized().encodeJson(this);
-  }
-
-  SectionDataCopyWith<SectionData> get copyWith =>
-      _SectionDataCopyWithImpl(this, $identity, $identity);
-}
-
-extension SectionDataValueCopy<$R>
-    on ObjectCopyWith<$R, SectionData, SectionData> {
-  SectionDataCopyWith<$R> get $asSectionData =>
-      $base.as((v, t, t2) => _SectionDataCopyWithImpl(v, t, t2));
-}
-
-abstract class SectionDataCopyWith<$R>
-    implements RecordCopyWith<$R, SectionData> {
-  $R call({String? content, ContentOptions? options});
-  SectionDataCopyWith<$R2> $chain<$R2>(Then<SectionData, $R2> t);
-}
-
-class _SectionDataCopyWithImpl<$R> extends RecordCopyWithBase<$R, SectionData>
-    implements SectionDataCopyWith<$R> {
-  _SectionDataCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final RecordMapperBase<SectionData> $mapper =
-      SectionDataMapper.ensureInitialized();
-  @override
-  $R call({String? content, Object? options = $none}) =>
-      $apply(FieldCopyWithData({
-        if (content != null) #content: content,
-        if (options != $none) #options: options
-      }));
-  @override
-  SectionData $make(CopyWithData data) => (
-        content: data.get(#content, or: $value.content),
-        options: data.get(#options, or: $value.options)
-      );
-
-  @override
-  SectionDataCopyWith<$R2> $chain<$R2>(Then<SectionData, $R2> t) =>
-      _SectionDataCopyWithImpl($value, $cast, t);
-}
-
-class ContentPartMapper extends SubClassMapperBase<ContentPart> {
-  ContentPartMapper._();
-
-  static ContentPartMapper? _instance;
-  static ContentPartMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ContentPartMapper._());
-      ContentSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
+      MapperContainer.globals.use(_instance = ColumnBlockDtoMapper._());
+      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
       ContentOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'ContentPart';
+  final String id = 'ColumnBlockDto';
 
-  static String _$content(ContentPart v) => v.content;
-  static const Field<ContentPart, String> _f$content =
-      Field('content', _$content);
-  static ContentOptions _$options(ContentPart v) => v.options;
-  static const Field<ContentPart, ContentOptions> _f$options =
-      Field('options', _$options);
-  static SubSectionType _$type(ContentPart v) => v.type;
-  static const Field<ContentPart, SubSectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
+  static String _$content(ColumnBlockDto v) => v.content;
+  static const Field<ColumnBlockDto, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+  static ContentOptions? _$options(ColumnBlockDto v) => v.options;
+  static const Field<ColumnBlockDto, ContentOptions> _f$options =
+      Field('options', _$options, opt: true);
 
   @override
-  final MappableFields<ContentPart> fields = const {
+  final MappableFields<ColumnBlockDto> fields = const {
     #content: _f$content,
     #options: _f$options,
-    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2250,140 +2142,136 @@ class ContentPartMapper extends SubClassMapperBase<ContentPart> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'content';
+  final dynamic discriminatorValue = 'column';
   @override
   late final ClassMapperBase superMapper =
-      ContentSectionPartMapper.ensureInitialized();
+      SubSectionBlockDtoMapper.ensureInitialized();
 
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(args: () => []);
   }
 
-  static ContentPart _instantiate(DecodingData data) {
-    return ContentPart(
+  static ColumnBlockDto _instantiate(DecodingData data) {
+    return ColumnBlockDto(
         content: data.dec(_f$content), options: data.dec(_f$options));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static ContentPart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ContentPart>(map);
+  static ColumnBlockDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ColumnBlockDto>(map);
   }
 
-  static ContentPart fromJson(String json) {
-    return ensureInitialized().decodeJson<ContentPart>(json);
+  static ColumnBlockDto fromJson(String json) {
+    return ensureInitialized().decodeJson<ColumnBlockDto>(json);
   }
 }
 
-mixin ContentPartMappable {
+mixin ColumnBlockDtoMappable {
   String toJson() {
-    return ContentPartMapper.ensureInitialized()
-        .encodeJson<ContentPart>(this as ContentPart);
+    return ColumnBlockDtoMapper.ensureInitialized()
+        .encodeJson<ColumnBlockDto>(this as ColumnBlockDto);
   }
 
   Map<String, dynamic> toMap() {
-    return ContentPartMapper.ensureInitialized()
-        .encodeMap<ContentPart>(this as ContentPart);
+    return ColumnBlockDtoMapper.ensureInitialized()
+        .encodeMap<ColumnBlockDto>(this as ColumnBlockDto);
   }
 
-  ContentPartCopyWith<ContentPart, ContentPart, ContentPart> get copyWith =>
-      _ContentPartCopyWithImpl(this as ContentPart, $identity, $identity);
+  ColumnBlockDtoCopyWith<ColumnBlockDto, ColumnBlockDto, ColumnBlockDto>
+      get copyWith => _ColumnBlockDtoCopyWithImpl(
+          this as ColumnBlockDto, $identity, $identity);
   @override
   String toString() {
-    return ContentPartMapper.ensureInitialized()
-        .stringifyValue(this as ContentPart);
+    return ColumnBlockDtoMapper.ensureInitialized()
+        .stringifyValue(this as ColumnBlockDto);
   }
 
   @override
   bool operator ==(Object other) {
-    return ContentPartMapper.ensureInitialized()
-        .equalsValue(this as ContentPart, other);
+    return ColumnBlockDtoMapper.ensureInitialized()
+        .equalsValue(this as ColumnBlockDto, other);
   }
 
   @override
   int get hashCode {
-    return ContentPartMapper.ensureInitialized().hashValue(this as ContentPart);
+    return ColumnBlockDtoMapper.ensureInitialized()
+        .hashValue(this as ColumnBlockDto);
   }
 }
 
-extension ContentPartValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ContentPart, $Out> {
-  ContentPartCopyWith<$R, ContentPart, $Out> get $asContentPart =>
-      $base.as((v, t, t2) => _ContentPartCopyWithImpl(v, t, t2));
+extension ColumnBlockDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ColumnBlockDto, $Out> {
+  ColumnBlockDtoCopyWith<$R, ColumnBlockDto, $Out> get $asColumnBlockDto =>
+      $base.as((v, t, t2) => _ColumnBlockDtoCopyWithImpl(v, t, t2));
 }
 
-abstract class ContentPartCopyWith<$R, $In extends ContentPart, $Out>
-    implements ContentSectionPartCopyWith<$R, $In, $Out, ContentOptions> {
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
+abstract class ColumnBlockDtoCopyWith<$R, $In extends ColumnBlockDto, $Out>
+    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, ContentOptions> {
+  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get options;
   @override
   $R call({String? content, ContentOptions? options});
-  ContentPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  ColumnBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
 }
 
-class _ContentPartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ContentPart, $Out>
-    implements ContentPartCopyWith<$R, ContentPart, $Out> {
-  _ContentPartCopyWithImpl(super.value, super.then, super.then2);
+class _ColumnBlockDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ColumnBlockDto, $Out>
+    implements ColumnBlockDtoCopyWith<$R, ColumnBlockDto, $Out> {
+  _ColumnBlockDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<ContentPart> $mapper =
-      ContentPartMapper.ensureInitialized();
+  late final ClassMapperBase<ColumnBlockDto> $mapper =
+      ColumnBlockDtoMapper.ensureInitialized();
   @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options =>
-      ($value.options as ContentOptions)
-          .copyWith
-          .$chain((v) => call(options: v));
+  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions>? get options =>
+      $value.options?.copyWith.$chain((v) => call(options: v));
   @override
-  $R call({String? content, ContentOptions? options}) =>
+  $R call({String? content, Object? options = $none}) =>
       $apply(FieldCopyWithData({
         if (content != null) #content: content,
-        if (options != null) #options: options
+        if (options != $none) #options: options
       }));
   @override
-  ContentPart $make(CopyWithData data) => ContentPart(
+  ColumnBlockDto $make(CopyWithData data) => ColumnBlockDto(
       content: data.get(#content, or: $value.content),
       options: data.get(#options, or: $value.options));
 
   @override
-  ContentPartCopyWith<$R2, ContentPart, $Out2> $chain<$R2, $Out2>(
+  ColumnBlockDtoCopyWith<$R2, ColumnBlockDto, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ContentPartCopyWithImpl($value, $cast, t);
+      _ColumnBlockDtoCopyWithImpl($value, $cast, t);
 }
 
-class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
-  WidgetPartMapper._();
+class WidgetBlockDtoMapper extends SubClassMapperBase<WidgetBlockDto> {
+  WidgetBlockDtoMapper._();
 
-  static WidgetPartMapper? _instance;
-  static WidgetPartMapper ensureInitialized() {
+  static WidgetBlockDtoMapper? _instance;
+  static WidgetBlockDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = WidgetPartMapper._());
-      ContentSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
+      MapperContainer.globals.use(_instance = WidgetBlockDtoMapper._());
+      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
       WidgetOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'WidgetPart';
+  final String id = 'WidgetBlockDto';
 
-  static WidgetOptions _$options(WidgetPart v) => v.options;
-  static const Field<WidgetPart, WidgetOptions> _f$options =
-      Field('options', _$options);
-  static String _$content(WidgetPart v) => v.content;
-  static const Field<WidgetPart, String> _f$content =
-      Field('content', _$content);
-  static SubSectionType _$type(WidgetPart v) => v.type;
-  static const Field<WidgetPart, SubSectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
+  static WidgetOptions? _$options(WidgetBlockDto v) => v.options;
+  static const Field<WidgetBlockDto, WidgetOptions> _f$options =
+      Field('options', _$options, opt: true);
+  static String _$content(WidgetBlockDto v) => v.content;
+  static const Field<WidgetBlockDto, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
 
   @override
-  final MappableFields<WidgetPart> fields = const {
+  final MappableFields<WidgetBlockDto> fields = const {
     #options: _f$options,
     #content: _f$content,
-    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2394,137 +2282,133 @@ class WidgetPartMapper extends SubClassMapperBase<WidgetPart> {
   final dynamic discriminatorValue = 'widget';
   @override
   late final ClassMapperBase superMapper =
-      ContentSectionPartMapper.ensureInitialized();
+      SubSectionBlockDtoMapper.ensureInitialized();
 
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(args: () => []);
   }
 
-  static WidgetPart _instantiate(DecodingData data) {
-    return WidgetPart(
+  static WidgetBlockDto _instantiate(DecodingData data) {
+    return WidgetBlockDto(
         options: data.dec(_f$options), content: data.dec(_f$content));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static WidgetPart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<WidgetPart>(map);
+  static WidgetBlockDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<WidgetBlockDto>(map);
   }
 
-  static WidgetPart fromJson(String json) {
-    return ensureInitialized().decodeJson<WidgetPart>(json);
+  static WidgetBlockDto fromJson(String json) {
+    return ensureInitialized().decodeJson<WidgetBlockDto>(json);
   }
 }
 
-mixin WidgetPartMappable {
+mixin WidgetBlockDtoMappable {
   String toJson() {
-    return WidgetPartMapper.ensureInitialized()
-        .encodeJson<WidgetPart>(this as WidgetPart);
+    return WidgetBlockDtoMapper.ensureInitialized()
+        .encodeJson<WidgetBlockDto>(this as WidgetBlockDto);
   }
 
   Map<String, dynamic> toMap() {
-    return WidgetPartMapper.ensureInitialized()
-        .encodeMap<WidgetPart>(this as WidgetPart);
+    return WidgetBlockDtoMapper.ensureInitialized()
+        .encodeMap<WidgetBlockDto>(this as WidgetBlockDto);
   }
 
-  WidgetPartCopyWith<WidgetPart, WidgetPart, WidgetPart> get copyWith =>
-      _WidgetPartCopyWithImpl(this as WidgetPart, $identity, $identity);
+  WidgetBlockDtoCopyWith<WidgetBlockDto, WidgetBlockDto, WidgetBlockDto>
+      get copyWith => _WidgetBlockDtoCopyWithImpl(
+          this as WidgetBlockDto, $identity, $identity);
   @override
   String toString() {
-    return WidgetPartMapper.ensureInitialized()
-        .stringifyValue(this as WidgetPart);
+    return WidgetBlockDtoMapper.ensureInitialized()
+        .stringifyValue(this as WidgetBlockDto);
   }
 
   @override
   bool operator ==(Object other) {
-    return WidgetPartMapper.ensureInitialized()
-        .equalsValue(this as WidgetPart, other);
+    return WidgetBlockDtoMapper.ensureInitialized()
+        .equalsValue(this as WidgetBlockDto, other);
   }
 
   @override
   int get hashCode {
-    return WidgetPartMapper.ensureInitialized().hashValue(this as WidgetPart);
+    return WidgetBlockDtoMapper.ensureInitialized()
+        .hashValue(this as WidgetBlockDto);
   }
 }
 
-extension WidgetPartValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, WidgetPart, $Out> {
-  WidgetPartCopyWith<$R, WidgetPart, $Out> get $asWidgetPart =>
-      $base.as((v, t, t2) => _WidgetPartCopyWithImpl(v, t, t2));
+extension WidgetBlockDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, WidgetBlockDto, $Out> {
+  WidgetBlockDtoCopyWith<$R, WidgetBlockDto, $Out> get $asWidgetBlockDto =>
+      $base.as((v, t, t2) => _WidgetBlockDtoCopyWithImpl(v, t, t2));
 }
 
-abstract class WidgetPartCopyWith<$R, $In extends WidgetPart, $Out>
-    implements ContentSectionPartCopyWith<$R, $In, $Out, WidgetOptions> {
-  @override
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options;
+abstract class WidgetBlockDtoCopyWith<$R, $In extends WidgetBlockDto, $Out>
+    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, WidgetOptions> {
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions>? get options;
   @override
   $R call({WidgetOptions? options, String? content});
-  WidgetPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  WidgetBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
 }
 
-class _WidgetPartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, WidgetPart, $Out>
-    implements WidgetPartCopyWith<$R, WidgetPart, $Out> {
-  _WidgetPartCopyWithImpl(super.value, super.then, super.then2);
+class _WidgetBlockDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, WidgetBlockDto, $Out>
+    implements WidgetBlockDtoCopyWith<$R, WidgetBlockDto, $Out> {
+  _WidgetBlockDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<WidgetPart> $mapper =
-      WidgetPartMapper.ensureInitialized();
+  late final ClassMapperBase<WidgetBlockDto> $mapper =
+      WidgetBlockDtoMapper.ensureInitialized();
   @override
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options =>
-      ($value.options as WidgetOptions)
-          .copyWith
-          .$chain((v) => call(options: v));
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions>? get options =>
+      $value.options?.copyWith.$chain((v) => call(options: v));
   @override
-  $R call({WidgetOptions? options, String? content}) =>
+  $R call({Object? options = $none, String? content}) =>
       $apply(FieldCopyWithData({
-        if (options != null) #options: options,
+        if (options != $none) #options: options,
         if (content != null) #content: content
       }));
   @override
-  WidgetPart $make(CopyWithData data) => WidgetPart(
+  WidgetBlockDto $make(CopyWithData data) => WidgetBlockDto(
       options: data.get(#options, or: $value.options),
       content: data.get(#content, or: $value.content));
 
   @override
-  WidgetPartCopyWith<$R2, WidgetPart, $Out2> $chain<$R2, $Out2>(
+  WidgetBlockDtoCopyWith<$R2, WidgetBlockDto, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _WidgetPartCopyWithImpl($value, $cast, t);
+      _WidgetBlockDtoCopyWithImpl($value, $cast, t);
 }
 
-class ImagePartMapper extends SubClassMapperBase<ImagePart> {
-  ImagePartMapper._();
+class ImageBlockDtoMapper extends SubClassMapperBase<ImageBlockDto> {
+  ImageBlockDtoMapper._();
 
-  static ImagePartMapper? _instance;
-  static ImagePartMapper ensureInitialized() {
+  static ImageBlockDtoMapper? _instance;
+  static ImageBlockDtoMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = ImagePartMapper._());
-      ContentSectionPartMapper.ensureInitialized().addSubMapper(_instance!);
+      MapperContainer.globals.use(_instance = ImageBlockDtoMapper._());
+      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
       ImageOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'ImagePart';
+  final String id = 'ImageBlockDto';
 
-  static ImageOptions _$options(ImagePart v) => v.options;
-  static const Field<ImagePart, ImageOptions> _f$options =
-      Field('options', _$options);
-  static String _$content(ImagePart v) => v.content;
-  static const Field<ImagePart, String> _f$content =
-      Field('content', _$content);
-  static SubSectionType _$type(ImagePart v) => v.type;
-  static const Field<ImagePart, SubSectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
+  static ImageOptions? _$options(ImageBlockDto v) => v.options;
+  static const Field<ImageBlockDto, ImageOptions> _f$options =
+      Field('options', _$options, opt: true);
+  static String _$content(ImageBlockDto v) => v.content;
+  static const Field<ImageBlockDto, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
 
   @override
-  final MappableFields<ImagePart> fields = const {
+  final MappableFields<ImageBlockDto> fields = const {
     #options: _f$options,
     #content: _f$content,
-    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2535,765 +2419,101 @@ class ImagePartMapper extends SubClassMapperBase<ImagePart> {
   final dynamic discriminatorValue = 'image';
   @override
   late final ClassMapperBase superMapper =
-      ContentSectionPartMapper.ensureInitialized();
+      SubSectionBlockDtoMapper.ensureInitialized();
 
   @override
   DecodingContext inherit(DecodingContext context) {
     return context.inherit(args: () => []);
   }
 
-  static ImagePart _instantiate(DecodingData data) {
-    return ImagePart(
+  static ImageBlockDto _instantiate(DecodingData data) {
+    return ImageBlockDto(
         options: data.dec(_f$options), content: data.dec(_f$content));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static ImagePart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ImagePart>(map);
+  static ImageBlockDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ImageBlockDto>(map);
   }
 
-  static ImagePart fromJson(String json) {
-    return ensureInitialized().decodeJson<ImagePart>(json);
+  static ImageBlockDto fromJson(String json) {
+    return ensureInitialized().decodeJson<ImageBlockDto>(json);
   }
 }
 
-mixin ImagePartMappable {
+mixin ImageBlockDtoMappable {
   String toJson() {
-    return ImagePartMapper.ensureInitialized()
-        .encodeJson<ImagePart>(this as ImagePart);
+    return ImageBlockDtoMapper.ensureInitialized()
+        .encodeJson<ImageBlockDto>(this as ImageBlockDto);
   }
 
   Map<String, dynamic> toMap() {
-    return ImagePartMapper.ensureInitialized()
-        .encodeMap<ImagePart>(this as ImagePart);
+    return ImageBlockDtoMapper.ensureInitialized()
+        .encodeMap<ImageBlockDto>(this as ImageBlockDto);
   }
 
-  ImagePartCopyWith<ImagePart, ImagePart, ImagePart> get copyWith =>
-      _ImagePartCopyWithImpl(this as ImagePart, $identity, $identity);
+  ImageBlockDtoCopyWith<ImageBlockDto, ImageBlockDto, ImageBlockDto>
+      get copyWith => _ImageBlockDtoCopyWithImpl(
+          this as ImageBlockDto, $identity, $identity);
   @override
   String toString() {
-    return ImagePartMapper.ensureInitialized()
-        .stringifyValue(this as ImagePart);
+    return ImageBlockDtoMapper.ensureInitialized()
+        .stringifyValue(this as ImageBlockDto);
   }
 
   @override
   bool operator ==(Object other) {
-    return ImagePartMapper.ensureInitialized()
-        .equalsValue(this as ImagePart, other);
+    return ImageBlockDtoMapper.ensureInitialized()
+        .equalsValue(this as ImageBlockDto, other);
   }
 
   @override
   int get hashCode {
-    return ImagePartMapper.ensureInitialized().hashValue(this as ImagePart);
+    return ImageBlockDtoMapper.ensureInitialized()
+        .hashValue(this as ImageBlockDto);
   }
 }
 
-extension ImagePartValueCopy<$R, $Out> on ObjectCopyWith<$R, ImagePart, $Out> {
-  ImagePartCopyWith<$R, ImagePart, $Out> get $asImagePart =>
-      $base.as((v, t, t2) => _ImagePartCopyWithImpl(v, t, t2));
+extension ImageBlockDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ImageBlockDto, $Out> {
+  ImageBlockDtoCopyWith<$R, ImageBlockDto, $Out> get $asImageBlockDto =>
+      $base.as((v, t, t2) => _ImageBlockDtoCopyWithImpl(v, t, t2));
 }
 
-abstract class ImagePartCopyWith<$R, $In extends ImagePart, $Out>
-    implements ContentSectionPartCopyWith<$R, $In, $Out, ImageOptions> {
-  @override
-  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options;
+abstract class ImageBlockDtoCopyWith<$R, $In extends ImageBlockDto, $Out>
+    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, ImageOptions> {
+  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions>? get options;
   @override
   $R call({ImageOptions? options, String? content});
-  ImagePartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+  ImageBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ImagePartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ImagePart, $Out>
-    implements ImagePartCopyWith<$R, ImagePart, $Out> {
-  _ImagePartCopyWithImpl(super.value, super.then, super.then2);
+class _ImageBlockDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ImageBlockDto, $Out>
+    implements ImageBlockDtoCopyWith<$R, ImageBlockDto, $Out> {
+  _ImageBlockDtoCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<ImagePart> $mapper =
-      ImagePartMapper.ensureInitialized();
+  late final ClassMapperBase<ImageBlockDto> $mapper =
+      ImageBlockDtoMapper.ensureInitialized();
   @override
-  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options =>
-      ($value.options as ImageOptions).copyWith.$chain((v) => call(options: v));
+  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions>? get options =>
+      $value.options?.copyWith.$chain((v) => call(options: v));
   @override
-  $R call({ImageOptions? options, String? content}) =>
+  $R call({Object? options = $none, String? content}) =>
       $apply(FieldCopyWithData({
-        if (options != null) #options: options,
+        if (options != $none) #options: options,
         if (content != null) #content: content
       }));
   @override
-  ImagePart $make(CopyWithData data) => ImagePart(
+  ImageBlockDto $make(CopyWithData data) => ImageBlockDto(
       options: data.get(#options, or: $value.options),
       content: data.get(#content, or: $value.content));
 
   @override
-  ImagePartCopyWith<$R2, ImagePart, $Out2> $chain<$R2, $Out2>(
+  ImageBlockDtoCopyWith<$R2, ImageBlockDto, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ImagePartCopyWithImpl($value, $cast, t);
-}
-
-class RootLayoutPartMapper extends SubClassMapperBase<RootLayoutPart> {
-  RootLayoutPartMapper._();
-
-  static RootLayoutPartMapper? _instance;
-  static RootLayoutPartMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = RootLayoutPartMapper._());
-      SectionDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      ContentOptionsMapper.ensureInitialized();
-      ContentSectionPartMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'RootLayoutPart';
-
-  static ContentOptions _$options(RootLayoutPart v) => v.options;
-  static const Field<RootLayoutPart, ContentOptions> _f$options =
-      Field('options', _$options);
-  static List<ContentSectionPart<ContentOptions>> _$contentSections(
-          RootLayoutPart v) =>
-      v.contentSections;
-  static const Field<RootLayoutPart, List<ContentSectionPart<ContentOptions>>>
-      _f$contentSections = Field('contentSections', _$contentSections,
-          key: 'content_sections', opt: true, def: const []);
-  static SectionType _$type(RootLayoutPart v) => v.type;
-  static const Field<RootLayoutPart, SectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
-
-  @override
-  final MappableFields<RootLayoutPart> fields = const {
-    #options: _f$options,
-    #contentSections: _f$contentSections,
-    #type: _f$type,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'root';
-  @override
-  late final ClassMapperBase superMapper = SectionDtoMapper.ensureInitialized();
-
-  static RootLayoutPart _instantiate(DecodingData data) {
-    return RootLayoutPart(
-        options: data.dec(_f$options),
-        contentSections: data.dec(_f$contentSections));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static RootLayoutPart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<RootLayoutPart>(map);
-  }
-
-  static RootLayoutPart fromJson(String json) {
-    return ensureInitialized().decodeJson<RootLayoutPart>(json);
-  }
-}
-
-mixin RootLayoutPartMappable {
-  String toJson() {
-    return RootLayoutPartMapper.ensureInitialized()
-        .encodeJson<RootLayoutPart>(this as RootLayoutPart);
-  }
-
-  Map<String, dynamic> toMap() {
-    return RootLayoutPartMapper.ensureInitialized()
-        .encodeMap<RootLayoutPart>(this as RootLayoutPart);
-  }
-
-  RootLayoutPartCopyWith<RootLayoutPart, RootLayoutPart, RootLayoutPart>
-      get copyWith => _RootLayoutPartCopyWithImpl(
-          this as RootLayoutPart, $identity, $identity);
-  @override
-  String toString() {
-    return RootLayoutPartMapper.ensureInitialized()
-        .stringifyValue(this as RootLayoutPart);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return RootLayoutPartMapper.ensureInitialized()
-        .equalsValue(this as RootLayoutPart, other);
-  }
-
-  @override
-  int get hashCode {
-    return RootLayoutPartMapper.ensureInitialized()
-        .hashValue(this as RootLayoutPart);
-  }
-}
-
-extension RootLayoutPartValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, RootLayoutPart, $Out> {
-  RootLayoutPartCopyWith<$R, RootLayoutPart, $Out> get $asRootLayoutPart =>
-      $base.as((v, t, t2) => _RootLayoutPartCopyWithImpl(v, t, t2));
-}
-
-abstract class RootLayoutPartCopyWith<$R, $In extends RootLayoutPart, $Out>
-    implements SectionDtoCopyWith<$R, $In, $Out> {
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections;
-  @override
-  $R call(
-      {ContentOptions? options,
-      List<ContentSectionPart<ContentOptions>>? contentSections});
-  RootLayoutPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _RootLayoutPartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, RootLayoutPart, $Out>
-    implements RootLayoutPartCopyWith<$R, RootLayoutPart, $Out> {
-  _RootLayoutPartCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<RootLayoutPart> $mapper =
-      RootLayoutPartMapper.ensureInitialized();
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections => ListCopyWith(
-      $value.contentSections,
-      (v, t) => v.copyWith.$chain(t),
-      (v) => call(contentSections: v));
-  @override
-  $R call(
-          {ContentOptions? options,
-          List<ContentSectionPart<ContentOptions>>? contentSections}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (contentSections != null) #contentSections: contentSections
-      }));
-  @override
-  RootLayoutPart $make(CopyWithData data) => RootLayoutPart(
-      options: data.get(#options, or: $value.options),
-      contentSections: data.get(#contentSections, or: $value.contentSections));
-
-  @override
-  RootLayoutPartCopyWith<$R2, RootLayoutPart, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _RootLayoutPartCopyWithImpl($value, $cast, t);
-}
-
-class HeaderLayoutPartMapper extends SubClassMapperBase<HeaderLayoutPart> {
-  HeaderLayoutPartMapper._();
-
-  static HeaderLayoutPartMapper? _instance;
-  static HeaderLayoutPartMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = HeaderLayoutPartMapper._());
-      SectionDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      ContentOptionsMapper.ensureInitialized();
-      ContentSectionPartMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'HeaderLayoutPart';
-
-  static ContentOptions _$options(HeaderLayoutPart v) => v.options;
-  static const Field<HeaderLayoutPart, ContentOptions> _f$options =
-      Field('options', _$options);
-  static List<ContentSectionPart<ContentOptions>> _$contentSections(
-          HeaderLayoutPart v) =>
-      v.contentSections;
-  static const Field<HeaderLayoutPart, List<ContentSectionPart<ContentOptions>>>
-      _f$contentSections = Field('contentSections', _$contentSections,
-          key: 'content_sections', opt: true, def: const []);
-  static SectionType _$type(HeaderLayoutPart v) => v.type;
-  static const Field<HeaderLayoutPart, SectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
-
-  @override
-  final MappableFields<HeaderLayoutPart> fields = const {
-    #options: _f$options,
-    #contentSections: _f$contentSections,
-    #type: _f$type,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'header';
-  @override
-  late final ClassMapperBase superMapper = SectionDtoMapper.ensureInitialized();
-
-  static HeaderLayoutPart _instantiate(DecodingData data) {
-    return HeaderLayoutPart(
-        options: data.dec(_f$options),
-        contentSections: data.dec(_f$contentSections));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static HeaderLayoutPart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<HeaderLayoutPart>(map);
-  }
-
-  static HeaderLayoutPart fromJson(String json) {
-    return ensureInitialized().decodeJson<HeaderLayoutPart>(json);
-  }
-}
-
-mixin HeaderLayoutPartMappable {
-  String toJson() {
-    return HeaderLayoutPartMapper.ensureInitialized()
-        .encodeJson<HeaderLayoutPart>(this as HeaderLayoutPart);
-  }
-
-  Map<String, dynamic> toMap() {
-    return HeaderLayoutPartMapper.ensureInitialized()
-        .encodeMap<HeaderLayoutPart>(this as HeaderLayoutPart);
-  }
-
-  HeaderLayoutPartCopyWith<HeaderLayoutPart, HeaderLayoutPart, HeaderLayoutPart>
-      get copyWith => _HeaderLayoutPartCopyWithImpl(
-          this as HeaderLayoutPart, $identity, $identity);
-  @override
-  String toString() {
-    return HeaderLayoutPartMapper.ensureInitialized()
-        .stringifyValue(this as HeaderLayoutPart);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return HeaderLayoutPartMapper.ensureInitialized()
-        .equalsValue(this as HeaderLayoutPart, other);
-  }
-
-  @override
-  int get hashCode {
-    return HeaderLayoutPartMapper.ensureInitialized()
-        .hashValue(this as HeaderLayoutPart);
-  }
-}
-
-extension HeaderLayoutPartValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, HeaderLayoutPart, $Out> {
-  HeaderLayoutPartCopyWith<$R, HeaderLayoutPart, $Out>
-      get $asHeaderLayoutPart =>
-          $base.as((v, t, t2) => _HeaderLayoutPartCopyWithImpl(v, t, t2));
-}
-
-abstract class HeaderLayoutPartCopyWith<$R, $In extends HeaderLayoutPart, $Out>
-    implements SectionDtoCopyWith<$R, $In, $Out> {
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections;
-  @override
-  $R call(
-      {ContentOptions? options,
-      List<ContentSectionPart<ContentOptions>>? contentSections});
-  HeaderLayoutPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _HeaderLayoutPartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, HeaderLayoutPart, $Out>
-    implements HeaderLayoutPartCopyWith<$R, HeaderLayoutPart, $Out> {
-  _HeaderLayoutPartCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<HeaderLayoutPart> $mapper =
-      HeaderLayoutPartMapper.ensureInitialized();
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections => ListCopyWith(
-      $value.contentSections,
-      (v, t) => v.copyWith.$chain(t),
-      (v) => call(contentSections: v));
-  @override
-  $R call(
-          {ContentOptions? options,
-          List<ContentSectionPart<ContentOptions>>? contentSections}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (contentSections != null) #contentSections: contentSections
-      }));
-  @override
-  HeaderLayoutPart $make(CopyWithData data) => HeaderLayoutPart(
-      options: data.get(#options, or: $value.options),
-      contentSections: data.get(#contentSections, or: $value.contentSections));
-
-  @override
-  HeaderLayoutPartCopyWith<$R2, HeaderLayoutPart, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _HeaderLayoutPartCopyWithImpl($value, $cast, t);
-}
-
-class BodyLayoutPartMapper extends SubClassMapperBase<BodyLayoutPart> {
-  BodyLayoutPartMapper._();
-
-  static BodyLayoutPartMapper? _instance;
-  static BodyLayoutPartMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = BodyLayoutPartMapper._());
-      SectionDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      ContentOptionsMapper.ensureInitialized();
-      ContentSectionPartMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'BodyLayoutPart';
-
-  static ContentOptions _$options(BodyLayoutPart v) => v.options;
-  static const Field<BodyLayoutPart, ContentOptions> _f$options =
-      Field('options', _$options);
-  static List<ContentSectionPart<ContentOptions>> _$contentSections(
-          BodyLayoutPart v) =>
-      v.contentSections;
-  static const Field<BodyLayoutPart, List<ContentSectionPart<ContentOptions>>>
-      _f$contentSections = Field('contentSections', _$contentSections,
-          key: 'content_sections', opt: true, def: const []);
-  static SectionType _$type(BodyLayoutPart v) => v.type;
-  static const Field<BodyLayoutPart, SectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
-
-  @override
-  final MappableFields<BodyLayoutPart> fields = const {
-    #options: _f$options,
-    #contentSections: _f$contentSections,
-    #type: _f$type,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'body';
-  @override
-  late final ClassMapperBase superMapper = SectionDtoMapper.ensureInitialized();
-
-  static BodyLayoutPart _instantiate(DecodingData data) {
-    return BodyLayoutPart(
-        options: data.dec(_f$options),
-        contentSections: data.dec(_f$contentSections));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static BodyLayoutPart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<BodyLayoutPart>(map);
-  }
-
-  static BodyLayoutPart fromJson(String json) {
-    return ensureInitialized().decodeJson<BodyLayoutPart>(json);
-  }
-}
-
-mixin BodyLayoutPartMappable {
-  String toJson() {
-    return BodyLayoutPartMapper.ensureInitialized()
-        .encodeJson<BodyLayoutPart>(this as BodyLayoutPart);
-  }
-
-  Map<String, dynamic> toMap() {
-    return BodyLayoutPartMapper.ensureInitialized()
-        .encodeMap<BodyLayoutPart>(this as BodyLayoutPart);
-  }
-
-  BodyLayoutPartCopyWith<BodyLayoutPart, BodyLayoutPart, BodyLayoutPart>
-      get copyWith => _BodyLayoutPartCopyWithImpl(
-          this as BodyLayoutPart, $identity, $identity);
-  @override
-  String toString() {
-    return BodyLayoutPartMapper.ensureInitialized()
-        .stringifyValue(this as BodyLayoutPart);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return BodyLayoutPartMapper.ensureInitialized()
-        .equalsValue(this as BodyLayoutPart, other);
-  }
-
-  @override
-  int get hashCode {
-    return BodyLayoutPartMapper.ensureInitialized()
-        .hashValue(this as BodyLayoutPart);
-  }
-}
-
-extension BodyLayoutPartValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, BodyLayoutPart, $Out> {
-  BodyLayoutPartCopyWith<$R, BodyLayoutPart, $Out> get $asBodyLayoutPart =>
-      $base.as((v, t, t2) => _BodyLayoutPartCopyWithImpl(v, t, t2));
-}
-
-abstract class BodyLayoutPartCopyWith<$R, $In extends BodyLayoutPart, $Out>
-    implements SectionDtoCopyWith<$R, $In, $Out> {
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections;
-  @override
-  $R call(
-      {ContentOptions? options,
-      List<ContentSectionPart<ContentOptions>>? contentSections});
-  BodyLayoutPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _BodyLayoutPartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, BodyLayoutPart, $Out>
-    implements BodyLayoutPartCopyWith<$R, BodyLayoutPart, $Out> {
-  _BodyLayoutPartCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<BodyLayoutPart> $mapper =
-      BodyLayoutPartMapper.ensureInitialized();
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections => ListCopyWith(
-      $value.contentSections,
-      (v, t) => v.copyWith.$chain(t),
-      (v) => call(contentSections: v));
-  @override
-  $R call(
-          {ContentOptions? options,
-          List<ContentSectionPart<ContentOptions>>? contentSections}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (contentSections != null) #contentSections: contentSections
-      }));
-  @override
-  BodyLayoutPart $make(CopyWithData data) => BodyLayoutPart(
-      options: data.get(#options, or: $value.options),
-      contentSections: data.get(#contentSections, or: $value.contentSections));
-
-  @override
-  BodyLayoutPartCopyWith<$R2, BodyLayoutPart, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _BodyLayoutPartCopyWithImpl($value, $cast, t);
-}
-
-class FooterLayoutPartMapper extends SubClassMapperBase<FooterLayoutPart> {
-  FooterLayoutPartMapper._();
-
-  static FooterLayoutPartMapper? _instance;
-  static FooterLayoutPartMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = FooterLayoutPartMapper._());
-      SectionDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      ContentOptionsMapper.ensureInitialized();
-      ContentSectionPartMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'FooterLayoutPart';
-
-  static ContentOptions _$options(FooterLayoutPart v) => v.options;
-  static const Field<FooterLayoutPart, ContentOptions> _f$options =
-      Field('options', _$options);
-  static List<ContentSectionPart<ContentOptions>> _$contentSections(
-          FooterLayoutPart v) =>
-      v.contentSections;
-  static const Field<FooterLayoutPart, List<ContentSectionPart<ContentOptions>>>
-      _f$contentSections = Field('contentSections', _$contentSections,
-          key: 'content_sections', opt: true, def: const []);
-  static SectionType _$type(FooterLayoutPart v) => v.type;
-  static const Field<FooterLayoutPart, SectionType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
-
-  @override
-  final MappableFields<FooterLayoutPart> fields = const {
-    #options: _f$options,
-    #contentSections: _f$contentSections,
-    #type: _f$type,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'footer';
-  @override
-  late final ClassMapperBase superMapper = SectionDtoMapper.ensureInitialized();
-
-  static FooterLayoutPart _instantiate(DecodingData data) {
-    return FooterLayoutPart(
-        options: data.dec(_f$options),
-        contentSections: data.dec(_f$contentSections));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static FooterLayoutPart fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<FooterLayoutPart>(map);
-  }
-
-  static FooterLayoutPart fromJson(String json) {
-    return ensureInitialized().decodeJson<FooterLayoutPart>(json);
-  }
-}
-
-mixin FooterLayoutPartMappable {
-  String toJson() {
-    return FooterLayoutPartMapper.ensureInitialized()
-        .encodeJson<FooterLayoutPart>(this as FooterLayoutPart);
-  }
-
-  Map<String, dynamic> toMap() {
-    return FooterLayoutPartMapper.ensureInitialized()
-        .encodeMap<FooterLayoutPart>(this as FooterLayoutPart);
-  }
-
-  FooterLayoutPartCopyWith<FooterLayoutPart, FooterLayoutPart, FooterLayoutPart>
-      get copyWith => _FooterLayoutPartCopyWithImpl(
-          this as FooterLayoutPart, $identity, $identity);
-  @override
-  String toString() {
-    return FooterLayoutPartMapper.ensureInitialized()
-        .stringifyValue(this as FooterLayoutPart);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return FooterLayoutPartMapper.ensureInitialized()
-        .equalsValue(this as FooterLayoutPart, other);
-  }
-
-  @override
-  int get hashCode {
-    return FooterLayoutPartMapper.ensureInitialized()
-        .hashValue(this as FooterLayoutPart);
-  }
-}
-
-extension FooterLayoutPartValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, FooterLayoutPart, $Out> {
-  FooterLayoutPartCopyWith<$R, FooterLayoutPart, $Out>
-      get $asFooterLayoutPart =>
-          $base.as((v, t, t2) => _FooterLayoutPartCopyWithImpl(v, t, t2));
-}
-
-abstract class FooterLayoutPartCopyWith<$R, $In extends FooterLayoutPart, $Out>
-    implements SectionDtoCopyWith<$R, $In, $Out> {
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options;
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections;
-  @override
-  $R call(
-      {ContentOptions? options,
-      List<ContentSectionPart<ContentOptions>>? contentSections});
-  FooterLayoutPartCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _FooterLayoutPartCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, FooterLayoutPart, $Out>
-    implements FooterLayoutPartCopyWith<$R, FooterLayoutPart, $Out> {
-  _FooterLayoutPartCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<FooterLayoutPart> $mapper =
-      FooterLayoutPartMapper.ensureInitialized();
-  @override
-  ContentOptionsCopyWith<$R, ContentOptions, ContentOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  ListCopyWith<
-      $R,
-      ContentSectionPart<ContentOptions>,
-      ContentSectionPartCopyWith<
-          $R,
-          ContentSectionPart<ContentOptions>,
-          ContentSectionPart<ContentOptions>,
-          ContentOptions>> get contentSections => ListCopyWith(
-      $value.contentSections,
-      (v, t) => v.copyWith.$chain(t),
-      (v) => call(contentSections: v));
-  @override
-  $R call(
-          {ContentOptions? options,
-          List<ContentSectionPart<ContentOptions>>? contentSections}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (contentSections != null) #contentSections: contentSections
-      }));
-  @override
-  FooterLayoutPart $make(CopyWithData data) => FooterLayoutPart(
-      options: data.get(#options, or: $value.options),
-      contentSections: data.get(#contentSections, or: $value.contentSections));
-
-  @override
-  FooterLayoutPartCopyWith<$R2, FooterLayoutPart, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _FooterLayoutPartCopyWithImpl($value, $cast, t);
+      _ImageBlockDtoCopyWithImpl($value, $cast, t);
 }

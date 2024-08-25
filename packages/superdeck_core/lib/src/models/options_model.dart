@@ -1,6 +1,6 @@
 part of 'models.dart';
 
-@MappableClass()
+@MappableClass(discriminatorValue: 'content')
 class ContentOptions with ContentOptionsMappable {
   final ContentAlignment? align;
   final int? flex;
@@ -25,7 +25,7 @@ class ContentOptions with ContentOptionsMappable {
   bool get isEmpty => flex == null && align == null;
 }
 
-@MappableClass()
+@MappableClass(discriminatorValue: 'image')
 class ImageOptions extends ContentOptions with ImageOptionsMappable {
   final String src;
   final ImageFit? fit;
@@ -45,7 +45,10 @@ class ImageOptions extends ContentOptions with ImageOptionsMappable {
   );
 }
 
-@MappableClass(hook: UnmappedPropertiesHook('args'))
+@MappableClass(
+  discriminatorValue: 'widget_options',
+  hook: UnmappedPropertiesHook('args'),
+)
 class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;

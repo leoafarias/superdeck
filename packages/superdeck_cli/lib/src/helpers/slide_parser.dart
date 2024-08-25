@@ -50,7 +50,7 @@ class SlideParser {
         return {
           'index': index,
           'content': e.content,
-          'options': e.options,
+          if (e.options.isNotEmpty) 'options': e.options,
           'key': e.key,
         };
       });

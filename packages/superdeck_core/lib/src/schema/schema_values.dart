@@ -34,19 +34,14 @@ class SchemaValue<V> {
     if (value is V) {
       return value;
     }
-    if (V is int) {
-      return _tryParseInt(value) as V?;
-    }
+    final type = V.toString();
 
-    if (V is double) {
-      return _tryParseDouble(value) as V?;
-    }
-
-    if (V is bool) {
-      return _tryParseBool(value) as V?;
-    }
-
-    return null;
+    return switch (type) {
+      'int' => _tryParseInt(value) as V?,
+      'double' => _tryParseDouble(value) as V?,
+      'bool' => _tryParseBool(value) as V?,
+      _ => null,
+    };
   }
 
   void validateOrThrow(Object value) {

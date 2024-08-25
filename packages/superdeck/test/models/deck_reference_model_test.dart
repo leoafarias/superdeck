@@ -12,7 +12,7 @@ void main() {
       final contents = await fixture.readAsString();
 
       final stopwatch = Stopwatch()..start();
-      SuperDeckReference.fromJson(contents);
+      ReferenceDto.fromJson(contents);
       stopwatch.stop();
 
       // Use Isolate.compute to run the parsing in a separate isolate
@@ -20,7 +20,7 @@ void main() {
 
       final stopwatch2 = Stopwatch()..start();
 
-      await compute(SuperDeckReference.fromJson, contents);
+      await compute(ReferenceDto.fromJson, contents);
 
       stopwatch2.stop();
 
@@ -32,7 +32,7 @@ void main() {
     test('parses a json deck reference', () async {
       final fixture = File('test/fixtures/deck_reference.json');
       final contents = await fixture.readAsString();
-      final deckReference = SuperDeckReference.fromJson(contents);
+      final deckReference = ReferenceDto.fromJson(contents);
 
       expect(deckReference, isNotNull);
       expect(deckReference.config, isNotNull);

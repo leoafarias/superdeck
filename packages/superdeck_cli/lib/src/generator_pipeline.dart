@@ -9,10 +9,11 @@ import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
-import 'package:superdeck_cli/src/helpers/section_parsing.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
 import 'package:superdeck_cli/src/helpers/slide_parser.dart';
+import 'package:superdeck_cli/src/parsers/section_parser/section_parsing.dart';
 import 'package:superdeck_core/superdeck_core.dart';
+import 'package:yaml_writer/yaml_writer.dart';
 
 typedef MarkdownReplacement = ({
   Pattern pattern,
@@ -118,9 +119,7 @@ class TaskPipeline {
   );
 
   Future<Browser> getBrowser() async {
-    if (_browser == null) {
-      _browser = await puppeteer.launch();
-    }
+    _browser ??= await puppeteer.launch();
     return _browser!;
   }
 
@@ -133,13 +132,14 @@ class TaskPipeline {
     return controller;
   }
 
-  Future<SuperDeckReference> run() async {
+  Future<ReferenceDto> run() async {
     await kMarkdownFile.ensureExists();
     await kGeneratedAssetsDir.ensureExists();
     await kReferenceFile.ensureExists();
     final markdownRaw = kMarkdownFile.readAsStringSync();
 
-    final loadedReference = SuperDeckReference.loadFile(kReferenceFile);
+    // final loadedReference = SuperDeckReference.loadYaml(kReferenceFileYaml);
+    final loadedReference = ReferenceDto.loadFile(kReferenceFile);
 
     final slides = SlideParser.run(markdownRaw);
 
@@ -166,17 +166,22 @@ class TaskPipeline {
 
     await _cleanupGeneratedFiles(result.neededAssets);
 
-    builders.forEach((builder) async => await builder.dispose());
+    for (var builder in builders) {
+      await builder.dispose();
+    }
 
     _browser?.close();
 
-    final reference = SuperDeckReference(
+    final reference = ReferenceDto(
       config: Config.loadFile(kProjectConfigFile),
       slides: result.slides,
       assets: result.neededAssets,
     );
 
     await kReferenceFile.writeAsString(prettyJson(reference.toMap()));
+    await kReferenceFileYaml
+        .writeAsString(YamlWriter().write(reference.toMap()));
+    await kReferenceMarkdownCopy.writeAsString(reference.toMarkdown());
 
     return reference;
   }
@@ -204,12 +209,6 @@ Future<void> _applyMarkdownReplacements(
   }
 
   await kMarkdownFile.writeAsString(markdownRaw);
-}
-
-enum AssetExtension {
-  png,
-
-  svg,
 }
 
 abstract class Task {
@@ -280,4 +279,77 @@ Future<List<File>> _loadGeneratedFiles() async {
   }
 
   return files;
+}
+
+extension on Slide {
+  String toMarkdown() {
+    final buffer = StringBuffer();
+
+    buffer.writeln('---');
+    buffer.write(YamlWriter().write(options?.toMap()));
+    buffer.writeln('---');
+
+    buffer.writeln(content);
+
+    // for (var section in sections) {
+    //   buffer.writeln(section.toMarkdown());
+    // }
+
+    return buffer.toString();
+  }
+}
+
+extension on ReferenceDto {
+  String toMarkdown() {
+    final buffer = StringBuffer();
+
+    for (var slide in slides) {
+      buffer.writeln(slide.toMarkdown());
+    }
+
+    return buffer.toString();
+  }
+}
+
+extension on SectionBlockDto {
+  String toMarkdown() {
+    final options = this.options?.toMap() ?? {};
+
+    final slideBuffer = StringBuffer();
+
+    final optionsBuffer = _optionsToString(options);
+
+    slideBuffer.writeln('{@section$optionsBuffer}');
+
+    for (var section in subSections) {
+      final options = section.options?.toMap() ?? {};
+      final optionsBuffer = _optionsToString(options);
+
+      final type = section.toMap()['type'];
+
+      slideBuffer.writeln('{@$type$optionsBuffer}');
+      if (section is ColumnBlockDto) {
+        final contents = section.content.split('\n');
+        for (var content in contents) {
+          slideBuffer.writeln(content);
+        }
+      }
+      slideBuffer.writeln('');
+    }
+
+    return slideBuffer.toString();
+  }
+
+  String _optionsToString(Map<String, dynamic> map) {
+    final buffer = StringBuffer();
+    final cleanMap = {...map}..remove('type');
+    for (var key in cleanMap.keys) {
+      final value = cleanMap[key];
+      if (value != null) {
+        buffer.write(' $key: $value');
+      }
+    }
+
+    return buffer.toString();
+  }
 }

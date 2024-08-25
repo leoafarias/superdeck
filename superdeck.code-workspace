@@ -1,10 +1,6 @@
 {
 	"folders": [
 		{
-			"name": "root",
-			"path": "."
-		},
-		{
 			"name": "superdeck",
 			"path": "packages/superdeck"
 		},

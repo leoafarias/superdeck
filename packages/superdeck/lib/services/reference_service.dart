@@ -58,17 +58,17 @@ class ReferenceService {
     }
   }
 
-  Future<SuperDeckReference> loadReference() async {
+  Future<ReferenceDto> loadReference() async {
     final slidesJson = await loadString(_slideRef.path);
     try {
       if (kCanRunProcess) {
-        return compute(SuperDeckReference.fromJson, slidesJson);
+        return compute(ReferenceDto.fromJson, slidesJson);
       } else {
-        return SuperDeckReference.fromJson(slidesJson);
+        return ReferenceDto.fromJson(slidesJson);
       }
     } catch (e) {
       log('Error loading deck: $e');
-      return const SuperDeckReference.empty();
+      return const ReferenceDto.empty();
     }
   }
 }

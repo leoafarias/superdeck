@@ -1,1 +1,1 @@
-export 'package:superdeck_cli/src/slides_loader.dart' show SlidesLoader;
+export 'package:superdeck_cli/src/deck_generator.dart' show SlidesLoader;
