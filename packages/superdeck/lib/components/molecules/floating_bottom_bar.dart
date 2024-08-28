@@ -6,10 +6,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../helpers/routes.dart';
 
 class FloatingBottomBar extends StatefulWidget {
-  final bool isVisible;
   const FloatingBottomBar({
     super.key,
-    required this.isVisible,
   });
 
   static double height = 80;
@@ -24,17 +22,17 @@ class _FloatingBottomBarState extends State<FloatingBottomBar> {
     final isDrawerOpen = context.isDrawerOpen;
     return Container(
       height: FloatingBottomBar.height,
-      padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
       width: MediaQuery.sizeOf(context).width,
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 60,
             decoration: BoxDecoration(
               color: const Color.fromARGB(171, 0, 0, 0),
-              border: Border(
+              border: const Border(
                 top: BorderSide(
                   color: Colors.white10,
                   width: 1,
@@ -54,7 +52,7 @@ class _FloatingBottomBarState extends State<FloatingBottomBar> {
                   ),
                   onPressed: () => context.toggleDrawer(),
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => context.previousSlide(),
@@ -63,7 +61,7 @@ class _FloatingBottomBarState extends State<FloatingBottomBar> {
                   icon: const Icon(Icons.arrow_forward),
                   onPressed: () => context.nextSlide(),
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
                   onPressed: () => context.closePresenterMenu(),
                   icon: const Icon(Icons.close),

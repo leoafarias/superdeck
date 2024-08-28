@@ -47,14 +47,6 @@ class SplitView extends HookWidget {
       }
     }, [isBottomOpen, isSideOpen]);
 
-    // usePostFrameEffect(() {
-    //   if (isSideOpen) {
-    //     sideAnimation.forward();
-    //   } else {
-    //     sideAnimation.reverse();
-    //   }
-    // }, [isSideOpen]);
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 9, 9, 9),
       key: kScaffoldKey,
@@ -86,9 +78,7 @@ class SplitView extends HookWidget {
           AnimatedPositioned(
             duration: Durations.short2,
             bottom: isBottomOpen ? 0 : -FloatingBottomBar.height,
-            child: FloatingBottomBar(
-              isVisible: true,
-            ),
+            child: const FloatingBottomBar(),
           ),
         ],
       ),

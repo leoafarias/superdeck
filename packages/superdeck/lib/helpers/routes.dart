@@ -73,7 +73,7 @@ final goRouterConfig = GoRouter(
             GoRoute(
               path: SDPaths.root.goRoute,
               pageBuilder: (context, state) => _getPage(
-                PresentationScreen(),
+                const PresentationScreen(),
                 state,
               ),
             ),
@@ -84,7 +84,7 @@ final goRouterConfig = GoRouter(
             GoRoute(
               path: SDPaths.chat.goRoute,
               pageBuilder: (context, state) => _getPage(
-                PresentationScreen(),
+                const PresentationScreen(),
                 state,
               ),
             ),
@@ -95,7 +95,7 @@ final goRouterConfig = GoRouter(
             GoRoute(
               path: SDPaths.export.goRoute,
               pageBuilder: (context, state) {
-                return _getPage(ExportScreen(), state);
+                return _getPage(const ExportScreen(), state);
               },
             ),
           ],

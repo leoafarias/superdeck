@@ -212,10 +212,56 @@ Content for slide 2
 
       expect(slides.length, equals(2));
       expect(slides[0].options?.title, equals('Slide 1'));
-      // expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides[0].markdown,
+          equals('Content for slide 1\n\n<!-- This is a note for slide 1 -->'));
       expect(slides[0].notes.length, equals(1));
-      expect(slides[0].notes[0].note, equals(' This is a note for slide 1 '));
-      expect(slides[0].notes[0].offset, equals(39));
+      expect(slides[0].notes[0].note, equals('This is a note for slide 1'));
+      expect(slides[0].notes[0].offset, equals(21));
+
+      expect(slides[1].options?.title, equals('Slide 2'));
+      expect(slides[1].markdown, equals('Content for slide 2'));
+      expect(slides[1].notes, isEmpty);
+    });
+
+    test('parses multiple notes from markdown comments', () {
+      const markdown = '''
+---
+title: Slide 1
+---
+Content for slide 1
+
+<!-- This is a note for slide 1 -->
+
+<!-- This is another note for slide 1 -->
+
+<!-- This is a third note for 
+slide 1 -->
+
+---
+title: Slide 2
+---
+
+Content for slide 2
+
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+      expect(slides[0].options?.title, equals('Slide 1'));
+      expect(
+          slides[0].markdown,
+          equals(
+              'Content for slide 1\n\n<!-- This is a note for slide 1 -->\n\n<!-- This is another note for slide 1 -->\n\n<!-- This is a third note for \nslide 1 -->'));
+      expect(slides[0].notes.length, equals(3));
+      expect(slides[0].notes[0].note, equals('This is a note for slide 1'));
+      expect(slides[0].notes[0].offset, equals(21));
+      expect(
+          slides[0].notes[1].note, equals('This is another note for slide 1'));
+      expect(slides[0].notes[1].offset, equals(58));
+      expect(slides[0].notes[2].note,
+          equals('This is a third note for \nslide 1'));
+      expect(slides[0].notes[2].offset, equals(101));
 
       expect(slides[1].options?.title, equals('Slide 2'));
       expect(slides[1].markdown, equals('Content for slide 2'));

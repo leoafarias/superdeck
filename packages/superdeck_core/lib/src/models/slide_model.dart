@@ -57,7 +57,7 @@ class SlideNote with SlideNoteMappable {
 
   static final schema = SchemaShape(
     {
-      "offset": Schema.string.required(),
+      "offset": Schema.integer.required(),
       "note": Schema.string.required(),
     },
     additionalProperties: false,

@@ -49,14 +49,27 @@ List<Slide> parseSlides(String markdown) {
     for (final match in slidesRaws) {
       final extracted = extractYamlFrontmatter(match);
 
-      // Whole content of the match
+      final regexComments = RegExp(r'<!--(.*?)-->', dotAll: true);
 
+      final notes = <SlideNote>[];
+      final comments = regexComments.allMatches(extracted.contents);
+
+      for (final comment in comments) {
+        final note = {
+          'offset': comment.start,
+          'note': comment.group(1)?.trim(),
+        };
+        SlideNote.schema.validateOrThrow(note);
+        notes.add(SlideNote.fromMap(note));
+      }
+
+      // Whole content of the match
       slides.add(
         Slide.fromMap({
           'options': extracted.frontMatter,
           'markdown': extracted.contents,
           'key': extracted.key
-        }),
+        }).copyWith(notes: notes),
       );
     }
 
@@ -64,6 +77,7 @@ List<Slide> parseSlides(String markdown) {
   } on FormatException catch (e) {
     throw SDFormatException(e.message, markdown, e.offset);
   } on SchemaValidationException catch (e) {
+    print(e.result.errors.map((e) => e.message).join('\n'));
     throw SDMarkdownParsingException(e, 0);
   }
 }

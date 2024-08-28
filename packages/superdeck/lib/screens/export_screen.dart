@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../components/remix/button.dart';
 import '../helpers/extensions.dart';
 import '../helpers/routes.dart';
 import '../providers/controller.dart';
@@ -120,9 +119,9 @@ class ExportDialog extends HookWidget {
                       onChanged: (value) => controller.quality = value!,
                       items: dropdownItems.toList(),
                     ),
-                    SizedBox(width: 10),
-                    SDButtonSolid(
-                      label: 'Export',
+                    const SizedBox(width: 10),
+                    OutlinedButton(
+                      child: const Text('Export'),
                       onPressed: () => controller.start(),
                     ),
                   ],
