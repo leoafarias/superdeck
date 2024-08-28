@@ -9,8 +9,7 @@ void main() {
     const rawMarkdown = '''
 # Hello
 ''';
-    final slideConfig =
-        Slide(index: 0, content: rawMarkdown, key: 'simple-slide');
+    final slideConfig = Slide(markdown: rawMarkdown, key: 'simple-slide');
     testWidgets('builds content', (WidgetTester tester) async {
       await tester.pumpSlide(slideConfig);
       final finder = find.byType(SlideTemplate);

@@ -37,7 +37,7 @@ class ImageOptions extends ContentOptions with ImageOptionsMappable {
     super.align,
   });
 
-  static final schema = ContentOptions.schema.merge(
+  static final schema = ContentOptions.schema.extend(
     {
       "fit": ImageFit.schema,
       "src": Schema.string.required(),
@@ -60,7 +60,7 @@ class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
     super.align,
   });
 
-  static final schema = ContentOptions.schema.merge(
+  static final schema = ContentOptions.schema.extend(
     {
       "name": Schema.string.required(),
     },

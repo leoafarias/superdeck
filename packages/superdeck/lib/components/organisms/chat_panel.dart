@@ -8,13 +8,12 @@ import '../../chat/components/typing_indicator.dart';
 import '../../chat/prompt.dart';
 import '../../helpers/constants.dart';
 import '../../helpers/extensions.dart';
-import '../../services/reference_service.dart';
 import '../atoms/markdown_viewer.dart';
 
 const _apiKey = 'AIzaSyD37mFwHkiMeArz_hp1hnRwysOsqqgnhPQ';
 
-final _geminiFlash = 'gemini-1.5-flash-latest';
-final _geminiPro = 'gemini-1.5-pro';
+const _geminiFlash = 'gemini-1.5-flash-latest';
+const _geminiPro = 'gemini-1.5-pro';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -63,13 +62,13 @@ class _ChatWidgetState extends State<ChatWidget> {
           presentationAssistantPrompt,
         ));
     if (kCanRunProcess) {
-      ReferenceService.instance.loadMarkdown().then((value) {
-        final content = '<PRESENTATION>\n$value\n</PRESENTATION>';
-        _chat = _model.startChat(history: [
-          // add <PRESENTATION> around value
-          Content.text(content),
-        ]);
-      });
+      // ReferenceService.instance.loadMarkdown().then((value) {
+      //   final content = '<PRESENTATION>\n$value\n</PRESENTATION>';
+      //   _chat = _model.startChat(history: [
+      //     // add <PRESENTATION> around value
+      //     Content.text(content),
+      //   ]);
+      // });
     } else {
       _chat = _model.startChat();
     }
@@ -77,15 +76,15 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final _textController = useTextEditingController();
-    final _scrollController = useScrollController();
-    final _loading = useState(false);
-    final _applyChanges = useState(false);
+    final textController = useTextEditingController();
+    final scrollController = useScrollController();
+    final loading = useState(false);
+    final applyChanges = useState(false);
 
-    void _scrollDown() {
+    void scrollDown() {
       WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+        (_) => scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
           duration: const Duration(
             milliseconds: 200,
           ),
@@ -94,27 +93,27 @@ class _ChatWidgetState extends State<ChatWidget> {
       );
     }
 
-    final _sendChatMessage = useCallback((String message) async {
-      _loading.value = true;
+    final sendChatMessage = useCallback((String message) async {
+      loading.value = true;
 
-      _textController.clear();
+      textController.clear();
 
       try {
-        if (!_applyChanges.value) {
+        if (!applyChanges.value) {
           _generatedContent.add((image: null, text: message, fromUser: true));
         }
         final response = await _chat.sendMessage(
           Content.text(message),
         );
         final text = response.text;
-        if (!_applyChanges.value) {
+        if (!applyChanges.value) {
           _generatedContent.add((image: null, text: text, fromUser: false));
         } else {
           // Replace <PRESENTATION> and </PRESENTATION> with empty string
           final provideMarkdownEdits = text!
               .replaceAll('<PRESENTATION>', '')
               .replaceAll('</PRESENTATION>', '');
-          await ReferenceService.instance.saveMarkdown(provideMarkdownEdits);
+          // await ReferenceService.instance.saveMarkdown(provideMarkdownEdits);
           _generatedContent.add((
             image: null,
             text: 'I have applied the changes.',
@@ -126,17 +125,17 @@ class _ChatWidgetState extends State<ChatWidget> {
           _showError('No response from API.');
           return;
         } else {
-          _loading.value = false;
-          _scrollDown();
+          loading.value = false;
+          scrollDown();
         }
       } catch (e) {
         _showError(e.toString());
       } finally {
-        _loading.value = false;
+        loading.value = false;
       }
     }, []);
 
-    final _textFieldFocus = useFocusNode(
+    final textFieldFocus = useFocusNode(
       onKeyEvent: (node, event) {
         if (event is KeyUpEvent) {
           return KeyEventResult.ignored;
@@ -146,17 +145,17 @@ class _ChatWidgetState extends State<ChatWidget> {
             event.logicalKey == LogicalKeyboardKey.numpadEnter;
 
         if (HardwareKeyboard.instance.isShiftPressed && isEnterKey) {
-          _textController.value = TextEditingValue(
-            text: _textController.text + '\n',
-            selection: TextSelection.collapsed(
-                offset: _textController.text.length + 1),
+          textController.value = TextEditingValue(
+            text: '${textController.text}\n',
+            selection:
+                TextSelection.collapsed(offset: textController.text.length + 1),
           );
           return KeyEventResult.handled;
         }
 
         if (isEnterKey) {
           if (event is KeyDownEvent) {
-            _sendChatMessage(_textController.text);
+            sendChatMessage(textController.text);
             return KeyEventResult.handled;
           }
         }
@@ -164,16 +163,16 @@ class _ChatWidgetState extends State<ChatWidget> {
       },
     );
     useEffect(() {
-      if (!_loading.value) {
-        _textFieldFocus.requestFocus();
+      if (!loading.value) {
+        textFieldFocus.requestFocus();
       }
-    }, [_loading.value]);
+    }, [loading.value]);
 
-    Widget _buildSendButton() {
-      if (!_loading.value) {
+    Widget buildSendButton() {
+      if (!loading.value) {
         return IconButton(
           onPressed: () async {
-            _sendChatMessage(_textController.text);
+            sendChatMessage(textController.text);
           },
           icon: Icon(
             Icons.send,
@@ -182,19 +181,19 @@ class _ChatWidgetState extends State<ChatWidget> {
         );
       }
 
-      return Padding(
+      return const Padding(
         padding: EdgeInsets.only(right: 16.0),
         child: WaitingIndicator(isTyping: true),
       );
     }
 
-    Widget _buildApplyChangesButton() {
+    Widget buildApplyChangesButton() {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: IconButton(
           onPressed: () async {
-            _applyChanges.value = true;
-            _sendChatMessage(provideMarkdownEdits);
+            applyChanges.value = true;
+            sendChatMessage(provideMarkdownEdits);
           },
           icon: Icon(
             Icons.bolt,
@@ -208,11 +207,11 @@ class _ChatWidgetState extends State<ChatWidget> {
       filled: true,
       fillColor: Colors.black45,
       hoverColor: Colors.black45,
-      hintText: _loading.value ? '' : 'Type a message',
-      enabled: !_loading.value,
-      hintStyle: TextStyle(color: Colors.white),
-      suffixIcon: _buildSendButton(),
-      prefixIcon: _buildApplyChangesButton(),
+      hintText: loading.value ? '' : 'Type a message',
+      enabled: !loading.value,
+      hintStyle: const TextStyle(color: Colors.white),
+      suffixIcon: buildSendButton(),
+      prefixIcon: buildApplyChangesButton(),
       suffixIconConstraints: const BoxConstraints(
         minWidth: 20,
         minHeight: 20,
@@ -237,7 +236,7 @@ class _ChatWidgetState extends State<ChatWidget> {
           Expanded(
             child: _apiKey.isNotEmpty
                 ? ListView.builder(
-                    controller: _scrollController,
+                    controller: scrollController,
                     itemBuilder: (context, idx) {
                       final content = _generatedContent[idx];
                       return MessageWidget(
@@ -263,17 +262,18 @@ class _ChatWidgetState extends State<ChatWidget> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 80),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     child: TextField(
-                      enabled: !_loading.value,
+                      enabled: !loading.value,
                       keyboardType: TextInputType.multiline,
                       autofocus: true,
                       expands: true,
                       style: context.textTheme.bodyMedium,
-                      focusNode: _textFieldFocus,
+                      focusNode: textFieldFocus,
                       decoration: textFieldDecoration,
                       maxLines: null,
-                      controller: _textController,
+                      controller: textController,
                     ),
                   ),
                 ),

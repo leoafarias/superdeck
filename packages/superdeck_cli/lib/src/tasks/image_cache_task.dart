@@ -10,7 +10,7 @@ class ImageCachingTask extends Task {
   Future<TaskController> run(controller) async {
     final slide = controller.slide;
 
-    var content = slide.content;
+    var content = slide.markdown;
     final slideData = slide.toMap();
     // Do not cache remot edata if cacheRemoteAssets is false
 

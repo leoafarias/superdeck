@@ -1709,25 +1709,22 @@ class SlideMapper extends ClassMapperBase<Slide> {
   @override
   final String id = 'Slide';
 
-  static int _$index(Slide v) => v.index;
-  static const Field<Slide, int> _f$index = Field('index', _$index);
   static String _$key(Slide v) => v.key;
   static const Field<Slide, String> _f$key = Field('key', _$key);
   static SlideOptions? _$options(Slide v) => v.options;
   static const Field<Slide, SlideOptions> _f$options =
       Field('options', _$options, opt: true);
-  static String _$content(Slide v) => v.content;
-  static const Field<Slide, String> _f$content = Field('content', _$content);
+  static String _$markdown(Slide v) => v.markdown;
+  static const Field<Slide, String> _f$markdown = Field('markdown', _$markdown);
   static List<SectionBlockDto> _$sections(Slide v) => v.sections;
   static const Field<Slide, List<SectionBlockDto>> _f$sections =
       Field('sections', _$sections, opt: true, def: const []);
 
   @override
   final MappableFields<Slide> fields = const {
-    #index: _f$index,
     #key: _f$key,
     #options: _f$options,
-    #content: _f$content,
+    #markdown: _f$markdown,
     #sections: _f$sections,
   };
   @override
@@ -1735,10 +1732,9 @@ class SlideMapper extends ClassMapperBase<Slide> {
 
   static Slide _instantiate(DecodingData data) {
     return Slide(
-        index: data.dec(_f$index),
         key: data.dec(_f$key),
         options: data.dec(_f$options),
-        content: data.dec(_f$content),
+        markdown: data.dec(_f$markdown),
         sections: data.dec(_f$sections));
   }
 
@@ -1793,10 +1789,9 @@ abstract class SlideCopyWith<$R, $In extends Slide, $Out>
           SectionBlockDtoCopyWith<$R, SectionBlockDto, SectionBlockDto>>
       get sections;
   $R call(
-      {int? index,
-      String? key,
+      {String? key,
       SlideOptions? options,
-      String? content,
+      String? markdown,
       List<SectionBlockDto>? sections});
   SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -1817,24 +1812,21 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
           (v, t) => v.copyWith.$chain(t), (v) => call(sections: v));
   @override
   $R call(
-          {int? index,
-          String? key,
+          {String? key,
           Object? options = $none,
-          String? content,
+          String? markdown,
           List<SectionBlockDto>? sections}) =>
       $apply(FieldCopyWithData({
-        if (index != null) #index: index,
         if (key != null) #key: key,
         if (options != $none) #options: options,
-        if (content != null) #content: content,
+        if (markdown != null) #markdown: markdown,
         if (sections != null) #sections: sections
       }));
   @override
   Slide $make(CopyWithData data) => Slide(
-      index: data.get(#index, or: $value.index),
       key: data.get(#key, or: $value.key),
       options: data.get(#options, or: $value.options),
-      content: data.get(#content, or: $value.content),
+      markdown: data.get(#markdown, or: $value.markdown),
       sections: data.get(#sections, or: $value.sections));
 
   @override
@@ -1999,6 +1991,7 @@ class SubSectionBlockDtoMapper extends ClassMapperBase<SubSectionBlockDto> {
       ColumnBlockDtoMapper.ensureInitialized();
       WidgetBlockDtoMapper.ensureInitialized();
       ImageBlockDtoMapper.ensureInitialized();
+      BlockTypeMapper.ensureInitialized();
       ContentOptionsMapper.ensureInitialized();
     }
     return _instance!;
@@ -2013,10 +2006,14 @@ class SubSectionBlockDtoMapper extends ClassMapperBase<SubSectionBlockDto> {
   static String _$content(SubSectionBlockDto v) => v.content;
   static const Field<SubSectionBlockDto, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static BlockType _$type(SubSectionBlockDto v) => v.type;
+  static const Field<SubSectionBlockDto, BlockType> _f$type =
+      Field('type', _$type);
 
   @override
   final MappableFields<SubSectionBlockDto> fields = const {
     #content: _f$content,
+    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2130,11 +2127,15 @@ class ColumnBlockDtoMapper extends SubClassMapperBase<ColumnBlockDto> {
   static ContentOptions? _$options(ColumnBlockDto v) => v.options;
   static const Field<ColumnBlockDto, ContentOptions> _f$options =
       Field('options', _$options, opt: true);
+  static BlockType _$type(ColumnBlockDto v) => v.type;
+  static const Field<ColumnBlockDto, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
 
   @override
   final MappableFields<ColumnBlockDto> fields = const {
     #content: _f$content,
     #options: _f$options,
+    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2261,17 +2262,21 @@ class WidgetBlockDtoMapper extends SubClassMapperBase<WidgetBlockDto> {
   @override
   final String id = 'WidgetBlockDto';
 
-  static WidgetOptions? _$options(WidgetBlockDto v) => v.options;
+  static WidgetOptions _$options(WidgetBlockDto v) => v.options;
   static const Field<WidgetBlockDto, WidgetOptions> _f$options =
-      Field('options', _$options, opt: true);
+      Field('options', _$options);
   static String _$content(WidgetBlockDto v) => v.content;
   static const Field<WidgetBlockDto, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static BlockType _$type(WidgetBlockDto v) => v.type;
+  static const Field<WidgetBlockDto, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
 
   @override
   final MappableFields<WidgetBlockDto> fields = const {
     #options: _f$options,
     #content: _f$content,
+    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2347,7 +2352,7 @@ extension WidgetBlockDtoValueCopy<$R, $Out>
 
 abstract class WidgetBlockDtoCopyWith<$R, $In extends WidgetBlockDto, $Out>
     implements SubSectionBlockDtoCopyWith<$R, $In, $Out, WidgetOptions> {
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions>? get options;
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options;
   @override
   $R call({WidgetOptions? options, String? content});
   WidgetBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -2363,12 +2368,12 @@ class _WidgetBlockDtoCopyWithImpl<$R, $Out>
   late final ClassMapperBase<WidgetBlockDto> $mapper =
       WidgetBlockDtoMapper.ensureInitialized();
   @override
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions>? get options =>
-      $value.options?.copyWith.$chain((v) => call(options: v));
+  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options =>
+      $value.options.copyWith.$chain((v) => call(options: v));
   @override
-  $R call({Object? options = $none, String? content}) =>
+  $R call({WidgetOptions? options, String? content}) =>
       $apply(FieldCopyWithData({
-        if (options != $none) #options: options,
+        if (options != null) #options: options,
         if (content != null) #content: content
       }));
   @override
@@ -2398,17 +2403,21 @@ class ImageBlockDtoMapper extends SubClassMapperBase<ImageBlockDto> {
   @override
   final String id = 'ImageBlockDto';
 
-  static ImageOptions? _$options(ImageBlockDto v) => v.options;
+  static ImageOptions _$options(ImageBlockDto v) => v.options;
   static const Field<ImageBlockDto, ImageOptions> _f$options =
-      Field('options', _$options, opt: true);
+      Field('options', _$options);
   static String _$content(ImageBlockDto v) => v.content;
   static const Field<ImageBlockDto, String> _f$content =
       Field('content', _$content, opt: true, def: '');
+  static BlockType _$type(ImageBlockDto v) => v.type;
+  static const Field<ImageBlockDto, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
 
   @override
   final MappableFields<ImageBlockDto> fields = const {
     #options: _f$options,
     #content: _f$content,
+    #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
@@ -2484,7 +2493,7 @@ extension ImageBlockDtoValueCopy<$R, $Out>
 
 abstract class ImageBlockDtoCopyWith<$R, $In extends ImageBlockDto, $Out>
     implements SubSectionBlockDtoCopyWith<$R, $In, $Out, ImageOptions> {
-  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions>? get options;
+  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options;
   @override
   $R call({ImageOptions? options, String? content});
   ImageBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -2499,12 +2508,12 @@ class _ImageBlockDtoCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ImageBlockDto> $mapper =
       ImageBlockDtoMapper.ensureInitialized();
   @override
-  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions>? get options =>
-      $value.options?.copyWith.$chain((v) => call(options: v));
+  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options =>
+      $value.options.copyWith.$chain((v) => call(options: v));
   @override
-  $R call({Object? options = $none, String? content}) =>
+  $R call({ImageOptions? options, String? content}) =>
       $apply(FieldCopyWithData({
-        if (options != $none) #options: options,
+        if (options != null) #options: options,
         if (content != null) #content: content
       }));
   @override

@@ -7,17 +7,18 @@
   },
   "slides": [
     {
-      "index": 0,
-      "key": "NYMpX0sJ",
+      "key": "jrySbty2",
       "options": {
         "style": "custom"
       },
-      "content": "{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
+      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
       "sections": [
         {
+          "options": null,
           "sub_sections": [
             {
               "content": "\n## This is an example of a widgets",
+              "options": null,
               "type": "column"
             },
             {
@@ -30,6 +31,7 @@
             },
             {
               "content": "\n```dart\nimport 'package:flutter/material.dart';\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n```",
+              "options": null,
               "type": "column"
             }
           ]
@@ -37,9 +39,8 @@
       ]
     },
     {
-      "index": 1,
       "key": "rHLJMgwc",
-      "content": "![Mermaid Diagram](.superdeck/generated/mermaid_llAVsepR.png)\n\n{@column flex: 3}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n\n<!-- Notes go here -->",
+      "markdown": "```mermaid\ngraph TD\n    A[Enter Chart Definition] --> B(Preview)\n    B --> C{decide}\n    C --> D[Keep]\n    C --> E[Edit Definition]\n    E --> B\n    D --> F[Save Image and Car]\n    F --> B  \n```\n\n{@column flex: 3}\n\n```mermaid\nsequenceDiagram\n    participant Customer as 🧑 Customer\n    participant Barista as ☕ Barista\n    participant CoffeeMachine as 🏭 Coffee Machine\n```\n\n\n<!-- Notes go here -->",
       "sections": [
         {
           "sub_sections": [
@@ -59,14 +60,14 @@
       ]
     },
     {
-      "index": 2,
       "key": "u0rRynPM",
       "options": {
         "style": "quote"
       },
-      "content": "{@section}\n{@column align: bottom_right flex: 3}\n# This presentation will be great\n\n{@column}\n\n{@section}\n\n\n{@column }\n{@column flex: 2 align: top_right}\n> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo",
+      "markdown": "{@section}\n{@column align: bottom_right flex: 3}\n# This presentation will be great\n\n{@column}\n\n{@section}\n\n\n{@column }\n{@column flex: 2 align: top_right}\n> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo",
       "sections": [
         {
+          "options": null,
           "sub_sections": [
             {
               "content": "\n# This presentation will be great",
@@ -78,14 +79,17 @@
             },
             {
               "content": "",
+              "options": null,
               "type": "column"
             }
           ]
         },
         {
+          "options": null,
           "sub_sections": [
             {
               "content": "",
+              "options": null,
               "type": "column"
             },
             {
@@ -101,14 +105,14 @@
       ]
     },
     {
-      "index": 3,
       "key": "huRpyhFQ",
       "options": {
         "style": "show_sections"
       },
-      "content": "{@section}\n{@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}\n\n{@section flex: 2}\n{@column flex: 2}\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n\n{@column}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
+      "markdown": "{@section}\n{@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}\n\n{@section flex: 2}\n{@column flex: 2}\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n\n{@column}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
       "sections": [
         {
+          "options": null,
           "sub_sections": [
             {
               "options": {
@@ -136,6 +140,7 @@
             },
             {
               "content": "\n### Section Options\nEasily customize the content of each section to suit your needs.\nUse front matter to define the layout of each section",
+              "options": null,
               "type": "column"
             }
           ]
@@ -143,14 +148,14 @@
       ]
     },
     {
-      "index": 4,
       "key": "twktEcis",
       "options": {
         "style": "show_sections"
       },
-      "content": "{@section}\n{@column align: bottom_right}\n\n## First\n\n{@column}  \n\n\n## Header\n\n{@section flex: 2}\n\n### Left Section\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n\n{@column}\n\n#### Section Options\n\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
+      "markdown": "{@section}\n{@column align: bottom_right}\n\n## First\n\n{@column}  \n\n\n## Header\n\n{@section flex: 2}\n\n### Left Section\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n\n{@column}\n\n#### Section Options\n\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
       "sections": [
         {
+          "options": null,
           "sub_sections": [
             {
               "content": "\n## First",
@@ -161,6 +166,7 @@
             },
             {
               "content": "\n## Header",
+              "options": null,
               "type": "column"
             }
           ]
@@ -176,6 +182,7 @@
             },
             {
               "content": "\n#### Section Options\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
+              "options": null,
               "type": "column"
             }
           ]

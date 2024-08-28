@@ -32,8 +32,6 @@ dependencies:
   flutter_hooks: ^0.20.5
   web: ^0.5.1
   file_saver: ^0.2.13
-  remix:
-    path: ../../../mix/packages/remix
   go_router_paths: ^0.2.2
   flutter_chat_ui: ^1.6.15
   image_picker: ^1.1.2

@@ -10,8 +10,9 @@ import '../services/reference_service.dart';
 final superDeckController = getIt.get<SuperDeckController>();
 
 class SuperDeckController {
-  SuperDeckController() {
-    ReferenceService.instance.listen(_getData.refresh);
+  final ReferenceService _referenceService;
+  SuperDeckController(this._referenceService) {
+    _referenceService.listen(_getData.refresh);
   }
 
   late final _getData = futureSignal(_loadData, lazy: false);
@@ -25,7 +26,7 @@ class SuperDeckController {
   final assets = signal<List<SlideAsset>>([]);
 
   Future<void> _loadData() async {
-    final data = await ReferenceService.instance.loadReference();
+    final data = await _referenceService.loadReference();
 
     batch(() {
       slides.assign(data.slides);

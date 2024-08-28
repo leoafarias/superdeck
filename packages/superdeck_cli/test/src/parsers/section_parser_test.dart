@@ -1,4 +1,4 @@
-import 'package:superdeck_cli/src/parsers/section_parser/section_parsing.dart';
+import 'package:superdeck_cli/src/parsers/section_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:test/test.dart';
 
@@ -63,7 +63,7 @@ Content inside the header.
         expect(sections[1].subSections.length, equals(2));
 
         expect(sections[0].subSections[0].content.trim(),
-            '# Regular Markdown\nThis is some regular markdown content.');
+            '# Regular Markdown\n\nThis is some regular markdown content.');
         expect(sections[1].subSections[0].content.trim(), '## Header Title');
         expect(sections[1].subSections[1].content.trim(),
             'Content inside the header.');
@@ -131,8 +131,8 @@ Header content column 2.
       expect(sections[0].subSections[1].content.trim(),
           'Header content column 2.');
 
-      expect(sections[0].subSections[0].columnOptiouns?.flex, equals(1));
-      expect(sections[0].subSections[1].columnOptiouns?.flex, equals(2));
+      expect(sections[0].subSections[0].columnOptions?.flex, equals(1));
+      expect(sections[0].subSections[1].columnOptions?.flex, equals(2));
     });
 
     test('Section with columns and alignment attribute in snake case', () {
@@ -156,9 +156,9 @@ Body content column 2.
       expect(
           sections[0].subSections[1].content.trim(), 'Body content column 2.');
 
-      expect(sections[0].subSections[0].columnOptiouns?.align,
+      expect(sections[0].subSections[0].columnOptions?.align,
           equals(ContentAlignment.center));
-      expect(sections[0].subSections[1].columnOptiouns?.align,
+      expect(sections[0].subSections[1].columnOptions?.align,
           equals(ContentAlignment.bottomRight));
     });
 
@@ -184,12 +184,12 @@ Footer content column 2.
       expect(sections[0].subSections[1].content.trim(),
           'Footer content column 2.');
 
-      expect(sections[0].subSections[0].columnOptiouns?.flex, equals(3));
-      expect(sections[0].subSections[0].columnOptiouns?.align,
+      expect(sections[0].subSections[0].columnOptions?.flex, equals(3));
+      expect(sections[0].subSections[0].columnOptions?.align,
           equals(ContentAlignment.topLeft));
 
-      expect(sections[0].subSections[1].columnOptiouns?.flex, equals(1));
-      expect(sections[0].subSections[1].columnOptiouns?.align,
+      expect(sections[0].subSections[1].columnOptions?.flex, equals(1));
+      expect(sections[0].subSections[1].columnOptions?.align,
           equals(ContentAlignment.centerRight));
     });
 
@@ -220,25 +220,25 @@ Footer content.
       expect(sections[2].subSections.length, equals(1));
 
       expect(sections[0].subSections[0].content.trim(), 'Header content.');
-      expect(sections[0].subSections[0].columnOptiouns?.flex, equals(1));
-      expect(sections[0].subSections[0].columnOptiouns?.align,
+      expect(sections[0].subSections[0].columnOptions?.flex, equals(1));
+      expect(sections[0].subSections[0].columnOptions?.align,
           equals(ContentAlignment.center));
 
       expect(
           sections[1].subSections[0].content.trim(), 'Body content column 1.');
-      expect(sections[1].subSections[0].columnOptiouns?.flex, equals(2));
-      expect(sections[1].subSections[0].columnOptiouns?.align,
+      expect(sections[1].subSections[0].columnOptions?.flex, equals(2));
+      expect(sections[1].subSections[0].columnOptions?.align,
           equals(ContentAlignment.centerLeft));
 
       expect(
           sections[1].subSections[1].content.trim(), 'Body content column 2.');
-      expect(sections[1].subSections[1].columnOptiouns?.flex, equals(1));
-      expect(sections[1].subSections[1].columnOptiouns?.align,
+      expect(sections[1].subSections[1].columnOptions?.flex, equals(1));
+      expect(sections[1].subSections[1].columnOptions?.align,
           equals(ContentAlignment.centerRight));
 
       expect(sections[2].subSections[0].content.trim(), 'Footer content.');
-      expect(sections[2].subSections[0].columnOptiouns?.flex, equals(1));
-      expect(sections[2].subSections[0].columnOptiouns?.align,
+      expect(sections[2].subSections[0].columnOptions?.flex, equals(1));
+      expect(sections[2].subSections[0].columnOptions?.align,
           equals(ContentAlignment.bottomCenter));
     });
   });
@@ -297,7 +297,7 @@ Footer content.
 
       expect(sections[1].subSections[0].content.trim(), 'Body content.');
       expect(sections[1].options?.align, equals(ContentAlignment.topLeft));
-      expect(sections[1].subSections[0].columnOptiouns?.flex, equals(3));
+      expect(sections[1].subSections[0].columnOptions?.flex, equals(3));
 
       expect(sections[2].subSections[0].content.trim(), 'Footer content.');
       expect(sections[2].options?.align, equals(ContentAlignment.bottomRight));
@@ -306,77 +306,193 @@ Footer content.
   });
 
   group(
-    'getTagContents',
+    'extractTagsFromLine',
     () {
       test('Empty string', () {
-        final result = extractTagData('{@section}');
-        expect(result.blockType, equals(BlockType.section));
-        expect(result.options, isEmpty);
+        final result = extractTagsFromLine('{@section}');
+        expect(result.first.blockType, equals(BlockType.section));
+        expect(result.first.options, isEmpty);
       });
 
       test('Single key-value pair', () {
-        final result = extractTagData('{@section key1: value1}');
-        expect(result.blockType, equals(BlockType.section));
-        expect(result.options, equals({'key1': 'value1'}));
+        final result = extractTagsFromLine('{@section key1: value1}');
+        expect(result.first.blockType, equals(BlockType.section));
+        expect(result.first.options, equals({'key1': 'value1'}));
       });
 
       test('Multiple key-value pairs', () {
-        final result = extractTagData('{@section key1: value1 key2: value2}');
-        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
+        final result =
+            extractTagsFromLine('{@section key1: value1 key2: value2}');
+        expect(
+            result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       test('Extra spaces', () {
         final result =
-            extractTagData('{@section  key1:  value1  key2:  value2}');
-        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
+            extractTagsFromLine('{@section  key1:  value1  key2:  value2}');
+        expect(
+            result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       test('Empty value', () {
-        expect(() => extractTagData('{@section key1:}'), throwsException);
+        final result = extractTagsFromLine('{@section key1:}');
+        expect(result.first.options['key1'], isNull);
       });
 
       test('Missing value', () {
-        expect(() => extractTagData('{@section key1}'), throwsException);
+        final result = extractTagsFromLine('{@section key1}');
+        expect(result.first.options['key1'], isNull);
       });
 
       test('Invalid tag format', () {
-        expect(() => extractTagData('{@section key1:'), throwsException);
+        expect(() => extractTagsFromLine('{@section key1:'), throwsException);
       });
 
       test('Returns contents of the first tag when multiple tags are present',
           () {
-        final result =
-            extractTagData('{@column firstTag: true} {@block secondTag:false}');
-        expect(result.blockType, equals(BlockType.column));
-        expect(result.options, equals({'firstTag': 'true'}));
+        final result = extractTagsFromLine(
+          '{@column firstTag: true} {@column secondTag:false}',
+        );
+        expect(result.first.blockType, equals(BlockType.column));
+        expect(result.first.options, equals({'firstTag': 'true'}));
       });
 
       test('Mixed valid and invalid pairs', () {
-        final result = extractTagData('{@column key1: value1 key2: value2}');
+        final result =
+            extractTagsFromLine('{@column key1: value1 key2: value2}');
         expect(
-          result.blockType,
+          result.first.blockType,
           equals(BlockType.column),
         );
 
-        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
+        expect(
+            result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       // Test falsy value
       test('Falsy value', () {
-        final result = extractTagData('{@column key1: false}');
-        final result2 = extractTagData('{@column key1: false key2: true}');
-        expect(result.options, equals({'key1': 'false'}));
-        expect(result2.options, equals({'key1': 'false', 'key2': 'true'}));
+        final result = extractTagsFromLine('{@column key1: false}');
+        final result2 = extractTagsFromLine('{@column key1: false key2: true}');
+        expect(result.first.options, equals({'key1': 'false'}));
+        expect(
+            result2.first.options, equals({'key1': 'false', 'key2': 'true'}));
       });
 
       test('Trims leading and trailing whitespace from tag contents', () {
-        final result = extractTagData('{@column key1: value1 key2: value2 }');
-        expect(result.options, equals({'key1': 'value1', 'key2': 'value2'}));
+        final result =
+            extractTagsFromLine('{@column key1: value1 key2: value2 }');
+        expect(
+            result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
     },
   );
+  group('Tag parsing tests', () {
+    test('Parse tag with both parts', () {
+      final input = '{@column blue: car}';
+      final expectedOutput = [
+        (
+          blockType: BlockType.column,
+          options: {
+            'blue': 'car',
+          }
+        )
+      ];
+
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(expectedOutput.first.blockType));
+      expect(result.first.options, equals(expectedOutput.first.options));
+    });
+
+    test('Parse tag with only first part', () {
+      final input = '{@column: demo}';
+      final expectedOutput = [(blockType: BlockType.column, options: {})];
+
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(expectedOutput.first.blockType));
+      expect(result.first.options, equals(expectedOutput.first.options));
+    });
+
+    test('Parse tag with extra whitespace', () {
+      final input = '{@column   red  :   bike }';
+      final expectedOutput = [
+        (
+          blockType: BlockType.column,
+          options: {
+            'red': 'bike',
+          }
+        )
+      ];
+
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(expectedOutput.first.blockType));
+      expect(result.first.options, equals(expectedOutput.first.options));
+    });
+
+    test('Parse tag with underscore in part names', () {
+      final input = '{@column my_color: my_vehicle}';
+      final expectedOutput = [
+        (
+          blockType: BlockType.column,
+          options: {
+            'my_color': 'my_vehicle',
+          }
+        )
+      ];
+
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(expectedOutput.first.blockType));
+      expect(result.first.options, equals(expectedOutput.first.options));
+    });
+
+    test('Parse tag with numbers in part names', () {
+      final input = '{@column color123: vehicle456 blabla: 10}';
+      final expectedOutput = [
+        (
+          blockType: BlockType.column,
+          options: {
+            'color123': 'vehicle456',
+            'blabla': '10',
+          }
+        )
+      ];
+
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(expectedOutput.first.blockType));
+      expect(result.first.options, equals(expectedOutput.first.options));
+    });
+
+    test('Return null for input without tag', () {
+      final input = 'This is a regular text without a tag.';
+      expect(() => extractTagsFromLine(input), throwsException);
+    });
+
+    test('Return null for input with incomplete tag', () {
+      final input = '{@column';
+      expect(() => extractTagsFromLine(input), throwsException);
+    });
+
+    test('Return null for input with incorrect tag format', () {
+      final input = '{@column: blue car}';
+      final expectedOutput = [
+        (
+          blockType: BlockType.column,
+          options: {},
+        )
+      ];
+
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(expectedOutput.first.blockType));
+      expect(result.first.options, equals(expectedOutput.first.options));
+    });
+  });
 }
 
 extension on SubSectionBlockDto {
-  ContentOptions? get columnOptiouns => (this as ColumnBlockDto).options;
+  ContentOptions? get columnOptions => (this as ColumnBlockDto).options;
 }

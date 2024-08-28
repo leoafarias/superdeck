@@ -2,6 +2,7 @@
 style: custom
 ---
 
+{@section}
 {@column}
 ## This is an example of a widgets
 

@@ -3,11 +3,11 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - index: 0
-    key: 'NYMpX0sJ'
+  - key: 'jrySbty2'
     options: 
       style: 'custom'
-    content: |-
+    markdown: |-
+      {@section}
       {@column}
       ## This is an example of a widgets
       
@@ -27,10 +27,12 @@ slides:
       
       ```
     sections: 
-      - sub_sections: 
+      - options: null
+        sub_sections: 
           - content: |-
               
               ## This is an example of a widgets
+            options: null
             type: 'column'
           - options: 
               name: 'demo'
@@ -48,15 +50,29 @@ slides:
                 );
               }
               ```
+            options: null
             type: 'column'
-  - index: 1
-    key: 'rHLJMgwc'
-    content: |-
-      ![Mermaid Diagram](.superdeck/generated/mermaid_llAVsepR.png)
+  - key: 'rHLJMgwc'
+    markdown: |-
+      ```mermaid
+      graph TD
+          A[Enter Chart Definition] --> B(Preview)
+          B --> C{decide}
+          C --> D[Keep]
+          C --> E[Edit Definition]
+          E --> B
+          D --> F[Save Image and Car]
+          F --> B  
+      ```
       
       {@column flex: 3}
       
-      ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+      ```mermaid
+      sequenceDiagram
+          participant Customer as 🧑 Customer
+          participant Barista as ☕ Barista
+          participant CoffeeMachine as 🏭 Coffee Machine
+      ```
       
       
       <!-- Notes go here -->
@@ -71,11 +87,10 @@ slides:
             options: 
               flex: 3
             type: 'column'
-  - index: 2
-    key: 'u0rRynPM'
+  - key: 'u0rRynPM'
     options: 
       style: 'quote'
-    content: |-
+    markdown: |-
       {@section}
       {@column align: bottom_right flex: 3}
       # This presentation will be great
@@ -91,7 +106,8 @@ slides:
       > You can quote me on that
       > ### Leo
     sections: 
-      - sub_sections: 
+      - options: null
+        sub_sections: 
           - content: |-
               
               # This presentation will be great
@@ -100,9 +116,12 @@ slides:
               align: 'bottom_right'
             type: 'column'
           - content: ''
+            options: null
             type: 'column'
-      - sub_sections: 
+      - options: null
+        sub_sections: 
           - content: ''
+            options: null
             type: 'column'
           - content: |-
               
@@ -113,11 +132,10 @@ slides:
               flex: 2
               align: 'top_right'
             type: 'column'
-  - index: 3
-    key: 'huRpyhFQ'
+  - key: 'huRpyhFQ'
     options: 
       style: 'show_sections'
-    content: |-
+    markdown: |-
       {@section}
       {@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}
       
@@ -136,7 +154,8 @@ slides:
       
       Use front matter to define the layout of each section
     sections: 
-      - sub_sections: 
+      - options: null
+        sub_sections: 
           - options: 
               src: 'https://picsum.photos/1200/1200?waves'
               fit: 'cover'
@@ -159,12 +178,12 @@ slides:
               ### Section Options
               Easily customize the content of each section to suit your needs.
               Use front matter to define the layout of each section
+            options: null
             type: 'column'
-  - index: 4
-    key: 'twktEcis'
+  - key: 'twktEcis'
     options: 
       style: 'show_sections'
-    content: |-
+    markdown: |-
       {@section}
       {@column align: bottom_right}
       
@@ -197,7 +216,8 @@ slides:
           alignment: bottom_left
       ```
     sections: 
-      - sub_sections: 
+      - options: null
+        sub_sections: 
           - content: |-
               
               ## First
@@ -207,6 +227,7 @@ slides:
           - content: |-
               
               ## Header
+            options: null
             type: 'column'
       - options: 
           flex: 2
@@ -229,6 +250,7 @@ slides:
                 header:
                   alignment: bottom_left
               ```
+            options: null
             type: 'column'
 assets: 
   - path: '.superdeck/generated/mermaid_llAVsepR.png'

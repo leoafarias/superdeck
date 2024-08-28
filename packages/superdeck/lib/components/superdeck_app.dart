@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/remix.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -58,25 +57,22 @@ class SuperDeckApp extends HookWidget {
           styles: styles,
           child: WidgetExamplesProvider(
             examples: examples,
-            child: RemixTokens(
-              data: RemixTokens.dark,
-              child: MaterialApp.router(
-                debugShowCheckedModeBanner: true,
-                title: 'Superdeck',
-                routerConfig: goRouterConfig,
-                theme: theme,
-                builder: (context, child) {
-                  return Watch.builder(builder: (context) {
-                    return LoadingOverlay(
-                      isLoading: superDeckController.isLoading.value,
-                      key: _uniqueKey,
-                      child: superDeckController.isDone.value
-                          ? child!
-                          : const SizedBox(),
-                    );
-                  });
-                },
-              ),
+            child: MaterialApp.router(
+              debugShowCheckedModeBanner: true,
+              title: 'Superdeck',
+              routerConfig: goRouterConfig,
+              theme: theme,
+              builder: (context, child) {
+                return Watch.builder(builder: (context) {
+                  return LoadingOverlay(
+                    isLoading: superDeckController.isLoading.value,
+                    key: _uniqueKey,
+                    child: superDeckController.isDone.value
+                        ? child!
+                        : const SizedBox(),
+                  );
+                });
+              },
             ),
           ),
         );

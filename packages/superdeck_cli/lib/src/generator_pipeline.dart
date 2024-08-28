@@ -6,12 +6,11 @@ import 'package:collection/collection.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
 import 'package:puppeteer/puppeteer.dart';
-import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
-import 'package:superdeck_cli/src/helpers/slide_parser.dart';
-import 'package:superdeck_cli/src/parsers/section_parser/section_parsing.dart';
+import 'package:superdeck_cli/src/parsers/section_parser.dart';
+import 'package:superdeck_cli/src/parsers/slide_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:yaml_writer/yaml_writer.dart';
 
@@ -27,33 +26,22 @@ typedef PipelineResult = ({
 });
 
 class TaskController {
+  final int index;
   final Slide slide;
   final List<SlideAsset> _assets;
   final TaskPipeline pipeline;
   final List<MarkdownReplacement> markdownReplacements;
 
-  Slide extractSlide() {
-    final sections = parseSections(slide.content);
-
-    final newSlide = Slide(
-      index: slide.index,
-      content: slide.content,
-      key: slide.key,
-      options: slide.options,
-      sections: sections,
-    );
-
-    return newSlide;
-  }
-
   TaskController._({
     required this.slide,
+    required this.index,
     required List<SlideAsset> assets,
     required this.pipeline,
     required this.markdownReplacements,
   }) : _assets = assets;
 
   TaskController({
+    required this.index,
     required this.slide,
     required this.pipeline,
     required List<SlideAsset> assets,
@@ -73,6 +61,7 @@ class TaskController {
     List<MarkdownReplacement>? markdownReplacements,
   }) {
     return TaskController._(
+      index: index,
       slide: slide ?? this.slide,
       pipeline: pipeline,
       markdownReplacements: markdownReplacements ?? this.markdownReplacements,
@@ -141,12 +130,13 @@ class TaskPipeline {
     // final loadedReference = SuperDeckReference.loadYaml(kReferenceFileYaml);
     final loadedReference = ReferenceDto.loadFile(kReferenceFile);
 
-    final slides = SlideParser.run(markdownRaw);
+    final slides = parseSlides(markdownRaw);
 
     final futures = <Future<TaskController>>[];
 
     for (var i = 0; i < slides.length; i++) {
       final controller = TaskController(
+        index: i,
         slide: slides[i],
         assets: loadedReference.assets,
         pipeline: this,
@@ -156,15 +146,22 @@ class TaskPipeline {
 
     final controllers = await Future.wait(futures);
 
-    final result = (
-      slides: controllers.map((e) => e.extractSlide()).toList(),
-      neededAssets: controllers.expand((e) => e.neededAssets).toList(),
-      markdownReplacements:
-          controllers.expand((e) => e.markdownReplacements).toList(),
-    );
-    await _applyMarkdownReplacements(result.markdownReplacements);
+    List<Slide> modifiedSlides = [];
+    List<SlideAsset> neededAssets = [];
+    List<MarkdownReplacement> markdownReplacements = [];
 
-    await _cleanupGeneratedFiles(result.neededAssets);
+    for (var controller in controllers) {
+      final modifiedSlide = controller.slide;
+      final parsedSlide = slides.firstWhere((s) => s.key == modifiedSlide.key);
+      final newSlide = _prepareSlide(parsedSlide, modifiedSlide);
+      modifiedSlides.add(newSlide);
+      neededAssets.addAll(controller.neededAssets);
+      markdownReplacements.addAll(controller.markdownReplacements);
+    }
+
+    await _applyMarkdownReplacements(markdownReplacements);
+
+    await _cleanupGeneratedFiles(neededAssets);
 
     for (var builder in builders) {
       await builder.dispose();
@@ -174,8 +171,8 @@ class TaskPipeline {
 
     final reference = ReferenceDto(
       config: Config.loadFile(kProjectConfigFile),
-      slides: result.slides,
-      assets: result.neededAssets,
+      slides: modifiedSlides,
+      assets: neededAssets,
     );
 
     await kReferenceFile.writeAsString(prettyJson(reference.toMap()));
@@ -285,11 +282,15 @@ extension on Slide {
   String toMarkdown() {
     final buffer = StringBuffer();
 
+    final options = this.options?.toMap();
+
     buffer.writeln('---');
-    buffer.write(YamlWriter().write(options?.toMap()));
+    if (options != null && options.isNotEmpty) {
+      buffer.write(YamlWriter().write(options));
+    }
     buffer.writeln('---');
 
-    buffer.writeln(content);
+    buffer.writeln(markdown);
 
     // for (var section in sections) {
     //   buffer.writeln(section.toMarkdown());
@@ -311,45 +312,10 @@ extension on ReferenceDto {
   }
 }
 
-extension on SectionBlockDto {
-  String toMarkdown() {
-    final options = this.options?.toMap() ?? {};
+Slide _prepareSlide(Slide parsedSlide, Slide modifiedSlide) {
+  final sections = parseSections(modifiedSlide.markdown);
 
-    final slideBuffer = StringBuffer();
-
-    final optionsBuffer = _optionsToString(options);
-
-    slideBuffer.writeln('{@section$optionsBuffer}');
-
-    for (var section in subSections) {
-      final options = section.options?.toMap() ?? {};
-      final optionsBuffer = _optionsToString(options);
-
-      final type = section.toMap()['type'];
-
-      slideBuffer.writeln('{@$type$optionsBuffer}');
-      if (section is ColumnBlockDto) {
-        final contents = section.content.split('\n');
-        for (var content in contents) {
-          slideBuffer.writeln(content);
-        }
-      }
-      slideBuffer.writeln('');
-    }
-
-    return slideBuffer.toString();
-  }
-
-  String _optionsToString(Map<String, dynamic> map) {
-    final buffer = StringBuffer();
-    final cleanMap = {...map}..remove('type');
-    for (var key in cleanMap.keys) {
-      final value = cleanMap[key];
-      if (value != null) {
-        buffer.write(' $key: $value');
-      }
-    }
-
-    return buffer.toString();
-  }
+  return parsedSlide.copyWith(
+    sections: sections,
+  );
 }

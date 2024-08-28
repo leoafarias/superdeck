@@ -33,7 +33,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   }
 
   SchemaMap mergeSchema(SchemaMap schema) {
-    return merge(
+    return extend(
       schema.properties,
       additionalProperties: schema.additionalProperties,
     );
@@ -43,7 +43,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
     return properties[key] as T?;
   }
 
-  SchemaMap merge(
+  SchemaMap extend(
     Map<String, SchemaValue> properties, {
     bool? additionalProperties,
     bool? optional,
@@ -58,7 +58,7 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
       final existingProp = mergedProperties[key];
 
       if (existingProp is SchemaMap && prop is SchemaMap) {
-        mergedProperties[key] = existingProp.merge(prop.properties);
+        mergedProperties[key] = existingProp.extend(prop.properties);
       } else {
         mergedProperties[key] = prop;
       }
@@ -132,6 +132,61 @@ class SchemaMap extends SchemaValue<Map<String, dynamic>> {
   }
 }
 
+class SchemaList<T extends SchemaValue> extends SchemaValue<List<T>> {
+  final T items;
+  const SchemaList(
+    this.items, {
+    super.optional = true,
+    super.validators = const [],
+  });
+
+  @override
+  SchemaList<T> copyWith({
+    bool? optional,
+    List<Validator<List<T>>>? validators,
+  }) {
+    return SchemaList(
+      items,
+      optional: optional ?? optionalValue,
+      validators: validators ?? this.validators,
+    );
+  }
+
+  @override
+  List<T>? tryParse(Object? value) {
+    if (value is List) {
+      final parsedList = value.map((e) => items.tryParse(e)).toList();
+      if (parsedList.any((e) => e == null)) {
+        return null;
+      }
+      return parsedList as List<T>;
+    }
+    return null;
+  }
+
+  @override
+  ValidationResult validate(List<String> path, Object? value) {
+    final validationResult = super.validate(path, value);
+    if (!validationResult.isValid) {
+      return validationResult;
+    }
+    try {
+      final parsedValue = tryParse(value)!;
+
+      for (var i = 0; i < parsedValue.length; i++) {
+        final result = items.validate([...path, i.toString()], parsedValue[i]);
+        if (!result.isValid) {
+          return result;
+        }
+      }
+
+      return ValidationResult.valid(path);
+    } on ValidationError catch (e) {
+      return ValidationResult(path: path, errors: [e]);
+    }
+  }
+}
+
 class SchemaShape extends SchemaMap {
   const SchemaShape(
     super.properties, {
@@ -150,4 +205,79 @@ class Schema {
   static const integer = SchemaValue<int>();
   static const boolean = SchemaValue<bool>();
   static const any = SchemaShape({}, additionalProperties: true);
+  static const list = SchemaList.new;
+}
+
+class DiscriminatorSchema extends SchemaValue<Map<String, dynamic>> {
+  final String discriminatorKey;
+  final SchemaValue baseSchema;
+  final Map<String, SchemaValue> schemas;
+
+  DiscriminatorSchema({
+    required this.discriminatorKey,
+    required this.schemas,
+    required this.baseSchema,
+    super.optional,
+    super.validators = const [],
+  });
+
+  @override
+  DiscriminatorSchema copyWith({
+    bool? optional,
+    Map<String, SchemaShape>? schemas,
+    List<Validator<Map<String, dynamic>>>? validators,
+  }) {
+    return DiscriminatorSchema(
+      discriminatorKey: discriminatorKey,
+      schemas: schemas ?? this.schemas,
+      baseSchema: baseSchema,
+      optional: optional ?? optionalValue,
+      validators: validators ?? this.validators,
+    );
+  }
+
+  @override
+  ValidationResult validate(List<String> path, Object? value) {
+    // First, perform the base validation using super.validate
+    final baseValidationResult = super.validate(path, value);
+    if (!baseValidationResult.isValid) {
+      return baseValidationResult;
+    }
+
+    final mapValue = tryParse(value)!;
+
+    final baseSchemaResult = baseSchema.validate(path, mapValue);
+
+    if (!baseSchemaResult.isValid) {
+      return baseSchemaResult;
+    }
+
+    final discriminatorValue = mapValue[discriminatorKey];
+    if (discriminatorValue == null) {
+      return ValidationResult(
+        path: path,
+        errors: [
+          RequiredPropMissingValidationError(
+            property: discriminatorKey,
+          )
+        ],
+      );
+    }
+
+    final schema = schemas[discriminatorValue];
+    if (schema == null) {
+      return ValidationResult(
+        path: path,
+        errors: [
+          InvalidTypeValidationError(
+            value: discriminatorValue.runtimeType,
+            expectedType: Map<String, dynamic>,
+          )
+        ],
+      );
+    }
+
+    // Validate against the selected schema
+    return schema.validate(path, value);
+  }
 }

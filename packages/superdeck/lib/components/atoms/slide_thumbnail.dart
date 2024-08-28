@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:remix/remix.dart';
 import 'package:signals/signals_flutter.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/constants.dart';
 import '../../providers/controller.dart';
-import '../../services/reference_service.dart';
 import '../../services/snapshot_service.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
@@ -41,8 +39,7 @@ class SlideThumbnail extends StatefulWidget {
 class _SlideThumbnailState extends State<SlideThumbnail> {
   bool _shouldRegenerate = false;
   late final thumbnailRequest = futureSignal(() async {
-    final thumbnailFile = ReferenceService.instance
-        .getAssetFile('thumbnail_${widget.slide.key}.png');
+    final thumbnailFile = widget.slide.thumbnailFile;
 
     if ((!kCanRunProcess || await thumbnailFile.exists()) &&
         !_shouldRegenerate) {
@@ -88,7 +85,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
             image: getImageProvider(file.path),
           );
         },
-        loading: () => IsometricLoading(),
+        loading: () => const IsometricLoading(),
         error: (error, _) {
           return const Center(
             child: Text('Error loading image'),
@@ -101,27 +98,26 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
       onSecondaryTapDown: (details) {
         final overlay =
             Overlay.of(context).context.findRenderObject() as RenderBox;
-        final menuItem =
-            (_PopMenuAction action) => PopupMenuItem<_PopMenuAction>(
-                value: action,
-                onTap: () {
-                  switch (action) {
-                    case _PopMenuAction.refreshThumbnail:
-                      _shouldRegenerate = true;
-                      thumbnailRequest.reset(AsyncState.loading());
-                      thumbnailRequest.reload();
-                      break;
-                  }
-                },
-                mouseCursor: SystemMouseCursors.click,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(action.icon),
-                    const SizedBox(width: 8),
-                    Text(action.label),
-                  ],
-                ));
+        menuItem(_PopMenuAction action) => PopupMenuItem<_PopMenuAction>(
+            value: action,
+            onTap: () {
+              switch (action) {
+                case _PopMenuAction.refreshThumbnail:
+                  _shouldRegenerate = true;
+                  thumbnailRequest.reset(AsyncState.loading());
+                  thumbnailRequest.reload();
+                  break;
+              }
+            },
+            mouseCursor: SystemMouseCursors.click,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(action.icon),
+                const SizedBox(width: 8),
+                Text(action.label),
+              ],
+            ));
         showMenu(
           context: context,
           menuPadding: EdgeInsets.zero,
@@ -191,7 +187,7 @@ class _PreviewContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = Style(
-      $box.color.$neutral(2),
+      $box.color.grey(),
       $box.margin.all(8),
       $box.border.width(2),
       $box.shadow(
@@ -200,7 +196,7 @@ class _PreviewContainer extends StatelessWidget {
       ),
       selected ? $box.wrap.scale(1.05) : $box.wrap.scale(1),
       selected ? $box.wrap.opacity(1) : $box.wrap.opacity(0.5),
-      selected ? $box.border.color.$accent() : $box.border.color.transparent(),
+      selected ? $box.border.color.cyan() : $box.border.color.transparent(),
     ).animate();
 
     return Box(

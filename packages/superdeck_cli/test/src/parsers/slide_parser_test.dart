@@ -1,0 +1,190 @@
+import 'package:superdeck_cli/src/helpers/exceptions.dart';
+import 'package:superdeck_cli/src/parsers/slide_parser.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('parseSlides', () {
+    test('parses valid markdown into slides', () {
+      const markdown = '''
+---
+title: Slide 1
+---
+Content for slide 1
+
+---
+title: Slide 2 
+---  
+Content for slide 2
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+      expect(slides[0].options?.title, equals('Slide 1'));
+      expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides[1].options?.title, equals('Slide 2'));
+      expect(slides[1].markdown, equals('Content for slide 2'));
+    });
+
+    test('parses slides with additional properties in YAML frontmatter', () {
+      const markdown = '''
+---
+
+title: Slide 1
+
+
+---
+Content for slide 1
+
+---
+title: Slide 2 
+---  
+Content for slide 2
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+      expect(slides[0].options?.title, equals('Slide 1'));
+
+      expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides[1].options?.title, equals('Slide 2'));
+
+      expect(slides[1].markdown, equals('Content for slide 2'));
+    });
+
+    test('handles slides with no properties in frontmatter', () {
+      const markdown = '''
+---
+---
+Content for slide 1
+
+---
+---
+Content for slide 2
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+      expect(slides[0].options, isNull);
+      expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides[1].options, isNull);
+      expect(slides[1].markdown, equals('Content for slide 2'));
+    });
+
+    test('handles slides with empty frontmatter', () {
+      const markdown = '''
+---
+title: 
+---
+Content for slide 1
+
+---
+title: 
+---  
+Content for slide 2
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+      expect(slides[0].options?.title, isNull);
+      expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides[1].options?.title, isNull);
+      expect(slides[1].markdown, equals('Content for slide 2'));
+    });
+
+    test('throws SDFormatException on invalid YAML frontmatter', () {
+      const markdown = '''
+---  
+invalid: yaml: frontmatter
+---
+Slide content
+''';
+
+      expect(() => parseSlides(markdown), throwsA(isA<SDFormatException>()));
+    });
+
+    test('throws SDMarkdownParsingException on invalid slide schema', () {
+      const markdown = '''
+---
+invalidField: Invalid value
+---  
+Slide content 
+''';
+
+      expect(() => parseSlides(markdown),
+          throwsA(isA<SDMarkdownParsingException>()));
+    });
+
+    test('handles empty markdown string', () {
+      const markdown = '';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides, isEmpty);
+    });
+
+    test('ignores content outside slide separators', () {
+      const markdown = '''
+This content is outside slides
+---
+title: Slide 1
+---
+Content for slide 1
+This content is also outside slides
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(1));
+      expect(slides[0].options?.title, equals('Slide 1'));
+      expect(slides[0].markdown, equals('Content for slide 1'));
+    });
+
+    test('parses slide with no content but valid frontmatter', () {
+      const markdown = '''
+---
+title: Slide 1
+---
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(1));
+      expect(slides[0].options?.title, equals('Slide 1'));
+      expect(slides[0].markdown, isEmpty);
+    });
+
+    test('parses multiple slides with some missing content or frontmatter', () {
+      const markdown = '''
+---
+title: Slide 1
+---
+Content for slide 1
+
+---
+title: Slide 2
+---
+---
+
+title: Slide 3
+---
+Content for slide 3
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(3));
+      expect(slides[0].options?.title, equals('Slide 1'));
+      expect(slides[0].markdown, equals('Content for slide 1'));
+
+      expect(slides[1].options?.title, equals('Slide 2'));
+      expect(slides[1].markdown, isEmpty);
+
+      expect(slides[2].options?.title, equals('Slide 3'));
+      expect(slides[2].markdown, equals('Content for slide 3'));
+    });
+  });
+}

@@ -17,9 +17,7 @@ final _markdown = File('slides.md');
 
 class ReferenceService {
   final _watcher = FileWatcher(_slideRef);
-  ReferenceService._();
-
-  static final instance = ReferenceService._();
+  ReferenceService();
 
   Future<String> loadString(String path) async {
     if (kCanRunProcess) {

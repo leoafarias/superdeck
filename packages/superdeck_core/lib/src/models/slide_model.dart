@@ -2,19 +2,19 @@ part of 'models.dart';
 
 @MappableClass()
 class Slide with SlideMappable {
-  final int index;
   final String key;
   final SlideOptions? options;
-  final String content;
+  final String markdown;
   final List<SectionBlockDto> sections;
 
   Slide({
-    required this.index,
     required this.key,
     this.options,
-    required this.content,
+    required this.markdown,
     this.sections = const [],
   });
+
+  File get thumbnailFile => File(p.join(kAssetsDir.path, 'thumbnail_$key.png'));
 
   static Slide fromMap(Map<String, dynamic> map) {
     Slide.schema.validateOrThrow(map);
@@ -25,9 +25,8 @@ class Slide with SlideMappable {
 
   static final schema = SchemaShape(
     {
-      "index": Schema.integer.required(),
       "key": Schema.string.required(),
-      "content": Schema.string.required(),
+      "markdown": Schema.string.required(),
       "title": Schema.string,
       'options': SlideOptions.schema.optional(),
     },

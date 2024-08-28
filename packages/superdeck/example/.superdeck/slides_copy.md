@@ -1,6 +1,7 @@
 ---
 style: 'custom'
 ---
+{@section}
 {@column}
 ## This is an example of a widgets
 
@@ -21,13 +22,26 @@ void main() {
 ```
 
 ---
-null
 ---
-![Mermaid Diagram](.superdeck/generated/mermaid_llAVsepR.png)
+```mermaid
+graph TD
+    A[Enter Chart Definition] --> B(Preview)
+    B --> C{decide}
+    C --> D[Keep]
+    C --> E[Edit Definition]
+    E --> B
+    D --> F[Save Image and Car]
+    F --> B  
+```
 
 {@column flex: 3}
 
-![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+```mermaid
+sequenceDiagram
+    participant Customer as 🧑 Customer
+    participant Barista as ☕ Barista
+    participant CoffeeMachine as 🏭 Coffee Machine
+```
 
 
 <!-- Notes go here -->

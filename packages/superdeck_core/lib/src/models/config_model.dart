@@ -64,7 +64,7 @@ class Config extends SlideOptions with ConfigMappable {
     return config;
   }
 
-  static final schema = SlideOptions.schema.merge(
+  static final schema = SlideOptions.schema.extend(
     {
       "cache_remote_assets": Schema.boolean.optional(),
       "markdown_file": Schema.string.required().isPosixPath(),

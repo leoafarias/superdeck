@@ -25,7 +25,16 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
     this.subSections = const [],
   });
 
-  SectionBlockDto addLine(String content) {
+  static SectionBlockDto parse(Map<String, dynamic> map) {
+    return SectionBlockDtoMapper.fromMap(map);
+  }
+
+  static final schema = SchemaShape({
+    'options': ContentOptions.schema,
+    'sub_sections': Schema.list(SubSectionBlockDto.schema),
+  });
+
+  SectionBlockDto appendLine(String content) {
     final lastPart = subSections.lastOrNull;
     final subSectionsCopy = [...subSections];
 
@@ -42,7 +51,7 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
     return copyWith(subSections: subSectionsCopy);
   }
 
-  SectionBlockDto addSubSection(SubSectionBlockDto part) {
+  SectionBlockDto appendSubsection(SubSectionBlockDto part) {
     return copyWith(subSections: [...subSections, part]);
   }
 }
@@ -55,12 +64,29 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
 sealed class SubSectionBlockDto<T extends ContentOptions> extends BlockDto
     with SubSectionBlockDtoMappable {
   final String content;
+  final BlockType type;
 
   T? get options;
 
   SubSectionBlockDto({
     this.content = '',
+    required this.type,
   });
+
+  static final baseSchema = SchemaShape({
+    'content': Schema.string,
+    'type': Schema.string.isEnum(BlockType.values)
+  });
+
+  static final schema = DiscriminatorSchema(
+    baseSchema: baseSchema,
+    discriminatorKey: 'type',
+    schemas: {
+      'column': ColumnBlockDto.schema,
+      'widget': WidgetBlockDto.schema,
+      'image': ImageBlockDto.schema,
+    },
+  );
 }
 
 @MappableClass(discriminatorValue: 'column')
@@ -72,55 +98,59 @@ class ColumnBlockDto extends SubSectionBlockDto<ContentOptions>
   ColumnBlockDto({
     super.content,
     this.options,
-  });
+  }) : super(type: BlockType.column);
+
+  static parse(Map<String, dynamic> map) {
+    schema.validateOrThrow(map);
+    return ColumnBlockDtoMapper.fromMap(map);
+  }
+
+  static final schema = SubSectionBlockDto.baseSchema.extend(
+    {'options': ContentOptions.schema},
+  );
 }
 
 @MappableClass(discriminatorValue: 'widget')
 class WidgetBlockDto extends SubSectionBlockDto<WidgetOptions>
     with WidgetBlockDtoMappable {
   @override
-  final WidgetOptions? options;
+  final WidgetOptions options;
 
   WidgetBlockDto({
-    this.options,
+    required this.options,
     super.content,
-  });
+  }) : super(type: BlockType.widget);
+
+  static parse(Map<String, dynamic> map) {
+    schema.validateOrThrow(map);
+    return WidgetBlockDtoMapper.fromMap(map);
+  }
+
+  static final schema = SubSectionBlockDto.baseSchema.extend(
+    {'options': WidgetOptions.schema.required()},
+  );
 }
 
 @MappableClass(discriminatorValue: 'image')
 class ImageBlockDto extends SubSectionBlockDto<ImageOptions>
     with ImageBlockDtoMappable {
   @override
-  final ImageOptions? options;
+  final ImageOptions options;
 
   ImageBlockDto({
-    this.options,
+    required this.options,
     super.content,
-  });
+  }) : super(type: BlockType.image);
+
+  static parse(Map<String, dynamic> map) {
+    schema.validateOrThrow(map);
+    return ImageBlockDtoMapper.fromMap(map);
+  }
+
+  static final schema = SubSectionBlockDto.baseSchema.extend(
+    {'options': ImageOptions.schema.required()},
+  );
 }
-
-// class BlockMappingHook extends MappingHook {
-//   const BlockMappingHook();
-
-//   @override
-//   Object? afterEncode(Object? value) {
-//     if (value is Map<dynamic, dynamic>) {
-//       if (value.isEmpty) {
-//         return null;
-//       } else {
-//         final valueCopy = {...value};
-//         for (var key in value.keys) {
-//           if (value[key] == null) {
-//             valueCopy.remove(key);
-//           }
-//         }
-//         return valueCopy;
-//       }
-//     }
-
-//     return value;
-//   }
-// }
 
 class OptionsMapper extends SimpleMapper<ContentOptions> {
   const OptionsMapper();

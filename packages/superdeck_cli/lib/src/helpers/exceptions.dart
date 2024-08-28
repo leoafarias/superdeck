@@ -26,7 +26,7 @@ class SDTaskException implements Exception {
   );
 
   String get message {
-    return 'Error running task on slide ${controller.slide.index}';
+    return 'Error running task on slide ${controller.index}';
   }
 
   @override

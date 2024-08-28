@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:puppeteer/puppeteer.dart';
-import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/generator_pipeline.dart';
+import 'package:superdeck_cli/src/helpers/logger.dart';
 
 // ---
 // title: Hello Title
@@ -121,7 +121,7 @@ class MermaidConverterTask extends Task {
     final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
     final slide = controller.slide;
 
-    final matches = mermaidBlockRegex.allMatches(slide.content);
+    final matches = mermaidBlockRegex.allMatches(slide.markdown);
 
     if (matches.isEmpty) return controller;
     final replacements = <({int start, int end, String markdown})>[];
@@ -157,7 +157,7 @@ class MermaidConverterTask extends Task {
       }
     }
 
-    var replacedData = slide.content;
+    var replacedData = slide.markdown;
 
     // Apply replacements in reverse order
     for (var replacement in replacements.reversed) {
@@ -171,7 +171,7 @@ class MermaidConverterTask extends Task {
     }
 
     return controller.copyWith(
-      slide: slide.copyWith(content: replacedData),
+      slide: slide.copyWith(markdown: replacedData),
     );
   }
 }

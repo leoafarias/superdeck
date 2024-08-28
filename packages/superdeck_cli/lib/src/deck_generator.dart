@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:superdeck_cli/src/constants.dart';
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/tasks/dart_formatter_task.dart';
 import 'package:superdeck_cli/src/tasks/image_cache_task.dart';
 import 'package:superdeck_cli/src/tasks/mermaid_task.dart';
 import 'package:superdeck_cli/src/tasks/slide_thumbnail_task.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 import 'package:watcher/watcher.dart';
 
 import 'generator_pipeline.dart';
@@ -64,7 +64,7 @@ class SlidesLoader {
 void _handleException(Exception e) {
   if (e is SDTaskException) {
     logger
-      ..err('slide: ${e.controller.slide.index}')
+      ..err('slide: ${e.controller.index}')
       ..err('Task error: ${e.taskName}');
 
     _handleException(e.exception);

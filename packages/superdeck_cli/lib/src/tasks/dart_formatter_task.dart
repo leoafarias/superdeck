@@ -11,7 +11,7 @@ class DartFormatterTask extends Task {
     final formattedMarkdown = _formatDartCodeBlocks(controller);
 
     return controller.copyWith(
-      slide: controller.slide.copyWith(content: formattedMarkdown),
+      slide: controller.slide.copyWith(markdown: formattedMarkdown),
     );
   }
 
@@ -19,7 +19,7 @@ class DartFormatterTask extends Task {
     TaskController controller,
   ) {
     final codeBlockRegex = RegExp(r'```dart\n([\s\S]*?)\n```');
-    final markdown = controller.slide.content;
+    final markdown = controller.slide.markdown;
     return markdown.replaceAllMapped(codeBlockRegex, (match) {
       final code = match.group(1)!;
 
