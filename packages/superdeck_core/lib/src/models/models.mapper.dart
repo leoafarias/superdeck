@@ -1702,6 +1702,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
       MapperContainer.globals.use(_instance = SlideMapper._());
       SlideOptionsMapper.ensureInitialized();
       SectionBlockDtoMapper.ensureInitialized();
+      SlideNoteMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1719,6 +1720,9 @@ class SlideMapper extends ClassMapperBase<Slide> {
   static List<SectionBlockDto> _$sections(Slide v) => v.sections;
   static const Field<Slide, List<SectionBlockDto>> _f$sections =
       Field('sections', _$sections, opt: true, def: const []);
+  static List<SlideNote> _$notes(Slide v) => v.notes;
+  static const Field<Slide, List<SlideNote>> _f$notes =
+      Field('notes', _$notes, opt: true, def: const []);
 
   @override
   final MappableFields<Slide> fields = const {
@@ -1726,6 +1730,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
     #options: _f$options,
     #markdown: _f$markdown,
     #sections: _f$sections,
+    #notes: _f$notes,
   };
   @override
   final bool ignoreNull = true;
@@ -1735,7 +1740,8 @@ class SlideMapper extends ClassMapperBase<Slide> {
         key: data.dec(_f$key),
         options: data.dec(_f$options),
         markdown: data.dec(_f$markdown),
-        sections: data.dec(_f$sections));
+        sections: data.dec(_f$sections),
+        notes: data.dec(_f$notes));
   }
 
   @override
@@ -1788,11 +1794,14 @@ abstract class SlideCopyWith<$R, $In extends Slide, $Out>
   ListCopyWith<$R, SectionBlockDto,
           SectionBlockDtoCopyWith<$R, SectionBlockDto, SectionBlockDto>>
       get sections;
+  ListCopyWith<$R, SlideNote, SlideNoteCopyWith<$R, SlideNote, SlideNote>>
+      get notes;
   $R call(
       {String? key,
       SlideOptions? options,
       String? markdown,
-      List<SectionBlockDto>? sections});
+      List<SectionBlockDto>? sections,
+      List<SlideNote>? notes});
   SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -1811,23 +1820,30 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
       get sections => ListCopyWith($value.sections,
           (v, t) => v.copyWith.$chain(t), (v) => call(sections: v));
   @override
+  ListCopyWith<$R, SlideNote, SlideNoteCopyWith<$R, SlideNote, SlideNote>>
+      get notes => ListCopyWith(
+          $value.notes, (v, t) => v.copyWith.$chain(t), (v) => call(notes: v));
+  @override
   $R call(
           {String? key,
           Object? options = $none,
           String? markdown,
-          List<SectionBlockDto>? sections}) =>
+          List<SectionBlockDto>? sections,
+          List<SlideNote>? notes}) =>
       $apply(FieldCopyWithData({
         if (key != null) #key: key,
         if (options != $none) #options: options,
         if (markdown != null) #markdown: markdown,
-        if (sections != null) #sections: sections
+        if (sections != null) #sections: sections,
+        if (notes != null) #notes: notes
       }));
   @override
   Slide $make(CopyWithData data) => Slide(
       key: data.get(#key, or: $value.key),
       options: data.get(#options, or: $value.options),
       markdown: data.get(#markdown, or: $value.markdown),
-      sections: data.get(#sections, or: $value.sections));
+      sections: data.get(#sections, or: $value.sections),
+      notes: data.get(#notes, or: $value.notes));
 
   @override
   SlideCopyWith<$R2, Slide, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
@@ -2103,6 +2119,113 @@ extension BlockTypeMapperExtension on BlockType {
     BlockTypeMapper.ensureInitialized();
     return MapperContainer.globals.toValue<BlockType>(this) as String;
   }
+}
+
+class SlideNoteMapper extends ClassMapperBase<SlideNote> {
+  SlideNoteMapper._();
+
+  static SlideNoteMapper? _instance;
+  static SlideNoteMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = SlideNoteMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'SlideNote';
+
+  static int _$offset(SlideNote v) => v.offset;
+  static const Field<SlideNote, int> _f$offset = Field('offset', _$offset);
+  static String _$note(SlideNote v) => v.note;
+  static const Field<SlideNote, String> _f$note = Field('note', _$note);
+
+  @override
+  final MappableFields<SlideNote> fields = const {
+    #offset: _f$offset,
+    #note: _f$note,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static SlideNote _instantiate(DecodingData data) {
+    return SlideNote(offset: data.dec(_f$offset), note: data.dec(_f$note));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static SlideNote fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SlideNote>(map);
+  }
+
+  static SlideNote fromJson(String json) {
+    return ensureInitialized().decodeJson<SlideNote>(json);
+  }
+}
+
+mixin SlideNoteMappable {
+  String toJson() {
+    return SlideNoteMapper.ensureInitialized()
+        .encodeJson<SlideNote>(this as SlideNote);
+  }
+
+  Map<String, dynamic> toMap() {
+    return SlideNoteMapper.ensureInitialized()
+        .encodeMap<SlideNote>(this as SlideNote);
+  }
+
+  SlideNoteCopyWith<SlideNote, SlideNote, SlideNote> get copyWith =>
+      _SlideNoteCopyWithImpl(this as SlideNote, $identity, $identity);
+  @override
+  String toString() {
+    return SlideNoteMapper.ensureInitialized()
+        .stringifyValue(this as SlideNote);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return SlideNoteMapper.ensureInitialized()
+        .equalsValue(this as SlideNote, other);
+  }
+
+  @override
+  int get hashCode {
+    return SlideNoteMapper.ensureInitialized().hashValue(this as SlideNote);
+  }
+}
+
+extension SlideNoteValueCopy<$R, $Out> on ObjectCopyWith<$R, SlideNote, $Out> {
+  SlideNoteCopyWith<$R, SlideNote, $Out> get $asSlideNote =>
+      $base.as((v, t, t2) => _SlideNoteCopyWithImpl(v, t, t2));
+}
+
+abstract class SlideNoteCopyWith<$R, $In extends SlideNote, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({int? offset, String? note});
+  SlideNoteCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _SlideNoteCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, SlideNote, $Out>
+    implements SlideNoteCopyWith<$R, SlideNote, $Out> {
+  _SlideNoteCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<SlideNote> $mapper =
+      SlideNoteMapper.ensureInitialized();
+  @override
+  $R call({int? offset, String? note}) => $apply(FieldCopyWithData(
+      {if (offset != null) #offset: offset, if (note != null) #note: note}));
+  @override
+  SlideNote $make(CopyWithData data) => SlideNote(
+      offset: data.get(#offset, or: $value.offset),
+      note: data.get(#note, or: $value.note));
+
+  @override
+  SlideNoteCopyWith<$R2, SlideNote, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _SlideNoteCopyWithImpl($value, $cast, t);
 }
 
 class ColumnBlockDtoMapper extends SubClassMapperBase<ColumnBlockDto> {

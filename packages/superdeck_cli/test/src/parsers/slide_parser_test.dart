@@ -133,6 +133,7 @@ This content is outside slides
 title: Slide 1
 ---
 Content for slide 1
+
 This content is also outside slides
 ''';
 
@@ -185,6 +186,40 @@ Content for slide 3
 
       expect(slides[2].options?.title, equals('Slide 3'));
       expect(slides[2].markdown, equals('Content for slide 3'));
+    });
+  });
+
+  // Group test notes from comments
+  group('Correctly parses slide notes from markdown comments', () {
+    test('parses notes from markdown comments', () {
+      const markdown = '''
+---
+title: Slide 1
+---
+Content for slide 1
+
+<!-- This is a note for slide 1 -->
+
+---
+title: Slide 2
+---
+
+Content for slide 2
+
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+      expect(slides[0].options?.title, equals('Slide 1'));
+      // expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides[0].notes.length, equals(1));
+      expect(slides[0].notes[0].note, equals(' This is a note for slide 1 '));
+      expect(slides[0].notes[0].offset, equals(39));
+
+      expect(slides[1].options?.title, equals('Slide 2'));
+      expect(slides[1].markdown, equals('Content for slide 2'));
+      expect(slides[1].notes, isEmpty);
     });
   });
 }
