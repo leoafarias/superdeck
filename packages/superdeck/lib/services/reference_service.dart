@@ -59,11 +59,7 @@ class ReferenceService {
   Future<ReferenceDto> loadReference() async {
     final slidesJson = await loadString(_slideRef.path);
     try {
-      if (kCanRunProcess) {
-        return compute(ReferenceDto.fromJson, slidesJson);
-      } else {
-        return ReferenceDto.fromJson(slidesJson);
-      }
+      return compute(ReferenceDto.fromJson, slidesJson);
     } catch (e) {
       log('Error loading deck: $e');
       return const ReferenceDto.empty();

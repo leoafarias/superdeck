@@ -29,6 +29,7 @@ class Slide with SlideMappable {
       "markdown": Schema.string.required(),
       "title": Schema.string,
       'options': SlideOptions.schema.optional(),
+      'sections': SchemaList(SectionBlockDto.schema).optional(),
     },
     additionalProperties: false,
   );
