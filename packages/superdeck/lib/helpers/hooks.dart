@@ -110,7 +110,7 @@ typedef Predicate<T> = bool Function(T prev, T next);
 
 OverlayPortalController useOverlayPortalController() {
   return use(
-    _OverlayPortalController(),
+    const _OverlayPortalController(),
   );
 }
 

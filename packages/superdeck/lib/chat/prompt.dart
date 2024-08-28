@@ -1,4 +1,4 @@
-final presentationAssistantPrompt = '''
+const presentationAssistantPrompt = '''
 
 
 
@@ -37,7 +37,7 @@ Before making specific suggestions, review the overall structure and style of th
 Envision the final version of the markdown presentation after all suggested changes have been implemented. Describe how the presentation has improved in terms of clarity, visual appeal, and audience engagement. What specific changes have made the most significant impact, and how does the presentation now meet the user's original goals?
 ''';
 
-final provideMarkdownEdits = '''
+const provideMarkdownEdits = '''
 CONTEXT:
 You need a finalized Markdown document incorporating all feedback and ready for immediate use, without extra lines or spaces, or extra content in the response.
 

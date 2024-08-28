@@ -3,7 +3,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
 import '../helpers/extensions.dart';
 
-final _baseTheme = DarkChatTheme();
+const _baseTheme = DarkChatTheme();
 
 ChatTheme buildChatTheme(BuildContext context) {
   return DarkChatTheme(

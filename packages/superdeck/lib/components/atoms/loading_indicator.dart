@@ -158,12 +158,12 @@ class IsometricLoadingPainter extends CustomPainter {
 
     // Calculate the minimum and maximum Y-coordinates from the path data
     // Assuming the minimum Y-coordinate is 0
-    final minY = 0.0;
+    const minY = 0.0;
     // Based on the maximum Y-coordinate value in the path data
-    final maxY = 226.45;
+    const maxY = 226.45;
 
     // Calculate the height of the paths
-    final pathHeight = maxY - minY;
+    const pathHeight = maxY - minY;
 
     // Calculate the scale factor based on the canvas size and path height
     final scaleFactor = canvasHeight / pathHeight;

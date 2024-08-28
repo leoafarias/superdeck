@@ -236,7 +236,7 @@ class SampleCodeElementBuilder extends MarkdownElementBuilder {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(8),

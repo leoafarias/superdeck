@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class WaitingIndicator extends StatefulWidget {
   final bool isTyping;
 
-  const WaitingIndicator({Key? key, required this.isTyping}) : super(key: key);
+  const WaitingIndicator({super.key, required this.isTyping});
 
   @override
   State createState() => _WaitingIndicatorState();

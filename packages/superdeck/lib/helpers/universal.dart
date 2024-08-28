@@ -34,7 +34,7 @@ class XButton extends StatelessWidget {
   final Widget child;
   final Color? color;
 
-  XButton({
+  const XButton({super.key, 
     required this.onPressed,
     required this.child,
     this.color,
@@ -66,7 +66,7 @@ class XSwitch extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  XSwitch({
+  const XSwitch({super.key, 
     required this.value,
     required this.onChanged,
   });
@@ -96,7 +96,7 @@ class XDropdownButton<T> extends StatefulWidget {
   final ValueChanged<T?> onChanged;
   final List<XDropdownMenuItem<T>> items;
 
-  XDropdownButton({
+  const XDropdownButton({
     super.key,
     this.isDense = false,
     this.underline,
@@ -143,13 +143,12 @@ class _XDropdownButtonState<T> extends State<XDropdownButton<T>> {
         return item.toCupertino();
       }
 
-      ;
       return GestureDetector(
         onTap: () => _showCupertinoPicker(context),
         child: Container(
           padding: widget.isDense
-              ? EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
-              : EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+              ? const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0)
+              : const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
           decoration: BoxDecoration(
             border: Border.all(color: CupertinoColors.inactiveGray),
             borderRadius: BorderRadius.circular(8.0),
@@ -271,8 +270,8 @@ class XDialogAction {
 
   CupertinoDialogAction toCupertino() {
     return CupertinoDialogAction(
-      child: child,
       onPressed: onPressed,
+      child: child,
     );
   }
 
