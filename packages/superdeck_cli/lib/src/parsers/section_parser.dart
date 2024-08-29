@@ -40,7 +40,13 @@ List<SectionBlockDto> parseSections(String markdown) {
     sections.add(currentSection);
   }
 
-  return sections;
+  // Remove subsections if they are empty
+  return sections
+      .map((section) => section.copyWith(
+          subSections: section.subSections
+              .where((subSection) => !subSection.isEmpty)
+              .toList()))
+      .toList();
 }
 
 BlockDto? _decodeBlock(SyntaxTagData tagData) {

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../../providers/controller.dart';
 import '../../providers/slide_provider.dart';
 import '../../providers/snapshot_provider.dart';
-import '../../providers/style_provider.dart';
 import '../../styles/style_spec.dart';
 import 'cache_image_widget.dart';
 import 'transition_widget.dart';
 
-class SlideView extends StatelessWidget {
+class SlideView extends HookWidget {
   const SlideView(
     this.slide, {
     super.key,
@@ -23,7 +24,7 @@ class SlideView extends StatelessWidget {
     final background = slide.options?.background;
     final transition = slide.options?.transition;
 
-    final variantStyle = StyleProvider.of(context, slide.options?.style);
+    final variantStyle = useStyle(slide);
 
     final isCapturing = SnapshotProvider.isCapturingOf(context);
     final duration =
@@ -31,7 +32,7 @@ class SlideView extends StatelessWidget {
 
     final backgroundWidget = background != null
         ? CacheImage(
-            url: background,
+            uri: Uri.parse(background),
             fit: BoxFit.cover,
             alignment: Alignment.center,
           )

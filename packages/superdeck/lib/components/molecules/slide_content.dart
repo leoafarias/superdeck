@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../providers/examples_provider.dart';
+import '../../providers/controller.dart';
 import '../../providers/snapshot_provider.dart';
 import '../../styles/style_spec.dart';
 import '../atoms/cache_image_widget.dart';
@@ -77,7 +77,7 @@ class ImageBlock extends StatelessWidget {
         color: Colors.green,
         image: DecorationImage(
             alignment: toAlignment(alignment),
-            image: getImageProvider(options.src),
+            image: getImageProvider(context, Uri.parse(options.src)),
             fit: toBoxFit(imageFit)),
       ),
       child: AnimatedBoxSpecWidget(
@@ -102,7 +102,7 @@ class WidgetBlock extends StatelessWidget {
     final spec = SlideSpec.of(context);
     final alignment = options.align ?? ContentAlignment.center;
 
-    final examples = WidgetExamplesProvider.of(context);
+    final examples = SuperDeckController.of(context).examples;
     final widgetBuilder = examples[options.name];
 
     if (widgetBuilder == null) {

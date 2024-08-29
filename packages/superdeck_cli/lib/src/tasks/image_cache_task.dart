@@ -27,23 +27,6 @@ class ImageCachingTask extends Task {
 
     Future<void> saveAsset(String url) async {
       if (isAssetFile(File(url))) return;
-      // Look by hashcode to see if the asset is already cached
-      final refName = buildReferenceName(url);
-
-      final asset = controller.checkAssetExists(refName);
-
-      // if (asset != null && await File(asset.path).exists()) {
-      //   final file = File(asset.path);
-      //   try {
-      //     print('File already exists: ${file.path}');
-      //     await controller.markFileAsNeeded(file, url);
-      //     return;
-      //   } catch (e) {
-      //     log('Error saving asset: ${file.path} $e');
-      //     await file.delete();
-      //     saveAsset(url);
-      //   }
-      // }
 
       try {
         final checkFileType = await http.head(Uri.parse(url));

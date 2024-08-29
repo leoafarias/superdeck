@@ -9,6 +9,9 @@ style: 'custom'
 
 {@column}
 
+
+
+
 ```dart
 import 'package:flutter/material.dart';
 
@@ -22,8 +25,10 @@ void main() {
 ```
 
 ---
+style: 'here'
 ---
 ```mermaid
+
 graph TD
     A[Enter Chart Definition] --> B(Preview)
     B --> C{decide}
@@ -32,6 +37,9 @@ graph TD
     E --> B
     D --> F[Save Image and Car]
     F --> B  
+    
+
+
 ```
 
 {@column flex: 3}
@@ -42,7 +50,6 @@ sequenceDiagram
     participant Barista as ☕ Barista
     participant CoffeeMachine as 🏭 Coffee Machine
 ```
-
 
 <!-- Notes go here -->
 

@@ -56,6 +56,8 @@ class ReferenceService {
     }
   }
 
+  void stop() => _watcher.stop();
+
   Future<ReferenceDto> loadReference() async {
     final slidesJson = await loadString(_slideRef.path);
     try {

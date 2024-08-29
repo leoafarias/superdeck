@@ -2,21 +2,21 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/constants.dart';
-import '../../superdeck.dart';
+import '../../providers/controller.dart';
 
 class CacheImage extends StatelessWidget {
-  final String url;
+  final Uri uri;
   final BoxFit? fit;
   final ImageSpec spec;
   final Alignment? alignment;
 
   const CacheImage({
-    required this.url,
+    required this.uri,
     this.fit = BoxFit.cover,
     this.alignment = Alignment.center,
     this.spec = const ImageSpec(),
@@ -26,7 +26,7 @@ class CacheImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedImageSpecWidget(
-      image: getImageProvider(url),
+      image: getImageProvider(context, uri),
       spec: spec.copyWith(
         fit: fit,
         alignment: alignment,
@@ -35,7 +35,7 @@ class CacheImage extends StatelessWidget {
   }
 }
 
-({int? width, int? height}) calculateImageSize(Size size, SlideAsset? asset) {
+Size calculateImageSize(Size size, SlideAsset? asset) {
   int? cacheWidth;
   int? cacheHeight;
   //  check if height or asset is larger
@@ -59,46 +59,42 @@ class CacheImage extends StatelessWidget {
     }
   }
 
-  return (width: cacheWidth, height: cacheHeight);
+  return Size(
+    cacheWidth?.toDouble() ?? size.width,
+    cacheHeight?.toDouble() ?? size.height,
+  );
 }
 
-ImageProvider getImageProvider(String url, {Size? targetSize}) {
-  ImageProvider provider;
+ImageProvider getImageProvider(
+  BuildContext context,
+  Uri uri, {
+  Size? targetSize,
+}) {
+  final asset = context.superdeck.getImageAsset(uri);
 
-  final assets = superDeckController.assets.value;
-
-  final assetUrl = assets.firstWhereOrNull((e) {
-    if (e.path == url) {
-      return true;
-    }
-
-    if (e.reference == url) {
-      return true;
-    }
-
-    return false;
-  });
-
-  url = assetUrl?.path ?? url;
-
-  //  check if its a local path or a network path
-  if (url.startsWith('http')) {
-    provider = CachedNetworkImageProvider(url);
-  } else {
-    if (kCanRunProcess) {
-      final file = File(url);
-      provider = FileImage(file);
-    } else {
-      provider = AssetImage(url);
-    }
+  if (asset == null) {
+    return _getProvider(uri.toString());
   }
 
-  final (:width, :height) =
-      calculateImageSize(targetSize ?? kResolution, assetUrl);
+  final provider = _getProvider(asset.path);
+
+  final size = calculateImageSize(targetSize ?? kResolution, asset);
 
   return ResizeImage.resizeIfNeeded(
-    width,
-    height,
+    size.width.toInt(),
+    size.height.toInt(),
     provider,
   );
+}
+
+ImageProvider _getProvider(String url) {
+  if (url.startsWith('http')) {
+    return CachedNetworkImageProvider(url);
+  } else {
+    if (kCanRunProcess) {
+      return FileImage(File(url));
+    } else {
+      return AssetImage(url);
+    }
+  }
 }

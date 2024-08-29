@@ -73,6 +73,8 @@ sealed class SubSectionBlockDto<T extends ContentOptions> extends BlockDto
     required this.type,
   });
 
+  bool get isEmpty => this is ColumnBlockDto && content.isEmpty;
+
   static final baseSchema = SchemaShape({
     'content': Schema.string,
     'type': Schema.string.isEnum(BlockType.values)

@@ -65,7 +65,7 @@ final goRouterConfig = GoRouter(
       restorationScopeId: 'shell1',
       parentNavigatorKey: kRootNavigatorKey,
       builder: (context, state, navigationShell) {
-        return AppShell(navigationShell: navigationShell);
+        return AppShell(child: navigationShell);
       },
       branches: [
         StatefulShellBranch(
@@ -73,7 +73,7 @@ final goRouterConfig = GoRouter(
             GoRoute(
               path: SDPaths.root.goRoute,
               pageBuilder: (context, state) => _getPage(
-                const PresentationScreen(),
+                PresentationScreen(key: state.pageKey),
                 state,
               ),
             ),

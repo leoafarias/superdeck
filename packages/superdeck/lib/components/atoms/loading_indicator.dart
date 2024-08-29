@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class LoadingOverlay extends StatefulWidget {
   final bool isLoading;
-  final Widget child;
 
   const LoadingOverlay({
     super.key,
     required this.isLoading,
-    required this.child,
   });
 
   @override
@@ -26,19 +24,33 @@ class _LoadingOverlayState extends State<LoadingOverlay>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _opacityAnimation =
-        Tween<double>(begin: 1.0, end: 0.0).animate(_animationController);
+    _opacityAnimation = CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeIn,
+        reverseCurve: Curves.easeIn);
   }
 
   @override
   void didUpdateWidget(LoadingOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!widget.isLoading && oldWidget.isLoading) {
-      _animationController.forward().then((_) {
-        setState(() {});
+    if (oldWidget.isLoading != widget.isLoading) {
+      _triggerChange(widget.isLoading);
+    }
+  }
+
+  Future<void> _triggerChange(bool isLoading) async {
+    if (isLoading) {
+      _animationController.reverse().then((value) {
+        if (mounted) {
+          setState(() {});
+        }
       });
-    } else if (widget.isLoading && !oldWidget.isLoading) {
-      _animationController.reverse().then((_) => setState(() {}));
+    } else {
+      _animationController.forward().then((value) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
     }
   }
 
@@ -50,21 +62,19 @@ class _LoadingOverlayState extends State<LoadingOverlay>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.child,
-        if (widget.isLoading || _animationController.isAnimating)
-          FadeTransition(
-            opacity: _opacityAnimation,
-            child: Container(
-              color: Colors.black87,
-              child: const Center(
-                child: IsometricLoading(),
-              ),
-            ),
+    if (widget.isLoading || _animationController.isAnimating) {
+      return FadeTransition(
+        opacity: _opacityAnimation,
+        child: Container(
+          color: Colors.black87,
+          child: const Center(
+            child: IsometricLoading(),
           ),
-      ],
-    );
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }
 

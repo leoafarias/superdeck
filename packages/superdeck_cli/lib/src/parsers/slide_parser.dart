@@ -13,10 +13,15 @@ List<String> _splitSlides(String content) {
   var isCodeBlock = false;
 
   for (var line in lines) {
-    if (line.trim().startsWith('```')) {
+    final trimmed = line.trim();
+    if (trimmed.startsWith('```')) {
       isCodeBlock = !isCodeBlock;
     }
-    if (line.trim() == '---' && !isCodeBlock) {
+    if (isCodeBlock) {
+      buffer.writeln(line);
+      continue;
+    }
+    if (trimmed == '---') {
       if (buffer.isNotEmpty) {
         if (inSlide) {
           slides.add(buffer.toString().trim());

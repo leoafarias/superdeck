@@ -7,17 +7,17 @@
   },
   "slides": [
     {
-      "key": "jrySbty2",
+      "key": "w4it131Y",
       "options": {
         "style": "custom"
       },
-      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
+      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n\n\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
       "sections": [
         {
           "options": null,
           "sub_sections": [
             {
-              "content": "\n## This is an example of a widgets",
+              "content": "\n## This is an example of a widgets\n",
               "options": null,
               "type": "column"
             },
@@ -30,32 +30,42 @@
               "type": "widget"
             },
             {
-              "content": "\n```dart\nimport 'package:flutter/material.dart';\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n```",
+              "content": "\n\n\n\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\nfinal style = Style(\n$box.padding.all(),\n$box.border.all(),\n);\n}\n\n```",
               "options": null,
               "type": "column"
             }
           ]
         }
-      ]
+      ],
+      "notes": []
     },
     {
-      "key": "rHLJMgwc",
-      "markdown": "```mermaid\ngraph TD\n    A[Enter Chart Definition] --> B(Preview)\n    B --> C{decide}\n    C --> D[Keep]\n    C --> E[Edit Definition]\n    E --> B\n    D --> F[Save Image and Car]\n    F --> B  \n```\n\n{@column flex: 3}\n\n```mermaid\nsequenceDiagram\n    participant Customer as 🧑 Customer\n    participant Barista as ☕ Barista\n    participant CoffeeMachine as 🏭 Coffee Machine\n```\n\n\n<!-- Notes go here -->",
+      "key": "zW5ZP5FY",
+      "options": {
+        "style": "here"
+      },
+      "markdown": "```mermaid\n\ngraph TD\n    A[Enter Chart Definition] --> B(Preview)\n    B --> C{decide}\n    C --> D[Keep]\n    C --> E[Edit Definition]\n    E --> B\n    D --> F[Save Image and Car]\n    F --> B  \n    \n\n\n```\n\n{@column flex: 3}\n\n```mermaid\nsequenceDiagram\n    participant Customer as 🧑 Customer\n    participant Barista as ☕ Barista\n    participant CoffeeMachine as 🏭 Coffee Machine\n```\n\n<!-- Notes go here -->",
       "sections": [
         {
           "sub_sections": [
             {
-              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_llAVsepR.png)",
+              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n",
               "type": "column"
             },
             {
-              "content": "\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n<!-- Notes go here -->",
+              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n<!-- Notes go here -->",
               "options": {
                 "flex": 3
               },
               "type": "column"
             }
           ]
+        }
+      ],
+      "notes": [
+        {
+          "offset": 382,
+          "note": "Notes go here"
         }
       ]
     },
@@ -70,7 +80,7 @@
           "options": null,
           "sub_sections": [
             {
-              "content": "\n# This presentation will be great",
+              "content": "\n# This presentation will be great\n",
               "options": {
                 "flex": 3,
                 "align": "bottom_right"
@@ -78,7 +88,7 @@
               "type": "column"
             },
             {
-              "content": "",
+              "content": "\n",
               "options": null,
               "type": "column"
             }
@@ -88,8 +98,7 @@
           "options": null,
           "sub_sections": [
             {
-              "content": "",
-              "options": null,
+              "content": "\n",
               "type": "column"
             },
             {
@@ -102,7 +111,8 @@
             }
           ]
         }
-      ]
+      ],
+      "notes": []
     },
     {
       "key": "huRpyhFQ",
@@ -116,7 +126,7 @@
           "sub_sections": [
             {
               "options": {
-                "src": "https://picsum.photos/1200/1200?waves",
+                "src": "https",
                 "fit": "cover",
                 "align": "top_left",
                 "type": "image"
@@ -132,23 +142,24 @@
           },
           "sub_sections": [
             {
-              "content": "\n# Two Column HGoes here\nThis is a two-column layout. You can use it to compare two different concepts or ideas.",
+              "content": "\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n",
               "options": {
                 "flex": 2
               },
               "type": "column"
             },
             {
-              "content": "\n### Section Options\nEasily customize the content of each section to suit your needs.\nUse front matter to define the layout of each section",
+              "content": "\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
               "options": null,
               "type": "column"
             }
           ]
         }
-      ]
+      ],
+      "notes": []
     },
     {
-      "key": "twktEcis",
+      "key": "X7aLd8Lm",
       "options": {
         "style": "show_sections"
       },
@@ -158,14 +169,14 @@
           "options": null,
           "sub_sections": [
             {
-              "content": "\n## First",
+              "content": "\n\n## First\n",
               "options": {
                 "align": "bottom_right"
               },
               "type": "column"
             },
             {
-              "content": "\n## Header",
+              "content": "\n\n\n## Header\n",
               "options": null,
               "type": "column"
             }
@@ -177,22 +188,23 @@
           },
           "sub_sections": [
             {
-              "content": "### Left Section\nEasily customize the content of each section to suit your needs.\nUse front matter to define the layout of each section",
+              "content": "\n### Left Section\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n",
               "type": "column"
             },
             {
-              "content": "\n#### Section Options\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
+              "content": "\n\n#### Section Options\n\n```yaml\nsections:\nleft:\nalignment: bottom_right\nflex: 2\nright:\nalignment: bottom_left\nheader:\nalignment: bottom_left\n```",
               "options": null,
               "type": "column"
             }
           ]
         }
-      ]
+      ],
+      "notes": []
     }
   ],
   "assets": [
     {
-      "path": ".superdeck/generated/mermaid_llAVsepR.png",
+      "path": ".superdeck/generated/mermaid_6EQHvrjD.png",
       "width": 313,
       "height": 449
     },
@@ -200,6 +212,26 @@
       "path": ".superdeck/generated/mermaid_BTVEzSEg.png",
       "width": 650,
       "height": 171
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_zW5ZP5FY.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_u0rRynPM.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_huRpyhFQ.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_X7aLd8Lm.png",
+      "width": 512,
+      "height": 288
     }
   ]
 }

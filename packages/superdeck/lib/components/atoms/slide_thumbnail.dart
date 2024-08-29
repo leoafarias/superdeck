@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:signals/signals_flutter.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../helpers/constants.dart';
-import '../../providers/controller.dart';
+import '../../helpers/notifiers/future_notifier.dart';
+import '../../helpers/notifiers/notifier_extensions.dart';
 import '../../services/snapshot_service.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
@@ -38,7 +38,7 @@ class SlideThumbnail extends StatefulWidget {
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
   bool _shouldRegenerate = false;
-  late final thumbnailRequest = futureSignal(() async {
+  late final thumbnailRequest = FutureNotifier(() async {
     final thumbnailFile = widget.slide.thumbnailFile;
 
     if ((!kCanRunProcess || await thumbnailFile.exists()) &&
@@ -77,22 +77,6 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
 
   @override
   Widget build(BuildContext context) {
-    final thumbnailContents = thumbnailRequest.build((value) {
-      return value.map(
-        data: (file) {
-          return Image(
-            gaplessPlayback: true,
-            image: getImageProvider(file.path),
-          );
-        },
-        loading: () => const IsometricLoading(),
-        error: (error, _) {
-          return const Center(
-            child: Text('Error loading image'),
-          );
-        },
-      );
-    });
     return GestureDetector(
       onTap: widget.onTap,
       onSecondaryTapDown: (details) {
@@ -104,7 +88,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
               switch (action) {
                 case _PopMenuAction.refreshThumbnail:
                   _shouldRegenerate = true;
-                  thumbnailRequest.reset(AsyncState.loading());
+
                   thumbnailRequest.reload();
                   break;
               }
@@ -136,7 +120,24 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
           children: [
             AspectRatio(
               aspectRatio: kAspectRatio,
-              child: thumbnailContents,
+              child: ListenableBuilder(
+                  listenable: thumbnailRequest,
+                  builder: (context, _) {
+                    return thumbnailRequest.map(
+                      data: (file) {
+                        return Image(
+                          gaplessPlayback: true,
+                          image: getImageProvider(context, file.uri),
+                        );
+                      },
+                      loading: () => const IsometricLoading(),
+                      error: (error) {
+                        return const Center(
+                          child: Text('Error loading image'),
+                        );
+                      },
+                    );
+                  }),
             ),
             Positioned(
               top: 0,

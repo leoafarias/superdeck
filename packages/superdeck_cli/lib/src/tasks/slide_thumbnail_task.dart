@@ -9,12 +9,11 @@ class SlideThumbnailTask extends Task {
 
   @override
   FutureOr<TaskController> run(controller) async {
-    final file = buildAssetFile('thumbnail_${controller.slide.key}', 'png');
+    final file = controller.slide.thumbnailFile;
 
     if (await file.exists()) {
       await controller.markFileAsNeeded(file);
     }
-
     return controller;
   }
 }

@@ -145,7 +145,7 @@ Widget _imageBuilder(
     return ConstrainedBox(
       constraints: calculateConstraints(size, slideSpec),
       child: CacheImage(
-        url: uri.toString(),
+        uri: uri,
         spec: slideSpec.image,
       ),
     );

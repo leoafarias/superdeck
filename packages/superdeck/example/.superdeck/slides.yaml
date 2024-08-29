@@ -3,7 +3,7 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - key: 'jrySbty2'
+  - key: 'w4it131Y'
     options: 
       style: 'custom'
     markdown: |-
@@ -14,6 +14,9 @@ slides:
       {@widget name: demo}
       
       {@column}
+      
+      
+      
       
       ```dart
       import 'package:flutter/material.dart';
@@ -29,7 +32,7 @@ slides:
     sections: 
       - options: null
         sub_sections: 
-          - content: |-
+          - content: |
               
               ## This is an example of a widgets
             options: null
@@ -41,20 +44,30 @@ slides:
             type: 'widget'
           - content: |-
               
+              
+              
+              
+              
               ```dart
               import 'package:flutter/material.dart';
+              
               void main() {
-                final style = Style(
-                  $box.padding.all(),
-                  $box.border.all(),
-                );
+              final style = Style(
+              $box.padding.all(),
+              $box.border.all(),
+              );
               }
+              
               ```
             options: null
             type: 'column'
-  - key: 'rHLJMgwc'
+    notes: []
+  - key: 'zW5ZP5FY'
+    options: 
+      style: 'here'
     markdown: |-
       ```mermaid
+      
       graph TD
           A[Enter Chart Definition] --> B(Preview)
           B --> C{decide}
@@ -63,6 +76,9 @@ slides:
           E --> B
           D --> F[Save Image and Car]
           F --> B  
+          
+      
+      
       ```
       
       {@column flex: 3}
@@ -74,19 +90,24 @@ slides:
           participant CoffeeMachine as 🏭 Coffee Machine
       ```
       
-      
       <!-- Notes go here -->
     sections: 
       - sub_sections: 
-          - content: '![Mermaid Diagram](.superdeck/generated/mermaid_llAVsepR.png)'
+          - content: |
+              ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
             type: 'column'
           - content: |-
               
+              
               ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+              
               <!-- Notes go here -->
             options: 
               flex: 3
             type: 'column'
+    notes: 
+      - offset: 382
+        note: 'Notes go here'
   - key: 'u0rRynPM'
     options: 
       style: 'quote'
@@ -108,20 +129,21 @@ slides:
     sections: 
       - options: null
         sub_sections: 
-          - content: |-
+          - content: |
               
               # This presentation will be great
             options: 
               flex: 3
               align: 'bottom_right'
             type: 'column'
-          - content: ''
+          - content: |
+              
             options: null
             type: 'column'
       - options: null
         sub_sections: 
-          - content: ''
-            options: null
+          - content: |
+              
             type: 'column'
           - content: |-
               
@@ -132,6 +154,7 @@ slides:
               flex: 2
               align: 'top_right'
             type: 'column'
+    notes: []
   - key: 'huRpyhFQ'
     options: 
       style: 'show_sections'
@@ -157,7 +180,7 @@ slides:
       - options: null
         sub_sections: 
           - options: 
-              src: 'https://picsum.photos/1200/1200?waves'
+              src: 'https'
               fit: 'cover'
               align: 'top_left'
               type: 'image'
@@ -166,21 +189,27 @@ slides:
       - options: 
           flex: 2
         sub_sections: 
-          - content: |-
+          - content: |
               
               # Two Column HGoes here
+              
               This is a two-column layout. You can use it to compare two different concepts or ideas.
+              
             options: 
               flex: 2
             type: 'column'
           - content: |-
               
+              
               ### Section Options
+              
               Easily customize the content of each section to suit your needs.
+              
               Use front matter to define the layout of each section
             options: null
             type: 'column'
-  - key: 'twktEcis'
+    notes: []
+  - key: 'X7aLd8Lm'
     options: 
       style: 'show_sections'
     markdown: |-
@@ -218,13 +247,16 @@ slides:
     sections: 
       - options: null
         sub_sections: 
-          - content: |-
+          - content: |
+              
               
               ## First
             options: 
               align: 'bottom_right'
             type: 'column'
-          - content: |-
+          - content: |
+              
+              
               
               ## Header
             options: null
@@ -232,30 +264,47 @@ slides:
       - options: 
           flex: 2
         sub_sections: 
-          - content: |-
+          - content: |
+              
               ### Left Section
               Easily customize the content of each section to suit your needs.
+              
               Use front matter to define the layout of each section
             type: 'column'
           - content: |-
               
+              
               #### Section Options
+              
               ```yaml
               sections:
-                left:
-                  alignment: bottom_right
-                  flex: 2
-                right:
-                  alignment: bottom_left
-                header:
-                  alignment: bottom_left
+              left:
+              alignment: bottom_right
+              flex: 2
+              right:
+              alignment: bottom_left
+              header:
+              alignment: bottom_left
               ```
             options: null
             type: 'column'
+    notes: []
 assets: 
-  - path: '.superdeck/generated/mermaid_llAVsepR.png'
+  - path: '.superdeck/generated/mermaid_6EQHvrjD.png'
     width: 313
     height: 449
   - path: '.superdeck/generated/mermaid_BTVEzSEg.png'
     width: 650
     height: 171
+  - path: '.superdeck/generated/thumbnail_zW5ZP5FY.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_u0rRynPM.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_huRpyhFQ.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_X7aLd8Lm.png'
+    width: 512
+    height: 288

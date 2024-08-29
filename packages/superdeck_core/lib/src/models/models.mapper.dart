@@ -6,64 +6,6 @@
 
 part of 'models.dart';
 
-class AssetFileTypeMapper extends EnumMapper<AssetFileType> {
-  AssetFileTypeMapper._();
-
-  static AssetFileTypeMapper? _instance;
-  static AssetFileTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = AssetFileTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static AssetFileType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  AssetFileType decode(dynamic value) {
-    switch (value) {
-      case 'png':
-        return AssetFileType.png;
-      case 'jpg':
-        return AssetFileType.jpg;
-      case 'jpeg':
-        return AssetFileType.jpeg;
-      case 'gif':
-        return AssetFileType.gif;
-      case 'webp':
-        return AssetFileType.webp;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(AssetFileType self) {
-    switch (self) {
-      case AssetFileType.png:
-        return 'png';
-      case AssetFileType.jpg:
-        return 'jpg';
-      case AssetFileType.jpeg:
-        return 'jpeg';
-      case AssetFileType.gif:
-        return 'gif';
-      case AssetFileType.webp:
-        return 'webp';
-    }
-  }
-}
-
-extension AssetFileTypeMapperExtension on AssetFileType {
-  String toValue() {
-    AssetFileTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<AssetFileType>(this) as String;
-  }
-}
-
 class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
   SlideAssetMapper._();
 

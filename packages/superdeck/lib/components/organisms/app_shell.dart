@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../helpers/routes.dart';
 import '../../providers/controller.dart';
@@ -11,12 +10,12 @@ import '../molecules/split_view.dart';
 /// BottomNavigationBar, where [child] is placed in the body of the Scaffold.
 class AppShell extends HookWidget {
   const AppShell({
-    required this.navigationShell,
+    required this.child,
     super.key = const ValueKey<String>('app_shell'),
   });
 
   /// The navigation shell and container for the branch Navigators.
-  final StatefulNavigationShell navigationShell;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +58,7 @@ class AppShell extends HookWidget {
 
     return CallbackShortcuts(
       bindings: bindings,
-      child: SplitView(
-        navigationShell: navigationShell,
-      ),
+      child: SplitView(child: child),
     );
   }
 }

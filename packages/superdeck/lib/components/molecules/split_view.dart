@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../helpers/hooks.dart';
 import '../../helpers/routes.dart';
@@ -10,11 +9,11 @@ import 'floating_bottom_bar.dart';
 final kScaffoldKey = GlobalKey<ScaffoldState>();
 
 class SplitView extends HookWidget {
-  final StatefulNavigationShell navigationShell;
+  final Widget child;
 
   const SplitView({
     super.key,
-    required this.navigationShell,
+    required this.child,
   });
 
   final _thumbnailWidth = 300.0;
@@ -23,10 +22,10 @@ class SplitView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isBottomOpen = context.isPresenterMenuOpen;
-    final isSideOpen = context.isDrawerOpen;
+    final isThumbnailsVisible = context.isDrawerOpen;
     final sideAnimation = useAnimationController(
       duration: _duration,
-      initialValue: isSideOpen && isBottomOpen ? 1.0 : 0.0,
+      initialValue: isThumbnailsVisible && isBottomOpen ? 1.0 : 0.0,
     );
     final bottomAnimation = useAnimationController(
       duration: _duration,
@@ -36,7 +35,7 @@ class SplitView extends HookWidget {
     usePostFrameEffect(() {
       if (isBottomOpen) {
         bottomAnimation.forward();
-        if (isSideOpen) {
+        if (isThumbnailsVisible) {
           sideAnimation.forward();
         } else {
           sideAnimation.reverse();
@@ -45,7 +44,7 @@ class SplitView extends HookWidget {
         sideAnimation.reverse();
         bottomAnimation.reverse();
       }
-    }, [isBottomOpen, isSideOpen]);
+    }, [isBottomOpen, isThumbnailsVisible]);
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 9, 9, 9),
@@ -72,7 +71,7 @@ class SplitView extends HookWidget {
                   child: const SlideThumbnailList(),
                 ),
               ),
-              Expanded(child: navigationShell)
+              Expanded(child: child)
             ],
           ),
           AnimatedPositioned(

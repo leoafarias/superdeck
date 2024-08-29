@@ -6,15 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../components/atoms/slide_view.dart';
 import '../components/molecules/split_view.dart';
 import '../helpers/constants.dart';
-import '../providers/assets_provider.dart';
-import '../providers/examples_provider.dart';
 import '../providers/snapshot_provider.dart';
-import '../providers/style_provider.dart';
 import '../superdeck.dart';
 
 enum SnapshotQuality {
@@ -99,20 +95,14 @@ class SnapshotService {
     try {
       final child = InheritedTheme.captureAll(
         context,
-        StyleProvider.inherit(
+        SuperDeckProvider.inherit(
           context: context,
-          child: AssetsProvider.inherit(
-            context: context,
-            child: WidgetExamplesProvider.inherit(
-              context: context,
-              child: MediaQuery(
-                data: MediaQuery.of(context),
-                child: MaterialApp(
-                  theme: Theme.of(context),
-                  debugShowCheckedModeBanner: false,
-                  home: Scaffold(body: widget),
-                ),
-              ),
+          child: MediaQuery(
+            data: MediaQuery.of(context),
+            child: MaterialApp(
+              theme: Theme.of(context),
+              debugShowCheckedModeBanner: false,
+              home: Scaffold(body: widget),
             ),
           ),
         ),

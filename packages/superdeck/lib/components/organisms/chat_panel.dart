@@ -10,7 +10,7 @@ import '../../helpers/constants.dart';
 import '../../helpers/extensions.dart';
 import '../atoms/markdown_viewer.dart';
 
-const _apiKey = 'AIzaSyD37mFwHkiMeArz_hp1hnRwysOsqqgnhPQ';
+const _apiKey = '';
 
 const _geminiFlash = 'gemini-1.5-flash-latest';
 const _geminiPro = 'gemini-1.5-pro';
