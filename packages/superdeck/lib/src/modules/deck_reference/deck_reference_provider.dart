@@ -42,15 +42,13 @@ class DecKReferenceProvider extends StatefulWidget {
   ///
   /// This method is useful when you want to create a [DecKReferenceProvider] with
   /// the same [DeckReferenceController] as an ancestor [DecKReferenceProvider].
-  static DecKReferenceProvider inherit({
+  static _ReferenceControllerInherited inherit({
     required BuildContext context,
     required Widget child,
   }) {
     final controller = DecKReferenceProvider.read(context);
-    return DecKReferenceProvider(
-      styles: controller.styles,
-      baseStyle: controller.baseStyle,
-      examples: controller.examples,
+    return _ReferenceControllerInherited(
+      controller: controller,
       child: child,
     );
   }
@@ -109,6 +107,20 @@ class _DecKReferenceProviderState extends State<DecKReferenceProvider> {
       baseStyle: widget.baseStyle,
       examples: widget.examples,
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.baseStyle != _controller.baseStyle ||
+        widget.styles != _controller.styles ||
+        widget.examples != _controller.examples) {
+      _controller = DeckReferenceController(
+        styles: widget.styles,
+        baseStyle: widget.baseStyle,
+        examples: widget.examples,
+      );
+    }
   }
 
   @override

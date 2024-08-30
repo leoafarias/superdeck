@@ -320,6 +320,15 @@ Footer content.
         expect(result.first.options, equals({'key1': 'value1'}));
       });
 
+      // test https:url
+      test('Single key-value pair with https url', () {
+        final result = extractTagsFromLine(
+            '{@section key0: car key1: https://www.google.com}');
+        expect(result.first.blockType, equals(BlockType.section));
+        expect(result.first.options,
+            equals({'key0': 'car', 'key1': 'https://www.google.com'}));
+      });
+
       test('Multiple key-value pairs', () {
         final result =
             extractTagsFromLine('{@section key1: value1 key2: value2}');
@@ -335,13 +344,11 @@ Footer content.
       });
 
       test('Empty value', () {
-        final result = extractTagsFromLine('{@section key1:}');
-        expect(result.first.options['key1'], isNull);
+        expect(() => extractTagsFromLine('{@section key1:}'), throwsException);
       });
 
       test('Missing value', () {
-        final result = extractTagsFromLine('{@section key1}');
-        expect(result.first.options['key1'], isNull);
+        expect(() => extractTagsFromLine('{@section key1}'), throwsException);
       });
 
       test('Invalid tag format', () {
@@ -351,10 +358,14 @@ Footer content.
       test('Returns contents of the first tag when multiple tags are present',
           () {
         final result = extractTagsFromLine(
-          '{@column firstTag: true} {@column secondTag:false}',
+          '{@column firstTag: true} {@column secondTag: false}',
         );
+        expect(result.length, equals(2));
         expect(result.first.blockType, equals(BlockType.column));
         expect(result.first.options, equals({'firstTag': 'true'}));
+
+        expect(result.last.blockType, equals(BlockType.column));
+        expect(result.last.options, equals({'secondTag': 'false'}));
       });
 
       test('Mixed valid and invalid pairs', () {
@@ -406,12 +417,8 @@ Footer content.
 
     test('Parse tag with only first part', () {
       final input = '{@column: demo}';
-      final expectedOutput = [(blockType: BlockType.column, options: {})];
 
-      final result = extractTagsFromLine(input);
-
-      expect(result.first.blockType, equals(expectedOutput.first.blockType));
-      expect(result.first.options, equals(expectedOutput.first.options));
+      expect(() => extractTagsFromLine(input), throwsException);
     });
 
     test('Parse tag with extra whitespace', () {
@@ -478,17 +485,8 @@ Footer content.
 
     test('Return null for input with incorrect tag format', () {
       final input = '{@column: blue car}';
-      final expectedOutput = [
-        (
-          blockType: BlockType.column,
-          options: {},
-        )
-      ];
 
-      final result = extractTagsFromLine(input);
-
-      expect(result.first.blockType, equals(expectedOutput.first.blockType));
-      expect(result.first.options, equals(expectedOutput.first.options));
+      expect(() => extractTagsFromLine(input), throwsException);
     });
   });
 }

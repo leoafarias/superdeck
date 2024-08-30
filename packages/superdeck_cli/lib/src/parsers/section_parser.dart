@@ -83,20 +83,42 @@ List<SyntaxTagData> extractTagsFromLine(String line) {
 
   return matches.map((match) {
     final blockTypeStr = match.group(1);
-    final rawOptions = match.group(2)!.trim();
+    var rawOptions = match.group(2)!.trim();
     final blockType = _getBlockType(blockTypeStr!);
 
-    final options = <String, String>{};
+    final options = <String, String?>{};
+    if (rawOptions.startsWith(':')) {
+      // final firstItem = rawOptions.substring(1).split(' ').first;
+
+      // rawOptions = rawOptions.substring(1 + firstItem.length).trim();
+      throw Exception(
+          'Invalid option format, must be key-value pairs\n $rawOptions');
+    }
+
     if (rawOptions.isNotEmpty) {
-      final optionRegex = RegExp(r'(\w+)\s*:\s*([\w_]+)');
-      final optionMatches = optionRegex.allMatches(rawOptions);
-      for (final optionMatch in optionMatches) {
-        final key = optionMatch.group(1);
-        final value = optionMatch.group(2);
-        if (key == null || value == null || value.isEmpty) {
-          throw Exception('Invalid option format');
+      final optionsSplit = rawOptions
+          .split(': ')
+          .expand((s) => s.split(' '))
+          .where((s) => s.isNotEmpty)
+          .toList();
+
+      // If value is not event throw an error
+      if (optionsSplit.length % 2 != 0) {
+        throw Exception(
+            'Invalid option format, must be key-value pairs\n $rawOptions');
+      }
+
+      // Now combine the options back together, every 2 pairs as key-value
+      for (var i = 0; i < optionsSplit.length; i += 2) {
+        final key = optionsSplit[i];
+        final value = optionsSplit[i + 1];
+        if (value.isEmpty) {
+          options[key] = null;
+        } else if (key.isEmpty) {
+          options[value] = true.toString();
+        } else {
+          options[key] = value.trim();
         }
-        options[key] = value.trim();
       }
     }
 
