@@ -7,8 +7,11 @@ class FutureNotifier<T> extends ValueNotifier<AsyncValue<T>>
     with SelectNotifierMixin<AsyncValue<T>> {
   late Future<T> Function() future;
 
-  FutureNotifier(this.future) : super(AsyncValue<T>.loading()) {
-    _updateFuture(future());
+  FutureNotifier(this.future, {bool lazy = true})
+      : super(AsyncValue<T>.loading()) {
+    if (!lazy) {
+      _updateFuture(future());
+    }
   }
 
   Future<void> _updateFuture(Future<T> future) async {

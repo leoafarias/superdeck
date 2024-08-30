@@ -50,7 +50,7 @@ class SuperDeckApp extends StatelessWidget {
           baseStyle: baseStyle,
           examples: examples,
           child: MaterialApp.router(
-            debugShowCheckedModeBanner: true,
+            debugShowCheckedModeBanner: false,
             title: 'Superdeck',
             routerConfig: goRouterConfig,
             theme: theme,

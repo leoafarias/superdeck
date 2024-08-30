@@ -162,7 +162,6 @@ class WidgetCaptureService {
       ).attachToRenderTree(buildOwner);
 
       while (retryCount > 0) {
-        await Future.delayed(const Duration(milliseconds: 100));
         isDirty = false;
         buildOwner
           ..buildScope(rootElement)

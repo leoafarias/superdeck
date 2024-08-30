@@ -62,6 +62,14 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   });
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      thumbnailRequest.reload();
+    });
+  }
+
+  @override
   void didUpdateWidget(covariant SlideThumbnail oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.slide != widget.slide) {
