@@ -2,12 +2,11 @@ import 'dart:convert';
 
 extension StringX on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1)}";
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 
   String snakeCase() {
-    return this
-        .replaceAll(RegExp(r'\s+'), '_')
+    return replaceAll(RegExp(r'\s+'), '_')
         .replaceAllMapped(
             RegExp(
                 r'[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+'),

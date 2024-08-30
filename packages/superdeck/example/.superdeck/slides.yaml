@@ -3,7 +3,52 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - key: 'w4it131Y'
+  - key: '3twTeSRu'
+    options: 
+      style: 'here'
+    markdown: |-
+      ```mermaid
+      
+      graph TD
+          A[Enter Chart Definition] --> B(Preview)
+          B --> C{decide}
+          C --> D[Keep]
+          C --> E[Edit Definition]
+          E --> B
+          D --> F[Save Image and Car]
+          F --> B  
+          
+      
+      
+      ```
+      
+      {@column}
+      
+      ```mermaid
+      sequenceDiagram
+          participant Customer as 🧑 Customer
+          participant Barista as ☕ Barista
+          participant CoffeeMachine as 🏭 Coffee Machine
+      ```
+      
+      <!-- Notes go here -->
+    sections: 
+      - sub_sections: 
+          - content: |
+              ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
+            type: 'column'
+          - content: |-
+              
+              
+              ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+              
+              <!-- Notes go here -->
+            options: null
+            type: 'column'
+    notes: 
+      - offset: 374
+        note: 'Notes go here'
+  - key: 'jrySbty2'
     options: 
       style: 'custom'
     markdown: |-
@@ -14,9 +59,6 @@ slides:
       {@widget name: demo}
       
       {@column}
-      
-      
-      
       
       ```dart
       import 'package:flutter/material.dart';
@@ -45,9 +87,6 @@ slides:
           - content: |-
               
               
-              
-              
-              
               ```dart
               import 'package:flutter/material.dart';
               
@@ -62,52 +101,6 @@ slides:
             options: null
             type: 'column'
     notes: []
-  - key: 'zW5ZP5FY'
-    options: 
-      style: 'here'
-    markdown: |-
-      ```mermaid
-      
-      graph TD
-          A[Enter Chart Definition] --> B(Preview)
-          B --> C{decide}
-          C --> D[Keep]
-          C --> E[Edit Definition]
-          E --> B
-          D --> F[Save Image and Car]
-          F --> B  
-          
-      
-      
-      ```
-      
-      {@column flex: 3}
-      
-      ```mermaid
-      sequenceDiagram
-          participant Customer as 🧑 Customer
-          participant Barista as ☕ Barista
-          participant CoffeeMachine as 🏭 Coffee Machine
-      ```
-      
-      <!-- Notes go here -->
-    sections: 
-      - sub_sections: 
-          - content: |
-              ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
-            type: 'column'
-          - content: |-
-              
-              
-              ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
-              
-              <!-- Notes go here -->
-            options: 
-              flex: 3
-            type: 'column'
-    notes: 
-      - offset: 382
-        note: 'Notes go here'
   - key: 'u0rRynPM'
     options: 
       style: 'quote'
@@ -209,7 +202,7 @@ slides:
             options: null
             type: 'column'
     notes: []
-  - key: 'X7aLd8Lm'
+  - key: 'twktEcis'
     options: 
       style: 'show_sections'
     markdown: |-
@@ -296,15 +289,3 @@ assets:
   - path: '.superdeck/generated/mermaid_BTVEzSEg.png'
     width: 650
     height: 171
-  - path: '.superdeck/generated/thumbnail_zW5ZP5FY.png'
-    width: 512
-    height: 288
-  - path: '.superdeck/generated/thumbnail_u0rRynPM.png'
-    width: 512
-    height: 288
-  - path: '.superdeck/generated/thumbnail_huRpyhFQ.png'
-    width: 512
-    height: 288
-  - path: '.superdeck/generated/thumbnail_X7aLd8Lm.png'
-    width: 512
-    height: 288

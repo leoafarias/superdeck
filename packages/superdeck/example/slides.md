@@ -1,30 +1,3 @@
----
-style: custom
----
-
-{@section}
-{@column}
-## This is an example of a widgets
-
-{@widget name: demo}
-
-{@column}
-
-
-
-
-```dart
-import 'package:flutter/material.dart';
-
-void main() {
-  final style = Style(
-    $box.padding.all(),
-    $box.border.all(),
-  );
-}
-
-```
-
 
 ---
 style: here
@@ -46,7 +19,7 @@ graph TD
 
 ```
 
-{@column flex: 3}
+{@column}
 
 ```mermaid
 sequenceDiagram
@@ -56,6 +29,31 @@ sequenceDiagram
 ```
 
 <!-- Notes go here -->
+
+---
+style: custom
+---
+
+{@section}
+{@column}
+## This is an example of a widgets
+
+{@widget name: demo}
+
+{@column}
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  final style = Style(
+    $box.padding.all(),
+    $box.border.all(),
+  );
+}
+
+```
+
 
 
 ---

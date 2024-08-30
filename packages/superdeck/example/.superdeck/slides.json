@@ -7,11 +7,39 @@
   },
   "slides": [
     {
-      "key": "w4it131Y",
+      "key": "3twTeSRu",
+      "options": {
+        "style": "here"
+      },
+      "markdown": "```mermaid\n\ngraph TD\n    A[Enter Chart Definition] --> B(Preview)\n    B --> C{decide}\n    C --> D[Keep]\n    C --> E[Edit Definition]\n    E --> B\n    D --> F[Save Image and Car]\n    F --> B  \n    \n\n\n```\n\n{@column}\n\n```mermaid\nsequenceDiagram\n    participant Customer as 🧑 Customer\n    participant Barista as ☕ Barista\n    participant CoffeeMachine as 🏭 Coffee Machine\n```\n\n<!-- Notes go here -->",
+      "sections": [
+        {
+          "sub_sections": [
+            {
+              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n",
+              "type": "column"
+            },
+            {
+              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n<!-- Notes go here -->",
+              "options": null,
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        {
+          "offset": 374,
+          "note": "Notes go here"
+        }
+      ]
+    },
+    {
+      "key": "jrySbty2",
       "options": {
         "style": "custom"
       },
-      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n\n\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
+      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
       "sections": [
         {
           "options": null,
@@ -30,7 +58,7 @@
               "type": "widget"
             },
             {
-              "content": "\n\n\n\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\nfinal style = Style(\n$box.padding.all(),\n$box.border.all(),\n);\n}\n\n```",
+              "content": "\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\nfinal style = Style(\n$box.padding.all(),\n$box.border.all(),\n);\n}\n\n```",
               "options": null,
               "type": "column"
             }
@@ -38,36 +66,6 @@
         }
       ],
       "notes": []
-    },
-    {
-      "key": "zW5ZP5FY",
-      "options": {
-        "style": "here"
-      },
-      "markdown": "```mermaid\n\ngraph TD\n    A[Enter Chart Definition] --> B(Preview)\n    B --> C{decide}\n    C --> D[Keep]\n    C --> E[Edit Definition]\n    E --> B\n    D --> F[Save Image and Car]\n    F --> B  \n    \n\n\n```\n\n{@column flex: 3}\n\n```mermaid\nsequenceDiagram\n    participant Customer as 🧑 Customer\n    participant Barista as ☕ Barista\n    participant CoffeeMachine as 🏭 Coffee Machine\n```\n\n<!-- Notes go here -->",
-      "sections": [
-        {
-          "sub_sections": [
-            {
-              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n",
-              "type": "column"
-            },
-            {
-              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n<!-- Notes go here -->",
-              "options": {
-                "flex": 3
-              },
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": [
-        {
-          "offset": 382,
-          "note": "Notes go here"
-        }
-      ]
     },
     {
       "key": "u0rRynPM",
@@ -159,7 +157,7 @@
       "notes": []
     },
     {
-      "key": "X7aLd8Lm",
+      "key": "twktEcis",
       "options": {
         "style": "show_sections"
       },
@@ -212,26 +210,6 @@
       "path": ".superdeck/generated/mermaid_BTVEzSEg.png",
       "width": 650,
       "height": 171
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_zW5ZP5FY.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_u0rRynPM.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_huRpyhFQ.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_X7aLd8Lm.png",
-      "width": 512,
-      "height": 288
     }
   ]
 }

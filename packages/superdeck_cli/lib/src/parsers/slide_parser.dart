@@ -5,6 +5,7 @@ import 'package:superdeck_cli/src/parsers/front_matter_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 List<String> _splitSlides(String content) {
+  content = content.trim();
   final lines = content.split('\n');
   final slides = <String>[];
   final buffer = StringBuffer();

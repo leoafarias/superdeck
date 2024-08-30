@@ -1,4 +1,4 @@
-library;
+library superdeck_core;
 
 export 'src/helpers/constants.dart';
 export 'src/helpers/extensions.dart';

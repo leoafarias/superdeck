@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:superdeck/templates/slide_template.dart';
+import 'package:superdeck/src/components/molecules/slide_template.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../test_helpers.dart';

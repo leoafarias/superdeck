@@ -12,6 +12,9 @@
 			"name": "superdeck_core",
 			"path": "packages/superdeck_core"
 		},
+		{
+			"path": "."
+		}
 	
 	],
 	"settings": {
