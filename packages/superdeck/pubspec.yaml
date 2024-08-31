@@ -47,8 +47,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-  mix_generator: ^0.2.2
-  custom_lint: ^0.6.4
+  mix_generator: ^0.3.0
+  custom_lint: ^0.6.5
   mix_lint: ^0.1.1
   
   

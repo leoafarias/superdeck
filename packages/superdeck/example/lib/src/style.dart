@@ -24,17 +24,26 @@ final _innerContainer = _util.innerContainer;
 Style get customStyle {
   return Style(
     _textStyle.as(GoogleFonts.poppins()),
-    _h1.textStyle.as(GoogleFonts.smooch()),
-    _code.textStyle.as(GoogleFonts.firaCode()),
+    _code.only(
+      textStyle: GoogleFonts.firaCode().toDto(),
+      decoration: const BoxDecoration(
+        color: Colors.black,
+      ).toDto(),
+    ),
     _code.decoration.color(Colors.black),
-    _h1.textStyle.fontSize(200),
-    _h1.textStyle.height(0),
-    _h1.textStyle.shadow(
-      color: Colors.deepOrange,
-      blurRadius: 20,
+    _h1.textStyle(
+      fontFamily: GoogleFonts.smooch().fontFamily,
+      fontSize: 200,
+      height: 0,
+      shadows: [
+        const Shadow(
+          color: Colors.black,
+          blurRadius: 20,
+          offset: Offset(5, 5),
+        ),
+      ],
     ),
     _h2.textStyle.fontSize(36),
-    _contentContainer.borderRadius(25),
     _innerContainer.gradient.linear(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -43,23 +52,36 @@ Style get customStyle {
         Colors.deepPurple.withOpacity(0.9),
       ],
     ),
-    _contentContainer.padding.vertical(0),
-    _outerContainer.padding(40),
-    _outerContainer.gradient.linear(
-      colors: [
-        Colors.red,
-        Colors.redAccent,
+    _contentContainer.only(
+      padding: const EdgeInsets.all(40).toDto(),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+      ).toDto(),
+    ),
+    _outerContainer.only(
+      padding: const EdgeInsets.all(40).toDto(),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.black,
+            Colors.black.withOpacity(0.5),
+          ],
+        ),
+      ).toDto(),
+    ),
+    _innerContainer.decoration(
+      border: Border.all(
+        color: Colors.deepOrange,
+        width: 4,
+      ),
+      borderRadius: BorderRadius.circular(25),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.4),
+          blurRadius: 20,
+          spreadRadius: 5,
+        )
       ],
-    ),
-    _innerContainer.borderRadius(25),
-    _innerContainer.border.all(
-      color: Colors.deepOrange,
-      width: 4,
-    ),
-    _innerContainer.shadow(
-      color: Colors.black.withOpacity(0.4),
-      blurRadius: 20,
-      spreadRadius: 5,
     ),
   );
 }
