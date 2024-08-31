@@ -9,7 +9,6 @@ import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
 import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
-import 'package:superdeck_cli/src/parsers/section_parser.dart';
 import 'package:superdeck_cli/src/parsers/slide_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:yaml_writer/yaml_writer.dart';
@@ -144,10 +143,7 @@ class TaskPipeline {
     List<MarkdownReplacement> markdownReplacements = [];
 
     for (var controller in controllers) {
-      final modifiedSlide = controller.slide;
-      final parsedSlide = slides.firstWhere((s) => s.key == modifiedSlide.key);
-      final newSlide = _prepareSlide(parsedSlide, modifiedSlide);
-      modifiedSlides.add(newSlide);
+      modifiedSlides.add(controller.slide);
       neededAssets.addAll(controller.neededAssets);
       markdownReplacements.addAll(controller.markdownReplacements);
     }
@@ -303,12 +299,4 @@ extension on ReferenceDto {
 
     return buffer.toString();
   }
-}
-
-Slide _prepareSlide(Slide parsedSlide, Slide modifiedSlide) {
-  final sections = parseSections(modifiedSlide.markdown);
-
-  return parsedSlide.copyWith(
-    sections: sections,
-  );
 }

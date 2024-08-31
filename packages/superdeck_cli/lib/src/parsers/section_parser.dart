@@ -65,6 +65,8 @@ BlockDto? _decodeBlock(SyntaxTagData tagData) {
       return WidgetBlockDto.parse(payload);
     case BlockType.section:
       return SectionBlockDto.parse(payload);
+    case BlockType.gist:
+      return GistBlockDto.parse(payload);
   }
 }
 

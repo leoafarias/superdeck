@@ -7,16 +7,23 @@
   },
   "slides": [
     {
-      "key": "3twTeSRu",
+      "key": "1bdq2Zlk",
       "options": {
         "style": "here"
       },
-      "markdown": "```mermaid\n\ngraph TD\n    A[Enter Chart Definition] --> B(Preview)\n    B --> C{decide}\n    C --> D[Keep]\n    C --> E[Edit Definition]\n    E --> B\n    D --> F[Save Image and Car]\n    F --> B  \n    \n\n\n```\n\n{@column}\n\n```mermaid\nsequenceDiagram\n    participant Customer as 🧑 Customer\n    participant Barista as ☕ Barista\n    participant CoffeeMachine as 🏭 Coffee Machine\n```\n\n<!-- Notes go here -->",
+      "markdown": "{@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }\n\n![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n<!-- Notes go here -->",
       "sections": [
         {
           "sub_sections": [
             {
-              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n",
+              "options": {
+                "id": "5c0e154dd50af4a9ac856908061291bc"
+              },
+              "content": "",
+              "type": "gist"
+            },
+            {
+              "content": "\n![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n",
               "type": "column"
             },
             {
@@ -29,7 +36,7 @@
       ],
       "notes": [
         {
-          "offset": 374,
+          "offset": 429,
           "note": "Notes go here"
         }
       ]
@@ -124,7 +131,7 @@
           "sub_sections": [
             {
               "options": {
-                "src": "https",
+                "src": "https://picsum.photos/1200/1200?waves",
                 "fit": "cover",
                 "align": "top_left",
                 "type": "image"
@@ -210,6 +217,26 @@
       "path": ".superdeck/generated/mermaid_BTVEzSEg.png",
       "width": 650,
       "height": 171
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_jrySbty2.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_u0rRynPM.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_huRpyhFQ.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_twktEcis.png",
+      "width": 512,
+      "height": 288
     }
   ]
 }

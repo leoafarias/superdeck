@@ -25,6 +25,8 @@ class SlideView extends HookWidget {
     final background = slide.options?.background;
     final transition = slide.options?.transition;
 
+    useAutomaticKeepAlive();
+
     final variantStyle = useDeckStyle(slide);
 
     final isCapturing = SnapshotProvider.isCapturingOf(context);

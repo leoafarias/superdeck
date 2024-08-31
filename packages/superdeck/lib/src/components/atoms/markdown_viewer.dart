@@ -121,29 +121,6 @@ List<TextSpan> updateTextColor(
   return updatedSpans;
 }
 
-// Widget _imageBuilder(Uri uri, String? title, String? alt) {
-//   return LayoutBuilder(builder: (context, constraints) {
-//     final slideSpec = SlideSpec.of(context);
-
-//     var height = constraints.maxHeight;
-
-//     if (height == double.infinity) {
-//       height = kResolution.height;
-//     }
-//     return Container(
-//       constraints: BoxConstraints(
-//         maxWidth: constraints.maxWidth,
-//         maxHeight: height,
-//       ),
-//       color: Colors.red,
-//       child: CacheImage(
-//         uri: uri,
-//         spec: slideSpec.image,
-//       ),
-//     );
-//   });
-// }
-
 class TextBuilder extends MarkdownElementBuilder {
   final MdTextSpec? spec;
   TextBuilder(this.spec);

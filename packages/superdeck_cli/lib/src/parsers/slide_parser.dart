@@ -83,7 +83,6 @@ List<Slide> parseSlides(String markdown) {
   } on FormatException catch (e) {
     throw SDFormatException(e.message, markdown, e.offset);
   } on SchemaValidationException catch (e) {
-    print(e.result.errors.map((e) => e.message).join('\n'));
     throw SDMarkdownParsingException(e, 0);
   }
 }

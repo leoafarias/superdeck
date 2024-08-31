@@ -3,38 +3,27 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - key: '3twTeSRu'
+  - key: '1bdq2Zlk'
     options: 
       style: 'here'
     markdown: |-
-      ```mermaid
+      {@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }
       
-      graph TD
-          A[Enter Chart Definition] --> B(Preview)
-          B --> C{decide}
-          C --> D[Keep]
-          C --> E[Edit Definition]
-          E --> B
-          D --> F[Save Image and Car]
-          F --> B  
-          
-      
-      
-      ```
+      ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
       
       {@column}
       
-      ```mermaid
-      sequenceDiagram
-          participant Customer as 🧑 Customer
-          participant Barista as ☕ Barista
-          participant CoffeeMachine as 🏭 Coffee Machine
-      ```
+      ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
       
       <!-- Notes go here -->
     sections: 
       - sub_sections: 
+          - options: 
+              id: '5c0e154dd50af4a9ac856908061291bc'
+            content: ''
+            type: 'gist'
           - content: |
+              
               ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
             type: 'column'
           - content: |-
@@ -46,7 +35,7 @@ slides:
             options: null
             type: 'column'
     notes: 
-      - offset: 374
+      - offset: 429
         note: 'Notes go here'
   - key: 'jrySbty2'
     options: 
@@ -173,7 +162,7 @@ slides:
       - options: null
         sub_sections: 
           - options: 
-              src: 'https'
+              src: 'https://picsum.photos/1200/1200?waves'
               fit: 'cover'
               align: 'top_left'
               type: 'image'
@@ -289,3 +278,15 @@ assets:
   - path: '.superdeck/generated/mermaid_BTVEzSEg.png'
     width: 650
     height: 171
+  - path: '.superdeck/generated/thumbnail_jrySbty2.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_u0rRynPM.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_huRpyhFQ.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_twktEcis.png'
+    width: 512
+    height: 288

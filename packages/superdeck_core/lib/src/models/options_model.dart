@@ -110,16 +110,6 @@ T mapDecoder<T>(Map<String, dynamic> args) {
   return args as T;
 }
 
-class ArgsSchema<T> {
-  final SchemaShape validator;
-  final Decoder<T> decoder;
-
-  const ArgsSchema({
-    required this.validator,
-    required this.decoder,
-  });
-}
-
 @MappableEnum()
 enum ImageFit {
   fill,

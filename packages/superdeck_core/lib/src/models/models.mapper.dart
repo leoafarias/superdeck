@@ -1084,6 +1084,7 @@ class ContentOptionsMapper extends ClassMapperBase<ContentOptions> {
       MapperContainer.globals.use(_instance = ContentOptionsMapper._());
       ImageOptionsMapper.ensureInitialized();
       WidgetOptionsMapper.ensureInitialized();
+      GistOptionsMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
@@ -1164,7 +1165,7 @@ extension ContentOptionsValueCopy<$R, $Out>
 
 abstract class ContentOptionsCopyWith<$R, $In extends ContentOptions, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? flex, ContentAlignment? align});
+  $R call();
   ContentOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -1178,9 +1179,7 @@ class _ContentOptionsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ContentOptions> $mapper =
       ContentOptionsMapper.ensureInitialized();
   @override
-  $R call({Object? flex = $none, Object? align = $none}) =>
-      $apply(FieldCopyWithData(
-          {if (flex != $none) #flex: flex, if (align != $none) #align: align}));
+  $R call() => $apply(FieldCopyWithData({}));
   @override
   ContentOptions $make(CopyWithData data) => ContentOptions(
       flex: data.get(#flex, or: $value.flex),
@@ -1948,6 +1947,7 @@ class SubSectionBlockDtoMapper extends ClassMapperBase<SubSectionBlockDto> {
       MapperContainer.globals.useAll([OptionsMapper()]);
       ColumnBlockDtoMapper.ensureInitialized();
       WidgetBlockDtoMapper.ensureInitialized();
+      GistBlockDtoMapper.ensureInitialized();
       ImageBlockDtoMapper.ensureInitialized();
       BlockTypeMapper.ensureInitialized();
       ContentOptionsMapper.ensureInitialized();
@@ -2036,6 +2036,8 @@ class BlockTypeMapper extends EnumMapper<BlockType> {
         return BlockType.image;
       case 'widget':
         return BlockType.widget;
+      case 'gist':
+        return BlockType.gist;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -2052,6 +2054,8 @@ class BlockTypeMapper extends EnumMapper<BlockType> {
         return 'image';
       case BlockType.widget:
         return 'widget';
+      case BlockType.gist:
+        return 'gist';
     }
   }
 }
@@ -2450,6 +2454,257 @@ class _WidgetBlockDtoCopyWithImpl<$R, $Out>
   WidgetBlockDtoCopyWith<$R2, WidgetBlockDto, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _WidgetBlockDtoCopyWithImpl($value, $cast, t);
+}
+
+class GistOptionsMapper extends ClassMapperBase<GistOptions> {
+  GistOptionsMapper._();
+
+  static GistOptionsMapper? _instance;
+  static GistOptionsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = GistOptionsMapper._());
+      ContentOptionsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'GistOptions';
+
+  static String _$id(GistOptions v) => v.id;
+  static const Field<GistOptions, String> _f$id = Field('id', _$id);
+  static ContentAlignment? _$align(GistOptions v) => v.align;
+  static const Field<GistOptions, ContentAlignment> _f$align =
+      Field('align', _$align, mode: FieldMode.member);
+  static int? _$flex(GistOptions v) => v.flex;
+  static const Field<GistOptions, int> _f$flex =
+      Field('flex', _$flex, mode: FieldMode.member);
+
+  @override
+  final MappableFields<GistOptions> fields = const {
+    #id: _f$id,
+    #align: _f$align,
+    #flex: _f$flex,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static GistOptions _instantiate(DecodingData data) {
+    return GistOptions(id: data.dec(_f$id));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static GistOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<GistOptions>(map);
+  }
+
+  static GistOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<GistOptions>(json);
+  }
+}
+
+mixin GistOptionsMappable {
+  String toJson() {
+    return GistOptionsMapper.ensureInitialized()
+        .encodeJson<GistOptions>(this as GistOptions);
+  }
+
+  Map<String, dynamic> toMap() {
+    return GistOptionsMapper.ensureInitialized()
+        .encodeMap<GistOptions>(this as GistOptions);
+  }
+
+  GistOptionsCopyWith<GistOptions, GistOptions, GistOptions> get copyWith =>
+      _GistOptionsCopyWithImpl(this as GistOptions, $identity, $identity);
+  @override
+  String toString() {
+    return GistOptionsMapper.ensureInitialized()
+        .stringifyValue(this as GistOptions);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return GistOptionsMapper.ensureInitialized()
+        .equalsValue(this as GistOptions, other);
+  }
+
+  @override
+  int get hashCode {
+    return GistOptionsMapper.ensureInitialized().hashValue(this as GistOptions);
+  }
+}
+
+extension GistOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, GistOptions, $Out> {
+  GistOptionsCopyWith<$R, GistOptions, $Out> get $asGistOptions =>
+      $base.as((v, t, t2) => _GistOptionsCopyWithImpl(v, t, t2));
+}
+
+abstract class GistOptionsCopyWith<$R, $In extends GistOptions, $Out>
+    implements ContentOptionsCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? id});
+  GistOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _GistOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, GistOptions, $Out>
+    implements GistOptionsCopyWith<$R, GistOptions, $Out> {
+  _GistOptionsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<GistOptions> $mapper =
+      GistOptionsMapper.ensureInitialized();
+  @override
+  $R call({String? id}) => $apply(FieldCopyWithData({if (id != null) #id: id}));
+  @override
+  GistOptions $make(CopyWithData data) =>
+      GistOptions(id: data.get(#id, or: $value.id));
+
+  @override
+  GistOptionsCopyWith<$R2, GistOptions, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _GistOptionsCopyWithImpl($value, $cast, t);
+}
+
+class GistBlockDtoMapper extends SubClassMapperBase<GistBlockDto> {
+  GistBlockDtoMapper._();
+
+  static GistBlockDtoMapper? _instance;
+  static GistBlockDtoMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = GistBlockDtoMapper._());
+      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
+      GistOptionsMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'GistBlockDto';
+
+  static GistOptions _$options(GistBlockDto v) => v.options;
+  static const Field<GistBlockDto, GistOptions> _f$options =
+      Field('options', _$options);
+  static String _$content(GistBlockDto v) => v.content;
+  static const Field<GistBlockDto, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+  static BlockType _$type(GistBlockDto v) => v.type;
+  static const Field<GistBlockDto, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
+
+  @override
+  final MappableFields<GistBlockDto> fields = const {
+    #options: _f$options,
+    #content: _f$content,
+    #type: _f$type,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'gist';
+  @override
+  late final ClassMapperBase superMapper =
+      SubSectionBlockDtoMapper.ensureInitialized();
+
+  @override
+  DecodingContext inherit(DecodingContext context) {
+    return context.inherit(args: () => []);
+  }
+
+  static GistBlockDto _instantiate(DecodingData data) {
+    return GistBlockDto(
+        options: data.dec(_f$options), content: data.dec(_f$content));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static GistBlockDto fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<GistBlockDto>(map);
+  }
+
+  static GistBlockDto fromJson(String json) {
+    return ensureInitialized().decodeJson<GistBlockDto>(json);
+  }
+}
+
+mixin GistBlockDtoMappable {
+  String toJson() {
+    return GistBlockDtoMapper.ensureInitialized()
+        .encodeJson<GistBlockDto>(this as GistBlockDto);
+  }
+
+  Map<String, dynamic> toMap() {
+    return GistBlockDtoMapper.ensureInitialized()
+        .encodeMap<GistBlockDto>(this as GistBlockDto);
+  }
+
+  GistBlockDtoCopyWith<GistBlockDto, GistBlockDto, GistBlockDto> get copyWith =>
+      _GistBlockDtoCopyWithImpl(this as GistBlockDto, $identity, $identity);
+  @override
+  String toString() {
+    return GistBlockDtoMapper.ensureInitialized()
+        .stringifyValue(this as GistBlockDto);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return GistBlockDtoMapper.ensureInitialized()
+        .equalsValue(this as GistBlockDto, other);
+  }
+
+  @override
+  int get hashCode {
+    return GistBlockDtoMapper.ensureInitialized()
+        .hashValue(this as GistBlockDto);
+  }
+}
+
+extension GistBlockDtoValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, GistBlockDto, $Out> {
+  GistBlockDtoCopyWith<$R, GistBlockDto, $Out> get $asGistBlockDto =>
+      $base.as((v, t, t2) => _GistBlockDtoCopyWithImpl(v, t, t2));
+}
+
+abstract class GistBlockDtoCopyWith<$R, $In extends GistBlockDto, $Out>
+    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, GistOptions> {
+  GistOptionsCopyWith<$R, GistOptions, GistOptions> get options;
+  @override
+  $R call({GistOptions? options, String? content});
+  GistBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _GistBlockDtoCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, GistBlockDto, $Out>
+    implements GistBlockDtoCopyWith<$R, GistBlockDto, $Out> {
+  _GistBlockDtoCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<GistBlockDto> $mapper =
+      GistBlockDtoMapper.ensureInitialized();
+  @override
+  GistOptionsCopyWith<$R, GistOptions, GistOptions> get options =>
+      $value.options.copyWith.$chain((v) => call(options: v));
+  @override
+  $R call({GistOptions? options, String? content}) => $apply(FieldCopyWithData({
+        if (options != null) #options: options,
+        if (content != null) #content: content
+      }));
+  @override
+  GistBlockDto $make(CopyWithData data) => GistBlockDto(
+      options: data.get(#options, or: $value.options),
+      content: data.get(#content, or: $value.content));
+
+  @override
+  GistBlockDtoCopyWith<$R2, GistBlockDto, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _GistBlockDtoCopyWithImpl($value, $cast, t);
 }
 
 class ImageBlockDtoMapper extends SubClassMapperBase<ImageBlockDto> {

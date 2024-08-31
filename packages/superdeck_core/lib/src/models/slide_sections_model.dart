@@ -6,6 +6,7 @@ enum BlockType {
   column,
   image,
   widget,
+  gist,
 }
 
 abstract class BlockDto<T extends ContentOptions> {
@@ -123,13 +124,48 @@ class WidgetBlockDto extends SubSectionBlockDto<WidgetOptions>
     super.content,
   }) : super(type: BlockType.widget);
 
-  static parse(Map<String, dynamic> map) {
+  static WidgetBlockDto parse(Map<String, dynamic> map) {
     schema.validateOrThrow(map);
     return WidgetBlockDtoMapper.fromMap(map);
   }
 
   static final schema = SubSectionBlockDto.baseSchema.extend(
     {'options': WidgetOptions.schema.required()},
+  );
+}
+
+@MappableClass()
+class GistOptions extends ContentOptions with GistOptionsMappable {
+  final String id;
+
+  GistOptions({
+    required this.id,
+  });
+
+  static final schema = ContentOptions.schema.extend(
+    {
+      'id': Schema.string.required(),
+    },
+  );
+}
+
+@MappableClass(discriminatorValue: 'gist')
+class GistBlockDto extends SubSectionBlockDto<GistOptions>
+    with GistBlockDtoMappable {
+  @override
+  final GistOptions options;
+  GistBlockDto({
+    required this.options,
+    super.content,
+  }) : super(type: BlockType.gist);
+
+  static GistBlockDto parse(Map<String, dynamic> map) {
+    schema.validateOrThrow(map);
+    return GistBlockDtoMapper.fromMap(map);
+  }
+
+  static final schema = SubSectionBlockDto.baseSchema.extend(
+    {'options': GistOptions.schema.required()},
   );
 }
 

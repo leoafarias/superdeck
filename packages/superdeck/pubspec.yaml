@@ -41,6 +41,7 @@ dependencies:
   auto_size_text: ^3.0.0
   material_symbols_icons: ^4.2780.0
   uri: ^1.0.0
+  webview_flutter: ^4.9.0
   
 dev_dependencies:
   flutter_test:

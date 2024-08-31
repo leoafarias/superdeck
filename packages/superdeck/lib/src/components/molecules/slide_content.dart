@@ -7,9 +7,10 @@ import '../../modules/deck_reference/deck_reference_provider.dart';
 import '../../modules/widget_capture/snapshot_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
+import '../organisms/webview_wrapper.dart';
 
-class ContentBlock extends StatelessWidget {
-  const ContentBlock({
+class ContentBlockWidget extends StatelessWidget {
+  const ContentBlockWidget({
     required this.content,
     required this.options,
     super.key,
@@ -58,8 +59,8 @@ class ContentBlock extends StatelessWidget {
   }
 }
 
-class ImageBlock extends StatelessWidget {
-  const ImageBlock({
+class ImageBlockWidget extends StatelessWidget {
+  const ImageBlockWidget({
     required this.options,
     super.key,
   });
@@ -74,7 +75,6 @@ class ImageBlock extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.green,
         image: DecorationImage(
             alignment: toAlignment(alignment),
             image: getImageProvider(context, Uri.parse(options.src)),
@@ -89,8 +89,8 @@ class ImageBlock extends StatelessWidget {
   }
 }
 
-class WidgetBlock extends StatelessWidget {
-  const WidgetBlock({
+class WidgetBlockWidget extends StatelessWidget {
+  const WidgetBlockWidget({
     required this.options,
     super.key,
   });
@@ -150,4 +150,26 @@ Alignment toAlignment(ContentAlignment alignment) {
     ContentAlignment.bottomCenter => Alignment.bottomCenter,
     ContentAlignment.bottomRight => Alignment.bottomRight,
   };
+}
+
+class GistBlockWidget extends StatelessWidget {
+  const GistBlockWidget({
+    required this.options,
+    super.key,
+  });
+
+  final GistOptions options;
+
+  @override
+  Widget build(context) {
+    final spec = SlideSpec.of(context);
+
+    return AnimatedBoxSpecWidget(
+      duration: const Duration(milliseconds: 300),
+      spec: spec.contentContainer,
+      child: WebViewWrapper(
+        url: 'https://dartpad.dev/?id={$options.id}',
+      ),
+    );
+  }
 }

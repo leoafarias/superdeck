@@ -1,29 +1,13 @@
 ---
 style: 'here'
 ---
-```mermaid
+{@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }
 
-graph TD
-    A[Enter Chart Definition] --> B(Preview)
-    B --> C{decide}
-    C --> D[Keep]
-    C --> E[Edit Definition]
-    E --> B
-    D --> F[Save Image and Car]
-    F --> B  
-    
-
-
-```
+![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
 
 {@column}
 
-```mermaid
-sequenceDiagram
-    participant Customer as 🧑 Customer
-    participant Barista as ☕ Barista
-    participant CoffeeMachine as 🏭 Coffee Machine
-```
+![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
 
 <!-- Notes go here -->
 

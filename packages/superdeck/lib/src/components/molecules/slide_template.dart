@@ -23,14 +23,17 @@ class SlideTemplate extends StatelessWidget {
               return Expanded(
                 flex: part.options?.flex ?? 1,
                 child: switch (part) {
-                  (ImageBlockDto p) => ImageBlock(
+                  (ImageBlockDto p) => ImageBlockWidget(
                       options: p.options,
                     ),
-                  (ColumnBlockDto p) => ContentBlock(
+                  (ColumnBlockDto p) => ContentBlockWidget(
                       content: p.content,
                       options: p.options,
                     ),
-                  (WidgetBlockDto p) => WidgetBlock(
+                  (WidgetBlockDto p) => WidgetBlockWidget(
+                      options: p.options,
+                    ),
+                  (GistBlockDto p) => GistBlockWidget(
                       options: p.options,
                     ),
                 },

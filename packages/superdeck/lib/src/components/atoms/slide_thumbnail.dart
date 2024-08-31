@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mix/mix.dart';
@@ -11,7 +13,10 @@ import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
 
 enum _PopMenuAction {
-  refreshThumbnail('Refresh Thumbnail', Icons.refresh);
+  refreshThumbnail(
+    'Refresh Thumbnail',
+    Icons.refresh,
+  );
 
   const _PopMenuAction(this.label, this.icon);
 
@@ -40,26 +45,10 @@ class SlideThumbnail extends StatefulWidget {
 class _SlideThumbnailState extends State<SlideThumbnail> {
   bool _shouldRegenerate = false;
   late final thumbnailRequest = FutureNotifier(() async {
-    final thumbnailFile = widget.slide.thumbnailFile;
-
-    if ((!kCanRunProcess || await thumbnailFile.exists()) &&
-        !_shouldRegenerate) {
-      return thumbnailFile;
-    }
-
-    try {
-      if (!context.mounted) {
-        return thumbnailFile;
-      }
-      final imageData = await WidgetCaptureService.instance.generate(
-        quality: WidgetCaptureQuality.low,
-        slide: widget.slide,
-      );
-
-      return await thumbnailFile.writeAsBytes(imageData, flush: true);
-    } finally {
-      _shouldRegenerate = false;
-    }
+    return _thumbnailGeneration(
+      widget.slide,
+      shouldRegenerate: _shouldRegenerate,
+    );
   });
 
   @override
@@ -84,44 +73,23 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
     super.dispose();
   }
 
+  void _handleAction(_PopMenuAction action) {
+    switch (action) {
+      case _PopMenuAction.refreshThumbnail:
+        setState(() {
+          _shouldRegenerate = true;
+        });
+        thumbnailRequest.refresh();
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
       onSecondaryTapDown: (details) {
-        final overlay =
-            Overlay.of(context).context.findRenderObject() as RenderBox;
-        menuItem(_PopMenuAction action) => PopupMenuItem<_PopMenuAction>(
-            value: action,
-            onTap: () {
-              switch (action) {
-                case _PopMenuAction.refreshThumbnail:
-                  _shouldRegenerate = true;
-
-                  thumbnailRequest.reload();
-                  break;
-              }
-            },
-            mouseCursor: SystemMouseCursors.click,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(action.icon),
-                const SizedBox(width: 8),
-                Text(action.label),
-              ],
-            ));
-        showMenu(
-          context: context,
-          menuPadding: EdgeInsets.zero,
-          items: [
-            menuItem(_PopMenuAction.refreshThumbnail),
-          ],
-          position: RelativeRect.fromSize(
-            details.globalPosition & Size.zero,
-            overlay.size,
-          ),
-        );
+        _showOverlayMenu(context, details, _handleAction);
       },
       child: _PreviewContainer(
         selected: widget.selected,
@@ -214,4 +182,60 @@ class _PreviewContainer extends StatelessWidget {
       child: AspectRatio(aspectRatio: kAspectRatio, child: child),
     );
   }
+}
+
+Future<File> _thumbnailGeneration(
+  Slide slide, {
+  required bool shouldRegenerate,
+}) async {
+  final thumbnailFile = slide.thumbnailFile;
+
+  if ((!kCanRunProcess || await thumbnailFile.exists()) && !shouldRegenerate) {
+    return thumbnailFile;
+  }
+
+  try {
+    final imageData = await WidgetCaptureService.instance.generate(
+      quality: WidgetCaptureQuality.low,
+      slide: slide,
+    );
+
+    return await thumbnailFile.writeAsBytes(imageData, flush: true);
+  } finally {
+    shouldRegenerate = false;
+  }
+}
+
+void _showOverlayMenu(
+  BuildContext context,
+  TapDownDetails details,
+  void Function(_PopMenuAction) handleAction,
+) {
+  final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+  menuItem(_PopMenuAction action) => PopupMenuItem(
+        value: action,
+        onTap: () => handleAction(action),
+        mouseCursor: SystemMouseCursors.click,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(action.icon),
+            const SizedBox(width: 8),
+            Text(action.label),
+          ],
+        ),
+      );
+
+  showMenu(
+    context: context,
+    menuPadding: EdgeInsets.zero,
+    items: [
+      menuItem(_PopMenuAction.refreshThumbnail),
+    ],
+    position: RelativeRect.fromSize(
+      details.globalPosition & Size.zero,
+      overlay.size,
+    ),
+  );
 }

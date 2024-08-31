@@ -4,6 +4,11 @@ class SchemaValidationException implements Exception {
   final ValidationResult result;
 
   const SchemaValidationException(this.result);
+
+  @override
+  String toString() {
+    return 'SchemaValidationException: ${result.errors.map((e) => e.message).join('\n')}';
+  }
 }
 
 enum SchemaErrorType {
@@ -28,6 +33,7 @@ class UnalowedAdditionalPropertyValidationError extends ValidationError {
     required this.property,
   });
 
+  @override
   String get message => 'Unallowed property: [$property]';
 }
 
@@ -40,6 +46,7 @@ class EnumViolatedValidationError extends ValidationError {
     required this.possibleValues,
   });
 
+  @override
   String get message =>
       'Wrong value: [$value] \n\n Possible values: $possibleValues';
 }
@@ -51,6 +58,7 @@ class RequiredPropMissingValidationError extends ValidationError {
     required this.property,
   });
 
+  @override
   String get message => 'Missing prop: [$property]';
 }
 
@@ -63,6 +71,7 @@ class InvalidTypeValidationError extends ValidationError {
     required this.expectedType,
   });
 
+  @override
   String get message => 'Invalid type: expected [$expectedType] got [$value]';
 }
 
@@ -70,12 +79,14 @@ class ConstraintsValidationError extends ValidationError {
   final String _message;
   const ConstraintsValidationError(this._message);
 
+  @override
   String get message => 'Constraints: $_message';
 }
 
 class UnknownValidationError extends ValidationError {
   const UnknownValidationError();
 
+  @override
   String get message => 'Unknown Validation error';
 }
 
