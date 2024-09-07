@@ -3,29 +3,244 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - key: 'Z2FhwJiY'
-    options: 
-      background: 'https://picsum.photos/1400/1200?wavfeffsff'
-      style: 'cover'
-    markdown: |-
-      ### DartPad In Your Slides
-      
-      
-      
-      You can embed DartPad code snippets in your slides.
-    sections: 
-      - sub_sections: 
-          - content: |-
-              ### DartPad In Your Slides
-              
-              
-              
-              You can embed DartPad code snippets in your slides.
-            type: 'column'
-    notes: []
-  - key: '6ZwVliZw'
+  - key: 'nFzROii9'
     options: {}
     markdown: |-
+      ### car
+      
+      > [!NOTE]  
+      > Highlights information that users should take into account, even when skimming.
+      
+      > [!TIP]
+      > Optional information to help a user be more successful.
+      
+      > [!IMPORTANT]  
+      > Crucial information necessary for users to succeed.
+      
+      > [!WARNING]  
+      > Critical content demanding immediate user attention due to potential risks.
+      
+      > [!CAUTION]
+      > Negative potential consequences of an action.
+      
+      {@column}
+      
+      ```markdown
+      
+      # Heading
+      
+      ## another
+      
+      
+      - List item 1
+      - List item 2
+        - Sublist item 1
+        - Sublist item 2
+      
+      [Link to Google](https://www.google.com)
+      
+      
+      ~~Strikethrough~~
+      
+      `code`
+      
+      
+      > [!NOTE]  
+      > Highlights information that users should take into account, even when skimming.
+      
+      > [!TIP]
+      > Optional information to help a user be more successful.
+      
+      > [!IMPORTANT]  
+      > Crucial information necessary for users to succeed.
+      
+      > [!WARNING]  
+      > Critical content demanding immediate user attention due to potential risks.
+      
+      > [!CAUTION]
+      > Negative potential consequences of an action.
+      
+      ```
+    sections: 
+      - sub_sections: 
+          - content: |
+              ### car
+              
+              > [!NOTE]  
+              > Highlights information that users should take into account, even when skimming.
+              
+              > [!TIP]
+              > Optional information to help a user be more successful.
+              
+              > [!IMPORTANT]  
+              > Crucial information necessary for users to succeed.
+              
+              > [!WARNING]  
+              > Critical content demanding immediate user attention due to potential risks.
+              
+              > [!CAUTION]
+              > Negative potential consequences of an action.
+            type: 'column'
+          - content: |-
+              
+              
+              ```markdown
+              
+              # Heading
+              
+              ## another
+              
+              
+              - List item 1
+              - List item 2
+                - Sublist item 1
+                - Sublist item 2
+              
+              [Link to Google](https://www.google.com)
+              
+              
+              ~~Strikethrough~~
+              
+              `code`
+              
+              
+              > [!NOTE]  
+              > Highlights information that users should take into account, even when skimming.
+              
+              > [!TIP]
+              > Optional information to help a user be more successful.
+              
+              > [!IMPORTANT]  
+              > Crucial information necessary for users to succeed.
+              
+              > [!WARNING]  
+              > Critical content demanding immediate user attention due to potential risks.
+              
+              > [!CAUTION]
+              > Negative potential consequences of an action.
+              
+              ```
+            options: null
+            type: 'column'
+    notes: []
+  - key: 'QDRb8wsw'
+    options: 
+      background: 'https://picsum.photos/1400/1200?wavfeffsfffffccf'
+      style: 'cover'
+    markdown: |-
+      {@section}
+      {@column align: top_left flex: 2}
+      
+      
+      {@section flex: 4 }
+      {@column align: top_left}
+      #### Unordered List
+      
+      - first
+      - second
+         - first
+            - first
+            - second
+      
+      {@column}
+      
+      #### Ordered List
+      
+      ### car
+      
+      
+      > [!NOTE]  
+      > Highlights information that users should take into account, even when skimming.
+      
+      
+      ___
+      
+      1. first
+      2. second
+         1. first
+            1. first
+            2. second
+      
+      {@column}
+      
+      - George Washington
+      * John Adams
+      + Thomas Jefferson
+      
+      
+      ### Task List
+      
+      - [x] Write the press release
+      - [ ] Update the website
+      - [ ] Contact the media
+    sections: 
+      - options: null
+        sub_sections: 
+          - content: |
+              
+              
+            options: 
+              flex: 2
+              align: 'top_left'
+            type: 'column'
+      - options: 
+          flex: 4
+        sub_sections: 
+          - content: |
+              
+              #### Unordered List
+              
+              - first
+              - second
+                 - first
+                    - first
+                    - second
+            options: 
+              align: 'top_left'
+            type: 'column'
+          - content: |
+              
+              
+              #### Ordered List
+              
+              ### car
+              
+              
+              > [!NOTE]  
+              > Highlights information that users should take into account, even when skimming.
+              
+              
+              ___
+              
+              1. first
+              2. second
+                 1. first
+                    1. first
+                    2. second
+            options: null
+            type: 'column'
+          - content: |-
+              
+              
+              - George Washington
+              * John Adams
+              + Thomas Jefferson
+              
+              
+              ### Task List
+              
+              - [x] Write the press release
+              - [ ] Update the website
+              - [ ] Contact the media
+            options: null
+            type: 'column'
+    notes: []
+  - key: '84OXoPw1'
+    options: {}
+    markdown: |-
+      ### Lists
+      
+      
       ![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
       
       {@column}
@@ -36,6 +251,9 @@ slides:
     sections: 
       - sub_sections: 
           - content: |
+              ### Lists
+              
+              
               ![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
             type: 'column'
           - content: |-
@@ -47,9 +265,40 @@ slides:
             options: null
             type: 'column'
     notes: 
-      - offset: 366
-        note: 'Notes go here'
-  - key: 'jrySbty2'
+      - note: 'Notes go here'
+  - key: 'Hb0Ckmmr'
+    options: {}
+    markdown: |-
+      ![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)
+      
+      `![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)
+      
+      {@column}
+      
+      ![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)
+    sections: 
+      - sub_sections: 
+          - content: |
+              ![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)
+              
+              `![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)
+            type: 'column'
+          - content: |-
+              
+              
+              ![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)
+            options: null
+            type: 'column'
+    notes: []
+  - key: 'BWbYfNH8'
+    options: {}
+    markdown: '![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)'
+    sections: 
+      - sub_sections: 
+          - content: '![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)'
+            type: 'column'
+    notes: []
+  - key: 'cW9gea1F'
     options: 
       style: 'custom'
     markdown: |-
@@ -92,10 +341,10 @@ slides:
               import 'package:flutter/material.dart';
               
               void main() {
-              final style = Style(
-              $box.padding.all(),
-              $box.border.all(),
-              );
+                final style = Style(
+                  $box.padding.all(),
+                  $box.border.all(),
+                );
               }
               
               ```
@@ -272,38 +521,55 @@ slides:
               
               ```yaml
               sections:
-              left:
-              alignment: bottom_right
-              flex: 2
-              right:
-              alignment: bottom_left
-              header:
-              alignment: bottom_left
+                left:
+                  alignment: bottom_right
+                  flex: 2
+                right:
+                  alignment: bottom_left
+                header:
+                  alignment: bottom_left
               ```
             options: null
             type: 'column'
     notes: []
 assets: 
-  - path: '.superdeck/generated/thumbnail_Z2FhwJiY.png'
+  - path: '.superdeck/generated/thumbnail_nFzROii9.png'
     width: 512
     height: 288
-  - path: '.superdeck/generated/image_caching_KArctawC.jpeg'
-    width: 1400
-    height: 1200
-    reference: 'https://picsum.photos/1400/1200?wavfeffsff'
   - path: '.superdeck/generated/mermaid_drzCSSND.png'
     width: 313
     height: 449
   - path: '.superdeck/generated/mermaid_5rpc8RsX.png'
     width: 650
     height: 171
-  - path: '.superdeck/generated/thumbnail_6ZwVliZw.png'
+  - path: '.superdeck/generated/thumbnail_84OXoPw1.png'
     width: 512
     height: 288
-  - path: '.superdeck/generated/thumbnail_jrySbty2.png'
+  - path: '.superdeck/generated/mermaid_z3WwaAnJ.png'
+    width: 1264
+    height: 565
+  - path: '.superdeck/generated/mermaid_2T41mK0F.png'
+    width: 700
+    height: 500
+  - path: '.superdeck/generated/mermaid_lE8UmZGn.png'
+    width: 655
+    height: 450
+  - path: '.superdeck/generated/thumbnail_Hb0Ckmmr.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/mermaid_qbuY1RWf.png'
+    width: 115
+    height: 346
+  - path: '.superdeck/generated/thumbnail_BWbYfNH8.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_cW9gea1F.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/thumbnail_u0rRynPM.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_kiRnLrLJ.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/thumbnail_twktEcis.png'

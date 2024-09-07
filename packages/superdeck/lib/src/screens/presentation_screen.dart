@@ -40,3 +40,16 @@ class PresentationScreen extends HookWidget {
     );
   }
 }
+
+class SlideScreen extends HookWidget {
+  const SlideScreen({required this.slideIndex, super.key});
+
+  final int slideIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    final slides = useDeckSlides();
+
+    return SlidePreview(slides[slideIndex]);
+  }
+}

@@ -1,15 +1,137 @@
 ---
-style: 'here'
 ---
-{@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }
+### car
 
-![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!TIP]
+> Optional information to help a user be more successful.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
+> [!CAUTION]
+> Negative potential consequences of an action.
 
 {@column}
 
-![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+```markdown
+
+# Heading
+
+## another
+
+
+- List item 1
+- List item 2
+  - Sublist item 1
+  - Sublist item 2
+
+[Link to Google](https://www.google.com)
+
+
+~~Strikethrough~~
+
+`code`
+
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!TIP]
+> Optional information to help a user be more successful.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
+> [!CAUTION]
+> Negative potential consequences of an action.
+
+```
+
+---
+background: 'https://picsum.photos/1400/1200?wavfeffsfffffccf'
+style: 'cover'
+---
+{@section}
+{@column align: top_left flex: 2}
+
+
+{@section flex: 4 }
+{@column align: top_left}
+#### Unordered List
+
+- first
+- second
+   - first
+      - first
+      - second
+
+{@column}
+
+#### Ordered List
+
+### car
+
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+
+___
+
+1. first
+2. second
+   1. first
+      1. first
+      2. second
+
+{@column}
+
+- George Washington
+* John Adams
++ Thomas Jefferson
+
+
+### Task List
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
+
+---
+---
+### Lists
+
+
+![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
+
+{@column}
+
+![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)
 
 <!-- Notes go here -->
+
+---
+---
+![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)
+
+`![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)
+
+{@column}
+
+![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)
+
+---
+---
+![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)
 
 ---
 style: 'custom'
@@ -56,7 +178,7 @@ style: 'quote'
 style: 'show_sections'
 ---
 {@section}
-{@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}
+{@image src: https://picsum.photos/200/1200?wafvfes align: top_left fit: cover}
 
 {@section flex: 2}
 {@column flex: 2}

@@ -7,17 +7,19 @@
   },
   "slides": [
     {
-      "key": "Z2FhwJiY",
-      "options": {
-        "background": "https://picsum.photos/1400/1200?wavfeffsff",
-        "style": "cover"
-      },
-      "markdown": "### DartPad In Your Slides\n\n\n\nYou can embed DartPad code snippets in your slides.",
+      "key": "nFzROii9",
+      "options": {},
+      "markdown": "### car\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n{@column}\n\n```markdown\n\n# Heading\n\n## another\n\n\n- List item 1\n- List item 2\n  - Sublist item 1\n  - Sublist item 2\n\n[Link to Google](https://www.google.com)\n\n\n~~Strikethrough~~\n\n`code`\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n```",
       "sections": [
         {
           "sub_sections": [
             {
-              "content": "### DartPad In Your Slides\n\n\n\nYou can embed DartPad code snippets in your slides.",
+              "content": "### car\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n",
+              "type": "column"
+            },
+            {
+              "content": "\n\n```markdown\n\n# Heading\n\n## another\n\n\n- List item 1\n- List item 2\n  - Sublist item 1\n  - Sublist item 2\n\n[Link to Google](https://www.google.com)\n\n\n~~Strikethrough~~\n\n`code`\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n```",
+              "options": null,
               "type": "column"
             }
           ]
@@ -26,14 +28,62 @@
       "notes": []
     },
     {
-      "key": "6ZwVliZw",
+      "key": "QDRb8wsw",
+      "options": {
+        "background": "https://picsum.photos/1400/1200?wavfeffsfffffccf",
+        "style": "cover"
+      },
+      "markdown": "{@section}\n{@column align: top_left flex: 2}\n\n\n{@section flex: 4 }\n{@column align: top_left}\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n{@column}\n\n#### Ordered List\n\n### car\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n\n{@column}\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
+      "sections": [
+        {
+          "options": null,
+          "sub_sections": [
+            {
+              "content": "\n\n",
+              "options": {
+                "flex": 2,
+                "align": "top_left"
+              },
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "options": {
+            "flex": 4
+          },
+          "sub_sections": [
+            {
+              "content": "\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n",
+              "options": {
+                "align": "top_left"
+              },
+              "type": "column"
+            },
+            {
+              "content": "\n\n#### Ordered List\n\n### car\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n",
+              "options": null,
+              "type": "column"
+            },
+            {
+              "content": "\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
+              "options": null,
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "key": "84OXoPw1",
       "options": {},
-      "markdown": "![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)\n\n<!-- Notes go here -->",
+      "markdown": "### Lists\n\n\n![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)\n\n<!-- Notes go here -->",
       "sections": [
         {
           "sub_sections": [
             {
-              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)\n",
+              "content": "### Lists\n\n\n![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)\n",
               "type": "column"
             },
             {
@@ -46,13 +96,49 @@
       ],
       "notes": [
         {
-          "offset": 366,
           "note": "Notes go here"
         }
       ]
     },
     {
-      "key": "jrySbty2",
+      "key": "Hb0Ckmmr",
+      "options": {},
+      "markdown": "![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)\n\n`![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)",
+      "sections": [
+        {
+          "sub_sections": [
+            {
+              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)\n\n`![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)\n",
+              "type": "column"
+            },
+            {
+              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)",
+              "options": null,
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "key": "BWbYfNH8",
+      "options": {},
+      "markdown": "![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)",
+      "sections": [
+        {
+          "sub_sections": [
+            {
+              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "key": "cW9gea1F",
       "options": {
         "style": "custom"
       },
@@ -75,7 +161,7 @@
               "type": "widget"
             },
             {
-              "content": "\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\nfinal style = Style(\n$box.padding.all(),\n$box.border.all(),\n);\n}\n\n```",
+              "content": "\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
               "options": null,
               "type": "column"
             }
@@ -207,7 +293,7 @@
               "type": "column"
             },
             {
-              "content": "\n\n#### Section Options\n\n```yaml\nsections:\nleft:\nalignment: bottom_right\nflex: 2\nright:\nalignment: bottom_left\nheader:\nalignment: bottom_left\n```",
+              "content": "\n\n#### Section Options\n\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
               "options": null,
               "type": "column"
             }
@@ -219,15 +305,9 @@
   ],
   "assets": [
     {
-      "path": ".superdeck/generated/thumbnail_Z2FhwJiY.png",
+      "path": ".superdeck/generated/thumbnail_nFzROii9.png",
       "width": 512,
       "height": 288
-    },
-    {
-      "path": ".superdeck/generated/image_caching_KArctawC.jpeg",
-      "width": 1400,
-      "height": 1200,
-      "reference": "https://picsum.photos/1400/1200?wavfeffsff"
     },
     {
       "path": ".superdeck/generated/mermaid_drzCSSND.png",
@@ -240,17 +320,52 @@
       "height": 171
     },
     {
-      "path": ".superdeck/generated/thumbnail_6ZwVliZw.png",
+      "path": ".superdeck/generated/thumbnail_84OXoPw1.png",
       "width": 512,
       "height": 288
     },
     {
-      "path": ".superdeck/generated/thumbnail_jrySbty2.png",
+      "path": ".superdeck/generated/mermaid_z3WwaAnJ.png",
+      "width": 1264,
+      "height": 565
+    },
+    {
+      "path": ".superdeck/generated/mermaid_2T41mK0F.png",
+      "width": 700,
+      "height": 500
+    },
+    {
+      "path": ".superdeck/generated/mermaid_lE8UmZGn.png",
+      "width": 655,
+      "height": 450
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_Hb0Ckmmr.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/mermaid_qbuY1RWf.png",
+      "width": 115,
+      "height": 346
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_BWbYfNH8.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_cW9gea1F.png",
       "width": 512,
       "height": 288
     },
     {
       "path": ".superdeck/generated/thumbnail_u0rRynPM.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_kiRnLrLJ.png",
       "width": 512,
       "height": 288
     },
