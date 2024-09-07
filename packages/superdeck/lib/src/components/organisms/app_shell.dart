@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../modules/common/helpers/hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
 import '../molecules/bottom_bar.dart';
+import '../molecules/scaled_app.dart';
 import 'slide_thumbnail_list.dart';
 
 final kScaffoldKey = GlobalKey<ScaffoldState>();
@@ -49,7 +50,9 @@ class AppShell extends HookWidget {
 
     return CallbackShortcuts(
       bindings: bindings,
-      child: SplitView(child: child),
+      child: SplitView(
+        child: child,
+      ),
     );
   }
 }
@@ -114,7 +117,7 @@ class SplitView extends HookWidget {
               child: const SlideThumbnailList(),
             ),
           ),
-          Expanded(child: child)
+          Expanded(child: ScaledWidget(child: child))
         ],
       ),
     );

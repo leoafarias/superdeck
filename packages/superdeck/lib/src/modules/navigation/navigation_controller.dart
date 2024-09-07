@@ -24,6 +24,7 @@ class NavigationController extends ChangeNotifier {
 
   void goToSlide(int index) {
     currentSlideIndex = index;
+
     notifyListeners();
   }
 

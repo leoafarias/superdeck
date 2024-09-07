@@ -19,8 +19,10 @@ class SlideThumbnailList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigation = useNavigation();
-    final currentSlideIndex = navigation.currentSlideIndex;
+    final navState = useNavigationState();
+    final navActions = useNavigationActions();
+
+    final currentSlideIndex = navState.currentSlideIndex;
 
     final slides = useDeckSlides();
     final controller = useScrollVisibleController();
@@ -76,7 +78,7 @@ class SlideThumbnailList extends HookWidget {
               child: SlideThumbnail(
                 page: index + 1,
                 selected: currentSlideIndex == index,
-                onTap: () => navigation.goToSlide(index),
+                onTap: () => navActions.goToSlide(index),
                 slide: slides[index],
               ),
             );

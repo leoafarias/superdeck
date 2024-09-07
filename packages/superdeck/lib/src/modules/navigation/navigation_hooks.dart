@@ -17,8 +17,16 @@ T _useSelectController<T>(T Function(NavigationController) selector) {
   return selector(controller);
 }
 
-NavigationController useNavigation() {
-  return _useController();
+typedef NavigationControllerState = ({
+  int currentSlideIndex,
+  bool isPresenterMenuOpen,
+});
+
+NavigationControllerState useNavigationState() {
+  return _useSelectController((c) => (
+        currentSlideIndex: c.currentSlideIndex,
+        isPresenterMenuOpen: c.isPresenterMenuOpen,
+      ));
 }
 
 typedef NavigationActions = ({
@@ -27,22 +35,30 @@ typedef NavigationActions = ({
   VoidCallback closePresenterMenu,
   VoidCallback openPresenterMenu,
   VoidCallback togglePresenterMenu,
+  void Function(int index) goToSlide,
 });
 
 NavigationActions useNavigationActions() {
+  final context = useContext();
   final controller = _useController();
   final slides = useDeckSlides();
-  final goToSlide = useCallback((index) {
+  final currentIndex = useCurrentSlideIndex();
+
+  final goToSlide = useCallback((int index) {
     if (index < 0 || index >= slides.length) return;
+    if (currentIndex == index) return;
+
     controller.goToSlide(index);
-  });
+  }, [context, slides, currentIndex]);
 
   final goToNextSlide = useCallback(
     () => goToSlide(controller.currentSlideIndex + 1),
+    [goToSlide],
   );
 
   final goToPreviousSlide = useCallback(
     () => goToSlide(controller.currentSlideIndex - 1),
+    [goToSlide],
   );
 
   return (
@@ -51,6 +67,7 @@ NavigationActions useNavigationActions() {
     closePresenterMenu: controller.closePresenterMenu,
     openPresenterMenu: controller.openPresenterMenu,
     togglePresenterMenu: controller.togglePresenterMenu,
+    goToSlide: goToSlide,
   );
 }
 
