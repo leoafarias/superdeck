@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../atoms/slide_view.dart';
-import 'scaled_app.dart';
 
 class SlidePreview<T extends Slide> extends StatelessWidget {
   const SlidePreview(
@@ -26,9 +25,7 @@ class SlidePreview<T extends Slide> extends StatelessWidget {
             ),
           ],
         ),
-        child: ScaledWidget(
-          child: SlideView(slide),
-        ),
+        child: SlideView(slide),
       ),
     );
   }
