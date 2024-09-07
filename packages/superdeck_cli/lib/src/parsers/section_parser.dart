@@ -7,8 +7,8 @@ List<SectionBlockDto> parseSections(String markdown) {
   SectionBlockDto? currentSection;
 
   for (var line in lines) {
-    line = line.trim();
-    if (line.startsWith('{@')) {
+    final trimmedLine = line.trim();
+    if (trimmedLine.startsWith('{@')) {
       final tagData = extractTagsFromLine(line);
       final blocks = tagData.map(_decodeBlock).toList();
 

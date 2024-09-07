@@ -3,39 +3,51 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - key: '1bdq2Zlk'
+  - key: 'Z2FhwJiY'
     options: 
-      style: 'here'
+      background: 'https://picsum.photos/1400/1200?wavfeffsff'
+      style: 'cover'
     markdown: |-
-      {@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }
+      ### DartPad In Your Slides
       
-      ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
+      
+      
+      You can embed DartPad code snippets in your slides.
+    sections: 
+      - sub_sections: 
+          - content: |-
+              ### DartPad In Your Slides
+              
+              
+              
+              You can embed DartPad code snippets in your slides.
+            type: 'column'
+    notes: []
+  - key: '6ZwVliZw'
+    options: {}
+    markdown: |-
+      ![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
       
       {@column}
       
-      ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+      ![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)
       
       <!-- Notes go here -->
     sections: 
       - sub_sections: 
-          - options: 
-              id: '5c0e154dd50af4a9ac856908061291bc'
-            content: ''
-            type: 'gist'
           - content: |
-              
-              ![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)
+              ![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
             type: 'column'
           - content: |-
               
               
-              ![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)
+              ![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)
               
               <!-- Notes go here -->
             options: null
             type: 'column'
     notes: 
-      - offset: 429
+      - offset: 366
         note: 'Notes go here'
   - key: 'jrySbty2'
     options: 
@@ -137,12 +149,12 @@ slides:
               align: 'top_right'
             type: 'column'
     notes: []
-  - key: 'huRpyhFQ'
+  - key: 'kiRnLrLJ'
     options: 
       style: 'show_sections'
     markdown: |-
       {@section}
-      {@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}
+      {@image src: https://picsum.photos/200/1200?wafvfes align: top_left fit: cover}
       
       {@section flex: 2}
       {@column flex: 2}
@@ -162,7 +174,7 @@ slides:
       - options: null
         sub_sections: 
           - options: 
-              src: 'https://picsum.photos/1200/1200?waves'
+              src: 'https://picsum.photos/200/1200?wafvfes'
               fit: 'cover'
               align: 'top_left'
               type: 'image'
@@ -272,19 +284,26 @@ slides:
             type: 'column'
     notes: []
 assets: 
-  - path: '.superdeck/generated/mermaid_6EQHvrjD.png'
+  - path: '.superdeck/generated/thumbnail_Z2FhwJiY.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/image_caching_KArctawC.jpeg'
+    width: 1400
+    height: 1200
+    reference: 'https://picsum.photos/1400/1200?wavfeffsff'
+  - path: '.superdeck/generated/mermaid_drzCSSND.png'
     width: 313
     height: 449
-  - path: '.superdeck/generated/mermaid_BTVEzSEg.png'
+  - path: '.superdeck/generated/mermaid_5rpc8RsX.png'
     width: 650
     height: 171
+  - path: '.superdeck/generated/thumbnail_6ZwVliZw.png'
+    width: 512
+    height: 288
   - path: '.superdeck/generated/thumbnail_jrySbty2.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/thumbnail_u0rRynPM.png'
-    width: 512
-    height: 288
-  - path: '.superdeck/generated/thumbnail_huRpyhFQ.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/thumbnail_twktEcis.png'

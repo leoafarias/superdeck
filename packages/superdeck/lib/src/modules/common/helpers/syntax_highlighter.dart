@@ -27,7 +27,7 @@ class SyntaxHighlight {
     // Load the markdown grammar and add it to the highlighter.
     for (var language in _secondarySupportedLangs) {
       final grammar = await rootBundle.loadString(
-        'packages/superdeck/grammars/$language.json',
+        'packages/superdeck/assets/grammars/$language.json',
       );
       Highlighter.addLanguage(language, grammar);
     }

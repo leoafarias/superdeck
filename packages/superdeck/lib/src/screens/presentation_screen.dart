@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../components/molecules/slide_preview.dart';
 import '../modules/common/helpers/hooks.dart';
-import '../modules/common/helpers/routes.dart';
 import '../modules/deck_reference/deck_reference_hooks.dart';
+import '../modules/navigation/navigation_hooks.dart';
 
 class PresentationScreen extends HookWidget {
   const PresentationScreen({super.key});
@@ -14,7 +14,7 @@ class PresentationScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slideIndex = context.currentSlideIndex;
+    final slideIndex = useCurrentSlideIndex();
     final pageController = usePageController(initialPage: slideIndex);
 
     final slides = useDeckSlides();

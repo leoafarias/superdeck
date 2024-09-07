@@ -1,15 +1,17 @@
 // lib/slide_parser.dart
 
+import 'dart:convert';
+
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/parsers/front_matter_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 List<String> _splitSlides(String content) {
   content = content.trim();
-  final lines = content.split('\n');
+  final lines = LineSplitter().convert(content);
   final slides = <String>[];
   final buffer = StringBuffer();
-  bool inSlide = false;
+  bool insideFrontMatter = false;
 
   var isCodeBlock = false;
 
@@ -22,20 +24,21 @@ List<String> _splitSlides(String content) {
       buffer.writeln(line);
       continue;
     }
+
+    if (insideFrontMatter && trimmed.isEmpty) {
+      insideFrontMatter = false;
+    }
+
     if (trimmed == '---') {
-      if (buffer.isNotEmpty) {
-        if (inSlide) {
+      if (!insideFrontMatter) {
+        if (buffer.isNotEmpty) {
           slides.add(buffer.toString().trim());
-          inSlide = false;
           buffer.clear();
-        } else {
-          inSlide = true;
         }
       }
-      buffer.writeln(line);
-    } else {
-      buffer.writeln(line);
+      insideFrontMatter = !insideFrontMatter;
     }
+    buffer.writeln(line);
   }
 
   if (buffer.isNotEmpty) {
@@ -49,7 +52,7 @@ List<Slide> parseSlides(String markdown) {
   try {
     final slidesRaws = _splitSlides(markdown);
 
-    print('Number of matches: ${slidesRaws.length}');
+    print('Slides ${slidesRaws.length}');
     final slides = <Slide>[];
 
     for (final match in slidesRaws) {
@@ -62,7 +65,6 @@ List<Slide> parseSlides(String markdown) {
 
       for (final comment in comments) {
         final note = {
-          'offset': comment.start,
           'note': comment.group(1)?.trim(),
         };
         SlideNote.schema.validateOrThrow(note);

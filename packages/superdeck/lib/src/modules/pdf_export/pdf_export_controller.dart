@@ -237,9 +237,7 @@ class _PdfExportControllerHookState
   @override
   void didUpdateHook(_PdfExportControllerHook oldHook) {
     super.didUpdateHook(oldHook);
-    if (oldHook.slides != hook.slides ||
-        oldHook.initialSlideIndex != hook.initialSlideIndex) {
-      print('update');
+    if (oldHook.slides != hook.slides) {
       _attachController(update: true);
     }
   }

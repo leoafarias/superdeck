@@ -6,79 +6,79 @@ part of 'style_spec.dart';
 // MixableSpecGenerator
 // **************************************************************************
 
-mixin _$MdTextSpec on Spec<MdTextSpec> {
-  static MdTextSpec from(MixData mix) {
-    return mix.attributeOf<MdTextSpecAttribute>()?.resolve(mix) ??
-        const MdTextSpec();
+mixin _$MarkdownTextSpec on Spec<MarkdownTextSpec> {
+  static MarkdownTextSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownTextSpecAttribute>()?.resolve(mix) ??
+        const MarkdownTextSpec();
   }
 
-  /// {@template md_text_spec_of}
-  /// Retrieves the [MdTextSpec] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template markdown_text_spec_of}
+  /// Retrieves the [MarkdownTextSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdTextSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdTextSpec].
+  /// given [BuildContext], and then retrieves the [MarkdownTextSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownTextSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdTextSpec = MdTextSpec.of(context);
+  /// final markdownTextSpec = MarkdownTextSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdTextSpec of(BuildContext context) {
-    return _$MdTextSpec.from(Mix.of(context));
+  static MarkdownTextSpec of(BuildContext context) {
+    return _$MarkdownTextSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdTextSpec] but with the given fields
+  /// Creates a copy of this [MarkdownTextSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdTextSpec copyWith({
+  MarkdownTextSpec copyWith({
     TextStyle? textStyle,
     EdgeInsets? padding,
     WrapAlignment? alignment,
   }) {
-    return MdTextSpec(
+    return MarkdownTextSpec(
       textStyle: textStyle ?? _$this.textStyle,
       padding: padding ?? _$this.padding,
       alignment: alignment ?? _$this.alignment,
     );
   }
 
-  /// Linearly interpolates between this [MdTextSpec] and another [MdTextSpec] based on the given parameter [t].
+  /// Linearly interpolates between this [MarkdownTextSpec] and another [MarkdownTextSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdTextSpec] is returned. When [t] is 1.0, the [other] [MdTextSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdTextSpec] is returned.
+  /// When [t] is 0.0, the current [MarkdownTextSpec] is returned. When [t] is 1.0, the [other] [MarkdownTextSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownTextSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdTextSpec] instance.
+  /// If [other] is null, this method returns the current [MarkdownTextSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdTextSpec] using the appropriate
+  /// The interpolation is performed on each property of the [MarkdownTextSpec] using the appropriate
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpTextStyle] for [textStyle].
   /// - [EdgeInsets.lerp] for [padding].
 
   /// For [alignment], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdTextSpec] is used. Otherwise, the value
-  /// from the [other] [MdTextSpec] is used.
+  /// If [t] is less than 0.5, the value from the current [MarkdownTextSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownTextSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdTextSpec] configurations.
+  /// different [MarkdownTextSpec] configurations.
   @override
-  MdTextSpec lerp(MdTextSpec? other, double t) {
+  MarkdownTextSpec lerp(MarkdownTextSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdTextSpec(
+    return MarkdownTextSpec(
       textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
       padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
       alignment: t < 0.5 ? _$this.alignment : other.alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTextSpec].
+  /// The list of properties that constitute the state of this [MarkdownTextSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTextSpec] instances for equality.
+  /// compare two [MarkdownTextSpec] instances for equality.
   @override
   List<Object?> get props => [
         _$this.textStyle,
@@ -86,67 +86,67 @@ mixin _$MdTextSpec on Spec<MdTextSpec> {
         _$this.alignment,
       ];
 
-  MdTextSpec get _$this => this as MdTextSpec;
+  MarkdownTextSpec get _$this => this as MarkdownTextSpec;
 }
 
-/// Represents the attributes of a [MdTextSpec].
+/// Represents the attributes of a [MarkdownTextSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdTextSpec].
+/// appearance of a [MarkdownTextSpec].
 ///
-/// Use this class to configure the attributes of a [MdTextSpec] and pass it to
-/// the [MdTextSpec] constructor.
-final class MdTextSpecAttribute extends SpecAttribute<MdTextSpec> {
+/// Use this class to configure the attributes of a [MarkdownTextSpec] and pass it to
+/// the [MarkdownTextSpec] constructor.
+final class MarkdownTextSpecAttribute extends SpecAttribute<MarkdownTextSpec> {
   final TextStyleDto? textStyle;
   final EdgeInsetsDto? padding;
   final WrapAlignment? alignment;
 
-  const MdTextSpecAttribute({
+  const MarkdownTextSpecAttribute({
     this.textStyle,
     this.padding,
     this.alignment,
   });
 
-  /// Resolves to [MdTextSpec] using the provided [MixData].
+  /// Resolves to [MarkdownTextSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdTextSpec = MdTextSpecAttribute(...).resolve(mix);
+  /// final markdownTextSpec = MarkdownTextSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdTextSpec resolve(MixData mix) {
-    return MdTextSpec(
+  MarkdownTextSpec resolve(MixData mix) {
+    return MarkdownTextSpec(
       textStyle: textStyle?.resolve(mix),
       padding: padding?.resolve(mix),
       alignment: alignment,
     );
   }
 
-  /// Merges the properties of this [MdTextSpecAttribute] with the properties of [other].
+  /// Merges the properties of this [MarkdownTextSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdTextSpecAttribute] with the properties of [other] taking precedence over
+  /// [MarkdownTextSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdTextSpecAttribute merge(MdTextSpecAttribute? other) {
+  MarkdownTextSpecAttribute merge(MarkdownTextSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdTextSpecAttribute(
+    return MarkdownTextSpecAttribute(
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       padding: padding?.merge(other.padding) ?? other.padding,
       alignment: other.alignment ?? alignment,
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTextSpecAttribute].
+  /// The list of properties that constitute the state of this [MarkdownTextSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTextSpecAttribute] instances for equality.
+  /// compare two [MarkdownTextSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
         textStyle,
@@ -155,33 +155,37 @@ final class MdTextSpecAttribute extends SpecAttribute<MdTextSpec> {
       ];
 }
 
-/// Utility class for configuring [MdTextSpecAttribute] properties.
+/// Utility class for configuring [MarkdownTextSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdTextSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdTextSpecAttribute].
-class MdTextSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdTextSpecAttribute> {
-  /// Utility for defining [MdTextSpecAttribute.textStyle]
+/// This class provides methods to set individual properties of a [MarkdownTextSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownTextSpecAttribute].
+class MarkdownTextSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownTextSpecAttribute> {
+  /// Utility for defining [MarkdownTextSpecAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdTextSpecAttribute.padding]
+  /// Utility for defining [MarkdownTextSpecAttribute.padding]
   late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdTextSpecAttribute.alignment]
+  /// Utility for defining [MarkdownTextSpecAttribute.alignment]
   late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
-  MdTextSpecUtility(super.builder);
+  MarkdownTextSpecUtility(super.builder, {super.mutable});
 
-  static final self = MdTextSpecUtility((v) => v);
+  MarkdownTextSpecUtility<T> get chain =>
+      MarkdownTextSpecUtility(attributeBuilder, mutable: true);
 
-  /// Returns a new [MdTextSpecAttribute] with the specified properties.
+  static MarkdownTextSpecUtility<MarkdownTextSpecAttribute> get self =>
+      MarkdownTextSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownTextSpecAttribute] with the specified properties.
   @override
   T only({
     TextStyleDto? textStyle,
     EdgeInsetsDto? padding,
     WrapAlignment? alignment,
   }) {
-    return builder(MdTextSpecAttribute(
+    return builder(MarkdownTextSpecAttribute(
       textStyle: textStyle,
       padding: padding,
       alignment: alignment,
@@ -189,20 +193,20 @@ class MdTextSpecUtility<T extends Attribute>
   }
 }
 
-/// A tween that interpolates between two [MdTextSpec] instances.
+/// A tween that interpolates between two [MarkdownTextSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdTextSpec] specifications.
-class MdTextSpecTween extends Tween<MdTextSpec?> {
-  MdTextSpecTween({
+/// different [MarkdownTextSpec] specifications.
+class MarkdownTextSpecTween extends Tween<MarkdownTextSpec?> {
+  MarkdownTextSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdTextSpec lerp(double t) {
+  MarkdownTextSpec lerp(double t) {
     if (begin == null && end == null) {
-      return const MdTextSpec();
+      return const MarkdownTextSpec();
     }
 
     if (begin == null) {
@@ -213,440 +217,40 @@ class MdTextSpecTween extends Tween<MdTextSpec?> {
   }
 }
 
-mixin _$MdHeadingSpec on Spec<MdHeadingSpec> {
-  static MdHeadingSpec from(MixData mix) {
-    return mix.attributeOf<MdHeadingSpecAttribute>()?.resolve(mix) ??
-        const MdHeadingSpec();
+mixin _$MarkdownListSpec on Spec<MarkdownListSpec> {
+  static MarkdownListSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownListSpecAttribute>()?.resolve(mix) ??
+        const MarkdownListSpec();
   }
 
-  /// {@template md_heading_spec_of}
-  /// Retrieves the [MdHeadingSpec] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template markdown_list_spec_of}
+  /// Retrieves the [MarkdownListSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdHeadingSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdHeadingSpec].
+  /// given [BuildContext], and then retrieves the [MarkdownListSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownListSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdHeadingSpec = MdHeadingSpec.of(context);
+  /// final markdownListSpec = MarkdownListSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdHeadingSpec of(BuildContext context) {
-    return _$MdHeadingSpec.from(Mix.of(context));
+  static MarkdownListSpec of(BuildContext context) {
+    return _$MarkdownListSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdHeadingSpec] but with the given fields
+  /// Creates a copy of this [MarkdownListSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdHeadingSpec copyWith({
-    TextStyle? textStyle,
-    EdgeInsets? padding,
-    WrapAlignment? align,
-  }) {
-    return MdHeadingSpec(
-      textStyle: textStyle ?? _$this.textStyle,
-      padding: padding ?? _$this.padding,
-      align: align ?? _$this.align,
-    );
-  }
-
-  /// Linearly interpolates between this [MdHeadingSpec] and another [MdHeadingSpec] based on the given parameter [t].
-  ///
-  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdHeadingSpec] is returned. When [t] is 1.0, the [other] [MdHeadingSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdHeadingSpec] is returned.
-  ///
-  /// If [other] is null, this method returns the current [MdHeadingSpec] instance.
-  ///
-  /// The interpolation is performed on each property of the [MdHeadingSpec] using the appropriate
-  /// interpolation method:
-  ///
-  /// - [MixHelpers.lerpTextStyle] for [textStyle].
-  /// - [EdgeInsets.lerp] for [padding].
-
-  /// For [align], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdHeadingSpec] is used. Otherwise, the value
-  /// from the [other] [MdHeadingSpec] is used.
-  ///
-  /// This method is typically used in animations to smoothly transition between
-  /// different [MdHeadingSpec] configurations.
-  @override
-  MdHeadingSpec lerp(MdHeadingSpec? other, double t) {
-    if (other == null) return _$this;
-
-    return MdHeadingSpec(
-      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
-      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
-      align: t < 0.5 ? _$this.align : other.align,
-    );
-  }
-
-  /// The list of properties that constitute the state of this [MdHeadingSpec].
-  ///
-  /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdHeadingSpec] instances for equality.
-  @override
-  List<Object?> get props => [
-        _$this.textStyle,
-        _$this.padding,
-        _$this.align,
-      ];
-
-  MdHeadingSpec get _$this => this as MdHeadingSpec;
-}
-
-/// Represents the attributes of a [MdHeadingSpec].
-///
-/// This class encapsulates properties defining the layout and
-/// appearance of a [MdHeadingSpec].
-///
-/// Use this class to configure the attributes of a [MdHeadingSpec] and pass it to
-/// the [MdHeadingSpec] constructor.
-final class MdHeadingSpecAttribute extends SpecAttribute<MdHeadingSpec> {
-  final TextStyleDto? textStyle;
-  final EdgeInsetsDto? padding;
-  final WrapAlignment? align;
-
-  const MdHeadingSpecAttribute({
-    this.textStyle,
-    this.padding,
-    this.align,
-  });
-
-  /// Resolves to [MdHeadingSpec] using the provided [MixData].
-  ///
-  /// If a property is null in the [MixData], it falls back to the
-  /// default value defined in the `defaultValue` for that property.
-  ///
-  /// ```dart
-  /// final mdHeadingSpec = MdHeadingSpecAttribute(...).resolve(mix);
-  /// ```
-  @override
-  MdHeadingSpec resolve(MixData mix) {
-    return MdHeadingSpec(
-      textStyle: textStyle?.resolve(mix),
-      padding: padding?.resolve(mix),
-      align: align,
-    );
-  }
-
-  /// Merges the properties of this [MdHeadingSpecAttribute] with the properties of [other].
-  ///
-  /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdHeadingSpecAttribute] with the properties of [other] taking precedence over
-  /// the corresponding properties of this instance.
-  ///
-  /// Properties from [other] that are null will fall back
-  /// to the values from this instance.
-  @override
-  MdHeadingSpecAttribute merge(MdHeadingSpecAttribute? other) {
-    if (other == null) return this;
-
-    return MdHeadingSpecAttribute(
-      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      padding: padding?.merge(other.padding) ?? other.padding,
-      align: other.align ?? align,
-    );
-  }
-
-  /// The list of properties that constitute the state of this [MdHeadingSpecAttribute].
-  ///
-  /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdHeadingSpecAttribute] instances for equality.
-  @override
-  List<Object?> get props => [
-        textStyle,
-        padding,
-        align,
-      ];
-}
-
-/// Utility class for configuring [MdHeadingSpecAttribute] properties.
-///
-/// This class provides methods to set individual properties of a [MdHeadingSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdHeadingSpecAttribute].
-class MdHeadingSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdHeadingSpecAttribute> {
-  /// Utility for defining [MdHeadingSpecAttribute.textStyle]
-  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
-
-  /// Utility for defining [MdHeadingSpecAttribute.padding]
-  late final padding = EdgeInsetsUtility((v) => only(padding: v));
-
-  /// Utility for defining [MdHeadingSpecAttribute.align]
-  late final align = WrapAlignmentUtility((v) => only(align: v));
-
-  MdHeadingSpecUtility(super.builder);
-
-  static final self = MdHeadingSpecUtility((v) => v);
-
-  /// Returns a new [MdHeadingSpecAttribute] with the specified properties.
-  @override
-  T only({
-    TextStyleDto? textStyle,
-    EdgeInsetsDto? padding,
-    WrapAlignment? align,
-  }) {
-    return builder(MdHeadingSpecAttribute(
-      textStyle: textStyle,
-      padding: padding,
-      align: align,
-    ));
-  }
-}
-
-/// A tween that interpolates between two [MdHeadingSpec] instances.
-///
-/// This class can be used in animations to smoothly transition between
-/// different [MdHeadingSpec] specifications.
-class MdHeadingSpecTween extends Tween<MdHeadingSpec?> {
-  MdHeadingSpecTween({
-    super.begin,
-    super.end,
-  });
-
-  @override
-  MdHeadingSpec lerp(double t) {
-    if (begin == null && end == null) {
-      return const MdHeadingSpec();
-    }
-
-    if (begin == null) {
-      return end!;
-    }
-
-    return begin!.lerp(end!, t);
-  }
-}
-
-mixin _$MdParagraphSpec on Spec<MdParagraphSpec> {
-  static MdParagraphSpec from(MixData mix) {
-    return mix.attributeOf<MdParagraphSpecAttribute>()?.resolve(mix) ??
-        const MdParagraphSpec();
-  }
-
-  /// {@template md_paragraph_spec_of}
-  /// Retrieves the [MdParagraphSpec] from the nearest [Mix] ancestor in the widget tree.
-  ///
-  /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdParagraphSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdParagraphSpec].
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// final mdParagraphSpec = MdParagraphSpec.of(context);
-  /// ```
-  /// {@endtemplate}
-  static MdParagraphSpec of(BuildContext context) {
-    return _$MdParagraphSpec.from(Mix.of(context));
-  }
-
-  /// Creates a copy of this [MdParagraphSpec] but with the given fields
-  /// replaced with the new values.
-  @override
-  MdParagraphSpec copyWith({
-    TextStyle? textStyle,
-    EdgeInsets? padding,
-  }) {
-    return MdParagraphSpec(
-      textStyle: textStyle ?? _$this.textStyle,
-      padding: padding ?? _$this.padding,
-    );
-  }
-
-  /// Linearly interpolates between this [MdParagraphSpec] and another [MdParagraphSpec] based on the given parameter [t].
-  ///
-  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdParagraphSpec] is returned. When [t] is 1.0, the [other] [MdParagraphSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdParagraphSpec] is returned.
-  ///
-  /// If [other] is null, this method returns the current [MdParagraphSpec] instance.
-  ///
-  /// The interpolation is performed on each property of the [MdParagraphSpec] using the appropriate
-  /// interpolation method:
-  ///
-  /// - [MixHelpers.lerpTextStyle] for [textStyle].
-  /// - [EdgeInsets.lerp] for [padding].
-
-  /// For , the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdParagraphSpec] is used. Otherwise, the value
-  /// from the [other] [MdParagraphSpec] is used.
-  ///
-  /// This method is typically used in animations to smoothly transition between
-  /// different [MdParagraphSpec] configurations.
-  @override
-  MdParagraphSpec lerp(MdParagraphSpec? other, double t) {
-    if (other == null) return _$this;
-
-    return MdParagraphSpec(
-      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
-      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
-    );
-  }
-
-  /// The list of properties that constitute the state of this [MdParagraphSpec].
-  ///
-  /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdParagraphSpec] instances for equality.
-  @override
-  List<Object?> get props => [
-        _$this.textStyle,
-        _$this.padding,
-      ];
-
-  MdParagraphSpec get _$this => this as MdParagraphSpec;
-}
-
-/// Represents the attributes of a [MdParagraphSpec].
-///
-/// This class encapsulates properties defining the layout and
-/// appearance of a [MdParagraphSpec].
-///
-/// Use this class to configure the attributes of a [MdParagraphSpec] and pass it to
-/// the [MdParagraphSpec] constructor.
-final class MdParagraphSpecAttribute extends SpecAttribute<MdParagraphSpec> {
-  final TextStyleDto? textStyle;
-  final EdgeInsetsDto? padding;
-
-  const MdParagraphSpecAttribute({
-    this.textStyle,
-    this.padding,
-  });
-
-  /// Resolves to [MdParagraphSpec] using the provided [MixData].
-  ///
-  /// If a property is null in the [MixData], it falls back to the
-  /// default value defined in the `defaultValue` for that property.
-  ///
-  /// ```dart
-  /// final mdParagraphSpec = MdParagraphSpecAttribute(...).resolve(mix);
-  /// ```
-  @override
-  MdParagraphSpec resolve(MixData mix) {
-    return MdParagraphSpec(
-      textStyle: textStyle?.resolve(mix),
-      padding: padding?.resolve(mix),
-    );
-  }
-
-  /// Merges the properties of this [MdParagraphSpecAttribute] with the properties of [other].
-  ///
-  /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdParagraphSpecAttribute] with the properties of [other] taking precedence over
-  /// the corresponding properties of this instance.
-  ///
-  /// Properties from [other] that are null will fall back
-  /// to the values from this instance.
-  @override
-  MdParagraphSpecAttribute merge(MdParagraphSpecAttribute? other) {
-    if (other == null) return this;
-
-    return MdParagraphSpecAttribute(
-      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      padding: padding?.merge(other.padding) ?? other.padding,
-    );
-  }
-
-  /// The list of properties that constitute the state of this [MdParagraphSpecAttribute].
-  ///
-  /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdParagraphSpecAttribute] instances for equality.
-  @override
-  List<Object?> get props => [
-        textStyle,
-        padding,
-      ];
-}
-
-/// Utility class for configuring [MdParagraphSpecAttribute] properties.
-///
-/// This class provides methods to set individual properties of a [MdParagraphSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdParagraphSpecAttribute].
-class MdParagraphSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdParagraphSpecAttribute> {
-  /// Utility for defining [MdParagraphSpecAttribute.textStyle]
-  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
-
-  /// Utility for defining [MdParagraphSpecAttribute.padding]
-  late final padding = EdgeInsetsUtility((v) => only(padding: v));
-
-  MdParagraphSpecUtility(super.builder);
-
-  static final self = MdParagraphSpecUtility((v) => v);
-
-  /// Returns a new [MdParagraphSpecAttribute] with the specified properties.
-  @override
-  T only({
-    TextStyleDto? textStyle,
-    EdgeInsetsDto? padding,
-  }) {
-    return builder(MdParagraphSpecAttribute(
-      textStyle: textStyle,
-      padding: padding,
-    ));
-  }
-}
-
-/// A tween that interpolates between two [MdParagraphSpec] instances.
-///
-/// This class can be used in animations to smoothly transition between
-/// different [MdParagraphSpec] specifications.
-class MdParagraphSpecTween extends Tween<MdParagraphSpec?> {
-  MdParagraphSpecTween({
-    super.begin,
-    super.end,
-  });
-
-  @override
-  MdParagraphSpec lerp(double t) {
-    if (begin == null && end == null) {
-      return const MdParagraphSpec();
-    }
-
-    if (begin == null) {
-      return end!;
-    }
-
-    return begin!.lerp(end!, t);
-  }
-}
-
-mixin _$MdListSpec on Spec<MdListSpec> {
-  static MdListSpec from(MixData mix) {
-    return mix.attributeOf<MdListSpecAttribute>()?.resolve(mix) ??
-        const MdListSpec();
-  }
-
-  /// {@template md_list_spec_of}
-  /// Retrieves the [MdListSpec] from the nearest [Mix] ancestor in the widget tree.
-  ///
-  /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdListSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdListSpec].
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// final mdListSpec = MdListSpec.of(context);
-  /// ```
-  /// {@endtemplate}
-  static MdListSpec of(BuildContext context) {
-    return _$MdListSpec.from(Mix.of(context));
-  }
-
-  /// Creates a copy of this [MdListSpec] but with the given fields
-  /// replaced with the new values.
-  @override
-  MdListSpec copyWith({
+  MarkdownListSpec copyWith({
     double? indent,
     TextStyle? bulletStyle,
     EdgeInsets? bulletPadding,
     WrapAlignment? orderedAlignment,
     WrapAlignment? unorderedAlignment,
   }) {
-    return MdListSpec(
+    return MarkdownListSpec(
       indent: indent ?? _$this.indent,
       bulletStyle: bulletStyle ?? _$this.bulletStyle,
       bulletPadding: bulletPadding ?? _$this.bulletPadding,
@@ -655,15 +259,15 @@ mixin _$MdListSpec on Spec<MdListSpec> {
     );
   }
 
-  /// Linearly interpolates between this [MdListSpec] and another [MdListSpec] based on the given parameter [t].
+  /// Linearly interpolates between this [MarkdownListSpec] and another [MarkdownListSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdListSpec] is returned. When [t] is 1.0, the [other] [MdListSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdListSpec] is returned.
+  /// When [t] is 0.0, the current [MarkdownListSpec] is returned. When [t] is 1.0, the [other] [MarkdownListSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownListSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdListSpec] instance.
+  /// If [other] is null, this method returns the current [MarkdownListSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdListSpec] using the appropriate
+  /// The interpolation is performed on each property of the [MarkdownListSpec] using the appropriate
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpDouble] for [indent].
@@ -671,16 +275,16 @@ mixin _$MdListSpec on Spec<MdListSpec> {
   /// - [EdgeInsets.lerp] for [bulletPadding].
 
   /// For [orderedAlignment] and [unorderedAlignment], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdListSpec] is used. Otherwise, the value
-  /// from the [other] [MdListSpec] is used.
+  /// If [t] is less than 0.5, the value from the current [MarkdownListSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownListSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdListSpec] configurations.
+  /// different [MarkdownListSpec] configurations.
   @override
-  MdListSpec lerp(MdListSpec? other, double t) {
+  MarkdownListSpec lerp(MarkdownListSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdListSpec(
+    return MarkdownListSpec(
       indent: MixHelpers.lerpDouble(_$this.indent, other.indent, t),
       bulletStyle:
           MixHelpers.lerpTextStyle(_$this.bulletStyle, other.bulletStyle, t),
@@ -693,10 +297,10 @@ mixin _$MdListSpec on Spec<MdListSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdListSpec].
+  /// The list of properties that constitute the state of this [MarkdownListSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdListSpec] instances for equality.
+  /// compare two [MarkdownListSpec] instances for equality.
   @override
   List<Object?> get props => [
         _$this.indent,
@@ -706,24 +310,24 @@ mixin _$MdListSpec on Spec<MdListSpec> {
         _$this.unorderedAlignment,
       ];
 
-  MdListSpec get _$this => this as MdListSpec;
+  MarkdownListSpec get _$this => this as MarkdownListSpec;
 }
 
-/// Represents the attributes of a [MdListSpec].
+/// Represents the attributes of a [MarkdownListSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdListSpec].
+/// appearance of a [MarkdownListSpec].
 ///
-/// Use this class to configure the attributes of a [MdListSpec] and pass it to
-/// the [MdListSpec] constructor.
-final class MdListSpecAttribute extends SpecAttribute<MdListSpec> {
+/// Use this class to configure the attributes of a [MarkdownListSpec] and pass it to
+/// the [MarkdownListSpec] constructor.
+final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
   final double? indent;
   final TextStyleDto? bulletStyle;
   final EdgeInsetsDto? bulletPadding;
   final WrapAlignment? orderedAlignment;
   final WrapAlignment? unorderedAlignment;
 
-  const MdListSpecAttribute({
+  const MarkdownListSpecAttribute({
     this.indent,
     this.bulletStyle,
     this.bulletPadding,
@@ -731,17 +335,17 @@ final class MdListSpecAttribute extends SpecAttribute<MdListSpec> {
     this.unorderedAlignment,
   });
 
-  /// Resolves to [MdListSpec] using the provided [MixData].
+  /// Resolves to [MarkdownListSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdListSpec = MdListSpecAttribute(...).resolve(mix);
+  /// final markdownListSpec = MarkdownListSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdListSpec resolve(MixData mix) {
-    return MdListSpec(
+  MarkdownListSpec resolve(MixData mix) {
+    return MarkdownListSpec(
       indent: indent,
       bulletStyle: bulletStyle?.resolve(mix),
       bulletPadding: bulletPadding?.resolve(mix),
@@ -750,19 +354,19 @@ final class MdListSpecAttribute extends SpecAttribute<MdListSpec> {
     );
   }
 
-  /// Merges the properties of this [MdListSpecAttribute] with the properties of [other].
+  /// Merges the properties of this [MarkdownListSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdListSpecAttribute] with the properties of [other] taking precedence over
+  /// [MarkdownListSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdListSpecAttribute merge(MdListSpecAttribute? other) {
+  MarkdownListSpecAttribute merge(MarkdownListSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdListSpecAttribute(
+    return MarkdownListSpecAttribute(
       indent: other.indent ?? indent,
       bulletStyle: bulletStyle?.merge(other.bulletStyle) ?? other.bulletStyle,
       bulletPadding:
@@ -772,10 +376,10 @@ final class MdListSpecAttribute extends SpecAttribute<MdListSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdListSpecAttribute].
+  /// The list of properties that constitute the state of this [MarkdownListSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdListSpecAttribute] instances for equality.
+  /// compare two [MarkdownListSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
         indent,
@@ -786,34 +390,38 @@ final class MdListSpecAttribute extends SpecAttribute<MdListSpec> {
       ];
 }
 
-/// Utility class for configuring [MdListSpecAttribute] properties.
+/// Utility class for configuring [MarkdownListSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdListSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdListSpecAttribute].
-class MdListSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdListSpecAttribute> {
-  /// Utility for defining [MdListSpecAttribute.indent]
+/// This class provides methods to set individual properties of a [MarkdownListSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownListSpecAttribute].
+class MarkdownListSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownListSpecAttribute> {
+  /// Utility for defining [MarkdownListSpecAttribute.indent]
   late final indent = DoubleUtility((v) => only(indent: v));
 
-  /// Utility for defining [MdListSpecAttribute.bulletStyle]
+  /// Utility for defining [MarkdownListSpecAttribute.bulletStyle]
   late final bulletStyle = TextStyleUtility((v) => only(bulletStyle: v));
 
-  /// Utility for defining [MdListSpecAttribute.bulletPadding]
+  /// Utility for defining [MarkdownListSpecAttribute.bulletPadding]
   late final bulletPadding = EdgeInsetsUtility((v) => only(bulletPadding: v));
 
-  /// Utility for defining [MdListSpecAttribute.orderedAlignment]
+  /// Utility for defining [MarkdownListSpecAttribute.orderedAlignment]
   late final orderedAlignment =
       WrapAlignmentUtility((v) => only(orderedAlignment: v));
 
-  /// Utility for defining [MdListSpecAttribute.unorderedAlignment]
+  /// Utility for defining [MarkdownListSpecAttribute.unorderedAlignment]
   late final unorderedAlignment =
       WrapAlignmentUtility((v) => only(unorderedAlignment: v));
 
-  MdListSpecUtility(super.builder);
+  MarkdownListSpecUtility(super.builder, {super.mutable});
 
-  static final self = MdListSpecUtility((v) => v);
+  MarkdownListSpecUtility<T> get chain =>
+      MarkdownListSpecUtility(attributeBuilder, mutable: true);
 
-  /// Returns a new [MdListSpecAttribute] with the specified properties.
+  static MarkdownListSpecUtility<MarkdownListSpecAttribute> get self =>
+      MarkdownListSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownListSpecAttribute] with the specified properties.
   @override
   T only({
     double? indent,
@@ -822,7 +430,7 @@ class MdListSpecUtility<T extends Attribute>
     WrapAlignment? orderedAlignment,
     WrapAlignment? unorderedAlignment,
   }) {
-    return builder(MdListSpecAttribute(
+    return builder(MarkdownListSpecAttribute(
       indent: indent,
       bulletStyle: bulletStyle,
       bulletPadding: bulletPadding,
@@ -832,20 +440,20 @@ class MdListSpecUtility<T extends Attribute>
   }
 }
 
-/// A tween that interpolates between two [MdListSpec] instances.
+/// A tween that interpolates between two [MarkdownListSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdListSpec] specifications.
-class MdListSpecTween extends Tween<MdListSpec?> {
-  MdListSpecTween({
+/// different [MarkdownListSpec] specifications.
+class MarkdownListSpecTween extends Tween<MarkdownListSpec?> {
+  MarkdownListSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdListSpec lerp(double t) {
+  MarkdownListSpec lerp(double t) {
     if (begin == null && end == null) {
-      return const MdListSpec();
+      return const MarkdownListSpec();
     }
 
     if (begin == null) {
@@ -856,33 +464,529 @@ class MdListSpecTween extends Tween<MdListSpec?> {
   }
 }
 
-mixin _$MdTableSpec on Spec<MdTableSpec> {
-  static MdTableSpec from(MixData mix) {
-    return mix.attributeOf<MdTableSpecAttribute>()?.resolve(mix) ??
-        const MdTableSpec();
+mixin _$MarkdownAlertSpec on Spec<MarkdownAlertSpec> {
+  static MarkdownAlertSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownAlertSpecAttribute>()?.resolve(mix) ??
+        const MarkdownAlertSpec();
   }
 
-  /// {@template md_table_spec_of}
-  /// Retrieves the [MdTableSpec] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template markdown_alert_spec_of}
+  /// Retrieves the [MarkdownAlertSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdTableSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdTableSpec].
+  /// given [BuildContext], and then retrieves the [MarkdownAlertSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownAlertSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdTableSpec = MdTableSpec.of(context);
+  /// final markdownAlertSpec = MarkdownAlertSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdTableSpec of(BuildContext context) {
-    return _$MdTableSpec.from(Mix.of(context));
+  static MarkdownAlertSpec of(BuildContext context) {
+    return _$MarkdownAlertSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdTableSpec] but with the given fields
+  /// Creates a copy of this [MarkdownAlertSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdTableSpec copyWith({
+  MarkdownAlertSpec copyWith({
+    MarkdownAlertTypeSpec? note,
+    MarkdownAlertTypeSpec? tip,
+    MarkdownAlertTypeSpec? important,
+    MarkdownAlertTypeSpec? warning,
+    MarkdownAlertTypeSpec? caution,
+  }) {
+    return MarkdownAlertSpec(
+      note: note ?? _$this.note,
+      tip: tip ?? _$this.tip,
+      important: important ?? _$this.important,
+      warning: warning ?? _$this.warning,
+      caution: caution ?? _$this.caution,
+    );
+  }
+
+  /// Linearly interpolates between this [MarkdownAlertSpec] and another [MarkdownAlertSpec] based on the given parameter [t].
+  ///
+  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
+  /// When [t] is 0.0, the current [MarkdownAlertSpec] is returned. When [t] is 1.0, the [other] [MarkdownAlertSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownAlertSpec] is returned.
+  ///
+  /// If [other] is null, this method returns the current [MarkdownAlertSpec] instance.
+  ///
+  /// The interpolation is performed on each property of the [MarkdownAlertSpec] using the appropriate
+  /// interpolation method:
+  ///
+
+  /// For [note] and [tip] and [important] and [warning] and [caution], the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MarkdownAlertSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownAlertSpec] is used.
+  ///
+  /// This method is typically used in animations to smoothly transition between
+  /// different [MarkdownAlertSpec] configurations.
+  @override
+  MarkdownAlertSpec lerp(MarkdownAlertSpec? other, double t) {
+    if (other == null) return _$this;
+
+    return MarkdownAlertSpec(
+      note: _$this.note.lerp(other.note, t),
+      tip: _$this.tip.lerp(other.tip, t),
+      important: _$this.important.lerp(other.important, t),
+      warning: _$this.warning.lerp(other.warning, t),
+      caution: _$this.caution.lerp(other.caution, t),
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MarkdownAlertSpec].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MarkdownAlertSpec] instances for equality.
+  @override
+  List<Object?> get props => [
+        _$this.note,
+        _$this.tip,
+        _$this.important,
+        _$this.warning,
+        _$this.caution,
+      ];
+
+  MarkdownAlertSpec get _$this => this as MarkdownAlertSpec;
+}
+
+/// Represents the attributes of a [MarkdownAlertSpec].
+///
+/// This class encapsulates properties defining the layout and
+/// appearance of a [MarkdownAlertSpec].
+///
+/// Use this class to configure the attributes of a [MarkdownAlertSpec] and pass it to
+/// the [MarkdownAlertSpec] constructor.
+final class MarkdownAlertSpecAttribute
+    extends SpecAttribute<MarkdownAlertSpec> {
+  final MarkdownAlertTypeSpecAttribute? note;
+  final MarkdownAlertTypeSpecAttribute? tip;
+  final MarkdownAlertTypeSpecAttribute? important;
+  final MarkdownAlertTypeSpecAttribute? warning;
+  final MarkdownAlertTypeSpecAttribute? caution;
+
+  const MarkdownAlertSpecAttribute({
+    this.note,
+    this.tip,
+    this.important,
+    this.warning,
+    this.caution,
+  });
+
+  /// Resolves to [MarkdownAlertSpec] using the provided [MixData].
+  ///
+  /// If a property is null in the [MixData], it falls back to the
+  /// default value defined in the `defaultValue` for that property.
+  ///
+  /// ```dart
+  /// final markdownAlertSpec = MarkdownAlertSpecAttribute(...).resolve(mix);
+  /// ```
+  @override
+  MarkdownAlertSpec resolve(MixData mix) {
+    return MarkdownAlertSpec(
+      note: note?.resolve(mix),
+      tip: tip?.resolve(mix),
+      important: important?.resolve(mix),
+      warning: warning?.resolve(mix),
+      caution: caution?.resolve(mix),
+    );
+  }
+
+  /// Merges the properties of this [MarkdownAlertSpecAttribute] with the properties of [other].
+  ///
+  /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
+  /// [MarkdownAlertSpecAttribute] with the properties of [other] taking precedence over
+  /// the corresponding properties of this instance.
+  ///
+  /// Properties from [other] that are null will fall back
+  /// to the values from this instance.
+  @override
+  MarkdownAlertSpecAttribute merge(MarkdownAlertSpecAttribute? other) {
+    if (other == null) return this;
+
+    return MarkdownAlertSpecAttribute(
+      note: note?.merge(other.note) ?? other.note,
+      tip: tip?.merge(other.tip) ?? other.tip,
+      important: important?.merge(other.important) ?? other.important,
+      warning: warning?.merge(other.warning) ?? other.warning,
+      caution: caution?.merge(other.caution) ?? other.caution,
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MarkdownAlertSpecAttribute].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MarkdownAlertSpecAttribute] instances for equality.
+  @override
+  List<Object?> get props => [
+        note,
+        tip,
+        important,
+        warning,
+        caution,
+      ];
+}
+
+/// Utility class for configuring [MarkdownAlertSpecAttribute] properties.
+///
+/// This class provides methods to set individual properties of a [MarkdownAlertSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownAlertSpecAttribute].
+class MarkdownAlertSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownAlertSpecAttribute> {
+  /// Utility for defining [MarkdownAlertSpecAttribute.note]
+  late final note = MarkdownAlertTypeSpecUtility((v) => only(note: v));
+
+  /// Utility for defining [MarkdownAlertSpecAttribute.tip]
+  late final tip = MarkdownAlertTypeSpecUtility((v) => only(tip: v));
+
+  /// Utility for defining [MarkdownAlertSpecAttribute.important]
+  late final important =
+      MarkdownAlertTypeSpecUtility((v) => only(important: v));
+
+  /// Utility for defining [MarkdownAlertSpecAttribute.warning]
+  late final warning = MarkdownAlertTypeSpecUtility((v) => only(warning: v));
+
+  /// Utility for defining [MarkdownAlertSpecAttribute.caution]
+  late final caution = MarkdownAlertTypeSpecUtility((v) => only(caution: v));
+
+  MarkdownAlertSpecUtility(super.builder, {super.mutable});
+
+  MarkdownAlertSpecUtility<T> get chain =>
+      MarkdownAlertSpecUtility(attributeBuilder, mutable: true);
+
+  static MarkdownAlertSpecUtility<MarkdownAlertSpecAttribute> get self =>
+      MarkdownAlertSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownAlertSpecAttribute] with the specified properties.
+  @override
+  T only({
+    MarkdownAlertTypeSpecAttribute? note,
+    MarkdownAlertTypeSpecAttribute? tip,
+    MarkdownAlertTypeSpecAttribute? important,
+    MarkdownAlertTypeSpecAttribute? warning,
+    MarkdownAlertTypeSpecAttribute? caution,
+  }) {
+    return builder(MarkdownAlertSpecAttribute(
+      note: note,
+      tip: tip,
+      important: important,
+      warning: warning,
+      caution: caution,
+    ));
+  }
+}
+
+/// A tween that interpolates between two [MarkdownAlertSpec] instances.
+///
+/// This class can be used in animations to smoothly transition between
+/// different [MarkdownAlertSpec] specifications.
+class MarkdownAlertSpecTween extends Tween<MarkdownAlertSpec?> {
+  MarkdownAlertSpecTween({
+    super.begin,
+    super.end,
+  });
+
+  @override
+  MarkdownAlertSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MarkdownAlertSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
+
+    return begin!.lerp(end!, t);
+  }
+}
+
+mixin _$MarkdownAlertTypeSpec on Spec<MarkdownAlertTypeSpec> {
+  static MarkdownAlertTypeSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownAlertTypeSpecAttribute>()?.resolve(mix) ??
+        const MarkdownAlertTypeSpec();
+  }
+
+  /// {@template markdown_alert_type_spec_of}
+  /// Retrieves the [MarkdownAlertTypeSpec] from the nearest [Mix] ancestor in the widget tree.
+  ///
+  /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
+  /// given [BuildContext], and then retrieves the [MarkdownAlertTypeSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownAlertTypeSpec].
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// final markdownAlertTypeSpec = MarkdownAlertTypeSpec.of(context);
+  /// ```
+  /// {@endtemplate}
+  static MarkdownAlertTypeSpec of(BuildContext context) {
+    return _$MarkdownAlertTypeSpec.from(Mix.of(context));
+  }
+
+  /// Creates a copy of this [MarkdownAlertTypeSpec] but with the given fields
+  /// replaced with the new values.
+  @override
+  MarkdownAlertTypeSpec copyWith({
+    TextSpec? heading,
+    TextSpec? description,
+    IconSpec? icon,
+    BoxSpec? container,
+    FlexSpec? headingFlex,
+    FlexSpec? containerFlex,
+  }) {
+    return MarkdownAlertTypeSpec(
+      heading: heading ?? _$this.heading,
+      description: description ?? _$this.description,
+      icon: icon ?? _$this.icon,
+      container: container ?? _$this.container,
+      headingFlex: headingFlex ?? _$this.headingFlex,
+      containerFlex: containerFlex ?? _$this.containerFlex,
+    );
+  }
+
+  /// Linearly interpolates between this [MarkdownAlertTypeSpec] and another [MarkdownAlertTypeSpec] based on the given parameter [t].
+  ///
+  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
+  /// When [t] is 0.0, the current [MarkdownAlertTypeSpec] is returned. When [t] is 1.0, the [other] [MarkdownAlertTypeSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownAlertTypeSpec] is returned.
+  ///
+  /// If [other] is null, this method returns the current [MarkdownAlertTypeSpec] instance.
+  ///
+  /// The interpolation is performed on each property of the [MarkdownAlertTypeSpec] using the appropriate
+  /// interpolation method:
+  ///
+  /// - [TextSpec.lerp] for [heading] and [description].
+  /// - [IconSpec.lerp] for [icon].
+  /// - [BoxSpec.lerp] for [container].
+  /// - [FlexSpec.lerp] for [headingFlex] and [containerFlex].
+
+  /// For , the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MarkdownAlertTypeSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownAlertTypeSpec] is used.
+  ///
+  /// This method is typically used in animations to smoothly transition between
+  /// different [MarkdownAlertTypeSpec] configurations.
+  @override
+  MarkdownAlertTypeSpec lerp(MarkdownAlertTypeSpec? other, double t) {
+    if (other == null) return _$this;
+
+    return MarkdownAlertTypeSpec(
+      heading: _$this.heading.lerp(other.heading, t),
+      description: _$this.description.lerp(other.description, t),
+      icon: _$this.icon.lerp(other.icon, t),
+      container: _$this.container.lerp(other.container, t),
+      headingFlex: _$this.headingFlex.lerp(other.headingFlex, t),
+      containerFlex: _$this.containerFlex.lerp(other.containerFlex, t),
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MarkdownAlertTypeSpec].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MarkdownAlertTypeSpec] instances for equality.
+  @override
+  List<Object?> get props => [
+        _$this.heading,
+        _$this.description,
+        _$this.icon,
+        _$this.container,
+        _$this.headingFlex,
+        _$this.containerFlex,
+      ];
+
+  MarkdownAlertTypeSpec get _$this => this as MarkdownAlertTypeSpec;
+}
+
+/// Represents the attributes of a [MarkdownAlertTypeSpec].
+///
+/// This class encapsulates properties defining the layout and
+/// appearance of a [MarkdownAlertTypeSpec].
+///
+/// Use this class to configure the attributes of a [MarkdownAlertTypeSpec] and pass it to
+/// the [MarkdownAlertTypeSpec] constructor.
+final class MarkdownAlertTypeSpecAttribute
+    extends SpecAttribute<MarkdownAlertTypeSpec> {
+  final TextSpecAttribute? heading;
+  final TextSpecAttribute? description;
+  final IconSpecAttribute? icon;
+  final BoxSpecAttribute? container;
+  final FlexSpecAttribute? headingFlex;
+  final FlexSpecAttribute? containerFlex;
+
+  const MarkdownAlertTypeSpecAttribute({
+    this.heading,
+    this.description,
+    this.icon,
+    this.container,
+    this.headingFlex,
+    this.containerFlex,
+  });
+
+  /// Resolves to [MarkdownAlertTypeSpec] using the provided [MixData].
+  ///
+  /// If a property is null in the [MixData], it falls back to the
+  /// default value defined in the `defaultValue` for that property.
+  ///
+  /// ```dart
+  /// final markdownAlertTypeSpec = MarkdownAlertTypeSpecAttribute(...).resolve(mix);
+  /// ```
+  @override
+  MarkdownAlertTypeSpec resolve(MixData mix) {
+    return MarkdownAlertTypeSpec(
+      heading: heading?.resolve(mix),
+      description: description?.resolve(mix),
+      icon: icon?.resolve(mix),
+      container: container?.resolve(mix),
+      headingFlex: headingFlex?.resolve(mix),
+      containerFlex: containerFlex?.resolve(mix),
+    );
+  }
+
+  /// Merges the properties of this [MarkdownAlertTypeSpecAttribute] with the properties of [other].
+  ///
+  /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
+  /// [MarkdownAlertTypeSpecAttribute] with the properties of [other] taking precedence over
+  /// the corresponding properties of this instance.
+  ///
+  /// Properties from [other] that are null will fall back
+  /// to the values from this instance.
+  @override
+  MarkdownAlertTypeSpecAttribute merge(MarkdownAlertTypeSpecAttribute? other) {
+    if (other == null) return this;
+
+    return MarkdownAlertTypeSpecAttribute(
+      heading: heading?.merge(other.heading) ?? other.heading,
+      description: description?.merge(other.description) ?? other.description,
+      icon: icon?.merge(other.icon) ?? other.icon,
+      container: container?.merge(other.container) ?? other.container,
+      headingFlex: headingFlex?.merge(other.headingFlex) ?? other.headingFlex,
+      containerFlex:
+          containerFlex?.merge(other.containerFlex) ?? other.containerFlex,
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MarkdownAlertTypeSpecAttribute].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MarkdownAlertTypeSpecAttribute] instances for equality.
+  @override
+  List<Object?> get props => [
+        heading,
+        description,
+        icon,
+        container,
+        headingFlex,
+        containerFlex,
+      ];
+}
+
+/// Utility class for configuring [MarkdownAlertTypeSpecAttribute] properties.
+///
+/// This class provides methods to set individual properties of a [MarkdownAlertTypeSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownAlertTypeSpecAttribute].
+class MarkdownAlertTypeSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownAlertTypeSpecAttribute> {
+  /// Utility for defining [MarkdownAlertTypeSpecAttribute.heading]
+  late final heading = TextSpecUtility((v) => only(heading: v));
+
+  /// Utility for defining [MarkdownAlertTypeSpecAttribute.description]
+  late final description = TextSpecUtility((v) => only(description: v));
+
+  /// Utility for defining [MarkdownAlertTypeSpecAttribute.icon]
+  late final icon = IconSpecUtility((v) => only(icon: v));
+
+  /// Utility for defining [MarkdownAlertTypeSpecAttribute.container]
+  late final container = BoxSpecUtility((v) => only(container: v));
+
+  /// Utility for defining [MarkdownAlertTypeSpecAttribute.headingFlex]
+  late final headingFlex = FlexSpecUtility((v) => only(headingFlex: v));
+
+  /// Utility for defining [MarkdownAlertTypeSpecAttribute.containerFlex]
+  late final containerFlex = FlexSpecUtility((v) => only(containerFlex: v));
+
+  MarkdownAlertTypeSpecUtility(super.builder, {super.mutable});
+
+  MarkdownAlertTypeSpecUtility<T> get chain =>
+      MarkdownAlertTypeSpecUtility(attributeBuilder, mutable: true);
+
+  static MarkdownAlertTypeSpecUtility<MarkdownAlertTypeSpecAttribute>
+      get self => MarkdownAlertTypeSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownAlertTypeSpecAttribute] with the specified properties.
+  @override
+  T only({
+    TextSpecAttribute? heading,
+    TextSpecAttribute? description,
+    IconSpecAttribute? icon,
+    BoxSpecAttribute? container,
+    FlexSpecAttribute? headingFlex,
+    FlexSpecAttribute? containerFlex,
+  }) {
+    return builder(MarkdownAlertTypeSpecAttribute(
+      heading: heading,
+      description: description,
+      icon: icon,
+      container: container,
+      headingFlex: headingFlex,
+      containerFlex: containerFlex,
+    ));
+  }
+}
+
+/// A tween that interpolates between two [MarkdownAlertTypeSpec] instances.
+///
+/// This class can be used in animations to smoothly transition between
+/// different [MarkdownAlertTypeSpec] specifications.
+class MarkdownAlertTypeSpecTween extends Tween<MarkdownAlertTypeSpec?> {
+  MarkdownAlertTypeSpecTween({
+    super.begin,
+    super.end,
+  });
+
+  @override
+  MarkdownAlertTypeSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MarkdownAlertTypeSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
+
+    return begin!.lerp(end!, t);
+  }
+}
+
+mixin _$MarkdownTableSpec on Spec<MarkdownTableSpec> {
+  static MarkdownTableSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownTableSpecAttribute>()?.resolve(mix) ??
+        const MarkdownTableSpec();
+  }
+
+  /// {@template markdown_table_spec_of}
+  /// Retrieves the [MarkdownTableSpec] from the nearest [Mix] ancestor in the widget tree.
+  ///
+  /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
+  /// given [BuildContext], and then retrieves the [MarkdownTableSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownTableSpec].
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// final markdownTableSpec = MarkdownTableSpec.of(context);
+  /// ```
+  /// {@endtemplate}
+  static MarkdownTableSpec of(BuildContext context) {
+    return _$MarkdownTableSpec.from(Mix.of(context));
+  }
+
+  /// Creates a copy of this [MarkdownTableSpec] but with the given fields
+  /// replaced with the new values.
+  @override
+  MarkdownTableSpec copyWith({
     TextStyle? headStyle,
     TextStyle? bodyStyle,
     TextAlign? headAlignment,
@@ -893,7 +997,7 @@ mixin _$MdTableSpec on Spec<MdTableSpec> {
     BoxDecoration? cellDecoration,
     TableCellVerticalAlignment? verticalAlignment,
   }) {
-    return MdTableSpec(
+    return MarkdownTableSpec(
       headStyle: headStyle ?? _$this.headStyle,
       bodyStyle: bodyStyle ?? _$this.bodyStyle,
       headAlignment: headAlignment ?? _$this.headAlignment,
@@ -906,15 +1010,15 @@ mixin _$MdTableSpec on Spec<MdTableSpec> {
     );
   }
 
-  /// Linearly interpolates between this [MdTableSpec] and another [MdTableSpec] based on the given parameter [t].
+  /// Linearly interpolates between this [MarkdownTableSpec] and another [MarkdownTableSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdTableSpec] is returned. When [t] is 1.0, the [other] [MdTableSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdTableSpec] is returned.
+  /// When [t] is 0.0, the current [MarkdownTableSpec] is returned. When [t] is 1.0, the [other] [MarkdownTableSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownTableSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdTableSpec] instance.
+  /// If [other] is null, this method returns the current [MarkdownTableSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdTableSpec] using the appropriate
+  /// The interpolation is performed on each property of the [MarkdownTableSpec] using the appropriate
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpTextStyle] for [headStyle] and [bodyStyle].
@@ -923,16 +1027,16 @@ mixin _$MdTableSpec on Spec<MdTableSpec> {
   /// - [BoxDecoration.lerp] for [cellDecoration].
 
   /// For [headAlignment] and [columnWidth] and [verticalAlignment], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdTableSpec] is used. Otherwise, the value
-  /// from the [other] [MdTableSpec] is used.
+  /// If [t] is less than 0.5, the value from the current [MarkdownTableSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownTableSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdTableSpec] configurations.
+  /// different [MarkdownTableSpec] configurations.
   @override
-  MdTableSpec lerp(MdTableSpec? other, double t) {
+  MarkdownTableSpec lerp(MarkdownTableSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdTableSpec(
+    return MarkdownTableSpec(
       headStyle: MixHelpers.lerpTextStyle(_$this.headStyle, other.headStyle, t),
       bodyStyle: MixHelpers.lerpTextStyle(_$this.bodyStyle, other.bodyStyle, t),
       headAlignment: t < 0.5 ? _$this.headAlignment : other.headAlignment,
@@ -947,10 +1051,10 @@ mixin _$MdTableSpec on Spec<MdTableSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTableSpec].
+  /// The list of properties that constitute the state of this [MarkdownTableSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTableSpec] instances for equality.
+  /// compare two [MarkdownTableSpec] instances for equality.
   @override
   List<Object?> get props => [
         _$this.headStyle,
@@ -964,17 +1068,18 @@ mixin _$MdTableSpec on Spec<MdTableSpec> {
         _$this.verticalAlignment,
       ];
 
-  MdTableSpec get _$this => this as MdTableSpec;
+  MarkdownTableSpec get _$this => this as MarkdownTableSpec;
 }
 
-/// Represents the attributes of a [MdTableSpec].
+/// Represents the attributes of a [MarkdownTableSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdTableSpec].
+/// appearance of a [MarkdownTableSpec].
 ///
-/// Use this class to configure the attributes of a [MdTableSpec] and pass it to
-/// the [MdTableSpec] constructor.
-final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
+/// Use this class to configure the attributes of a [MarkdownTableSpec] and pass it to
+/// the [MarkdownTableSpec] constructor.
+final class MarkdownTableSpecAttribute
+    extends SpecAttribute<MarkdownTableSpec> {
   final TextStyleDto? headStyle;
   final TextStyleDto? bodyStyle;
   final TextAlign? headAlignment;
@@ -985,7 +1090,7 @@ final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
   final BoxDecorationDto? cellDecoration;
   final TableCellVerticalAlignment? verticalAlignment;
 
-  const MdTableSpecAttribute({
+  const MarkdownTableSpecAttribute({
     this.headStyle,
     this.bodyStyle,
     this.headAlignment,
@@ -997,17 +1102,17 @@ final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
     this.verticalAlignment,
   });
 
-  /// Resolves to [MdTableSpec] using the provided [MixData].
+  /// Resolves to [MarkdownTableSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdTableSpec = MdTableSpecAttribute(...).resolve(mix);
+  /// final markdownTableSpec = MarkdownTableSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdTableSpec resolve(MixData mix) {
-    return MdTableSpec(
+  MarkdownTableSpec resolve(MixData mix) {
+    return MarkdownTableSpec(
       headStyle: headStyle?.resolve(mix),
       bodyStyle: bodyStyle?.resolve(mix),
       headAlignment: headAlignment,
@@ -1020,19 +1125,19 @@ final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
     );
   }
 
-  /// Merges the properties of this [MdTableSpecAttribute] with the properties of [other].
+  /// Merges the properties of this [MarkdownTableSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdTableSpecAttribute] with the properties of [other] taking precedence over
+  /// [MarkdownTableSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdTableSpecAttribute merge(MdTableSpecAttribute? other) {
+  MarkdownTableSpecAttribute merge(MarkdownTableSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdTableSpecAttribute(
+    return MarkdownTableSpecAttribute(
       headStyle: headStyle?.merge(other.headStyle) ?? other.headStyle,
       bodyStyle: bodyStyle?.merge(other.bodyStyle) ?? other.bodyStyle,
       headAlignment: other.headAlignment ?? headAlignment,
@@ -1046,10 +1151,10 @@ final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdTableSpecAttribute].
+  /// The list of properties that constitute the state of this [MarkdownTableSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdTableSpecAttribute] instances for equality.
+  /// compare two [MarkdownTableSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
         headStyle,
@@ -1064,46 +1169,50 @@ final class MdTableSpecAttribute extends SpecAttribute<MdTableSpec> {
       ];
 }
 
-/// Utility class for configuring [MdTableSpecAttribute] properties.
+/// Utility class for configuring [MarkdownTableSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdTableSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdTableSpecAttribute].
-class MdTableSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdTableSpecAttribute> {
-  /// Utility for defining [MdTableSpecAttribute.headStyle]
+/// This class provides methods to set individual properties of a [MarkdownTableSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownTableSpecAttribute].
+class MarkdownTableSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownTableSpecAttribute> {
+  /// Utility for defining [MarkdownTableSpecAttribute.headStyle]
   late final headStyle = TextStyleUtility((v) => only(headStyle: v));
 
-  /// Utility for defining [MdTableSpecAttribute.bodyStyle]
+  /// Utility for defining [MarkdownTableSpecAttribute.bodyStyle]
   late final bodyStyle = TextStyleUtility((v) => only(bodyStyle: v));
 
-  /// Utility for defining [MdTableSpecAttribute.headAlignment]
+  /// Utility for defining [MarkdownTableSpecAttribute.headAlignment]
   late final headAlignment = TextAlignUtility((v) => only(headAlignment: v));
 
-  /// Utility for defining [MdTableSpecAttribute.padding]
+  /// Utility for defining [MarkdownTableSpecAttribute.padding]
   late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdTableSpecAttribute.border]
+  /// Utility for defining [MarkdownTableSpecAttribute.border]
   late final border = TableBorderUtility((v) => only(border: v));
 
-  /// Utility for defining [MdTableSpecAttribute.columnWidth]
+  /// Utility for defining [MarkdownTableSpecAttribute.columnWidth]
   late final columnWidth = TableColumnWidthUtility((v) => only(columnWidth: v));
 
-  /// Utility for defining [MdTableSpecAttribute.cellPadding]
+  /// Utility for defining [MarkdownTableSpecAttribute.cellPadding]
   late final cellPadding = EdgeInsetsUtility((v) => only(cellPadding: v));
 
-  /// Utility for defining [MdTableSpecAttribute.cellDecoration]
+  /// Utility for defining [MarkdownTableSpecAttribute.cellDecoration]
   late final cellDecoration =
       BoxDecorationUtility((v) => only(cellDecoration: v));
 
-  /// Utility for defining [MdTableSpecAttribute.verticalAlignment]
+  /// Utility for defining [MarkdownTableSpecAttribute.verticalAlignment]
   late final verticalAlignment =
       TableCellVerticalAlignmentUtility((v) => only(verticalAlignment: v));
 
-  MdTableSpecUtility(super.builder);
+  MarkdownTableSpecUtility(super.builder, {super.mutable});
 
-  static final self = MdTableSpecUtility((v) => v);
+  MarkdownTableSpecUtility<T> get chain =>
+      MarkdownTableSpecUtility(attributeBuilder, mutable: true);
 
-  /// Returns a new [MdTableSpecAttribute] with the specified properties.
+  static MarkdownTableSpecUtility<MarkdownTableSpecAttribute> get self =>
+      MarkdownTableSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownTableSpecAttribute] with the specified properties.
   @override
   T only({
     TextStyleDto? headStyle,
@@ -1116,7 +1225,7 @@ class MdTableSpecUtility<T extends Attribute>
     BoxDecorationDto? cellDecoration,
     TableCellVerticalAlignment? verticalAlignment,
   }) {
-    return builder(MdTableSpecAttribute(
+    return builder(MarkdownTableSpecAttribute(
       headStyle: headStyle,
       bodyStyle: bodyStyle,
       headAlignment: headAlignment,
@@ -1130,20 +1239,20 @@ class MdTableSpecUtility<T extends Attribute>
   }
 }
 
-/// A tween that interpolates between two [MdTableSpec] instances.
+/// A tween that interpolates between two [MarkdownTableSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdTableSpec] specifications.
-class MdTableSpecTween extends Tween<MdTableSpec?> {
-  MdTableSpecTween({
+/// different [MarkdownTableSpec] specifications.
+class MarkdownTableSpecTween extends Tween<MarkdownTableSpec?> {
+  MarkdownTableSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdTableSpec lerp(double t) {
+  MarkdownTableSpec lerp(double t) {
     if (begin == null && end == null) {
-      return const MdTableSpec();
+      return const MarkdownTableSpec();
     }
 
     if (begin == null) {
@@ -1154,39 +1263,39 @@ class MdTableSpecTween extends Tween<MdTableSpec?> {
   }
 }
 
-mixin _$MdBlockquoteSpec on Spec<MdBlockquoteSpec> {
-  static MdBlockquoteSpec from(MixData mix) {
-    return mix.attributeOf<MdBlockquoteSpecAttribute>()?.resolve(mix) ??
-        const MdBlockquoteSpec();
+mixin _$MarkdownBlockquoteSpec on Spec<MarkdownBlockquoteSpec> {
+  static MarkdownBlockquoteSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownBlockquoteSpecAttribute>()?.resolve(mix) ??
+        const MarkdownBlockquoteSpec();
   }
 
-  /// {@template md_blockquote_spec_of}
-  /// Retrieves the [MdBlockquoteSpec] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template markdown_blockquote_spec_of}
+  /// Retrieves the [MarkdownBlockquoteSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdBlockquoteSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdBlockquoteSpec].
+  /// given [BuildContext], and then retrieves the [MarkdownBlockquoteSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownBlockquoteSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdBlockquoteSpec = MdBlockquoteSpec.of(context);
+  /// final markdownBlockquoteSpec = MarkdownBlockquoteSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdBlockquoteSpec of(BuildContext context) {
-    return _$MdBlockquoteSpec.from(Mix.of(context));
+  static MarkdownBlockquoteSpec of(BuildContext context) {
+    return _$MarkdownBlockquoteSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdBlockquoteSpec] but with the given fields
+  /// Creates a copy of this [MarkdownBlockquoteSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdBlockquoteSpec copyWith({
+  MarkdownBlockquoteSpec copyWith({
     TextStyle? textStyle,
     EdgeInsets? padding,
     BoxDecoration? decoration,
     WrapAlignment? alignment,
   }) {
-    return MdBlockquoteSpec(
+    return MarkdownBlockquoteSpec(
       textStyle: textStyle ?? _$this.textStyle,
       padding: padding ?? _$this.padding,
       decoration: decoration ?? _$this.decoration,
@@ -1194,15 +1303,15 @@ mixin _$MdBlockquoteSpec on Spec<MdBlockquoteSpec> {
     );
   }
 
-  /// Linearly interpolates between this [MdBlockquoteSpec] and another [MdBlockquoteSpec] based on the given parameter [t].
+  /// Linearly interpolates between this [MarkdownBlockquoteSpec] and another [MarkdownBlockquoteSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdBlockquoteSpec] is returned. When [t] is 1.0, the [other] [MdBlockquoteSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdBlockquoteSpec] is returned.
+  /// When [t] is 0.0, the current [MarkdownBlockquoteSpec] is returned. When [t] is 1.0, the [other] [MarkdownBlockquoteSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownBlockquoteSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdBlockquoteSpec] instance.
+  /// If [other] is null, this method returns the current [MarkdownBlockquoteSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdBlockquoteSpec] using the appropriate
+  /// The interpolation is performed on each property of the [MarkdownBlockquoteSpec] using the appropriate
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpTextStyle] for [textStyle].
@@ -1210,16 +1319,16 @@ mixin _$MdBlockquoteSpec on Spec<MdBlockquoteSpec> {
   /// - [BoxDecoration.lerp] for [decoration].
 
   /// For [alignment], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdBlockquoteSpec] is used. Otherwise, the value
-  /// from the [other] [MdBlockquoteSpec] is used.
+  /// If [t] is less than 0.5, the value from the current [MarkdownBlockquoteSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownBlockquoteSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdBlockquoteSpec] configurations.
+  /// different [MarkdownBlockquoteSpec] configurations.
   @override
-  MdBlockquoteSpec lerp(MdBlockquoteSpec? other, double t) {
+  MarkdownBlockquoteSpec lerp(MarkdownBlockquoteSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdBlockquoteSpec(
+    return MarkdownBlockquoteSpec(
       textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
       padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
       decoration: BoxDecoration.lerp(_$this.decoration, other.decoration, t),
@@ -1227,10 +1336,10 @@ mixin _$MdBlockquoteSpec on Spec<MdBlockquoteSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdBlockquoteSpec].
+  /// The list of properties that constitute the state of this [MarkdownBlockquoteSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdBlockquoteSpec] instances for equality.
+  /// compare two [MarkdownBlockquoteSpec] instances for equality.
   @override
   List<Object?> get props => [
         _$this.textStyle,
@@ -1239,40 +1348,41 @@ mixin _$MdBlockquoteSpec on Spec<MdBlockquoteSpec> {
         _$this.alignment,
       ];
 
-  MdBlockquoteSpec get _$this => this as MdBlockquoteSpec;
+  MarkdownBlockquoteSpec get _$this => this as MarkdownBlockquoteSpec;
 }
 
-/// Represents the attributes of a [MdBlockquoteSpec].
+/// Represents the attributes of a [MarkdownBlockquoteSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdBlockquoteSpec].
+/// appearance of a [MarkdownBlockquoteSpec].
 ///
-/// Use this class to configure the attributes of a [MdBlockquoteSpec] and pass it to
-/// the [MdBlockquoteSpec] constructor.
-final class MdBlockquoteSpecAttribute extends SpecAttribute<MdBlockquoteSpec> {
+/// Use this class to configure the attributes of a [MarkdownBlockquoteSpec] and pass it to
+/// the [MarkdownBlockquoteSpec] constructor.
+final class MarkdownBlockquoteSpecAttribute
+    extends SpecAttribute<MarkdownBlockquoteSpec> {
   final TextStyleDto? textStyle;
   final EdgeInsetsDto? padding;
   final BoxDecorationDto? decoration;
   final WrapAlignment? alignment;
 
-  const MdBlockquoteSpecAttribute({
+  const MarkdownBlockquoteSpecAttribute({
     this.textStyle,
     this.padding,
     this.decoration,
     this.alignment,
   });
 
-  /// Resolves to [MdBlockquoteSpec] using the provided [MixData].
+  /// Resolves to [MarkdownBlockquoteSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdBlockquoteSpec = MdBlockquoteSpecAttribute(...).resolve(mix);
+  /// final markdownBlockquoteSpec = MarkdownBlockquoteSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdBlockquoteSpec resolve(MixData mix) {
-    return MdBlockquoteSpec(
+  MarkdownBlockquoteSpec resolve(MixData mix) {
+    return MarkdownBlockquoteSpec(
       textStyle: textStyle?.resolve(mix),
       padding: padding?.resolve(mix),
       decoration: decoration?.resolve(mix),
@@ -1280,19 +1390,20 @@ final class MdBlockquoteSpecAttribute extends SpecAttribute<MdBlockquoteSpec> {
     );
   }
 
-  /// Merges the properties of this [MdBlockquoteSpecAttribute] with the properties of [other].
+  /// Merges the properties of this [MarkdownBlockquoteSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdBlockquoteSpecAttribute] with the properties of [other] taking precedence over
+  /// [MarkdownBlockquoteSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdBlockquoteSpecAttribute merge(MdBlockquoteSpecAttribute? other) {
+  MarkdownBlockquoteSpecAttribute merge(
+      MarkdownBlockquoteSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdBlockquoteSpecAttribute(
+    return MarkdownBlockquoteSpecAttribute(
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       padding: padding?.merge(other.padding) ?? other.padding,
       decoration: decoration?.merge(other.decoration) ?? other.decoration,
@@ -1300,10 +1411,10 @@ final class MdBlockquoteSpecAttribute extends SpecAttribute<MdBlockquoteSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdBlockquoteSpecAttribute].
+  /// The list of properties that constitute the state of this [MarkdownBlockquoteSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdBlockquoteSpecAttribute] instances for equality.
+  /// compare two [MarkdownBlockquoteSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
         textStyle,
@@ -1313,29 +1424,33 @@ final class MdBlockquoteSpecAttribute extends SpecAttribute<MdBlockquoteSpec> {
       ];
 }
 
-/// Utility class for configuring [MdBlockquoteSpecAttribute] properties.
+/// Utility class for configuring [MarkdownBlockquoteSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdBlockquoteSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdBlockquoteSpecAttribute].
-class MdBlockquoteSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdBlockquoteSpecAttribute> {
-  /// Utility for defining [MdBlockquoteSpecAttribute.textStyle]
+/// This class provides methods to set individual properties of a [MarkdownBlockquoteSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownBlockquoteSpecAttribute].
+class MarkdownBlockquoteSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownBlockquoteSpecAttribute> {
+  /// Utility for defining [MarkdownBlockquoteSpecAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdBlockquoteSpecAttribute.padding]
+  /// Utility for defining [MarkdownBlockquoteSpecAttribute.padding]
   late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdBlockquoteSpecAttribute.decoration]
+  /// Utility for defining [MarkdownBlockquoteSpecAttribute.decoration]
   late final decoration = BoxDecorationUtility((v) => only(decoration: v));
 
-  /// Utility for defining [MdBlockquoteSpecAttribute.alignment]
+  /// Utility for defining [MarkdownBlockquoteSpecAttribute.alignment]
   late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
-  MdBlockquoteSpecUtility(super.builder);
+  MarkdownBlockquoteSpecUtility(super.builder, {super.mutable});
 
-  static final self = MdBlockquoteSpecUtility((v) => v);
+  MarkdownBlockquoteSpecUtility<T> get chain =>
+      MarkdownBlockquoteSpecUtility(attributeBuilder, mutable: true);
 
-  /// Returns a new [MdBlockquoteSpecAttribute] with the specified properties.
+  static MarkdownBlockquoteSpecUtility<MarkdownBlockquoteSpecAttribute>
+      get self => MarkdownBlockquoteSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownBlockquoteSpecAttribute] with the specified properties.
   @override
   T only({
     TextStyleDto? textStyle,
@@ -1343,7 +1458,7 @@ class MdBlockquoteSpecUtility<T extends Attribute>
     BoxDecorationDto? decoration,
     WrapAlignment? alignment,
   }) {
-    return builder(MdBlockquoteSpecAttribute(
+    return builder(MarkdownBlockquoteSpecAttribute(
       textStyle: textStyle,
       padding: padding,
       decoration: decoration,
@@ -1352,20 +1467,20 @@ class MdBlockquoteSpecUtility<T extends Attribute>
   }
 }
 
-/// A tween that interpolates between two [MdBlockquoteSpec] instances.
+/// A tween that interpolates between two [MarkdownBlockquoteSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdBlockquoteSpec] specifications.
-class MdBlockquoteSpecTween extends Tween<MdBlockquoteSpec?> {
-  MdBlockquoteSpecTween({
+/// different [MarkdownBlockquoteSpec] specifications.
+class MarkdownBlockquoteSpecTween extends Tween<MarkdownBlockquoteSpec?> {
+  MarkdownBlockquoteSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdBlockquoteSpec lerp(double t) {
+  MarkdownBlockquoteSpec lerp(double t) {
     if (begin == null && end == null) {
-      return const MdBlockquoteSpec();
+      return const MarkdownBlockquoteSpec();
     }
 
     if (begin == null) {
@@ -1376,39 +1491,39 @@ class MdBlockquoteSpecTween extends Tween<MdBlockquoteSpec?> {
   }
 }
 
-mixin _$MdCodeblockSpec on Spec<MdCodeblockSpec> {
-  static MdCodeblockSpec from(MixData mix) {
-    return mix.attributeOf<MdCodeblockSpecAttribute>()?.resolve(mix) ??
-        const MdCodeblockSpec();
+mixin _$MarkdownCodeblockSpec on Spec<MarkdownCodeblockSpec> {
+  static MarkdownCodeblockSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownCodeblockSpecAttribute>()?.resolve(mix) ??
+        const MarkdownCodeblockSpec();
   }
 
-  /// {@template md_codeblock_spec_of}
-  /// Retrieves the [MdCodeblockSpec] from the nearest [Mix] ancestor in the widget tree.
+  /// {@template markdown_codeblock_spec_of}
+  /// Retrieves the [MarkdownCodeblockSpec] from the nearest [Mix] ancestor in the widget tree.
   ///
   /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
-  /// given [BuildContext], and then retrieves the [MdCodeblockSpec] from that [Mix].
-  /// If no ancestor [Mix] is found, this method returns an empty [MdCodeblockSpec].
+  /// given [BuildContext], and then retrieves the [MarkdownCodeblockSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownCodeblockSpec].
   ///
   /// Example:
   ///
   /// ```dart
-  /// final mdCodeblockSpec = MdCodeblockSpec.of(context);
+  /// final markdownCodeblockSpec = MarkdownCodeblockSpec.of(context);
   /// ```
   /// {@endtemplate}
-  static MdCodeblockSpec of(BuildContext context) {
-    return _$MdCodeblockSpec.from(Mix.of(context));
+  static MarkdownCodeblockSpec of(BuildContext context) {
+    return _$MarkdownCodeblockSpec.from(Mix.of(context));
   }
 
-  /// Creates a copy of this [MdCodeblockSpec] but with the given fields
+  /// Creates a copy of this [MarkdownCodeblockSpec] but with the given fields
   /// replaced with the new values.
   @override
-  MdCodeblockSpec copyWith({
+  MarkdownCodeblockSpec copyWith({
     TextStyle? textStyle,
     EdgeInsets? padding,
     BoxDecoration? decoration,
     WrapAlignment? alignment,
   }) {
-    return MdCodeblockSpec(
+    return MarkdownCodeblockSpec(
       textStyle: textStyle ?? _$this.textStyle,
       padding: padding ?? _$this.padding,
       decoration: decoration ?? _$this.decoration,
@@ -1416,15 +1531,15 @@ mixin _$MdCodeblockSpec on Spec<MdCodeblockSpec> {
     );
   }
 
-  /// Linearly interpolates between this [MdCodeblockSpec] and another [MdCodeblockSpec] based on the given parameter [t].
+  /// Linearly interpolates between this [MarkdownCodeblockSpec] and another [MarkdownCodeblockSpec] based on the given parameter [t].
   ///
   /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
-  /// When [t] is 0.0, the current [MdCodeblockSpec] is returned. When [t] is 1.0, the [other] [MdCodeblockSpec] is returned.
-  /// For values of [t] between 0.0 and 1.0, an interpolated [MdCodeblockSpec] is returned.
+  /// When [t] is 0.0, the current [MarkdownCodeblockSpec] is returned. When [t] is 1.0, the [other] [MarkdownCodeblockSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownCodeblockSpec] is returned.
   ///
-  /// If [other] is null, this method returns the current [MdCodeblockSpec] instance.
+  /// If [other] is null, this method returns the current [MarkdownCodeblockSpec] instance.
   ///
-  /// The interpolation is performed on each property of the [MdCodeblockSpec] using the appropriate
+  /// The interpolation is performed on each property of the [MarkdownCodeblockSpec] using the appropriate
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpTextStyle] for [textStyle].
@@ -1432,16 +1547,16 @@ mixin _$MdCodeblockSpec on Spec<MdCodeblockSpec> {
   /// - [BoxDecoration.lerp] for [decoration].
 
   /// For [alignment], the interpolation is performed using a step function.
-  /// If [t] is less than 0.5, the value from the current [MdCodeblockSpec] is used. Otherwise, the value
-  /// from the [other] [MdCodeblockSpec] is used.
+  /// If [t] is less than 0.5, the value from the current [MarkdownCodeblockSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownCodeblockSpec] is used.
   ///
   /// This method is typically used in animations to smoothly transition between
-  /// different [MdCodeblockSpec] configurations.
+  /// different [MarkdownCodeblockSpec] configurations.
   @override
-  MdCodeblockSpec lerp(MdCodeblockSpec? other, double t) {
+  MarkdownCodeblockSpec lerp(MarkdownCodeblockSpec? other, double t) {
     if (other == null) return _$this;
 
-    return MdCodeblockSpec(
+    return MarkdownCodeblockSpec(
       textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
       padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
       decoration: BoxDecoration.lerp(_$this.decoration, other.decoration, t),
@@ -1449,10 +1564,10 @@ mixin _$MdCodeblockSpec on Spec<MdCodeblockSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdCodeblockSpec].
+  /// The list of properties that constitute the state of this [MarkdownCodeblockSpec].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdCodeblockSpec] instances for equality.
+  /// compare two [MarkdownCodeblockSpec] instances for equality.
   @override
   List<Object?> get props => [
         _$this.textStyle,
@@ -1461,40 +1576,41 @@ mixin _$MdCodeblockSpec on Spec<MdCodeblockSpec> {
         _$this.alignment,
       ];
 
-  MdCodeblockSpec get _$this => this as MdCodeblockSpec;
+  MarkdownCodeblockSpec get _$this => this as MarkdownCodeblockSpec;
 }
 
-/// Represents the attributes of a [MdCodeblockSpec].
+/// Represents the attributes of a [MarkdownCodeblockSpec].
 ///
 /// This class encapsulates properties defining the layout and
-/// appearance of a [MdCodeblockSpec].
+/// appearance of a [MarkdownCodeblockSpec].
 ///
-/// Use this class to configure the attributes of a [MdCodeblockSpec] and pass it to
-/// the [MdCodeblockSpec] constructor.
-final class MdCodeblockSpecAttribute extends SpecAttribute<MdCodeblockSpec> {
+/// Use this class to configure the attributes of a [MarkdownCodeblockSpec] and pass it to
+/// the [MarkdownCodeblockSpec] constructor.
+final class MarkdownCodeblockSpecAttribute
+    extends SpecAttribute<MarkdownCodeblockSpec> {
   final TextStyleDto? textStyle;
   final EdgeInsetsDto? padding;
   final BoxDecorationDto? decoration;
   final WrapAlignment? alignment;
 
-  const MdCodeblockSpecAttribute({
+  const MarkdownCodeblockSpecAttribute({
     this.textStyle,
     this.padding,
     this.decoration,
     this.alignment,
   });
 
-  /// Resolves to [MdCodeblockSpec] using the provided [MixData].
+  /// Resolves to [MarkdownCodeblockSpec] using the provided [MixData].
   ///
   /// If a property is null in the [MixData], it falls back to the
   /// default value defined in the `defaultValue` for that property.
   ///
   /// ```dart
-  /// final mdCodeblockSpec = MdCodeblockSpecAttribute(...).resolve(mix);
+  /// final markdownCodeblockSpec = MarkdownCodeblockSpecAttribute(...).resolve(mix);
   /// ```
   @override
-  MdCodeblockSpec resolve(MixData mix) {
-    return MdCodeblockSpec(
+  MarkdownCodeblockSpec resolve(MixData mix) {
+    return MarkdownCodeblockSpec(
       textStyle: textStyle?.resolve(mix),
       padding: padding?.resolve(mix),
       decoration: decoration?.resolve(mix),
@@ -1502,19 +1618,19 @@ final class MdCodeblockSpecAttribute extends SpecAttribute<MdCodeblockSpec> {
     );
   }
 
-  /// Merges the properties of this [MdCodeblockSpecAttribute] with the properties of [other].
+  /// Merges the properties of this [MarkdownCodeblockSpecAttribute] with the properties of [other].
   ///
   /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
-  /// [MdCodeblockSpecAttribute] with the properties of [other] taking precedence over
+  /// [MarkdownCodeblockSpecAttribute] with the properties of [other] taking precedence over
   /// the corresponding properties of this instance.
   ///
   /// Properties from [other] that are null will fall back
   /// to the values from this instance.
   @override
-  MdCodeblockSpecAttribute merge(MdCodeblockSpecAttribute? other) {
+  MarkdownCodeblockSpecAttribute merge(MarkdownCodeblockSpecAttribute? other) {
     if (other == null) return this;
 
-    return MdCodeblockSpecAttribute(
+    return MarkdownCodeblockSpecAttribute(
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       padding: padding?.merge(other.padding) ?? other.padding,
       decoration: decoration?.merge(other.decoration) ?? other.decoration,
@@ -1522,10 +1638,10 @@ final class MdCodeblockSpecAttribute extends SpecAttribute<MdCodeblockSpec> {
     );
   }
 
-  /// The list of properties that constitute the state of this [MdCodeblockSpecAttribute].
+  /// The list of properties that constitute the state of this [MarkdownCodeblockSpecAttribute].
   ///
   /// This property is used by the [==] operator and the [hashCode] getter to
-  /// compare two [MdCodeblockSpecAttribute] instances for equality.
+  /// compare two [MarkdownCodeblockSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
         textStyle,
@@ -1535,29 +1651,33 @@ final class MdCodeblockSpecAttribute extends SpecAttribute<MdCodeblockSpec> {
       ];
 }
 
-/// Utility class for configuring [MdCodeblockSpecAttribute] properties.
+/// Utility class for configuring [MarkdownCodeblockSpecAttribute] properties.
 ///
-/// This class provides methods to set individual properties of a [MdCodeblockSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MdCodeblockSpecAttribute].
-class MdCodeblockSpecUtility<T extends Attribute>
-    extends SpecUtility<T, MdCodeblockSpecAttribute> {
-  /// Utility for defining [MdCodeblockSpecAttribute.textStyle]
+/// This class provides methods to set individual properties of a [MarkdownCodeblockSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownCodeblockSpecAttribute].
+class MarkdownCodeblockSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownCodeblockSpecAttribute> {
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MdCodeblockSpecAttribute.padding]
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.padding]
   late final padding = EdgeInsetsUtility((v) => only(padding: v));
 
-  /// Utility for defining [MdCodeblockSpecAttribute.decoration]
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.decoration]
   late final decoration = BoxDecorationUtility((v) => only(decoration: v));
 
-  /// Utility for defining [MdCodeblockSpecAttribute.alignment]
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.alignment]
   late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
-  MdCodeblockSpecUtility(super.builder);
+  MarkdownCodeblockSpecUtility(super.builder, {super.mutable});
 
-  static final self = MdCodeblockSpecUtility((v) => v);
+  MarkdownCodeblockSpecUtility<T> get chain =>
+      MarkdownCodeblockSpecUtility(attributeBuilder, mutable: true);
 
-  /// Returns a new [MdCodeblockSpecAttribute] with the specified properties.
+  static MarkdownCodeblockSpecUtility<MarkdownCodeblockSpecAttribute>
+      get self => MarkdownCodeblockSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownCodeblockSpecAttribute] with the specified properties.
   @override
   T only({
     TextStyleDto? textStyle,
@@ -1565,7 +1685,7 @@ class MdCodeblockSpecUtility<T extends Attribute>
     BoxDecorationDto? decoration,
     WrapAlignment? alignment,
   }) {
-    return builder(MdCodeblockSpecAttribute(
+    return builder(MarkdownCodeblockSpecAttribute(
       textStyle: textStyle,
       padding: padding,
       decoration: decoration,
@@ -1574,20 +1694,219 @@ class MdCodeblockSpecUtility<T extends Attribute>
   }
 }
 
-/// A tween that interpolates between two [MdCodeblockSpec] instances.
+/// A tween that interpolates between two [MarkdownCodeblockSpec] instances.
 ///
 /// This class can be used in animations to smoothly transition between
-/// different [MdCodeblockSpec] specifications.
-class MdCodeblockSpecTween extends Tween<MdCodeblockSpec?> {
-  MdCodeblockSpecTween({
+/// different [MarkdownCodeblockSpec] specifications.
+class MarkdownCodeblockSpecTween extends Tween<MarkdownCodeblockSpec?> {
+  MarkdownCodeblockSpecTween({
     super.begin,
     super.end,
   });
 
   @override
-  MdCodeblockSpec lerp(double t) {
+  MarkdownCodeblockSpec lerp(double t) {
     if (begin == null && end == null) {
-      return const MdCodeblockSpec();
+      return const MarkdownCodeblockSpec();
+    }
+
+    if (begin == null) {
+      return end!;
+    }
+
+    return begin!.lerp(end!, t);
+  }
+}
+
+mixin _$MarkdownCheckboxSpec on Spec<MarkdownCheckboxSpec> {
+  static MarkdownCheckboxSpec from(MixData mix) {
+    return mix.attributeOf<MarkdownCheckboxSpecAttribute>()?.resolve(mix) ??
+        const MarkdownCheckboxSpec();
+  }
+
+  /// {@template markdown_checkbox_spec_of}
+  /// Retrieves the [MarkdownCheckboxSpec] from the nearest [Mix] ancestor in the widget tree.
+  ///
+  /// This method uses [Mix.of] to obtain the [Mix] instance associated with the
+  /// given [BuildContext], and then retrieves the [MarkdownCheckboxSpec] from that [Mix].
+  /// If no ancestor [Mix] is found, this method returns an empty [MarkdownCheckboxSpec].
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// final markdownCheckboxSpec = MarkdownCheckboxSpec.of(context);
+  /// ```
+  /// {@endtemplate}
+  static MarkdownCheckboxSpec of(BuildContext context) {
+    return _$MarkdownCheckboxSpec.from(Mix.of(context));
+  }
+
+  /// Creates a copy of this [MarkdownCheckboxSpec] but with the given fields
+  /// replaced with the new values.
+  @override
+  MarkdownCheckboxSpec copyWith({
+    TextStyle? textStyle,
+    IconSpec? icon,
+  }) {
+    return MarkdownCheckboxSpec(
+      textStyle: textStyle ?? _$this.textStyle,
+      icon: icon ?? _$this.icon,
+    );
+  }
+
+  /// Linearly interpolates between this [MarkdownCheckboxSpec] and another [MarkdownCheckboxSpec] based on the given parameter [t].
+  ///
+  /// The parameter [t] represents the interpolation factor, typically ranging from 0.0 to 1.0.
+  /// When [t] is 0.0, the current [MarkdownCheckboxSpec] is returned. When [t] is 1.0, the [other] [MarkdownCheckboxSpec] is returned.
+  /// For values of [t] between 0.0 and 1.0, an interpolated [MarkdownCheckboxSpec] is returned.
+  ///
+  /// If [other] is null, this method returns the current [MarkdownCheckboxSpec] instance.
+  ///
+  /// The interpolation is performed on each property of the [MarkdownCheckboxSpec] using the appropriate
+  /// interpolation method:
+  ///
+  /// - [MixHelpers.lerpTextStyle] for [textStyle].
+  /// - [IconSpec.lerp] for [icon].
+
+  /// For , the interpolation is performed using a step function.
+  /// If [t] is less than 0.5, the value from the current [MarkdownCheckboxSpec] is used. Otherwise, the value
+  /// from the [other] [MarkdownCheckboxSpec] is used.
+  ///
+  /// This method is typically used in animations to smoothly transition between
+  /// different [MarkdownCheckboxSpec] configurations.
+  @override
+  MarkdownCheckboxSpec lerp(MarkdownCheckboxSpec? other, double t) {
+    if (other == null) return _$this;
+
+    return MarkdownCheckboxSpec(
+      textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
+      icon: _$this.icon?.lerp(other.icon, t) ?? other.icon,
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MarkdownCheckboxSpec].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MarkdownCheckboxSpec] instances for equality.
+  @override
+  List<Object?> get props => [
+        _$this.textStyle,
+        _$this.icon,
+      ];
+
+  MarkdownCheckboxSpec get _$this => this as MarkdownCheckboxSpec;
+}
+
+/// Represents the attributes of a [MarkdownCheckboxSpec].
+///
+/// This class encapsulates properties defining the layout and
+/// appearance of a [MarkdownCheckboxSpec].
+///
+/// Use this class to configure the attributes of a [MarkdownCheckboxSpec] and pass it to
+/// the [MarkdownCheckboxSpec] constructor.
+class MarkdownCheckboxSpecAttribute
+    extends SpecAttribute<MarkdownCheckboxSpec> {
+  final TextStyleDto? textStyle;
+  final IconSpecAttribute? icon;
+
+  const MarkdownCheckboxSpecAttribute({
+    this.textStyle,
+    this.icon,
+  });
+
+  /// Resolves to [MarkdownCheckboxSpec] using the provided [MixData].
+  ///
+  /// If a property is null in the [MixData], it falls back to the
+  /// default value defined in the `defaultValue` for that property.
+  ///
+  /// ```dart
+  /// final markdownCheckboxSpec = MarkdownCheckboxSpecAttribute(...).resolve(mix);
+  /// ```
+  @override
+  MarkdownCheckboxSpec resolve(MixData mix) {
+    return MarkdownCheckboxSpec(
+      textStyle: textStyle?.resolve(mix),
+      icon: icon?.resolve(mix),
+    );
+  }
+
+  /// Merges the properties of this [MarkdownCheckboxSpecAttribute] with the properties of [other].
+  ///
+  /// If [other] is null, returns this instance unchanged. Otherwise, returns a new
+  /// [MarkdownCheckboxSpecAttribute] with the properties of [other] taking precedence over
+  /// the corresponding properties of this instance.
+  ///
+  /// Properties from [other] that are null will fall back
+  /// to the values from this instance.
+  @override
+  MarkdownCheckboxSpecAttribute merge(
+      covariant MarkdownCheckboxSpecAttribute? other) {
+    if (other == null) return this;
+
+    return MarkdownCheckboxSpecAttribute(
+      textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
+      icon: icon?.merge(other.icon) ?? other.icon,
+    );
+  }
+
+  /// The list of properties that constitute the state of this [MarkdownCheckboxSpecAttribute].
+  ///
+  /// This property is used by the [==] operator and the [hashCode] getter to
+  /// compare two [MarkdownCheckboxSpecAttribute] instances for equality.
+  @override
+  List<Object?> get props => [
+        textStyle,
+        icon,
+      ];
+}
+
+/// Utility class for configuring [MarkdownCheckboxSpecAttribute] properties.
+///
+/// This class provides methods to set individual properties of a [MarkdownCheckboxSpecAttribute].
+/// Use the methods of this class to configure specific properties of a [MarkdownCheckboxSpecAttribute].
+class MarkdownCheckboxSpecUtility<T extends Attribute>
+    extends SpecUtility<T, MarkdownCheckboxSpecAttribute> {
+  /// Utility for defining [MarkdownCheckboxSpecAttribute.textStyle]
+  late final textStyle = TextStyleUtility((v) => only(textStyle: v));
+
+  /// Utility for defining [MarkdownCheckboxSpecAttribute.icon]
+  late final icon = IconSpecUtility((v) => only(icon: v));
+
+  MarkdownCheckboxSpecUtility(super.builder, {super.mutable});
+
+  MarkdownCheckboxSpecUtility<T> get chain =>
+      MarkdownCheckboxSpecUtility(attributeBuilder, mutable: true);
+
+  static MarkdownCheckboxSpecUtility<MarkdownCheckboxSpecAttribute> get self =>
+      MarkdownCheckboxSpecUtility((v) => v);
+
+  /// Returns a new [MarkdownCheckboxSpecAttribute] with the specified properties.
+  @override
+  T only({
+    TextStyleDto? textStyle,
+    IconSpecAttribute? icon,
+  }) {
+    return builder(MarkdownCheckboxSpecAttribute(
+      textStyle: textStyle,
+      icon: icon,
+    ));
+  }
+}
+
+/// A tween that interpolates between two [MarkdownCheckboxSpec] instances.
+///
+/// This class can be used in animations to smoothly transition between
+/// different [MarkdownCheckboxSpec] specifications.
+class MarkdownCheckboxSpecTween extends Tween<MarkdownCheckboxSpec?> {
+  MarkdownCheckboxSpecTween({
+    super.begin,
+    super.end,
+  });
+
+  @override
+  MarkdownCheckboxSpec lerp(double t) {
+    if (begin == null && end == null) {
+      return const MarkdownCheckboxSpec();
     }
 
     if (begin == null) {
@@ -1625,20 +1944,20 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// replaced with the new values.
   @override
   SlideSpec copyWith({
-    MdHeadingSpec? h1,
-    MdHeadingSpec? h2,
-    MdHeadingSpec? h3,
-    MdHeadingSpec? h4,
-    MdHeadingSpec? h5,
-    MdHeadingSpec? h6,
-    MdParagraphSpec? paragraph,
+    TextSpec? h1,
+    TextSpec? h2,
+    TextSpec? h3,
+    TextSpec? h4,
+    TextSpec? h5,
+    TextSpec? h6,
+    TextSpec? p,
     TextStyle? link,
     double? blockSpacing,
-    MdBlockquoteSpec? blockquote,
-    MdListSpec? list,
-    MdTableSpec? table,
-    TextStyle? checkbox,
-    MdCodeblockSpec? code,
+    MarkdownBlockquoteSpec? blockquote,
+    MarkdownListSpec? list,
+    MarkdownTableSpec? table,
+    MarkdownCheckboxSpec? checkbox,
+    MarkdownCodeblockSpec? code,
     TextStyle? a,
     TextStyle? em,
     TextStyle? strong,
@@ -1647,10 +1966,10 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     TextStyle? img,
     BoxDecoration? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
-    BoxSpec? innerContainer,
-    BoxSpec? outerContainer,
+    BoxSpec? slideContainer,
     BoxSpec? contentContainer,
     ImageSpec? image,
+    MarkdownAlertSpec? alert,
     AnimatedData? animated,
   }) {
     return SlideSpec(
@@ -1660,7 +1979,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       h4: h4 ?? _$this.h4,
       h5: h5 ?? _$this.h5,
       h6: h6 ?? _$this.h6,
-      paragraph: paragraph ?? _$this.paragraph,
+      p: p ?? _$this.p,
       link: link ?? _$this.link,
       blockSpacing: blockSpacing ?? _$this.blockSpacing,
       blockquote: blockquote ?? _$this.blockquote,
@@ -1677,10 +1996,10 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       horizontalRuleDecoration:
           horizontalRuleDecoration ?? _$this.horizontalRuleDecoration,
       textScaleFactor: textScaleFactor ?? _$this.textScaleFactor,
-      innerContainer: innerContainer ?? _$this.innerContainer,
-      outerContainer: outerContainer ?? _$this.outerContainer,
+      slideContainer: slideContainer ?? _$this.slideContainer,
       contentContainer: contentContainer ?? _$this.contentContainer,
       image: image ?? _$this.image,
+      alert: alert ?? _$this.alert,
       animated: animated ?? _$this.animated,
     );
   }
@@ -1696,13 +2015,14 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// The interpolation is performed on each property of the [SlideSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpTextStyle] for [link] and [checkbox] and [a] and [em] and [strong] and [del] and [img].
+  /// - [TextSpec.lerp] for [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [p].
+  /// - [MixHelpers.lerpTextStyle] for [link] and [a] and [em] and [strong] and [del] and [img].
   /// - [MixHelpers.lerpDouble] for [blockSpacing].
   /// - [BoxDecoration.lerp] for [horizontalRuleDecoration].
-  /// - [BoxSpec.lerp] for [innerContainer] and [outerContainer] and [contentContainer].
+  /// - [BoxSpec.lerp] for [slideContainer] and [contentContainer].
   /// - [ImageSpec.lerp] for [image].
 
-  /// For [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [paragraph] and [blockquote] and [list] and [table] and [code] and [textAlign] and [textScaleFactor] and [animated], the interpolation is performed using a step function.
+  /// For [blockquote] and [list] and [table] and [checkbox] and [code] and [textAlign] and [textScaleFactor] and [alert] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [SlideSpec] is used. Otherwise, the value
   /// from the [other] [SlideSpec] is used.
   ///
@@ -1719,7 +2039,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       h4: _$this.h4?.lerp(other.h4, t) ?? other.h4,
       h5: _$this.h5?.lerp(other.h5, t) ?? other.h5,
       h6: _$this.h6?.lerp(other.h6, t) ?? other.h6,
-      paragraph: _$this.paragraph?.lerp(other.paragraph, t) ?? other.paragraph,
+      p: _$this.p?.lerp(other.p, t) ?? other.p,
       link: MixHelpers.lerpTextStyle(_$this.link, other.link, t),
       blockSpacing:
           MixHelpers.lerpDouble(_$this.blockSpacing, other.blockSpacing, t),
@@ -1727,7 +2047,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
           _$this.blockquote?.lerp(other.blockquote, t) ?? other.blockquote,
       list: _$this.list?.lerp(other.list, t) ?? other.list,
       table: _$this.table?.lerp(other.table, t) ?? other.table,
-      checkbox: MixHelpers.lerpTextStyle(_$this.checkbox, other.checkbox, t),
+      checkbox: _$this.checkbox?.lerp(other.checkbox, t) ?? other.checkbox,
       code: _$this.code?.lerp(other.code, t) ?? other.code,
       a: MixHelpers.lerpTextStyle(_$this.a, other.a, t),
       em: MixHelpers.lerpTextStyle(_$this.em, other.em, t),
@@ -1738,10 +2058,10 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       horizontalRuleDecoration: BoxDecoration.lerp(
           _$this.horizontalRuleDecoration, other.horizontalRuleDecoration, t),
       textScaleFactor: t < 0.5 ? _$this.textScaleFactor : other.textScaleFactor,
-      innerContainer: _$this.innerContainer.lerp(other.innerContainer, t),
-      outerContainer: _$this.outerContainer.lerp(other.outerContainer, t),
+      slideContainer: _$this.slideContainer.lerp(other.slideContainer, t),
       contentContainer: _$this.contentContainer.lerp(other.contentContainer, t),
       image: _$this.image.lerp(other.image, t),
+      alert: _$this.alert.lerp(other.alert, t),
       animated: t < 0.5 ? _$this.animated : other.animated,
     );
   }
@@ -1758,7 +2078,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.h4,
         _$this.h5,
         _$this.h6,
-        _$this.paragraph,
+        _$this.p,
         _$this.link,
         _$this.blockSpacing,
         _$this.blockquote,
@@ -1774,10 +2094,10 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.img,
         _$this.horizontalRuleDecoration,
         _$this.textScaleFactor,
-        _$this.innerContainer,
-        _$this.outerContainer,
+        _$this.slideContainer,
         _$this.contentContainer,
         _$this.image,
+        _$this.alert,
         _$this.animated,
       ];
 
@@ -1792,20 +2112,20 @@ mixin _$SlideSpec on Spec<SlideSpec> {
 /// Use this class to configure the attributes of a [SlideSpec] and pass it to
 /// the [SlideSpec] constructor.
 final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
-  final MdHeadingSpecAttribute? h1;
-  final MdHeadingSpecAttribute? h2;
-  final MdHeadingSpecAttribute? h3;
-  final MdHeadingSpecAttribute? h4;
-  final MdHeadingSpecAttribute? h5;
-  final MdHeadingSpecAttribute? h6;
-  final MdParagraphSpecAttribute? paragraph;
+  final TextSpecAttribute? h1;
+  final TextSpecAttribute? h2;
+  final TextSpecAttribute? h3;
+  final TextSpecAttribute? h4;
+  final TextSpecAttribute? h5;
+  final TextSpecAttribute? h6;
+  final TextSpecAttribute? p;
   final TextStyleDto? link;
   final double? blockSpacing;
-  final MdBlockquoteSpecAttribute? blockquote;
-  final MdListSpecAttribute? list;
-  final MdTableSpecAttribute? table;
-  final TextStyleDto? checkbox;
-  final MdCodeblockSpecAttribute? code;
+  final MarkdownBlockquoteSpecAttribute? blockquote;
+  final MarkdownListSpecAttribute? list;
+  final MarkdownTableSpecAttribute? table;
+  final MarkdownCheckboxSpecAttribute? checkbox;
+  final MarkdownCodeblockSpecAttribute? code;
   final TextStyleDto? a;
   final TextStyleDto? em;
   final TextStyleDto? strong;
@@ -1814,10 +2134,10 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   final TextStyleDto? img;
   final BoxDecorationDto? horizontalRuleDecoration;
   final TextScaler? textScaleFactor;
-  final BoxSpecAttribute? innerContainer;
-  final BoxSpecAttribute? outerContainer;
+  final BoxSpecAttribute? slideContainer;
   final BoxSpecAttribute? contentContainer;
   final ImageSpecAttribute? image;
+  final MarkdownAlertSpecAttribute? alert;
 
   const SlideSpecAttribute({
     this.h1,
@@ -1826,7 +2146,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.h4,
     this.h5,
     this.h6,
-    this.paragraph,
+    this.p,
     this.link,
     this.blockSpacing,
     this.blockquote,
@@ -1842,10 +2162,10 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.img,
     this.horizontalRuleDecoration,
     this.textScaleFactor,
-    this.innerContainer,
-    this.outerContainer,
+    this.slideContainer,
     this.contentContainer,
     this.image,
+    this.alert,
     super.animated,
   });
 
@@ -1866,7 +2186,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       h4: h4?.resolve(mix),
       h5: h5?.resolve(mix),
       h6: h6?.resolve(mix),
-      paragraph: paragraph?.resolve(mix),
+      p: p?.resolve(mix),
       link: link?.resolve(mix),
       blockSpacing: blockSpacing,
       blockquote: blockquote?.resolve(mix),
@@ -1882,10 +2202,10 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       img: img?.resolve(mix),
       horizontalRuleDecoration: horizontalRuleDecoration?.resolve(mix),
       textScaleFactor: textScaleFactor,
-      innerContainer: innerContainer?.resolve(mix),
-      outerContainer: outerContainer?.resolve(mix),
+      slideContainer: slideContainer?.resolve(mix),
       contentContainer: contentContainer?.resolve(mix),
       image: image?.resolve(mix),
+      alert: alert?.resolve(mix),
       animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
@@ -1909,7 +2229,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       h4: h4?.merge(other.h4) ?? other.h4,
       h5: h5?.merge(other.h5) ?? other.h5,
       h6: h6?.merge(other.h6) ?? other.h6,
-      paragraph: paragraph?.merge(other.paragraph) ?? other.paragraph,
+      p: p?.merge(other.p) ?? other.p,
       link: link?.merge(other.link) ?? other.link,
       blockSpacing: other.blockSpacing ?? blockSpacing,
       blockquote: blockquote?.merge(other.blockquote) ?? other.blockquote,
@@ -1927,13 +2247,12 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
           horizontalRuleDecoration?.merge(other.horizontalRuleDecoration) ??
               other.horizontalRuleDecoration,
       textScaleFactor: other.textScaleFactor ?? textScaleFactor,
-      innerContainer:
-          innerContainer?.merge(other.innerContainer) ?? other.innerContainer,
-      outerContainer:
-          outerContainer?.merge(other.outerContainer) ?? other.outerContainer,
+      slideContainer:
+          slideContainer?.merge(other.slideContainer) ?? other.slideContainer,
       contentContainer: contentContainer?.merge(other.contentContainer) ??
           other.contentContainer,
       image: image?.merge(other.image) ?? other.image,
+      alert: alert?.merge(other.alert) ?? other.alert,
       animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
@@ -1950,7 +2269,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         h4,
         h5,
         h6,
-        paragraph,
+        p,
         link,
         blockSpacing,
         blockquote,
@@ -1966,10 +2285,10 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         img,
         horizontalRuleDecoration,
         textScaleFactor,
-        innerContainer,
-        outerContainer,
+        slideContainer,
         contentContainer,
         image,
+        alert,
         animated,
       ];
 }
@@ -1981,25 +2300,25 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
 class SlideSpecUtility<T extends Attribute>
     extends SpecUtility<T, SlideSpecAttribute> {
   /// Utility for defining [SlideSpecAttribute.h1]
-  late final h1 = MdHeadingSpecUtility((v) => only(h1: v));
+  late final h1 = TextSpecUtility((v) => only(h1: v));
 
   /// Utility for defining [SlideSpecAttribute.h2]
-  late final h2 = MdHeadingSpecUtility((v) => only(h2: v));
+  late final h2 = TextSpecUtility((v) => only(h2: v));
 
   /// Utility for defining [SlideSpecAttribute.h3]
-  late final h3 = MdHeadingSpecUtility((v) => only(h3: v));
+  late final h3 = TextSpecUtility((v) => only(h3: v));
 
   /// Utility for defining [SlideSpecAttribute.h4]
-  late final h4 = MdHeadingSpecUtility((v) => only(h4: v));
+  late final h4 = TextSpecUtility((v) => only(h4: v));
 
   /// Utility for defining [SlideSpecAttribute.h5]
-  late final h5 = MdHeadingSpecUtility((v) => only(h5: v));
+  late final h5 = TextSpecUtility((v) => only(h5: v));
 
   /// Utility for defining [SlideSpecAttribute.h6]
-  late final h6 = MdHeadingSpecUtility((v) => only(h6: v));
+  late final h6 = TextSpecUtility((v) => only(h6: v));
 
-  /// Utility for defining [SlideSpecAttribute.paragraph]
-  late final paragraph = MdParagraphSpecUtility((v) => only(paragraph: v));
+  /// Utility for defining [SlideSpecAttribute.p]
+  late final p = TextSpecUtility((v) => only(p: v));
 
   /// Utility for defining [SlideSpecAttribute.link]
   late final link = TextStyleUtility((v) => only(link: v));
@@ -2008,19 +2327,20 @@ class SlideSpecUtility<T extends Attribute>
   late final blockSpacing = DoubleUtility((v) => only(blockSpacing: v));
 
   /// Utility for defining [SlideSpecAttribute.blockquote]
-  late final blockquote = MdBlockquoteSpecUtility((v) => only(blockquote: v));
+  late final blockquote =
+      MarkdownBlockquoteSpecUtility((v) => only(blockquote: v));
 
   /// Utility for defining [SlideSpecAttribute.list]
-  late final list = MdListSpecUtility((v) => only(list: v));
+  late final list = MarkdownListSpecUtility((v) => only(list: v));
 
   /// Utility for defining [SlideSpecAttribute.table]
-  late final table = MdTableSpecUtility((v) => only(table: v));
+  late final table = MarkdownTableSpecUtility((v) => only(table: v));
 
   /// Utility for defining [SlideSpecAttribute.checkbox]
-  late final checkbox = TextStyleUtility((v) => only(checkbox: v));
+  late final checkbox = MarkdownCheckboxSpecUtility((v) => only(checkbox: v));
 
   /// Utility for defining [SlideSpecAttribute.code]
-  late final code = MdCodeblockSpecUtility((v) => only(code: v));
+  late final code = MarkdownCodeblockSpecUtility((v) => only(code: v));
 
   /// Utility for defining [SlideSpecAttribute.a]
   late final a = TextStyleUtility((v) => only(a: v));
@@ -2048,11 +2368,8 @@ class SlideSpecUtility<T extends Attribute>
   late final textScaleFactor =
       TextScalerUtility((v) => only(textScaleFactor: v));
 
-  /// Utility for defining [SlideSpecAttribute.innerContainer]
-  late final innerContainer = BoxSpecUtility((v) => only(innerContainer: v));
-
-  /// Utility for defining [SlideSpecAttribute.outerContainer]
-  late final outerContainer = BoxSpecUtility((v) => only(outerContainer: v));
+  /// Utility for defining [SlideSpecAttribute.slideContainer]
+  late final slideContainer = BoxSpecUtility((v) => only(slideContainer: v));
 
   /// Utility for defining [SlideSpecAttribute.contentContainer]
   late final contentContainer =
@@ -2061,30 +2378,37 @@ class SlideSpecUtility<T extends Attribute>
   /// Utility for defining [SlideSpecAttribute.image]
   late final image = ImageSpecUtility((v) => only(image: v));
 
+  /// Utility for defining [SlideSpecAttribute.alert]
+  late final alert = MarkdownAlertSpecUtility((v) => only(alert: v));
+
   /// Utility for defining [SlideSpecAttribute.animated]
   late final animated = AnimatedUtility((v) => only(animated: v));
 
-  SlideSpecUtility(super.builder);
+  SlideSpecUtility(super.builder, {super.mutable});
 
-  static final self = SlideSpecUtility((v) => v);
+  SlideSpecUtility<T> get chain =>
+      SlideSpecUtility(attributeBuilder, mutable: true);
+
+  static SlideSpecUtility<SlideSpecAttribute> get self =>
+      SlideSpecUtility((v) => v);
 
   /// Returns a new [SlideSpecAttribute] with the specified properties.
   @override
   T only({
-    MdHeadingSpecAttribute? h1,
-    MdHeadingSpecAttribute? h2,
-    MdHeadingSpecAttribute? h3,
-    MdHeadingSpecAttribute? h4,
-    MdHeadingSpecAttribute? h5,
-    MdHeadingSpecAttribute? h6,
-    MdParagraphSpecAttribute? paragraph,
+    TextSpecAttribute? h1,
+    TextSpecAttribute? h2,
+    TextSpecAttribute? h3,
+    TextSpecAttribute? h4,
+    TextSpecAttribute? h5,
+    TextSpecAttribute? h6,
+    TextSpecAttribute? p,
     TextStyleDto? link,
     double? blockSpacing,
-    MdBlockquoteSpecAttribute? blockquote,
-    MdListSpecAttribute? list,
-    MdTableSpecAttribute? table,
-    TextStyleDto? checkbox,
-    MdCodeblockSpecAttribute? code,
+    MarkdownBlockquoteSpecAttribute? blockquote,
+    MarkdownListSpecAttribute? list,
+    MarkdownTableSpecAttribute? table,
+    MarkdownCheckboxSpecAttribute? checkbox,
+    MarkdownCodeblockSpecAttribute? code,
     TextStyleDto? a,
     TextStyleDto? em,
     TextStyleDto? strong,
@@ -2093,10 +2417,10 @@ class SlideSpecUtility<T extends Attribute>
     TextStyleDto? img,
     BoxDecorationDto? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
-    BoxSpecAttribute? innerContainer,
-    BoxSpecAttribute? outerContainer,
+    BoxSpecAttribute? slideContainer,
     BoxSpecAttribute? contentContainer,
     ImageSpecAttribute? image,
+    MarkdownAlertSpecAttribute? alert,
     AnimatedDataDto? animated,
   }) {
     return builder(SlideSpecAttribute(
@@ -2106,7 +2430,7 @@ class SlideSpecUtility<T extends Attribute>
       h4: h4,
       h5: h5,
       h6: h6,
-      paragraph: paragraph,
+      p: p,
       link: link,
       blockSpacing: blockSpacing,
       blockquote: blockquote,
@@ -2122,10 +2446,10 @@ class SlideSpecUtility<T extends Attribute>
       img: img,
       horizontalRuleDecoration: horizontalRuleDecoration,
       textScaleFactor: textScaleFactor,
-      innerContainer: innerContainer,
-      outerContainer: outerContainer,
+      slideContainer: slideContainer,
       contentContainer: contentContainer,
       image: image,
+      alert: alert,
       animated: animated,
     ));
   }

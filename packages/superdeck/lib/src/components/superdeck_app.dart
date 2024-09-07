@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../../superdeck.dart';
@@ -11,20 +10,24 @@ import '../modules/common/helpers/routes.dart';
 import '../modules/common/helpers/syntax_highlighter.dart';
 import '../modules/common/helpers/theme.dart';
 import '../modules/deck_reference/deck_reference_provider.dart';
+import '../modules/navigation/navigation_controller.dart';
+import '../modules/navigation/navigation_provider.dart';
+import 'atoms/conditional_widget.dart';
+import 'atoms/loading_indicator.dart';
 
 var _initialized = false;
 
 class SuperDeckApp extends StatelessWidget {
   const SuperDeckApp({
     super.key,
-    this.baseStyle = const Style.empty(),
-    this.styles = const <String, Style>{},
+    this.baseStyle,
+    this.styles = const <String, DeckStyle>{},
     this.examples = const <String, ExampleBuilder>{},
   });
 
-  final Style baseStyle;
+  final DeckStyle? baseStyle;
   final Map<String, ExampleBuilder> examples;
-  final Map<String, Style> styles;
+  final Map<String, DeckStyle> styles;
 
   static Future<void> initialize() async {
     // Return if its initialized
@@ -35,6 +38,7 @@ class SuperDeckApp extends StatelessWidget {
     WidgetsFlutterBinding.ensureInitialized();
 
     await Future.wait([
+      NavigationController.initialize(),
       SyntaxHighlight.initialize(),
       _initializeWindowManager(),
     ]);
@@ -42,21 +46,16 @@ class SuperDeckApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: SuperDeckApp.initialize(),
-      builder: (context, snapshot) {
-        return DecKReferenceProvider(
-          styles: styles,
-          baseStyle: baseStyle,
-          examples: examples,
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: 'Superdeck',
-            routerConfig: goRouterConfig,
-            theme: theme,
-          ),
-        );
-      },
+    return SuperDeckProvider(
+      baseStyle: baseStyle,
+      examples: examples,
+      styles: styles,
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'Superdeck',
+        routerConfig: goRouterConfig,
+        theme: theme,
+      ),
     );
   }
 }
@@ -81,4 +80,86 @@ Future<void> _initializeWindowManager() async {
   });
 
   await windowManager.setAspectRatio(kAspectRatio);
+}
+
+class SuperDeckProvider extends StatefulWidget {
+  const SuperDeckProvider({
+    super.key,
+    required this.child,
+    this.baseStyle,
+    this.styles = const <String, DeckStyle>{},
+    this.examples = const <String, ExampleBuilder>{},
+  });
+
+  final Widget child;
+  final DeckStyle? baseStyle;
+  final Map<String, ExampleBuilder> examples;
+  final Map<String, DeckStyle> styles;
+
+  @override
+  State<SuperDeckProvider> createState() => _SuperDeckProviderState();
+}
+
+class _SuperDeckProviderState extends State<SuperDeckProvider> {
+  late final DeckReferenceController _controller;
+  late final NavigationController _navigation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = DeckReferenceController(
+      baseStyle: widget.baseStyle ?? DeckStyle(),
+      examples: widget.examples,
+      styles: widget.styles,
+    );
+    _navigation = NavigationController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+    _navigation.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant SuperDeckProvider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.baseStyle != oldWidget.baseStyle ||
+        widget.examples != oldWidget.examples ||
+        widget.styles != oldWidget.styles) {
+      _controller.update(
+        baseStyle: widget.baseStyle,
+        examples: widget.examples,
+        styles: widget.styles,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationProvider(
+      controller: _navigation,
+      child: DeckReferenceProvider(
+        controller: _controller,
+        child: ListenableBuilder(
+            listenable: Listenable.merge([_controller, _navigation]),
+            builder: (context, _) {
+              return Stack(
+                children: [
+                  ConditionalWidget(
+                    condition: _controller.hasData,
+                    fallback: const SizedBox(),
+                    child: widget.child,
+                  ),
+                  LoadingOverlay(
+                    isLoading:
+                        _controller.isLoading || _controller.isRefreshing,
+                  ),
+                ],
+              );
+            }),
+      ),
+    );
+  }
 }

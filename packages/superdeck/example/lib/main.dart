@@ -5,6 +5,7 @@ import 'src/style.dart';
 import 'src/widget/mix_demo.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SuperDeckApp.initialize();
   runApp(
     Builder(builder: (context) {
@@ -13,11 +14,10 @@ void main() async {
         debugShowCheckedModeBanner: false,
         home: SuperDeckApp(
           styles: {
-            'custom': customStyle,
-            'cover': coverStyle,
-            'announcement': announcementStyle,
-            'quote': quoteStyle,
-            'show_sections': showSectionsStyle,
+            'cover': CoverStyle(),
+            'announcement': AnnouncementStyle(),
+            'quote': QuoteStyle(),
+            'show_sections': ShowSectionsStyle(),
           },
           // ignore: prefer_const_literals_to_create_immutables
           examples: {'demo': mixExampleBuilder},

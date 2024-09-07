@@ -88,6 +88,7 @@ sealed class SubSectionBlockDto<T extends ContentOptions> extends BlockDto
       'column': ColumnBlockDto.schema,
       'widget': WidgetBlockDto.schema,
       'image': ImageBlockDto.schema,
+      'gist': GistBlockDto.schema,
     },
   );
 }
@@ -134,26 +135,11 @@ class WidgetBlockDto extends SubSectionBlockDto<WidgetOptions>
   );
 }
 
-@MappableClass()
-class GistOptions extends ContentOptions with GistOptionsMappable {
-  final String id;
-
-  GistOptions({
-    required this.id,
-  });
-
-  static final schema = ContentOptions.schema.extend(
-    {
-      'id': Schema.string.required(),
-    },
-  );
-}
-
 @MappableClass(discriminatorValue: 'gist')
-class GistBlockDto extends SubSectionBlockDto<GistOptions>
+class GistBlockDto extends SubSectionBlockDto<DartPadOptions>
     with GistBlockDtoMappable {
   @override
-  final GistOptions options;
+  final DartPadOptions options;
   GistBlockDto({
     required this.options,
     super.content,
@@ -165,7 +151,7 @@ class GistBlockDto extends SubSectionBlockDto<GistOptions>
   }
 
   static final schema = SubSectionBlockDto.baseSchema.extend(
-    {'options': GistOptions.schema.required()},
+    {'options': DartPadOptions.schema.required()},
   );
 }
 

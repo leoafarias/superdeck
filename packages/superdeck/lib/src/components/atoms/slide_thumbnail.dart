@@ -43,13 +43,34 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  bool _shouldRegenerate = false;
   late final thumbnailRequest = FutureNotifier(() async {
     return _thumbnailGeneration(
       widget.slide,
-      shouldRegenerate: _shouldRegenerate,
     );
   });
+
+  Future<File> _thumbnailGeneration(
+    Slide slide,
+  ) async {
+    final thumbnailFile = slide.thumbnailFile;
+
+    if (!kCanRunProcess) {
+      return thumbnailFile;
+    }
+
+    if (await thumbnailFile.exists()) {
+      return thumbnailFile;
+    }
+
+    try {
+      final imageData = await WidgetCaptureService.instance.generate(
+        quality: WidgetCaptureQuality.low,
+        slide: slide,
+      );
+
+      return await thumbnailFile.writeAsBytes(imageData, flush: true);
+    } finally {}
+  }
 
   @override
   void initState() {
@@ -63,7 +84,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   void didUpdateWidget(covariant SlideThumbnail oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.slide != widget.slide) {
-      thumbnailRequest.refresh();
+      thumbnailRequest.reload();
     }
   }
 
@@ -76,9 +97,6 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
   void _handleAction(_PopMenuAction action) {
     switch (action) {
       case _PopMenuAction.refreshThumbnail:
-        setState(() {
-          _shouldRegenerate = true;
-        });
         thumbnailRequest.refresh();
         break;
     }
@@ -181,28 +199,6 @@ class _PreviewContainer extends StatelessWidget {
       style: style,
       child: AspectRatio(aspectRatio: kAspectRatio, child: child),
     );
-  }
-}
-
-Future<File> _thumbnailGeneration(
-  Slide slide, {
-  required bool shouldRegenerate,
-}) async {
-  final thumbnailFile = slide.thumbnailFile;
-
-  if ((!kCanRunProcess || await thumbnailFile.exists()) && !shouldRegenerate) {
-    return thumbnailFile;
-  }
-
-  try {
-    final imageData = await WidgetCaptureService.instance.generate(
-      quality: WidgetCaptureQuality.low,
-      slide: slide,
-    );
-
-    return await thumbnailFile.writeAsBytes(imageData, flush: true);
-  } finally {
-    shouldRegenerate = false;
   }
 }
 

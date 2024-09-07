@@ -9,18 +9,34 @@ import 'package:flutter/services.dart';
 
 import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
-import '../../components/molecules/split_view.dart';
 import '../common/helpers/constants.dart';
+import '../common/helpers/extensions.dart';
 import '../deck_reference/deck_reference_provider.dart';
-import 'snapshot_provider.dart';
+import '../navigation/navigation_provider.dart';
+import 'widget_capture_provider.dart';
 
 enum WidgetCaptureQuality {
-  low('Low', pixelRatio: 0.4),
-  good('Good', pixelRatio: 1),
-  better('Better', pixelRatio: 2),
-  best('Best', pixelRatio: 3);
+  low(
+    'Low',
+    pixelRatio: 0.4,
+  ),
+  good(
+    'Good',
+    pixelRatio: 1,
+  ),
+  better(
+    'Better',
+    pixelRatio: 2,
+  ),
+  best(
+    'Best',
+    pixelRatio: 3,
+  );
 
-  const WidgetCaptureQuality(this.label, {required this.pixelRatio});
+  const WidgetCaptureQuality(
+    this.label, {
+    required this.pixelRatio,
+  });
 
   final String label;
   final double pixelRatio;
@@ -29,7 +45,7 @@ enum WidgetCaptureQuality {
 class WidgetCaptureService {
   WidgetCaptureService._();
 
-  static final WidgetCaptureService instance = WidgetCaptureService._();
+  static final instance = WidgetCaptureService._();
 
   static final _generationQueue = <String>{};
   static const _maxConcurrentGenerations = 3;
@@ -93,16 +109,21 @@ class WidgetCaptureService {
     Size? targetSize,
   }) async {
     try {
+      final controller = context.watch<DeckReferenceProvider>().controller;
+      final navigation = context.watch<NavigationProvider>().controller;
       final child = InheritedTheme.captureAll(
         context,
-        DecKReferenceProvider.inherit(
-          context: context,
-          child: MediaQuery(
-            data: MediaQuery.of(context),
-            child: MaterialApp(
-              theme: Theme.of(context),
-              debugShowCheckedModeBanner: false,
-              home: Scaffold(body: widget),
+        NavigationProvider(
+          controller: navigation,
+          child: DeckReferenceProvider(
+            controller: controller,
+            child: MediaQuery(
+              data: MediaQuery.of(context),
+              child: MaterialApp(
+                theme: Theme.of(context),
+                debugShowCheckedModeBanner: false,
+                home: Scaffold(body: widget),
+              ),
             ),
           ),
         ),
@@ -174,6 +195,8 @@ class WidgetCaptureService {
 
         await Future.delayed(const Duration(milliseconds: 250));
 
+        await waitForImageProviders(rootElement);
+
         if (!isDirty) {
           log('Image generation completed.');
           break;
@@ -194,4 +217,56 @@ class WidgetCaptureService {
       rethrow;
     }
   }
+}
+
+Future<void> waitForImageProviders(BuildContext context) async {
+  final List<Future<void>> futures = [];
+
+  void visit(Element element) {
+    if (element.widget is Image) {
+      final image = element.widget as Image;
+      final provider = image.image;
+
+      final stream = provider.resolve(ImageConfiguration.empty);
+      final completer = stream.completer;
+      if (completer != null) {
+        futures.add(_waitForImageCompleter(completer));
+      }
+    }
+    if (element.widget is Container) {
+      final container = element.widget as Container;
+      if (container.decoration is BoxDecoration) {
+        final boxDecoration = container.decoration as BoxDecoration;
+        if (boxDecoration.image != null) {
+          final provider = boxDecoration.image!.image;
+          final stream = provider.resolve(ImageConfiguration.empty);
+          final completer = stream.completer;
+
+          if (completer != null) {
+            futures.add(_waitForImageCompleter(completer));
+          }
+        }
+      }
+    }
+    element.visitChildren(visit);
+  }
+
+  context.visitChildElements(visit);
+
+  await Future.wait(futures);
+}
+
+Future<void> _waitForImageCompleter(ImageStreamCompleter completer) {
+  final Completer<void> imageCompleter = Completer<void>();
+
+  void listener(ImageInfo image, bool synchronousCall) {
+    // completer.removeListener(imageListener);
+    imageCompleter.complete();
+  }
+
+  final imageListener = ImageStreamListener(listener);
+
+  completer.addListener(imageListener);
+
+  return imageCompleter.future;
 }

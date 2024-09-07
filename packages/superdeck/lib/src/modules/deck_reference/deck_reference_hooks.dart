@@ -2,13 +2,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../common/helpers/extensions.dart';
 import 'deck_reference_controller.dart';
 import 'deck_reference_provider.dart';
 
 DeckReferenceController _useController() {
   final context = useContext();
 
-  return useListenable(context.deck);
+  return useListenable(context.watch<DeckReferenceProvider>().controller);
 }
 
 T _useSelectController<T>(T Function(DeckReferenceController) selector) {

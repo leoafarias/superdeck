@@ -7,27 +7,37 @@
   },
   "slides": [
     {
-      "key": "1bdq2Zlk",
+      "key": "Z2FhwJiY",
       "options": {
-        "style": "here"
+        "background": "https://picsum.photos/1400/1200?wavfeffsff",
+        "style": "cover"
       },
-      "markdown": "{@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }\n\n![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n<!-- Notes go here -->",
+      "markdown": "### DartPad In Your Slides\n\n\n\nYou can embed DartPad code snippets in your slides.",
       "sections": [
         {
           "sub_sections": [
             {
-              "options": {
-                "id": "5c0e154dd50af4a9ac856908061291bc"
-              },
-              "content": "",
-              "type": "gist"
-            },
+              "content": "### DartPad In Your Slides\n\n\n\nYou can embed DartPad code snippets in your slides.",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "key": "6ZwVliZw",
+      "options": {},
+      "markdown": "![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)\n\n<!-- Notes go here -->",
+      "sections": [
+        {
+          "sub_sections": [
             {
-              "content": "\n![Mermaid Diagram](.superdeck/generated/mermaid_6EQHvrjD.png)\n",
+              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)\n",
               "type": "column"
             },
             {
-              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_BTVEzSEg.png)\n\n<!-- Notes go here -->",
+              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)\n\n<!-- Notes go here -->",
               "options": null,
               "type": "column"
             }
@@ -36,7 +46,7 @@
       ],
       "notes": [
         {
-          "offset": 429,
+          "offset": 366,
           "note": "Notes go here"
         }
       ]
@@ -120,18 +130,18 @@
       "notes": []
     },
     {
-      "key": "huRpyhFQ",
+      "key": "kiRnLrLJ",
       "options": {
         "style": "show_sections"
       },
-      "markdown": "{@section}\n{@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}\n\n{@section flex: 2}\n{@column flex: 2}\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n\n{@column}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
+      "markdown": "{@section}\n{@image src: https://picsum.photos/200/1200?wafvfes align: top_left fit: cover}\n\n{@section flex: 2}\n{@column flex: 2}\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n\n{@column}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
       "sections": [
         {
           "options": null,
           "sub_sections": [
             {
               "options": {
-                "src": "https://picsum.photos/1200/1200?waves",
+                "src": "https://picsum.photos/200/1200?wafvfes",
                 "fit": "cover",
                 "align": "top_left",
                 "type": "image"
@@ -209,14 +219,30 @@
   ],
   "assets": [
     {
-      "path": ".superdeck/generated/mermaid_6EQHvrjD.png",
+      "path": ".superdeck/generated/thumbnail_Z2FhwJiY.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/image_caching_KArctawC.jpeg",
+      "width": 1400,
+      "height": 1200,
+      "reference": "https://picsum.photos/1400/1200?wavfeffsff"
+    },
+    {
+      "path": ".superdeck/generated/mermaid_drzCSSND.png",
       "width": 313,
       "height": 449
     },
     {
-      "path": ".superdeck/generated/mermaid_BTVEzSEg.png",
+      "path": ".superdeck/generated/mermaid_5rpc8RsX.png",
       "width": 650,
       "height": 171
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_6ZwVliZw.png",
+      "width": 512,
+      "height": 288
     },
     {
       "path": ".superdeck/generated/thumbnail_jrySbty2.png",
@@ -225,11 +251,6 @@
     },
     {
       "path": ".superdeck/generated/thumbnail_u0rRynPM.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_huRpyhFQ.png",
       "width": 512,
       "height": 288
     },

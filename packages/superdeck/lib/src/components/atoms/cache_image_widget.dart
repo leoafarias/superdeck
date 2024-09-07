@@ -7,6 +7,7 @@ import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/helpers/constants.dart';
+import '../../modules/common/helpers/extensions.dart';
 import '../../modules/deck_reference/deck_reference_provider.dart';
 
 class CacheImage extends StatelessWidget {
@@ -29,9 +30,48 @@ class CacheImage extends StatelessWidget {
 
     return AnimatedImageSpecWidget(
       image: imageProvider,
+      errorBuilder: (context, error, stackTrace) {
+        // display a red background with an error message
+        return Container(
+          color: Colors.red,
+          child: Center(
+            child: Text('Error loading image: $uri'),
+          ),
+        );
+      },
       spec: spec.copyWith(
         fit: fit,
         alignment: alignment,
+      ),
+    );
+  }
+}
+
+class CacheDecorationImage extends StatelessWidget {
+  final Uri uri;
+  final BoxFit? fit;
+  final ImageSpec spec;
+  final Alignment? alignment;
+
+  const CacheDecorationImage({
+    required this.uri,
+    this.fit = BoxFit.cover,
+    this.alignment = Alignment.center,
+    this.spec = const ImageSpec(),
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final imageProvider = getImageProvider(context, uri);
+
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: imageProvider,
+          fit: fit ?? BoxFit.cover,
+          alignment: alignment ?? Alignment.center,
+        ),
       ),
     );
   }
@@ -72,7 +112,8 @@ ImageProvider getImageProvider(
   Uri uri, {
   Size? targetSize,
 }) {
-  final asset = context.deck.getImageAsset(uri);
+  final asset =
+      context.watch<DeckReferenceProvider>().controller.getImageAsset(uri);
 
   if (asset == null) {
     return _getProvider(uri.toString());

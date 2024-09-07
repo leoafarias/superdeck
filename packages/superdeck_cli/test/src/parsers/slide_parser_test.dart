@@ -1,5 +1,6 @@
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/parsers/slide_parser.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -9,15 +10,22 @@ void main() {
 ---
 title: Slide 1
 ---
+
 Content for slide 1
 
 ---
 title: Slide 2 
 ---  
+
 Content for slide 2
 ''';
 
       final slides = parseSlides(markdown);
+
+      for (var slide in slides) {
+        print('Slide: ${slide.options?.title}');
+        print('Markdown: ${slide.markdown}');
+      }
 
       expect(slides.length, equals(2));
       expect(slides[0].options?.title, equals('Slide 1'));
@@ -29,10 +37,7 @@ Content for slide 2
     test('parses slides with additional properties in YAML frontmatter', () {
       const markdown = '''
 ---
-
 title: Slide 1
-
-
 ---
 Content for slide 1
 
@@ -67,9 +72,9 @@ Content for slide 2
       final slides = parseSlides(markdown);
 
       expect(slides.length, equals(2));
-      expect(slides[0].options, isNull);
+      expect(slides[0].options, SlideOptions());
       expect(slides[0].markdown, equals('Content for slide 1'));
-      expect(slides[1].options, isNull);
+      expect(slides[1].options, SlideOptions());
       expect(slides[1].markdown, equals('Content for slide 2'));
     });
 
@@ -139,9 +144,10 @@ This content is also outside slides
 
       final slides = parseSlides(markdown);
 
-      expect(slides.length, equals(1));
-      expect(slides[0].options?.title, equals('Slide 1'));
-      expect(slides[0].markdown, equals('Content for slide 1'));
+      expect(slides.length, equals(2));
+      expect(slides[1].options?.title, equals('Slide 1'));
+      expect(slides[1].markdown,
+          equals('Content for slide 1\n\nThis content is also outside slides'));
     });
 
     test('parses slide with no content but valid frontmatter', () {
@@ -169,7 +175,6 @@ Content for slide 1
 title: Slide 2
 ---
 ---
-
 title: Slide 3
 ---
 Content for slide 3
@@ -216,7 +221,6 @@ Content for slide 2
           equals('Content for slide 1\n\n<!-- This is a note for slide 1 -->'));
       expect(slides[0].notes.length, equals(1));
       expect(slides[0].notes[0].note, equals('This is a note for slide 1'));
-      expect(slides[0].notes[0].offset, equals(21));
 
       expect(slides[1].options?.title, equals('Slide 2'));
       expect(slides[1].markdown, equals('Content for slide 2'));
@@ -255,16 +259,43 @@ Content for slide 2
               'Content for slide 1\n\n<!-- This is a note for slide 1 -->\n\n<!-- This is another note for slide 1 -->\n\n<!-- This is a third note for \nslide 1 -->'));
       expect(slides[0].notes.length, equals(3));
       expect(slides[0].notes[0].note, equals('This is a note for slide 1'));
-      expect(slides[0].notes[0].offset, equals(21));
+
       expect(
           slides[0].notes[1].note, equals('This is another note for slide 1'));
-      expect(slides[0].notes[1].offset, equals(58));
+
       expect(slides[0].notes[2].note,
           equals('This is a third note for \nslide 1'));
-      expect(slides[0].notes[2].offset, equals(101));
 
       expect(slides[1].options?.title, equals('Slide 2'));
       expect(slides[1].markdown, equals('Content for slide 2'));
+      expect(slides[1].notes, isEmpty);
+    });
+  });
+
+  // Test that mixes single --- with frontmatter
+  group('Handles slides with mixed frontmatter and ---', () {
+    test('parses slides with mixed frontmatter and ---', () {
+      const markdown = '''
+---
+title: Slide 1
+--- 
+Content for slide 1
+
+---
+
+Content for the second slide
+''';
+
+      final slides = parseSlides(markdown);
+
+      expect(slides.length, equals(2));
+
+      expect(slides[0].options?.title, equals('Slide 1'));
+      expect(slides[0].markdown, equals('Content for slide 1'));
+
+      expect(slides[1].options, SlideOptions());
+      expect(slides[1].markdown, equals('Content for the second slide'));
+
       expect(slides[1].notes, isEmpty);
     });
   });

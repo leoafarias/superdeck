@@ -44,7 +44,10 @@ Future<String> _generateMermaidGraph(
     </html>
   ''');
 
-  await page.waitForSelector('pre.mermaid > svg');
+  await page.waitForSelector('pre.mermaid > svg',
+      timeout: Duration(
+        seconds: 5,
+      ));
   final element = await page.$('pre.mermaid > svg');
   final svgContent = await element.evaluate('el => el.outerHTML');
 
@@ -107,10 +110,16 @@ Future<List<int>> _convertSvgToImage(Browser browser, String svgContent) async {
 
 Future<List<int>> generateRoughMermaidGraph(
     Browser browser, String graphDefinition) async {
-  final svgContent = await _generateMermaidGraph(browser, graphDefinition);
-  // final roughDraft = await _convertToRoughDraft(browser, svgContent);
+  try {
+    final svgContent = await _generateMermaidGraph(browser, graphDefinition);
+    // final roughDraft = await _convertToRoughDraft(browser, svgContent);
 
-  return _convertSvgToImage(browser, svgContent);
+    return _convertSvgToImage(browser, svgContent);
+  } on Exception catch (e) {
+    throw Exception(
+      'Mermaid generation timedout, maybe this is not a supported graph',
+    );
+  }
 }
 
 class MermaidConverterTask extends Task {

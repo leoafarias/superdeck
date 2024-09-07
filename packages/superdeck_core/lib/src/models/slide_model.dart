@@ -41,11 +41,9 @@ class Slide with SlideMappable {
 
 @MappableClass()
 class SlideNote with SlideNoteMappable {
-  final int offset;
   final String note;
 
   SlideNote({
-    required this.offset,
     required this.note,
   });
 
@@ -58,7 +56,6 @@ class SlideNote with SlideNoteMappable {
 
   static final schema = SchemaShape(
     {
-      "offset": Schema.integer.required(),
       "note": Schema.string.required(),
     },
     additionalProperties: false,

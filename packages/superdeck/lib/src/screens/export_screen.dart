@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../modules/common/helpers/extensions.dart';
-import '../modules/common/helpers/routes.dart';
 import '../modules/deck_reference/deck_reference_hooks.dart';
+import '../modules/navigation/navigation_hooks.dart';
 import '../modules/pdf_export/pdf_export_controller.dart';
 import '../modules/widget_capture/widget_capture_service.dart';
 
@@ -14,12 +14,11 @@ class ExportScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final slides = useDeckSlides();
-    final currentSlideIndex = useValueNotifier(
-        context.currentSlideIndex, [context.currentSlideIndex]);
+    final currentSlideIndex = useCurrentSlideIndex();
 
     final export = usePdfExportController(
       slides: slides,
-      slideIndex: currentSlideIndex.value,
+      slideIndex: currentSlideIndex,
     );
 
     final inProgress = export.inProgress;
@@ -33,46 +32,44 @@ class ExportScreen extends HookWidget {
             child: Container(
           color: const Color.fromARGB(255, 14, 14, 14).withOpacity(0.9),
         )),
-        inProgress ? _ProgressDialog(export) : ExportDialog(export),
+        inProgress ? PdfExportBar(export) : ExportDialog(export),
       ],
     );
   }
 }
 
-class _ProgressDialog extends StatelessWidget {
-  const _ProgressDialog(this.controller);
+class PdfExportBar extends StatelessWidget {
+  const PdfExportBar(this.controller, {super.key});
 
   final PdfExportController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 32.0,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            controller.isComplete
-                ? Icon(
-                    Icons.check_circle,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 16.0,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          controller.isComplete
+              ? Icon(
+                  Icons.check_circle,
+                  color: context.colorScheme.primary,
+                  size: 32,
+                )
+              : SizedBox(
+                  height: 32,
+                  width: 32,
+                  child: CircularProgressIndicator(
                     color: context.colorScheme.primary,
-                    size: 42,
-                  )
-                : SizedBox(
-                    height: 42,
-                    width: 42,
-                    child: CircularProgressIndicator(
-                      color: context.colorScheme.primary,
-                      value: controller.isBuilding ? null : controller.progress,
-                    ),
+                    value: controller.isBuilding ? null : controller.progress,
                   ),
-            const SizedBox(height: 16.0),
-            Text(controller.progressText),
-          ],
-        ),
+                ),
+          const SizedBox(width: 16.0),
+          Text(controller.progressText),
+        ],
       ),
     );
   }

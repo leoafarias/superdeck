@@ -15,12 +15,10 @@ class ContentOptions with ContentOptionsMappable {
     return copyWith.$merge(other);
   }
 
-  static final schema = SchemaShape(
-    {
-      "align": ContentAlignment.schema.optional(),
-      "flex": Schema.integer.optional(),
-    },
-  );
+  static final schema = SchemaShape({
+    "align": ContentAlignment.schema.optional(),
+    "flex": Schema.integer.optional(),
+  });
 
   bool get isEmpty => flex == null && align == null;
 }
@@ -37,12 +35,10 @@ class ImageOptions extends ContentOptions with ImageOptionsMappable {
     super.align,
   });
 
-  static final schema = ContentOptions.schema.extend(
-    {
-      "fit": ImageFit.schema,
-      "src": Schema.string.required(),
-    },
-  );
+  static final schema = ContentOptions.schema.extend({
+    "fit": ImageFit.schema,
+    "src": Schema.string.required(),
+  });
 }
 
 @MappableClass(
@@ -61,11 +57,38 @@ class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
   });
 
   static final schema = ContentOptions.schema.extend(
-    {
-      "name": Schema.string.required(),
-    },
+    {"name": Schema.string.required()},
     additionalProperties: true,
   );
+}
+
+@MappableEnum()
+enum DartPadTheme {
+  dark,
+  light;
+
+  static final schema = Schema.string.isEnum(values);
+}
+
+@MappableClass()
+class DartPadOptions extends ContentOptions with DartPadOptionsMappable {
+  final String id;
+  final DartPadTheme? theme;
+  final bool embed;
+
+  DartPadOptions({
+    required this.id,
+    this.theme,
+    super.flex,
+    super.align,
+    this.embed = true,
+  });
+
+  static final schema = ContentOptions.schema.extend({
+    'id': Schema.string.required(),
+    'theme': DartPadTheme.schema.optional(),
+    'embed': Schema.boolean.optional(),
+  });
 }
 
 @MappableClass(
@@ -94,14 +117,12 @@ class TransitionOptions with TransitionOptionsMappable {
     return copyWith.$merge(other);
   }
 
-  static final schema = SchemaShape(
-    {
-      "type": TransitionType.schema.required(),
-      "duration": Schema.integer.optional(),
-      "delay": Schema.integer.optional(),
-      "curve": CurveType.schema.optional(),
-    },
-  );
+  static final schema = SchemaShape({
+    "type": TransitionType.schema.required(),
+    "duration": Schema.integer.optional(),
+    "delay": Schema.integer.optional(),
+    "curve": CurveType.schema.optional(),
+  });
 }
 
 typedef Decoder<T> = T Function(Map<String, dynamic>);
@@ -121,13 +142,6 @@ enum ImageFit {
   scaleDown;
 
   static final schema = Schema.string.isEnum(values);
-}
-
-class LayoutType {
-  const LayoutType._();
-  static const simple = 'simple';
-
-  static const invalid = 'invalid';
 }
 
 @MappableEnum()

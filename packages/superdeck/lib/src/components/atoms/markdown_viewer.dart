@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -6,13 +5,14 @@ import 'package:mix/mix.dart';
 
 import '../../modules/common/helpers/syntax_highlighter.dart';
 import '../../modules/common/styles/style_spec.dart';
+import '../markdown/alert_block_syntax.dart';
 import 'cache_image_widget.dart';
 
-class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
+class MarkdownViewer extends ImplicitlyAnimatedWidget {
   final String content;
   final SlideSpec spec;
 
-  const AnimatedMarkdownViewer({
+  const MarkdownViewer({
     super.key,
     required this.content,
     required this.spec,
@@ -22,11 +22,10 @@ class AnimatedMarkdownViewer extends ImplicitlyAnimatedWidget {
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
-      _AnimatedMarkdownViewerState();
+      _MarkdownViewerState();
 }
 
-class _AnimatedMarkdownViewerState
-    extends AnimatedWidgetBaseState<AnimatedMarkdownViewer> {
+class _MarkdownViewerState extends AnimatedWidgetBaseState<MarkdownViewer> {
   SlideSpecTween? _styleTween;
 
   @override
@@ -43,29 +42,140 @@ class _AnimatedMarkdownViewerState
     final spec = _styleTween!.evaluate(animation) ?? const SlideSpec();
     return MarkdownBody(
       data: widget.content,
-      extensionSet: md.ExtensionSet(
-        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-        <md.InlineSyntax>[
-          md.EmojiSyntax(),
-          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-        ],
-      ),
-      builders: {
-        'code': CodeElementBuilder(spec.code),
-        'img': ImageElementBuilder(spec.image),
-      },
-      bulletBuilder: (parameters) {
-        if (parameters.style == BulletStyle.orderedList) {
-          final index = parameters.index + 1;
-          return Text(
-            '$index .',
-            style: spec.list?.bulletStyle,
-          );
-        } else {
-          return Text('•', style: spec.list?.bulletStyle);
-        }
-      },
+      extensionSet: md.ExtensionSet.gitHubFlavored,
+      builders: _markdownBuilders(spec),
+      paddingBuilders: _markdownPaddingBuilders(spec),
+      checkboxBuilder: _markdownCheckboxBuilder(spec),
+      bulletBuilder: _markdownBulletBuilder(spec),
+      blockSyntaxes: const [AlertBlockSyntax()],
       styleSheet: _styleTween!.evaluate(animation)?.toStyle(),
+    );
+  }
+}
+
+Map<String, MarkdownElementBuilder> _markdownBuilders(SlideSpec spec) {
+  return {
+    'h1': HeadingTextBuilder(spec.h1),
+    'h2': HeadingTextBuilder(spec.h2),
+    'h3': HeadingTextBuilder(spec.h3),
+    'h4': HeadingTextBuilder(spec.h4),
+    'h5': HeadingTextBuilder(spec.h5),
+    'h6': HeadingTextBuilder(spec.h6),
+    'alert': AlertElementBuilder(spec.alert),
+    // 'p': TextBuilder(spec.p),
+    'code': CodeElementBuilder(spec.code),
+    'img': ImageElementBuilder(spec.image),
+    'li': TextBuilder(spec.p),
+  };
+}
+
+Map<String, MarkdownPaddingBuilder> _markdownPaddingBuilders(SlideSpec spec) {
+  return {
+    'h1': ZeroPaddingBuilder(),
+    'h2': ZeroPaddingBuilder(),
+    'h3': ZeroPaddingBuilder(),
+    'h4': ZeroPaddingBuilder(),
+    'h5': ZeroPaddingBuilder(),
+    'h6': ZeroPaddingBuilder(),
+    'li': ZeroPaddingBuilder(),
+    // 'p': ZeroPaddingBuilder(),
+  };
+}
+
+Widget Function(bool) _markdownCheckboxBuilder(SlideSpec spec) {
+  return (bool checked) {
+    final icon = checked ? Icons.check_box : Icons.check_box_outline_blank;
+    return IconSpecWidget(icon, spec: spec.checkbox?.icon);
+  };
+}
+
+Widget Function(MarkdownBulletParameters params) _markdownBulletBuilder(
+  SlideSpec spec,
+) {
+  return (parameters) {
+    final contents = switch (parameters.style) {
+      BulletStyle.unorderedList => '•',
+      BulletStyle.orderedList => '${parameters.index + 1}.',
+    };
+
+    return Text(contents, style: spec.list?.bulletStyle);
+  };
+}
+
+class ZeroPaddingBuilder extends MarkdownPaddingBuilder {
+  @override
+  EdgeInsets getPadding() {
+    return EdgeInsets.zero;
+  }
+}
+
+class HeadingTextBuilder extends MarkdownElementBuilder {
+  final TextSpec? spec;
+  HeadingTextBuilder(this.spec);
+  @override
+  Widget? visitText(md.Text text, TextStyle? preferredStyle) {
+    return TextSpecWidget(
+      text.text,
+      spec: spec,
+    );
+  }
+}
+
+class TextBuilder extends MarkdownElementBuilder {
+  final TextSpec? spec;
+  TextBuilder(this.spec);
+  @override
+  Widget? visitText(md.Text text, TextStyle? preferredStyle) {
+    return TextSpecWidget(
+      text.text,
+      spec: spec,
+    );
+  }
+}
+
+class CodeElementBuilder extends MarkdownElementBuilder {
+  final MarkdownCodeblockSpec? spec;
+  CodeElementBuilder(this.spec);
+  @override
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    var language = 'dart';
+
+    if (element.attributes['class'] != null) {
+      String lg = element.attributes['class'] as String;
+      language = lg.substring(9);
+    }
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: spec?.padding,
+            decoration: spec?.decoration,
+            child: RichText(
+              text: TextSpan(
+                style: spec?.textStyle,
+                children: SyntaxHighlight.render(
+                  element.textContent.trim(),
+                  language,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ImageElementBuilder extends MarkdownElementBuilder {
+  final ImageSpec? spec;
+  ImageElementBuilder(this.spec);
+  @override
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    final uri = Uri.parse(element.attributes['src']!);
+
+    return CacheImage(
+      uri: uri,
+      spec: spec ?? const ImageSpec(),
     );
   }
 }
@@ -119,123 +229,4 @@ List<TextSpan> updateTextColor(
   }
 
   return updatedSpans;
-}
-
-class TextBuilder extends MarkdownElementBuilder {
-  final MdTextSpec? spec;
-  TextBuilder(this.spec);
-  @override
-  Widget visitText(md.Text text, TextStyle? preferredStyle) {
-    return Padding(
-      padding: spec?.padding ?? EdgeInsets.zero,
-      child: Text(
-        text.text,
-        style: spec?.textStyle,
-      ),
-    );
-  }
-}
-
-class HeadingTextBuilder extends MarkdownElementBuilder {
-  final MdHeadingSpec? spec;
-  HeadingTextBuilder(this.spec);
-  @override
-  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final level = int.parse(element.tag.substring(1));
-    final style = spec?.textStyle;
-
-    return Padding(
-      padding: spec?.padding ?? EdgeInsets.zero,
-      child: AutoSizeText(
-        element.textContent,
-        style: style?.copyWith(
-          fontSize: style.fontSize! + (6 - level) * 4,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class CodeElementBuilder extends MarkdownElementBuilder {
-  final MdCodeblockSpec? spec;
-  CodeElementBuilder(this.spec);
-  @override
-  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    var language = 'dart';
-
-    if (element.attributes['class'] != null) {
-      String lg = element.attributes['class'] as String;
-      language = lg.substring(9);
-    }
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: spec?.padding,
-            decoration: spec?.decoration,
-            child: RichText(
-              text: TextSpan(
-                style: spec?.textStyle,
-                children: SyntaxHighlight.render(
-                  element.textContent.trim(),
-                  language,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ImageElementBuilder extends MarkdownElementBuilder {
-  final ImageSpec? spec;
-  ImageElementBuilder(this.spec);
-  @override
-  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final uri = Uri.parse(element.attributes['src']!);
-
-    return CacheImage(
-      uri: uri,
-      spec: spec ?? const ImageSpec(),
-    );
-  }
-}
-
-class SampleCodeElementBuilder extends MarkdownElementBuilder {
-  final MdCodeblockSpec? spec;
-  SampleCodeElementBuilder(this.spec);
-  @override
-  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    var language = 'dart';
-
-    if (element.attributes['class'] != null) {
-      String lg = element.attributes['class'] as String;
-      language = lg.substring(9);
-    }
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: RichText(
-              text: TextSpan(
-                style: spec?.textStyle,
-                children: SyntaxHighlight.render(
-                  element.textContent.trim(),
-                  language,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

@@ -12,16 +12,13 @@ class ImageCachingTask extends Task {
 
     var content = slide.markdown;
     final slideData = slide.toMap();
+
     // Do not cache remot edata if cacheRemoteAssets is false
 
     // Get any url of images that are in the markdown
     // Save it the local path on the device
     // and replace the url with the local path
     final imageRegex = RegExp(r'!\[.*?\]\((.*?)\)');
-    final urlRegex = RegExp(
-      r'((http|https|ftp):\/\/)?(www\.)?([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+)(\/[^\s]*)?',
-      caseSensitive: false,
-    );
 
     final matches = imageRegex.allMatches(content);
 
@@ -29,8 +26,17 @@ class ImageCachingTask extends Task {
       if (isAssetFile(File(url))) return;
 
       try {
-        final checkFileType = await http.head(Uri.parse(url));
+        final refName = buildReferenceName(url);
+        final asset = controller.checkAssetExists(refName);
+
+        if (asset != null) {
+          controller.markNeeded(asset);
+          return;
+        }
+
+        final checkFileType = await http.get(Uri.parse(url));
         final contentType = checkFileType.headers['content-type'];
+
         if (contentType == null) {
           return;
         }
@@ -42,6 +48,7 @@ class ImageCachingTask extends Task {
         final commonRenderableFormats = ['jpeg', 'png', 'gif', 'webp'];
         final extension = contentType.split('/').last;
         if (!commonRenderableFormats.contains(extension)) {
+          print('Not a renderable format: $url');
           return;
         }
         final response = await http.get(Uri.parse(url));
@@ -54,14 +61,12 @@ class ImageCachingTask extends Task {
 
           // Create a file with the appropriate extension
           final file = buildAssetFile(
-            buildReferenceName(url),
+            refName,
             extension ?? 'jpg',
           );
 
           // Write the image data to the file
           await file.writeAsBytes(response.bodyBytes);
-
-          print('Image saved to: $url');
 
           await controller.markFileAsNeeded(file, url);
         } else {}
@@ -77,19 +82,12 @@ class ImageCachingTask extends Task {
       await saveAsset(assetUri);
     }
 
-    if (slideData['background'] != null) {
-      // Check if it matches
-      if (urlRegex.hasMatch(slideData['background'])) {
-        await saveAsset(slideData['background']);
-      }
-    }
+    final slideOptions = slideData['options'];
+    final backgroundOption =
+        slideOptions != null ? slideOptions['background'] : null;
 
-    if (slideData['options'] != null) {
-      if (slideData['options']['background'] != null) {
-        if (urlRegex.hasMatch(slideData['options']['background'])) {
-          await saveAsset(slideData['options']['background']);
-        }
-      }
+    if (backgroundOption != null) {
+      await saveAsset(backgroundOption);
     }
 
     return controller;

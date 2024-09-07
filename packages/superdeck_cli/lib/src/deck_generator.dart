@@ -4,7 +4,6 @@ import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/logger.dart';
 import 'package:superdeck_cli/src/tasks/build_sections_task.dart';
 import 'package:superdeck_cli/src/tasks/dart_formatter_task.dart';
-import 'package:superdeck_cli/src/tasks/image_cache_task.dart';
 import 'package:superdeck_cli/src/tasks/mermaid_task.dart';
 import 'package:superdeck_cli/src/tasks/slide_thumbnail_task.dart';
 import 'package:superdeck_core/superdeck_core.dart';
@@ -48,7 +47,7 @@ class SlidesLoader {
       const MermaidConverterTask(),
       const DartFormatterTask(),
       const SlideThumbnailTask(),
-      const ImageCachingTask(),
+      // const ImageCachingTask(),
       const BuildSectionsTask(),
     ]);
     try {

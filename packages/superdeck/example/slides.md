@@ -1,9 +1,112 @@
-
----
-style: here
 ---
 
-{@gist id: 5c0e154dd50af4a9ac856908061291bc flex: 5 }
+### Alert blocks
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!TIP]
+> Optional information to help a user be more successful.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
+> [!CAUTION]
+> Negative potential consequences of an action.
+
+{@column}
+
+```markdown
+
+# Heading
+
+## another
+
+
+- List item 1
+- List item 2
+  - Sublist item 1
+  - Sublist item 2
+
+[Link to Google](https://www.google.com)
+
+
+~~Strikethrough~~
+
+`code`
+
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!TIP]
+> Optional information to help a user be more successful.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
+> [!CAUTION]
+> Negative potential consequences of an action.
+
+```
+
+
+---
+style: cover
+background: https://picsum.photos/1400/1200?wavfeffsfffffccf
+---
+
+{@section}
+{@column align: top_left flex: 2}
+
+### Lists
+
+{@section flex: 4 }
+{@column align: top_left}
+#### Unordered List
+
+- first
+- second
+   - first
+      - first
+      - second
+
+{@column}
+
+#### Ordered List
+
+___
+
+1. first
+2. second
+   1. first
+      1. first
+      2. second
+
+{@column}
+
+- George Washington
+* John Adams
++ Thomas Jefferson
+
+
+### Task List
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media
+
+
+---
+
+### Lists
+
 
 ```mermaid
 
@@ -15,8 +118,6 @@ graph TD
     E --> B
     D --> F[Save Image and Car]
     F --> B  
-    
-
 
 ```
 
@@ -24,7 +125,7 @@ graph TD
 
 ```mermaid
 sequenceDiagram
-    participant Customer as 🧑 Customer
+  participant Customer as 🧑 Customer
     participant Barista as ☕ Barista
     participant CoffeeMachine as 🏭 Coffee Machine
 ```
@@ -32,8 +133,58 @@ sequenceDiagram
 <!-- Notes go here -->
 
 ---
+
+```mermaid
+journey
+    title My working day
+    section Go to work
+      Make tea: 5: Me
+      Go upstairs: 3: Me
+      Do work: 1: Me, Cat
+    section Go home
+      Go downstairs: 5: Me
+      Sit down: 3: Me
+```
+
+````mermaid
+    xychart-beta
+    title "Sales Revenue"
+    x-axis [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
+    y-axis "Revenue (in $)" 4000 --> 11000
+    bar [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+    line [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+```
+
+{@column}
+
+```mermaid
+%%{init: {"pie": {"textPosition": 0.5}, "themeVariables": {"pieOuterStrokeWidth": "5px"}} }%%
+pie showData
+    title Key elements in Product X
+    "Calcium" : 42.96
+    "Potassium" : 50.05
+    "Magnesium" : 10.01
+    "Iron" :  5
+```
+
+---
+
+
+```mermaid
+stateDiagram
+    [*] --> Still
+    Still --> [*]
+
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]
+
+```
+---
 style: custom
 ---
+
 
 {@section}
 {@column}
@@ -82,7 +233,7 @@ style: show_sections
 ---
 
 {@section}
-{@image src: https://picsum.photos/1200/1200?waves align: top_left fit: cover}
+{@image src: https://picsum.photos/200/1200?wafvfes align: top_left fit: cover}
 
 {@section flex: 2}
 {@column flex: 2}

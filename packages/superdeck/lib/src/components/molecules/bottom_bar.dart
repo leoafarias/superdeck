@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../modules/common/helpers/routes.dart';
+import '../../modules/navigation/navigation_hooks.dart';
 
-class SDBottomBar extends StatelessWidget {
+class SDBottomBar extends HookWidget {
   const SDBottomBar({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final actions = useNavigationActions();
+
     return SizedBox(
       height: 60,
       width: MediaQuery.sizeOf(context).width,
@@ -31,15 +34,15 @@ class SDBottomBar extends StatelessWidget {
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.previousSlide(),
+                onPressed: actions.previousSlide,
               ),
               IconButton(
                 icon: const Icon(Icons.arrow_forward),
-                onPressed: () => context.nextSlide(),
+                onPressed: actions.nextSlide,
               ),
               const Spacer(),
               IconButton(
-                onPressed: () => context.closePresenterMenu(),
+                onPressed: actions.closePresenterMenu,
                 icon: const Icon(Icons.close),
               ),
             ],

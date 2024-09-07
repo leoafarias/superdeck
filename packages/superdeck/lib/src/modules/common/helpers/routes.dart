@@ -5,7 +5,6 @@ import 'package:go_router_paths/go_router_paths.dart';
 import '../../../../../superdeck.dart';
 import '../../../screens/export_screen.dart';
 import '../../../screens/presentation_screen.dart';
-import '../../deck_reference/deck_reference_provider.dart';
 
 class SDPaths {
   static Path get root => Path('/');
@@ -107,68 +106,4 @@ final goRouterConfig = GoRouter(
 
 MaterialPage _getPage(Widget child, GoRouterState state) {
   return MaterialPage(key: state.pageKey, child: child, maintainState: false);
-}
-
-extension BuildContextRoutesX on BuildContext {
-  int get currentSlidePage => int.parse(_slidePage ?? '1');
-  int get currentSlideIndex => currentSlidePage - 1;
-
-  DeckReferenceController get _deck => DecKReferenceProvider.read(this);
-
-  void goToSlide(int page) {
-    if (_deck.slides.length < page || page < 1) {
-      return;
-    }
-
-    go(_replaceQueryParam('slide', '$page'));
-  }
-
-  String get currentPath {
-    return GoRouterState.of(this).uri.toString();
-  }
-
-  void nextSlide() => goToSlide(currentSlidePage + 1);
-
-  void previousSlide() => goToSlide(currentSlidePage - 1);
-
-  String _replaceQueryParam(String key, String value) {
-    final uri = GoRouterState.of(this).uri;
-    final queryParameters = Map<String, String>.from(uri.queryParameters);
-    queryParameters[key] = value;
-    return uri.replace(queryParameters: queryParameters).toString();
-  }
-
-  bool get isPresenterMenuOpen => _presenterMenuParam == '1';
-
-  void openPresenterMenu() =>
-      go(_replaceQueryParam(QueryParams.presenterMenu, '1'));
-
-  void closePresenterMenu() =>
-      go(_replaceQueryParam(QueryParams.presenterMenu, '0'));
-
-  void togglePresenterMenu() {
-    if (isPresenterMenuOpen) {
-      closePresenterMenu();
-    } else {
-      openPresenterMenu();
-    }
-  }
-
-  Map<String, String> get _queryParams {
-    return GoRouterState.of(this).uri.queryParameters;
-  }
-
-  // listen to the drawer query parameter
-
-  String? get _presenterMenuParam => _queryParams[QueryParams.presenterMenu];
-
-  String? get _slidePage => _queryParams[QueryParams.slide];
-
-  void goPath(Path path) {
-    go(path.path);
-  }
-
-  void pushPath(Path path) {
-    push(path.path);
-  }
 }

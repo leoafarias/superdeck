@@ -12,11 +12,16 @@ typedef MarkdownExtraction = ({
 // Extracts the YAML frontmatter from a markdown string
 MarkdownExtraction extractYamlFrontmatter(String markdown) {
   final key = shortHashId(markdown);
-  final regex = RegExp(r'^---\n([\s\S]*?)\n---', multiLine: true);
+  final regex = RegExp(
+    r'^---.*\r?\n([\s\S]*?)---',
+    multiLine: true,
+  );
   final match = regex.firstMatch(markdown);
   if (match == null) {
+    // get everything after the second `---`
+    final contents = markdown.split('---').last;
     return (
-      contents: markdown.trim(),
+      contents: contents.trim(),
       frontMatter: {},
       key: key,
     );

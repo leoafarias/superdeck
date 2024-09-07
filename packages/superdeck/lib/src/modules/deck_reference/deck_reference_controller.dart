@@ -4,7 +4,7 @@ import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../common/helpers/async_value.dart';
-import '../common/styles/style_util.dart';
+import '../common/styles/style.dart';
 import 'deck_reference_service.dart';
 
 /// A controller for managing deck references and associated data.
@@ -27,30 +27,51 @@ import 'deck_reference_service.dart';
 /// final headerStyle = deckRef.getStyle('h1');
 /// ```
 
+bool _isDebug = true;
+
 class DeckReferenceController extends ChangeNotifier {
   final _referenceService = DeckReferenceService();
-  final Map<String, Style> styles;
-  final Map<String, ExampleBuilder> examples;
-  final Style baseStyle;
-
-  /// This style is the default merged with the base style.
-  late final Style _style;
+  Map<String, DeckStyle> _styles = {};
+  Map<String, ExampleBuilder> _examples = {};
+  DeckStyle _baseStyle = DeckStyle();
 
   AsyncValue<ReferenceDto> _asyncData = const AsyncValue.loading();
 
   /// Creates a [DeckReferenceController] with the given styles and examples.
   ///
-  /// The [styles] map contains named [Style] instances that can be retrieved
-  /// with [getStyle]. The [baseStyle] is merged with the default style.
-  /// The [examples] map contains named widget builders for example slides.
+  /// The [_styles] map contains named [Style] instances that can be retrieved
+  /// with [getStyle]. The [_baseStyle] is merged with the default style.
+  /// The [_examples] map contains named widget builders for example slides.
   DeckReferenceController({
-    required this.styles,
-    required this.baseStyle,
-    required this.examples,
+    required Map<String, DeckStyle> styles,
+    required DeckStyle baseStyle,
+    required Map<String, ExampleBuilder> examples,
   }) {
-    _style = defaultStyle.merge(baseStyle);
+    _styles = styles;
+    _baseStyle = baseStyle;
+    _examples = examples;
     _loadReferences();
     _referenceService.listen(_loadReferences);
+  }
+
+  void update({
+    DeckStyle? baseStyle,
+    Map<String, DeckStyle>? styles,
+    Map<String, ExampleBuilder>? examples,
+  }) {
+    if (baseStyle != null) {
+      _baseStyle = baseStyle;
+    }
+
+    if (styles != null) {
+      _styles = styles;
+    }
+
+    if (examples != null) {
+      _examples = examples;
+    }
+
+    notifyListeners();
   }
 
   /// Whether reference data is currently being loaded.
@@ -68,21 +89,24 @@ class DeckReferenceController extends ChangeNotifier {
   /// The list of slides in the loaded reference data.
   List<Slide> get slides => _asyncData.requireData.slides;
 
+  ReferenceDto get requireData => _asyncData.requireData;
+
   /// The list of assets in the loaded reference data.
   List<SlideAsset> get assets => _asyncData.requireData.assets;
 
   /// Retrieves the [Style] registered with the given [name].
   ///
-  /// If no match is found, returns the default [baseStyle].
+  /// If no match is found, returns the default [_baseStyle].
   Style getStyle(String? name) {
-    return _style.merge(styles[name]);
+    final style = _baseStyle.build().merge(_styles[name]?.build());
+    return _isDebug ? style.applyVariant(const Variant('debug')) : style;
   }
 
   /// Retrieves the [ExampleBuilder] registered with the given [name].
   ///
   /// If no match is found, returns null.
   ExampleBuilder? getExampleWidget(String name) {
-    return examples[name];
+    return _examples[name];
   }
 
   /// Retrieves the [SlideAsset] that matches the given [uri].
@@ -100,10 +124,10 @@ class DeckReferenceController extends ChangeNotifier {
     try {
       _asyncData = _asyncData.copyWith(status: AsyncStatus.loading);
       notifyListeners();
-
+      final data = await _referenceService.loadReference();
       _asyncData = _asyncData.copyWith(
         status: AsyncStatus.sucess,
-        data: await _referenceService.loadReference(),
+        data: data,
       );
     } catch (error, stackTrace) {
       _asyncData = AsyncValue.error(error, stackTrace);

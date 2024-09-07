@@ -881,6 +881,52 @@ class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
       _ConfigCopyWithImpl($value, $cast, t);
 }
 
+class DartPadThemeMapper extends EnumMapper<DartPadTheme> {
+  DartPadThemeMapper._();
+
+  static DartPadThemeMapper? _instance;
+  static DartPadThemeMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DartPadThemeMapper._());
+    }
+    return _instance!;
+  }
+
+  static DartPadTheme fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  DartPadTheme decode(dynamic value) {
+    switch (value) {
+      case 'dark':
+        return DartPadTheme.dark;
+      case 'light':
+        return DartPadTheme.light;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(DartPadTheme self) {
+    switch (self) {
+      case DartPadTheme.dark:
+        return 'dark';
+      case DartPadTheme.light:
+        return 'light';
+    }
+  }
+}
+
+extension DartPadThemeMapperExtension on DartPadTheme {
+  String toValue() {
+    DartPadThemeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<DartPadTheme>(this) as String;
+  }
+}
+
 class ImageFitMapper extends EnumMapper<ImageFit> {
   ImageFitMapper._();
 
@@ -1084,7 +1130,7 @@ class ContentOptionsMapper extends ClassMapperBase<ContentOptions> {
       MapperContainer.globals.use(_instance = ContentOptionsMapper._());
       ImageOptionsMapper.ensureInitialized();
       WidgetOptionsMapper.ensureInitialized();
-      GistOptionsMapper.ensureInitialized();
+      DartPadOptionsMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
@@ -1165,7 +1211,7 @@ extension ContentOptionsValueCopy<$R, $Out>
 
 abstract class ContentOptionsCopyWith<$R, $In extends ContentOptions, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call();
+  $R call({int? flex, ContentAlignment? align});
   ContentOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -1179,7 +1225,9 @@ class _ContentOptionsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<ContentOptions> $mapper =
       ContentOptionsMapper.ensureInitialized();
   @override
-  $R call() => $apply(FieldCopyWithData({}));
+  $R call({Object? flex = $none, Object? align = $none}) =>
+      $apply(FieldCopyWithData(
+          {if (flex != $none) #flex: flex, if (align != $none) #align: align}));
   @override
   ContentOptions $make(CopyWithData data) => ContentOptions(
       flex: data.get(#flex, or: $value.flex),
@@ -1491,6 +1539,158 @@ class _WidgetOptionsCopyWithImpl<$R, $Out>
   WidgetOptionsCopyWith<$R2, WidgetOptions, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _WidgetOptionsCopyWithImpl($value, $cast, t);
+}
+
+class DartPadOptionsMapper extends ClassMapperBase<DartPadOptions> {
+  DartPadOptionsMapper._();
+
+  static DartPadOptionsMapper? _instance;
+  static DartPadOptionsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = DartPadOptionsMapper._());
+      ContentOptionsMapper.ensureInitialized();
+      DartPadThemeMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'DartPadOptions';
+
+  static String _$id(DartPadOptions v) => v.id;
+  static const Field<DartPadOptions, String> _f$id = Field('id', _$id);
+  static DartPadTheme? _$theme(DartPadOptions v) => v.theme;
+  static const Field<DartPadOptions, DartPadTheme> _f$theme =
+      Field('theme', _$theme, opt: true);
+  static int? _$flex(DartPadOptions v) => v.flex;
+  static const Field<DartPadOptions, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(DartPadOptions v) => v.align;
+  static const Field<DartPadOptions, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static bool _$embed(DartPadOptions v) => v.embed;
+  static const Field<DartPadOptions, bool> _f$embed =
+      Field('embed', _$embed, opt: true, def: true);
+
+  @override
+  final MappableFields<DartPadOptions> fields = const {
+    #id: _f$id,
+    #theme: _f$theme,
+    #flex: _f$flex,
+    #align: _f$align,
+    #embed: _f$embed,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static DartPadOptions _instantiate(DecodingData data) {
+    return DartPadOptions(
+        id: data.dec(_f$id),
+        theme: data.dec(_f$theme),
+        flex: data.dec(_f$flex),
+        align: data.dec(_f$align),
+        embed: data.dec(_f$embed));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static DartPadOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<DartPadOptions>(map);
+  }
+
+  static DartPadOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<DartPadOptions>(json);
+  }
+}
+
+mixin DartPadOptionsMappable {
+  String toJson() {
+    return DartPadOptionsMapper.ensureInitialized()
+        .encodeJson<DartPadOptions>(this as DartPadOptions);
+  }
+
+  Map<String, dynamic> toMap() {
+    return DartPadOptionsMapper.ensureInitialized()
+        .encodeMap<DartPadOptions>(this as DartPadOptions);
+  }
+
+  DartPadOptionsCopyWith<DartPadOptions, DartPadOptions, DartPadOptions>
+      get copyWith => _DartPadOptionsCopyWithImpl(
+          this as DartPadOptions, $identity, $identity);
+  @override
+  String toString() {
+    return DartPadOptionsMapper.ensureInitialized()
+        .stringifyValue(this as DartPadOptions);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return DartPadOptionsMapper.ensureInitialized()
+        .equalsValue(this as DartPadOptions, other);
+  }
+
+  @override
+  int get hashCode {
+    return DartPadOptionsMapper.ensureInitialized()
+        .hashValue(this as DartPadOptions);
+  }
+}
+
+extension DartPadOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, DartPadOptions, $Out> {
+  DartPadOptionsCopyWith<$R, DartPadOptions, $Out> get $asDartPadOptions =>
+      $base.as((v, t, t2) => _DartPadOptionsCopyWithImpl(v, t, t2));
+}
+
+abstract class DartPadOptionsCopyWith<$R, $In extends DartPadOptions, $Out>
+    implements ContentOptionsCopyWith<$R, $In, $Out> {
+  @override
+  $R call(
+      {String? id,
+      DartPadTheme? theme,
+      int? flex,
+      ContentAlignment? align,
+      bool? embed});
+  DartPadOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _DartPadOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, DartPadOptions, $Out>
+    implements DartPadOptionsCopyWith<$R, DartPadOptions, $Out> {
+  _DartPadOptionsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<DartPadOptions> $mapper =
+      DartPadOptionsMapper.ensureInitialized();
+  @override
+  $R call(
+          {String? id,
+          Object? theme = $none,
+          Object? flex = $none,
+          Object? align = $none,
+          bool? embed}) =>
+      $apply(FieldCopyWithData({
+        if (id != null) #id: id,
+        if (theme != $none) #theme: theme,
+        if (flex != $none) #flex: flex,
+        if (align != $none) #align: align,
+        if (embed != null) #embed: embed
+      }));
+  @override
+  DartPadOptions $make(CopyWithData data) => DartPadOptions(
+      id: data.get(#id, or: $value.id),
+      theme: data.get(#theme, or: $value.theme),
+      flex: data.get(#flex, or: $value.flex),
+      align: data.get(#align, or: $value.align),
+      embed: data.get(#embed, or: $value.embed));
+
+  @override
+  DartPadOptionsCopyWith<$R2, DartPadOptions, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _DartPadOptionsCopyWithImpl($value, $cast, t);
 }
 
 class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {
@@ -2081,21 +2281,18 @@ class SlideNoteMapper extends ClassMapperBase<SlideNote> {
   @override
   final String id = 'SlideNote';
 
-  static int _$offset(SlideNote v) => v.offset;
-  static const Field<SlideNote, int> _f$offset = Field('offset', _$offset);
   static String _$note(SlideNote v) => v.note;
   static const Field<SlideNote, String> _f$note = Field('note', _$note);
 
   @override
   final MappableFields<SlideNote> fields = const {
-    #offset: _f$offset,
     #note: _f$note,
   };
   @override
   final bool ignoreNull = true;
 
   static SlideNote _instantiate(DecodingData data) {
-    return SlideNote(offset: data.dec(_f$offset), note: data.dec(_f$note));
+    return SlideNote(note: data.dec(_f$note));
   }
 
   @override
@@ -2148,7 +2345,7 @@ extension SlideNoteValueCopy<$R, $Out> on ObjectCopyWith<$R, SlideNote, $Out> {
 
 abstract class SlideNoteCopyWith<$R, $In extends SlideNote, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? offset, String? note});
+  $R call({String? note});
   SlideNoteCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -2161,12 +2358,11 @@ class _SlideNoteCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SlideNote> $mapper =
       SlideNoteMapper.ensureInitialized();
   @override
-  $R call({int? offset, String? note}) => $apply(FieldCopyWithData(
-      {if (offset != null) #offset: offset, if (note != null) #note: note}));
+  $R call({String? note}) =>
+      $apply(FieldCopyWithData({if (note != null) #note: note}));
   @override
-  SlideNote $make(CopyWithData data) => SlideNote(
-      offset: data.get(#offset, or: $value.offset),
-      note: data.get(#note, or: $value.note));
+  SlideNote $make(CopyWithData data) =>
+      SlideNote(note: data.get(#note, or: $value.note));
 
   @override
   SlideNoteCopyWith<$R2, SlideNote, $Out2> $chain<$R2, $Out2>(
@@ -2456,119 +2652,6 @@ class _WidgetBlockDtoCopyWithImpl<$R, $Out>
       _WidgetBlockDtoCopyWithImpl($value, $cast, t);
 }
 
-class GistOptionsMapper extends ClassMapperBase<GistOptions> {
-  GistOptionsMapper._();
-
-  static GistOptionsMapper? _instance;
-  static GistOptionsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = GistOptionsMapper._());
-      ContentOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'GistOptions';
-
-  static String _$id(GistOptions v) => v.id;
-  static const Field<GistOptions, String> _f$id = Field('id', _$id);
-  static ContentAlignment? _$align(GistOptions v) => v.align;
-  static const Field<GistOptions, ContentAlignment> _f$align =
-      Field('align', _$align, mode: FieldMode.member);
-  static int? _$flex(GistOptions v) => v.flex;
-  static const Field<GistOptions, int> _f$flex =
-      Field('flex', _$flex, mode: FieldMode.member);
-
-  @override
-  final MappableFields<GistOptions> fields = const {
-    #id: _f$id,
-    #align: _f$align,
-    #flex: _f$flex,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static GistOptions _instantiate(DecodingData data) {
-    return GistOptions(id: data.dec(_f$id));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static GistOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<GistOptions>(map);
-  }
-
-  static GistOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<GistOptions>(json);
-  }
-}
-
-mixin GistOptionsMappable {
-  String toJson() {
-    return GistOptionsMapper.ensureInitialized()
-        .encodeJson<GistOptions>(this as GistOptions);
-  }
-
-  Map<String, dynamic> toMap() {
-    return GistOptionsMapper.ensureInitialized()
-        .encodeMap<GistOptions>(this as GistOptions);
-  }
-
-  GistOptionsCopyWith<GistOptions, GistOptions, GistOptions> get copyWith =>
-      _GistOptionsCopyWithImpl(this as GistOptions, $identity, $identity);
-  @override
-  String toString() {
-    return GistOptionsMapper.ensureInitialized()
-        .stringifyValue(this as GistOptions);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return GistOptionsMapper.ensureInitialized()
-        .equalsValue(this as GistOptions, other);
-  }
-
-  @override
-  int get hashCode {
-    return GistOptionsMapper.ensureInitialized().hashValue(this as GistOptions);
-  }
-}
-
-extension GistOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, GistOptions, $Out> {
-  GistOptionsCopyWith<$R, GistOptions, $Out> get $asGistOptions =>
-      $base.as((v, t, t2) => _GistOptionsCopyWithImpl(v, t, t2));
-}
-
-abstract class GistOptionsCopyWith<$R, $In extends GistOptions, $Out>
-    implements ContentOptionsCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? id});
-  GistOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _GistOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, GistOptions, $Out>
-    implements GistOptionsCopyWith<$R, GistOptions, $Out> {
-  _GistOptionsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<GistOptions> $mapper =
-      GistOptionsMapper.ensureInitialized();
-  @override
-  $R call({String? id}) => $apply(FieldCopyWithData({if (id != null) #id: id}));
-  @override
-  GistOptions $make(CopyWithData data) =>
-      GistOptions(id: data.get(#id, or: $value.id));
-
-  @override
-  GistOptionsCopyWith<$R2, GistOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _GistOptionsCopyWithImpl($value, $cast, t);
-}
-
 class GistBlockDtoMapper extends SubClassMapperBase<GistBlockDto> {
   GistBlockDtoMapper._();
 
@@ -2577,7 +2660,7 @@ class GistBlockDtoMapper extends SubClassMapperBase<GistBlockDto> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = GistBlockDtoMapper._());
       SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      GistOptionsMapper.ensureInitialized();
+      DartPadOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -2585,8 +2668,8 @@ class GistBlockDtoMapper extends SubClassMapperBase<GistBlockDto> {
   @override
   final String id = 'GistBlockDto';
 
-  static GistOptions _$options(GistBlockDto v) => v.options;
-  static const Field<GistBlockDto, GistOptions> _f$options =
+  static DartPadOptions _$options(GistBlockDto v) => v.options;
+  static const Field<GistBlockDto, DartPadOptions> _f$options =
       Field('options', _$options);
   static String _$content(GistBlockDto v) => v.content;
   static const Field<GistBlockDto, String> _f$content =
@@ -2673,10 +2756,10 @@ extension GistBlockDtoValueCopy<$R, $Out>
 }
 
 abstract class GistBlockDtoCopyWith<$R, $In extends GistBlockDto, $Out>
-    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, GistOptions> {
-  GistOptionsCopyWith<$R, GistOptions, GistOptions> get options;
+    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, DartPadOptions> {
+  DartPadOptionsCopyWith<$R, DartPadOptions, DartPadOptions> get options;
   @override
-  $R call({GistOptions? options, String? content});
+  $R call({DartPadOptions? options, String? content});
   GistBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -2689,10 +2772,11 @@ class _GistBlockDtoCopyWithImpl<$R, $Out>
   late final ClassMapperBase<GistBlockDto> $mapper =
       GistBlockDtoMapper.ensureInitialized();
   @override
-  GistOptionsCopyWith<$R, GistOptions, GistOptions> get options =>
+  DartPadOptionsCopyWith<$R, DartPadOptions, DartPadOptions> get options =>
       $value.options.copyWith.$chain((v) => call(options: v));
   @override
-  $R call({GistOptions? options, String? content}) => $apply(FieldCopyWithData({
+  $R call({DartPadOptions? options, String? content}) =>
+      $apply(FieldCopyWithData({
         if (options != null) #options: options,
         if (content != null) #content: content
       }));

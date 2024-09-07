@@ -4,9 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../modules/common/helpers/hooks.dart';
-import '../../modules/common/helpers/routes.dart';
 import '../../modules/common/helpers/utils.dart';
 import '../../modules/deck_reference/deck_reference_hooks.dart';
+import '../../modules/navigation/navigation_hooks.dart';
 import '../atoms/slide_thumbnail.dart';
 
 class SlideThumbnailList extends HookWidget {
@@ -19,7 +19,8 @@ class SlideThumbnailList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentSlideIndex = context.currentSlidePage - 1;
+    final navigation = useNavigation();
+    final currentSlideIndex = navigation.currentSlideIndex;
 
     final slides = useDeckSlides();
     final controller = useScrollVisibleController();
@@ -75,7 +76,7 @@ class SlideThumbnailList extends HookWidget {
               child: SlideThumbnail(
                 page: index + 1,
                 selected: currentSlideIndex == index,
-                onTap: () => context.goToSlide(index + 1),
+                onTap: () => navigation.goToSlide(index),
                 slide: slides[index],
               ),
             );

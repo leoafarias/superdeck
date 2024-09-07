@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mix/mix.dart';
 import 'package:superdeck/src/components/atoms/slide_view.dart';
+import 'package:superdeck/src/modules/common/styles/style.dart';
 import 'package:superdeck/src/modules/deck_reference/deck_reference_controller.dart';
 import 'package:superdeck/src/modules/deck_reference/deck_reference_provider.dart';
-import 'package:superdeck/src/modules/widget_capture/snapshot_provider.dart';
+import 'package:superdeck/src/modules/widget_capture/widget_capture_provider.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 extension WidgetTesterX on WidgetTester {
@@ -15,17 +15,19 @@ extension WidgetTesterX on WidgetTester {
   Future<void> pumpSlide<T extends Slide>(
     T slide, {
     bool isSnapshot = false,
-    Style style = const Style.empty(),
+    DeckStyle? style,
     Map<String, ExampleBuilder> examples = const {},
     List<SlideAsset> assets = const [],
   }) async {
     return pumpWithScaffold(
       SnapshotProvider(
         isCapturing: isSnapshot,
-        child: DecKReferenceProvider(
-          styles: const {},
-          baseStyle: style,
-          examples: examples,
+        child: DeckReferenceProvider(
+          controller: DeckReferenceController(
+            styles: const {},
+            baseStyle: style ?? DeckStyle(),
+            examples: examples,
+          ),
           child: SlideView(slide),
         ),
       ),

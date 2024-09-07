@@ -37,7 +37,7 @@ class SelectValueNotifier<T, R> extends ValueNotifier<R> {
 
   void _updateValue() {
     final newValue = _selector(_notifier.value);
-    print('$debugLabel: $newValue');
+
     if (value != newValue) {
       value = newValue;
     }
