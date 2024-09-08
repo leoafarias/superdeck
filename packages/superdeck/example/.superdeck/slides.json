@@ -7,14 +7,34 @@
   },
   "slides": [
     {
-      "key": "nFzROii9",
+      "key": "RhWMtoMW",
       "options": {},
-      "markdown": "### car\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n{@column}\n\n```markdown\n\n# Heading\n\n## another\n\n\n- List item 1\n- List item 2\n  - Sublist item 1\n  - Sublist item 2\n\n[Link to Google](https://www.google.com)\n\n\n~~Strikethrough~~\n\n`code`\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n```",
+      "markdown": "{@section}\n{@column align: top_left flex: 2 tag: supertag}\n# This is a title\n\n{@section flex: 2 }\n{@column align: top_left}\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n{@column}\n\n```markdown\n\n# Heading\n\n## another\n\n\n- List item 1\n- List item 2\n  - Sublist item 1\n  - Sublist item 2\n\n[Link to Google](https://www.google.com)\n\n\n~~Strikethrough~~\n\n`code`\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n```",
       "sections": [
         {
+          "options": null,
           "sub_sections": [
             {
-              "content": "### car\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n",
+              "content": "\n# This is a title\n",
+              "options": {
+                "flex": 2,
+                "align": "top_left",
+                "tag": "supertag"
+              },
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "options": {
+            "flex": 2
+          },
+          "sub_sections": [
+            {
+              "content": "\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n",
+              "options": {
+                "align": "top_left"
+              },
               "type": "column"
             },
             {
@@ -28,21 +48,22 @@
       "notes": []
     },
     {
-      "key": "QDRb8wsw",
+      "key": "AsbP12bN",
       "options": {
         "background": "https://picsum.photos/1400/1200?wavfeffsfffffccf",
         "style": "cover"
       },
-      "markdown": "{@section}\n{@column align: top_left flex: 2}\n\n\n{@section flex: 4 }\n{@column align: top_left}\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n{@column}\n\n#### Ordered List\n\n### car\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n\n{@column}\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
+      "markdown": "{@section}\n{@column align: top_right flex: 2 tag: supertag}\n# Change\n\n{@section flex: 2 }\n{@column align: top_left}\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n{@column}\n\n#### Ordered List\n\n### car\n\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n\n{@column}\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
       "sections": [
         {
           "options": null,
           "sub_sections": [
             {
-              "content": "\n\n",
+              "content": "\n# Change\n",
               "options": {
                 "flex": 2,
-                "align": "top_left"
+                "align": "top_right",
+                "tag": "supertag"
               },
               "type": "column"
             }
@@ -50,7 +71,7 @@
         },
         {
           "options": {
-            "flex": 4
+            "flex": 2
           },
           "sub_sections": [
             {
@@ -61,7 +82,7 @@
               "type": "column"
             },
             {
-              "content": "\n\n#### Ordered List\n\n### car\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n",
+              "content": "\n\n#### Ordered List\n\n### car\n\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n",
               "options": null,
               "type": "column"
             },
@@ -96,7 +117,7 @@
       ],
       "notes": [
         {
-          "note": "Notes go here"
+          "content": "Notes go here"
         }
       ]
     },
@@ -138,11 +159,11 @@
       "notes": []
     },
     {
-      "key": "cW9gea1F",
+      "key": "m6aTFAjV",
       "options": {
         "style": "custom"
       },
-      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
+      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo tag: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
       "sections": [
         {
           "options": null,
@@ -155,6 +176,7 @@
             {
               "options": {
                 "name": "demo",
+                "tag": "demo",
                 "type": "widget_options"
               },
               "content": "",
@@ -164,6 +186,35 @@
               "content": "\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
               "options": null,
               "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "key": "GksCD5Lc",
+      "options": {},
+      "markdown": "{@section}\n{@column flex: 1}\n\n{@widget name: demo tag: demo}\n\n{@column}",
+      "sections": [
+        {
+          "options": null,
+          "sub_sections": [
+            {
+              "content": "\n",
+              "options": {
+                "flex": 1
+              },
+              "type": "column"
+            },
+            {
+              "options": {
+                "name": "demo",
+                "tag": "demo",
+                "type": "widget_options"
+              },
+              "content": "",
+              "type": "widget"
             }
           ]
         }
@@ -305,7 +356,12 @@
   ],
   "assets": [
     {
-      "path": ".superdeck/generated/thumbnail_nFzROii9.png",
+      "path": ".superdeck/generated/thumbnail_RhWMtoMW.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_AsbP12bN.png",
       "width": 512,
       "height": 288
     },
@@ -355,7 +411,12 @@
       "height": 288
     },
     {
-      "path": ".superdeck/generated/thumbnail_cW9gea1F.png",
+      "path": ".superdeck/generated/thumbnail_m6aTFAjV.png",
+      "width": 512,
+      "height": 288
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_GksCD5Lc.png",
       "width": 512,
       "height": 288
     },

@@ -13,7 +13,7 @@ class ExportScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slides = useDeckSlides();
+    final slides = useSlideList();
     final currentSlideIndex = useCurrentSlideIndex();
 
     final export = usePdfExportController(

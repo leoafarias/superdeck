@@ -45,6 +45,13 @@ class _ContentBlockWidget extends StatelessWidget {
       duration: Durations.medium1,
     );
 
+    if (options?.tag != null) {
+      child = Hero(
+        tag: options!.tag!,
+        child: child,
+      );
+    }
+
     if (!isCapturing) {
       child = SingleChildScrollView(
         child: child,
@@ -72,14 +79,24 @@ class _ImageBlockWidget extends StatelessWidget {
   @override
   Widget build(context) {
     final options = block.options;
+    final tag = options.tag;
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
 
-    return CacheDecorationImage(
+    Widget widget = CacheDecorationImage(
       uri: Uri.parse(options.src),
       fit: toBoxFit(imageFit),
       alignment: toAlignment(alignment),
     );
+
+    if (tag != null) {
+      widget = Hero(
+        tag: tag,
+        child: widget,
+      );
+    }
+
+    return widget;
   }
 }
 
@@ -106,7 +123,18 @@ class _WidgetBlockWidget extends StatelessWidget {
     }
 
     return Builder(
-      builder: (context) => widgetBuilder(context, options),
+      builder: (context) {
+        final widget = widgetBuilder(context, options);
+
+        if (options.tag != null) {
+          return Hero(
+            tag: options.tag!,
+            child: widget,
+          );
+        }
+
+        return widget;
+      },
     );
   }
 }

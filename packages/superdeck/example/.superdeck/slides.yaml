@@ -3,10 +3,16 @@ config:
     type: 'fade_in'
     duration: 0
 slides: 
-  - key: 'nFzROii9'
+  - key: 'RhWMtoMW'
     options: {}
     markdown: |-
-      ### car
+      {@section}
+      {@column align: top_left flex: 2 tag: supertag}
+      # This is a title
+      
+      {@section flex: 2 }
+      {@column align: top_left}
+      
       
       > [!NOTE]  
       > Highlights information that users should take into account, even when skimming.
@@ -62,9 +68,22 @@ slides:
       
       ```
     sections: 
-      - sub_sections: 
+      - options: null
+        sub_sections: 
           - content: |
-              ### car
+              
+              # This is a title
+            options: 
+              flex: 2
+              align: 'top_left'
+              tag: 'supertag'
+            type: 'column'
+      - options: 
+          flex: 2
+        sub_sections: 
+          - content: |
+              
+              
               
               > [!NOTE]  
               > Highlights information that users should take into account, even when skimming.
@@ -80,6 +99,8 @@ slides:
               
               > [!CAUTION]
               > Negative potential consequences of an action.
+            options: 
+              align: 'top_left'
             type: 'column'
           - content: |-
               
@@ -123,16 +144,16 @@ slides:
             options: null
             type: 'column'
     notes: []
-  - key: 'QDRb8wsw'
+  - key: 'AsbP12bN'
     options: 
       background: 'https://picsum.photos/1400/1200?wavfeffsfffffccf'
       style: 'cover'
     markdown: |-
       {@section}
-      {@column align: top_left flex: 2}
+      {@column align: top_right flex: 2 tag: supertag}
+      # Change
       
-      
-      {@section flex: 4 }
+      {@section flex: 2 }
       {@column align: top_left}
       #### Unordered List
       
@@ -148,9 +169,6 @@ slides:
       
       ### car
       
-      
-      > [!NOTE]  
-      > Highlights information that users should take into account, even when skimming.
       
       
       ___
@@ -178,13 +196,14 @@ slides:
         sub_sections: 
           - content: |
               
-              
+              # Change
             options: 
               flex: 2
-              align: 'top_left'
+              align: 'top_right'
+              tag: 'supertag'
             type: 'column'
       - options: 
-          flex: 4
+          flex: 2
         sub_sections: 
           - content: |
               
@@ -205,9 +224,6 @@ slides:
               
               ### car
               
-              
-              > [!NOTE]  
-              > Highlights information that users should take into account, even when skimming.
               
               
               ___
@@ -265,7 +281,7 @@ slides:
             options: null
             type: 'column'
     notes: 
-      - note: 'Notes go here'
+      - content: 'Notes go here'
   - key: 'Hb0Ckmmr'
     options: {}
     markdown: |-
@@ -298,7 +314,7 @@ slides:
           - content: '![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)'
             type: 'column'
     notes: []
-  - key: 'cW9gea1F'
+  - key: 'm6aTFAjV'
     options: 
       style: 'custom'
     markdown: |-
@@ -306,7 +322,7 @@ slides:
       {@column}
       ## This is an example of a widgets
       
-      {@widget name: demo}
+      {@widget name: demo tag: demo}
       
       {@column}
       
@@ -331,6 +347,7 @@ slides:
             type: 'column'
           - options: 
               name: 'demo'
+              tag: 'demo'
               type: 'widget_options'
             content: ''
             type: 'widget'
@@ -350,6 +367,30 @@ slides:
               ```
             options: null
             type: 'column'
+    notes: []
+  - key: 'GksCD5Lc'
+    options: {}
+    markdown: |-
+      {@section}
+      {@column flex: 1}
+      
+      {@widget name: demo tag: demo}
+      
+      {@column}
+    sections: 
+      - options: null
+        sub_sections: 
+          - content: |
+              
+            options: 
+              flex: 1
+            type: 'column'
+          - options: 
+              name: 'demo'
+              tag: 'demo'
+              type: 'widget_options'
+            content: ''
+            type: 'widget'
     notes: []
   - key: 'u0rRynPM'
     options: 
@@ -533,7 +574,10 @@ slides:
             type: 'column'
     notes: []
 assets: 
-  - path: '.superdeck/generated/thumbnail_nFzROii9.png'
+  - path: '.superdeck/generated/thumbnail_RhWMtoMW.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_AsbP12bN.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/mermaid_drzCSSND.png'
@@ -563,7 +607,10 @@ assets:
   - path: '.superdeck/generated/thumbnail_BWbYfNH8.png'
     width: 512
     height: 288
-  - path: '.superdeck/generated/thumbnail_cW9gea1F.png'
+  - path: '.superdeck/generated/thumbnail_m6aTFAjV.png'
+    width: 512
+    height: 288
+  - path: '.superdeck/generated/thumbnail_GksCD5Lc.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/thumbnail_u0rRynPM.png'

@@ -65,7 +65,7 @@ List<Slide> parseSlides(String markdown) {
 
       for (final comment in comments) {
         final note = {
-          'note': comment.group(1)?.trim(),
+          'content': comment.group(1)?.trim(),
         };
         SlideNote.schema.validateOrThrow(note);
         notes.add(SlideNote.fromMap(note));

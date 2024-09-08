@@ -23,7 +23,7 @@ class SlideView extends HookWidget {
 
     final transition = slide.options?.transition;
 
-    final style = useDeckStyle(config);
+    final style = useSlideStyle(config);
     final background = config.options?.background;
 
     final backgroundWidget = background != null

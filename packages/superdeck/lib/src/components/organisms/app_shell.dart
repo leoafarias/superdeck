@@ -6,7 +6,8 @@ import '../../modules/common/helpers/hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
 import '../molecules/bottom_bar.dart';
 import '../molecules/scaled_app.dart';
-import 'slide_thumbnail_list.dart';
+import 'note_panel.dart';
+import 'thumbnail_panel.dart';
 
 final kScaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -72,6 +73,7 @@ class SplitView extends HookWidget {
   Widget build(BuildContext context) {
     final isPresnterMenuOpen = useIsPresenterMenuOpen();
     final navigationActions = useNavigationActions();
+    final navigatonState = useNavigationState();
 
     final bottomAnimation = useAnimationController(
       duration: _duration,
@@ -96,14 +98,6 @@ class SplitView extends HookWidget {
               icon: const Icon(Icons.menu),
             )
           : null,
-      bottomNavigationBar: SizeTransition(
-        sizeFactor: CurvedAnimation(
-          parent: bottomAnimation,
-          curve: Curves.easeInOut,
-        ),
-        axis: Axis.vertical,
-        child: const SDBottomBar(),
-      ),
       body: Row(
         children: [
           SizeTransition(
@@ -114,10 +108,38 @@ class SplitView extends HookWidget {
             ),
             child: SizedBox(
               width: _thumbnailWidth,
-              child: const SlideThumbnailList(),
+              child: const DefaultTabController(
+                length: 2,
+                child: Scaffold(
+                  bottomNavigationBar: TabBar(
+                    tabs: [
+                      Tab(text: 'Preview'),
+                      Tab(text: 'Notes'),
+                    ],
+                  ),
+                  body: TabBarView(
+                    children: [
+                      ThumbnailPanel(),
+                      NotePanel(),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
-          Expanded(child: ScaledWidget(child: child))
+          Expanded(
+            child: Scaffold(
+              bottomNavigationBar: SizeTransition(
+                sizeFactor: CurvedAnimation(
+                  parent: bottomAnimation,
+                  curve: Curves.easeInOut,
+                ),
+                axis: Axis.vertical,
+                child: const SDBottomBar(),
+              ),
+              body: Center(child: ScaledWidget(child: child)),
+            ),
+          )
         ],
       ),
     );

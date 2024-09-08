@@ -9,7 +9,7 @@ enum BlockType {
   gist,
 }
 
-abstract class BlockDto<T extends ContentOptions> {
+abstract class BlockDto<T extends BlockOptions> {
   const BlockDto();
 }
 
@@ -18,7 +18,7 @@ abstract class BlockDto<T extends ContentOptions> {
   // hook: BlockMappingHook(),
 )
 class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
-  final ContentOptions? options;
+  final BlockOptions? options;
   final List<SubSectionBlockDto> subSections;
 
   SectionBlockDto({
@@ -31,7 +31,7 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
   }
 
   static final schema = SchemaShape({
-    'options': ContentOptions.schema,
+    'options': BlockOptions.schema,
     'sub_sections': Schema.list(SubSectionBlockDto.schema),
   });
 
@@ -62,7 +62,7 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
   includeCustomMappers: [OptionsMapper()],
   // hook: BlockMappingHook(),
 )
-sealed class SubSectionBlockDto<T extends ContentOptions> extends BlockDto
+sealed class SubSectionBlockDto<T extends BlockOptions> extends BlockDto
     with SubSectionBlockDtoMappable {
   final String content;
   final BlockType type;
@@ -94,10 +94,10 @@ sealed class SubSectionBlockDto<T extends ContentOptions> extends BlockDto
 }
 
 @MappableClass(discriminatorValue: 'column')
-class ColumnBlockDto extends SubSectionBlockDto<ContentOptions>
+class ColumnBlockDto extends SubSectionBlockDto<BlockOptions>
     with ColumnBlockDtoMappable {
   @override
-  final ContentOptions? options;
+  final BlockOptions? options;
 
   ColumnBlockDto({
     super.content,
@@ -110,7 +110,7 @@ class ColumnBlockDto extends SubSectionBlockDto<ContentOptions>
   }
 
   static final schema = SubSectionBlockDto.baseSchema.extend(
-    {'options': ContentOptions.schema},
+    {'options': BlockOptions.schema},
   );
 }
 
@@ -176,16 +176,16 @@ class ImageBlockDto extends SubSectionBlockDto<ImageOptions>
   );
 }
 
-class OptionsMapper extends SimpleMapper<ContentOptions> {
+class OptionsMapper extends SimpleMapper<BlockOptions> {
   const OptionsMapper();
 
   @override
-  ContentOptions decode(dynamic value) {
-    return ContentOptionsMapper.fromMap(value);
+  BlockOptions decode(dynamic value) {
+    return BlockOptionsMapper.fromMap(value);
   }
 
   @override
-  dynamic encode(ContentOptions self) {
+  dynamic encode(BlockOptions self) {
     final map = self.toMap();
     if (map.isEmpty) {
       return null;

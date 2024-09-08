@@ -220,7 +220,7 @@ Content for slide 2
       expect(slides[0].markdown,
           equals('Content for slide 1\n\n<!-- This is a note for slide 1 -->'));
       expect(slides[0].notes.length, equals(1));
-      expect(slides[0].notes[0].note, equals('This is a note for slide 1'));
+      expect(slides[0].notes[0].content, equals('This is a note for slide 1'));
 
       expect(slides[1].options?.title, equals('Slide 2'));
       expect(slides[1].markdown, equals('Content for slide 2'));
@@ -258,12 +258,12 @@ Content for slide 2
           equals(
               'Content for slide 1\n\n<!-- This is a note for slide 1 -->\n\n<!-- This is another note for slide 1 -->\n\n<!-- This is a third note for \nslide 1 -->'));
       expect(slides[0].notes.length, equals(3));
-      expect(slides[0].notes[0].note, equals('This is a note for slide 1'));
+      expect(slides[0].notes[0].content, equals('This is a note for slide 1'));
 
-      expect(
-          slides[0].notes[1].note, equals('This is another note for slide 1'));
+      expect(slides[0].notes[1].content,
+          equals('This is another note for slide 1'));
 
-      expect(slides[0].notes[2].note,
+      expect(slides[0].notes[2].content,
           equals('This is a third note for \nslide 1'));
 
       expect(slides[1].options?.title, equals('Slide 2'));

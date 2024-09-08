@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_router_paths/go_router_paths.dart';
 
@@ -55,6 +56,7 @@ final goRouterConfig = GoRouter(
                         slideIndex: 0,
                       ),
                       state,
+                      isRoot: true,
                     ),
                 routes: [
                   GoRoute(
@@ -63,7 +65,7 @@ final goRouterConfig = GoRouter(
                       final index = int.parse(
                         state.pathParameters[SDPaths.slides.slide.id] ?? '0',
                       );
-                      return _getPage(
+                      return _getPageTransition(
                         SlideScreen(slideIndex: index),
                         state,
                       );
@@ -87,18 +89,50 @@ final goRouterConfig = GoRouter(
   ],
 );
 
-CupertinoPage _getPage(Widget child, GoRouterState state) {
-  return CupertinoPage(
-      key: state.pageKey, child: child, maintainState: true, canPop: false);
+MaterialPage _getPage(Widget child, GoRouterState state,
+    {bool isRoot = false}) {
+  return MaterialPage(
+    key: state.pageKey,
+    child: child,
+    maintainState: true,
+    canPop: !isRoot,
+  );
+}
+
+CustomTransitionPage<void> _getPageTransition(
+  Widget child,
+  GoRouterState state,
+) {
+  final extra = state.extra as Map<String, dynamic>?;
+  final isBack = extra?['replace'] as bool? ?? false;
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    maintainState: true,
+    transitionDuration: isBack
+        ? const Duration(milliseconds: 0)
+        : const Duration(milliseconds: 500),
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: animation,
+        child: child,
+      );
+    },
+  );
 }
 
 CustomTransitionPage<void> _getCupertinoTransition(
   Widget child,
   GoRouterState state,
 ) {
+  final extra = state.extra as Map<String, dynamic>?;
+  final isBack = extra?['replace'] as bool? ?? false;
   return CustomTransitionPage<void>(
     key: state.pageKey,
     maintainState: true,
+    transitionDuration: isBack
+        ? const Duration(milliseconds: 0)
+        : const Duration(milliseconds: 500),
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       // Use CurpertinoPageTransition

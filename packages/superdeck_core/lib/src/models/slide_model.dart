@@ -41,10 +41,10 @@ class Slide with SlideMappable {
 
 @MappableClass()
 class SlideNote with SlideNoteMappable {
-  final String note;
+  final String content;
 
   SlideNote({
-    required this.note,
+    required this.content,
   });
 
   static SlideNote fromMap(Map<String, dynamic> map) {
@@ -56,7 +56,7 @@ class SlideNote with SlideNoteMappable {
 
   static final schema = SchemaShape(
     {
-      "note": Schema.string.required(),
+      "content": Schema.string.required(),
     },
     additionalProperties: false,
   );

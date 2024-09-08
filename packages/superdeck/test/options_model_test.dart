@@ -4,13 +4,13 @@ import 'package:superdeck_core/superdeck_core.dart';
 void main() {
   group('ContentOptions', () {
     test('merge returns original instance when other is null', () {
-      const options = ContentOptions();
+      const options = BlockOptions();
       expect(options.merge(null), same(options));
     });
 
     test('merge returns new instance with merged values', () {
-      const options1 = ContentOptions(flex: 2, align: ContentAlignment.topLeft);
-      const options2 = ContentOptions(align: ContentAlignment.bottomRight);
+      const options1 = BlockOptions(flex: 2, align: ContentAlignment.topLeft);
+      const options2 = BlockOptions(align: ContentAlignment.bottomRight);
       final merged = options1.merge(options2);
       expect(merged.flex, options1.flex);
       expect(merged.align, options2.align);

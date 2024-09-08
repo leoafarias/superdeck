@@ -21,15 +21,17 @@ T _useSelectController<T>(T Function(NavigationController) selector) {
 }
 
 typedef NavigationControllerState = ({
-  int currentSlideIndex,
   bool isPresenterMenuOpen,
+  bool showNotes,
 });
 
 NavigationControllerState useNavigationState() {
-  return _useSelectController((c) => (
-        currentSlideIndex: c.currentSlideIndex,
-        isPresenterMenuOpen: c.isPresenterMenuOpen,
-      ));
+  return _useSelectController(
+    (c) => (
+      isPresenterMenuOpen: c.isPresenterMenuOpen,
+      showNotes: c.showNotes,
+    ),
+  );
 }
 
 typedef NavigationActions = ({
@@ -38,42 +40,56 @@ typedef NavigationActions = ({
   VoidCallback closePresenterMenu,
   VoidCallback openPresenterMenu,
   VoidCallback togglePresenterMenu,
+  VoidCallback toggleShowNotes,
   void Function(int index) goToSlide,
 });
+
+GoRouterState _useGoRouterState() {
+  final context = useContext();
+  final routerState = GoRouterState.of(context);
+  final state = useState(routerState);
+
+  useEffect(() {
+    state.value = routerState;
+  }, [routerState]);
+
+  return state.value;
+}
+
+// Get the currentSlide index from the current path
+int useCurrentSlideIndex() {
+  final router = _useGoRouterState();
+  final param = router.pathParameters[SDPaths.slides.slide.id] ?? '0';
+
+  return int.tryParse(param) ?? 0;
+}
 
 NavigationActions useNavigationActions() {
   final context = useContext();
   final controller = _useController();
-  final slides = useDeckSlides();
+  final slides = useSlideList();
   final currentIndex = useCurrentSlideIndex();
 
-  final goToSlide = useCallback((int index, [bool stepping = false]) {
+  final goToSlide = useCallback((int index) {
     if (index < 0 || index >= slides.length) return;
     if (currentIndex == index) return;
 
     final isForward = index > currentIndex;
     final slidePath = SDPaths.slides.slide.define(index.toString()).path;
 
-    controller.goToSlide(index);
-    if (!isForward) {
-      if (context.canPop()) {
-        context.pop();
-      }
-      context.replace(slidePath);
-      return;
-    }
-
-    context.push(slidePath, extra: currentIndex);
+    context.push(slidePath, extra: {'replace': !isForward});
   }, [context, slides, currentIndex]);
 
   final goToNextSlide = useCallback(
-    () => goToSlide(controller.currentSlideIndex + 1, true),
-    [goToSlide],
+    () => goToSlide(currentIndex + 1),
+    [goToSlide, currentIndex],
   );
 
   final goToPreviousSlide = useCallback(
-    () => goToSlide(controller.currentSlideIndex - 1, true),
-    [goToSlide],
+    () => goToSlide(currentIndex - 1),
+    [
+      goToSlide,
+    ],
   );
 
   return (
@@ -83,13 +99,10 @@ NavigationActions useNavigationActions() {
     openPresenterMenu: controller.openPresenterMenu,
     togglePresenterMenu: controller.togglePresenterMenu,
     goToSlide: goToSlide,
+    toggleShowNotes: controller.toggleShowNotes,
   );
 }
 
 bool useIsPresenterMenuOpen() {
   return _useSelectController((c) => c.isPresenterMenuOpen);
-}
-
-int useCurrentSlideIndex() {
-  return _useSelectController((c) => c.currentSlideIndex);
 }

@@ -1,6 +1,13 @@
 ---
 
-### car
+
+{@section}
+{@column align: top_left flex: 2 tag: supertag}
+# This is a title
+
+{@section flex: 2 }
+{@column align: top_left}
+
 
 > [!NOTE]  
 > Highlights information that users should take into account, even when skimming.
@@ -63,10 +70,10 @@ background: https://picsum.photos/1400/1200?wavfeffsfffffccf
 ---
 
 {@section}
-{@column align: top_left flex: 2}
+{@column align: top_right flex: 2 tag: supertag}
+# Change
 
-
-{@section flex: 4 }
+{@section flex: 2 }
 {@column align: top_left}
 #### Unordered List
 
@@ -82,9 +89,6 @@ background: https://picsum.photos/1400/1200?wavfeffsfffffccf
 
 ### car
 
-
-> [!NOTE]  
-> Highlights information that users should take into account, even when skimming.
 
 
 ___
@@ -196,7 +200,7 @@ style: custom
 {@column}
 ## This is an example of a widgets
 
-{@widget name: demo}
+{@widget name: demo tag: demo}
 
 {@column}
 
@@ -211,6 +215,16 @@ void main() {
 }
 
 ```
+
+---
+
+{@section}
+{@column flex: 1}
+
+{@widget name: demo tag: demo}
+
+{@column}
+
 
 
 

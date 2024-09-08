@@ -1,16 +1,18 @@
 part of 'models.dart';
 
 @MappableClass(discriminatorValue: 'content')
-class ContentOptions with ContentOptionsMappable {
+class BlockOptions with BlockOptionsMappable {
   final ContentAlignment? align;
   final int? flex;
+  final String? tag;
 
-  const ContentOptions({
+  const BlockOptions({
     this.flex,
     this.align,
+    this.tag,
   });
 
-  ContentOptions merge(ContentOptions? other) {
+  BlockOptions merge(BlockOptions? other) {
     if (other == null) return this;
     return copyWith.$merge(other);
   }
@@ -18,13 +20,14 @@ class ContentOptions with ContentOptionsMappable {
   static final schema = SchemaShape({
     "align": ContentAlignment.schema.optional(),
     "flex": Schema.integer.optional(),
+    "tag": Schema.string.optional(),
   });
 
   bool get isEmpty => flex == null && align == null;
 }
 
 @MappableClass(discriminatorValue: 'image')
-class ImageOptions extends ContentOptions with ImageOptionsMappable {
+class ImageOptions extends BlockOptions with ImageOptionsMappable {
   final String src;
   final ImageFit? fit;
 
@@ -33,9 +36,10 @@ class ImageOptions extends ContentOptions with ImageOptionsMappable {
     this.fit,
     super.flex,
     super.align,
+    super.tag,
   });
 
-  static final schema = ContentOptions.schema.extend({
+  static final schema = BlockOptions.schema.extend({
     "fit": ImageFit.schema,
     "src": Schema.string.required(),
   });
@@ -45,7 +49,7 @@ class ImageOptions extends ContentOptions with ImageOptionsMappable {
   discriminatorValue: 'widget_options',
   hook: UnmappedPropertiesHook('args'),
 )
-class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
+class WidgetOptions extends BlockOptions with WidgetOptionsMappable {
   final String name;
   final Map<String, dynamic> args;
 
@@ -54,9 +58,10 @@ class WidgetOptions extends ContentOptions with WidgetOptionsMappable {
     this.args = const {},
     super.flex,
     super.align,
+    super.tag,
   });
 
-  static final schema = ContentOptions.schema.extend(
+  static final schema = BlockOptions.schema.extend(
     {"name": Schema.string.required()},
     additionalProperties: true,
   );
@@ -71,7 +76,7 @@ enum DartPadTheme {
 }
 
 @MappableClass()
-class DartPadOptions extends ContentOptions with DartPadOptionsMappable {
+class DartPadOptions extends BlockOptions with DartPadOptionsMappable {
   final String id;
   final DartPadTheme? theme;
   final bool embed;
@@ -80,11 +85,12 @@ class DartPadOptions extends ContentOptions with DartPadOptionsMappable {
     required this.id,
     this.theme,
     super.flex,
+    super.tag,
     super.align,
     this.embed = true,
   });
 
-  static final schema = ContentOptions.schema.extend({
+  static final schema = BlockOptions.schema.extend({
     'id': Schema.string.required(),
     'theme': DartPadTheme.schema.optional(),
     'embed': Schema.boolean.optional(),

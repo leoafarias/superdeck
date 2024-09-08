@@ -9,8 +9,8 @@ import '../../modules/deck_reference/deck_reference_hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
 import '../atoms/slide_thumbnail.dart';
 
-class SlideThumbnailList extends HookWidget {
-  const SlideThumbnailList({
+class ThumbnailPanel extends HookWidget {
+  const ThumbnailPanel({
     super.key,
   });
 
@@ -19,12 +19,11 @@ class SlideThumbnailList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navState = useNavigationState();
     final navActions = useNavigationActions();
 
-    final currentSlideIndex = navState.currentSlideIndex;
+    final currentSlideIndex = useCurrentSlideIndex();
 
-    final slides = useDeckSlides();
+    final slides = useSlideList();
     final controller = useScrollVisibleController();
     final visibleItems = controller.visibleItems;
 

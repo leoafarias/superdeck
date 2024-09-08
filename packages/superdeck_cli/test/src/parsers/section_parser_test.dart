@@ -492,5 +492,5 @@ Footer content.
 }
 
 extension on SubSectionBlockDto {
-  ContentOptions? get columnOptions => (this as ColumnBlockDto).options;
+  BlockOptions? get columnOptions => (this as ColumnBlockDto).options;
 }

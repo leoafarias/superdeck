@@ -17,7 +17,7 @@ class PresentationScreen extends HookWidget {
     final slideIndex = useCurrentSlideIndex();
     final pageController = usePageController(initialPage: slideIndex);
 
-    final slides = useDeckSlides();
+    final slides = useSlideList();
 
     usePostFrameEffect(() {
       if (slideIndex >= slides.length) {
@@ -48,8 +48,8 @@ class SlideScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slides = useDeckSlides();
+    final slide = useSlide(slideIndex);
 
-    return SlidePreview(slides[slideIndex]);
+    return SlidePreview(slide);
   }
 }

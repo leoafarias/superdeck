@@ -3,6 +3,7 @@ import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../common/helpers/extensions.dart';
+import '../navigation/navigation_hooks.dart';
 import 'deck_reference_controller.dart';
 import 'deck_reference_provider.dart';
 
@@ -17,20 +18,29 @@ T _useSelectController<T>(T Function(DeckReferenceController) selector) {
   return selector(controller);
 }
 
-List<Slide> useDeckSlides() {
+List<Slide> useSlideList() {
   return _useSelectController((controller) => controller.slides);
+}
+
+Slide useSlide(int index) {
+  return _useSelectController((controller) => controller.slides[index]);
 }
 
 List<SlideAsset> useAssets() {
   return _useSelectController((controller) => controller.assets);
 }
 
-Style useDeckStyle(Slide slide) {
+Style useSlideStyle(Slide slide) {
   return _useSelectController(
     (controller) => controller.getStyle(
       slide.options?.style,
     ),
   );
+}
+
+Slide useCurrentSlide() {
+  final index = useCurrentSlideIndex();
+  return useSlide(index);
 }
 
 ExampleBuilder? useDeckExamples(String name) {

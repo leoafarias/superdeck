@@ -3,34 +3,24 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:localstorage/localstorage.dart';
 
-const _currentSlideKey = 'currentSlideIndex';
 const _isPresenterMenuOpenKey = 'isPresenterMenuOpen';
+const _showNotesKey = 'showNotes';
 
 class NavigationController extends ChangeNotifier {
-  late int currentSlideIndex;
   late bool isPresenterMenuOpen;
+  late bool showNotes;
 
   static Future<void> initialize() => initLocalStorage();
 
   NavigationController() {
-    currentSlideIndex = _get(_currentSlideKey, 0);
     isPresenterMenuOpen = _get(_isPresenterMenuOpenKey, false);
+    showNotes = _get(_showNotesKey, false);
 
     addListener(() {
-      _set(_currentSlideKey, currentSlideIndex);
       _set(_isPresenterMenuOpenKey, isPresenterMenuOpen);
+      _set(_showNotesKey, showNotes);
     });
   }
-
-  void goToSlide(int index) {
-    currentSlideIndex = index;
-
-    notifyListeners();
-  }
-
-  void nextSlide() => goToSlide(currentSlideIndex + 1);
-
-  void previousSlide() => goToSlide(currentSlideIndex - 1);
 
   void togglePresenterMenu() {
     isPresenterMenuOpen = !isPresenterMenuOpen;
@@ -44,6 +34,11 @@ class NavigationController extends ChangeNotifier {
 
   void openPresenterMenu() {
     isPresenterMenuOpen = true;
+    notifyListeners();
+  }
+
+  void toggleShowNotes() {
+    showNotes = !showNotes;
     notifyListeners();
   }
 
