@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
 import '../common/helpers/extensions.dart';
+import '../common/helpers/routes.dart';
 import '../deck_reference/deck_reference_hooks.dart';
 import 'navigation_controller.dart';
 import 'navigation_provider.dart';
@@ -44,20 +47,32 @@ NavigationActions useNavigationActions() {
   final slides = useDeckSlides();
   final currentIndex = useCurrentSlideIndex();
 
-  final goToSlide = useCallback((int index) {
+  final goToSlide = useCallback((int index, [bool stepping = false]) {
     if (index < 0 || index >= slides.length) return;
     if (currentIndex == index) return;
 
+    final isForward = index > currentIndex;
+    final slidePath = SDPaths.slides.slide.define(index.toString()).path;
+
     controller.goToSlide(index);
+    if (!isForward) {
+      if (context.canPop()) {
+        context.pop();
+      }
+      context.replace(slidePath);
+      return;
+    }
+
+    context.push(slidePath, extra: currentIndex);
   }, [context, slides, currentIndex]);
 
   final goToNextSlide = useCallback(
-    () => goToSlide(controller.currentSlideIndex + 1),
+    () => goToSlide(controller.currentSlideIndex + 1, true),
     [goToSlide],
   );
 
   final goToPreviousSlide = useCallback(
-    () => goToSlide(controller.currentSlideIndex - 1),
+    () => goToSlide(controller.currentSlideIndex - 1, true),
     [goToSlide],
   );
 
