@@ -113,24 +113,19 @@ ___
 ---
 ### Lists
 
-
-![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
+{@column tag: mermaidtag} 
+![Mermaid Diagram](.superdeck/generated/mermaid_35iQRzBm.png)
 
 {@column}
 
-![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)
+![Mermaid Diagram](.superdeck/generated/mermaid_9ls01mLz.png)
 
 <!-- Notes go here -->
 
 ---
 ---
-![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)
-
-`![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)
-
-{@column}
-
-![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)
+{@column tag: mermaidtag} 
+![Mermaid Diagram](.superdeck/generated/mermaid_BL3YozKB.png)
 
 ---
 ---

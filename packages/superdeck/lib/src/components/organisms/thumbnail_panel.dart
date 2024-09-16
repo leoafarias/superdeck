@@ -5,7 +5,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../modules/common/helpers/hooks.dart';
 import '../../modules/common/helpers/utils.dart';
-import '../../modules/deck_reference/deck_reference_hooks.dart';
+import '../../modules/deck/deck_hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
 import '../atoms/slide_thumbnail.dart';
 
@@ -23,7 +23,7 @@ class ThumbnailPanel extends HookWidget {
 
     final currentSlideIndex = useCurrentSlideIndex();
 
-    final slides = useSlideList();
+    final slides = useSlides();
     final controller = useScrollVisibleController();
     final visibleItems = controller.visibleItems;
 

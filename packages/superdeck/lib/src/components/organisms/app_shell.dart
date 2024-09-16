@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
+import '../molecules/block_widget.dart';
 import '../molecules/bottom_bar.dart';
 import '../molecules/scaled_app.dart';
 import 'note_panel.dart';
@@ -71,28 +73,28 @@ class SplitView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPresnterMenuOpen = useIsPresenterMenuOpen();
+    final isPresenterMenuOpen = useIsPresenterMenuOpen();
     final navigationActions = useNavigationActions();
     final navigatonState = useNavigationState();
 
     final bottomAnimation = useAnimationController(
       duration: _duration,
-      initialValue: isPresnterMenuOpen ? 1.0 : 0.0,
+      initialValue: isPresenterMenuOpen ? 1.0 : 0.0,
     );
 
     usePostFrameEffect(() {
-      if (isPresnterMenuOpen) {
+      if (isPresenterMenuOpen) {
         bottomAnimation.forward();
       } else {
         bottomAnimation.reverse();
       }
-    }, [isPresnterMenuOpen]);
+    }, [isPresenterMenuOpen]);
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 9, 9, 9),
       key: kScaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      floatingActionButton: !isPresnterMenuOpen
+      floatingActionButton: !isPresenterMenuOpen
           ? IconButton(
               onPressed: navigationActions.openPresenterMenu,
               icon: const Icon(Icons.menu),
@@ -108,22 +110,14 @@ class SplitView extends HookWidget {
             ),
             child: SizedBox(
               width: _thumbnailWidth,
-              child: const DefaultTabController(
-                length: 2,
-                child: Scaffold(
-                  bottomNavigationBar: TabBar(
-                    tabs: [
-                      Tab(text: 'Preview'),
-                      Tab(text: 'Notes'),
-                    ],
+              child: const Column(
+                children: [
+                  Expanded(flex: 3, child: ThumbnailPanel()),
+                  Expanded(
+                    flex: 1,
+                    child: NotePanel(),
                   ),
-                  body: TabBarView(
-                    children: [
-                      ThumbnailPanel(),
-                      NotePanel(),
-                    ],
-                  ),
-                ),
+                ],
               ),
             ),
           ),
@@ -137,7 +131,12 @@ class SplitView extends HookWidget {
                 axis: Axis.vertical,
                 child: const SDBottomBar(),
               ),
-              body: Center(child: ScaledWidget(child: child)),
+              body: Center(
+                child: BlockProvider(
+                  data: const BlockConfiguration(size: kResolution),
+                  child: ScaledWidget(child: child),
+                ),
+              ),
             ),
           )
         ],

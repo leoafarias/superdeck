@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../modules/common/helpers/extensions.dart';
-import '../modules/deck_reference/deck_reference_hooks.dart';
+import '../modules/deck/deck_hooks.dart';
 import '../modules/navigation/navigation_hooks.dart';
 import '../modules/pdf_export/pdf_export_controller.dart';
 import '../modules/widget_capture/widget_capture_service.dart';
@@ -13,7 +13,7 @@ class ExportScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slides = useSlideList();
+    final slides = useSlides();
     final currentSlideIndex = useCurrentSlideIndex();
 
     final export = usePdfExportController(

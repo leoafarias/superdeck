@@ -11,7 +11,7 @@ import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
 import '../common/helpers/extensions.dart';
-import '../deck_reference/deck_reference_provider.dart';
+import '../deck/deck_provider.dart';
 import '../navigation/navigation_provider.dart';
 import 'widget_capture_provider.dart';
 
@@ -109,13 +109,13 @@ class WidgetCaptureService {
     Size? targetSize,
   }) async {
     try {
-      final controller = context.watch<DeckReferenceProvider>().controller;
+      final controller = context.watch<DeckProvider>().controller;
       final navigation = context.watch<NavigationProvider>().controller;
       final child = InheritedTheme.captureAll(
         context,
         NavigationProvider(
           controller: navigation,
-          child: DeckReferenceProvider(
+          child: DeckProvider(
             controller: controller,
             child: MediaQuery(
               data: MediaQuery.of(context),

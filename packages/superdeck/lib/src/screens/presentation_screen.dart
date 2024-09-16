@@ -1,9 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../components/molecules/slide_preview.dart';
 import '../modules/common/helpers/hooks.dart';
-import '../modules/deck_reference/deck_reference_hooks.dart';
+import '../modules/deck/deck_hooks.dart';
 import '../modules/navigation/navigation_hooks.dart';
 
 class PresentationScreen extends HookWidget {
@@ -17,7 +18,7 @@ class PresentationScreen extends HookWidget {
     final slideIndex = useCurrentSlideIndex();
     final pageController = usePageController(initialPage: slideIndex);
 
-    final slides = useSlideList();
+    final slides = useSlides();
 
     usePostFrameEffect(() {
       if (slideIndex >= slides.length) {
@@ -36,20 +37,20 @@ class PresentationScreen extends HookWidget {
 
     return PageView(
       controller: pageController,
-      children: slides.map(SlidePreview.new).toList(),
+      children: slides.mapIndexed((index, slide) {
+        return SlideScreen(slideIndex: index);
+      }).toList(),
     );
   }
 }
 
-class SlideScreen extends HookWidget {
+class SlideScreen extends StatelessWidget {
   const SlideScreen({required this.slideIndex, super.key});
 
   final int slideIndex;
 
   @override
   Widget build(BuildContext context) {
-    final slide = useSlide(slideIndex);
-
-    return SlidePreview(slide);
+    return SlidePreview(slideIndex);
   }
 }

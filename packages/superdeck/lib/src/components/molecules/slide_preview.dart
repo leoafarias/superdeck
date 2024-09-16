@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../../modules/deck/deck_hooks.dart';
 import '../atoms/slide_view.dart';
 
-class SlidePreview<T extends Slide> extends StatelessWidget {
+class SlidePreview<T extends Slide> extends HookWidget {
   const SlidePreview(
-    this.slide, {
+    this.slideIndex, {
     super.key,
   });
 
-  final T slide;
+  final int slideIndex;
 
   @override
   Widget build(BuildContext context) {
+    final slide = useGetSlide(slideIndex);
+
     return Center(
       child: Container(
         decoration: BoxDecoration(

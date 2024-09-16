@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../common/helpers/extensions.dart';
 import '../common/helpers/routes.dart';
-import '../deck_reference/deck_reference_hooks.dart';
+import '../deck/deck_hooks.dart';
 import 'navigation_controller.dart';
 import 'navigation_provider.dart';
 
@@ -67,7 +67,7 @@ int useCurrentSlideIndex() {
 NavigationActions useNavigationActions() {
   final context = useContext();
   final controller = _useController();
-  final slides = useSlideList();
+  final slides = useSlides();
   final currentIndex = useCurrentSlideIndex();
 
   final goToSlide = useCallback((int index) {

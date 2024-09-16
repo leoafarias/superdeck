@@ -6,6 +6,7 @@ import 'package:mix/mix.dart';
 import '../../modules/common/helpers/syntax_highlighter.dart';
 import '../../modules/common/styles/style_spec.dart';
 import '../markdown/alert_block_syntax.dart';
+import '../molecules/block_widget.dart';
 import 'cache_image_widget.dart';
 
 class MarkdownViewer extends ImplicitlyAnimatedWidget {
@@ -173,10 +174,20 @@ class ImageElementBuilder extends MarkdownElementBuilder {
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     final uri = Uri.parse(element.attributes['src']!);
 
-    return CacheImage(
-      uri: uri,
-      spec: spec ?? const ImageSpec(),
-    );
+    return Builder(builder: (context) {
+      final size = BlockProvider.of(context).size;
+
+      return ConstrainedBox(
+        constraints: BoxConstraints.tight(size),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: CacheImage(
+            uri: uri,
+            spec: spec ?? const ImageSpec(),
+          ),
+        ),
+      );
+    });
   }
 }
 

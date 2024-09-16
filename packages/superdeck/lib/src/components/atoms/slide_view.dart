@@ -3,36 +3,35 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../../modules/common/helpers/extensions.dart';
 import '../../modules/common/styles/style_spec.dart';
-import '../../modules/deck_reference/deck_reference_hooks.dart';
+import '../../modules/deck/deck_controller.dart';
+import '../../modules/deck/deck_hooks.dart';
+import '../../modules/deck/deck_provider.dart';
+import '../../modules/deck/slide_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../molecules/block_widget.dart';
 import 'transition_widget.dart';
 
 class SlideView extends HookWidget {
-  final Slide config;
+  final Slide slide;
   const SlideView(
-    this.config, {
+    this.slide, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     useAutomaticKeepAlive();
-    final slide = config;
 
     final transition = slide.options?.transition;
 
-    final style = useSlideStyle(config);
-    final background = config.options?.background;
+    final builders = useGetParts();
+    final slideIndex = useGetSlideIndex(slide);
 
-    final backgroundWidget = background != null
-        ? CacheImage(
-            uri: Uri.parse(background),
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-          )
-        : const SizedBox();
+    final style = useGetSlideStyle(slide);
+
+    final background = slide.options?.background;
 
     return TransitionWidget(
       key: ValueKey(transition),
@@ -42,51 +41,103 @@ class SlideView extends HookWidget {
           builder: (context) {
             final spec = SlideSpec.of(context);
 
-            return spec.slideContainer(
-              child: Stack(
-                children: [
-                  Positioned.fill(child: backgroundWidget),
-                  Column(
-                    children: config.sections.map((section) {
-                      final sectionFlex = section.options?.flex ?? 1;
-                      final sectionAlignment =
-                          section.options?.align ?? ContentAlignment.center;
+            final configuration = SlideConfiguration(
+              slide: slide,
+              slideIndex: slideIndex,
+              spec: spec,
+              controller: context.watch<DeckProvider>().controller,
+            );
 
-                      return Expanded(
-                        flex: sectionFlex,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: section.subSections.map((subSection) {
-                            final subSectionFlex =
-                                subSection.options?.flex ?? 1;
-                            final subSectionAlignment =
-                                subSection.options?.align ??
-                                    ContentAlignment.center;
-                            return SpecBuilder(
-                                style: style.applyVariant(
-                                    Variant(subSection.type.name)),
-                                builder: (context) {
-                                  final spec = SlideSpec.of(context);
-                                  return Expanded(
-                                    flex: subSectionFlex,
-                                    child: spec.contentContainer(
-                                      child: Align(
-                                        alignment:
-                                            toAlignment(subSectionAlignment),
-                                        child: BlockWidget(subSection),
-                                      ),
-                                    ),
-                                  );
-                                });
-                          }).toList(),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
+            return SlideProvider(
+              configuration: configuration,
+              child: spec.slideContainer(
+                child: Column(
+                  children: [
+                    _SlidePartBuilder(builders.header, configuration),
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: background != null
+                                ? CacheImage(
+                                    uri: Uri.parse(background),
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.center,
+                                  )
+                                : const SizedBox(),
+                          ),
+                          Column(
+                            children: slide.sections.map((section) {
+                              final sectionFlex = section.options?.flex ?? 1;
+                              final sectionAlignment = section.options?.align ??
+                                  ContentAlignment.center;
+
+                              return Expanded(
+                                flex: sectionFlex,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: section.subSections.map(
+                                    (subSection) {
+                                      final subSectionFlex =
+                                          subSection.options?.flex ?? 1;
+                                      final subSectionAlignment =
+                                          subSection.options?.align ??
+                                              ContentAlignment.center;
+                                      return SpecBuilder(
+                                        style: style.applyVariant(
+                                            Variant(subSection.type.name)),
+                                        builder: (context) {
+                                          final spec = SlideSpec.of(context);
+                                          return Expanded(
+                                            flex: subSectionFlex,
+                                            child: spec.contentContainer(
+                                              child: Align(
+                                                alignment: toAlignment(
+                                                  subSectionAlignment,
+                                                ),
+                                                child: BlockWidget(subSection),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ).toList(),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _SlidePartBuilder(builders.footer, configuration),
+                  ],
+                ),
               ),
             );
           }),
+    );
+  }
+}
+
+class _SlidePartBuilder extends StatelessWidget {
+  final SlidePart? builder;
+  final SlideConfiguration configuration;
+
+  const _SlidePartBuilder(
+    this.builder,
+    this.configuration,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    if (builder == null) {
+      return const SizedBox();
+    }
+
+    return SizedBox(
+      height: builder!.height,
+      child: builder?.build(configuration),
     );
   }
 }

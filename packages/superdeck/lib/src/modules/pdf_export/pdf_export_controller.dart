@@ -168,7 +168,7 @@ class PdfExportController extends ChangeNotifier {
 
         return RepaintBoundary(
           key: _slideKeys[slide.key],
-          child: SlidePreview(slide),
+          child: SlidePreview(index),
         );
       },
     );

@@ -251,59 +251,52 @@ slides:
             options: null
             type: 'column'
     notes: []
-  - key: '84OXoPw1'
+  - key: 'SwH4MDZr'
     options: {}
     markdown: |-
       ### Lists
       
-      
-      ![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
+      {@column tag: mermaidtag} 
+      ![Mermaid Diagram](.superdeck/generated/mermaid_35iQRzBm.png)
       
       {@column}
       
-      ![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)
+      ![Mermaid Diagram](.superdeck/generated/mermaid_9ls01mLz.png)
       
       <!-- Notes go here -->
     sections: 
       - sub_sections: 
           - content: |
               ### Lists
+            type: 'column'
+          - content: |
               
-              
-              ![Mermaid Diagram](.superdeck/generated/mermaid_drzCSSND.png)
+              ![Mermaid Diagram](.superdeck/generated/mermaid_35iQRzBm.png)
+            options: 
+              tag: 'mermaidtag'
             type: 'column'
           - content: |-
               
               
-              ![Mermaid Diagram](.superdeck/generated/mermaid_5rpc8RsX.png)
+              ![Mermaid Diagram](.superdeck/generated/mermaid_9ls01mLz.png)
               
               <!-- Notes go here -->
             options: null
             type: 'column'
     notes: 
       - content: 'Notes go here'
-  - key: 'Hb0Ckmmr'
+  - key: 'XZn50Z7c'
     options: {}
     markdown: |-
-      ![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)
-      
-      `![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)
-      
-      {@column}
-      
-      ![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)
+      {@column tag: mermaidtag} 
+      ![Mermaid Diagram](.superdeck/generated/mermaid_BL3YozKB.png)
     sections: 
       - sub_sections: 
-          - content: |
-              ![Mermaid Diagram](.superdeck/generated/mermaid_z3WwaAnJ.png)
-              
-              `![Mermaid Diagram](.superdeck/generated/mermaid_2T41mK0F.png)
-            type: 'column'
           - content: |-
               
-              
-              ![Mermaid Diagram](.superdeck/generated/mermaid_lE8UmZGn.png)
-            options: null
+              ![Mermaid Diagram](.superdeck/generated/mermaid_BL3YozKB.png)
+            options: 
+              tag: 'mermaidtag'
             type: 'column'
     notes: []
   - key: 'BWbYfNH8'
@@ -580,33 +573,18 @@ assets:
   - path: '.superdeck/generated/thumbnail_AsbP12bN.png'
     width: 512
     height: 288
-  - path: '.superdeck/generated/mermaid_drzCSSND.png'
-    width: 313
-    height: 449
-  - path: '.superdeck/generated/mermaid_5rpc8RsX.png'
-    width: 650
-    height: 171
-  - path: '.superdeck/generated/thumbnail_84OXoPw1.png'
-    width: 512
-    height: 288
-  - path: '.superdeck/generated/mermaid_z3WwaAnJ.png'
-    width: 1264
-    height: 565
-  - path: '.superdeck/generated/mermaid_2T41mK0F.png'
-    width: 700
-    height: 500
-  - path: '.superdeck/generated/mermaid_lE8UmZGn.png'
-    width: 655
-    height: 450
-  - path: '.superdeck/generated/thumbnail_Hb0Ckmmr.png'
-    width: 512
-    height: 288
+  - path: '.superdeck/generated/mermaid_35iQRzBm.png'
+    width: 494
+    height: 920
+  - path: '.superdeck/generated/mermaid_9ls01mLz.png'
+    width: 968
+    height: 606
+  - path: '.superdeck/generated/mermaid_BL3YozKB.png'
+    width: 494
+    height: 920
   - path: '.superdeck/generated/mermaid_qbuY1RWf.png'
-    width: 115
-    height: 346
-  - path: '.superdeck/generated/thumbnail_BWbYfNH8.png'
-    width: 512
-    height: 288
+    width: 222
+    height: 674
   - path: '.superdeck/generated/thumbnail_m6aTFAjV.png'
     width: 512
     height: 288

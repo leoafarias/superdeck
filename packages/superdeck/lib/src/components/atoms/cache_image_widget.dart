@@ -8,7 +8,7 @@ import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/extensions.dart';
-import '../../modules/deck_reference/deck_reference_provider.dart';
+import '../../modules/deck/deck_provider.dart';
 
 class CacheImage extends StatelessWidget {
   final Uri uri;
@@ -112,8 +112,7 @@ ImageProvider getImageProvider(
   Uri uri, {
   Size? targetSize,
 }) {
-  final asset =
-      context.watch<DeckReferenceProvider>().controller.getImageAsset(uri);
+  final asset = context.watch<DeckProvider>().controller.getImageAsset(uri);
 
   if (asset == null) {
     return _getProvider(uri.toString());

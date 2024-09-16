@@ -1,27 +1,119 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/extensions.dart';
+import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/common/styles/style_spec.dart';
-import '../../modules/deck_reference/deck_reference_provider.dart';
+import '../../modules/deck/deck_hooks.dart';
+import '../../modules/deck/deck_provider.dart';
 import '../../modules/widget_capture/widget_capture_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
-class BlockWidget<T extends SubSectionBlockDto> extends StatelessWidget {
+class BlockWidget<T extends SubSectionBlockDto> extends HookWidget {
   const BlockWidget(this.block, {super.key});
 
   final T block;
 
   @override
   Widget build(context) {
-    return switch (block) {
-      (ImageBlockDto p) => _ImageBlockWidget(p),
-      (ColumnBlockDto p) => _ContentBlockWidget(p),
-      (WidgetBlockDto p) => _WidgetBlockWidget(p),
-      (GistBlockDto p) => _GistBlockWidget(p),
-    };
+    final widgetSize = useState<Size?>(null);
+    final partsHeight = useTotalPartsHeight();
+    return BlockProvider(
+      data: BlockConfiguration(
+          size: widgetSize.value ??
+              Size(kResolution.width, kResolution.height - partsHeight)),
+      child: MeasureSize(
+        onChange: (size) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            widgetSize.value = size;
+          });
+        },
+        child: switch (block) {
+          (ImageBlockDto p) => _ImageBlockWidget(p),
+          (ColumnBlockDto p) => _ContentBlockWidget(p),
+          (WidgetBlockDto p) => _WidgetBlockWidget(p),
+          (GistBlockDto p) => _GistBlockWidget(p),
+        },
+      ),
+    );
+  }
+}
+
+class BlockConfiguration {
+  const BlockConfiguration({required this.size});
+
+  final Size size;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BlockConfiguration && other.size == size;
+  }
+
+  @override
+  int get hashCode => size.hashCode;
+}
+
+class BlockHero extends StatelessWidget {
+  const BlockHero({
+    super.key,
+    required this.tag,
+    required this.child,
+  });
+
+  final String tag;
+  final Widget child;
+
+  @override
+  Widget build(context) {
+    return Hero(
+      flightShuttleBuilder: (flightContext, animation, flightDirection,
+          fromHeroContext, BuildContext toHeroContext) {
+        final toSize = BlockProvider.of(toHeroContext).size;
+        final fromSize = BlockProvider.of(fromHeroContext).size;
+        return AnimatedBuilder(
+            animation: animation,
+            child: child,
+            builder: (context, child) {
+              final interpolatedSize =
+                  Size.lerp(fromSize, toSize, animation.value)!;
+
+              return BlockProvider(
+                data: BlockConfiguration(size: interpolatedSize),
+                child: child!,
+              );
+            });
+      },
+      tag: tag,
+      child: child,
+    );
+  }
+}
+
+class BlockProvider extends InheritedWidget {
+  const BlockProvider({
+    super.key,
+    required this.data,
+    required super.child,
+  });
+
+  final BlockConfiguration data;
+
+  static BlockConfiguration of(BuildContext context) {
+    final provider =
+        context.dependOnInheritedWidgetOfExactType<BlockProvider>();
+    return provider!.data;
+  }
+
+  @override
+  bool updateShouldNotify(BlockProvider oldWidget) {
+    return data != oldWidget.data;
   }
 }
 
@@ -36,6 +128,7 @@ class _ContentBlockWidget extends StatelessWidget {
     final options = block.options;
     final content = block.content;
     final alignment = options?.align ?? ContentAlignment.center;
+    final hasTag = options?.tag != null;
 
     final spec = SlideSpec.of(context);
 
@@ -45,8 +138,15 @@ class _ContentBlockWidget extends StatelessWidget {
       duration: Durations.medium1,
     );
 
-    if (options?.tag != null) {
-      child = Hero(
+    child = Wrap(
+      clipBehavior: Clip.hardEdge,
+      children: [
+        child,
+      ],
+    );
+
+    if (hasTag) {
+      child = BlockHero(
         tag: options!.tag!,
         child: child,
       );
@@ -56,18 +156,14 @@ class _ContentBlockWidget extends StatelessWidget {
       child = SingleChildScrollView(
         child: child,
       );
-    } else {
-      child = Wrap(
-        clipBehavior: Clip.hardEdge,
-        children: [
-          child,
-        ],
-      );
     }
-    return Align(
+
+    child = Align(
       alignment: toAlignment(alignment),
       child: child,
     );
+
+    return child;
   }
 }
 
@@ -90,7 +186,7 @@ class _ImageBlockWidget extends StatelessWidget {
     );
 
     if (tag != null) {
-      widget = Hero(
+      widget = BlockHero(
         tag: tag,
         child: widget,
       );
@@ -108,10 +204,8 @@ class _WidgetBlockWidget extends StatelessWidget {
   @override
   Widget build(context) {
     final options = block.options;
-    final widgetBuilder = context
-        .watch<DeckReferenceProvider>()
-        .controller
-        .getExampleWidget(options.name);
+    final widgetBuilder =
+        context.watch<DeckProvider>().controller.getExampleWidget(options.name);
 
     if (widgetBuilder == null) {
       return Container(
@@ -127,7 +221,7 @@ class _WidgetBlockWidget extends StatelessWidget {
         final widget = widgetBuilder(context, options);
 
         if (options.tag != null) {
-          return Hero(
+          return BlockHero(
             tag: options.tag!,
             child: widget,
           );

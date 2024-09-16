@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/generator_pipeline.dart';
@@ -26,15 +27,48 @@ Future<String> _generateMermaidGraph(
 
   await page.setContent('''
     <html>
+
+    
       <body>
         <pre class="mermaid">
           $graphDefinition
         </pre>
         <script type="module">
           import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+           const themeVariables = {
+            darkMode: true, // Dark mode is enabled
+            background: '#000000', // Background color
+            fontFamily: 'Arial, sans-serif', // Font family
+            fontSize: '14px', // Font size
+            primaryColor: '#6200FFFF', // Primary node background color
+            primaryTextColor: '#FFFFFF', // Primary text color inside nodes
+            primaryBorderColor: '#6200FFFF', // Primary node border color
+            secondaryColor: '#ff6600', // Secondary node background color
+            secondaryTextColor: '#000000', // Secondary node text color
+            secondaryBorderColor: '#ff6600', // Secondary node border color
+            tertiaryColor: '#ffcc00', // Tertiary node background color
+            tertiaryTextColor: '#000000', // Tertiary node text color
+            tertiaryBorderColor: '#ffcc00', // Tertiary node border color
+            noteBkgColor: '#333333', // Note background color
+            noteTextColor: '#FFFFFF', // Note text color
+            noteBorderColor: '#ffcc00', // Note border color
+            lineColor: '#555555', // Line color connecting the nodes
+            errorBkgColor: '#00FFFBFF', // Background color for errors
+            errorTextColor: '#000000', // Text color for errors
+            
+          };
+
           mermaid.initialize({
-            startOnLoad: false,
-            theme: 'dark',
+            startOnLoad: true,
+            theme: 'base',
+            darkMode: true,
+
+            flowchart: {
+              // defaultRenderer: "elk",
+              // curve: 'linear', // Optional: 'cardinal', 'linear', 'natural', etc.
+            },
+            themeVariables: themeVariables,
           });
           mermaid.run({
             querySelector: 'pre.mermaid',
@@ -88,6 +122,12 @@ Future<String> _convertToRoughDraft(Browser browser, String svgContent) async {
 Future<List<int>> _convertSvgToImage(Browser browser, String svgContent) async {
   final page = await browser.newPage();
 
+  await page.setViewport(DeviceViewport(
+    width: 1280, // Set desired width
+    height: 780, // Set desired height
+    deviceScaleFactor: 2, // Control the scale (1 is standard)
+  ));
+
   await page.setContent('''
     <html>
       <body>
@@ -103,6 +143,10 @@ Future<List<int>> _convertSvgToImage(Browser browser, String svgContent) async {
     omitBackground: true,
   );
 
+  page.onConsole.listen((msg) {
+    log('PAGE LOG: ${msg.text}');
+  });
+
   await page.close();
 
   return screenshot;
@@ -115,7 +159,7 @@ Future<List<int>> generateRoughMermaidGraph(
     // final roughDraft = await _convertToRoughDraft(browser, svgContent);
 
     return _convertSvgToImage(browser, svgContent);
-  } on Exception catch (e) {
+  } on Exception catch (_) {
     throw Exception(
       'Mermaid generation timedout, maybe this is not a supported graph',
     );

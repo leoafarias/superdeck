@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../modules/deck_reference/deck_reference_hooks.dart';
+import '../../modules/deck/deck_hooks.dart';
 
 class NotePanel extends HookWidget {
   const NotePanel({
@@ -12,16 +13,31 @@ class NotePanel extends HookWidget {
   Widget build(BuildContext context) {
     final slide = useCurrentSlide();
 
+    final notes =
+        slide.notes.isEmpty ? [SlideNote(content: 'No notes')] : slide.notes;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
           child: Container(
-            color: Colors.grey,
+            decoration: BoxDecoration(
+              color: Theme.of(context).dialogBackgroundColor,
+              border: Border(
+                top: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                ),
+              ),
+            ),
+            padding: const EdgeInsets.all(16),
             child: SingleChildScrollView(
               child: Column(
-                children:
-                    slide.notes.map((note) => Text(note.content)).toList(),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: notes
+                    .map(
+                      (note) => Text(note.content),
+                    )
+                    .toList(),
               ),
             ),
           ),

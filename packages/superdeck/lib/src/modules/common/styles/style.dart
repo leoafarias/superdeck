@@ -3,12 +3,12 @@ import 'package:mix/mix.dart';
 
 import 'style_spec.dart';
 
-TextStyle get baseTextStyle =>
+TextStyle get _baseTextStyle =>
     const TextStyle().copyWith(fontSize: 20, height: 1.4, color: Colors.white);
-TextStyle get monoTextStyle => baseTextStyle.copyWith(fontSize: 16);
-TextStyle get serifTextStyle => baseTextStyle.copyWith(fontSize: 50);
+TextStyle get _monoTextStyle => _baseTextStyle.copyWith(fontSize: 16);
+TextStyle get _serifTextStyle => _baseTextStyle.copyWith(fontSize: 50);
 
-TextStyle get headingTextStyle => baseTextStyle.copyWith(height: 1.2);
+TextStyle get headingTextStyle => _baseTextStyle.copyWith(height: 1.2);
 
 const onGist = Variant('gist');
 const onDebug = Variant('debug');
@@ -18,7 +18,7 @@ class DeckStyle {
   DeckStyle();
   SlideSpecUtility<SlideSpecAttribute> get $ => SlideSpecUtility.self;
 
-  Style get baseStyle {
+  Style build() {
     final containers = [
       $.slideContainer.color.black(),
       $.contentContainer.padding.all(40),
@@ -40,7 +40,7 @@ class DeckStyle {
       // Heading
       $.alert.all.heading.chain
         ..capitalize()
-        ..style.as(baseTextStyle)
+        ..style.as(_baseTextStyle)
         ..style.bold(),
       // Container
       $.alert.all.container.chain
@@ -51,7 +51,7 @@ class DeckStyle {
         ..border.left.width(4),
       // Description
       $.alert.all.description.chain
-        ..style.as(baseTextStyle)
+        ..style.as(_baseTextStyle)
         ..textAlign.left()
         ..style.height(1.6)
         ..style.fontSize(16),
@@ -70,9 +70,9 @@ class DeckStyle {
 
     final typography = [
       $.headingTextStyle.style.as(headingTextStyle),
-      $.baseTextStyle.as(baseTextStyle),
+      $.baseTextStyle.as(_baseTextStyle),
       $.p.chain
-        ..style.as(baseTextStyle)
+        ..style.as(_baseTextStyle)
         ..wrap.padding.bottom(12),
       $.h1.chain
         ..style.fontSize(96)
@@ -90,26 +90,26 @@ class DeckStyle {
         ..style.fontSize(24)
         ..wrap.padding.bottom(3),
       $.h6.chain
-        ..style.as(baseTextStyle)
+        ..style.as(_baseTextStyle)
         ..wrap.padding.bottom(3),
     ];
 
     final codeStyle = $.code.chain
-      ..textStyle.as(monoTextStyle)
+      ..textStyle.as(_monoTextStyle)
       ..padding.all(24)
       ..decoration.color(const Color.fromARGB(255, 23, 23, 23))
       ..decoration.borderRadius.circular(10);
 
     final tableStyle = $.table.chain
-      ..headStyle.as(baseTextStyle)
+      ..headStyle.as(_baseTextStyle)
       ..headStyle.fontWeight.bold()
-      ..bodyStyle.as(baseTextStyle)
+      ..bodyStyle.as(_baseTextStyle)
       ..cellPadding.all(12)
       ..border.all(color: Colors.grey, width: 2)
       ..cellDecoration.color(Colors.grey.withOpacity(0.1));
 
     final blockquoteStyle = $.blockquote.chain
-      ..textStyle.as(serifTextStyle)
+      ..textStyle.as(_serifTextStyle)
       ..textStyle.fontSize(32)
       ..padding(
         bottom: 12,
@@ -122,7 +122,7 @@ class DeckStyle {
 
     final MarkdownListSpecUtility<SlideSpecAttribute> listStyle = $.list.chain
       ..bulletPadding.left(0)
-      ..bulletStyle.as(baseTextStyle);
+      ..bulletStyle.as(_baseTextStyle);
 
     return Style.create([
       ...containers,
@@ -132,8 +132,8 @@ class DeckStyle {
       ...alertStyle,
 
       $.link.color(const Color.fromARGB(255, 66, 82, 96)),
-      $.list.bulletStyle.as(baseTextStyle),
-      $.checkbox.textStyle.as(baseTextStyle),
+      $.list.bulletStyle.as(_baseTextStyle),
+      $.checkbox.textStyle.as(_baseTextStyle),
 
       tableStyle,
       blockquoteStyle,
@@ -142,8 +142,6 @@ class DeckStyle {
       $.image.fit.cover(),
     ]);
   }
-
-  Style build() => baseStyle;
 }
 
 class SlideSpecSectionsUtility {
