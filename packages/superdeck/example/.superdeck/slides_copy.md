@@ -63,8 +63,11 @@
 ```
 
 ---
-background: 'https://picsum.photos/1400/1200?wavfeffsfffffccf'
-style: 'cover'
+colors: 
+  - '#36FFFF'
+  - '#00ff00'
+  - '#0000ff'
+  - '#ffff00'
 ---
 {@section}
 {@column align: top_right flex: 2 tag: supertag}
@@ -79,6 +82,8 @@ style: 'cover'
    - first
       - first
       - second
+
+![Image](assets/image_test.png)
 
 {@column}
 

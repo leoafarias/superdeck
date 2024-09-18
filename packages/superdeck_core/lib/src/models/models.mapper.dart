@@ -1773,7 +1773,6 @@ class SlideOptionsMapper extends ClassMapperBase<SlideOptions> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideOptionsMapper._());
       ConfigMapper.ensureInitialized();
-      TransitionOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1790,26 +1789,28 @@ class SlideOptionsMapper extends ClassMapperBase<SlideOptions> {
   static String? _$style(SlideOptions v) => v.style;
   static const Field<SlideOptions, String> _f$style =
       Field('style', _$style, opt: true);
-  static TransitionOptions? _$transition(SlideOptions v) => v.transition;
-  static const Field<SlideOptions, TransitionOptions> _f$transition =
-      Field('transition', _$transition, opt: true);
+  static Map<String, Object?> _$args(SlideOptions v) => v.args;
+  static const Field<SlideOptions, Map<String, Object?>> _f$args =
+      Field('args', _$args, opt: true, def: const {});
 
   @override
   final MappableFields<SlideOptions> fields = const {
     #title: _f$title,
     #background: _f$background,
     #style: _f$style,
-    #transition: _f$transition,
+    #args: _f$args,
   };
   @override
   final bool ignoreNull = true;
 
+  @override
+  final MappingHook hook = const UnmappedPropertiesHook('args');
   static SlideOptions _instantiate(DecodingData data) {
     return SlideOptions(
         title: data.dec(_f$title),
         background: data.dec(_f$background),
         style: data.dec(_f$style),
-        transition: data.dec(_f$transition));
+        args: data.dec(_f$args));
   }
 
   @override
@@ -1864,9 +1865,7 @@ extension SlideOptionsValueCopy<$R, $Out>
 
 abstract class SlideOptionsCopyWith<$R, $In extends SlideOptions, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
-      get transition;
-  $R call({String? background, String? style, TransitionOptions? transition});
+  $R call({String? background, String? style});
   SlideOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -1879,25 +1878,17 @@ class _SlideOptionsCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SlideOptions> $mapper =
       SlideOptionsMapper.ensureInitialized();
   @override
-  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
-      get transition =>
-          $value.transition?.copyWith.$chain((v) => call(transition: v));
-  @override
-  $R call(
-          {Object? background = $none,
-          Object? style = $none,
-          Object? transition = $none}) =>
+  $R call({Object? background = $none, Object? style = $none}) =>
       $apply(FieldCopyWithData({
         if (background != $none) #background: background,
-        if (style != $none) #style: style,
-        if (transition != $none) #transition: transition
+        if (style != $none) #style: style
       }));
   @override
   SlideOptions $make(CopyWithData data) => SlideOptions(
       title: data.get(#title, or: $value.title),
       background: data.get(#background, or: $value.background),
       style: data.get(#style, or: $value.style),
-      transition: data.get(#transition, or: $value.transition));
+      args: data.get(#args, or: $value.args));
 
   @override
   SlideOptionsCopyWith<$R2, SlideOptions, $Out2> $chain<$R2, $Out2>(
@@ -1905,149 +1896,135 @@ class _SlideOptionsCopyWithImpl<$R, $Out>
       _SlideOptionsCopyWithImpl($value, $cast, t);
 }
 
-class TransitionOptionsMapper extends ClassMapperBase<TransitionOptions> {
-  TransitionOptionsMapper._();
+class ConfigMapper extends ClassMapperBase<Config> {
+  ConfigMapper._();
 
-  static TransitionOptionsMapper? _instance;
-  static TransitionOptionsMapper ensureInitialized() {
+  static ConfigMapper? _instance;
+  static ConfigMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = TransitionOptionsMapper._());
-      MapperContainer.globals.useAll([DurationMapper()]);
-      TransitionTypeMapper.ensureInitialized();
-      CurveTypeMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = ConfigMapper._());
+      SlideOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'TransitionOptions';
+  final String id = 'Config';
 
-  static TransitionType _$type(TransitionOptions v) => v.type;
-  static const Field<TransitionOptions, TransitionType> _f$type =
-      Field('type', _$type);
-  static Duration? _$duration(TransitionOptions v) => v.duration;
-  static const Field<TransitionOptions, Duration> _f$duration =
-      Field('duration', _$duration, opt: true);
-  static Duration? _$delay(TransitionOptions v) => v.delay;
-  static const Field<TransitionOptions, Duration> _f$delay =
-      Field('delay', _$delay, opt: true);
-  static CurveType? _$curve(TransitionOptions v) => v.curve;
-  static const Field<TransitionOptions, CurveType> _f$curve =
-      Field('curve', _$curve, opt: true);
+  static String? _$background(Config v) => v.background;
+  static const Field<Config, String> _f$background =
+      Field('background', _$background);
+  static String? _$style(Config v) => v.style;
+  static const Field<Config, String> _f$style = Field('style', _$style);
+  static bool? _$cacheRemoteAssets(Config v) => v.cacheRemoteAssets;
+  static const Field<Config, bool> _f$cacheRemoteAssets = Field(
+      'cacheRemoteAssets', _$cacheRemoteAssets,
+      key: 'cache_remote_assets', opt: true);
+  static String? _$title(Config v) => v.title;
+  static const Field<Config, String> _f$title =
+      Field('title', _$title, mode: FieldMode.member);
+  static Map<String, Object?> _$args(Config v) => v.args;
+  static const Field<Config, Map<String, Object?>> _f$args =
+      Field('args', _$args, mode: FieldMode.member);
 
   @override
-  final MappableFields<TransitionOptions> fields = const {
-    #type: _f$type,
-    #duration: _f$duration,
-    #delay: _f$delay,
-    #curve: _f$curve,
+  final MappableFields<Config> fields = const {
+    #background: _f$background,
+    #style: _f$style,
+    #cacheRemoteAssets: _f$cacheRemoteAssets,
+    #title: _f$title,
+    #args: _f$args,
   };
   @override
   final bool ignoreNull = true;
 
-  static TransitionOptions _instantiate(DecodingData data) {
-    return TransitionOptions(
-        type: data.dec(_f$type),
-        duration: data.dec(_f$duration),
-        delay: data.dec(_f$delay),
-        curve: data.dec(_f$curve));
+  @override
+  final MappingHook superHook = const UnmappedPropertiesHook('args');
+
+  static Config _instantiate(DecodingData data) {
+    return Config(
+        background: data.dec(_f$background),
+        style: data.dec(_f$style),
+        cacheRemoteAssets: data.dec(_f$cacheRemoteAssets));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static TransitionOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<TransitionOptions>(map);
+  static Config fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Config>(map);
   }
 
-  static TransitionOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<TransitionOptions>(json);
+  static Config fromJson(String json) {
+    return ensureInitialized().decodeJson<Config>(json);
   }
 }
 
-mixin TransitionOptionsMappable {
+mixin ConfigMappable {
   String toJson() {
-    return TransitionOptionsMapper.ensureInitialized()
-        .encodeJson<TransitionOptions>(this as TransitionOptions);
+    return ConfigMapper.ensureInitialized().encodeJson<Config>(this as Config);
   }
 
   Map<String, dynamic> toMap() {
-    return TransitionOptionsMapper.ensureInitialized()
-        .encodeMap<TransitionOptions>(this as TransitionOptions);
+    return ConfigMapper.ensureInitialized().encodeMap<Config>(this as Config);
   }
 
-  TransitionOptionsCopyWith<TransitionOptions, TransitionOptions,
-          TransitionOptions>
-      get copyWith => _TransitionOptionsCopyWithImpl(
-          this as TransitionOptions, $identity, $identity);
+  ConfigCopyWith<Config, Config, Config> get copyWith =>
+      _ConfigCopyWithImpl(this as Config, $identity, $identity);
   @override
   String toString() {
-    return TransitionOptionsMapper.ensureInitialized()
-        .stringifyValue(this as TransitionOptions);
+    return ConfigMapper.ensureInitialized().stringifyValue(this as Config);
   }
 
   @override
   bool operator ==(Object other) {
-    return TransitionOptionsMapper.ensureInitialized()
-        .equalsValue(this as TransitionOptions, other);
+    return ConfigMapper.ensureInitialized().equalsValue(this as Config, other);
   }
 
   @override
   int get hashCode {
-    return TransitionOptionsMapper.ensureInitialized()
-        .hashValue(this as TransitionOptions);
+    return ConfigMapper.ensureInitialized().hashValue(this as Config);
   }
 }
 
-extension TransitionOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, TransitionOptions, $Out> {
-  TransitionOptionsCopyWith<$R, TransitionOptions, $Out>
-      get $asTransitionOptions =>
-          $base.as((v, t, t2) => _TransitionOptionsCopyWithImpl(v, t, t2));
+extension ConfigValueCopy<$R, $Out> on ObjectCopyWith<$R, Config, $Out> {
+  ConfigCopyWith<$R, Config, $Out> get $asConfig =>
+      $base.as((v, t, t2) => _ConfigCopyWithImpl(v, t, t2));
 }
 
-abstract class TransitionOptionsCopyWith<$R, $In extends TransitionOptions,
-    $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call(
-      {TransitionType? type,
-      Duration? duration,
-      Duration? delay,
-      CurveType? curve});
-  TransitionOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+abstract class ConfigCopyWith<$R, $In extends Config, $Out>
+    implements SlideOptionsCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? background, String? style, bool? cacheRemoteAssets});
+  ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _TransitionOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, TransitionOptions, $Out>
-    implements TransitionOptionsCopyWith<$R, TransitionOptions, $Out> {
-  _TransitionOptionsCopyWithImpl(super.value, super.then, super.then2);
+class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
+    implements ConfigCopyWith<$R, Config, $Out> {
+  _ConfigCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<TransitionOptions> $mapper =
-      TransitionOptionsMapper.ensureInitialized();
+  late final ClassMapperBase<Config> $mapper = ConfigMapper.ensureInitialized();
   @override
   $R call(
-          {TransitionType? type,
-          Object? duration = $none,
-          Object? delay = $none,
-          Object? curve = $none}) =>
+          {Object? background = $none,
+          Object? style = $none,
+          Object? cacheRemoteAssets = $none}) =>
       $apply(FieldCopyWithData({
-        if (type != null) #type: type,
-        if (duration != $none) #duration: duration,
-        if (delay != $none) #delay: delay,
-        if (curve != $none) #curve: curve
+        if (background != $none) #background: background,
+        if (style != $none) #style: style,
+        if (cacheRemoteAssets != $none) #cacheRemoteAssets: cacheRemoteAssets
       }));
   @override
-  TransitionOptions $make(CopyWithData data) => TransitionOptions(
-      type: data.get(#type, or: $value.type),
-      duration: data.get(#duration, or: $value.duration),
-      delay: data.get(#delay, or: $value.delay),
-      curve: data.get(#curve, or: $value.curve));
+  Config $make(CopyWithData data) => Config(
+      background: data.get(#background, or: $value.background),
+      style: data.get(#style, or: $value.style),
+      cacheRemoteAssets:
+          data.get(#cacheRemoteAssets, or: $value.cacheRemoteAssets));
 
   @override
-  TransitionOptionsCopyWith<$R2, TransitionOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _TransitionOptionsCopyWithImpl($value, $cast, t);
+  ConfigCopyWith<$R2, Config, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _ConfigCopyWithImpl($value, $cast, t);
 }
 
 class TransitionTypeMapper extends EnumMapper<TransitionType> {
@@ -2370,150 +2347,6 @@ extension CurveTypeMapperExtension on CurveType {
   }
 }
 
-class ConfigMapper extends ClassMapperBase<Config> {
-  ConfigMapper._();
-
-  static ConfigMapper? _instance;
-  static ConfigMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ConfigMapper._());
-      SlideOptionsMapper.ensureInitialized();
-      TransitionOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'Config';
-
-  static String? _$background(Config v) => v.background;
-  static const Field<Config, String> _f$background =
-      Field('background', _$background);
-  static String? _$style(Config v) => v.style;
-  static const Field<Config, String> _f$style = Field('style', _$style);
-  static TransitionOptions? _$transition(Config v) => v.transition;
-  static const Field<Config, TransitionOptions> _f$transition =
-      Field('transition', _$transition);
-  static bool? _$cacheRemoteAssets(Config v) => v.cacheRemoteAssets;
-  static const Field<Config, bool> _f$cacheRemoteAssets = Field(
-      'cacheRemoteAssets', _$cacheRemoteAssets,
-      key: 'cache_remote_assets', opt: true);
-  static String? _$title(Config v) => v.title;
-  static const Field<Config, String> _f$title =
-      Field('title', _$title, mode: FieldMode.member);
-
-  @override
-  final MappableFields<Config> fields = const {
-    #background: _f$background,
-    #style: _f$style,
-    #transition: _f$transition,
-    #cacheRemoteAssets: _f$cacheRemoteAssets,
-    #title: _f$title,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static Config _instantiate(DecodingData data) {
-    return Config(
-        background: data.dec(_f$background),
-        style: data.dec(_f$style),
-        transition: data.dec(_f$transition),
-        cacheRemoteAssets: data.dec(_f$cacheRemoteAssets));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Config fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<Config>(map);
-  }
-
-  static Config fromJson(String json) {
-    return ensureInitialized().decodeJson<Config>(json);
-  }
-}
-
-mixin ConfigMappable {
-  String toJson() {
-    return ConfigMapper.ensureInitialized().encodeJson<Config>(this as Config);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ConfigMapper.ensureInitialized().encodeMap<Config>(this as Config);
-  }
-
-  ConfigCopyWith<Config, Config, Config> get copyWith =>
-      _ConfigCopyWithImpl(this as Config, $identity, $identity);
-  @override
-  String toString() {
-    return ConfigMapper.ensureInitialized().stringifyValue(this as Config);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return ConfigMapper.ensureInitialized().equalsValue(this as Config, other);
-  }
-
-  @override
-  int get hashCode {
-    return ConfigMapper.ensureInitialized().hashValue(this as Config);
-  }
-}
-
-extension ConfigValueCopy<$R, $Out> on ObjectCopyWith<$R, Config, $Out> {
-  ConfigCopyWith<$R, Config, $Out> get $asConfig =>
-      $base.as((v, t, t2) => _ConfigCopyWithImpl(v, t, t2));
-}
-
-abstract class ConfigCopyWith<$R, $In extends Config, $Out>
-    implements SlideOptionsCopyWith<$R, $In, $Out> {
-  @override
-  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
-      get transition;
-  @override
-  $R call(
-      {String? background,
-      String? style,
-      TransitionOptions? transition,
-      bool? cacheRemoteAssets});
-  ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
-    implements ConfigCopyWith<$R, Config, $Out> {
-  _ConfigCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Config> $mapper = ConfigMapper.ensureInitialized();
-  @override
-  TransitionOptionsCopyWith<$R, TransitionOptions, TransitionOptions>?
-      get transition =>
-          $value.transition?.copyWith.$chain((v) => call(transition: v));
-  @override
-  $R call(
-          {Object? background = $none,
-          Object? style = $none,
-          Object? transition = $none,
-          Object? cacheRemoteAssets = $none}) =>
-      $apply(FieldCopyWithData({
-        if (background != $none) #background: background,
-        if (style != $none) #style: style,
-        if (transition != $none) #transition: transition,
-        if (cacheRemoteAssets != $none) #cacheRemoteAssets: cacheRemoteAssets
-      }));
-  @override
-  Config $make(CopyWithData data) => Config(
-      background: data.get(#background, or: $value.background),
-      style: data.get(#style, or: $value.style),
-      transition: data.get(#transition, or: $value.transition),
-      cacheRemoteAssets:
-          data.get(#cacheRemoteAssets, or: $value.cacheRemoteAssets));
-
-  @override
-  ConfigCopyWith<$R2, Config, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ConfigCopyWithImpl($value, $cast, t);
-}
-
 class LayoutPositionMapper extends EnumMapper<LayoutPosition> {
   LayoutPositionMapper._();
 
@@ -2566,6 +2399,151 @@ extension LayoutPositionMapperExtension on LayoutPosition {
     LayoutPositionMapper.ensureInitialized();
     return MapperContainer.globals.toValue<LayoutPosition>(this) as String;
   }
+}
+
+class TransitionOptionsMapper extends ClassMapperBase<TransitionOptions> {
+  TransitionOptionsMapper._();
+
+  static TransitionOptionsMapper? _instance;
+  static TransitionOptionsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = TransitionOptionsMapper._());
+      MapperContainer.globals.useAll([DurationMapper()]);
+      TransitionTypeMapper.ensureInitialized();
+      CurveTypeMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'TransitionOptions';
+
+  static TransitionType _$type(TransitionOptions v) => v.type;
+  static const Field<TransitionOptions, TransitionType> _f$type =
+      Field('type', _$type);
+  static Duration? _$duration(TransitionOptions v) => v.duration;
+  static const Field<TransitionOptions, Duration> _f$duration =
+      Field('duration', _$duration, opt: true);
+  static Duration? _$delay(TransitionOptions v) => v.delay;
+  static const Field<TransitionOptions, Duration> _f$delay =
+      Field('delay', _$delay, opt: true);
+  static CurveType? _$curve(TransitionOptions v) => v.curve;
+  static const Field<TransitionOptions, CurveType> _f$curve =
+      Field('curve', _$curve, opt: true);
+
+  @override
+  final MappableFields<TransitionOptions> fields = const {
+    #type: _f$type,
+    #duration: _f$duration,
+    #delay: _f$delay,
+    #curve: _f$curve,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static TransitionOptions _instantiate(DecodingData data) {
+    return TransitionOptions(
+        type: data.dec(_f$type),
+        duration: data.dec(_f$duration),
+        delay: data.dec(_f$delay),
+        curve: data.dec(_f$curve));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static TransitionOptions fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<TransitionOptions>(map);
+  }
+
+  static TransitionOptions fromJson(String json) {
+    return ensureInitialized().decodeJson<TransitionOptions>(json);
+  }
+}
+
+mixin TransitionOptionsMappable {
+  String toJson() {
+    return TransitionOptionsMapper.ensureInitialized()
+        .encodeJson<TransitionOptions>(this as TransitionOptions);
+  }
+
+  Map<String, dynamic> toMap() {
+    return TransitionOptionsMapper.ensureInitialized()
+        .encodeMap<TransitionOptions>(this as TransitionOptions);
+  }
+
+  TransitionOptionsCopyWith<TransitionOptions, TransitionOptions,
+          TransitionOptions>
+      get copyWith => _TransitionOptionsCopyWithImpl(
+          this as TransitionOptions, $identity, $identity);
+  @override
+  String toString() {
+    return TransitionOptionsMapper.ensureInitialized()
+        .stringifyValue(this as TransitionOptions);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return TransitionOptionsMapper.ensureInitialized()
+        .equalsValue(this as TransitionOptions, other);
+  }
+
+  @override
+  int get hashCode {
+    return TransitionOptionsMapper.ensureInitialized()
+        .hashValue(this as TransitionOptions);
+  }
+}
+
+extension TransitionOptionsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, TransitionOptions, $Out> {
+  TransitionOptionsCopyWith<$R, TransitionOptions, $Out>
+      get $asTransitionOptions =>
+          $base.as((v, t, t2) => _TransitionOptionsCopyWithImpl(v, t, t2));
+}
+
+abstract class TransitionOptionsCopyWith<$R, $In extends TransitionOptions,
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
+  $R call(
+      {TransitionType? type,
+      Duration? duration,
+      Duration? delay,
+      CurveType? curve});
+  TransitionOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _TransitionOptionsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, TransitionOptions, $Out>
+    implements TransitionOptionsCopyWith<$R, TransitionOptions, $Out> {
+  _TransitionOptionsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<TransitionOptions> $mapper =
+      TransitionOptionsMapper.ensureInitialized();
+  @override
+  $R call(
+          {TransitionType? type,
+          Object? duration = $none,
+          Object? delay = $none,
+          Object? curve = $none}) =>
+      $apply(FieldCopyWithData({
+        if (type != null) #type: type,
+        if (duration != $none) #duration: duration,
+        if (delay != $none) #delay: delay,
+        if (curve != $none) #curve: curve
+      }));
+  @override
+  TransitionOptions $make(CopyWithData data) => TransitionOptions(
+      type: data.get(#type, or: $value.type),
+      duration: data.get(#duration, or: $value.duration),
+      delay: data.get(#delay, or: $value.delay),
+      curve: data.get(#curve, or: $value.curve));
+
+  @override
+  TransitionOptionsCopyWith<$R2, TransitionOptions, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _TransitionOptionsCopyWithImpl($value, $cast, t);
 }
 
 class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {

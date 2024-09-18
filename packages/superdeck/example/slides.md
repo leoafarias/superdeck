@@ -65,8 +65,11 @@
 
 
 ---
-style: cover
-background: https://picsum.photos/1400/1200?wavfeffsfffffccf
+colors:
+  - "#36FFFF"
+  - "#00ff00"
+  - "#0000ff"
+  - "#ffff00"
 ---
 
 {@section}
@@ -82,6 +85,8 @@ background: https://picsum.photos/1400/1200?wavfeffsfffffccf
    - first
       - first
       - second
+
+![Image](assets/image_test.png)
 
 {@column}
 

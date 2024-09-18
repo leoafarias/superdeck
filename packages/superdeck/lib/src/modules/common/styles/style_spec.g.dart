@@ -155,10 +155,10 @@ final class MarkdownTextSpecAttribute extends SpecAttribute<MarkdownTextSpec> {
       ];
 }
 
-/// Utility class for configuring [MarkdownTextSpecAttribute] properties.
+/// Utility class for configuring [MarkdownTextSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownTextSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownTextSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownTextSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownTextSpec].
 class MarkdownTextSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownTextSpecAttribute> {
   /// Utility for defining [MarkdownTextSpecAttribute.textStyle]
@@ -390,10 +390,10 @@ final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
       ];
 }
 
-/// Utility class for configuring [MarkdownListSpecAttribute] properties.
+/// Utility class for configuring [MarkdownListSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownListSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownListSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownListSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownListSpec].
 class MarkdownListSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownListSpecAttribute> {
   /// Utility for defining [MarkdownListSpecAttribute.indent]
@@ -630,10 +630,10 @@ final class MarkdownAlertSpecAttribute
       ];
 }
 
-/// Utility class for configuring [MarkdownAlertSpecAttribute] properties.
+/// Utility class for configuring [MarkdownAlertSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownAlertSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownAlertSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownAlertSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownAlertSpec].
 class MarkdownAlertSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownAlertSpecAttribute> {
   /// Utility for defining [MarkdownAlertSpecAttribute.note]
@@ -883,10 +883,10 @@ final class MarkdownAlertTypeSpecAttribute
       ];
 }
 
-/// Utility class for configuring [MarkdownAlertTypeSpecAttribute] properties.
+/// Utility class for configuring [MarkdownAlertTypeSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownAlertTypeSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownAlertTypeSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownAlertTypeSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownAlertTypeSpec].
 class MarkdownAlertTypeSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownAlertTypeSpecAttribute> {
   /// Utility for defining [MarkdownAlertTypeSpecAttribute.heading]
@@ -1169,10 +1169,10 @@ final class MarkdownTableSpecAttribute
       ];
 }
 
-/// Utility class for configuring [MarkdownTableSpecAttribute] properties.
+/// Utility class for configuring [MarkdownTableSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownTableSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownTableSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownTableSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownTableSpec].
 class MarkdownTableSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownTableSpecAttribute> {
   /// Utility for defining [MarkdownTableSpecAttribute.headStyle]
@@ -1424,10 +1424,10 @@ final class MarkdownBlockquoteSpecAttribute
       ];
 }
 
-/// Utility class for configuring [MarkdownBlockquoteSpecAttribute] properties.
+/// Utility class for configuring [MarkdownBlockquoteSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownBlockquoteSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownBlockquoteSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownBlockquoteSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownBlockquoteSpec].
 class MarkdownBlockquoteSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownBlockquoteSpecAttribute> {
   /// Utility for defining [MarkdownBlockquoteSpecAttribute.textStyle]
@@ -1651,10 +1651,10 @@ final class MarkdownCodeblockSpecAttribute
       ];
 }
 
-/// Utility class for configuring [MarkdownCodeblockSpecAttribute] properties.
+/// Utility class for configuring [MarkdownCodeblockSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownCodeblockSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownCodeblockSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownCodeblockSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownCodeblockSpec].
 class MarkdownCodeblockSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownCodeblockSpecAttribute> {
   /// Utility for defining [MarkdownCodeblockSpecAttribute.textStyle]
@@ -1860,10 +1860,10 @@ class MarkdownCheckboxSpecAttribute
       ];
 }
 
-/// Utility class for configuring [MarkdownCheckboxSpecAttribute] properties.
+/// Utility class for configuring [MarkdownCheckboxSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [MarkdownCheckboxSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [MarkdownCheckboxSpecAttribute].
+/// This class provides methods to set individual properties of a [MarkdownCheckboxSpec].
+/// Use the methods of this class to configure specific properties of a [MarkdownCheckboxSpec].
 class MarkdownCheckboxSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownCheckboxSpecAttribute> {
   /// Utility for defining [MarkdownCheckboxSpecAttribute.textStyle]
@@ -2293,10 +2293,10 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       ];
 }
 
-/// Utility class for configuring [SlideSpecAttribute] properties.
+/// Utility class for configuring [SlideSpec] properties.
 ///
-/// This class provides methods to set individual properties of a [SlideSpecAttribute].
-/// Use the methods of this class to configure specific properties of a [SlideSpecAttribute].
+/// This class provides methods to set individual properties of a [SlideSpec].
+/// Use the methods of this class to configure specific properties of a [SlideSpec].
 class SlideSpecUtility<T extends Attribute>
     extends SpecUtility<T, SlideSpecAttribute> {
   /// Utility for defining [SlideSpecAttribute.h1]

@@ -9,9 +9,7 @@ import '../modules/common/helpers/constants.dart';
 import '../modules/common/helpers/routes.dart';
 import '../modules/common/helpers/syntax_highlighter.dart';
 import '../modules/common/helpers/theme.dart';
-import '../modules/deck/deck_provider.dart';
 import '../modules/navigation/navigation_controller.dart';
-import '../modules/navigation/navigation_provider.dart';
 import 'atoms/conditional_widget.dart';
 import 'atoms/loading_indicator.dart';
 
@@ -25,6 +23,7 @@ class SuperDeckApp extends StatelessWidget {
     this.examples = const <String, ExampleBuilder>{},
     this.header,
     this.footer,
+    this.background,
   });
 
   final DeckStyle? baseStyle;
@@ -32,6 +31,7 @@ class SuperDeckApp extends StatelessWidget {
   final Map<String, DeckStyle> styles;
   final SlidePart? header;
   final SlidePart? footer;
+  final Widget? background;
 
   static Future<void> initialize() async {
     // Return if its initialized
@@ -54,6 +54,7 @@ class SuperDeckApp extends StatelessWidget {
       baseStyle: baseStyle,
       examples: examples,
       styles: styles,
+      background: background,
       header: header,
       footer: footer,
       child: MaterialApp.router(
@@ -75,6 +76,7 @@ class SuperDeckProvider extends StatefulWidget {
     this.examples = const <String, ExampleBuilder>{},
     this.header,
     this.footer,
+    this.background,
   });
 
   final Widget child;
@@ -83,6 +85,7 @@ class SuperDeckProvider extends StatefulWidget {
   final Map<String, DeckStyle> styles;
   final SlidePart? header;
   final SlidePart? footer;
+  final Widget? background;
 
   @override
   State<SuperDeckProvider> createState() => _SuperDeckProviderState();
@@ -98,6 +101,7 @@ class _SuperDeckProviderState extends State<SuperDeckProvider> {
     _controller = DeckController(
       baseStyle: widget.baseStyle ?? DeckStyle(),
       examples: widget.examples,
+      background: widget.background,
       styles: widget.styles,
       header: widget.header,
       footer: widget.footer,
@@ -132,11 +136,9 @@ class _SuperDeckProviderState extends State<SuperDeckProvider> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationProvider(
-      controller: _navigation,
-      child: DeckProvider(
-        controller: _controller,
-        child: ListenableBuilder(
+    return _navigation.watch(
+      (context, _) => _controller.watch(
+        (context) => ListenableBuilder(
             listenable: Listenable.merge([_controller, _navigation]),
             builder: (context, _) {
               return Stack(

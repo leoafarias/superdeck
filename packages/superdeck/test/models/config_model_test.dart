@@ -15,8 +15,7 @@ void main() {
 
       expect(config.background, 'bg.jpg');
       expect(config.style, 'dark');
-      expect(config.transition?.type, TransitionType.fadeInDownBig);
-      expect(config.transition?.duration, const Duration(milliseconds: 500));
+
       expect(config.cacheRemoteAssets, true);
     });
 
@@ -28,8 +27,7 @@ void main() {
 
       expect(config.background, 'bg.jpg');
       expect(config.style, 'light');
-      expect(config.transition?.type, TransitionType.slideInRight);
-      expect(config.transition?.duration, const Duration(seconds: 1));
+
       expect(config.cacheRemoteAssets, false);
     });
   });

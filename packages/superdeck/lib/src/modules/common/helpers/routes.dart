@@ -109,13 +109,22 @@ CustomTransitionPage<void> _getPageTransition(
     key: state.pageKey,
     maintainState: true,
     transitionDuration: isBack
-        ? const Duration(milliseconds: 0)
+        ? const Duration(milliseconds: 00)
         : const Duration(milliseconds: 500),
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(
-        opacity: animation,
-        child: child,
+        opacity: Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(animation),
+        child: FadeTransition(
+          opacity: Tween<double>(
+            begin: 1.0,
+            end: 0.0,
+          ).animate(secondaryAnimation),
+          child: child,
+        ),
       );
     },
   );

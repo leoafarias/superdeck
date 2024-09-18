@@ -6,7 +6,6 @@ import 'package:superdeck_core/superdeck_core.dart';
 import '../common/helpers/async_value.dart';
 import '../common/styles/style.dart';
 import 'deck_service.dart';
-import 'slide_provider.dart';
 
 /// A controller for managing deck references and associated data.
 ///
@@ -30,23 +29,6 @@ import 'slide_provider.dart';
 
 bool _isDebug = true;
 
-final class SlidePartBuilder extends SlidePart {
-  final Widget Function(SlideConfiguration) builder;
-  const SlidePartBuilder({
-    super.key,
-    required this.builder,
-    required this.height,
-  });
-
-  @override
-  final double height;
-
-  @override
-  Widget build(SlideConfiguration configuration) {
-    return builder(configuration);
-  }
-}
-
 abstract class SlidePart extends StatefulWidget {
   double get height;
 
@@ -54,7 +36,7 @@ abstract class SlidePart extends StatefulWidget {
     super.key,
   });
 
-  Widget build(SlideConfiguration configuration);
+  Widget build(BuildContext context);
 
   @override
   SlidePartState createState() => SlidePartState();
@@ -63,12 +45,12 @@ abstract class SlidePart extends StatefulWidget {
 class SlidePartState extends State<SlidePart> {
   @override
   Widget build(BuildContext context) {
-    final configuration = SlideProvider.of(context).configuration;
-    SizedBox(
+    return SizedBox(
       height: widget.height,
-      child: widget.build(configuration),
+      child: Builder(builder: (context) {
+        return widget.build(context);
+      }),
     );
-    return widget.build(configuration);
   }
 }
 
@@ -77,8 +59,11 @@ class DeckController extends ChangeNotifier {
   Map<String, DeckStyle> _styles = {};
   Map<String, ExampleBuilder> _examples = {};
   DeckStyle _baseStyle = DeckStyle();
-  SlidePart? header;
-  SlidePart? footer;
+  SlidePart? _header;
+  SlidePart? _footer;
+  final Widget? _background;
+  late List<Slide> _slides;
+  late List<SlideAsset> _assets;
 
   AsyncValue<ReferenceDto> asyncData = const AsyncValue.loading();
 
@@ -90,16 +75,52 @@ class DeckController extends ChangeNotifier {
   DeckController({
     required Map<String, DeckStyle> styles,
     required DeckStyle baseStyle,
+    List<Slide> initialSlides = const [],
+    List<SlideAsset> initialAssets = const [],
     required Map<String, ExampleBuilder> examples,
-    this.header,
-    this.footer,
-  }) {
+    SlidePart? header,
+    SlidePart? footer,
+    Widget? background,
+    bool lazy = false,
+  })  : _footer = footer,
+        _header = header,
+        _background = background {
     _styles = styles;
+    _slides = initialSlides;
+    _assets = initialAssets;
 
     _baseStyle = baseStyle;
     _examples = examples;
-    loadReferences();
-    _referenceService.listen(loadReferences);
+    if (!lazy) {
+      loadReferences();
+
+      _referenceService.listen(loadReferences);
+    }
+  }
+
+  DeckController singleSlide(Slide slide) {
+    return copyWith(slides: [slide]);
+  }
+
+  DeckController copyWith({
+    DeckStyle? baseStyle,
+    Map<String, DeckStyle>? styles,
+    Map<String, ExampleBuilder>? examples,
+    SlidePart? header,
+    SlidePart? footer,
+    List<Slide>? slides,
+  }) {
+    return DeckController(
+      baseStyle: baseStyle ?? _baseStyle,
+      styles: styles ?? _styles,
+      examples: examples ?? _examples,
+      initialSlides: slides ?? _slides,
+      initialAssets: _assets,
+      header: header ?? _header,
+      footer: footer ?? _footer,
+      background: _background,
+      lazy: true,
+    );
   }
 
   void update({
@@ -108,17 +129,18 @@ class DeckController extends ChangeNotifier {
     Map<String, ExampleBuilder>? examples,
     SlidePart? headerBuilder,
     SlidePart? footerBuilder,
+    List<Slide>? slides,
   }) {
     if (baseStyle != null) {
       baseStyle = baseStyle;
     }
 
     if (headerBuilder != null) {
-      header = headerBuilder;
+      _header = headerBuilder;
     }
 
     if (footerBuilder != null) {
-      footer = footerBuilder;
+      _footer = footerBuilder;
     }
 
     if (styles != null) {
@@ -129,7 +151,40 @@ class DeckController extends ChangeNotifier {
       examples = examples;
     }
 
+    if (slides != null) {
+      _slides = slides;
+    }
+
     notifyListeners();
+  }
+
+  double get totalPartsHeight {
+    final headerHeight = _header?.height ?? 0;
+    final footerHeight = _footer?.height ?? 0;
+
+    return headerHeight + footerHeight;
+  }
+
+  SlidePart? get header => _header;
+
+  SlidePart? get footer => _footer;
+
+  static DeckController of(BuildContext context) {
+    final provider =
+        context.dependOnInheritedWidgetOfExactType<_DeckControllerProvider>();
+    return provider!.controller;
+  }
+
+  Widget watch(Widget Function(BuildContext context) builder) {
+    return _DeckControllerProvider(
+        controller: this,
+        child: Builder(
+          builder: builder,
+        ));
+  }
+
+  Widget buildBackground() {
+    return _background ?? const SizedBox();
   }
 
   /// Whether reference data is currently being loaded.
@@ -145,12 +200,12 @@ class DeckController extends ChangeNotifier {
   bool get hasData => asyncData.hasValue;
 
   /// The list of slides in the loaded reference data.
-  List<Slide> get slides => asyncData.requireData.slides;
-
-  ReferenceDto get requireData => asyncData.requireData;
+  List<Slide> get slides => _slides;
 
   /// The list of assets in the loaded reference data.
-  List<SlideAsset> get assets => asyncData.requireData.assets;
+  List<SlideAsset> get assets => _assets;
+
+  Slide getSlide(int index) => slides[index];
 
   /// Retrieves the [Style] registered with the given [name].
   ///
@@ -187,6 +242,9 @@ class DeckController extends ChangeNotifier {
         status: AsyncStatus.sucess,
         data: data,
       );
+
+      _slides = data.slides;
+      _assets = data.assets;
     } catch (error, stackTrace) {
       asyncData = AsyncValue.error(error, stackTrace);
     } finally {
@@ -206,3 +264,18 @@ typedef ExampleBuilder = Widget Function(
   BuildContext context,
   WidgetOptions options,
 );
+
+/// An inherited notifier that provides access to a [DeckController].
+///
+/// This class is used internally by [_DeckControllerProvider] to propagate the
+/// [DeckController] down the widget tree.
+class _DeckControllerProvider extends InheritedNotifier<DeckController> {
+  /// Creates a [_DeckControllerProvider] with the given [controller] and [child].
+  const _DeckControllerProvider({
+    required this.controller,
+    required super.child,
+  });
+
+  /// The [DeckController] instance associated with this inherited notifier.
+  final DeckController controller;
+}

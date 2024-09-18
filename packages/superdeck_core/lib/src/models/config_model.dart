@@ -1,17 +1,19 @@
 part of 'models.dart';
 
-@MappableClass()
+@MappableClass(
+  hook: UnmappedPropertiesHook('args'),
+)
 class SlideOptions with SlideOptionsMappable {
   final String? title;
   final String? background;
   final String? style;
-  final TransitionOptions? transition;
+  final Map<String, Object?> args;
 
   const SlideOptions({
     this.title,
     this.background,
     this.style,
-    this.transition,
+    this.args = const {},
   });
 
   static final fromMap = SlideOptionsMapper.fromMap;
@@ -21,9 +23,8 @@ class SlideOptions with SlideOptionsMappable {
       "title": Schema.string,
       "background": Schema.string,
       "style": Schema.string,
-      "transition": TransitionOptions.schema.optional(),
     },
-    additionalProperties: false,
+    additionalProperties: true,
   );
 }
 
@@ -34,7 +35,6 @@ class Config extends SlideOptions with ConfigMappable {
   const Config({
     required super.background,
     required super.style,
-    required super.transition,
     this.cacheRemoteAssets,
   });
 
@@ -52,7 +52,6 @@ class Config extends SlideOptions with ConfigMappable {
           cacheRemoteAssets: null,
           background: null,
           style: null,
-          transition: null,
         );
 
   static const fromMap = ConfigMapper.fromMap;

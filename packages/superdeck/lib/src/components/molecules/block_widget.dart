@@ -8,7 +8,6 @@ import '../../modules/common/helpers/extensions.dart';
 import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/common/styles/style_spec.dart';
 import '../../modules/deck/deck_hooks.dart';
-import '../../modules/deck/deck_provider.dart';
 import '../../modules/widget_capture/widget_capture_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
@@ -73,10 +72,16 @@ class BlockHero extends StatelessWidget {
   @override
   Widget build(context) {
     return Hero(
-      flightShuttleBuilder: (flightContext, animation, flightDirection,
-          fromHeroContext, BuildContext toHeroContext) {
+      flightShuttleBuilder: (
+        flightContext,
+        animation,
+        flightDirection,
+        fromHeroContext,
+        BuildContext toHeroContext,
+      ) {
         final toSize = BlockProvider.of(toHeroContext).size;
         final fromSize = BlockProvider.of(fromHeroContext).size;
+
         return AnimatedBuilder(
             animation: animation,
             child: child,
@@ -204,8 +209,8 @@ class _WidgetBlockWidget extends StatelessWidget {
   @override
   Widget build(context) {
     final options = block.options;
-    final widgetBuilder =
-        context.watch<DeckProvider>().controller.getExampleWidget(options.name);
+
+    final widgetBuilder = context.deck.getExampleWidget(options.name);
 
     if (widgetBuilder == null) {
       return Container(

@@ -7,12 +7,11 @@ import '../common/helpers/extensions.dart';
 import '../common/helpers/routes.dart';
 import '../deck/deck_hooks.dart';
 import 'navigation_controller.dart';
-import 'navigation_provider.dart';
 
 NavigationController _useController() {
   final context = useContext();
 
-  return useListenable(context.watch<NavigationProvider>().controller);
+  return useListenable(context.navigation);
 }
 
 T _useSelectController<T>(T Function(NavigationController) selector) {

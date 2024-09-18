@@ -1,7 +1,4 @@
-config: 
-  transition: 
-    type: 'fade_in'
-    duration: 0
+config: {}
 slides: 
   - key: 'RhWMtoMW'
     options: {}
@@ -144,10 +141,13 @@ slides:
             options: null
             type: 'column'
     notes: []
-  - key: 'AsbP12bN'
+  - key: 'Qt9V95dl'
     options: 
-      background: 'https://picsum.photos/1400/1200?wavfeffsfffffccf'
-      style: 'cover'
+      colors: 
+        - '#36FFFF'
+        - '#00ff00'
+        - '#0000ff'
+        - '#ffff00'
     markdown: |-
       {@section}
       {@column align: top_right flex: 2 tag: supertag}
@@ -162,6 +162,8 @@ slides:
          - first
             - first
             - second
+      
+      ![Image](assets/image_test.png)
       
       {@column}
       
@@ -214,6 +216,8 @@ slides:
                  - first
                     - first
                     - second
+              
+              ![Image](assets/image_test.png)
             options: 
               align: 'top_left'
             type: 'column'
@@ -570,7 +574,7 @@ assets:
   - path: '.superdeck/generated/thumbnail_RhWMtoMW.png'
     width: 512
     height: 288
-  - path: '.superdeck/generated/thumbnail_AsbP12bN.png'
+  - path: '.superdeck/generated/thumbnail_Qt9V95dl.png'
     width: 512
     height: 288
   - path: '.superdeck/generated/mermaid_35iQRzBm.png'
@@ -578,13 +582,22 @@ assets:
     height: 920
   - path: '.superdeck/generated/mermaid_9ls01mLz.png'
     width: 968
-    height: 606
+    height: 618
+  - path: '.superdeck/generated/thumbnail_SwH4MDZr.png'
+    width: 512
+    height: 288
   - path: '.superdeck/generated/mermaid_BL3YozKB.png'
     width: 494
     height: 920
+  - path: '.superdeck/generated/thumbnail_XZn50Z7c.png'
+    width: 512
+    height: 288
   - path: '.superdeck/generated/mermaid_qbuY1RWf.png'
     width: 222
     height: 674
+  - path: '.superdeck/generated/thumbnail_BWbYfNH8.png'
+    width: 512
+    height: 288
   - path: '.superdeck/generated/thumbnail_m6aTFAjV.png'
     width: 512
     height: 288

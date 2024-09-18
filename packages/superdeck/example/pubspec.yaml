@@ -14,7 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.2.1
-  mix: ^1.4.6
+  mesh: ^0.4.1
+  mix: ^1.5.0
   superdeck:
     path: ../
 
@@ -29,5 +30,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/
     - .superdeck/
     - .superdeck/generated/

@@ -20,7 +20,7 @@ class DeckStyle {
 
   Style build() {
     final containers = [
-      $.slideContainer.color.black(),
+      $.slideContainer.color.transparent(),
       $.contentContainer.padding.all(40),
       $.section.image(
         $.contentContainer.padding.all(0),

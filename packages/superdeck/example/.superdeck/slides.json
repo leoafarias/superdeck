@@ -1,10 +1,5 @@
 {
-  "config": {
-    "transition": {
-      "type": "fade_in",
-      "duration": 0
-    }
-  },
+  "config": {},
   "slides": [
     {
       "key": "RhWMtoMW",
@@ -48,12 +43,16 @@
       "notes": []
     },
     {
-      "key": "AsbP12bN",
+      "key": "Qt9V95dl",
       "options": {
-        "background": "https://picsum.photos/1400/1200?wavfeffsfffffccf",
-        "style": "cover"
+        "colors": [
+          "#36FFFF",
+          "#00ff00",
+          "#0000ff",
+          "#ffff00"
+        ]
       },
-      "markdown": "{@section}\n{@column align: top_right flex: 2 tag: supertag}\n# Change\n\n{@section flex: 2 }\n{@column align: top_left}\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n{@column}\n\n#### Ordered List\n\n### car\n\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n\n{@column}\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
+      "markdown": "{@section}\n{@column align: top_right flex: 2 tag: supertag}\n# Change\n\n{@section flex: 2 }\n{@column align: top_left}\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n![Image](assets/image_test.png)\n\n{@column}\n\n#### Ordered List\n\n### car\n\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n\n{@column}\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
       "sections": [
         {
           "options": null,
@@ -75,7 +74,7 @@
           },
           "sub_sections": [
             {
-              "content": "\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n",
+              "content": "\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n![Image](assets/image_test.png)\n",
               "options": {
                 "align": "top_left"
               },
@@ -366,7 +365,7 @@
       "height": 288
     },
     {
-      "path": ".superdeck/generated/thumbnail_AsbP12bN.png",
+      "path": ".superdeck/generated/thumbnail_Qt9V95dl.png",
       "width": 512,
       "height": 288
     },
@@ -378,7 +377,12 @@
     {
       "path": ".superdeck/generated/mermaid_9ls01mLz.png",
       "width": 968,
-      "height": 606
+      "height": 618
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_SwH4MDZr.png",
+      "width": 512,
+      "height": 288
     },
     {
       "path": ".superdeck/generated/mermaid_BL3YozKB.png",
@@ -386,9 +390,19 @@
       "height": 920
     },
     {
+      "path": ".superdeck/generated/thumbnail_XZn50Z7c.png",
+      "width": 512,
+      "height": 288
+    },
+    {
       "path": ".superdeck/generated/mermaid_qbuY1RWf.png",
       "width": 222,
       "height": 674
+    },
+    {
+      "path": ".superdeck/generated/thumbnail_BWbYfNH8.png",
+      "width": 512,
+      "height": 288
     },
     {
       "path": ".superdeck/generated/thumbnail_m6aTFAjV.png",

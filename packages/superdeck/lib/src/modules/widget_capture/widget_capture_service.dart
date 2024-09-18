@@ -10,9 +10,6 @@ import 'package:flutter/services.dart';
 import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
-import '../common/helpers/extensions.dart';
-import '../deck/deck_provider.dart';
-import '../navigation/navigation_provider.dart';
 import 'widget_capture_provider.dart';
 
 enum WidgetCaptureQuality {
@@ -62,8 +59,14 @@ class WidgetCaptureService {
 
       _generationQueue.add(queueKey);
 
+      final controller = DeckController.of(kScaffoldKey.currentContext!);
+
       final image = await _fromWidgetToImage(
-        SnapshotProvider(isCapturing: true, child: SlideView(slide)),
+        SnapshotProvider(
+            isCapturing: true,
+            child: controller.watch(
+              (_) => const SlideView(0),
+            )),
         context: kScaffoldKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
@@ -109,20 +112,20 @@ class WidgetCaptureService {
     Size? targetSize,
   }) async {
     try {
-      final controller = context.watch<DeckProvider>().controller;
-      final navigation = context.watch<NavigationProvider>().controller;
+      final controller = DeckController.of(context);
+      final navigation = context.navigation;
       final child = InheritedTheme.captureAll(
         context,
-        NavigationProvider(
-          controller: navigation,
-          child: DeckProvider(
-            controller: controller,
-            child: MediaQuery(
-              data: MediaQuery.of(context),
-              child: MaterialApp(
-                theme: Theme.of(context),
-                debugShowCheckedModeBanner: false,
-                home: Scaffold(body: widget),
+        MediaQuery(
+          data: MediaQuery.of(context),
+          child: MaterialApp(
+            theme: Theme.of(context),
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              body: navigation.watch(
+                (context, _) => controller.watch(
+                  (context) => widget,
+                ),
               ),
             ),
           ),

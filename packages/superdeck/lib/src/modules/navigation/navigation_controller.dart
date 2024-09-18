@@ -22,6 +22,23 @@ class NavigationController extends ChangeNotifier {
     });
   }
 
+  static NavigationController of(BuildContext context) {
+    final provider =
+        context.dependOnInheritedWidgetOfExactType<_NavigationProvider>();
+    return provider!.controller;
+  }
+
+  Widget watch(
+      Widget Function(BuildContext context, NavigationController controller)
+          builder) {
+    return _NavigationProvider(
+      controller: this,
+      child: Builder(
+        builder: (context) => builder(context, this),
+      ),
+    );
+  }
+
   void togglePresenterMenu() {
     isPresenterMenuOpen = !isPresenterMenuOpen;
     notifyListeners();
@@ -50,4 +67,13 @@ class NavigationController extends ChangeNotifier {
   static void _set<T>(String key, T value) {
     localStorage.setItem(key, jsonEncode(value));
   }
+}
+
+class _NavigationProvider extends InheritedNotifier<NavigationController> {
+  const _NavigationProvider({
+    required this.controller,
+    required super.child,
+  });
+
+  final NavigationController controller;
 }

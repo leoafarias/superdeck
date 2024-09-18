@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../modules/common/helpers/constants.dart';
+import '../../modules/common/helpers/extensions.dart';
 import '../../modules/common/helpers/hooks.dart';
+import '../../modules/deck/slide_provider.dart';
 import '../../modules/navigation/navigation_hooks.dart';
 import '../molecules/block_widget.dart';
 import '../molecules/bottom_bar.dart';
@@ -67,6 +70,21 @@ class SplitView extends HookWidget {
     super.key,
     required this.child,
   });
+
+  int _getCurrentSlideIndex(BuildContext context) {
+    final goRouter = GoRouter.of(context);
+    final uri = goRouter.routeInformationProvider.value.uri;
+
+    if (uri.pathSegments.length >= 2 && uri.pathSegments[0] == 'slides') {
+      final slideIdStr = uri.pathSegments[1];
+      final slideIndex = int.tryParse(slideIdStr);
+      if (slideIndex != null) {
+        return slideIndex;
+      }
+    }
+
+    return 0;
+  }
 
   final _thumbnailWidth = 300.0;
   final _duration = const Duration(milliseconds: 200);
@@ -132,10 +150,21 @@ class SplitView extends HookWidget {
                 child: const SDBottomBar(),
               ),
               body: Center(
-                child: BlockProvider(
-                  data: const BlockConfiguration(size: kResolution),
-                  child: ScaledWidget(child: child),
-                ),
+                child: SlideConfigurationBuilder(
+                    controller: context.deck,
+                    slideIndex: _getCurrentSlideIndex(context),
+                    builder: (context, _) {
+                      return BlockProvider(
+                        data: const BlockConfiguration(size: kResolution),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                                child: context.deck.buildBackground()),
+                            ScaledWidget(child: child),
+                          ],
+                        ),
+                      );
+                    }),
               ),
             ),
           )
