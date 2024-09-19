@@ -16,7 +16,7 @@ void main() {
       expect(finder, findsOneWidget);
       // Check if template model equals to slide model
       final template = tester.widget<SlideView>(finder);
-      expect(template.slideIndex, slideConfig);
+      expect(template.slide, slideConfig);
     });
   });
 }

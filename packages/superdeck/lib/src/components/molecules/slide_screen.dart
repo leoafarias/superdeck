@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../../modules/deck/deck_hooks.dart';
 import '../atoms/slide_view.dart';
 
-class SlidePreview<T extends Slide> extends StatelessWidget {
-  const SlidePreview(
+class SlideScreen<T extends Slide> extends HookWidget {
+  const SlideScreen(
     this.slideIndex, {
     super.key,
   });
@@ -13,9 +15,13 @@ class SlidePreview<T extends Slide> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final slide = useGetSlide(slideIndex);
+    useAutomaticKeepAlive();
+
     return Center(
       child: Container(
         decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 29, 29, 29),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -24,7 +30,7 @@ class SlidePreview<T extends Slide> extends StatelessWidget {
             ),
           ],
         ),
-        child: SlideView(slideIndex),
+        child: SlideView(slide),
       ),
     );
   }

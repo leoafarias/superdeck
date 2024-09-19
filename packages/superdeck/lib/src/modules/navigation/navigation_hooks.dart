@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
-import '../common/helpers/extensions.dart';
 import '../common/helpers/routes.dart';
 import '../deck/deck_hooks.dart';
 import 'navigation_controller.dart';
@@ -11,7 +10,9 @@ import 'navigation_controller.dart';
 NavigationController _useController() {
   final context = useContext();
 
-  return useListenable(context.navigation);
+  return useListenable(
+    NavigationController.of(context),
+  );
 }
 
 T _useSelectController<T>(T Function(NavigationController) selector) {
@@ -76,7 +77,7 @@ NavigationActions useNavigationActions() {
     final isForward = index > currentIndex;
     final slidePath = SDPaths.slides.slide.define(index.toString()).path;
 
-    context.push(slidePath, extra: {'replace': !isForward});
+    context.pushReplacement(slidePath, extra: {'replace': !isForward});
   }, [context, slides, currentIndex]);
 
   final goToNextSlide = useCallback(

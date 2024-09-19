@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:go_router_paths/go_router_paths.dart';
 
 import '../../../../../superdeck.dart';
+import '../../../components/molecules/slide_screen.dart';
 import '../../../screens/export_screen.dart';
-import '../../../screens/presentation_screen.dart';
 
 class SDPaths {
   static Path get root => Path('/');
@@ -51,12 +50,9 @@ final goRouterConfig = GoRouter(
           routes: [
             GoRoute(
                 path: SDPaths.slides.goRoute,
-                pageBuilder: (context, state) => _getPage(
-                      const SlideScreen(
-                        slideIndex: 0,
-                      ),
-                      state,
-                      isRoot: true,
+                pageBuilder: (context, state) => NoTransitionPage(
+                      key: state.pageKey,
+                      child: const SlideScreen(0),
                     ),
                 routes: [
                   GoRoute(
@@ -66,7 +62,7 @@ final goRouterConfig = GoRouter(
                         state.pathParameters[SDPaths.slides.slide.id] ?? '0',
                       );
                       return _getPageTransition(
-                        SlideScreen(slideIndex: index),
+                        SlideScreen(index),
                         state,
                       );
                     },
@@ -125,32 +121,6 @@ CustomTransitionPage<void> _getPageTransition(
           ).animate(secondaryAnimation),
           child: child,
         ),
-      );
-    },
-  );
-}
-
-CustomTransitionPage<void> _getCupertinoTransition(
-  Widget child,
-  GoRouterState state,
-) {
-  final extra = state.extra as Map<String, dynamic>?;
-  final isBack = extra?['replace'] as bool? ?? false;
-  return CustomTransitionPage<void>(
-    key: state.pageKey,
-    maintainState: true,
-    transitionDuration: isBack
-        ? const Duration(milliseconds: 0)
-        : const Duration(milliseconds: 500),
-    child: child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      // Use CurpertinoPageTransition
-      // but change the animation
-      return CupertinoPageTransition(
-        primaryRouteAnimation: animation,
-        secondaryRouteAnimation: secondaryAnimation,
-        linearTransition: true,
-        child: child,
       );
     },
   );

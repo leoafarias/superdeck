@@ -61,14 +61,13 @@ Future<String> _generateMermaidGraph(
 
           mermaid.initialize({
             startOnLoad: true,
-            theme: 'base',
-            darkMode: true,
+            theme: 'dark',
 
             flowchart: {
               // defaultRenderer: "elk",
               // curve: 'linear', // Optional: 'cardinal', 'linear', 'natural', etc.
             },
-            themeVariables: themeVariables,
+            // themeVariables: themeVariables,
           });
           mermaid.run({
             querySelector: 'pre.mermaid',

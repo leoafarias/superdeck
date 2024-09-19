@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:mesh/mesh.dart';
 import 'package:superdeck/superdeck.dart';
 
@@ -15,71 +16,99 @@ Color _colorFromHex(String hexString) {
   return Color(int.parse(hexString, radix: 16));
 }
 
-const _defaultColors = [
-  Color.fromARGB(255, 239, 0, 0),
-  Color.fromARGB(255, 121, 19, 255),
-  Color.fromARGB(255, 160, 155, 24),
-  Color.fromARGB(255, 0, 221, 255),
-];
-
 OMeshRect _meshBuilder(List<Color> colors) {
   return OMeshRect(
-    width: 2,
-    height: 2,
+    width: 3,
+    height: 3,
     fallbackColor: const Color(0xff0e0e0e),
     backgroundColor: const Color(0x00d6d6d6),
     vertices: [
-      OVertex(0, 0), OVertex(1, 0), // Row 1
-      OVertex(0, 1), OVertex(1, 1), // Row 2
+      (0.0, 0.0).v, (0.5, 0.0).v, (1.0, 0.0).v, // Row 1
+
+      (0.0, 0.5).v, (0.5, 0.5).v, (1.0, 0.5).v, // Row 2
+
+      (0.0, 1.0).v, (0.5, 1.0).v, (1.0, 1.0).v, // Row 3
     ],
     colors: colors,
   );
 }
 
-class _CustomBackgroundOptions {
-  final List<Color> _colors;
-
-  const _CustomBackgroundOptions({
-    List<Color> colors = const [],
-  }) : _colors = colors;
-
-  static _CustomBackgroundOptions fromMap(Map<String, Object?>? map) {
-    if (map == null) {
-      return const _CustomBackgroundOptions();
-    }
-    return _CustomBackgroundOptions(
-      colors: (map['colors'] as List<dynamic>? ?? const []).map((color) {
-        return _colorFromHex(color.toString());
-      }).toList(),
-    );
-  }
-
-  static _CustomBackgroundOptions fromConfiguration(SlideConfiguration config) {
-    return _CustomBackgroundOptions.fromMap(config.slide.options?.args);
-  }
-
-  List<Color> get colors {
-    return _defaultColors.asMap().entries.map((entry) {
-      final index = entry.key;
-      return index < _colors.length ? _colors[index] : entry.value;
-    }).toList();
-  }
-}
-
-class BackgroundPart extends StatelessWidget {
+class BackgroundPart extends SlidePart {
   const BackgroundPart({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      final options = _CustomBackgroundOptions.fromConfiguration(
-        context.slide,
-      );
+  Widget build(BuildContext context, configuration) {
+    final previousIndex = configuration.slideIndex > 0 &&
+            configuration.slideIndex <
+                configuration.controller.slides.length - 1
+        ? configuration.slideIndex - 1
+        : 0;
 
-      return AnimatedOMeshGradient(
-          mesh: _meshBuilder(options.colors), duration: Durations.extralong4);
+    return _AnimatedSwitcherOMesh(
+      colors: _determiniscOrderBasedOnIndex(configuration.slideIndex),
+      previousColors: _determiniscOrderBasedOnIndex(previousIndex),
+      duration: const Duration(milliseconds: 1000),
+    );
+  }
+}
+
+// animate bwett colors and previous colors in duration
+class _AnimatedSwitcherOMesh extends StatefulWidget {
+  final List<Color> colors;
+  final List<Color> previousColors;
+  final Duration duration;
+
+  const _AnimatedSwitcherOMesh({
+    required this.colors,
+    required this.previousColors,
+    required this.duration,
+  });
+
+  @override
+  _AnimatedSwitcherOMeshState createState() => _AnimatedSwitcherOMeshState();
+}
+
+class _AnimatedSwitcherOMeshState extends State<_AnimatedSwitcherOMesh>
+    with SingleTickerProviderStateMixin {
+  late List<Color> _colors;
+
+  @override
+  void initState() {
+    super.initState();
+    _colors = widget.previousColors;
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _colors = widget.colors;
+        });
+      });
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOMeshGradient(
+      mesh: _meshBuilder(_colors),
+      duration: widget.duration,
+    );
+  }
+}
+
+final _buildColors = [
+  const Color.fromARGB(255, 5, 5, 28),
+  const Color.fromARGB(255, 5, 5, 5),
+  const Color.fromARGB(255, 3, 19, 48),
+  const Color.fromARGB(255, 41, 12, 56),
+  const Color.fromARGB(255, 5, 5, 5),
+  const Color.fromARGB(255, 5, 5, 5),
+  const Color.fromARGB(255, 17, 0, 63),
+  const Color.fromARGB(255, 0, 0, 0),
+  const Color.fromARGB(255, 5, 5, 5),
+];
+List<Color> _determiniscOrderBasedOnIndex(int index) {
+  return _buildColors.sublist(index % _buildColors.length)
+    ..addAll(_buildColors.sublist(0, index % _buildColors.length));
 }

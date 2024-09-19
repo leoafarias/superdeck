@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:superdeck/superdeck.dart';
 
-class HeaderPart extends SlidePart {
+class HeaderPart extends FixedSlidePart {
   const HeaderPart({
     super.key,
   });
 
   @override
-  double get height => 40;
+  double get height => 0;
 
   @override
-  Widget build(BuildContext context) {
-    final configuration = context.slide;
-    final slide = context.slide.slide;
+  Widget build(context, configuration) {
+    final slide = configuration.slide;
     final index = configuration.slideIndex;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),

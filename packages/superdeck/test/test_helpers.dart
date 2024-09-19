@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:superdeck/src/components/atoms/slide_view.dart';
+import 'package:superdeck/src/modules/common/styles/style.dart';
+import 'package:superdeck/src/modules/deck/deck_controller.dart';
 import 'package:superdeck/src/modules/widget_capture/widget_capture_provider.dart';
-import 'package:superdeck/superdeck.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 extension WidgetTesterX on WidgetTester {
   Future<void> pumpWithScaffold(Widget widget) async {
@@ -13,19 +15,21 @@ extension WidgetTesterX on WidgetTester {
     T slide, {
     bool isSnapshot = false,
     DeckStyle? style,
-    Map<String, WidgetBuilderWithOptions> examples = const {},
+    Map<String, WidgetBuilderWithOptions> widgets = const {},
     List<SlideAsset> assets = const [],
   }) async {
     final controller = DeckController(
       styles: const {},
-      initialSlides: [slide],
       baseStyle: style ?? DeckStyle(),
-      widgets: examples,
+      widgets: widgets,
     );
     return pumpWithScaffold(
       SnapshotProvider(
         isCapturing: isSnapshot,
-        child: controller.watch((context) => const SlideView(0)),
+        child: DeckControllerProvider(
+          controller: controller,
+          child: SlideView(slide),
+        ),
       ),
     );
   }

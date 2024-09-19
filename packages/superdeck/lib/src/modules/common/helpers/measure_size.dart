@@ -23,6 +23,7 @@ class MeasureSizeRenderObject extends RenderProxyBox {
   }
 }
 
+@visibleForTesting
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
@@ -35,5 +36,49 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return MeasureSizeRenderObject(onChange);
+  }
+}
+
+class MeasureSizeBuilder extends StatefulWidget {
+  final Widget Function(Size size) builder;
+  final Duration duration;
+  const MeasureSizeBuilder({
+    super.key,
+    required this.builder,
+    required this.duration,
+  });
+
+  @override
+  State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
+}
+
+class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
+  Size? _size;
+  @override
+  Widget build(BuildContext context) {
+    return MeasureSize(
+      onChange: (size) {
+        widget.builder(size);
+      },
+      child: AnimatedSize(
+        duration: widget.duration,
+        curve: Curves.easeInOut,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            Widget current = widget.builder(_size ?? constraints.biggest);
+
+            if (_size != null) {
+              current = SizedBox(
+                width: _size!.width,
+                height: _size!.height,
+                child: current,
+              );
+            }
+
+            return current;
+          },
+        ),
+      ),
+    );
   }
 }

@@ -63,7 +63,7 @@ Map<String, MarkdownElementBuilder> _markdownBuilders(SlideSpec spec) {
     'h5': HeadingTextBuilder(spec.h5),
     'h6': HeadingTextBuilder(spec.h6),
     'alert': AlertElementBuilder(spec.alert),
-    // 'p': TextBuilder(spec.p),
+    'p': TextBuilder(spec.p),
     'code': CodeElementBuilder(spec.code),
     'img': ImageElementBuilder(spec.image),
     'li': TextBuilder(spec.p),

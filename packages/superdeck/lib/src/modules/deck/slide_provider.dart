@@ -22,7 +22,7 @@ class SlideConfiguration {
 
   static SlideConfiguration of(BuildContext context) {
     return context
-        .dependOnInheritedWidgetOfExactType<_SlideConfigurationProvider>()!
+        .dependOnInheritedWidgetOfExactType<SlideConfigurationProvider>()!
         .configuration;
   }
 
@@ -33,13 +33,6 @@ class SlideConfiguration {
       slideIndex: slideIndex,
       controller: controller,
       builder: builder,
-    );
-  }
-
-  Widget provide(Widget Function(BuildContext context) builder) {
-    return _SlideConfigurationProvider(
-      configuration: this,
-      child: Builder(builder: builder),
     );
   }
 
@@ -71,16 +64,17 @@ class SlideConfiguration {
   }
 }
 
-class _SlideConfigurationProvider extends InheritedWidget {
+class SlideConfigurationProvider extends InheritedWidget {
   final SlideConfiguration configuration;
 
-  const _SlideConfigurationProvider({
+  const SlideConfigurationProvider({
+    super.key,
     required this.configuration,
     required super.child,
   });
 
   @override
-  bool updateShouldNotify(_SlideConfigurationProvider oldWidget) {
+  bool updateShouldNotify(SlideConfigurationProvider oldWidget) {
     return configuration != oldWidget.configuration;
   }
 }
@@ -117,7 +111,7 @@ class SlideConfigurationBuilder extends StatelessWidget {
           controller: controller,
         );
 
-        return _SlideConfigurationProvider(
+        return SlideConfigurationProvider(
             configuration: configuration,
             child: Builder(
               builder: (context) {
@@ -142,9 +136,6 @@ class _SlidePartBuilder extends StatelessWidget {
       return const SizedBox();
     }
 
-    return SizedBox(
-      height: part!.height,
-      child: part!.build(context),
-    );
+    return part!;
   }
 }

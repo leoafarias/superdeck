@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
+import '../navigation/navigation_controller.dart';
 import 'widget_capture_provider.dart';
 
 enum WidgetCaptureQuality {
@@ -59,14 +60,8 @@ class WidgetCaptureService {
 
       _generationQueue.add(queueKey);
 
-      final controller = DeckController.of(kScaffoldKey.currentContext!);
-
       final image = await _fromWidgetToImage(
-        SnapshotProvider(
-            isCapturing: true,
-            child: controller.watch(
-              (_) => const SlideView(0),
-            )),
+        SnapshotProvider(isCapturing: true, child: SlideView(slide)),
         context: kScaffoldKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
@@ -113,24 +108,23 @@ class WidgetCaptureService {
   }) async {
     try {
       final controller = DeckController.of(context);
-      final navigation = context.navigation;
+      final navigation = NavigationController.of(context);
       final child = InheritedTheme.captureAll(
-        context,
-        MediaQuery(
-          data: MediaQuery.of(context),
-          child: MaterialApp(
-            theme: Theme.of(context),
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              body: navigation.watch(
-                (context, _) => controller.watch(
-                  (context) => widget,
+          context,
+          NavigationProvider(
+            controller: navigation,
+            child: DeckControllerProvider(
+              controller: controller,
+              child: MediaQuery(
+                data: MediaQuery.of(context),
+                child: MaterialApp(
+                  theme: Theme.of(context),
+                  debugShowCheckedModeBanner: false,
+                  home: Scaffold(body: widget),
                 ),
               ),
             ),
-          ),
-        ),
-      );
+          ));
 
       final repaintBoundary = RenderRepaintBoundary();
       final platformDispatcher = WidgetsBinding.instance.platformDispatcher;

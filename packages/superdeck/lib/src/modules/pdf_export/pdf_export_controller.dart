@@ -8,7 +8,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../components/molecules/slide_preview.dart';
+import '../../components/molecules/slide_screen.dart';
 import '../common/helpers/constants.dart';
 import '../widget_capture/widget_capture_service.dart';
 
@@ -168,7 +168,7 @@ class PdfExportController extends ChangeNotifier {
 
         return RepaintBoundary(
           key: _slideKeys[slide.key],
-          child: SlidePreview(index),
+          child: SlideScreen(index),
         );
       },
     );

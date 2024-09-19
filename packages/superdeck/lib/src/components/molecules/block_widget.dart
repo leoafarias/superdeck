@@ -1,44 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../modules/common/helpers/constants.dart';
-import '../../modules/common/helpers/extensions.dart';
+import '../../../superdeck.dart';
 import '../../modules/common/helpers/measure_size.dart';
-import '../../modules/common/styles/style_spec.dart';
-import '../../modules/deck/deck_hooks.dart';
 import '../../modules/widget_capture/widget_capture_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
-class BlockWidget<T extends SubSectionBlockDto> extends HookWidget {
+class BlockWidget<T extends SubSectionBlockDto> extends StatelessWidget {
   const BlockWidget(this.block, {super.key});
 
   final T block;
 
   @override
   Widget build(context) {
-    final widgetSize = useState<Size?>(null);
-    final partsHeight = useTotalPartsHeight();
-    return BlockProvider(
-      data: BlockConfiguration(
-          size: widgetSize.value ??
-              Size(kResolution.width, kResolution.height - partsHeight)),
-      child: MeasureSize(
-        onChange: (size) {
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            widgetSize.value = size;
-          });
-        },
-        child: switch (block) {
-          (ImageBlockDto p) => _ImageBlockWidget(p),
-          (ColumnBlockDto p) => _ContentBlockWidget(p),
-          (WidgetBlockDto p) => _WidgetBlockWidget(p),
-          (GistBlockDto p) => _GistBlockWidget(p),
-        },
-      ),
+    return MeasureSizeBuilder(
+      duration: Durations.medium1,
+      builder: (size) {
+        return BlockProvider(
+          data: BlockConfiguration(size: size),
+          child: switch (block) {
+            (ImageBlockDto p) => _ImageBlockWidget(p),
+            (ColumnBlockDto p) => _ContentBlockWidget(p),
+            (WidgetBlockDto p) => _WidgetBlockWidget(p),
+            (GistBlockDto p) => _GistBlockWidget(p),
+          },
+        );
+      },
     );
   }
 }
@@ -79,21 +67,14 @@ class BlockHero extends StatelessWidget {
         fromHeroContext,
         BuildContext toHeroContext,
       ) {
-        final toSize = BlockProvider.of(toHeroContext).size;
-        final fromSize = BlockProvider.of(fromHeroContext).size;
+        Widget current = _flightShuttleBlockProvider(
+          animation,
+          fromHeroContext,
+          toHeroContext,
+          child,
+        );
 
-        return AnimatedBuilder(
-            animation: animation,
-            child: child,
-            builder: (context, child) {
-              final interpolatedSize =
-                  Size.lerp(fromSize, toSize, animation.value)!;
-
-              return BlockProvider(
-                data: BlockConfiguration(size: interpolatedSize),
-                child: child!,
-              );
-            });
+        return current;
       },
       tag: tag,
       child: child,
@@ -120,6 +101,29 @@ class BlockProvider extends InheritedWidget {
   bool updateShouldNotify(BlockProvider oldWidget) {
     return data != oldWidget.data;
   }
+}
+
+Widget _flightShuttleBlockProvider(
+  Animation<double> animation,
+  BuildContext fromHeroContext,
+  BuildContext toHeroContext,
+  Widget child,
+) {
+  final toSize = BlockProvider.of(toHeroContext).size;
+  final fromSize = BlockProvider.of(fromHeroContext).size;
+
+  return AnimatedBuilder(
+    animation: animation,
+    child: child,
+    builder: (context, child) {
+      final interpolatedSize = Size.lerp(fromSize, toSize, animation.value)!;
+
+      return BlockProvider(
+        data: BlockConfiguration(size: interpolatedSize),
+        child: child!,
+      );
+    },
+  );
 }
 
 class _ContentBlockWidget extends StatelessWidget {
@@ -209,8 +213,9 @@ class _WidgetBlockWidget extends StatelessWidget {
   @override
   Widget build(context) {
     final options = block.options;
+    final controller = DeckController.of(context);
 
-    final widgetBuilder = context.deck.getWidget(options.name);
+    final widgetBuilder = controller.getWidget(options.name);
 
     if (widgetBuilder == null) {
       return Container(
@@ -223,12 +228,22 @@ class _WidgetBlockWidget extends StatelessWidget {
 
     return Builder(
       builder: (context) {
-        final widget = widgetBuilder(context, options);
+        Widget widget;
+        try {
+          widget = widgetBuilder(context, options);
+        } catch (e) {
+          widget = Container(
+            color: Colors.red,
+            child: Center(
+              child: Text('Error building widget: ${options.name}\n$e'),
+            ),
+          );
+        }
 
         if (options.tag != null) {
           return BlockHero(
             tag: options.tag!,
-            child: widget,
+            child: Container(child: widget),
           );
         }
 

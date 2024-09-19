@@ -29,9 +29,9 @@ class SuperDeckApp extends StatelessWidget {
   final DeckStyle? baseStyle;
   final Map<String, WidgetBuilderWithOptions> widgets;
   final Map<String, DeckStyle> styles;
-  final SlidePart? header;
-  final SlidePart? footer;
-  final Widget? background;
+  final FixedSlidePart? header;
+  final FixedSlidePart? footer;
+  final SlidePart? background;
 
   static Future<void> initialize() async {
     // Return if its initialized
@@ -83,9 +83,9 @@ class SuperDeckProvider extends StatefulWidget {
   final DeckStyle? baseStyle;
   final Map<String, WidgetBuilderWithOptions> widgets;
   final Map<String, DeckStyle> styles;
-  final SlidePart? header;
-  final SlidePart? footer;
-  final Widget? background;
+  final FixedSlidePart? header;
+  final FixedSlidePart? footer;
+  final SlidePart? background;
 
   @override
   State<SuperDeckProvider> createState() => _SuperDeckProviderState();
@@ -128,17 +128,19 @@ class _SuperDeckProviderState extends State<SuperDeckProvider> {
         baseStyle: widget.baseStyle,
         examples: widget.widgets,
         styles: widget.styles,
-        headerBuilder: widget.header,
-        footerBuilder: widget.footer,
+        header: widget.header,
+        footer: widget.footer,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _navigation.watch(
-      (context, _) => _controller.watch(
-        (context) => ListenableBuilder(
+    return NavigationProvider(
+      controller: _navigation,
+      child: DeckControllerProvider(
+        controller: _controller,
+        child: ListenableBuilder(
             listenable: Listenable.merge([_controller, _navigation]),
             builder: (context, _) {
               return Stack(

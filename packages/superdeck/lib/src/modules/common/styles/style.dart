@@ -20,8 +20,10 @@ class DeckStyle {
 
   Style build() {
     final containers = [
-      $.slideContainer.color.transparent(),
-      $.contentContainer.padding.all(40),
+      $.slideContainer.chain
+        ..color.transparent()
+        ..padding.all(40),
+      // $.contentContainer.padding.all(40),
       $.section.image(
         $.contentContainer.padding.all(0),
       ),
@@ -157,6 +159,10 @@ extension SlideSpecUtilityX<T extends Attribute> on SlideSpecUtility<T> {
   TextStyleUtility<T> get baseTextStyle {
     return TextStyleUtility(
       (value) => only(
+        link: value,
+        a: value,
+        em: value,
+        strong: value,
         p: TextSpecAttribute(style: value),
         h1: TextSpecAttribute(style: value),
         h2: TextSpecAttribute(style: value),

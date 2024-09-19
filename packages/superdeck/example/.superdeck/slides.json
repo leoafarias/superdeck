@@ -2,223 +2,40 @@
   "config": {},
   "slides": [
     {
-      "key": "RhWMtoMW",
+      "key": "xY7W6tPW",
       "options": {},
-      "markdown": "{@section}\n{@column align: top_left flex: 2 tag: supertag}\n# This is a title\n\n{@section flex: 2 }\n{@column align: top_left}\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n{@column}\n\n```markdown\n\n# Heading\n\n## another\n\n\n- List item 1\n- List item 2\n  - Sublist item 1\n  - Sublist item 2\n\n[Link to Google](https://www.google.com)\n\n\n~~Strikethrough~~\n\n`code`\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n```",
+      "markdown": "{@section flex: 2}\n{@column align: bottom_left tag: heading flex: 2}\n# Generative UI with Flutter\n\n## by Leo Farias\n\n\n{@section}\n{@column}\n\n{@column align: bottom_right }\n\n> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.",
       "sections": [
-        {
-          "options": null,
-          "sub_sections": [
-            {
-              "content": "\n# This is a title\n",
-              "options": {
-                "flex": 2,
-                "align": "top_left",
-                "tag": "supertag"
-              },
-              "type": "column"
-            }
-          ]
-        },
         {
           "options": {
             "flex": 2
           },
           "sub_sections": [
             {
-              "content": "\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n",
-              "options": {
-                "align": "top_left"
-              },
-              "type": "column"
-            },
-            {
-              "content": "\n\n```markdown\n\n# Heading\n\n## another\n\n\n- List item 1\n- List item 2\n  - Sublist item 1\n  - Sublist item 2\n\n[Link to Google](https://www.google.com)\n\n\n~~Strikethrough~~\n\n`code`\n\n\n> [!NOTE]  \n> Highlights information that users should take into account, even when skimming.\n\n> [!TIP]\n> Optional information to help a user be more successful.\n\n> [!IMPORTANT]  \n> Crucial information necessary for users to succeed.\n\n> [!WARNING]  \n> Critical content demanding immediate user attention due to potential risks.\n\n> [!CAUTION]\n> Negative potential consequences of an action.\n\n```",
-              "options": null,
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "key": "Qt9V95dl",
-      "options": {
-        "colors": [
-          "#36FFFF",
-          "#00ff00",
-          "#0000ff",
-          "#ffff00"
-        ]
-      },
-      "markdown": "{@section}\n{@column align: top_right flex: 2 tag: supertag}\n# Change\n\n{@section flex: 2 }\n{@column align: top_left}\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n![Image](assets/image_test.png)\n\n{@column}\n\n#### Ordered List\n\n### car\n\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n\n{@column}\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
-      "sections": [
-        {
-          "options": null,
-          "sub_sections": [
-            {
-              "content": "\n# Change\n",
+              "content": "\n# Generative UI with Flutter\n\n## by Leo Farias\n\n",
               "options": {
                 "flex": 2,
-                "align": "top_right",
-                "tag": "supertag"
+                "align": "bottom_left",
+                "tag": "heading"
               },
               "type": "column"
             }
           ]
         },
-        {
-          "options": {
-            "flex": 2
-          },
-          "sub_sections": [
-            {
-              "content": "\n#### Unordered List\n\n- first\n- second\n   - first\n      - first\n      - second\n\n![Image](assets/image_test.png)\n",
-              "options": {
-                "align": "top_left"
-              },
-              "type": "column"
-            },
-            {
-              "content": "\n\n#### Ordered List\n\n### car\n\n\n\n___\n\n1. first\n2. second\n   1. first\n      1. first\n      2. second\n",
-              "options": null,
-              "type": "column"
-            },
-            {
-              "content": "\n\n- George Washington\n* John Adams\n+ Thomas Jefferson\n\n\n### Task List\n\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media",
-              "options": null,
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "key": "SwH4MDZr",
-      "options": {},
-      "markdown": "### Lists\n\n{@column tag: mermaidtag} \n![Mermaid Diagram](.superdeck/generated/mermaid_35iQRzBm.png)\n\n{@column}\n\n![Mermaid Diagram](.superdeck/generated/mermaid_9ls01mLz.png)\n\n<!-- Notes go here -->",
-      "sections": [
-        {
-          "sub_sections": [
-            {
-              "content": "### Lists\n",
-              "type": "column"
-            },
-            {
-              "content": "\n![Mermaid Diagram](.superdeck/generated/mermaid_35iQRzBm.png)\n",
-              "options": {
-                "tag": "mermaidtag"
-              },
-              "type": "column"
-            },
-            {
-              "content": "\n\n![Mermaid Diagram](.superdeck/generated/mermaid_9ls01mLz.png)\n\n<!-- Notes go here -->",
-              "options": null,
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": [
-        {
-          "content": "Notes go here"
-        }
-      ]
-    },
-    {
-      "key": "XZn50Z7c",
-      "options": {},
-      "markdown": "{@column tag: mermaidtag} \n![Mermaid Diagram](.superdeck/generated/mermaid_BL3YozKB.png)",
-      "sections": [
-        {
-          "sub_sections": [
-            {
-              "content": "\n![Mermaid Diagram](.superdeck/generated/mermaid_BL3YozKB.png)",
-              "options": {
-                "tag": "mermaidtag"
-              },
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "key": "BWbYfNH8",
-      "options": {},
-      "markdown": "![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)",
-      "sections": [
-        {
-          "sub_sections": [
-            {
-              "content": "![Mermaid Diagram](.superdeck/generated/mermaid_qbuY1RWf.png)",
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "key": "m6aTFAjV",
-      "options": {
-        "style": "custom"
-      },
-      "markdown": "{@section}\n{@column}\n## This is an example of a widgets\n\n{@widget name: demo tag: demo}\n\n{@column}\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
-      "sections": [
-        {
-          "options": null,
-          "sub_sections": [
-            {
-              "content": "\n## This is an example of a widgets\n",
-              "options": null,
-              "type": "column"
-            },
-            {
-              "options": {
-                "name": "demo",
-                "tag": "demo",
-                "type": "widget_options"
-              },
-              "content": "",
-              "type": "widget"
-            },
-            {
-              "content": "\n\n```dart\nimport 'package:flutter/material.dart';\n\nvoid main() {\n  final style = Style(\n    $box.padding.all(),\n    $box.border.all(),\n  );\n}\n\n```",
-              "options": null,
-              "type": "column"
-            }
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "key": "GksCD5Lc",
-      "options": {},
-      "markdown": "{@section}\n{@column flex: 1}\n\n{@widget name: demo tag: demo}\n\n{@column}",
-      "sections": [
         {
           "options": null,
           "sub_sections": [
             {
               "content": "\n",
-              "options": {
-                "flex": 1
-              },
+              "options": null,
               "type": "column"
             },
             {
+              "content": "\n\n> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.",
               "options": {
-                "name": "demo",
-                "tag": "demo",
-                "type": "widget_options"
+                "align": "bottom_right"
               },
-              "content": "",
-              "type": "widget"
+              "type": "column"
             }
           ]
         }
@@ -226,42 +43,72 @@
       "notes": []
     },
     {
-      "key": "u0rRynPM",
-      "options": {
-        "style": "quote"
-      },
-      "markdown": "{@section}\n{@column align: bottom_right flex: 3}\n# This presentation will be great\n\n{@column}\n\n{@section}\n\n\n{@column }\n{@column flex: 2 align: top_right}\n> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo",
+      "key": "7vdkZAKY",
+      "options": {},
+      "markdown": "{@column align: center_left flex: 3 tag: heading} \n### Gemini Function Calling\n\n{@column align: bottom_right}\n> [!NOTE]  \n> The Function Calling feature is in Beta release\n\n{@section flex: 4}\n\n\n![llm tools](assets/llm_tools.png)",
       "sections": [
         {
-          "options": null,
           "sub_sections": [
             {
-              "content": "\n# This presentation will be great\n",
+              "content": "\n### Gemini Function Calling\n",
               "options": {
                 "flex": 3,
-                "align": "bottom_right"
+                "align": "center_left",
+                "tag": "heading"
               },
               "type": "column"
             },
             {
-              "content": "\n",
-              "options": null,
+              "content": "\n> [!NOTE]  \n> The Function Calling feature is in Beta release\n",
+              "options": {
+                "align": "bottom_right"
+              },
               "type": "column"
             }
           ]
         },
         {
+          "options": {
+            "flex": 4
+          },
+          "sub_sections": [
+            {
+              "content": "\n\n![llm tools](assets/llm_tools.png)",
+              "type": "column"
+            }
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "key": "D8ksAhWG",
+      "options": {},
+      "markdown": "{@section }\n{@column align: bottom_left tag: heading}\n\n### User Interaction\n\nNatural Language is the primary way to interact with an LLM\n\n{@section flex: 3}\n{@column align: center flex: 3} \n![llm response](assets/llm_interaction.png)",
+      "sections": [
+        {
           "options": null,
           "sub_sections": [
             {
-              "content": "\n",
-              "type": "column"
-            },
-            {
-              "content": "\n> Create your Flutter presentations faster and easier than ever.\n> You can quote me on that\n> ### Leo",
+              "content": "\n\n### User Interaction\n\nNatural Language is the primary way to interact with an LLM\n",
               "options": {
-                "flex": 2,
-                "align": "top_right"
+                "align": "bottom_left",
+                "tag": "heading"
+              },
+              "type": "column"
+            }
+          ]
+        },
+        {
+          "options": {
+            "flex": 3
+          },
+          "sub_sections": [
+            {
+              "content": "\n![llm response](assets/llm_interaction.png)",
+              "options": {
+                "flex": 3,
+                "align": "center"
               },
               "type": "column"
             }
@@ -271,42 +118,26 @@
       "notes": []
     },
     {
-      "key": "kiRnLrLJ",
-      "options": {
-        "style": "show_sections"
-      },
-      "markdown": "{@section}\n{@image src: https://picsum.photos/200/1200?wafvfes align: top_left fit: cover}\n\n{@section flex: 2}\n{@column flex: 2}\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n\n{@column}\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
+      "key": "1dx9bbwC",
+      "options": {},
+      "markdown": "{@section}\n{@column align: center_left tag: heading}\n### Widget Response\n\n{@column flex: 3}\n![widget_response](assets/widget_response.png)",
       "sections": [
         {
           "options": null,
           "sub_sections": [
             {
+              "content": "\n### Widget Response\n",
               "options": {
-                "src": "https://picsum.photos/200/1200?wafvfes",
-                "fit": "cover",
-                "align": "top_left",
-                "type": "image"
-              },
-              "content": "",
-              "type": "image"
-            }
-          ]
-        },
-        {
-          "options": {
-            "flex": 2
-          },
-          "sub_sections": [
-            {
-              "content": "\n# Two Column HGoes here\n\nThis is a two-column layout. You can use it to compare two different concepts or ideas.\n\n",
-              "options": {
-                "flex": 2
+                "align": "center_left",
+                "tag": "heading"
               },
               "type": "column"
             },
             {
-              "content": "\n\n### Section Options\n\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section",
-              "options": null,
+              "content": "\n![widget_response](assets/widget_response.png)",
+              "options": {
+                "flex": 3
+              },
               "type": "column"
             }
           ]
@@ -315,40 +146,18 @@
       "notes": []
     },
     {
-      "key": "twktEcis",
-      "options": {
-        "style": "show_sections"
-      },
-      "markdown": "{@section}\n{@column align: bottom_right}\n\n## First\n\n{@column}  \n\n\n## Header\n\n{@section flex: 2}\n\n### Left Section\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n\n{@column}\n\n#### Section Options\n\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
+      "key": "m5uVM3JC",
+      "options": {},
+      "markdown": "## Structured Output\n\n{@column}\n![structured_output](assets/structured_output.png)}",
       "sections": [
         {
-          "options": null,
           "sub_sections": [
             {
-              "content": "\n\n## First\n",
-              "options": {
-                "align": "bottom_right"
-              },
+              "content": "## Structured Output\n",
               "type": "column"
             },
             {
-              "content": "\n\n\n## Header\n",
-              "options": null,
-              "type": "column"
-            }
-          ]
-        },
-        {
-          "options": {
-            "flex": 2
-          },
-          "sub_sections": [
-            {
-              "content": "\n### Left Section\nEasily customize the content of each section to suit your needs.\n\nUse front matter to define the layout of each section\n",
-              "type": "column"
-            },
-            {
-              "content": "\n\n#### Section Options\n\n```yaml\nsections:\n  left:\n    alignment: bottom_right\n    flex: 2\n  right:\n    alignment: bottom_left\n  header:\n    alignment: bottom_left\n```",
+              "content": "\n![structured_output](assets/structured_output.png)}",
               "options": null,
               "type": "column"
             }
@@ -360,72 +169,22 @@
   ],
   "assets": [
     {
-      "path": ".superdeck/generated/thumbnail_RhWMtoMW.png",
+      "path": ".superdeck/generated/thumbnail_7vdkZAKY.png",
       "width": 512,
       "height": 288
     },
     {
-      "path": ".superdeck/generated/thumbnail_Qt9V95dl.png",
+      "path": ".superdeck/generated/thumbnail_D8ksAhWG.png",
       "width": 512,
       "height": 288
     },
     {
-      "path": ".superdeck/generated/mermaid_35iQRzBm.png",
-      "width": 494,
-      "height": 920
-    },
-    {
-      "path": ".superdeck/generated/mermaid_9ls01mLz.png",
-      "width": 968,
-      "height": 618
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_SwH4MDZr.png",
+      "path": ".superdeck/generated/thumbnail_1dx9bbwC.png",
       "width": 512,
       "height": 288
     },
     {
-      "path": ".superdeck/generated/mermaid_BL3YozKB.png",
-      "width": 494,
-      "height": 920
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_XZn50Z7c.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/mermaid_qbuY1RWf.png",
-      "width": 222,
-      "height": 674
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_BWbYfNH8.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_m6aTFAjV.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_GksCD5Lc.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_u0rRynPM.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_kiRnLrLJ.png",
-      "width": 512,
-      "height": 288
-    },
-    {
-      "path": ".superdeck/generated/thumbnail_twktEcis.png",
+      "path": ".superdeck/generated/thumbnail_m5uVM3JC.png",
       "width": 512,
       "height": 288
     }

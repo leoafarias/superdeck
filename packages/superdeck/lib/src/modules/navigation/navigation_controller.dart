@@ -24,19 +24,8 @@ class NavigationController extends ChangeNotifier {
 
   static NavigationController of(BuildContext context) {
     final provider =
-        context.dependOnInheritedWidgetOfExactType<_NavigationProvider>();
+        context.dependOnInheritedWidgetOfExactType<NavigationProvider>();
     return provider!.controller;
-  }
-
-  Widget watch(
-      Widget Function(BuildContext context, NavigationController controller)
-          builder) {
-    return _NavigationProvider(
-      controller: this,
-      child: Builder(
-        builder: (context) => builder(context, this),
-      ),
-    );
   }
 
   void togglePresenterMenu() {
@@ -69,8 +58,9 @@ class NavigationController extends ChangeNotifier {
   }
 }
 
-class _NavigationProvider extends InheritedNotifier<NavigationController> {
-  const _NavigationProvider({
+class NavigationProvider extends InheritedNotifier<NavigationController> {
+  const NavigationProvider({
+    super.key,
     required this.controller,
     required super.child,
   });
