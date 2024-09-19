@@ -79,7 +79,7 @@ class BackgroundPart extends StatelessWidget {
       );
 
       return AnimatedOMeshGradient(
-          mesh: _meshBuilder(options.colors), duration: Durations.long4);
+          mesh: _meshBuilder(options.colors), duration: Durations.extralong4);
     });
   }
 }

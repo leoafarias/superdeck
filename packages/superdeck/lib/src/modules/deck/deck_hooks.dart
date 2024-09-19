@@ -67,9 +67,9 @@ Slide? useNextSlide() {
   return useGetSlide(index + 1);
 }
 
-ExampleBuilder? useDeckExamples(String name) {
+WidgetBuilderWithOptions? useDeckExamples(String name) {
   return _useSelectController(
-    (controller) => controller.getExampleWidget(name),
+    (controller) => controller.getWidget(name),
   );
 }
 

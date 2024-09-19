@@ -210,7 +210,7 @@ class _WidgetBlockWidget extends StatelessWidget {
   Widget build(context) {
     final options = block.options;
 
-    final widgetBuilder = context.deck.getExampleWidget(options.name);
+    final widgetBuilder = context.deck.getWidget(options.name);
 
     if (widgetBuilder == null) {
       return Container(

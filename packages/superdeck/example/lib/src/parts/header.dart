@@ -17,9 +17,10 @@ class HeaderPart extends SlidePart {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(slide.options?.title ?? 'Generative UIs'),
+          Text(slide.options?.title ?? 'Generative UI with Flutter'),
+          const SizedBox(width: 20),
           Text('${index + 1}'),
         ],
       ),

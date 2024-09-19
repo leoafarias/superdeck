@@ -36,7 +36,7 @@ class SlideConfiguration {
     );
   }
 
-  Widget watch(Widget Function(BuildContext context) builder) {
+  Widget provide(Widget Function(BuildContext context) builder) {
     return _SlideConfigurationProvider(
       configuration: this,
       child: Builder(builder: builder),
@@ -109,17 +109,19 @@ class SlideConfigurationBuilder extends StatelessWidget {
       builder: (context) {
         final spec = SlideSpec.of(context);
 
+        final configuration = SlideConfiguration(
+          slide: slide,
+          slideIndex: slideIndex,
+          spec: spec,
+          slideStyle: slideStyle,
+          controller: controller,
+        );
+
         return _SlideConfigurationProvider(
-            configuration: SlideConfiguration(
-              slide: slide,
-              slideIndex: slideIndex,
-              spec: spec,
-              slideStyle: slideStyle,
-              controller: controller,
-            ),
+            configuration: configuration,
             child: Builder(
               builder: (context) {
-                return builder(context, SlideConfiguration.of(context));
+                return builder(context, configuration);
               },
             ));
       },

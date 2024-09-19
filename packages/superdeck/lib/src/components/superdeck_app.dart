@@ -20,14 +20,14 @@ class SuperDeckApp extends StatelessWidget {
     super.key,
     this.baseStyle,
     this.styles = const <String, DeckStyle>{},
-    this.examples = const <String, ExampleBuilder>{},
+    this.widgets = const <String, WidgetBuilderWithOptions>{},
     this.header,
     this.footer,
     this.background,
   });
 
   final DeckStyle? baseStyle;
-  final Map<String, ExampleBuilder> examples;
+  final Map<String, WidgetBuilderWithOptions> widgets;
   final Map<String, DeckStyle> styles;
   final SlidePart? header;
   final SlidePart? footer;
@@ -52,7 +52,7 @@ class SuperDeckApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SuperDeckProvider(
       baseStyle: baseStyle,
-      examples: examples,
+      widgets: widgets,
       styles: styles,
       background: background,
       header: header,
@@ -73,7 +73,7 @@ class SuperDeckProvider extends StatefulWidget {
     required this.child,
     this.baseStyle,
     this.styles = const <String, DeckStyle>{},
-    this.examples = const <String, ExampleBuilder>{},
+    this.widgets = const <String, WidgetBuilderWithOptions>{},
     this.header,
     this.footer,
     this.background,
@@ -81,7 +81,7 @@ class SuperDeckProvider extends StatefulWidget {
 
   final Widget child;
   final DeckStyle? baseStyle;
-  final Map<String, ExampleBuilder> examples;
+  final Map<String, WidgetBuilderWithOptions> widgets;
   final Map<String, DeckStyle> styles;
   final SlidePart? header;
   final SlidePart? footer;
@@ -100,7 +100,7 @@ class _SuperDeckProviderState extends State<SuperDeckProvider> {
     super.initState();
     _controller = DeckController(
       baseStyle: widget.baseStyle ?? DeckStyle(),
-      examples: widget.examples,
+      widgets: widget.widgets,
       background: widget.background,
       styles: widget.styles,
       header: widget.header,
@@ -120,13 +120,13 @@ class _SuperDeckProviderState extends State<SuperDeckProvider> {
   void didUpdateWidget(covariant SuperDeckProvider oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.baseStyle != oldWidget.baseStyle ||
-        widget.examples != oldWidget.examples ||
+        widget.widgets != oldWidget.widgets ||
         widget.styles != oldWidget.styles ||
         widget.header != oldWidget.header ||
         widget.footer != oldWidget.footer) {
       _controller.update(
         baseStyle: widget.baseStyle,
-        examples: widget.examples,
+        examples: widget.widgets,
         styles: widget.styles,
         headerBuilder: widget.header,
         footerBuilder: widget.footer,

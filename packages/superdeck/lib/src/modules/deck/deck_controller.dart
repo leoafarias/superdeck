@@ -27,7 +27,7 @@ import 'deck_service.dart';
 /// final headerStyle = deckRef.getStyle('h1');
 /// ```
 
-bool _isDebug = true;
+bool _isDebug = false;
 
 abstract class SlidePart extends StatefulWidget {
   double get height;
@@ -57,7 +57,7 @@ class SlidePartState extends State<SlidePart> {
 class DeckController extends ChangeNotifier {
   final _referenceService = DeckReferenceService();
   Map<String, DeckStyle> _styles = {};
-  Map<String, ExampleBuilder> _examples = {};
+  Map<String, WidgetBuilderWithOptions> _widgets = {};
   DeckStyle _baseStyle = DeckStyle();
   SlidePart? _header;
   SlidePart? _footer;
@@ -71,17 +71,16 @@ class DeckController extends ChangeNotifier {
   ///
   /// The [_styles] map contains named [Style] instances that can be retrieved
   /// with [getStyle]. The [_baseStyle] is merged with the default style.
-  /// The [_examples] map contains named widget builders for example slides.
+  /// The [_widgets] map contains named widget builders for example slides.
   DeckController({
     required Map<String, DeckStyle> styles,
     required DeckStyle baseStyle,
     List<Slide> initialSlides = const [],
     List<SlideAsset> initialAssets = const [],
-    required Map<String, ExampleBuilder> examples,
+    required Map<String, WidgetBuilderWithOptions> widgets,
     SlidePart? header,
     SlidePart? footer,
     Widget? background,
-    bool lazy = false,
   })  : _footer = footer,
         _header = header,
         _background = background {
@@ -90,43 +89,17 @@ class DeckController extends ChangeNotifier {
     _assets = initialAssets;
 
     _baseStyle = baseStyle;
-    _examples = examples;
-    if (!lazy) {
-      loadReferences();
+    _widgets = widgets;
 
-      _referenceService.listen(loadReferences);
-    }
-  }
+    loadReferences();
 
-  DeckController singleSlide(Slide slide) {
-    return copyWith(slides: [slide]);
-  }
-
-  DeckController copyWith({
-    DeckStyle? baseStyle,
-    Map<String, DeckStyle>? styles,
-    Map<String, ExampleBuilder>? examples,
-    SlidePart? header,
-    SlidePart? footer,
-    List<Slide>? slides,
-  }) {
-    return DeckController(
-      baseStyle: baseStyle ?? _baseStyle,
-      styles: styles ?? _styles,
-      examples: examples ?? _examples,
-      initialSlides: slides ?? _slides,
-      initialAssets: _assets,
-      header: header ?? _header,
-      footer: footer ?? _footer,
-      background: _background,
-      lazy: true,
-    );
+    _referenceService.listen(loadReferences);
   }
 
   void update({
     DeckStyle? baseStyle,
     Map<String, DeckStyle>? styles,
-    Map<String, ExampleBuilder>? examples,
+    Map<String, WidgetBuilderWithOptions>? examples,
     SlidePart? headerBuilder,
     SlidePart? footerBuilder,
     List<Slide>? slides,
@@ -144,11 +117,11 @@ class DeckController extends ChangeNotifier {
     }
 
     if (styles != null) {
-      styles = styles;
+      _styles = styles;
     }
 
     if (examples != null) {
-      examples = examples;
+      _widgets = examples;
     }
 
     if (slides != null) {
@@ -215,11 +188,11 @@ class DeckController extends ChangeNotifier {
     return _isDebug ? style.applyVariant(const Variant('debug')) : style;
   }
 
-  /// Retrieves the [ExampleBuilder] registered with the given [name].
+  /// Retrieves the [WidgetBuilderWithOptions] registered with the given [name].
   ///
   /// If no match is found, returns null.
-  ExampleBuilder? getExampleWidget(String name) {
-    return _examples[name];
+  WidgetBuilderWithOptions? getWidget(String name) {
+    return _widgets[name];
   }
 
   /// Retrieves the [SlideAsset] that matches the given [uri].
@@ -260,7 +233,7 @@ class DeckController extends ChangeNotifier {
   }
 }
 
-typedef ExampleBuilder = Widget Function(
+typedef WidgetBuilderWithOptions = Widget Function(
   BuildContext context,
   WidgetOptions options,
 );

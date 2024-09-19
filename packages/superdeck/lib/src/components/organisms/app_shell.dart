@@ -159,7 +159,8 @@ class SplitView extends HookWidget {
                         child: Stack(
                           children: [
                             Positioned.fill(
-                                child: context.deck.buildBackground()),
+                              child: context.deck.buildBackground(),
+                            ),
                             ScaledWidget(child: child),
                           ],
                         ),

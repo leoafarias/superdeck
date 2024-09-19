@@ -13,14 +13,14 @@ extension WidgetTesterX on WidgetTester {
     T slide, {
     bool isSnapshot = false,
     DeckStyle? style,
-    Map<String, ExampleBuilder> examples = const {},
+    Map<String, WidgetBuilderWithOptions> examples = const {},
     List<SlideAsset> assets = const [],
   }) async {
     final controller = DeckController(
       styles: const {},
       initialSlides: [slide],
       baseStyle: style ?? DeckStyle(),
-      examples: examples,
+      widgets: examples,
     );
     return pumpWithScaffold(
       SnapshotProvider(
