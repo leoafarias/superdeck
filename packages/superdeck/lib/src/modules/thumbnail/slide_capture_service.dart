@@ -11,45 +11,31 @@ import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
 import '../navigation/navigation_controller.dart';
-import 'widget_capture_provider.dart';
+import 'slide_capture_provider.dart';
 
-enum WidgetCaptureQuality {
-  low(
-    'Low',
-    pixelRatio: 0.4,
-  ),
-  good(
-    'Good',
-    pixelRatio: 1,
-  ),
-  better(
-    'Better',
-    pixelRatio: 2,
-  ),
-  best(
-    'Best',
-    pixelRatio: 3,
+enum SlideCaptureQuality {
+  low(0.4),
+  good(1),
+  better(2),
+  best(3);
+
+  const SlideCaptureQuality(
+    this.pixelRatio,
   );
 
-  const WidgetCaptureQuality(
-    this.label, {
-    required this.pixelRatio,
-  });
-
-  final String label;
   final double pixelRatio;
 }
 
-class WidgetCaptureService {
-  WidgetCaptureService._();
+class SlideCaptureService {
+  SlideCaptureService._();
 
-  static final instance = WidgetCaptureService._();
+  static final instance = SlideCaptureService._();
 
   static final _generationQueue = <String>{};
   static const _maxConcurrentGenerations = 3;
 
   Future<Uint8List> generate({
-    required WidgetCaptureQuality quality,
+    SlideCaptureQuality quality = SlideCaptureQuality.low,
     required Slide slide,
   }) async {
     final queueKey = shortHash(slide.key + quality.name);
@@ -78,7 +64,7 @@ class WidgetCaptureService {
 
   Future<Uint8List> generateWithKey({
     required GlobalKey key,
-    required WidgetCaptureQuality quality,
+    required SlideCaptureQuality quality,
   }) async {
     final boundary =
         key.currentContext!.findRenderObject() as RenderRepaintBoundary;

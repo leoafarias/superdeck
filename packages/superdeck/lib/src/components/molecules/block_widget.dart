@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../superdeck.dart';
 import '../../modules/common/helpers/measure_size.dart';
-import '../../modules/widget_capture/widget_capture_provider.dart';
+import '../../modules/thumbnail/slide_capture_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';

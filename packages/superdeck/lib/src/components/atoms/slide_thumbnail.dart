@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/helpers/constants.dart';
-import '../../modules/common/helpers/notifiers/future_notifier.dart';
-import '../../modules/common/helpers/notifiers/notifier_extensions.dart';
-import '../../modules/widget_capture/widget_capture_service.dart';
+import '../../modules/thumbnail/thumbnail_controller.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
 
@@ -43,131 +38,91 @@ class SlideThumbnail extends StatefulWidget {
 }
 
 class _SlideThumbnailState extends State<SlideThumbnail> {
-  late final thumbnailRequest = FutureNotifier(() async {
-    return _thumbnailGeneration(
-      widget.slide,
-    );
-  });
-
-  Future<File> _thumbnailGeneration(
-    Slide slide,
-  ) async {
-    final thumbnailFile = slide.thumbnailFile;
-
-    if (!kCanRunProcess) {
-      return thumbnailFile;
-    }
-
-    if (await thumbnailFile.exists()) {
-      return thumbnailFile;
-    }
-
-    try {
-      final imageData = await WidgetCaptureService.instance.generate(
-        quality: WidgetCaptureQuality.low,
-        slide: slide,
-      );
-
-      return await thumbnailFile.writeAsBytes(imageData, flush: true);
-    } finally {}
-  }
+  late ThumbnailController _thumbnailController;
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      thumbnailRequest.reload();
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant SlideThumbnail oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.slide != widget.slide) {
-      thumbnailRequest.reload();
-    }
+    _thumbnailController = ThumbnailController()..load(widget.slide);
   }
 
   @override
   void dispose() {
-    thumbnailRequest.dispose();
+    _thumbnailController.dispose();
     super.dispose();
   }
 
   void _handleAction(_PopMenuAction action) {
     switch (action) {
       case _PopMenuAction.refreshThumbnail:
-        thumbnailRequest.refresh();
+        _thumbnailController.refresh(widget.slide);
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onSecondaryTapDown: (details) {
-        _showOverlayMenu(context, details, _handleAction);
-      },
-      child: _PreviewContainer(
-        selected: widget.selected,
-        child: Stack(
-          children: [
-            AspectRatio(
-              aspectRatio: kAspectRatio,
-              child: ListenableBuilder(
-                  listenable: thumbnailRequest,
-                  builder: (context, _) {
-                    return thumbnailRequest.map(
-                      data: (file) {
-                        return Image(
-                          gaplessPlayback: true,
-                          image: getImageProvider(context, file.uri),
-                        );
-                      },
-                      loading: () => const IsometricLoading(),
-                      error: (error) {
-                        return const Center(
-                          child: Text('Error loading image'),
-                        );
-                      },
-                    );
-                  }),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              left: 0,
-              child: thumbnailRequest.build((value) {
-                return SizedBox(
-                  child: value.isRefreshing
-                      ? const LinearProgressIndicator(
-                          minHeight: 3,
-                          backgroundColor: Colors.transparent,
-                        )
-                      : null,
-                );
-              }),
-            ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                color: Colors.black.withOpacity(0.9),
-                child: Text(
-                  '${widget.page}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+    return ListenableBuilder(
+        listenable: _thumbnailController,
+        builder: (context, _) {
+          return GestureDetector(
+            onTap: widget.onTap,
+            onSecondaryTapDown: (details) {
+              _showOverlayMenu(context, details, _handleAction);
+            },
+            child: _PreviewContainer(
+              selected: widget.selected,
+              child: Stack(
+                children: [
+                  AspectRatio(
+                    aspectRatio: kAspectRatio,
+                    child: _thumbnailController.when(
+                        data: (file) {
+                          return Image(
+                            gaplessPlayback: true,
+                            image: getImageProvider(context, file.uri),
+                          );
+                        },
+                        loading: () => const IsometricLoading(),
+                        error: (error) {
+                          return const Center(
+                            child: Text('Error loading image'),
+                          );
+                        }),
                   ),
-                ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    child: SizedBox(
+                      child: _thumbnailController.isRefreshing
+                          ? const LinearProgressIndicator(
+                              minHeight: 3,
+                              backgroundColor: Colors.transparent,
+                            )
+                          : null,
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                      color: Colors.black.withOpacity(0.9),
+                      child: Text(
+                        '${widget.page}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }
 

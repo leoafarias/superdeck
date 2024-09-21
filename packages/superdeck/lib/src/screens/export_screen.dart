@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../modules/common/helpers/extensions.dart';
 import '../modules/deck/deck_hooks.dart';
 import '../modules/navigation/navigation_hooks.dart';
 import '../modules/pdf_export/pdf_export_controller.dart';
-import '../modules/widget_capture/widget_capture_service.dart';
 
 class ExportScreen extends HookWidget {
   const ExportScreen({super.key});
@@ -83,15 +81,6 @@ class ExportDialog extends HookWidget {
   final PdfExportController controller;
   @override
   Widget build(BuildContext context) {
-    final dropdownItems = WidgetCaptureQuality.values.map(
-      (quality) => DropdownMenuItem(
-        value: quality,
-        child: Text(
-          quality.name.capitalize(),
-        ),
-      ),
-    );
-
     return Dialog(
       backgroundColor: Colors.black,
       child: Padding(
@@ -108,14 +97,6 @@ class ExportDialog extends HookWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    DropdownButton(
-                      isDense: true,
-                      value: controller.quality,
-                      focusColor: Colors.transparent,
-                      underline: const SizedBox.shrink(),
-                      onChanged: (value) => controller.quality = value!,
-                      items: dropdownItems.toList(),
-                    ),
                     const SizedBox(width: 10),
                     OutlinedButton(
                       child: const Text('Export'),

@@ -10,7 +10,7 @@ import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../components/molecules/slide_screen.dart';
 import '../common/helpers/constants.dart';
-import '../widget_capture/widget_capture_service.dart';
+import '../thumbnail/slide_capture_service.dart';
 
 enum PdfExportStatus {
   idle,
@@ -20,7 +20,7 @@ enum PdfExportStatus {
 }
 
 class PdfExportController extends ChangeNotifier {
-  WidgetCaptureQuality _quality = WidgetCaptureQuality.good;
+  SlideCaptureQuality _quality = SlideCaptureQuality.good;
   PdfExportStatus _status = PdfExportStatus.idle;
   List<Uint8List> _images = [];
   late final PageController _pageController;
@@ -55,9 +55,9 @@ class PdfExportController extends ChangeNotifier {
         : 'Exporting ${_images.length} / ${_slides.length}';
   }
 
-  WidgetCaptureQuality get quality => _quality;
+  SlideCaptureQuality get quality => _quality;
 
-  set quality(WidgetCaptureQuality quality) {
+  set quality(SlideCaptureQuality quality) {
     if (_quality == quality) return;
     _quality = quality;
     notifyListeners();
@@ -106,7 +106,7 @@ class PdfExportController extends ChangeNotifier {
       await _wait();
     }
 
-    final image = await WidgetCaptureService.instance.generateWithKey(
+    final image = await SlideCaptureService.instance.generateWithKey(
       quality: _quality,
       key: _slideKeys[slide.key]!,
     );

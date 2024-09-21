@@ -68,7 +68,7 @@ class SplitView extends HookWidget {
     required this.child,
   });
 
-  final _thumbnailWidth = 300.0;
+  final _thumbnailWidth = 0.0;
   final _duration = const Duration(milliseconds: 200);
 
   @override

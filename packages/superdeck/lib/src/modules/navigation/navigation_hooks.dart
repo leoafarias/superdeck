@@ -77,7 +77,7 @@ NavigationActions useNavigationActions() {
     final isForward = index > currentIndex;
     final slidePath = SDPaths.slides.slide.define(index.toString()).path;
 
-    context.pushReplacement(slidePath, extra: {'replace': !isForward});
+    context.push(slidePath, extra: {'replace': !isForward});
   }, [context, slides, currentIndex]);
 
   final goToNextSlide = useCallback(

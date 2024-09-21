@@ -18,7 +18,7 @@ class DartFormatterTask extends Task {
   String _formatDartCodeBlocks(
     TaskController controller,
   ) {
-    final codeBlockRegex = RegExp(r'```dart\n([\s\S]*?)\n```');
+    final codeBlockRegex = RegExp('```dart\n(.*?)\n```', dotAll: true);
     final markdown = controller.slide.markdown;
     return markdown.replaceAllMapped(codeBlockRegex, (match) {
       final code = match.group(1)!;
