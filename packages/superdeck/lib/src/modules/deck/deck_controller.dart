@@ -6,7 +6,7 @@ import '../../../superdeck.dart';
 import '../common/helpers/async_value.dart';
 import 'deck_service.dart';
 
-bool _isDebug = false;
+bool _isDebug = true;
 
 class DeckController extends ChangeNotifier {
   final _referenceService = DeckReferenceService();

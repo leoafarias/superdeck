@@ -41,15 +41,36 @@ class _MarkdownViewerState extends AnimatedWidgetBaseState<MarkdownViewer> {
   @override
   Widget build(BuildContext context) {
     final spec = _styleTween!.evaluate(animation) ?? const SlideSpec();
-    return MarkdownBody(
-      data: widget.content,
-      extensionSet: md.ExtensionSet.gitHubFlavored,
-      builders: _markdownBuilders(spec),
-      paddingBuilders: _markdownPaddingBuilders(spec),
-      checkboxBuilder: _markdownCheckboxBuilder(spec),
-      bulletBuilder: _markdownBulletBuilder(spec),
-      blockSyntaxes: const [AlertBlockSyntax()],
-      styleSheet: _styleTween!.evaluate(animation)?.toStyle(),
+    return _MarkdownBuilder(
+      content: widget.content,
+      spec: spec,
+    );
+  }
+}
+
+class _MarkdownBuilder extends StatelessWidget {
+  final String content;
+  final SlideSpec spec;
+
+  const _MarkdownBuilder({
+    required this.content,
+    required this.spec,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.red,
+      child: MarkdownBody(
+        data: content,
+        extensionSet: md.ExtensionSet.gitHubWeb,
+        builders: _markdownBuilders(spec),
+        paddingBuilders: _markdownPaddingBuilders(spec),
+        checkboxBuilder: _markdownCheckboxBuilder(spec),
+        bulletBuilder: _markdownBulletBuilder(spec),
+        blockSyntaxes: const [AlertBlockSyntax()],
+        styleSheet: spec.toStyle(),
+      ),
     );
   }
 }
@@ -66,21 +87,15 @@ Map<String, MarkdownElementBuilder> _markdownBuilders(SlideSpec spec) {
     'p': TextBuilder(spec.p),
     'code': CodeElementBuilder(spec.code),
     'img': ImageElementBuilder(spec.image),
-    'li': TextBuilder(spec.p),
+    'li': TextBuilder(spec.list?.text),
   };
 }
 
 Map<String, MarkdownPaddingBuilder> _markdownPaddingBuilders(SlideSpec spec) {
-  return {
-    'h1': ZeroPaddingBuilder(),
-    'h2': ZeroPaddingBuilder(),
-    'h3': ZeroPaddingBuilder(),
-    'h4': ZeroPaddingBuilder(),
-    'h5': ZeroPaddingBuilder(),
-    'h6': ZeroPaddingBuilder(),
-    'li': ZeroPaddingBuilder(),
-    // 'p': ZeroPaddingBuilder(),
-  };
+  return _kBlockTags.fold(
+    <String, MarkdownPaddingBuilder>{},
+    (map, tag) => map..[tag] = ZeroPaddingBuilder(),
+  );
 }
 
 Widget Function(bool) _markdownCheckboxBuilder(SlideSpec spec) {
@@ -99,15 +114,13 @@ Widget Function(MarkdownBulletParameters params) _markdownBulletBuilder(
       BulletStyle.orderedList => '${parameters.index + 1}.',
     };
 
-    return Text(contents, style: spec.list?.bulletStyle);
+    return TextSpecWidget(spec: spec.list?.bullet, contents);
   };
 }
 
 class ZeroPaddingBuilder extends MarkdownPaddingBuilder {
   @override
-  EdgeInsets getPadding() {
-    return EdgeInsets.zero;
-  }
+  EdgeInsets getPadding() => EdgeInsets.zero;
 }
 
 class HeadingTextBuilder extends MarkdownElementBuilder {
@@ -116,10 +129,14 @@ class HeadingTextBuilder extends MarkdownElementBuilder {
   @override
   Widget? visitText(md.Text text, TextStyle? preferredStyle) {
     return TextSpecWidget(
-      text.text,
+      _transformLineBreaks(text.text),
       spec: spec,
     );
   }
+}
+
+String _transformLineBreaks(String text) {
+  return text.replaceAll('<br>', '\n');
 }
 
 class TextBuilder extends MarkdownElementBuilder {
@@ -128,7 +145,7 @@ class TextBuilder extends MarkdownElementBuilder {
   @override
   Widget? visitText(md.Text text, TextStyle? preferredStyle) {
     return TextSpecWidget(
-      text.text,
+      _transformLineBreaks(text.text),
       spec: spec,
     );
   }
@@ -148,9 +165,8 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            padding: spec?.padding,
-            decoration: spec?.decoration,
+          child: BoxSpecWidget(
+            spec: spec?.container,
             child: RichText(
               text: TextSpan(
                 style: spec?.textStyle,
@@ -191,53 +207,49 @@ class ImageElementBuilder extends MarkdownElementBuilder {
   }
 }
 
-List<TextSpan> updateTextColor(
-  List<TextSpan> originalSpans,
-  List<int> targetLines,
-  Color newColor,
-) {
-  // Check if the target line is within the range of the list
-  if (targetLines.isEmpty) {
-    return originalSpans;
+final _classRegex = RegExp(r'^(.*?)(\s*\{\.([^\}\s]+)\})\s*$');
+
+class SdHeaderSyntax extends md.HeaderSyntax {
+  const SdHeaderSyntax();
+
+  @override
+  bool canParse(md.BlockParser parser) {
+    return pattern.hasMatch(parser.current.content) &&
+        _classRegex.hasMatch(parser.current.content);
   }
 
-  // Clone the original list to avoid mutating it directly
-  List<TextSpan> updatedSpans = List<TextSpan>.from(originalSpans);
+  @override
+  md.Node parse(md.BlockParser parser) {
+    final match = _classRegex.firstMatch(parser.current.content)!;
+    parser.advance();
 
-  // Detect line break from the list of text spans
-  // This is done by checking if the previous span is a line break
-  // If it is, then the current span is the start of a new line
-  int line = 1;
+    final className = match[3];
 
-  for (int i = 0; i < updatedSpans.length; i++) {
-    if (i > 0) {
-      final currentValue = updatedSpans[i].text ?? '';
+    final element = super.parse(parser) as md.Element;
 
-      if (currentValue.startsWith('\n')) {
-        line++;
-      }
-    }
-    final originalSpan = originalSpans[i];
-
-    final textStyle = originalSpan.style ?? const TextStyle();
-
-    if (targetLines.contains(line)) {
-      updatedSpans[i] = TextSpan(
-        text: originalSpan.text,
-        children: originalSpan.children,
-        recognizer: originalSpan.recognizer,
-        mouseCursor: originalSpan.mouseCursor,
-        onEnter: originalSpan.onEnter,
-        onExit: originalSpan.onExit,
-        semanticsLabel: originalSpan.semanticsLabel,
-        locale: originalSpan.locale,
-        spellOut: originalSpan.spellOut,
-        style: textStyle.copyWith(
-          backgroundColor: newColor,
-        ),
-      );
-    }
+    return element..generatedId = className;
   }
-
-  return updatedSpans;
 }
+
+final _kBlockTags = <String>[
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'ul',
+  'ol',
+  'li',
+  'blockquote',
+  'pre',
+  'ol',
+  'ul',
+  'hr',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'section',
+];

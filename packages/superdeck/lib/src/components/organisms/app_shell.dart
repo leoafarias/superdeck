@@ -9,7 +9,6 @@ import '../molecules/block_widget.dart';
 import '../molecules/bottom_bar.dart';
 import '../molecules/scaled_app.dart';
 import 'note_panel.dart';
-import 'thumbnail_panel.dart';
 
 final kScaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -112,7 +111,7 @@ class SplitView extends HookWidget {
               width: _thumbnailWidth,
               child: const Column(
                 children: [
-                  Expanded(flex: 3, child: ThumbnailPanel()),
+                  // Expanded(flex: 3, child: ThumbnailPanel()),
                   Expanded(
                     flex: 1,
                     child: NotePanel(),
@@ -129,7 +128,7 @@ class SplitView extends HookWidget {
                   curve: Curves.easeInOut,
                 ),
                 axis: Axis.vertical,
-                child: const SDBottomBar(),
+                child: const SdBottomBar(),
               ),
               body: Center(
                 child: BlockProvider(

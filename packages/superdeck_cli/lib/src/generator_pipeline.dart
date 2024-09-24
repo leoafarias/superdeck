@@ -13,15 +13,9 @@ import 'package:superdeck_cli/src/parsers/slide_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:yaml_writer/yaml_writer.dart';
 
-typedef MarkdownReplacement = ({
-  Pattern pattern,
-  String replacement,
-});
-
 typedef PipelineResult = ({
   List<Slide> slides,
   List<SlideAsset> neededAssets,
-  List<MarkdownReplacement> markdownReplacements,
 });
 
 class TaskController {
@@ -29,14 +23,12 @@ class TaskController {
   final Slide slide;
   final List<SlideAsset> _assets;
   final TaskPipeline pipeline;
-  final List<MarkdownReplacement> markdownReplacements;
 
   TaskController._({
     required this.slide,
     required this.index,
     required List<SlideAsset> assets,
     required this.pipeline,
-    required this.markdownReplacements,
   }) : _assets = assets;
 
   TaskController({
@@ -44,8 +36,7 @@ class TaskController {
     required this.slide,
     required this.pipeline,
     required List<SlideAsset> assets,
-  })  : _assets = assets,
-        markdownReplacements = [];
+  }) : _assets = assets;
 
   List<SlideAsset> neededAssets = [];
 
@@ -58,13 +49,11 @@ class TaskController {
   TaskController copyWith({
     Slide? slide,
     List<SlideAsset>? assets,
-    List<MarkdownReplacement>? markdownReplacements,
   }) {
     return TaskController._(
       index: index,
       slide: slide ?? this.slide,
       pipeline: pipeline,
-      markdownReplacements: markdownReplacements ?? this.markdownReplacements,
       assets: assets ?? _assets,
     )..neededAssets = neededAssets;
   }
@@ -140,15 +129,11 @@ class TaskPipeline {
 
     List<Slide> modifiedSlides = [];
     List<SlideAsset> neededAssets = [];
-    List<MarkdownReplacement> markdownReplacements = [];
 
     for (var controller in controllers) {
       modifiedSlides.add(controller.slide);
       neededAssets.addAll(controller.neededAssets);
-      markdownReplacements.addAll(controller.markdownReplacements);
     }
-
-    await _applyMarkdownReplacements(markdownReplacements);
 
     await _cleanupGeneratedFiles(neededAssets);
 
@@ -185,18 +170,6 @@ Future<void> _cleanupGeneratedFiles(List<SlideAsset> assets) async {
   }
 }
 
-Future<void> _applyMarkdownReplacements(
-  List<MarkdownReplacement> replacements,
-) async {
-  var markdownRaw = await kMarkdownFile.readAsString();
-
-  for (final entry in replacements) {
-    markdownRaw = markdownRaw.replaceAll(entry.pattern, entry.replacement);
-  }
-
-  await kMarkdownFile.writeAsString(markdownRaw);
-}
-
 abstract class Task {
   final String taskName;
   const Task(this.taskName);
@@ -209,7 +182,7 @@ abstract class Task {
     try {
       return run(controller);
     } on Exception catch (e) {
-      throw SDTaskException(taskName, controller, e);
+      throw SdTaskException(taskName, controller, e);
     }
   }
 

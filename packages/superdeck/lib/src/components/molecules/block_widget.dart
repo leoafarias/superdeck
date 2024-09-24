@@ -141,10 +141,12 @@ class _ContentBlockWidget extends StatelessWidget {
 
     final spec = SlideSpec.of(context);
 
-    Widget child = MarkdownViewer(
-      content: content,
-      spec: spec,
-      duration: Durations.medium1,
+    Widget child = spec.contentContainer(
+      child: MarkdownViewer(
+        content: content,
+        spec: spec,
+        duration: Durations.medium1,
+      ),
     );
 
     child = Wrap(

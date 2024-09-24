@@ -244,16 +244,14 @@ mixin _$MarkdownListSpec on Spec<MarkdownListSpec> {
   /// replaced with the new values.
   @override
   MarkdownListSpec copyWith({
-    double? indent,
-    TextStyle? bulletStyle,
-    EdgeInsets? bulletPadding,
+    TextSpec? bullet,
+    TextSpec? text,
     WrapAlignment? orderedAlignment,
     WrapAlignment? unorderedAlignment,
   }) {
     return MarkdownListSpec(
-      indent: indent ?? _$this.indent,
-      bulletStyle: bulletStyle ?? _$this.bulletStyle,
-      bulletPadding: bulletPadding ?? _$this.bulletPadding,
+      bullet: bullet ?? _$this.bullet,
+      text: text ?? _$this.text,
       orderedAlignment: orderedAlignment ?? _$this.orderedAlignment,
       unorderedAlignment: unorderedAlignment ?? _$this.unorderedAlignment,
     );
@@ -270,9 +268,7 @@ mixin _$MarkdownListSpec on Spec<MarkdownListSpec> {
   /// The interpolation is performed on each property of the [MarkdownListSpec] using the appropriate
   /// interpolation method:
   ///
-  /// - [MixHelpers.lerpDouble] for [indent].
-  /// - [MixHelpers.lerpTextStyle] for [bulletStyle].
-  /// - [EdgeInsets.lerp] for [bulletPadding].
+  /// - [TextSpec.lerp] for [bullet] and [text].
 
   /// For [orderedAlignment] and [unorderedAlignment], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [MarkdownListSpec] is used. Otherwise, the value
@@ -285,11 +281,8 @@ mixin _$MarkdownListSpec on Spec<MarkdownListSpec> {
     if (other == null) return _$this;
 
     return MarkdownListSpec(
-      indent: MixHelpers.lerpDouble(_$this.indent, other.indent, t),
-      bulletStyle:
-          MixHelpers.lerpTextStyle(_$this.bulletStyle, other.bulletStyle, t),
-      bulletPadding:
-          EdgeInsets.lerp(_$this.bulletPadding, other.bulletPadding, t),
+      bullet: _$this.bullet?.lerp(other.bullet, t) ?? other.bullet,
+      text: _$this.text?.lerp(other.text, t) ?? other.text,
       orderedAlignment:
           t < 0.5 ? _$this.orderedAlignment : other.orderedAlignment,
       unorderedAlignment:
@@ -303,9 +296,8 @@ mixin _$MarkdownListSpec on Spec<MarkdownListSpec> {
   /// compare two [MarkdownListSpec] instances for equality.
   @override
   List<Object?> get props => [
-        _$this.indent,
-        _$this.bulletStyle,
-        _$this.bulletPadding,
+        _$this.bullet,
+        _$this.text,
         _$this.orderedAlignment,
         _$this.unorderedAlignment,
       ];
@@ -321,16 +313,14 @@ mixin _$MarkdownListSpec on Spec<MarkdownListSpec> {
 /// Use this class to configure the attributes of a [MarkdownListSpec] and pass it to
 /// the [MarkdownListSpec] constructor.
 final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
-  final double? indent;
-  final TextStyleDto? bulletStyle;
-  final EdgeInsetsDto? bulletPadding;
+  final TextSpecAttribute? bullet;
+  final TextSpecAttribute? text;
   final WrapAlignment? orderedAlignment;
   final WrapAlignment? unorderedAlignment;
 
   const MarkdownListSpecAttribute({
-    this.indent,
-    this.bulletStyle,
-    this.bulletPadding,
+    this.bullet,
+    this.text,
     this.orderedAlignment,
     this.unorderedAlignment,
   });
@@ -346,9 +336,8 @@ final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
   @override
   MarkdownListSpec resolve(MixData mix) {
     return MarkdownListSpec(
-      indent: indent,
-      bulletStyle: bulletStyle?.resolve(mix),
-      bulletPadding: bulletPadding?.resolve(mix),
+      bullet: bullet?.resolve(mix),
+      text: text?.resolve(mix),
       orderedAlignment: orderedAlignment,
       unorderedAlignment: unorderedAlignment,
     );
@@ -367,10 +356,8 @@ final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
     if (other == null) return this;
 
     return MarkdownListSpecAttribute(
-      indent: other.indent ?? indent,
-      bulletStyle: bulletStyle?.merge(other.bulletStyle) ?? other.bulletStyle,
-      bulletPadding:
-          bulletPadding?.merge(other.bulletPadding) ?? other.bulletPadding,
+      bullet: bullet?.merge(other.bullet) ?? other.bullet,
+      text: text?.merge(other.text) ?? other.text,
       orderedAlignment: other.orderedAlignment ?? orderedAlignment,
       unorderedAlignment: other.unorderedAlignment ?? unorderedAlignment,
     );
@@ -382,9 +369,8 @@ final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
   /// compare two [MarkdownListSpecAttribute] instances for equality.
   @override
   List<Object?> get props => [
-        indent,
-        bulletStyle,
-        bulletPadding,
+        bullet,
+        text,
         orderedAlignment,
         unorderedAlignment,
       ];
@@ -396,14 +382,11 @@ final class MarkdownListSpecAttribute extends SpecAttribute<MarkdownListSpec> {
 /// Use the methods of this class to configure specific properties of a [MarkdownListSpec].
 class MarkdownListSpecUtility<T extends Attribute>
     extends SpecUtility<T, MarkdownListSpecAttribute> {
-  /// Utility for defining [MarkdownListSpecAttribute.indent]
-  late final indent = DoubleUtility((v) => only(indent: v));
+  /// Utility for defining [MarkdownListSpecAttribute.bullet]
+  late final bullet = TextSpecUtility((v) => only(bullet: v));
 
-  /// Utility for defining [MarkdownListSpecAttribute.bulletStyle]
-  late final bulletStyle = TextStyleUtility((v) => only(bulletStyle: v));
-
-  /// Utility for defining [MarkdownListSpecAttribute.bulletPadding]
-  late final bulletPadding = EdgeInsetsUtility((v) => only(bulletPadding: v));
+  /// Utility for defining [MarkdownListSpecAttribute.text]
+  late final text = TextSpecUtility((v) => only(text: v));
 
   /// Utility for defining [MarkdownListSpecAttribute.orderedAlignment]
   late final orderedAlignment =
@@ -424,16 +407,14 @@ class MarkdownListSpecUtility<T extends Attribute>
   /// Returns a new [MarkdownListSpecAttribute] with the specified properties.
   @override
   T only({
-    double? indent,
-    TextStyleDto? bulletStyle,
-    EdgeInsetsDto? bulletPadding,
+    TextSpecAttribute? bullet,
+    TextSpecAttribute? text,
     WrapAlignment? orderedAlignment,
     WrapAlignment? unorderedAlignment,
   }) {
     return builder(MarkdownListSpecAttribute(
-      indent: indent,
-      bulletStyle: bulletStyle,
-      bulletPadding: bulletPadding,
+      bullet: bullet,
+      text: text,
       orderedAlignment: orderedAlignment,
       unorderedAlignment: unorderedAlignment,
     ));
@@ -996,6 +977,8 @@ mixin _$MarkdownTableSpec on Spec<MarkdownTableSpec> {
     EdgeInsets? cellPadding,
     BoxDecoration? cellDecoration,
     TableCellVerticalAlignment? verticalAlignment,
+    WidgetModifiersData? modifiers,
+    AnimatedData? animated,
   }) {
     return MarkdownTableSpec(
       headStyle: headStyle ?? _$this.headStyle,
@@ -1007,6 +990,8 @@ mixin _$MarkdownTableSpec on Spec<MarkdownTableSpec> {
       cellPadding: cellPadding ?? _$this.cellPadding,
       cellDecoration: cellDecoration ?? _$this.cellDecoration,
       verticalAlignment: verticalAlignment ?? _$this.verticalAlignment,
+      modifiers: modifiers ?? _$this.modifiers,
+      animated: animated ?? _$this.animated,
     );
   }
 
@@ -1026,7 +1011,7 @@ mixin _$MarkdownTableSpec on Spec<MarkdownTableSpec> {
   /// - [TableBorder.lerp] for [border].
   /// - [BoxDecoration.lerp] for [cellDecoration].
 
-  /// For [headAlignment] and [columnWidth] and [verticalAlignment], the interpolation is performed using a step function.
+  /// For [headAlignment] and [columnWidth] and [verticalAlignment] and [modifiers] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [MarkdownTableSpec] is used. Otherwise, the value
   /// from the [other] [MarkdownTableSpec] is used.
   ///
@@ -1048,6 +1033,8 @@ mixin _$MarkdownTableSpec on Spec<MarkdownTableSpec> {
           BoxDecoration.lerp(_$this.cellDecoration, other.cellDecoration, t),
       verticalAlignment:
           t < 0.5 ? _$this.verticalAlignment : other.verticalAlignment,
+      modifiers: other.modifiers,
+      animated: t < 0.5 ? _$this.animated : other.animated,
     );
   }
 
@@ -1066,6 +1053,8 @@ mixin _$MarkdownTableSpec on Spec<MarkdownTableSpec> {
         _$this.cellPadding,
         _$this.cellDecoration,
         _$this.verticalAlignment,
+        _$this.modifiers,
+        _$this.animated,
       ];
 
   MarkdownTableSpec get _$this => this as MarkdownTableSpec;
@@ -1100,6 +1089,8 @@ final class MarkdownTableSpecAttribute
     this.cellPadding,
     this.cellDecoration,
     this.verticalAlignment,
+    super.modifiers,
+    super.animated,
   });
 
   /// Resolves to [MarkdownTableSpec] using the provided [MixData].
@@ -1122,6 +1113,8 @@ final class MarkdownTableSpecAttribute
       cellPadding: cellPadding?.resolve(mix),
       cellDecoration: cellDecoration?.resolve(mix),
       verticalAlignment: verticalAlignment,
+      modifiers: modifiers?.resolve(mix),
+      animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
 
@@ -1148,6 +1141,8 @@ final class MarkdownTableSpecAttribute
       cellDecoration:
           cellDecoration?.merge(other.cellDecoration) ?? other.cellDecoration,
       verticalAlignment: other.verticalAlignment ?? verticalAlignment,
+      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
 
@@ -1166,6 +1161,8 @@ final class MarkdownTableSpecAttribute
         cellPadding,
         cellDecoration,
         verticalAlignment,
+        modifiers,
+        animated,
       ];
 }
 
@@ -1204,6 +1201,12 @@ class MarkdownTableSpecUtility<T extends Attribute>
   late final verticalAlignment =
       TableCellVerticalAlignmentUtility((v) => only(verticalAlignment: v));
 
+  /// Utility for defining [MarkdownTableSpecAttribute.modifiers]
+  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+
+  /// Utility for defining [MarkdownTableSpecAttribute.animated]
+  late final animated = AnimatedUtility((v) => only(animated: v));
+
   MarkdownTableSpecUtility(super.builder, {super.mutable});
 
   MarkdownTableSpecUtility<T> get chain =>
@@ -1224,6 +1227,8 @@ class MarkdownTableSpecUtility<T extends Attribute>
     EdgeInsetsDto? cellPadding,
     BoxDecorationDto? cellDecoration,
     TableCellVerticalAlignment? verticalAlignment,
+    WidgetModifiersDataDto? modifiers,
+    AnimatedDataDto? animated,
   }) {
     return builder(MarkdownTableSpecAttribute(
       headStyle: headStyle,
@@ -1235,6 +1240,8 @@ class MarkdownTableSpecUtility<T extends Attribute>
       cellPadding: cellPadding,
       cellDecoration: cellDecoration,
       verticalAlignment: verticalAlignment,
+      modifiers: modifiers,
+      animated: animated,
     ));
   }
 }
@@ -1294,12 +1301,16 @@ mixin _$MarkdownBlockquoteSpec on Spec<MarkdownBlockquoteSpec> {
     EdgeInsets? padding,
     BoxDecoration? decoration,
     WrapAlignment? alignment,
+    WidgetModifiersData? modifiers,
+    AnimatedData? animated,
   }) {
     return MarkdownBlockquoteSpec(
       textStyle: textStyle ?? _$this.textStyle,
       padding: padding ?? _$this.padding,
       decoration: decoration ?? _$this.decoration,
       alignment: alignment ?? _$this.alignment,
+      modifiers: modifiers ?? _$this.modifiers,
+      animated: animated ?? _$this.animated,
     );
   }
 
@@ -1318,7 +1329,7 @@ mixin _$MarkdownBlockquoteSpec on Spec<MarkdownBlockquoteSpec> {
   /// - [EdgeInsets.lerp] for [padding].
   /// - [BoxDecoration.lerp] for [decoration].
 
-  /// For [alignment], the interpolation is performed using a step function.
+  /// For [alignment] and [modifiers] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [MarkdownBlockquoteSpec] is used. Otherwise, the value
   /// from the [other] [MarkdownBlockquoteSpec] is used.
   ///
@@ -1333,6 +1344,8 @@ mixin _$MarkdownBlockquoteSpec on Spec<MarkdownBlockquoteSpec> {
       padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
       decoration: BoxDecoration.lerp(_$this.decoration, other.decoration, t),
       alignment: t < 0.5 ? _$this.alignment : other.alignment,
+      modifiers: other.modifiers,
+      animated: t < 0.5 ? _$this.animated : other.animated,
     );
   }
 
@@ -1346,6 +1359,8 @@ mixin _$MarkdownBlockquoteSpec on Spec<MarkdownBlockquoteSpec> {
         _$this.padding,
         _$this.decoration,
         _$this.alignment,
+        _$this.modifiers,
+        _$this.animated,
       ];
 
   MarkdownBlockquoteSpec get _$this => this as MarkdownBlockquoteSpec;
@@ -1370,6 +1385,8 @@ final class MarkdownBlockquoteSpecAttribute
     this.padding,
     this.decoration,
     this.alignment,
+    super.modifiers,
+    super.animated,
   });
 
   /// Resolves to [MarkdownBlockquoteSpec] using the provided [MixData].
@@ -1387,6 +1404,8 @@ final class MarkdownBlockquoteSpecAttribute
       padding: padding?.resolve(mix),
       decoration: decoration?.resolve(mix),
       alignment: alignment,
+      modifiers: modifiers?.resolve(mix),
+      animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
 
@@ -1408,6 +1427,8 @@ final class MarkdownBlockquoteSpecAttribute
       padding: padding?.merge(other.padding) ?? other.padding,
       decoration: decoration?.merge(other.decoration) ?? other.decoration,
       alignment: other.alignment ?? alignment,
+      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
 
@@ -1421,6 +1442,8 @@ final class MarkdownBlockquoteSpecAttribute
         padding,
         decoration,
         alignment,
+        modifiers,
+        animated,
       ];
 }
 
@@ -1442,6 +1465,12 @@ class MarkdownBlockquoteSpecUtility<T extends Attribute>
   /// Utility for defining [MarkdownBlockquoteSpecAttribute.alignment]
   late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
 
+  /// Utility for defining [MarkdownBlockquoteSpecAttribute.modifiers]
+  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+
+  /// Utility for defining [MarkdownBlockquoteSpecAttribute.animated]
+  late final animated = AnimatedUtility((v) => only(animated: v));
+
   MarkdownBlockquoteSpecUtility(super.builder, {super.mutable});
 
   MarkdownBlockquoteSpecUtility<T> get chain =>
@@ -1457,12 +1486,16 @@ class MarkdownBlockquoteSpecUtility<T extends Attribute>
     EdgeInsetsDto? padding,
     BoxDecorationDto? decoration,
     WrapAlignment? alignment,
+    WidgetModifiersDataDto? modifiers,
+    AnimatedDataDto? animated,
   }) {
     return builder(MarkdownBlockquoteSpecAttribute(
       textStyle: textStyle,
       padding: padding,
       decoration: decoration,
       alignment: alignment,
+      modifiers: modifiers,
+      animated: animated,
     ));
   }
 }
@@ -1519,15 +1552,17 @@ mixin _$MarkdownCodeblockSpec on Spec<MarkdownCodeblockSpec> {
   @override
   MarkdownCodeblockSpec copyWith({
     TextStyle? textStyle,
-    EdgeInsets? padding,
-    BoxDecoration? decoration,
+    BoxSpec? container,
     WrapAlignment? alignment,
+    WidgetModifiersData? modifiers,
+    AnimatedData? animated,
   }) {
     return MarkdownCodeblockSpec(
       textStyle: textStyle ?? _$this.textStyle,
-      padding: padding ?? _$this.padding,
-      decoration: decoration ?? _$this.decoration,
+      container: container ?? _$this.container,
       alignment: alignment ?? _$this.alignment,
+      modifiers: modifiers ?? _$this.modifiers,
+      animated: animated ?? _$this.animated,
     );
   }
 
@@ -1543,10 +1578,9 @@ mixin _$MarkdownCodeblockSpec on Spec<MarkdownCodeblockSpec> {
   /// interpolation method:
   ///
   /// - [MixHelpers.lerpTextStyle] for [textStyle].
-  /// - [EdgeInsets.lerp] for [padding].
-  /// - [BoxDecoration.lerp] for [decoration].
+  /// - [BoxSpec.lerp] for [container].
 
-  /// For [alignment], the interpolation is performed using a step function.
+  /// For [alignment] and [modifiers] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [MarkdownCodeblockSpec] is used. Otherwise, the value
   /// from the [other] [MarkdownCodeblockSpec] is used.
   ///
@@ -1558,9 +1592,10 @@ mixin _$MarkdownCodeblockSpec on Spec<MarkdownCodeblockSpec> {
 
     return MarkdownCodeblockSpec(
       textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
-      padding: EdgeInsets.lerp(_$this.padding, other.padding, t),
-      decoration: BoxDecoration.lerp(_$this.decoration, other.decoration, t),
+      container: _$this.container?.lerp(other.container, t) ?? other.container,
       alignment: t < 0.5 ? _$this.alignment : other.alignment,
+      modifiers: other.modifiers,
+      animated: t < 0.5 ? _$this.animated : other.animated,
     );
   }
 
@@ -1571,9 +1606,10 @@ mixin _$MarkdownCodeblockSpec on Spec<MarkdownCodeblockSpec> {
   @override
   List<Object?> get props => [
         _$this.textStyle,
-        _$this.padding,
-        _$this.decoration,
+        _$this.container,
         _$this.alignment,
+        _$this.modifiers,
+        _$this.animated,
       ];
 
   MarkdownCodeblockSpec get _$this => this as MarkdownCodeblockSpec;
@@ -1589,15 +1625,15 @@ mixin _$MarkdownCodeblockSpec on Spec<MarkdownCodeblockSpec> {
 final class MarkdownCodeblockSpecAttribute
     extends SpecAttribute<MarkdownCodeblockSpec> {
   final TextStyleDto? textStyle;
-  final EdgeInsetsDto? padding;
-  final BoxDecorationDto? decoration;
+  final BoxSpecAttribute? container;
   final WrapAlignment? alignment;
 
   const MarkdownCodeblockSpecAttribute({
     this.textStyle,
-    this.padding,
-    this.decoration,
+    this.container,
     this.alignment,
+    super.modifiers,
+    super.animated,
   });
 
   /// Resolves to [MarkdownCodeblockSpec] using the provided [MixData].
@@ -1612,9 +1648,10 @@ final class MarkdownCodeblockSpecAttribute
   MarkdownCodeblockSpec resolve(MixData mix) {
     return MarkdownCodeblockSpec(
       textStyle: textStyle?.resolve(mix),
-      padding: padding?.resolve(mix),
-      decoration: decoration?.resolve(mix),
+      container: container?.resolve(mix),
       alignment: alignment,
+      modifiers: modifiers?.resolve(mix),
+      animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
 
@@ -1632,9 +1669,10 @@ final class MarkdownCodeblockSpecAttribute
 
     return MarkdownCodeblockSpecAttribute(
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
-      padding: padding?.merge(other.padding) ?? other.padding,
-      decoration: decoration?.merge(other.decoration) ?? other.decoration,
+      container: container?.merge(other.container) ?? other.container,
       alignment: other.alignment ?? alignment,
+      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
 
@@ -1645,9 +1683,10 @@ final class MarkdownCodeblockSpecAttribute
   @override
   List<Object?> get props => [
         textStyle,
-        padding,
-        decoration,
+        container,
         alignment,
+        modifiers,
+        animated,
       ];
 }
 
@@ -1660,14 +1699,17 @@ class MarkdownCodeblockSpecUtility<T extends Attribute>
   /// Utility for defining [MarkdownCodeblockSpecAttribute.textStyle]
   late final textStyle = TextStyleUtility((v) => only(textStyle: v));
 
-  /// Utility for defining [MarkdownCodeblockSpecAttribute.padding]
-  late final padding = EdgeInsetsUtility((v) => only(padding: v));
-
-  /// Utility for defining [MarkdownCodeblockSpecAttribute.decoration]
-  late final decoration = BoxDecorationUtility((v) => only(decoration: v));
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.container]
+  late final container = BoxSpecUtility((v) => only(container: v));
 
   /// Utility for defining [MarkdownCodeblockSpecAttribute.alignment]
   late final alignment = WrapAlignmentUtility((v) => only(alignment: v));
+
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.modifiers]
+  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+
+  /// Utility for defining [MarkdownCodeblockSpecAttribute.animated]
+  late final animated = AnimatedUtility((v) => only(animated: v));
 
   MarkdownCodeblockSpecUtility(super.builder, {super.mutable});
 
@@ -1681,15 +1723,17 @@ class MarkdownCodeblockSpecUtility<T extends Attribute>
   @override
   T only({
     TextStyleDto? textStyle,
-    EdgeInsetsDto? padding,
-    BoxDecorationDto? decoration,
+    BoxSpecAttribute? container,
     WrapAlignment? alignment,
+    WidgetModifiersDataDto? modifiers,
+    AnimatedDataDto? animated,
   }) {
     return builder(MarkdownCodeblockSpecAttribute(
       textStyle: textStyle,
-      padding: padding,
-      decoration: decoration,
+      container: container,
       alignment: alignment,
+      modifiers: modifiers,
+      animated: animated,
     ));
   }
 }
@@ -1747,10 +1791,14 @@ mixin _$MarkdownCheckboxSpec on Spec<MarkdownCheckboxSpec> {
   MarkdownCheckboxSpec copyWith({
     TextStyle? textStyle,
     IconSpec? icon,
+    WidgetModifiersData? modifiers,
+    AnimatedData? animated,
   }) {
     return MarkdownCheckboxSpec(
       textStyle: textStyle ?? _$this.textStyle,
       icon: icon ?? _$this.icon,
+      modifiers: modifiers ?? _$this.modifiers,
+      animated: animated ?? _$this.animated,
     );
   }
 
@@ -1768,7 +1816,7 @@ mixin _$MarkdownCheckboxSpec on Spec<MarkdownCheckboxSpec> {
   /// - [MixHelpers.lerpTextStyle] for [textStyle].
   /// - [IconSpec.lerp] for [icon].
 
-  /// For , the interpolation is performed using a step function.
+  /// For [modifiers] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [MarkdownCheckboxSpec] is used. Otherwise, the value
   /// from the [other] [MarkdownCheckboxSpec] is used.
   ///
@@ -1781,6 +1829,8 @@ mixin _$MarkdownCheckboxSpec on Spec<MarkdownCheckboxSpec> {
     return MarkdownCheckboxSpec(
       textStyle: MixHelpers.lerpTextStyle(_$this.textStyle, other.textStyle, t),
       icon: _$this.icon?.lerp(other.icon, t) ?? other.icon,
+      modifiers: other.modifiers,
+      animated: t < 0.5 ? _$this.animated : other.animated,
     );
   }
 
@@ -1792,6 +1842,8 @@ mixin _$MarkdownCheckboxSpec on Spec<MarkdownCheckboxSpec> {
   List<Object?> get props => [
         _$this.textStyle,
         _$this.icon,
+        _$this.modifiers,
+        _$this.animated,
       ];
 
   MarkdownCheckboxSpec get _$this => this as MarkdownCheckboxSpec;
@@ -1812,6 +1864,8 @@ class MarkdownCheckboxSpecAttribute
   const MarkdownCheckboxSpecAttribute({
     this.textStyle,
     this.icon,
+    super.modifiers,
+    super.animated,
   });
 
   /// Resolves to [MarkdownCheckboxSpec] using the provided [MixData].
@@ -1827,6 +1881,8 @@ class MarkdownCheckboxSpecAttribute
     return MarkdownCheckboxSpec(
       textStyle: textStyle?.resolve(mix),
       icon: icon?.resolve(mix),
+      modifiers: modifiers?.resolve(mix),
+      animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
 
@@ -1846,6 +1902,8 @@ class MarkdownCheckboxSpecAttribute
     return MarkdownCheckboxSpecAttribute(
       textStyle: textStyle?.merge(other.textStyle) ?? other.textStyle,
       icon: icon?.merge(other.icon) ?? other.icon,
+      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
+      animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
 
@@ -1857,6 +1915,8 @@ class MarkdownCheckboxSpecAttribute
   List<Object?> get props => [
         textStyle,
         icon,
+        modifiers,
+        animated,
       ];
 }
 
@@ -1872,6 +1932,12 @@ class MarkdownCheckboxSpecUtility<T extends Attribute>
   /// Utility for defining [MarkdownCheckboxSpecAttribute.icon]
   late final icon = IconSpecUtility((v) => only(icon: v));
 
+  /// Utility for defining [MarkdownCheckboxSpecAttribute.modifiers]
+  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+
+  /// Utility for defining [MarkdownCheckboxSpecAttribute.animated]
+  late final animated = AnimatedUtility((v) => only(animated: v));
+
   MarkdownCheckboxSpecUtility(super.builder, {super.mutable});
 
   MarkdownCheckboxSpecUtility<T> get chain =>
@@ -1885,10 +1951,14 @@ class MarkdownCheckboxSpecUtility<T extends Attribute>
   T only({
     TextStyleDto? textStyle,
     IconSpecAttribute? icon,
+    WidgetModifiersDataDto? modifiers,
+    AnimatedDataDto? animated,
   }) {
     return builder(MarkdownCheckboxSpecAttribute(
       textStyle: textStyle,
       icon: icon,
+      modifiers: modifiers,
+      animated: animated,
     ));
   }
 }
@@ -1952,7 +2022,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     TextSpec? h6,
     TextSpec? p,
     TextStyle? link,
-    double? blockSpacing,
     MarkdownBlockquoteSpec? blockquote,
     MarkdownListSpec? list,
     MarkdownTableSpec? table,
@@ -1962,7 +2031,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     TextStyle? em,
     TextStyle? strong,
     TextStyle? del,
-    WrapAlignment? textAlign,
     TextStyle? img,
     BoxDecoration? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
@@ -1970,6 +2038,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     BoxSpec? contentContainer,
     ImageSpec? image,
     MarkdownAlertSpec? alert,
+    WidgetModifiersData? modifiers,
     AnimatedData? animated,
   }) {
     return SlideSpec(
@@ -1981,7 +2050,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       h6: h6 ?? _$this.h6,
       p: p ?? _$this.p,
       link: link ?? _$this.link,
-      blockSpacing: blockSpacing ?? _$this.blockSpacing,
       blockquote: blockquote ?? _$this.blockquote,
       list: list ?? _$this.list,
       table: table ?? _$this.table,
@@ -1991,7 +2059,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       em: em ?? _$this.em,
       strong: strong ?? _$this.strong,
       del: del ?? _$this.del,
-      textAlign: textAlign ?? _$this.textAlign,
       img: img ?? _$this.img,
       horizontalRuleDecoration:
           horizontalRuleDecoration ?? _$this.horizontalRuleDecoration,
@@ -2000,6 +2067,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       contentContainer: contentContainer ?? _$this.contentContainer,
       image: image ?? _$this.image,
       alert: alert ?? _$this.alert,
+      modifiers: modifiers ?? _$this.modifiers,
       animated: animated ?? _$this.animated,
     );
   }
@@ -2017,12 +2085,11 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   ///
   /// - [TextSpec.lerp] for [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [p].
   /// - [MixHelpers.lerpTextStyle] for [link] and [a] and [em] and [strong] and [del] and [img].
-  /// - [MixHelpers.lerpDouble] for [blockSpacing].
   /// - [BoxDecoration.lerp] for [horizontalRuleDecoration].
   /// - [BoxSpec.lerp] for [slideContainer] and [contentContainer].
   /// - [ImageSpec.lerp] for [image].
 
-  /// For [blockquote] and [list] and [table] and [checkbox] and [code] and [textAlign] and [textScaleFactor] and [alert] and [animated], the interpolation is performed using a step function.
+  /// For [blockquote] and [list] and [table] and [checkbox] and [code] and [textScaleFactor] and [alert] and [modifiers] and [animated], the interpolation is performed using a step function.
   /// If [t] is less than 0.5, the value from the current [SlideSpec] is used. Otherwise, the value
   /// from the [other] [SlideSpec] is used.
   ///
@@ -2041,8 +2108,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       h6: _$this.h6?.lerp(other.h6, t) ?? other.h6,
       p: _$this.p?.lerp(other.p, t) ?? other.p,
       link: MixHelpers.lerpTextStyle(_$this.link, other.link, t),
-      blockSpacing:
-          MixHelpers.lerpDouble(_$this.blockSpacing, other.blockSpacing, t),
       blockquote:
           _$this.blockquote?.lerp(other.blockquote, t) ?? other.blockquote,
       list: _$this.list?.lerp(other.list, t) ?? other.list,
@@ -2053,7 +2118,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       em: MixHelpers.lerpTextStyle(_$this.em, other.em, t),
       strong: MixHelpers.lerpTextStyle(_$this.strong, other.strong, t),
       del: MixHelpers.lerpTextStyle(_$this.del, other.del, t),
-      textAlign: t < 0.5 ? _$this.textAlign : other.textAlign,
       img: MixHelpers.lerpTextStyle(_$this.img, other.img, t),
       horizontalRuleDecoration: BoxDecoration.lerp(
           _$this.horizontalRuleDecoration, other.horizontalRuleDecoration, t),
@@ -2062,6 +2126,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       contentContainer: _$this.contentContainer.lerp(other.contentContainer, t),
       image: _$this.image.lerp(other.image, t),
       alert: _$this.alert.lerp(other.alert, t),
+      modifiers: other.modifiers,
       animated: t < 0.5 ? _$this.animated : other.animated,
     );
   }
@@ -2080,7 +2145,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.h6,
         _$this.p,
         _$this.link,
-        _$this.blockSpacing,
         _$this.blockquote,
         _$this.list,
         _$this.table,
@@ -2090,7 +2154,6 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.em,
         _$this.strong,
         _$this.del,
-        _$this.textAlign,
         _$this.img,
         _$this.horizontalRuleDecoration,
         _$this.textScaleFactor,
@@ -2098,6 +2161,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.contentContainer,
         _$this.image,
         _$this.alert,
+        _$this.modifiers,
         _$this.animated,
       ];
 
@@ -2120,7 +2184,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   final TextSpecAttribute? h6;
   final TextSpecAttribute? p;
   final TextStyleDto? link;
-  final double? blockSpacing;
   final MarkdownBlockquoteSpecAttribute? blockquote;
   final MarkdownListSpecAttribute? list;
   final MarkdownTableSpecAttribute? table;
@@ -2130,7 +2193,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   final TextStyleDto? em;
   final TextStyleDto? strong;
   final TextStyleDto? del;
-  final WrapAlignment? textAlign;
   final TextStyleDto? img;
   final BoxDecorationDto? horizontalRuleDecoration;
   final TextScaler? textScaleFactor;
@@ -2148,7 +2210,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.h6,
     this.p,
     this.link,
-    this.blockSpacing,
     this.blockquote,
     this.list,
     this.table,
@@ -2158,7 +2219,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.em,
     this.strong,
     this.del,
-    this.textAlign,
     this.img,
     this.horizontalRuleDecoration,
     this.textScaleFactor,
@@ -2166,6 +2226,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.contentContainer,
     this.image,
     this.alert,
+    super.modifiers,
     super.animated,
   });
 
@@ -2188,7 +2249,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       h6: h6?.resolve(mix),
       p: p?.resolve(mix),
       link: link?.resolve(mix),
-      blockSpacing: blockSpacing,
       blockquote: blockquote?.resolve(mix),
       list: list?.resolve(mix),
       table: table?.resolve(mix),
@@ -2198,7 +2258,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       em: em?.resolve(mix),
       strong: strong?.resolve(mix),
       del: del?.resolve(mix),
-      textAlign: textAlign,
       img: img?.resolve(mix),
       horizontalRuleDecoration: horizontalRuleDecoration?.resolve(mix),
       textScaleFactor: textScaleFactor,
@@ -2206,6 +2265,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       contentContainer: contentContainer?.resolve(mix),
       image: image?.resolve(mix),
       alert: alert?.resolve(mix),
+      modifiers: modifiers?.resolve(mix),
       animated: animated?.resolve(mix) ?? mix.animation,
     );
   }
@@ -2231,7 +2291,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       h6: h6?.merge(other.h6) ?? other.h6,
       p: p?.merge(other.p) ?? other.p,
       link: link?.merge(other.link) ?? other.link,
-      blockSpacing: other.blockSpacing ?? blockSpacing,
       blockquote: blockquote?.merge(other.blockquote) ?? other.blockquote,
       list: list?.merge(other.list) ?? other.list,
       table: table?.merge(other.table) ?? other.table,
@@ -2241,7 +2300,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       em: em?.merge(other.em) ?? other.em,
       strong: strong?.merge(other.strong) ?? other.strong,
       del: del?.merge(other.del) ?? other.del,
-      textAlign: other.textAlign ?? textAlign,
       img: img?.merge(other.img) ?? other.img,
       horizontalRuleDecoration:
           horizontalRuleDecoration?.merge(other.horizontalRuleDecoration) ??
@@ -2253,6 +2311,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
           other.contentContainer,
       image: image?.merge(other.image) ?? other.image,
       alert: alert?.merge(other.alert) ?? other.alert,
+      modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
       animated: animated?.merge(other.animated) ?? other.animated,
     );
   }
@@ -2271,7 +2330,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         h6,
         p,
         link,
-        blockSpacing,
         blockquote,
         list,
         table,
@@ -2281,7 +2339,6 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         em,
         strong,
         del,
-        textAlign,
         img,
         horizontalRuleDecoration,
         textScaleFactor,
@@ -2289,6 +2346,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         contentContainer,
         image,
         alert,
+        modifiers,
         animated,
       ];
 }
@@ -2323,9 +2381,6 @@ class SlideSpecUtility<T extends Attribute>
   /// Utility for defining [SlideSpecAttribute.link]
   late final link = TextStyleUtility((v) => only(link: v));
 
-  /// Utility for defining [SlideSpecAttribute.blockSpacing]
-  late final blockSpacing = DoubleUtility((v) => only(blockSpacing: v));
-
   /// Utility for defining [SlideSpecAttribute.blockquote]
   late final blockquote =
       MarkdownBlockquoteSpecUtility((v) => only(blockquote: v));
@@ -2354,9 +2409,6 @@ class SlideSpecUtility<T extends Attribute>
   /// Utility for defining [SlideSpecAttribute.del]
   late final del = TextStyleUtility((v) => only(del: v));
 
-  /// Utility for defining [SlideSpecAttribute.textAlign]
-  late final textAlign = WrapAlignmentUtility((v) => only(textAlign: v));
-
   /// Utility for defining [SlideSpecAttribute.img]
   late final img = TextStyleUtility((v) => only(img: v));
 
@@ -2381,6 +2433,9 @@ class SlideSpecUtility<T extends Attribute>
   /// Utility for defining [SlideSpecAttribute.alert]
   late final alert = MarkdownAlertSpecUtility((v) => only(alert: v));
 
+  /// Utility for defining [SlideSpecAttribute.modifiers]
+  late final wrap = SpecModifierUtility((v) => only(modifiers: v));
+
   /// Utility for defining [SlideSpecAttribute.animated]
   late final animated = AnimatedUtility((v) => only(animated: v));
 
@@ -2403,7 +2458,6 @@ class SlideSpecUtility<T extends Attribute>
     TextSpecAttribute? h6,
     TextSpecAttribute? p,
     TextStyleDto? link,
-    double? blockSpacing,
     MarkdownBlockquoteSpecAttribute? blockquote,
     MarkdownListSpecAttribute? list,
     MarkdownTableSpecAttribute? table,
@@ -2413,7 +2467,6 @@ class SlideSpecUtility<T extends Attribute>
     TextStyleDto? em,
     TextStyleDto? strong,
     TextStyleDto? del,
-    WrapAlignment? textAlign,
     TextStyleDto? img,
     BoxDecorationDto? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
@@ -2421,6 +2474,7 @@ class SlideSpecUtility<T extends Attribute>
     BoxSpecAttribute? contentContainer,
     ImageSpecAttribute? image,
     MarkdownAlertSpecAttribute? alert,
+    WidgetModifiersDataDto? modifiers,
     AnimatedDataDto? animated,
   }) {
     return builder(SlideSpecAttribute(
@@ -2432,7 +2486,6 @@ class SlideSpecUtility<T extends Attribute>
       h6: h6,
       p: p,
       link: link,
-      blockSpacing: blockSpacing,
       blockquote: blockquote,
       list: list,
       table: table,
@@ -2442,7 +2495,6 @@ class SlideSpecUtility<T extends Attribute>
       em: em,
       strong: strong,
       del: del,
-      textAlign: textAlign,
       img: img,
       horizontalRuleDecoration: horizontalRuleDecoration,
       textScaleFactor: textScaleFactor,
@@ -2450,6 +2502,7 @@ class SlideSpecUtility<T extends Attribute>
       contentContainer: contentContainer,
       image: image,
       alert: alert,
+      modifiers: modifiers,
       animated: animated,
     ));
   }

@@ -12,33 +12,33 @@ class BaseStyle extends DeckStyle {
   Style build() {
     return super.build().merge(
           Style(
-            $.baseTextStyle.as(GoogleFonts.poppins()),
-            $.h1.chain
-              ..style.fontWeight.w900()
-              ..style.fontSize(100),
-            $.h2.chain
-              ..style.fontWeight.w100()
-              ..style.fontSize(80),
-            $.h3.chain..style.fontSize(36),
-            $.alert.all.chain
-              ..heading.style.fontSize(24)
-              ..icon.size(36)
-              ..description.style.fontSize(24)
-              ..description.style.fontWeight.w400(),
-            $.alert.note.chain
-              ..heading.style.color(_accent)
-              ..icon.color(_accent)
-              ..container.border.left.color(_accent),
-            $.code.chain
-              ..textStyle.as(GoogleFonts.jetBrainsMono())
-              ..decoration.color(
-                const Color.fromARGB(255, 3, 17, 19),
-              )
-              ..decoration.border.all(
-                    color: const Color.fromARGB(255, 6, 49, 50),
-                    width: 1,
-                  ),
-          ),
+              // $.baseTextStyle.as(GoogleFonts.poppins()),
+              // $.h1.chain
+              //   ..style.fontWeight.w900()
+              //   ..style.fontSize(100),
+              // $.h2.chain
+              //   ..style.fontWeight.w100()
+              //   ..style.fontSize(80),
+              // $.h3.chain..style.fontSize(36),
+              // $.alert.all.chain
+              //   ..heading.style.fontSize(24)
+              //   ..icon.size(36)
+              //   ..description.style.fontSize(24)
+              //   ..description.style.fontWeight.w400(),
+              // $.alert.note.chain
+              //   ..heading.style.color(_accent)
+              //   ..icon.color(_accent)
+              //   ..container.border.left.color(_accent),
+              // $.code.chain
+              //   ..textStyle.as(GoogleFonts.jetBrainsMono())
+              //   ..decoration.color(
+              //     const Color.fromARGB(255, 3, 17, 19),
+              //   )
+              //   ..decoration.border.all(
+              //         color: const Color.fromARGB(255, 6, 49, 50),
+              //         width: 1,
+              //       ),
+              ),
         );
   }
 }

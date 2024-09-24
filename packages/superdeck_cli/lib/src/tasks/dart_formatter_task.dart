@@ -18,23 +18,14 @@ class DartFormatterTask extends Task {
   String _formatDartCodeBlocks(
     TaskController controller,
   ) {
-    final codeBlockRegex = RegExp('```dart\n(.*?)\n```', dotAll: true);
+    final codeBlockRegex = RegExp('```dart\n(.*?)\n```');
     final markdown = controller.slide.markdown;
     return markdown.replaceAllMapped(codeBlockRegex, (match) {
       final code = match.group(1)!;
 
       final formattedCode = DartProcess.format(code);
 
-      final replacement = '```dart\n$formattedCode\n```';
-
-      controller.markdownReplacements.add(
-        (
-          pattern: match.group(0)!,
-          replacement: replacement,
-        ),
-      );
-
-      return replacement;
+      return '```dart\n$formattedCode\n```';
     });
   }
 }

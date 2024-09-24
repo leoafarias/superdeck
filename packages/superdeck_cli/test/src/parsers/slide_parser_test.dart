@@ -108,7 +108,7 @@ invalid: yaml: frontmatter
 Slide content
 ''';
 
-      expect(() => parseSlides(markdown), throwsA(isA<SDFormatException>()));
+      expect(() => parseSlides(markdown), throwsA(isA<SdFormatException>()));
     });
 
     test('throws SDMarkdownParsingException on invalid slide schema', () {
@@ -120,7 +120,7 @@ Slide content
 ''';
 
       expect(() => parseSlides(markdown),
-          throwsA(isA<SDMarkdownParsingException>()));
+          throwsA(isA<SdMarkdownParsingException>()));
     });
 
     test('handles empty markdown string', () {

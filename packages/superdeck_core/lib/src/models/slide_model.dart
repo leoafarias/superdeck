@@ -16,8 +16,9 @@ class Slide with SlideMappable {
     this.notes = const [],
   });
 
-  File get thumbnailFile =>
-      File(p.join(kGeneratedAssetsDir.path, 'thumbnail_$key.png'));
+  File get thumbnailFile => File(
+        p.join(kGeneratedAssetsDir.path, 'thumbnail_$key.png'),
+      );
 
   static Slide fromMap(Map<String, dynamic> map) {
     Slide.schema.validateOrThrow(map);

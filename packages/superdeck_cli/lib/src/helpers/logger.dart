@@ -9,7 +9,7 @@ final logger = Logger(
 );
 
 extension LoggerX on Logger {
-  void formatError(SDFormatException exception) {
+  void formatError(SdFormatException exception) {
     final message = exception.message;
     final source = exception.source;
 

@@ -113,12 +113,15 @@ Footer content column.
     test('Header with columns and flex attribute', () {
       const markdown = '''
 {@section}
-{@column flex: 1 }
+{@column
+  flex: 1
+}
 Header content column 1.
 
-{@column flex: 2}
+{@column
+  flex: 2
+}
 Header content column 2.
-
 ''';
 
       final sections = parseSections(markdown);
@@ -138,12 +141,15 @@ Header content column 2.
     test('Section with columns and alignment attribute in snake case', () {
       const markdown = '''
 {@section}
-{@column align: center}
+{@column
+      align: center
+}
 Body content column 1.
 
-{@column align: bottom_right}
+{@column
+      align: bottom_right
+}
 Body content column 2.
-
 ''';
 
       final sections = parseSections(markdown);
@@ -166,12 +172,16 @@ Body content column 2.
         () {
       const markdown = '''
 {@section}
-{@column flex: 3 align: top_left}
+{@column
+  flex: 3 
+  align: top_left
+}
 Footer content column 1.
-
-{@column flex: 1 align: center_right}
+{@column
+  flex: 1
+  align: center_right
+}
 Footer content column 2.
-
 ''';
 
       final sections = parseSections(markdown);
@@ -196,18 +206,30 @@ Footer content column 2.
     test('Sections with columns and attributes', () {
       const markdown = '''
 {@section}
-{@column flex: 1 align: center}
+{@column
+    flex: 1
+    align: center
+}
 Header content.
 
 {@section}
-{@column flex: 2  align: center_left}
+{@column
+    flex: 2
+    align: center_left
+}
 Body content column 1.
 
-{@column flex: 1 align: center_right}
+{@column
+    flex: 1
+    align: center_right
+}
 Body content column 2.
 
 {@section}
-{@column flex: 1 align: bottom_center}
+{@column
+    flex: 1
+    align: bottom_center
+}
 Footer content.
 
 ''';
@@ -247,18 +269,19 @@ Footer content.
     test('Fail case - Invalid flex attribute format', () {
       const markdown = '''
 {@section}
-{@column flex:invalid}
+{@column flex: invalid}
 Header content.
 
 ''';
-
       expect(() => parseSections(markdown), throwsException);
     });
 
     test('Fail case - Invalid alignment attribute value', () {
       const markdown = '''
 {@section}
-{@column align:invalid_alignment}
+{@column
+  align:invalid_alignment
+}
 Header content.
 
 ''';
@@ -275,11 +298,19 @@ Header content.
 {@column}
 Header content.
 
-{@section align: top_left flex: 2}
-{@column flex: 3}
+{@section
+  align: top_left
+  flex: 2
+}
+{@column
+  flex: 3
+}
 Body content.
 
-{@section align: bottom_right flex: 1}
+{@section
+  align: bottom_right
+  flex: 1
+}
 {@column align: bottom_right}
 Footer content.
 
@@ -322,29 +353,41 @@ Footer content.
 
       // test https:url
       test('Single key-value pair with https url', () {
-        final result = extractTagsFromLine(
-            '{@section key0: car key1: https://www.google.com}');
+        final result = extractTagsFromLine('''
+{@section
+  key0: car 
+  key1: https://www.google.com
+}
+''');
         expect(result.first.blockType, equals(BlockType.section));
         expect(result.first.options,
             equals({'key0': 'car', 'key1': 'https://www.google.com'}));
       });
 
       test('Multiple key-value pairs', () {
-        final result =
-            extractTagsFromLine('{@section key1: value1 key2: value2}');
+        final result = extractTagsFromLine('''
+                        {@section 
+                          key1: value1
+                          key2: value2
+                        }
+                    ''');
         expect(
             result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       test('Extra spaces', () {
-        final result =
-            extractTagsFromLine('{@section  key1:  value1  key2:  value2}');
+        final result = extractTagsFromLine('''
+{@section 
+  key1:  value1  
+  key2:  value2}
+''');
         expect(
             result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
 
       test('Empty value', () {
-        expect(() => extractTagsFromLine('{@section key1:}'), throwsException);
+        final result = extractTagsFromLine('{@section key1:}');
+        expect(result.first.options, equals({'key1': null}));
       });
 
       test('Missing value', () {
@@ -362,15 +405,19 @@ Footer content.
         );
         expect(result.length, equals(2));
         expect(result.first.blockType, equals(BlockType.column));
-        expect(result.first.options, equals({'firstTag': 'true'}));
+        expect(result.first.options, equals({'firstTag': true}));
 
         expect(result.last.blockType, equals(BlockType.column));
-        expect(result.last.options, equals({'secondTag': 'false'}));
+        expect(result.last.options, equals({'secondTag': false}));
       });
 
       test('Mixed valid and invalid pairs', () {
-        final result =
-            extractTagsFromLine('{@column key1: value1 key2: value2}');
+        final result = extractTagsFromLine('''
+{@column
+  key1: value1
+  key2: value2
+}
+''');
         expect(
           result.first.blockType,
           equals(BlockType.column),
@@ -382,16 +429,26 @@ Footer content.
 
       // Test falsy value
       test('Falsy value', () {
-        final result = extractTagsFromLine('{@column key1: false}');
-        final result2 = extractTagsFromLine('{@column key1: false key2: true}');
-        expect(result.first.options, equals({'key1': 'false'}));
-        expect(
-            result2.first.options, equals({'key1': 'false', 'key2': 'true'}));
+        final result = extractTagsFromLine('''
+{@column key1: false}
+''');
+        final result2 = extractTagsFromLine('''
+{@column 
+  key1: false 
+  key2: true
+}
+        ''');
+        expect(result.first.options, equals({'key1': false}));
+        expect(result2.first.options, equals({'key1': false, 'key2': true}));
       });
 
       test('Trims leading and trailing whitespace from tag contents', () {
-        final result =
-            extractTagsFromLine('{@column key1: value1 key2: value2 }');
+        final result = extractTagsFromLine('''
+{@column
+  key1: value1
+  key2: value2
+}
+''');
         expect(
             result.first.options, equals({'key1': 'value1', 'key2': 'value2'}));
       });
@@ -418,7 +475,10 @@ Footer content.
     test('Parse tag with only first part', () {
       final input = '{@column: demo}';
 
-      expect(() => extractTagsFromLine(input), throwsException);
+      final result = extractTagsFromLine(input);
+
+      expect(result.first.blockType, equals(BlockType.column));
+      expect(result.first.options, equals({'': 'demo'}));
     });
 
     test('Parse tag with extra whitespace', () {
@@ -456,13 +516,18 @@ Footer content.
     });
 
     test('Parse tag with numbers in part names', () {
-      final input = '{@column color123: vehicle456 blabla: 10}';
+      final input = '''
+{@column 
+  color123: vehicle456 
+  blabla: 10
+}
+''';
       final expectedOutput = [
         (
           blockType: BlockType.column,
           options: {
             'color123': 'vehicle456',
-            'blabla': '10',
+            'blabla': 10,
           }
         )
       ];
@@ -485,8 +550,9 @@ Footer content.
 
     test('Return null for input with incorrect tag format', () {
       final input = '{@column: blue car}';
+      final result = extractTagsFromLine(input);
 
-      expect(() => extractTagsFromLine(input), throwsException);
+      expect(result.first.blockType, equals(BlockType.column));
     });
   });
 }

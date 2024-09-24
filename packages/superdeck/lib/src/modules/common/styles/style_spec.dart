@@ -32,16 +32,15 @@ final class MarkdownTextSpec extends Spec<MarkdownTextSpec>
 @MixableSpec()
 final class MarkdownListSpec extends Spec<MarkdownListSpec>
     with _$MarkdownListSpec {
-  final double? indent;
-  final TextStyle? bulletStyle;
-  final EdgeInsets? bulletPadding;
+  final TextSpec? bullet;
+  final TextSpec? text;
+
   final WrapAlignment? orderedAlignment;
   final WrapAlignment? unorderedAlignment;
 
   const MarkdownListSpec({
-    this.indent,
-    this.bulletStyle,
-    this.bulletPadding,
+    this.bullet,
+    this.text,
     this.orderedAlignment,
     this.unorderedAlignment,
   });
@@ -127,22 +126,6 @@ extension MarkdownAlertTypeSpecUtilityX<T extends Attribute>
       });
 }
 
-//  return only(
-//           heading: TextSpecAttribute(
-//             style: TextStyleDto(
-//               color: value,
-//             ),
-//           ),
-//           container: BoxSpecAttribute(
-//               decoration: BoxDecorationDto(
-//             color: value,
-//             border: BorderDto(
-//               left: BorderSideDto(color: value),
-//             ),
-//           )),
-//           icon: IconSpecAttribute(color: value),
-//         );
-
 @MixableSpec()
 final class MarkdownTableSpec extends Spec<MarkdownTableSpec>
     with _$MarkdownTableSpec {
@@ -167,6 +150,8 @@ final class MarkdownTableSpec extends Spec<MarkdownTableSpec>
     this.cellPadding,
     this.cellDecoration,
     this.verticalAlignment,
+    super.modifiers,
+    super.animated,
   });
 }
 
@@ -183,6 +168,8 @@ final class MarkdownBlockquoteSpec extends Spec<MarkdownBlockquoteSpec>
     this.padding,
     this.decoration,
     this.alignment,
+    super.modifiers,
+    super.animated,
   });
 }
 
@@ -190,15 +177,16 @@ final class MarkdownBlockquoteSpec extends Spec<MarkdownBlockquoteSpec>
 final class MarkdownCodeblockSpec extends Spec<MarkdownCodeblockSpec>
     with _$MarkdownCodeblockSpec {
   final TextStyle? textStyle;
-  final EdgeInsets? padding;
-  final BoxDecoration? decoration;
+  final BoxSpec? container;
+
   final WrapAlignment? alignment;
 
   const MarkdownCodeblockSpec({
     this.textStyle,
-    this.padding,
-    this.decoration,
+    this.container,
     this.alignment,
+    super.modifiers,
+    super.animated,
   });
 }
 
@@ -211,13 +199,13 @@ class MarkdownCheckboxSpec extends Spec<MarkdownCheckboxSpec>
   const MarkdownCheckboxSpec({
     this.textStyle,
     this.icon,
+    super.modifiers,
+    super.animated,
   });
 }
 
 @MixableSpec()
 final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
-  final WrapAlignment? textAlign;
-
   final TextSpec? h1;
 
   final TextSpec? h2;
@@ -241,14 +229,12 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
   final TextSpec? p;
 
   final TextStyle? link;
-  final double? blockSpacing;
 
   @MixableProperty(dto: _mdAlert)
   final MarkdownAlertSpec alert;
 
   @MixableProperty(utilities: [MixableUtility(alias: 'divider')])
   final BoxDecoration? horizontalRuleDecoration;
-
   @MixableProperty(dto: _mdBlockQuote)
   final MarkdownBlockquoteSpec? blockquote;
 
@@ -280,7 +266,6 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
     this.h6,
     this.p,
     this.link,
-    this.blockSpacing,
     this.blockquote,
     this.list,
     this.table,
@@ -290,7 +275,6 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
     this.em,
     this.strong,
     this.del,
-    this.textAlign,
     this.img,
     this.horizontalRuleDecoration,
     this.textScaleFactor,
@@ -298,6 +282,7 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
     BoxSpec? contentContainer,
     ImageSpec? image,
     MarkdownAlertSpec? alert,
+    super.modifiers,
     super.animated,
   })  : slideContainer = slideContainer ?? const BoxSpec(),
         contentContainer = contentContainer ?? const BoxSpec(),
@@ -307,15 +292,11 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
   MarkdownStyleSheet toStyle() {
     return MarkdownStyleSheet(
       a: link,
-      textAlign: textAlign ?? WrapAlignment.start,
-      blockSpacing: blockSpacing,
       blockquote: blockquote?.textStyle,
       blockquotePadding: blockquote?.padding,
+      horizontalRuleDecoration: horizontalRuleDecoration,
       blockquoteDecoration: blockquote?.decoration,
       blockquoteAlign: blockquote?.alignment ?? WrapAlignment.start,
-      listBullet: list?.bulletStyle,
-      listBulletPadding: list?.bulletPadding,
-      listIndent: list?.indent,
       orderedListAlign: list?.orderedAlignment ?? WrapAlignment.start,
       unorderedListAlign: list?.unorderedAlignment ?? WrapAlignment.start,
       tableHead: table?.headStyle,
@@ -328,10 +309,6 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
       tableCellsDecoration: table?.cellDecoration,
       tableVerticalAlignment:
           table?.verticalAlignment ?? TableCellVerticalAlignment.middle,
-      code: code?.textStyle,
-      codeblockAlign: code?.alignment ?? WrapAlignment.start,
-      codeblockPadding: code?.padding,
-      codeblockDecoration: code?.decoration,
       checkbox: checkbox?.textStyle,
     );
   }

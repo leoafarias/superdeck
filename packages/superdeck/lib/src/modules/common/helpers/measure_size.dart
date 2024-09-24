@@ -23,7 +23,6 @@ class MeasureSizeRenderObject extends RenderProxyBox {
   }
 }
 
-@visibleForTesting
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 

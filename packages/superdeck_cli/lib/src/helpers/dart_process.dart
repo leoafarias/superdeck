@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
@@ -14,7 +15,7 @@ class DartProcess {
   }
 
   static String format(String code) {
-    final hash = shortHashId('$code'); // Generate a hash for the code
+    final hash = shortHashId(code); // Generate a hash for the code
     final tempFile = File('${Directory.systemTemp.path}/$hash.dart');
     try {
       tempFile.createSync(recursive: true);
@@ -35,7 +36,7 @@ class DartProcess {
   }
 }
 
-SDFormatException _handleFormattingError(String stderr, String source) {
+SdFormatException _handleFormattingError(String stderr, String source) {
   final match =
       RegExp(r'line (\d+), column (\d+) of .*: (.+)').firstMatch(stderr);
 
@@ -45,7 +46,7 @@ SDFormatException _handleFormattingError(String stderr, String source) {
     final message = match.group(3)!;
 
     // Calculate the zero-based offset
-    final lines = source.split('\n');
+    final lines = LineSplitter().convert(source);
     int offset = 0;
 
     // Calculate the offset by summing the lengths of all preceding lines
@@ -54,12 +55,12 @@ SDFormatException _handleFormattingError(String stderr, String source) {
     }
     offset += column - 1; // Add the column offset within the line
 
-    return SDFormatException(
+    return SdFormatException(
       'Dart code formatting error: $message',
       source,
       offset,
     );
   } else {
-    return SDFormatException('Error formatting dart code: $stderr');
+    return SdFormatException('Error formatting dart code: $stderr');
   }
 }

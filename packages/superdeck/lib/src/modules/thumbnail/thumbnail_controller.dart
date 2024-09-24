@@ -18,8 +18,8 @@ class ThumbnailController with ChangeNotifier {
   Future<void> load(Slide slide) async {
     try {
       final result = kCanRunProcess
-          ? slide.thumbnailFile
-          : await _generateThumbnail(slide);
+          ? await _generateThumbnail(slide)
+          : slide.thumbnailFile;
       _asyncData = AsyncValue.data(result);
     } catch (e, stackTrace) {
       _asyncData = AsyncValue.error(e, stackTrace);

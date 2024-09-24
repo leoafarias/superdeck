@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../modules/navigation/navigation_hooks.dart';
 
-class SDBottomBar extends HookWidget {
-  const SDBottomBar({
+class SdBottomBar extends HookWidget {
+  const SdBottomBar({
     super.key,
   });
 

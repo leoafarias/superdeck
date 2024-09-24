@@ -63,15 +63,15 @@ class SlidesLoader {
 }
 
 void _handleException(Exception e) {
-  if (e is SDTaskException) {
+  if (e is SdTaskException) {
     logger
       ..err('slide: ${e.controller.index}')
       ..err('Task error: ${e.taskName}');
 
     _handleException(e.exception);
-  } else if (e is SDFormatException) {
+  } else if (e is SdFormatException) {
     logger.formatError(e);
-  } else if (e is SDMarkdownParsingException) {
+  } else if (e is SdMarkdownParsingException) {
     final errorMessages = e.messages.join('\n');
     logger
       ..newLine()

@@ -74,19 +74,17 @@ class SlideView extends HookWidget {
                                       subSection.options?.align ??
                                           ContentAlignment.center;
                                   return SpecBuilder(
-                                    style: style.applyVariant(
-                                        Variant(subSection.type.name)),
+                                    style: style.applyVariant(Variant(
+                                      subSection.type.name,
+                                    )),
                                     builder: (context) {
-                                      final spec = SlideSpec.of(context);
                                       return Expanded(
                                         flex: subSectionFlex,
-                                        child: spec.contentContainer(
-                                          child: Align(
-                                            alignment: toAlignment(
-                                              subSectionAlignment,
-                                            ),
-                                            child: BlockWidget(subSection),
+                                        child: Align(
+                                          alignment: toAlignment(
+                                            subSectionAlignment,
                                           ),
+                                          child: BlockWidget(subSection),
                                         ),
                                       );
                                     },

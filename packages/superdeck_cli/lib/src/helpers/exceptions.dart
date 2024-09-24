@@ -1,11 +1,11 @@
 import 'package:superdeck_cli/src/generator_pipeline.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-class SDMarkdownParsingException implements Exception {
+class SdMarkdownParsingException implements Exception {
   final SchemaValidationException exception;
   final int slideLocation;
 
-  SDMarkdownParsingException(this.exception, this.slideLocation);
+  SdMarkdownParsingException(this.exception, this.slideLocation);
 
   String get location => exception.result.path.join(' | ');
 
@@ -14,12 +14,12 @@ class SDMarkdownParsingException implements Exception {
   }
 }
 
-class SDTaskException implements Exception {
+class SdTaskException implements Exception {
   final String taskName;
   final TaskController controller;
   final Exception exception;
 
-  SDTaskException(
+  SdTaskException(
     this.taskName,
     this.controller,
     this.exception,
@@ -33,12 +33,12 @@ class SDTaskException implements Exception {
   String toString() => message;
 }
 
-class SDFormatException implements Exception {
+class SdFormatException implements Exception {
   final String message;
   final int? offset;
   final String source;
 
-  SDFormatException(
+  SdFormatException(
     this.message, [
     this.source = '',
     this.offset,

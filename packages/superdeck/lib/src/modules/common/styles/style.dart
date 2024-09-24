@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mix/mix.dart';
 
 import 'style_spec.dart';
 
-TextStyle get _baseTextStyle =>
-    const TextStyle().copyWith(fontSize: 20, height: 1.4, color: Colors.white);
-TextStyle get _monoTextStyle => _baseTextStyle.copyWith(fontSize: 16);
-TextStyle get _serifTextStyle => _baseTextStyle.copyWith(fontSize: 50);
-
-TextStyle get headingTextStyle => _baseTextStyle.copyWith(height: 1.2);
+TextStyle get _baseTextStyle => GoogleFonts.poppins().copyWith(
+      fontSize: 24,
+      color: Colors.white,
+    );
 
 const onGist = Variant('gist');
 const onDebug = Variant('debug');
@@ -20,10 +19,9 @@ class DeckStyle {
 
   Style build() {
     final containers = [
-      $.slideContainer.chain
-        ..color.transparent()
-        ..padding.all(40),
-      // $.contentContainer.padding.all(40),
+      // $.blockSpacing.padding.horizontal(40),
+      $.slideContainer.chain..color.transparent(),
+      $.contentContainer.padding.all(40),
       $.section.image(
         $.contentContainer.padding.all(0),
       ),
@@ -55,8 +53,8 @@ class DeckStyle {
       $.alert.all.description.chain
         ..style.as(_baseTextStyle)
         ..textAlign.left()
-        ..style.height(1.6)
-        ..style.fontSize(16),
+        ..style.height(1.6),
+
       // Remaining
       $.alert.all.chain
         ..containerFlex.gap(12)
@@ -71,36 +69,50 @@ class DeckStyle {
     ];
 
     final typography = [
-      $.headingTextStyle.style.as(headingTextStyle),
+      $.headingTextStyle.chain,
       $.baseTextStyle.as(_baseTextStyle),
-      $.p.chain
-        ..style.as(_baseTextStyle)
-        ..wrap.padding.bottom(12),
       $.h1.chain
         ..style.fontSize(96)
-        ..wrap.padding.bottom(12),
+        ..style.fontWeight.bold()
+        ..style.height(1.1)
+        ..wrap.padding.bottom(16),
       $.h2.chain
         ..style.fontSize(72)
-        ..wrap.padding.bottom(9),
+        ..style.fontWeight.bold()
+        ..style.height(1.2)
+        ..wrap.padding.bottom(12),
       $.h3.chain
         ..style.fontSize(48)
-        ..wrap.padding.bottom(6),
+        ..style.fontWeight.w600()
+        ..style.height(1.3)
+        ..wrap.padding.bottom(12),
       $.h4.chain
         ..style.fontSize(36)
-        ..wrap.padding.bottom(4),
+        ..style.fontWeight.normal()
+        ..style.height(1.3)
+        ..wrap.padding.bottom(8),
       $.h5.chain
         ..style.fontSize(24)
-        ..wrap.padding.bottom(3),
+        ..style.fontWeight.normal()
+        ..style.height(1.4)
+        ..wrap.padding.bottom(4),
       $.h6.chain
         ..style.as(_baseTextStyle)
+        ..style.height(1.4)
+        ..style.fontWeight.normal()
         ..wrap.padding.bottom(3),
+      $.p.chain
+        ..style.as(_baseTextStyle)
+        ..style.height(1.6)
+        ..wrap.padding.bottom(12),
     ];
 
     final codeStyle = $.code.chain
-      ..textStyle.as(_monoTextStyle)
-      ..padding.all(24)
-      ..decoration.color(const Color.fromARGB(255, 23, 23, 23))
-      ..decoration.borderRadius.circular(10);
+      ..textStyle.as(GoogleFonts.jetBrainsMono())
+      ..textStyle.fontSize(18)
+      ..container.padding.all(32)
+      ..container.color(const Color.fromARGB(255, 0, 0, 0))
+      ..container.borderRadius.circular(10);
 
     final tableStyle = $.table.chain
       ..headStyle.as(_baseTextStyle)
@@ -111,7 +123,7 @@ class DeckStyle {
       ..cellDecoration.color(Colors.grey.withOpacity(0.1));
 
     final blockquoteStyle = $.blockquote.chain
-      ..textStyle.as(_serifTextStyle)
+      ..textStyle.as(_baseTextStyle)
       ..textStyle.fontSize(32)
       ..padding(
         bottom: 12,
@@ -122,9 +134,11 @@ class DeckStyle {
             width: 4,
           );
 
-    final MarkdownListSpecUtility<SlideSpecAttribute> listStyle = $.list.chain
-      ..bulletPadding.left(0)
-      ..bulletStyle.as(_baseTextStyle);
+    final listStyle = $.list.chain
+      ..bullet.style.as(_baseTextStyle)
+      ..text.style.as(_baseTextStyle)
+      ..text.style.height(1.6)
+      ..text.wrap.padding.bottom(8);
 
     return Style.create([
       ...containers,
@@ -134,7 +148,7 @@ class DeckStyle {
       ...alertStyle,
 
       $.link.color(const Color.fromARGB(255, 66, 82, 96)),
-      $.list.bulletStyle.as(_baseTextStyle),
+      $.list.bullet.style.as(_baseTextStyle),
       $.checkbox.textStyle.as(_baseTextStyle),
 
       tableStyle,
@@ -170,12 +184,43 @@ extension SlideSpecUtilityX<T extends Attribute> on SlideSpecUtility<T> {
         h4: TextSpecAttribute(style: value),
         h5: TextSpecAttribute(style: value),
         h6: TextSpecAttribute(style: value),
-        list: MarkdownListSpecAttribute(bulletStyle: value),
+        list: MarkdownListSpecAttribute(
+            bullet: TextSpecAttribute(
+          style: value,
+        )),
         table: MarkdownTableSpecAttribute(bodyStyle: value, headStyle: value),
         code: MarkdownCodeblockSpecAttribute(textStyle: value),
         blockquote: MarkdownBlockquoteSpecAttribute(textStyle: value),
       ),
     );
+  }
+
+  PaddingModifierSpecUtility<T> get blockSpacing {
+    return PaddingModifierSpecUtility((value) {
+      final modifier = WidgetModifiersDataDto([value]);
+      return only(
+        h1: TextSpecAttribute(modifiers: modifier),
+        h2: TextSpecAttribute(modifiers: modifier),
+        h3: TextSpecAttribute(modifiers: modifier),
+        h4: TextSpecAttribute(modifiers: modifier),
+        h5: TextSpecAttribute(modifiers: modifier),
+        h6: TextSpecAttribute(modifiers: modifier),
+        p: TextSpecAttribute(modifiers: modifier),
+        list: MarkdownListSpecAttribute(
+          bullet: TextSpecAttribute(modifiers: modifier),
+        ),
+        blockquote: MarkdownBlockquoteSpecAttribute(
+          modifiers: modifier,
+        ),
+        image: ImageSpecAttribute(modifiers: modifier),
+        code: MarkdownCodeblockSpecAttribute(
+          modifiers: modifier,
+        ),
+        table: MarkdownTableSpecAttribute(
+          modifiers: modifier,
+        ),
+      );
+    });
   }
 
   SlideSpecSectionsUtility get section => const SlideSpecSectionsUtility();
@@ -192,4 +237,29 @@ extension SlideSpecUtilityX<T extends Attribute> on SlideSpecUtility<T> {
       ),
     );
   }
+}
+
+extension TextDirectiveX<T extends Attribute> on TextDirectiveUtility<T> {
+  T sameWidthLines(int lines) => call((String text) {
+        final words = text.split(' ');
+        final averageLineLength = text.length / lines;
+
+        final formattedLines = <String>[];
+        var currentLine = StringBuffer();
+
+        for (var word in words) {
+          final newLineLength = currentLine.length + word.length + 1;
+          if (newLineLength > averageLineLength && currentLine.isNotEmpty) {
+            formattedLines.add(currentLine.toString());
+            currentLine.clear();
+          }
+          currentLine.write(currentLine.isEmpty ? word : ' $word');
+        }
+
+        if (currentLine.isNotEmpty) {
+          formattedLines.add(currentLine.toString());
+        }
+
+        return formattedLines.join('\n');
+      });
 }
