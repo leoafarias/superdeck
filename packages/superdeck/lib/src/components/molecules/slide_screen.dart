@@ -15,7 +15,7 @@ class SlideScreen<T extends Slide> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final slide = useGetSlide(slideIndex);
+    final slide = useSlideConfiguration(slideIndex);
     useAutomaticKeepAlive();
 
     return Center(

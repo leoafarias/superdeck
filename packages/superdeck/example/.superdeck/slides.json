@@ -2,9 +2,9 @@
   "config": {},
   "slides": [
     {
-      "key": "MqLdan6B",
+      "key": "7jBlgJne",
       "options": {},
-      "markdown": "## How can LLMs Understtand Your UI?\n\n{@column}\n![structured_output](https://picsum.photos/800/300)",
+      "markdown": "## How can LLMs Understtand Your UI?\n\n{@column tag: image}\n![structured_output](https://picsum.photos/800/300)",
       "sections": [
         {
           "blocks": [
@@ -14,19 +14,20 @@
             },
             {
               "content": "\n![structured_output](https://picsum.photos/800/300)",
-              "options": null,
+              "options": {
+                "tag": "image"
+              },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
     },
     {
-      "key": "0TuA2JaL",
+      "key": "WyToSNjt",
       "options": {},
-      "markdown": "## Another image\n{@column}\n![structured_output](https://picsum.photos/800/1400)",
+      "markdown": "## Another image\n{@column tag: image}\n![structured_output](https://picsum.photos/800/1400)",
       "sections": [
         {
           "blocks": [
@@ -36,11 +37,12 @@
             },
             {
               "content": "\n![structured_output](https://picsum.photos/800/1400)",
-              "options": null,
+              "options": {
+                "tag": "image"
+              },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -63,8 +65,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -90,8 +91,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -121,8 +121,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -154,8 +153,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -176,8 +174,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -193,8 +190,7 @@
               "content": "# LLM ❤️ GUI",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -224,8 +220,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -241,8 +236,7 @@
               "content": "### Benefits of UI over Chat\n\n- More intuitive and user-friendly, especially for complex tasks\n- Faster feedback loop between users and LLMs\n- Enhances efficiency and interaction",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -267,8 +261,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -291,8 +284,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -314,8 +306,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -332,8 +323,7 @@
               "content": "```dart\n\nfinal model = GenerativeModel(\n  model: 'gemini-1.5-pro',\n  apiKey: apiKey,\n  generationConfig: GenerationConfig(\n    responseMimeType: 'application/json',\n    responseSchema: schema,\n  ),\n);\n\nfinal prompt = 'List a few popular cookie recipes.';\nfinal response = await model.generateContent([Content.text(prompt)]);\n\n```",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -350,8 +340,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -368,8 +357,7 @@
               "options": null,
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -398,8 +386,7 @@
               "content": "",
               "type": "widget"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -428,8 +415,7 @@
               "content": "",
               "type": "widget"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -445,8 +431,7 @@
               "content": "## LLMs Orchestrate APIs",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -467,8 +452,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -498,8 +482,7 @@
               "content": "",
               "type": "widget"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -528,8 +511,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -557,8 +539,7 @@
               },
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -588,8 +569,7 @@
               "content": "",
               "type": "widget"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -605,8 +585,7 @@
               "content": "## What if the tool to use is a widget schema?",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -622,8 +601,7 @@
               "content": "### Experimental\n\n```dart\nfinal schema = Schema.object(properties: {\n  'textFields': Schema.array(\n    description: 'A list of text fields',\n    items: TextFieldSchemaDto.schema,\n    nullable: true,\n  ),\n  'dropdowns': Schema.array(\n    description: 'A list of dropdowns',\n    items: DropdownSchemaDto.schema,\n    nullable: true,\n  ),\n  'colorPickers': Schema.array(\n    description: 'A list of colors pickers',\n    items: ColorPickerDtoSchema.schema,\n    nullable: true,\n  ),\n});\n\n```",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -651,8 +629,7 @@
               "content": "",
               "type": "widget"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -668,8 +645,7 @@
               "content": "## The future of UI might be orchestrating user experiences rather than creating it.",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []
@@ -685,8 +661,7 @@
               "content": "### Thank you\n\nLeo Farias\n@leoafarias\n(GitHub, Twitter/X)",
               "type": "column"
             }
-          ],
-          "type": "SectionBlockDto"
+          ]
         }
       ],
       "notes": []

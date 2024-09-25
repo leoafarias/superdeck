@@ -1,59 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mix/mix.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/styles/style_spec.dart';
-import '../../modules/deck/deck_controller.dart';
-import '../../modules/deck/deck_hooks.dart';
-import '../../modules/deck/slide_provider.dart';
-import '../atoms/cache_image_widget.dart';
+import '../../modules/slide/slide_configuration.dart';
 import '../molecules/block_widget.dart';
 
-class SlideView extends HookWidget {
-  final Slide slide;
+class SlideView extends StatelessWidget {
+  final SlideConfiguration slide;
   const SlideView(
     this.slide, {
     super.key,
+    this.isCapturing = false,
   });
+
+  final bool isCapturing;
 
   @override
   Widget build(BuildContext context) {
-    final slideIndex = useGetSlideIndex(slide);
-
-    final style = useGetSlideStyle(slide);
-
-    final background = slide.options?.background;
-
-    return SpecBuilder(
-      style: style,
-      builder: (context) {
-        final spec = SlideSpec.of(context);
-        final controller = DeckController.of(context);
-
-        final configuration = SlideConfiguration(
-          slide: slide,
-          slideStyle: style,
-          slideIndex: slideIndex,
-          spec: spec,
-          controller: controller,
-        );
-
-        return SlideConfigurationProvider(
-          configuration: configuration,
-          child: Column(
+    return SlideConfigurationProvider(
+      configuration: slide,
+      isCapturing: isCapturing,
+      child: SpecBuilder(
+        style: slide.style,
+        builder: (context) {
+          final spec = SlideSpec.of(context);
+          return Column(
             children: [
               Expanded(
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: background != null
-                          ? CacheImage(
-                              uri: Uri.parse(background),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.center,
-                            )
-                          : controller.buildBackground(),
+                      child: slide.buildBackground(),
                     ),
                     spec.slideContainer(
                       child: Column(
@@ -65,9 +42,9 @@ class SlideView extends HookWidget {
                 ),
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

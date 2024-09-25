@@ -5,10 +5,10 @@ class Slide with SlideMappable {
   final String key;
   final SlideOptions? options;
   final String markdown;
-  final List<SectionBlockDto> sections;
+  final List<SectionBlock> sections;
   final List<SlideNote> notes;
 
-  Slide({
+  const Slide({
     required this.key,
     this.options,
     required this.markdown,
@@ -33,7 +33,7 @@ class Slide with SlideMappable {
       "markdown": Schema.string.required(),
       "title": Schema.string.optional(),
       'options': SlideOptions.schema.optional(),
-      'sections': SchemaList(SectionBlockDto.schema).optional(),
+      'sections': SchemaList(SectionBlock.schema).optional(),
       'notes': SchemaList(Schema.string).optional(),
     },
     additionalProperties: false,

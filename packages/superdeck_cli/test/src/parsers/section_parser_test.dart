@@ -232,7 +232,7 @@ Footer content.
       expect(sections[2].blocks.length, equals(1));
 
       expect(sections[0].blocks[0].content.trim(), 'Header content.');
-      expect(sections[0].blocks[0].columnOptions?.flex, equals(1));
+      expect(sections[0].blocks[0].flex, equals(1));
       expect(sections[0].blocks[0].columnOptions?.align,
           equals(ContentAlignment.center));
 
@@ -312,15 +312,15 @@ Footer content.
       expect(sections[2].blocks.length, equals(1));
 
       expect(sections[0].blocks[0].content.trim(), 'Header content.');
-      expect(sections[0].options?.align, equals(ContentAlignment.center));
+      expect(sections[0].align, equals(ContentAlignment.center));
 
       expect(sections[1].blocks[0].content.trim(), 'Body content.');
-      expect(sections[1].options?.align, equals(ContentAlignment.topLeft));
+      expect(sections[1].align, equals(ContentAlignment.topLeft));
       expect(sections[1].blocks[0].columnOptions?.flex, equals(3));
 
       expect(sections[2].blocks[0].content.trim(), 'Footer content.');
-      expect(sections[2].options?.align, equals(ContentAlignment.bottomRight));
-      expect(sections[2].options?.flex, equals(1));
+      expect(sections[2].align, equals(ContentAlignment.bottomRight));
+      expect(sections[2].flex, equals(1));
     });
   });
 
@@ -545,6 +545,6 @@ Footer content.
   });
 }
 
-extension on BlockDto {
-  BlockOptions? get columnOptions => (this as ColumnBlockDto).options;
+extension on Block {
+  ColumnBlock? get columnOptions => (this as ColumnBlock);
 }

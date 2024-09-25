@@ -4,6 +4,15 @@ import 'package:mix/mix.dart';
 
 import '../styles/style_spec.dart';
 
+Size getSizeWithoutSpacing(Size size, SlideSpec spec) {
+  final offset = calculateSpecOffset(spec);
+
+  return Size(
+    size.width - offset.dx,
+    size.height - offset.dy,
+  );
+}
+
 Offset calculateSpecOffset(SlideSpec spec) {
   // final outerContainer = spec.outerContainer;
   // final innerContainer = spec.innerContainer;

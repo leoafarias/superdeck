@@ -11,7 +11,6 @@ import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
 import '../navigation/navigation_controller.dart';
-import 'slide_capture_provider.dart';
 
 enum SlideCaptureQuality {
   low(0.4),
@@ -36,7 +35,7 @@ class SlideCaptureService {
 
   Future<Uint8List> generate({
     SlideCaptureQuality quality = SlideCaptureQuality.low,
-    required Slide slide,
+    required SlideConfiguration slide,
   }) async {
     final queueKey = shortHash(slide.key + quality.name);
     try {
@@ -47,7 +46,7 @@ class SlideCaptureService {
       _generationQueue.add(queueKey);
 
       final image = await _fromWidgetToImage(
-        SnapshotProvider(isCapturing: true, child: SlideView(slide)),
+        SlideView(slide, isCapturing: true),
         context: kScaffoldKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,

@@ -159,8 +159,8 @@ class BlockTypeMapper extends EnumMapper<BlockType> {
         return BlockType.image;
       case 'widget':
         return BlockType.widget;
-      case 'gist':
-        return BlockType.gist;
+      case 'dartpad':
+        return BlockType.dartpad;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -177,8 +177,8 @@ class BlockTypeMapper extends EnumMapper<BlockType> {
         return 'image';
       case BlockType.widget:
         return 'widget';
-      case BlockType.gist:
-        return 'gist';
+      case BlockType.dartpad:
+        return 'dartpad';
     }
   }
 }
@@ -190,274 +190,116 @@ extension BlockTypeMapperExtension on BlockType {
   }
 }
 
-class SectionBlockDtoMapper extends ClassMapperBase<SectionBlockDto> {
-  SectionBlockDtoMapper._();
+class DartPadThemeMapper extends EnumMapper<DartPadTheme> {
+  DartPadThemeMapper._();
 
-  static SectionBlockDtoMapper? _instance;
-  static SectionBlockDtoMapper ensureInitialized() {
+  static DartPadThemeMapper? _instance;
+  static DartPadThemeMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SectionBlockDtoMapper._());
-      MapperContainer.globals.useAll([OptionsMapper()]);
-      BlockOptionsMapper.ensureInitialized();
-      SubSectionBlockDtoMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = DartPadThemeMapper._());
     }
     return _instance!;
   }
 
-  @override
-  final String id = 'SectionBlockDto';
-
-  static BlockOptions? _$options(SectionBlockDto v) => v.options;
-  static const Field<SectionBlockDto, BlockOptions> _f$options =
-      Field('options', _$options, opt: true);
-  static List<SubSectionBlockDto<BlockOptions>> _$blocks(SectionBlockDto v) =>
-      v.blocks;
-  static const Field<SectionBlockDto, List<SubSectionBlockDto<BlockOptions>>>
-      _f$blocks = Field('blocks', _$blocks, opt: true, def: const []);
-
-  @override
-  final MappableFields<SectionBlockDto> fields = const {
-    #options: _f$options,
-    #blocks: _f$blocks,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static SectionBlockDto _instantiate(DecodingData data) {
-    return SectionBlockDto(
-        options: data.dec(_f$options), blocks: data.dec(_f$blocks));
+  static DartPadTheme fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
   }
 
   @override
-  final Function instantiate = _instantiate;
-
-  static SectionBlockDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SectionBlockDto>(map);
+  DartPadTheme decode(dynamic value) {
+    switch (value) {
+      case 'dark':
+        return DartPadTheme.dark;
+      case 'light':
+        return DartPadTheme.light;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
   }
 
-  static SectionBlockDto fromJson(String json) {
-    return ensureInitialized().decodeJson<SectionBlockDto>(json);
+  @override
+  dynamic encode(DartPadTheme self) {
+    switch (self) {
+      case DartPadTheme.dark:
+        return 'dark';
+      case DartPadTheme.light:
+        return 'light';
+    }
   }
 }
 
-mixin SectionBlockDtoMappable {
-  String toJson() {
-    return SectionBlockDtoMapper.ensureInitialized()
-        .encodeJson<SectionBlockDto>(this as SectionBlockDto);
-  }
-
-  Map<String, dynamic> toMap() {
-    return SectionBlockDtoMapper.ensureInitialized()
-        .encodeMap<SectionBlockDto>(this as SectionBlockDto);
-  }
-
-  SectionBlockDtoCopyWith<SectionBlockDto, SectionBlockDto, SectionBlockDto>
-      get copyWith => _SectionBlockDtoCopyWithImpl(
-          this as SectionBlockDto, $identity, $identity);
-  @override
-  String toString() {
-    return SectionBlockDtoMapper.ensureInitialized()
-        .stringifyValue(this as SectionBlockDto);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return SectionBlockDtoMapper.ensureInitialized()
-        .equalsValue(this as SectionBlockDto, other);
-  }
-
-  @override
-  int get hashCode {
-    return SectionBlockDtoMapper.ensureInitialized()
-        .hashValue(this as SectionBlockDto);
+extension DartPadThemeMapperExtension on DartPadTheme {
+  String toValue() {
+    DartPadThemeMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<DartPadTheme>(this) as String;
   }
 }
 
-extension SectionBlockDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, SectionBlockDto, $Out> {
-  SectionBlockDtoCopyWith<$R, SectionBlockDto, $Out> get $asSectionBlockDto =>
-      $base.as((v, t, t2) => _SectionBlockDtoCopyWithImpl(v, t, t2));
-}
+class ImageFitMapper extends EnumMapper<ImageFit> {
+  ImageFitMapper._();
 
-abstract class SectionBlockDtoCopyWith<$R, $In extends SectionBlockDto, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  BlockOptionsCopyWith<$R, BlockOptions, BlockOptions>? get options;
-  ListCopyWith<
-      $R,
-      SubSectionBlockDto<BlockOptions>,
-      SubSectionBlockDtoCopyWith<$R, SubSectionBlockDto<BlockOptions>,
-          SubSectionBlockDto<BlockOptions>, BlockOptions>> get blocks;
-  $R call(
-      {BlockOptions? options, List<SubSectionBlockDto<BlockOptions>>? blocks});
-  SectionBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _SectionBlockDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SectionBlockDto, $Out>
-    implements SectionBlockDtoCopyWith<$R, SectionBlockDto, $Out> {
-  _SectionBlockDtoCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<SectionBlockDto> $mapper =
-      SectionBlockDtoMapper.ensureInitialized();
-  @override
-  BlockOptionsCopyWith<$R, BlockOptions, BlockOptions>? get options =>
-      $value.options?.copyWith.$chain((v) => call(options: v));
-  @override
-  ListCopyWith<
-      $R,
-      SubSectionBlockDto<BlockOptions>,
-      SubSectionBlockDtoCopyWith<
-          $R,
-          SubSectionBlockDto<BlockOptions>,
-          SubSectionBlockDto<BlockOptions>,
-          BlockOptions>> get blocks => ListCopyWith(
-      $value.blocks, (v, t) => v.copyWith.$chain(t), (v) => call(blocks: v));
-  @override
-  $R call(
-          {Object? options = $none,
-          List<SubSectionBlockDto<BlockOptions>>? blocks}) =>
-      $apply(FieldCopyWithData({
-        if (options != $none) #options: options,
-        if (blocks != null) #blocks: blocks
-      }));
-  @override
-  SectionBlockDto $make(CopyWithData data) => SectionBlockDto(
-      options: data.get(#options, or: $value.options),
-      blocks: data.get(#blocks, or: $value.blocks));
-
-  @override
-  SectionBlockDtoCopyWith<$R2, SectionBlockDto, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SectionBlockDtoCopyWithImpl($value, $cast, t);
-}
-
-class BlockOptionsMapper extends ClassMapperBase<BlockOptions> {
-  BlockOptionsMapper._();
-
-  static BlockOptionsMapper? _instance;
-  static BlockOptionsMapper ensureInitialized() {
+  static ImageFitMapper? _instance;
+  static ImageFitMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = BlockOptionsMapper._());
-      WidgetOptionsMapper.ensureInitialized();
-      DartPadOptionsMapper.ensureInitialized();
-      ImageOptionsMapper.ensureInitialized();
-      ContentAlignmentMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = ImageFitMapper._());
     }
     return _instance!;
   }
 
-  @override
-  final String id = 'BlockOptions';
-
-  static int? _$flex(BlockOptions v) => v.flex;
-  static const Field<BlockOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true);
-  static ContentAlignment? _$align(BlockOptions v) => v.align;
-  static const Field<BlockOptions, ContentAlignment> _f$align =
-      Field('align', _$align, opt: true);
-  static String? _$tag(BlockOptions v) => v.tag;
-  static const Field<BlockOptions, String> _f$tag =
-      Field('tag', _$tag, opt: true);
-
-  @override
-  final MappableFields<BlockOptions> fields = const {
-    #flex: _f$flex,
-    #align: _f$align,
-    #tag: _f$tag,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static BlockOptions _instantiate(DecodingData data) {
-    return BlockOptions(
-        flex: data.dec(_f$flex),
-        align: data.dec(_f$align),
-        tag: data.dec(_f$tag));
+  static ImageFit fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
   }
 
   @override
-  final Function instantiate = _instantiate;
-
-  static BlockOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<BlockOptions>(map);
-  }
-
-  static BlockOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<BlockOptions>(json);
-  }
-}
-
-mixin BlockOptionsMappable {
-  String toJson() {
-    return BlockOptionsMapper.ensureInitialized()
-        .encodeJson<BlockOptions>(this as BlockOptions);
-  }
-
-  Map<String, dynamic> toMap() {
-    return BlockOptionsMapper.ensureInitialized()
-        .encodeMap<BlockOptions>(this as BlockOptions);
-  }
-
-  BlockOptionsCopyWith<BlockOptions, BlockOptions, BlockOptions> get copyWith =>
-      _BlockOptionsCopyWithImpl(this as BlockOptions, $identity, $identity);
-  @override
-  String toString() {
-    return BlockOptionsMapper.ensureInitialized()
-        .stringifyValue(this as BlockOptions);
+  ImageFit decode(dynamic value) {
+    switch (value) {
+      case 'fill':
+        return ImageFit.fill;
+      case 'contain':
+        return ImageFit.contain;
+      case 'cover':
+        return ImageFit.cover;
+      case 'fit_width':
+        return ImageFit.fitWidth;
+      case 'fit_height':
+        return ImageFit.fitHeight;
+      case 'none':
+        return ImageFit.none;
+      case 'scale_down':
+        return ImageFit.scaleDown;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
   }
 
   @override
-  bool operator ==(Object other) {
-    return BlockOptionsMapper.ensureInitialized()
-        .equalsValue(this as BlockOptions, other);
-  }
-
-  @override
-  int get hashCode {
-    return BlockOptionsMapper.ensureInitialized()
-        .hashValue(this as BlockOptions);
+  dynamic encode(ImageFit self) {
+    switch (self) {
+      case ImageFit.fill:
+        return 'fill';
+      case ImageFit.contain:
+        return 'contain';
+      case ImageFit.cover:
+        return 'cover';
+      case ImageFit.fitWidth:
+        return 'fit_width';
+      case ImageFit.fitHeight:
+        return 'fit_height';
+      case ImageFit.none:
+        return 'none';
+      case ImageFit.scaleDown:
+        return 'scale_down';
+    }
   }
 }
 
-extension BlockOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, BlockOptions, $Out> {
-  BlockOptionsCopyWith<$R, BlockOptions, $Out> get $asBlockOptions =>
-      $base.as((v, t, t2) => _BlockOptionsCopyWithImpl(v, t, t2));
-}
-
-abstract class BlockOptionsCopyWith<$R, $In extends BlockOptions, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? flex, ContentAlignment? align, String? tag});
-  BlockOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _BlockOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, BlockOptions, $Out>
-    implements BlockOptionsCopyWith<$R, BlockOptions, $Out> {
-  _BlockOptionsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<BlockOptions> $mapper =
-      BlockOptionsMapper.ensureInitialized();
-  @override
-  $R call({Object? flex = $none, Object? align = $none, Object? tag = $none}) =>
-      $apply(FieldCopyWithData({
-        if (flex != $none) #flex: flex,
-        if (align != $none) #align: align,
-        if (tag != $none) #tag: tag
-      }));
-  @override
-  BlockOptions $make(CopyWithData data) => BlockOptions(
-      flex: data.get(#flex, or: $value.flex),
-      align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag));
-
-  @override
-  BlockOptionsCopyWith<$R2, BlockOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _BlockOptionsCopyWithImpl($value, $cast, t);
+extension ImageFitMapperExtension on ImageFit {
+  String toValue() {
+    ImageFitMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<ImageFit>(this) as String;
+  }
 }
 
 class ContentAlignmentMapper extends EnumMapper<ContentAlignment> {
@@ -534,108 +376,356 @@ extension ContentAlignmentMapperExtension on ContentAlignment {
   }
 }
 
-class SubSectionBlockDtoMapper extends ClassMapperBase<SubSectionBlockDto> {
-  SubSectionBlockDtoMapper._();
+class BlockMapper extends ClassMapperBase<Block> {
+  BlockMapper._();
 
-  static SubSectionBlockDtoMapper? _instance;
-  static SubSectionBlockDtoMapper ensureInitialized() {
+  static BlockMapper? _instance;
+  static BlockMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = SubSectionBlockDtoMapper._());
-      MapperContainer.globals.useAll([OptionsMapper()]);
-      ColumnBlockDtoMapper.ensureInitialized();
-      WidgetBlockDtoMapper.ensureInitialized();
-      GistBlockDtoMapper.ensureInitialized();
-      ImageBlockDtoMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = BlockMapper._());
+      SectionBlockMapper.ensureInitialized();
+      ContentBlockMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
       BlockTypeMapper.ensureInitialized();
-      BlockOptionsMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'SubSectionBlockDto';
-  @override
-  Function get typeFactory =>
-      <T extends BlockOptions>(f) => f<SubSectionBlockDto<T>>();
+  final String id = 'Block';
 
-  static String _$content(SubSectionBlockDto v) => v.content;
-  static const Field<SubSectionBlockDto, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
-  static BlockType _$type(SubSectionBlockDto v) => v.type;
-  static const Field<SubSectionBlockDto, BlockType> _f$type =
-      Field('type', _$type);
+  static int? _$flex(Block v) => v.flex;
+  static const Field<Block, int> _f$flex = Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(Block v) => v.align;
+  static const Field<Block, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static String? _$tag(Block v) => v.tag;
+  static const Field<Block, String> _f$tag = Field('tag', _$tag, opt: true);
+  static BlockType _$type(Block v) => v.type;
+  static const Field<Block, BlockType> _f$type = Field('type', _$type);
 
   @override
-  final MappableFields<SubSectionBlockDto> fields = const {
-    #content: _f$content,
+  final MappableFields<Block> fields = const {
+    #flex: _f$flex,
+    #align: _f$align,
+    #tag: _f$tag,
     #type: _f$type,
   };
   @override
   final bool ignoreNull = true;
 
-  static SubSectionBlockDto<T> _instantiate<T extends BlockOptions>(
-      DecodingData data) {
+  static Block _instantiate(DecodingData data) {
     throw MapperException.missingSubclass(
-        'SubSectionBlockDto', 'type', '${data.value['type']}');
+        'Block', 'type', '${data.value['type']}');
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static SubSectionBlockDto<T> fromMap<T extends BlockOptions>(
-      Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SubSectionBlockDto<T>>(map);
+  static Block fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<Block>(map);
   }
 
-  static SubSectionBlockDto<T> fromJson<T extends BlockOptions>(String json) {
-    return ensureInitialized().decodeJson<SubSectionBlockDto<T>>(json);
+  static Block fromJson(String json) {
+    return ensureInitialized().decodeJson<Block>(json);
   }
 }
 
-mixin SubSectionBlockDtoMappable<T extends BlockOptions> {
+mixin BlockMappable {
   String toJson();
   Map<String, dynamic> toMap();
-  SubSectionBlockDtoCopyWith<SubSectionBlockDto<T>, SubSectionBlockDto<T>,
-      SubSectionBlockDto<T>, T> get copyWith;
+  BlockCopyWith<Block, Block, Block> get copyWith;
 }
 
-abstract class SubSectionBlockDtoCopyWith<$R, $In extends SubSectionBlockDto<T>,
-    $Out, T extends BlockOptions> implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? content});
-  SubSectionBlockDtoCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+abstract class BlockCopyWith<$R, $In extends Block, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({int? flex, ContentAlignment? align, String? tag});
+  BlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class ColumnBlockDtoMapper extends SubClassMapperBase<ColumnBlockDto> {
-  ColumnBlockDtoMapper._();
+class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
+  SectionBlockMapper._();
 
-  static ColumnBlockDtoMapper? _instance;
-  static ColumnBlockDtoMapper ensureInitialized() {
+  static SectionBlockMapper? _instance;
+  static SectionBlockMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = ColumnBlockDtoMapper._());
-      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      BlockOptionsMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = SectionBlockMapper._());
+      BlockMapper.ensureInitialized().addSubMapper(_instance!);
+      MapperContainer.globals.useAll([NullIfEmptyBlock()]);
+      ContentBlockMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'ColumnBlockDto';
+  final String id = 'SectionBlock';
 
-  static String _$content(ColumnBlockDto v) => v.content;
-  static const Field<ColumnBlockDto, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
-  static BlockOptions? _$options(ColumnBlockDto v) => v.options;
-  static const Field<ColumnBlockDto, BlockOptions> _f$options =
-      Field('options', _$options, opt: true);
-  static BlockType _$type(ColumnBlockDto v) => v.type;
-  static const Field<ColumnBlockDto, BlockType> _f$type =
+  static List<ContentBlock> _$blocks(SectionBlock v) => v.blocks;
+  static const Field<SectionBlock, List<ContentBlock>> _f$blocks =
+      Field('blocks', _$blocks, opt: true, def: const []);
+  static int? _$flex(SectionBlock v) => v.flex;
+  static const Field<SectionBlock, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(SectionBlock v) => v.align;
+  static const Field<SectionBlock, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static String? _$tag(SectionBlock v) => v.tag;
+  static const Field<SectionBlock, String> _f$tag =
+      Field('tag', _$tag, opt: true);
+  static BlockType _$type(SectionBlock v) => v.type;
+  static const Field<SectionBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
 
   @override
-  final MappableFields<ColumnBlockDto> fields = const {
+  final MappableFields<SectionBlock> fields = const {
+    #blocks: _f$blocks,
+    #flex: _f$flex,
+    #align: _f$align,
+    #tag: _f$tag,
+    #type: _f$type,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'SectionBlock';
+  @override
+  late final ClassMapperBase superMapper = BlockMapper.ensureInitialized();
+
+  static SectionBlock _instantiate(DecodingData data) {
+    return SectionBlock(
+        blocks: data.dec(_f$blocks),
+        flex: data.dec(_f$flex),
+        align: data.dec(_f$align),
+        tag: data.dec(_f$tag));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static SectionBlock fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<SectionBlock>(map);
+  }
+
+  static SectionBlock fromJson(String json) {
+    return ensureInitialized().decodeJson<SectionBlock>(json);
+  }
+}
+
+mixin SectionBlockMappable {
+  String toJson() {
+    return SectionBlockMapper.ensureInitialized()
+        .encodeJson<SectionBlock>(this as SectionBlock);
+  }
+
+  Map<String, dynamic> toMap() {
+    return SectionBlockMapper.ensureInitialized()
+        .encodeMap<SectionBlock>(this as SectionBlock);
+  }
+
+  SectionBlockCopyWith<SectionBlock, SectionBlock, SectionBlock> get copyWith =>
+      _SectionBlockCopyWithImpl(this as SectionBlock, $identity, $identity);
+  @override
+  String toString() {
+    return SectionBlockMapper.ensureInitialized()
+        .stringifyValue(this as SectionBlock);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return SectionBlockMapper.ensureInitialized()
+        .equalsValue(this as SectionBlock, other);
+  }
+
+  @override
+  int get hashCode {
+    return SectionBlockMapper.ensureInitialized()
+        .hashValue(this as SectionBlock);
+  }
+}
+
+extension SectionBlockValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, SectionBlock, $Out> {
+  SectionBlockCopyWith<$R, SectionBlock, $Out> get $asSectionBlock =>
+      $base.as((v, t, t2) => _SectionBlockCopyWithImpl(v, t, t2));
+}
+
+abstract class SectionBlockCopyWith<$R, $In extends SectionBlock, $Out>
+    implements BlockCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, ContentBlock,
+      ContentBlockCopyWith<$R, ContentBlock, ContentBlock>> get blocks;
+  @override
+  $R call(
+      {List<ContentBlock>? blocks,
+      int? flex,
+      ContentAlignment? align,
+      String? tag});
+  SectionBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _SectionBlockCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, SectionBlock, $Out>
+    implements SectionBlockCopyWith<$R, SectionBlock, $Out> {
+  _SectionBlockCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<SectionBlock> $mapper =
+      SectionBlockMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, ContentBlock,
+          ContentBlockCopyWith<$R, ContentBlock, ContentBlock>>
+      get blocks => ListCopyWith($value.blocks, (v, t) => v.copyWith.$chain(t),
+          (v) => call(blocks: v));
+  @override
+  $R call(
+          {List<ContentBlock>? blocks,
+          Object? flex = $none,
+          Object? align = $none,
+          Object? tag = $none}) =>
+      $apply(FieldCopyWithData({
+        if (blocks != null) #blocks: blocks,
+        if (flex != $none) #flex: flex,
+        if (align != $none) #align: align,
+        if (tag != $none) #tag: tag
+      }));
+  @override
+  SectionBlock $make(CopyWithData data) => SectionBlock(
+      blocks: data.get(#blocks, or: $value.blocks),
+      flex: data.get(#flex, or: $value.flex),
+      align: data.get(#align, or: $value.align),
+      tag: data.get(#tag, or: $value.tag));
+
+  @override
+  SectionBlockCopyWith<$R2, SectionBlock, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _SectionBlockCopyWithImpl($value, $cast, t);
+}
+
+class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
+  ContentBlockMapper._();
+
+  static ContentBlockMapper? _instance;
+  static ContentBlockMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ContentBlockMapper._());
+      BlockMapper.ensureInitialized().addSubMapper(_instance!);
+      ColumnBlockMapper.ensureInitialized();
+      ImageBlockMapper.ensureInitialized();
+      WidgetBlockMapper.ensureInitialized();
+      DartPadBlockMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
+      BlockTypeMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ContentBlock';
+
+  static String _$content(ContentBlock v) => v.content;
+  static const Field<ContentBlock, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+  static int? _$flex(ContentBlock v) => v.flex;
+  static const Field<ContentBlock, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(ContentBlock v) => v.align;
+  static const Field<ContentBlock, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static String? _$tag(ContentBlock v) => v.tag;
+  static const Field<ContentBlock, String> _f$tag =
+      Field('tag', _$tag, opt: true);
+  static BlockType _$type(ContentBlock v) => v.type;
+  static const Field<ContentBlock, BlockType> _f$type = Field('type', _$type);
+
+  @override
+  final MappableFields<ContentBlock> fields = const {
     #content: _f$content,
-    #options: _f$options,
+    #flex: _f$flex,
+    #align: _f$align,
+    #tag: _f$tag,
+    #type: _f$type,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'ContentBlock';
+  @override
+  late final ClassMapperBase superMapper = BlockMapper.ensureInitialized();
+
+  static ContentBlock _instantiate(DecodingData data) {
+    throw MapperException.missingSubclass(
+        'ContentBlock', 'type', '${data.value['type']}');
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static ContentBlock fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ContentBlock>(map);
+  }
+
+  static ContentBlock fromJson(String json) {
+    return ensureInitialized().decodeJson<ContentBlock>(json);
+  }
+}
+
+mixin ContentBlockMappable {
+  String toJson();
+  Map<String, dynamic> toMap();
+  ContentBlockCopyWith<ContentBlock, ContentBlock, ContentBlock> get copyWith;
+}
+
+abstract class ContentBlockCopyWith<$R, $In extends ContentBlock, $Out>
+    implements BlockCopyWith<$R, $In, $Out> {
+  @override
+  $R call({String? content, int? flex, ContentAlignment? align, String? tag});
+  ContentBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
+  ColumnBlockMapper._();
+
+  static ColumnBlockMapper? _instance;
+  static ColumnBlockMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ColumnBlockMapper._());
+      ContentBlockMapper.ensureInitialized().addSubMapper(_instance!);
+      ContentAlignmentMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'ColumnBlock';
+
+  static int? _$flex(ColumnBlock v) => v.flex;
+  static const Field<ColumnBlock, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(ColumnBlock v) => v.align;
+  static const Field<ColumnBlock, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static String? _$tag(ColumnBlock v) => v.tag;
+  static const Field<ColumnBlock, String> _f$tag =
+      Field('tag', _$tag, opt: true);
+  static String _$content(ColumnBlock v) => v.content;
+  static const Field<ColumnBlock, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+  static BlockType _$type(ColumnBlock v) => v.type;
+  static const Field<ColumnBlock, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
+
+  @override
+  final MappableFields<ColumnBlock> fields = const {
+    #flex: _f$flex,
+    #align: _f$align,
+    #tag: _f$tag,
+    #content: _f$content,
     #type: _f$type,
   };
   @override
@@ -647,135 +737,319 @@ class ColumnBlockDtoMapper extends SubClassMapperBase<ColumnBlockDto> {
   final dynamic discriminatorValue = 'column';
   @override
   late final ClassMapperBase superMapper =
-      SubSectionBlockDtoMapper.ensureInitialized();
+      ContentBlockMapper.ensureInitialized();
 
-  @override
-  DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => []);
-  }
-
-  static ColumnBlockDto _instantiate(DecodingData data) {
-    return ColumnBlockDto(
-        content: data.dec(_f$content), options: data.dec(_f$options));
+  static ColumnBlock _instantiate(DecodingData data) {
+    return ColumnBlock(
+        flex: data.dec(_f$flex),
+        align: data.dec(_f$align),
+        tag: data.dec(_f$tag),
+        content: data.dec(_f$content));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static ColumnBlockDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ColumnBlockDto>(map);
+  static ColumnBlock fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ColumnBlock>(map);
   }
 
-  static ColumnBlockDto fromJson(String json) {
-    return ensureInitialized().decodeJson<ColumnBlockDto>(json);
+  static ColumnBlock fromJson(String json) {
+    return ensureInitialized().decodeJson<ColumnBlock>(json);
   }
 }
 
-mixin ColumnBlockDtoMappable {
+mixin ColumnBlockMappable {
   String toJson() {
-    return ColumnBlockDtoMapper.ensureInitialized()
-        .encodeJson<ColumnBlockDto>(this as ColumnBlockDto);
+    return ColumnBlockMapper.ensureInitialized()
+        .encodeJson<ColumnBlock>(this as ColumnBlock);
   }
 
   Map<String, dynamic> toMap() {
-    return ColumnBlockDtoMapper.ensureInitialized()
-        .encodeMap<ColumnBlockDto>(this as ColumnBlockDto);
+    return ColumnBlockMapper.ensureInitialized()
+        .encodeMap<ColumnBlock>(this as ColumnBlock);
   }
 
-  ColumnBlockDtoCopyWith<ColumnBlockDto, ColumnBlockDto, ColumnBlockDto>
-      get copyWith => _ColumnBlockDtoCopyWithImpl(
-          this as ColumnBlockDto, $identity, $identity);
+  ColumnBlockCopyWith<ColumnBlock, ColumnBlock, ColumnBlock> get copyWith =>
+      _ColumnBlockCopyWithImpl(this as ColumnBlock, $identity, $identity);
   @override
   String toString() {
-    return ColumnBlockDtoMapper.ensureInitialized()
-        .stringifyValue(this as ColumnBlockDto);
+    return ColumnBlockMapper.ensureInitialized()
+        .stringifyValue(this as ColumnBlock);
   }
 
   @override
   bool operator ==(Object other) {
-    return ColumnBlockDtoMapper.ensureInitialized()
-        .equalsValue(this as ColumnBlockDto, other);
+    return ColumnBlockMapper.ensureInitialized()
+        .equalsValue(this as ColumnBlock, other);
   }
 
   @override
   int get hashCode {
-    return ColumnBlockDtoMapper.ensureInitialized()
-        .hashValue(this as ColumnBlockDto);
+    return ColumnBlockMapper.ensureInitialized().hashValue(this as ColumnBlock);
   }
 }
 
-extension ColumnBlockDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ColumnBlockDto, $Out> {
-  ColumnBlockDtoCopyWith<$R, ColumnBlockDto, $Out> get $asColumnBlockDto =>
-      $base.as((v, t, t2) => _ColumnBlockDtoCopyWithImpl(v, t, t2));
+extension ColumnBlockValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ColumnBlock, $Out> {
+  ColumnBlockCopyWith<$R, ColumnBlock, $Out> get $asColumnBlock =>
+      $base.as((v, t, t2) => _ColumnBlockCopyWithImpl(v, t, t2));
 }
 
-abstract class ColumnBlockDtoCopyWith<$R, $In extends ColumnBlockDto, $Out>
-    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, BlockOptions> {
-  BlockOptionsCopyWith<$R, BlockOptions, BlockOptions>? get options;
+abstract class ColumnBlockCopyWith<$R, $In extends ColumnBlock, $Out>
+    implements ContentBlockCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? content, BlockOptions? options});
-  ColumnBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
+  $R call({int? flex, ContentAlignment? align, String? tag, String? content});
+  ColumnBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ColumnBlockDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ColumnBlockDto, $Out>
-    implements ColumnBlockDtoCopyWith<$R, ColumnBlockDto, $Out> {
-  _ColumnBlockDtoCopyWithImpl(super.value, super.then, super.then2);
+class _ColumnBlockCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ColumnBlock, $Out>
+    implements ColumnBlockCopyWith<$R, ColumnBlock, $Out> {
+  _ColumnBlockCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<ColumnBlockDto> $mapper =
-      ColumnBlockDtoMapper.ensureInitialized();
+  late final ClassMapperBase<ColumnBlock> $mapper =
+      ColumnBlockMapper.ensureInitialized();
   @override
-  BlockOptionsCopyWith<$R, BlockOptions, BlockOptions>? get options =>
-      $value.options?.copyWith.$chain((v) => call(options: v));
-  @override
-  $R call({String? content, Object? options = $none}) =>
+  $R call(
+          {Object? flex = $none,
+          Object? align = $none,
+          Object? tag = $none,
+          String? content}) =>
       $apply(FieldCopyWithData({
-        if (content != null) #content: content,
-        if (options != $none) #options: options
+        if (flex != $none) #flex: flex,
+        if (align != $none) #align: align,
+        if (tag != $none) #tag: tag,
+        if (content != null) #content: content
       }));
   @override
-  ColumnBlockDto $make(CopyWithData data) => ColumnBlockDto(
-      content: data.get(#content, or: $value.content),
-      options: data.get(#options, or: $value.options));
+  ColumnBlock $make(CopyWithData data) => ColumnBlock(
+      flex: data.get(#flex, or: $value.flex),
+      align: data.get(#align, or: $value.align),
+      tag: data.get(#tag, or: $value.tag),
+      content: data.get(#content, or: $value.content));
 
   @override
-  ColumnBlockDtoCopyWith<$R2, ColumnBlockDto, $Out2> $chain<$R2, $Out2>(
+  ColumnBlockCopyWith<$R2, ColumnBlock, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ColumnBlockDtoCopyWithImpl($value, $cast, t);
+      _ColumnBlockCopyWithImpl($value, $cast, t);
 }
 
-class WidgetBlockDtoMapper extends SubClassMapperBase<WidgetBlockDto> {
-  WidgetBlockDtoMapper._();
+class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
+  ImageBlockMapper._();
 
-  static WidgetBlockDtoMapper? _instance;
-  static WidgetBlockDtoMapper ensureInitialized() {
+  static ImageBlockMapper? _instance;
+  static ImageBlockMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = WidgetBlockDtoMapper._());
-      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      WidgetOptionsMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = ImageBlockMapper._());
+      ContentBlockMapper.ensureInitialized().addSubMapper(_instance!);
+      ImageFitMapper.ensureInitialized();
+      ContentAlignmentMapper.ensureInitialized();
     }
     return _instance!;
   }
 
   @override
-  final String id = 'WidgetBlockDto';
+  final String id = 'ImageBlock';
 
-  static WidgetOptions _$options(WidgetBlockDto v) => v.options;
-  static const Field<WidgetBlockDto, WidgetOptions> _f$options =
-      Field('options', _$options);
-  static String _$content(WidgetBlockDto v) => v.content;
-  static const Field<WidgetBlockDto, String> _f$content =
+  static String _$src(ImageBlock v) => v.src;
+  static const Field<ImageBlock, String> _f$src = Field('src', _$src);
+  static ImageFit? _$fit(ImageBlock v) => v.fit;
+  static const Field<ImageBlock, ImageFit> _f$fit =
+      Field('fit', _$fit, opt: true);
+  static int? _$flex(ImageBlock v) => v.flex;
+  static const Field<ImageBlock, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(ImageBlock v) => v.align;
+  static const Field<ImageBlock, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static String? _$tag(ImageBlock v) => v.tag;
+  static const Field<ImageBlock, String> _f$tag =
+      Field('tag', _$tag, opt: true);
+  static String _$content(ImageBlock v) => v.content;
+  static const Field<ImageBlock, String> _f$content =
       Field('content', _$content, opt: true, def: '');
-  static BlockType _$type(WidgetBlockDto v) => v.type;
-  static const Field<WidgetBlockDto, BlockType> _f$type =
+  static BlockType _$type(ImageBlock v) => v.type;
+  static const Field<ImageBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
 
   @override
-  final MappableFields<WidgetBlockDto> fields = const {
-    #options: _f$options,
+  final MappableFields<ImageBlock> fields = const {
+    #src: _f$src,
+    #fit: _f$fit,
+    #flex: _f$flex,
+    #align: _f$align,
+    #tag: _f$tag,
+    #content: _f$content,
+    #type: _f$type,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = 'image';
+  @override
+  late final ClassMapperBase superMapper =
+      ContentBlockMapper.ensureInitialized();
+
+  static ImageBlock _instantiate(DecodingData data) {
+    return ImageBlock(
+        src: data.dec(_f$src),
+        fit: data.dec(_f$fit),
+        flex: data.dec(_f$flex),
+        align: data.dec(_f$align),
+        tag: data.dec(_f$tag),
+        content: data.dec(_f$content));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static ImageBlock fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<ImageBlock>(map);
+  }
+
+  static ImageBlock fromJson(String json) {
+    return ensureInitialized().decodeJson<ImageBlock>(json);
+  }
+}
+
+mixin ImageBlockMappable {
+  String toJson() {
+    return ImageBlockMapper.ensureInitialized()
+        .encodeJson<ImageBlock>(this as ImageBlock);
+  }
+
+  Map<String, dynamic> toMap() {
+    return ImageBlockMapper.ensureInitialized()
+        .encodeMap<ImageBlock>(this as ImageBlock);
+  }
+
+  ImageBlockCopyWith<ImageBlock, ImageBlock, ImageBlock> get copyWith =>
+      _ImageBlockCopyWithImpl(this as ImageBlock, $identity, $identity);
+  @override
+  String toString() {
+    return ImageBlockMapper.ensureInitialized()
+        .stringifyValue(this as ImageBlock);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return ImageBlockMapper.ensureInitialized()
+        .equalsValue(this as ImageBlock, other);
+  }
+
+  @override
+  int get hashCode {
+    return ImageBlockMapper.ensureInitialized().hashValue(this as ImageBlock);
+  }
+}
+
+extension ImageBlockValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, ImageBlock, $Out> {
+  ImageBlockCopyWith<$R, ImageBlock, $Out> get $asImageBlock =>
+      $base.as((v, t, t2) => _ImageBlockCopyWithImpl(v, t, t2));
+}
+
+abstract class ImageBlockCopyWith<$R, $In extends ImageBlock, $Out>
+    implements ContentBlockCopyWith<$R, $In, $Out> {
+  @override
+  $R call(
+      {String? src,
+      ImageFit? fit,
+      int? flex,
+      ContentAlignment? align,
+      String? tag,
+      String? content});
+  ImageBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _ImageBlockCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, ImageBlock, $Out>
+    implements ImageBlockCopyWith<$R, ImageBlock, $Out> {
+  _ImageBlockCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<ImageBlock> $mapper =
+      ImageBlockMapper.ensureInitialized();
+  @override
+  $R call(
+          {String? src,
+          Object? fit = $none,
+          Object? flex = $none,
+          Object? align = $none,
+          Object? tag = $none,
+          String? content}) =>
+      $apply(FieldCopyWithData({
+        if (src != null) #src: src,
+        if (fit != $none) #fit: fit,
+        if (flex != $none) #flex: flex,
+        if (align != $none) #align: align,
+        if (tag != $none) #tag: tag,
+        if (content != null) #content: content
+      }));
+  @override
+  ImageBlock $make(CopyWithData data) => ImageBlock(
+      src: data.get(#src, or: $value.src),
+      fit: data.get(#fit, or: $value.fit),
+      flex: data.get(#flex, or: $value.flex),
+      align: data.get(#align, or: $value.align),
+      tag: data.get(#tag, or: $value.tag),
+      content: data.get(#content, or: $value.content));
+
+  @override
+  ImageBlockCopyWith<$R2, ImageBlock, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _ImageBlockCopyWithImpl($value, $cast, t);
+}
+
+class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
+  WidgetBlockMapper._();
+
+  static WidgetBlockMapper? _instance;
+  static WidgetBlockMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = WidgetBlockMapper._());
+      ContentBlockMapper.ensureInitialized().addSubMapper(_instance!);
+      ContentAlignmentMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'WidgetBlock';
+
+  static String _$name(WidgetBlock v) => v.name;
+  static const Field<WidgetBlock, String> _f$name = Field('name', _$name);
+  static Map<String, dynamic> _$args(WidgetBlock v) => v.args;
+  static const Field<WidgetBlock, Map<String, dynamic>> _f$args =
+      Field('args', _$args, opt: true, def: const {});
+  static int? _$flex(WidgetBlock v) => v.flex;
+  static const Field<WidgetBlock, int> _f$flex =
+      Field('flex', _$flex, opt: true);
+  static ContentAlignment? _$align(WidgetBlock v) => v.align;
+  static const Field<WidgetBlock, ContentAlignment> _f$align =
+      Field('align', _$align, opt: true);
+  static String? _$tag(WidgetBlock v) => v.tag;
+  static const Field<WidgetBlock, String> _f$tag =
+      Field('tag', _$tag, opt: true);
+  static String _$content(WidgetBlock v) => v.content;
+  static const Field<WidgetBlock, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+  static BlockType _$type(WidgetBlock v) => v.type;
+  static const Field<WidgetBlock, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
+
+  @override
+  final MappableFields<WidgetBlock> fields = const {
+    #name: _f$name,
+    #args: _f$args,
+    #flex: _f$flex,
+    #align: _f$align,
+    #tag: _f$tag,
     #content: _f$content,
     #type: _f$type,
   };
@@ -788,220 +1062,71 @@ class WidgetBlockDtoMapper extends SubClassMapperBase<WidgetBlockDto> {
   final dynamic discriminatorValue = 'widget';
   @override
   late final ClassMapperBase superMapper =
-      SubSectionBlockDtoMapper.ensureInitialized();
-
-  @override
-  DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => []);
-  }
-
-  static WidgetBlockDto _instantiate(DecodingData data) {
-    return WidgetBlockDto(
-        options: data.dec(_f$options), content: data.dec(_f$content));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static WidgetBlockDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<WidgetBlockDto>(map);
-  }
-
-  static WidgetBlockDto fromJson(String json) {
-    return ensureInitialized().decodeJson<WidgetBlockDto>(json);
-  }
-}
-
-mixin WidgetBlockDtoMappable {
-  String toJson() {
-    return WidgetBlockDtoMapper.ensureInitialized()
-        .encodeJson<WidgetBlockDto>(this as WidgetBlockDto);
-  }
-
-  Map<String, dynamic> toMap() {
-    return WidgetBlockDtoMapper.ensureInitialized()
-        .encodeMap<WidgetBlockDto>(this as WidgetBlockDto);
-  }
-
-  WidgetBlockDtoCopyWith<WidgetBlockDto, WidgetBlockDto, WidgetBlockDto>
-      get copyWith => _WidgetBlockDtoCopyWithImpl(
-          this as WidgetBlockDto, $identity, $identity);
-  @override
-  String toString() {
-    return WidgetBlockDtoMapper.ensureInitialized()
-        .stringifyValue(this as WidgetBlockDto);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return WidgetBlockDtoMapper.ensureInitialized()
-        .equalsValue(this as WidgetBlockDto, other);
-  }
-
-  @override
-  int get hashCode {
-    return WidgetBlockDtoMapper.ensureInitialized()
-        .hashValue(this as WidgetBlockDto);
-  }
-}
-
-extension WidgetBlockDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, WidgetBlockDto, $Out> {
-  WidgetBlockDtoCopyWith<$R, WidgetBlockDto, $Out> get $asWidgetBlockDto =>
-      $base.as((v, t, t2) => _WidgetBlockDtoCopyWithImpl(v, t, t2));
-}
-
-abstract class WidgetBlockDtoCopyWith<$R, $In extends WidgetBlockDto, $Out>
-    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, WidgetOptions> {
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options;
-  @override
-  $R call({WidgetOptions? options, String? content});
-  WidgetBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _WidgetBlockDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, WidgetBlockDto, $Out>
-    implements WidgetBlockDtoCopyWith<$R, WidgetBlockDto, $Out> {
-  _WidgetBlockDtoCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<WidgetBlockDto> $mapper =
-      WidgetBlockDtoMapper.ensureInitialized();
-  @override
-  WidgetOptionsCopyWith<$R, WidgetOptions, WidgetOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  $R call({WidgetOptions? options, String? content}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (content != null) #content: content
-      }));
-  @override
-  WidgetBlockDto $make(CopyWithData data) => WidgetBlockDto(
-      options: data.get(#options, or: $value.options),
-      content: data.get(#content, or: $value.content));
-
-  @override
-  WidgetBlockDtoCopyWith<$R2, WidgetBlockDto, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _WidgetBlockDtoCopyWithImpl($value, $cast, t);
-}
-
-class WidgetOptionsMapper extends SubClassMapperBase<WidgetOptions> {
-  WidgetOptionsMapper._();
-
-  static WidgetOptionsMapper? _instance;
-  static WidgetOptionsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = WidgetOptionsMapper._());
-      BlockOptionsMapper.ensureInitialized().addSubMapper(_instance!);
-      ContentAlignmentMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'WidgetOptions';
-
-  static String _$name(WidgetOptions v) => v.name;
-  static const Field<WidgetOptions, String> _f$name = Field('name', _$name);
-  static Map<String, dynamic> _$args(WidgetOptions v) => v.args;
-  static const Field<WidgetOptions, Map<String, dynamic>> _f$args =
-      Field('args', _$args, opt: true, def: const {});
-  static int? _$flex(WidgetOptions v) => v.flex;
-  static const Field<WidgetOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true);
-  static ContentAlignment? _$align(WidgetOptions v) => v.align;
-  static const Field<WidgetOptions, ContentAlignment> _f$align =
-      Field('align', _$align, opt: true);
-  static String? _$tag(WidgetOptions v) => v.tag;
-  static const Field<WidgetOptions, String> _f$tag =
-      Field('tag', _$tag, opt: true);
-
-  @override
-  final MappableFields<WidgetOptions> fields = const {
-    #name: _f$name,
-    #args: _f$args,
-    #flex: _f$flex,
-    #align: _f$align,
-    #tag: _f$tag,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'widget_options';
-  @override
-  late final ClassMapperBase superMapper =
-      BlockOptionsMapper.ensureInitialized();
+      ContentBlockMapper.ensureInitialized();
 
   @override
   final MappingHook hook = const UnmappedPropertiesHook('args');
-  static WidgetOptions _instantiate(DecodingData data) {
-    return WidgetOptions(
+  static WidgetBlock _instantiate(DecodingData data) {
+    return WidgetBlock(
         name: data.dec(_f$name),
         args: data.dec(_f$args),
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
-        tag: data.dec(_f$tag));
+        tag: data.dec(_f$tag),
+        content: data.dec(_f$content));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static WidgetOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<WidgetOptions>(map);
+  static WidgetBlock fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<WidgetBlock>(map);
   }
 
-  static WidgetOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<WidgetOptions>(json);
+  static WidgetBlock fromJson(String json) {
+    return ensureInitialized().decodeJson<WidgetBlock>(json);
   }
 }
 
-mixin WidgetOptionsMappable {
+mixin WidgetBlockMappable {
   String toJson() {
-    return WidgetOptionsMapper.ensureInitialized()
-        .encodeJson<WidgetOptions>(this as WidgetOptions);
+    return WidgetBlockMapper.ensureInitialized()
+        .encodeJson<WidgetBlock>(this as WidgetBlock);
   }
 
   Map<String, dynamic> toMap() {
-    return WidgetOptionsMapper.ensureInitialized()
-        .encodeMap<WidgetOptions>(this as WidgetOptions);
+    return WidgetBlockMapper.ensureInitialized()
+        .encodeMap<WidgetBlock>(this as WidgetBlock);
   }
 
-  WidgetOptionsCopyWith<WidgetOptions, WidgetOptions, WidgetOptions>
-      get copyWith => _WidgetOptionsCopyWithImpl(
-          this as WidgetOptions, $identity, $identity);
+  WidgetBlockCopyWith<WidgetBlock, WidgetBlock, WidgetBlock> get copyWith =>
+      _WidgetBlockCopyWithImpl(this as WidgetBlock, $identity, $identity);
   @override
   String toString() {
-    return WidgetOptionsMapper.ensureInitialized()
-        .stringifyValue(this as WidgetOptions);
+    return WidgetBlockMapper.ensureInitialized()
+        .stringifyValue(this as WidgetBlock);
   }
 
   @override
   bool operator ==(Object other) {
-    return WidgetOptionsMapper.ensureInitialized()
-        .equalsValue(this as WidgetOptions, other);
+    return WidgetBlockMapper.ensureInitialized()
+        .equalsValue(this as WidgetBlock, other);
   }
 
   @override
   int get hashCode {
-    return WidgetOptionsMapper.ensureInitialized()
-        .hashValue(this as WidgetOptions);
+    return WidgetBlockMapper.ensureInitialized().hashValue(this as WidgetBlock);
   }
 }
 
-extension WidgetOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, WidgetOptions, $Out> {
-  WidgetOptionsCopyWith<$R, WidgetOptions, $Out> get $asWidgetOptions =>
-      $base.as((v, t, t2) => _WidgetOptionsCopyWithImpl(v, t, t2));
+extension WidgetBlockValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, WidgetBlock, $Out> {
+  WidgetBlockCopyWith<$R, WidgetBlock, $Out> get $asWidgetBlock =>
+      $base.as((v, t, t2) => _WidgetBlockCopyWithImpl(v, t, t2));
 }
 
-abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions, $Out>
-    implements BlockOptionsCopyWith<$R, $In, $Out> {
+abstract class WidgetBlockCopyWith<$R, $In extends WidgetBlock, $Out>
+    implements ContentBlockCopyWith<$R, $In, $Out> {
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get args;
   @override
@@ -1010,18 +1135,19 @@ abstract class WidgetOptionsCopyWith<$R, $In extends WidgetOptions, $Out>
       Map<String, dynamic>? args,
       int? flex,
       ContentAlignment? align,
-      String? tag});
-  WidgetOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+      String? tag,
+      String? content});
+  WidgetBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _WidgetOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, WidgetOptions, $Out>
-    implements WidgetOptionsCopyWith<$R, WidgetOptions, $Out> {
-  _WidgetOptionsCopyWithImpl(super.value, super.then, super.then2);
+class _WidgetBlockCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, WidgetBlock, $Out>
+    implements WidgetBlockCopyWith<$R, WidgetBlock, $Out> {
+  _WidgetBlockCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<WidgetOptions> $mapper =
-      WidgetOptionsMapper.ensureInitialized();
+  late final ClassMapperBase<WidgetBlock> $mapper =
+      WidgetBlockMapper.ensureInitialized();
   @override
   MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>
       get args => MapCopyWith($value.args,
@@ -1032,175 +1158,39 @@ class _WidgetOptionsCopyWithImpl<$R, $Out>
           Map<String, dynamic>? args,
           Object? flex = $none,
           Object? align = $none,
-          Object? tag = $none}) =>
+          Object? tag = $none,
+          String? content}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
-        if (tag != $none) #tag: tag
+        if (tag != $none) #tag: tag,
+        if (content != null) #content: content
       }));
   @override
-  WidgetOptions $make(CopyWithData data) => WidgetOptions(
+  WidgetBlock $make(CopyWithData data) => WidgetBlock(
       name: data.get(#name, or: $value.name),
       args: data.get(#args, or: $value.args),
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag));
-
-  @override
-  WidgetOptionsCopyWith<$R2, WidgetOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _WidgetOptionsCopyWithImpl($value, $cast, t);
-}
-
-class GistBlockDtoMapper extends SubClassMapperBase<GistBlockDto> {
-  GistBlockDtoMapper._();
-
-  static GistBlockDtoMapper? _instance;
-  static GistBlockDtoMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = GistBlockDtoMapper._());
-      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      DartPadOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'GistBlockDto';
-
-  static DartPadOptions _$options(GistBlockDto v) => v.options;
-  static const Field<GistBlockDto, DartPadOptions> _f$options =
-      Field('options', _$options);
-  static String _$content(GistBlockDto v) => v.content;
-  static const Field<GistBlockDto, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
-  static BlockType _$type(GistBlockDto v) => v.type;
-  static const Field<GistBlockDto, BlockType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
-
-  @override
-  final MappableFields<GistBlockDto> fields = const {
-    #options: _f$options,
-    #content: _f$content,
-    #type: _f$type,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'gist';
-  @override
-  late final ClassMapperBase superMapper =
-      SubSectionBlockDtoMapper.ensureInitialized();
-
-  @override
-  DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => []);
-  }
-
-  static GistBlockDto _instantiate(DecodingData data) {
-    return GistBlockDto(
-        options: data.dec(_f$options), content: data.dec(_f$content));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static GistBlockDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<GistBlockDto>(map);
-  }
-
-  static GistBlockDto fromJson(String json) {
-    return ensureInitialized().decodeJson<GistBlockDto>(json);
-  }
-}
-
-mixin GistBlockDtoMappable {
-  String toJson() {
-    return GistBlockDtoMapper.ensureInitialized()
-        .encodeJson<GistBlockDto>(this as GistBlockDto);
-  }
-
-  Map<String, dynamic> toMap() {
-    return GistBlockDtoMapper.ensureInitialized()
-        .encodeMap<GistBlockDto>(this as GistBlockDto);
-  }
-
-  GistBlockDtoCopyWith<GistBlockDto, GistBlockDto, GistBlockDto> get copyWith =>
-      _GistBlockDtoCopyWithImpl(this as GistBlockDto, $identity, $identity);
-  @override
-  String toString() {
-    return GistBlockDtoMapper.ensureInitialized()
-        .stringifyValue(this as GistBlockDto);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return GistBlockDtoMapper.ensureInitialized()
-        .equalsValue(this as GistBlockDto, other);
-  }
-
-  @override
-  int get hashCode {
-    return GistBlockDtoMapper.ensureInitialized()
-        .hashValue(this as GistBlockDto);
-  }
-}
-
-extension GistBlockDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, GistBlockDto, $Out> {
-  GistBlockDtoCopyWith<$R, GistBlockDto, $Out> get $asGistBlockDto =>
-      $base.as((v, t, t2) => _GistBlockDtoCopyWithImpl(v, t, t2));
-}
-
-abstract class GistBlockDtoCopyWith<$R, $In extends GistBlockDto, $Out>
-    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, DartPadOptions> {
-  DartPadOptionsCopyWith<$R, DartPadOptions, DartPadOptions> get options;
-  @override
-  $R call({DartPadOptions? options, String? content});
-  GistBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _GistBlockDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, GistBlockDto, $Out>
-    implements GistBlockDtoCopyWith<$R, GistBlockDto, $Out> {
-  _GistBlockDtoCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<GistBlockDto> $mapper =
-      GistBlockDtoMapper.ensureInitialized();
-  @override
-  DartPadOptionsCopyWith<$R, DartPadOptions, DartPadOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  $R call({DartPadOptions? options, String? content}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (content != null) #content: content
-      }));
-  @override
-  GistBlockDto $make(CopyWithData data) => GistBlockDto(
-      options: data.get(#options, or: $value.options),
+      tag: data.get(#tag, or: $value.tag),
       content: data.get(#content, or: $value.content));
 
   @override
-  GistBlockDtoCopyWith<$R2, GistBlockDto, $Out2> $chain<$R2, $Out2>(
+  WidgetBlockCopyWith<$R2, WidgetBlock, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _GistBlockDtoCopyWithImpl($value, $cast, t);
+      _WidgetBlockCopyWithImpl($value, $cast, t);
 }
 
-class DartPadOptionsMapper extends ClassMapperBase<DartPadOptions> {
-  DartPadOptionsMapper._();
+class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
+  DartPadBlockMapper._();
 
-  static DartPadOptionsMapper? _instance;
-  static DartPadOptionsMapper ensureInitialized() {
+  static DartPadBlockMapper? _instance;
+  static DartPadBlockMapper ensureInitialized() {
     if (_instance == null) {
-      MapperContainer.globals.use(_instance = DartPadOptionsMapper._());
-      BlockOptionsMapper.ensureInitialized();
+      MapperContainer.globals.use(_instance = DartPadBlockMapper._());
+      ContentBlockMapper.ensureInitialized().addSubMapper(_instance!);
       DartPadThemeMapper.ensureInitialized();
       ContentAlignmentMapper.ensureInitialized();
     }
@@ -1208,228 +1198,41 @@ class DartPadOptionsMapper extends ClassMapperBase<DartPadOptions> {
   }
 
   @override
-  final String id = 'DartPadOptions';
+  final String id = 'DartPadBlock';
 
-  static String _$id(DartPadOptions v) => v.id;
-  static const Field<DartPadOptions, String> _f$id = Field('id', _$id);
-  static DartPadTheme? _$theme(DartPadOptions v) => v.theme;
-  static const Field<DartPadOptions, DartPadTheme> _f$theme =
+  static String _$id(DartPadBlock v) => v.id;
+  static const Field<DartPadBlock, String> _f$id = Field('id', _$id);
+  static DartPadTheme? _$theme(DartPadBlock v) => v.theme;
+  static const Field<DartPadBlock, DartPadTheme> _f$theme =
       Field('theme', _$theme, opt: true);
-  static int? _$flex(DartPadOptions v) => v.flex;
-  static const Field<DartPadOptions, int> _f$flex =
+  static int? _$flex(DartPadBlock v) => v.flex;
+  static const Field<DartPadBlock, int> _f$flex =
       Field('flex', _$flex, opt: true);
-  static String? _$tag(DartPadOptions v) => v.tag;
-  static const Field<DartPadOptions, String> _f$tag =
+  static String? _$tag(DartPadBlock v) => v.tag;
+  static const Field<DartPadBlock, String> _f$tag =
       Field('tag', _$tag, opt: true);
-  static ContentAlignment? _$align(DartPadOptions v) => v.align;
-  static const Field<DartPadOptions, ContentAlignment> _f$align =
+  static String _$content(DartPadBlock v) => v.content;
+  static const Field<DartPadBlock, String> _f$content =
+      Field('content', _$content, opt: true, def: '');
+  static ContentAlignment? _$align(DartPadBlock v) => v.align;
+  static const Field<DartPadBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static bool _$embed(DartPadOptions v) => v.embed;
-  static const Field<DartPadOptions, bool> _f$embed =
+  static bool _$embed(DartPadBlock v) => v.embed;
+  static const Field<DartPadBlock, bool> _f$embed =
       Field('embed', _$embed, opt: true, def: true);
+  static BlockType _$type(DartPadBlock v) => v.type;
+  static const Field<DartPadBlock, BlockType> _f$type =
+      Field('type', _$type, mode: FieldMode.member);
 
   @override
-  final MappableFields<DartPadOptions> fields = const {
+  final MappableFields<DartPadBlock> fields = const {
     #id: _f$id,
     #theme: _f$theme,
     #flex: _f$flex,
     #tag: _f$tag,
+    #content: _f$content,
     #align: _f$align,
     #embed: _f$embed,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static DartPadOptions _instantiate(DecodingData data) {
-    return DartPadOptions(
-        id: data.dec(_f$id),
-        theme: data.dec(_f$theme),
-        flex: data.dec(_f$flex),
-        tag: data.dec(_f$tag),
-        align: data.dec(_f$align),
-        embed: data.dec(_f$embed));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static DartPadOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<DartPadOptions>(map);
-  }
-
-  static DartPadOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<DartPadOptions>(json);
-  }
-}
-
-mixin DartPadOptionsMappable {
-  String toJson() {
-    return DartPadOptionsMapper.ensureInitialized()
-        .encodeJson<DartPadOptions>(this as DartPadOptions);
-  }
-
-  Map<String, dynamic> toMap() {
-    return DartPadOptionsMapper.ensureInitialized()
-        .encodeMap<DartPadOptions>(this as DartPadOptions);
-  }
-
-  DartPadOptionsCopyWith<DartPadOptions, DartPadOptions, DartPadOptions>
-      get copyWith => _DartPadOptionsCopyWithImpl(
-          this as DartPadOptions, $identity, $identity);
-  @override
-  String toString() {
-    return DartPadOptionsMapper.ensureInitialized()
-        .stringifyValue(this as DartPadOptions);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return DartPadOptionsMapper.ensureInitialized()
-        .equalsValue(this as DartPadOptions, other);
-  }
-
-  @override
-  int get hashCode {
-    return DartPadOptionsMapper.ensureInitialized()
-        .hashValue(this as DartPadOptions);
-  }
-}
-
-extension DartPadOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, DartPadOptions, $Out> {
-  DartPadOptionsCopyWith<$R, DartPadOptions, $Out> get $asDartPadOptions =>
-      $base.as((v, t, t2) => _DartPadOptionsCopyWithImpl(v, t, t2));
-}
-
-abstract class DartPadOptionsCopyWith<$R, $In extends DartPadOptions, $Out>
-    implements BlockOptionsCopyWith<$R, $In, $Out> {
-  @override
-  $R call(
-      {String? id,
-      DartPadTheme? theme,
-      int? flex,
-      String? tag,
-      ContentAlignment? align,
-      bool? embed});
-  DartPadOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _DartPadOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, DartPadOptions, $Out>
-    implements DartPadOptionsCopyWith<$R, DartPadOptions, $Out> {
-  _DartPadOptionsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<DartPadOptions> $mapper =
-      DartPadOptionsMapper.ensureInitialized();
-  @override
-  $R call(
-          {String? id,
-          Object? theme = $none,
-          Object? flex = $none,
-          Object? tag = $none,
-          Object? align = $none,
-          bool? embed}) =>
-      $apply(FieldCopyWithData({
-        if (id != null) #id: id,
-        if (theme != $none) #theme: theme,
-        if (flex != $none) #flex: flex,
-        if (tag != $none) #tag: tag,
-        if (align != $none) #align: align,
-        if (embed != null) #embed: embed
-      }));
-  @override
-  DartPadOptions $make(CopyWithData data) => DartPadOptions(
-      id: data.get(#id, or: $value.id),
-      theme: data.get(#theme, or: $value.theme),
-      flex: data.get(#flex, or: $value.flex),
-      tag: data.get(#tag, or: $value.tag),
-      align: data.get(#align, or: $value.align),
-      embed: data.get(#embed, or: $value.embed));
-
-  @override
-  DartPadOptionsCopyWith<$R2, DartPadOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _DartPadOptionsCopyWithImpl($value, $cast, t);
-}
-
-class DartPadThemeMapper extends EnumMapper<DartPadTheme> {
-  DartPadThemeMapper._();
-
-  static DartPadThemeMapper? _instance;
-  static DartPadThemeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = DartPadThemeMapper._());
-    }
-    return _instance!;
-  }
-
-  static DartPadTheme fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  DartPadTheme decode(dynamic value) {
-    switch (value) {
-      case 'dark':
-        return DartPadTheme.dark;
-      case 'light':
-        return DartPadTheme.light;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(DartPadTheme self) {
-    switch (self) {
-      case DartPadTheme.dark:
-        return 'dark';
-      case DartPadTheme.light:
-        return 'light';
-    }
-  }
-}
-
-extension DartPadThemeMapperExtension on DartPadTheme {
-  String toValue() {
-    DartPadThemeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<DartPadTheme>(this) as String;
-  }
-}
-
-class ImageBlockDtoMapper extends SubClassMapperBase<ImageBlockDto> {
-  ImageBlockDtoMapper._();
-
-  static ImageBlockDtoMapper? _instance;
-  static ImageBlockDtoMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ImageBlockDtoMapper._());
-      SubSectionBlockDtoMapper.ensureInitialized().addSubMapper(_instance!);
-      ImageOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'ImageBlockDto';
-
-  static ImageOptions _$options(ImageBlockDto v) => v.options;
-  static const Field<ImageBlockDto, ImageOptions> _f$options =
-      Field('options', _$options);
-  static String _$content(ImageBlockDto v) => v.content;
-  static const Field<ImageBlockDto, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
-  static BlockType _$type(ImageBlockDto v) => v.type;
-  static const Field<ImageBlockDto, BlockType> _f$type =
-      Field('type', _$type, mode: FieldMode.member);
-
-  @override
-  final MappableFields<ImageBlockDto> fields = const {
-    #options: _f$options,
-    #content: _f$content,
     #type: _f$type,
   };
   @override
@@ -1438,330 +1241,126 @@ class ImageBlockDtoMapper extends SubClassMapperBase<ImageBlockDto> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'image';
+  final dynamic discriminatorValue = 'DartPadBlock';
   @override
   late final ClassMapperBase superMapper =
-      SubSectionBlockDtoMapper.ensureInitialized();
+      ContentBlockMapper.ensureInitialized();
 
-  @override
-  DecodingContext inherit(DecodingContext context) {
-    return context.inherit(args: () => []);
-  }
-
-  static ImageBlockDto _instantiate(DecodingData data) {
-    return ImageBlockDto(
-        options: data.dec(_f$options), content: data.dec(_f$content));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static ImageBlockDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ImageBlockDto>(map);
-  }
-
-  static ImageBlockDto fromJson(String json) {
-    return ensureInitialized().decodeJson<ImageBlockDto>(json);
-  }
-}
-
-mixin ImageBlockDtoMappable {
-  String toJson() {
-    return ImageBlockDtoMapper.ensureInitialized()
-        .encodeJson<ImageBlockDto>(this as ImageBlockDto);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ImageBlockDtoMapper.ensureInitialized()
-        .encodeMap<ImageBlockDto>(this as ImageBlockDto);
-  }
-
-  ImageBlockDtoCopyWith<ImageBlockDto, ImageBlockDto, ImageBlockDto>
-      get copyWith => _ImageBlockDtoCopyWithImpl(
-          this as ImageBlockDto, $identity, $identity);
-  @override
-  String toString() {
-    return ImageBlockDtoMapper.ensureInitialized()
-        .stringifyValue(this as ImageBlockDto);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return ImageBlockDtoMapper.ensureInitialized()
-        .equalsValue(this as ImageBlockDto, other);
-  }
-
-  @override
-  int get hashCode {
-    return ImageBlockDtoMapper.ensureInitialized()
-        .hashValue(this as ImageBlockDto);
-  }
-}
-
-extension ImageBlockDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ImageBlockDto, $Out> {
-  ImageBlockDtoCopyWith<$R, ImageBlockDto, $Out> get $asImageBlockDto =>
-      $base.as((v, t, t2) => _ImageBlockDtoCopyWithImpl(v, t, t2));
-}
-
-abstract class ImageBlockDtoCopyWith<$R, $In extends ImageBlockDto, $Out>
-    implements SubSectionBlockDtoCopyWith<$R, $In, $Out, ImageOptions> {
-  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options;
-  @override
-  $R call({ImageOptions? options, String? content});
-  ImageBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ImageBlockDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ImageBlockDto, $Out>
-    implements ImageBlockDtoCopyWith<$R, ImageBlockDto, $Out> {
-  _ImageBlockDtoCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<ImageBlockDto> $mapper =
-      ImageBlockDtoMapper.ensureInitialized();
-  @override
-  ImageOptionsCopyWith<$R, ImageOptions, ImageOptions> get options =>
-      $value.options.copyWith.$chain((v) => call(options: v));
-  @override
-  $R call({ImageOptions? options, String? content}) =>
-      $apply(FieldCopyWithData({
-        if (options != null) #options: options,
-        if (content != null) #content: content
-      }));
-  @override
-  ImageBlockDto $make(CopyWithData data) => ImageBlockDto(
-      options: data.get(#options, or: $value.options),
-      content: data.get(#content, or: $value.content));
-
-  @override
-  ImageBlockDtoCopyWith<$R2, ImageBlockDto, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ImageBlockDtoCopyWithImpl($value, $cast, t);
-}
-
-class ImageOptionsMapper extends SubClassMapperBase<ImageOptions> {
-  ImageOptionsMapper._();
-
-  static ImageOptionsMapper? _instance;
-  static ImageOptionsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ImageOptionsMapper._());
-      BlockOptionsMapper.ensureInitialized().addSubMapper(_instance!);
-      ImageFitMapper.ensureInitialized();
-      ContentAlignmentMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'ImageOptions';
-
-  static String _$src(ImageOptions v) => v.src;
-  static const Field<ImageOptions, String> _f$src = Field('src', _$src);
-  static ImageFit? _$fit(ImageOptions v) => v.fit;
-  static const Field<ImageOptions, ImageFit> _f$fit =
-      Field('fit', _$fit, opt: true);
-  static int? _$flex(ImageOptions v) => v.flex;
-  static const Field<ImageOptions, int> _f$flex =
-      Field('flex', _$flex, opt: true);
-  static ContentAlignment? _$align(ImageOptions v) => v.align;
-  static const Field<ImageOptions, ContentAlignment> _f$align =
-      Field('align', _$align, opt: true);
-  static String? _$tag(ImageOptions v) => v.tag;
-  static const Field<ImageOptions, String> _f$tag =
-      Field('tag', _$tag, opt: true);
-
-  @override
-  final MappableFields<ImageOptions> fields = const {
-    #src: _f$src,
-    #fit: _f$fit,
-    #flex: _f$flex,
-    #align: _f$align,
-    #tag: _f$tag,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = 'image';
-  @override
-  late final ClassMapperBase superMapper =
-      BlockOptionsMapper.ensureInitialized();
-
-  static ImageOptions _instantiate(DecodingData data) {
-    return ImageOptions(
-        src: data.dec(_f$src),
-        fit: data.dec(_f$fit),
+  static DartPadBlock _instantiate(DecodingData data) {
+    return DartPadBlock(
+        id: data.dec(_f$id),
+        theme: data.dec(_f$theme),
         flex: data.dec(_f$flex),
+        tag: data.dec(_f$tag),
+        content: data.dec(_f$content),
         align: data.dec(_f$align),
-        tag: data.dec(_f$tag));
+        embed: data.dec(_f$embed));
   }
 
   @override
   final Function instantiate = _instantiate;
 
-  static ImageOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ImageOptions>(map);
+  static DartPadBlock fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<DartPadBlock>(map);
   }
 
-  static ImageOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<ImageOptions>(json);
+  static DartPadBlock fromJson(String json) {
+    return ensureInitialized().decodeJson<DartPadBlock>(json);
   }
 }
 
-mixin ImageOptionsMappable {
+mixin DartPadBlockMappable {
   String toJson() {
-    return ImageOptionsMapper.ensureInitialized()
-        .encodeJson<ImageOptions>(this as ImageOptions);
+    return DartPadBlockMapper.ensureInitialized()
+        .encodeJson<DartPadBlock>(this as DartPadBlock);
   }
 
   Map<String, dynamic> toMap() {
-    return ImageOptionsMapper.ensureInitialized()
-        .encodeMap<ImageOptions>(this as ImageOptions);
+    return DartPadBlockMapper.ensureInitialized()
+        .encodeMap<DartPadBlock>(this as DartPadBlock);
   }
 
-  ImageOptionsCopyWith<ImageOptions, ImageOptions, ImageOptions> get copyWith =>
-      _ImageOptionsCopyWithImpl(this as ImageOptions, $identity, $identity);
+  DartPadBlockCopyWith<DartPadBlock, DartPadBlock, DartPadBlock> get copyWith =>
+      _DartPadBlockCopyWithImpl(this as DartPadBlock, $identity, $identity);
   @override
   String toString() {
-    return ImageOptionsMapper.ensureInitialized()
-        .stringifyValue(this as ImageOptions);
+    return DartPadBlockMapper.ensureInitialized()
+        .stringifyValue(this as DartPadBlock);
   }
 
   @override
   bool operator ==(Object other) {
-    return ImageOptionsMapper.ensureInitialized()
-        .equalsValue(this as ImageOptions, other);
+    return DartPadBlockMapper.ensureInitialized()
+        .equalsValue(this as DartPadBlock, other);
   }
 
   @override
   int get hashCode {
-    return ImageOptionsMapper.ensureInitialized()
-        .hashValue(this as ImageOptions);
+    return DartPadBlockMapper.ensureInitialized()
+        .hashValue(this as DartPadBlock);
   }
 }
 
-extension ImageOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ImageOptions, $Out> {
-  ImageOptionsCopyWith<$R, ImageOptions, $Out> get $asImageOptions =>
-      $base.as((v, t, t2) => _ImageOptionsCopyWithImpl(v, t, t2));
+extension DartPadBlockValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, DartPadBlock, $Out> {
+  DartPadBlockCopyWith<$R, DartPadBlock, $Out> get $asDartPadBlock =>
+      $base.as((v, t, t2) => _DartPadBlockCopyWithImpl(v, t, t2));
 }
 
-abstract class ImageOptionsCopyWith<$R, $In extends ImageOptions, $Out>
-    implements BlockOptionsCopyWith<$R, $In, $Out> {
+abstract class DartPadBlockCopyWith<$R, $In extends DartPadBlock, $Out>
+    implements ContentBlockCopyWith<$R, $In, $Out> {
   @override
   $R call(
-      {String? src,
-      ImageFit? fit,
+      {String? id,
+      DartPadTheme? theme,
       int? flex,
+      String? tag,
+      String? content,
       ContentAlignment? align,
-      String? tag});
-  ImageOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+      bool? embed});
+  DartPadBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
-class _ImageOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ImageOptions, $Out>
-    implements ImageOptionsCopyWith<$R, ImageOptions, $Out> {
-  _ImageOptionsCopyWithImpl(super.value, super.then, super.then2);
+class _DartPadBlockCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, DartPadBlock, $Out>
+    implements DartPadBlockCopyWith<$R, DartPadBlock, $Out> {
+  _DartPadBlockCopyWithImpl(super.value, super.then, super.then2);
 
   @override
-  late final ClassMapperBase<ImageOptions> $mapper =
-      ImageOptionsMapper.ensureInitialized();
+  late final ClassMapperBase<DartPadBlock> $mapper =
+      DartPadBlockMapper.ensureInitialized();
   @override
   $R call(
-          {String? src,
-          Object? fit = $none,
+          {String? id,
+          Object? theme = $none,
           Object? flex = $none,
+          Object? tag = $none,
+          String? content,
           Object? align = $none,
-          Object? tag = $none}) =>
+          bool? embed}) =>
       $apply(FieldCopyWithData({
-        if (src != null) #src: src,
-        if (fit != $none) #fit: fit,
+        if (id != null) #id: id,
+        if (theme != $none) #theme: theme,
         if (flex != $none) #flex: flex,
+        if (tag != $none) #tag: tag,
+        if (content != null) #content: content,
         if (align != $none) #align: align,
-        if (tag != $none) #tag: tag
+        if (embed != null) #embed: embed
       }));
   @override
-  ImageOptions $make(CopyWithData data) => ImageOptions(
-      src: data.get(#src, or: $value.src),
-      fit: data.get(#fit, or: $value.fit),
+  DartPadBlock $make(CopyWithData data) => DartPadBlock(
+      id: data.get(#id, or: $value.id),
+      theme: data.get(#theme, or: $value.theme),
       flex: data.get(#flex, or: $value.flex),
+      tag: data.get(#tag, or: $value.tag),
+      content: data.get(#content, or: $value.content),
       align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag));
+      embed: data.get(#embed, or: $value.embed));
 
   @override
-  ImageOptionsCopyWith<$R2, ImageOptions, $Out2> $chain<$R2, $Out2>(
+  DartPadBlockCopyWith<$R2, DartPadBlock, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
-      _ImageOptionsCopyWithImpl($value, $cast, t);
-}
-
-class ImageFitMapper extends EnumMapper<ImageFit> {
-  ImageFitMapper._();
-
-  static ImageFitMapper? _instance;
-  static ImageFitMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ImageFitMapper._());
-    }
-    return _instance!;
-  }
-
-  static ImageFit fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  ImageFit decode(dynamic value) {
-    switch (value) {
-      case 'fill':
-        return ImageFit.fill;
-      case 'contain':
-        return ImageFit.contain;
-      case 'cover':
-        return ImageFit.cover;
-      case 'fit_width':
-        return ImageFit.fitWidth;
-      case 'fit_height':
-        return ImageFit.fitHeight;
-      case 'none':
-        return ImageFit.none;
-      case 'scale_down':
-        return ImageFit.scaleDown;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(ImageFit self) {
-    switch (self) {
-      case ImageFit.fill:
-        return 'fill';
-      case ImageFit.contain:
-        return 'contain';
-      case ImageFit.cover:
-        return 'cover';
-      case ImageFit.fitWidth:
-        return 'fit_width';
-      case ImageFit.fitHeight:
-        return 'fit_height';
-      case ImageFit.none:
-        return 'none';
-      case ImageFit.scaleDown:
-        return 'scale_down';
-    }
-  }
-}
-
-extension ImageFitMapperExtension on ImageFit {
-  String toValue() {
-    ImageFitMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<ImageFit>(this) as String;
-  }
+      _DartPadBlockCopyWithImpl($value, $cast, t);
 }
 
 class SlideOptionsMapper extends ClassMapperBase<SlideOptions> {
@@ -2026,525 +1625,6 @@ class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
       _ConfigCopyWithImpl($value, $cast, t);
 }
 
-class TransitionTypeMapper extends EnumMapper<TransitionType> {
-  TransitionTypeMapper._();
-
-  static TransitionTypeMapper? _instance;
-  static TransitionTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = TransitionTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static TransitionType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  TransitionType decode(dynamic value) {
-    switch (value) {
-      case 'fade_in':
-        return TransitionType.fadeIn;
-      case 'fade_in_down':
-        return TransitionType.fadeInDown;
-      case 'fade_in_down_big':
-        return TransitionType.fadeInDownBig;
-      case 'fade_in_up':
-        return TransitionType.fadeInUp;
-      case 'fade_in_up_big':
-        return TransitionType.fadeInUpBig;
-      case 'fade_in_left':
-        return TransitionType.fadeInLeft;
-      case 'fade_in_left_big':
-        return TransitionType.fadeInLeftBig;
-      case 'fade_in_right':
-        return TransitionType.fadeInRight;
-      case 'fade_in_right_big':
-        return TransitionType.fadeInRightBig;
-      case 'fade_out':
-        return TransitionType.fadeOut;
-      case 'fade_out_down':
-        return TransitionType.fadeOutDown;
-      case 'fade_out_down_big':
-        return TransitionType.fadeOutDownBig;
-      case 'fade_out_up':
-        return TransitionType.fadeOutUp;
-      case 'fade_out_up_big':
-        return TransitionType.fadeOutUpBig;
-      case 'fade_out_left':
-        return TransitionType.fadeOutLeft;
-      case 'fade_out_left_big':
-        return TransitionType.fadeOutLeftBig;
-      case 'fade_out_right':
-        return TransitionType.fadeOutRight;
-      case 'fade_out_right_big':
-        return TransitionType.fadeOutRightBig;
-      case 'bounce_in_down':
-        return TransitionType.bounceInDown;
-      case 'bounce_in_up':
-        return TransitionType.bounceInUp;
-      case 'bounce_in_left':
-        return TransitionType.bounceInLeft;
-      case 'bounce_in_right':
-        return TransitionType.bounceInRight;
-      case 'elastic_in':
-        return TransitionType.elasticIn;
-      case 'elastic_in_down':
-        return TransitionType.elasticInDown;
-      case 'elastic_in_up':
-        return TransitionType.elasticInUp;
-      case 'elastic_in_left':
-        return TransitionType.elasticInLeft;
-      case 'elastic_in_right':
-        return TransitionType.elasticInRight;
-      case 'slide_in_down':
-        return TransitionType.slideInDown;
-      case 'slide_in_up':
-        return TransitionType.slideInUp;
-      case 'slide_in_left':
-        return TransitionType.slideInLeft;
-      case 'slide_in_right':
-        return TransitionType.slideInRight;
-      case 'flip_in_x':
-        return TransitionType.flipInX;
-      case 'flip_in_y':
-        return TransitionType.flipInY;
-      case 'zoom_in':
-        return TransitionType.zoomIn;
-      case 'zoom_out':
-        return TransitionType.zoomOut;
-      case 'jello_in':
-        return TransitionType.jelloIn;
-      case 'bounce':
-        return TransitionType.bounce;
-      case 'dance':
-        return TransitionType.dance;
-      case 'flash':
-        return TransitionType.flash;
-      case 'pulse':
-        return TransitionType.pulse;
-      case 'roulette':
-        return TransitionType.roulette;
-      case 'shake_x':
-        return TransitionType.shakeX;
-      case 'shake_y':
-        return TransitionType.shakeY;
-      case 'spin':
-        return TransitionType.spin;
-      case 'spin_perfect':
-        return TransitionType.spinPerfect;
-      case 'swing':
-        return TransitionType.swing;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(TransitionType self) {
-    switch (self) {
-      case TransitionType.fadeIn:
-        return 'fade_in';
-      case TransitionType.fadeInDown:
-        return 'fade_in_down';
-      case TransitionType.fadeInDownBig:
-        return 'fade_in_down_big';
-      case TransitionType.fadeInUp:
-        return 'fade_in_up';
-      case TransitionType.fadeInUpBig:
-        return 'fade_in_up_big';
-      case TransitionType.fadeInLeft:
-        return 'fade_in_left';
-      case TransitionType.fadeInLeftBig:
-        return 'fade_in_left_big';
-      case TransitionType.fadeInRight:
-        return 'fade_in_right';
-      case TransitionType.fadeInRightBig:
-        return 'fade_in_right_big';
-      case TransitionType.fadeOut:
-        return 'fade_out';
-      case TransitionType.fadeOutDown:
-        return 'fade_out_down';
-      case TransitionType.fadeOutDownBig:
-        return 'fade_out_down_big';
-      case TransitionType.fadeOutUp:
-        return 'fade_out_up';
-      case TransitionType.fadeOutUpBig:
-        return 'fade_out_up_big';
-      case TransitionType.fadeOutLeft:
-        return 'fade_out_left';
-      case TransitionType.fadeOutLeftBig:
-        return 'fade_out_left_big';
-      case TransitionType.fadeOutRight:
-        return 'fade_out_right';
-      case TransitionType.fadeOutRightBig:
-        return 'fade_out_right_big';
-      case TransitionType.bounceInDown:
-        return 'bounce_in_down';
-      case TransitionType.bounceInUp:
-        return 'bounce_in_up';
-      case TransitionType.bounceInLeft:
-        return 'bounce_in_left';
-      case TransitionType.bounceInRight:
-        return 'bounce_in_right';
-      case TransitionType.elasticIn:
-        return 'elastic_in';
-      case TransitionType.elasticInDown:
-        return 'elastic_in_down';
-      case TransitionType.elasticInUp:
-        return 'elastic_in_up';
-      case TransitionType.elasticInLeft:
-        return 'elastic_in_left';
-      case TransitionType.elasticInRight:
-        return 'elastic_in_right';
-      case TransitionType.slideInDown:
-        return 'slide_in_down';
-      case TransitionType.slideInUp:
-        return 'slide_in_up';
-      case TransitionType.slideInLeft:
-        return 'slide_in_left';
-      case TransitionType.slideInRight:
-        return 'slide_in_right';
-      case TransitionType.flipInX:
-        return 'flip_in_x';
-      case TransitionType.flipInY:
-        return 'flip_in_y';
-      case TransitionType.zoomIn:
-        return 'zoom_in';
-      case TransitionType.zoomOut:
-        return 'zoom_out';
-      case TransitionType.jelloIn:
-        return 'jello_in';
-      case TransitionType.bounce:
-        return 'bounce';
-      case TransitionType.dance:
-        return 'dance';
-      case TransitionType.flash:
-        return 'flash';
-      case TransitionType.pulse:
-        return 'pulse';
-      case TransitionType.roulette:
-        return 'roulette';
-      case TransitionType.shakeX:
-        return 'shake_x';
-      case TransitionType.shakeY:
-        return 'shake_y';
-      case TransitionType.spin:
-        return 'spin';
-      case TransitionType.spinPerfect:
-        return 'spin_perfect';
-      case TransitionType.swing:
-        return 'swing';
-    }
-  }
-}
-
-extension TransitionTypeMapperExtension on TransitionType {
-  String toValue() {
-    TransitionTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<TransitionType>(this) as String;
-  }
-}
-
-class CurveTypeMapper extends EnumMapper<CurveType> {
-  CurveTypeMapper._();
-
-  static CurveTypeMapper? _instance;
-  static CurveTypeMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = CurveTypeMapper._());
-    }
-    return _instance!;
-  }
-
-  static CurveType fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  CurveType decode(dynamic value) {
-    switch (value) {
-      case 'ease':
-        return CurveType.ease;
-      case 'bounce_in':
-        return CurveType.bounceIn;
-      case 'bounce_out':
-        return CurveType.bounceOut;
-      case 'ease_in':
-        return CurveType.easeIn;
-      case 'ease_in_out':
-        return CurveType.easeInOut;
-      case 'ease_out':
-        return CurveType.easeOut;
-      case 'elastic_in':
-        return CurveType.elasticIn;
-      case 'elastic_in_out':
-        return CurveType.elasticInOut;
-      case 'elastic_out':
-        return CurveType.elasticOut;
-      case 'fast_linear_to_slow_ease_in':
-        return CurveType.fastLinearToSlowEaseIn;
-      case 'fast_out_slow_in':
-        return CurveType.fastOutSlowIn;
-      case 'linear':
-        return CurveType.linear;
-      case 'decelerate':
-        return CurveType.decelerate;
-      case 'slow_middle':
-        return CurveType.slowMiddle;
-      case 'linear_to_ease_out':
-        return CurveType.linearToEaseOut;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(CurveType self) {
-    switch (self) {
-      case CurveType.ease:
-        return 'ease';
-      case CurveType.bounceIn:
-        return 'bounce_in';
-      case CurveType.bounceOut:
-        return 'bounce_out';
-      case CurveType.easeIn:
-        return 'ease_in';
-      case CurveType.easeInOut:
-        return 'ease_in_out';
-      case CurveType.easeOut:
-        return 'ease_out';
-      case CurveType.elasticIn:
-        return 'elastic_in';
-      case CurveType.elasticInOut:
-        return 'elastic_in_out';
-      case CurveType.elasticOut:
-        return 'elastic_out';
-      case CurveType.fastLinearToSlowEaseIn:
-        return 'fast_linear_to_slow_ease_in';
-      case CurveType.fastOutSlowIn:
-        return 'fast_out_slow_in';
-      case CurveType.linear:
-        return 'linear';
-      case CurveType.decelerate:
-        return 'decelerate';
-      case CurveType.slowMiddle:
-        return 'slow_middle';
-      case CurveType.linearToEaseOut:
-        return 'linear_to_ease_out';
-    }
-  }
-}
-
-extension CurveTypeMapperExtension on CurveType {
-  String toValue() {
-    CurveTypeMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<CurveType>(this) as String;
-  }
-}
-
-class LayoutPositionMapper extends EnumMapper<LayoutPosition> {
-  LayoutPositionMapper._();
-
-  static LayoutPositionMapper? _instance;
-  static LayoutPositionMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = LayoutPositionMapper._());
-    }
-    return _instance!;
-  }
-
-  static LayoutPosition fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  LayoutPosition decode(dynamic value) {
-    switch (value) {
-      case 'left':
-        return LayoutPosition.left;
-      case 'right':
-        return LayoutPosition.right;
-      case 'top':
-        return LayoutPosition.top;
-      case 'bottom':
-        return LayoutPosition.bottom;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(LayoutPosition self) {
-    switch (self) {
-      case LayoutPosition.left:
-        return 'left';
-      case LayoutPosition.right:
-        return 'right';
-      case LayoutPosition.top:
-        return 'top';
-      case LayoutPosition.bottom:
-        return 'bottom';
-    }
-  }
-}
-
-extension LayoutPositionMapperExtension on LayoutPosition {
-  String toValue() {
-    LayoutPositionMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<LayoutPosition>(this) as String;
-  }
-}
-
-class TransitionOptionsMapper extends ClassMapperBase<TransitionOptions> {
-  TransitionOptionsMapper._();
-
-  static TransitionOptionsMapper? _instance;
-  static TransitionOptionsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = TransitionOptionsMapper._());
-      MapperContainer.globals.useAll([DurationMapper()]);
-      TransitionTypeMapper.ensureInitialized();
-      CurveTypeMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'TransitionOptions';
-
-  static TransitionType _$type(TransitionOptions v) => v.type;
-  static const Field<TransitionOptions, TransitionType> _f$type =
-      Field('type', _$type);
-  static Duration? _$duration(TransitionOptions v) => v.duration;
-  static const Field<TransitionOptions, Duration> _f$duration =
-      Field('duration', _$duration, opt: true);
-  static Duration? _$delay(TransitionOptions v) => v.delay;
-  static const Field<TransitionOptions, Duration> _f$delay =
-      Field('delay', _$delay, opt: true);
-  static CurveType? _$curve(TransitionOptions v) => v.curve;
-  static const Field<TransitionOptions, CurveType> _f$curve =
-      Field('curve', _$curve, opt: true);
-
-  @override
-  final MappableFields<TransitionOptions> fields = const {
-    #type: _f$type,
-    #duration: _f$duration,
-    #delay: _f$delay,
-    #curve: _f$curve,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static TransitionOptions _instantiate(DecodingData data) {
-    return TransitionOptions(
-        type: data.dec(_f$type),
-        duration: data.dec(_f$duration),
-        delay: data.dec(_f$delay),
-        curve: data.dec(_f$curve));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static TransitionOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<TransitionOptions>(map);
-  }
-
-  static TransitionOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<TransitionOptions>(json);
-  }
-}
-
-mixin TransitionOptionsMappable {
-  String toJson() {
-    return TransitionOptionsMapper.ensureInitialized()
-        .encodeJson<TransitionOptions>(this as TransitionOptions);
-  }
-
-  Map<String, dynamic> toMap() {
-    return TransitionOptionsMapper.ensureInitialized()
-        .encodeMap<TransitionOptions>(this as TransitionOptions);
-  }
-
-  TransitionOptionsCopyWith<TransitionOptions, TransitionOptions,
-          TransitionOptions>
-      get copyWith => _TransitionOptionsCopyWithImpl(
-          this as TransitionOptions, $identity, $identity);
-  @override
-  String toString() {
-    return TransitionOptionsMapper.ensureInitialized()
-        .stringifyValue(this as TransitionOptions);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return TransitionOptionsMapper.ensureInitialized()
-        .equalsValue(this as TransitionOptions, other);
-  }
-
-  @override
-  int get hashCode {
-    return TransitionOptionsMapper.ensureInitialized()
-        .hashValue(this as TransitionOptions);
-  }
-}
-
-extension TransitionOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, TransitionOptions, $Out> {
-  TransitionOptionsCopyWith<$R, TransitionOptions, $Out>
-      get $asTransitionOptions =>
-          $base.as((v, t, t2) => _TransitionOptionsCopyWithImpl(v, t, t2));
-}
-
-abstract class TransitionOptionsCopyWith<$R, $In extends TransitionOptions,
-    $Out> implements ClassCopyWith<$R, $In, $Out> {
-  $R call(
-      {TransitionType? type,
-      Duration? duration,
-      Duration? delay,
-      CurveType? curve});
-  TransitionOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _TransitionOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, TransitionOptions, $Out>
-    implements TransitionOptionsCopyWith<$R, TransitionOptions, $Out> {
-  _TransitionOptionsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<TransitionOptions> $mapper =
-      TransitionOptionsMapper.ensureInitialized();
-  @override
-  $R call(
-          {TransitionType? type,
-          Object? duration = $none,
-          Object? delay = $none,
-          Object? curve = $none}) =>
-      $apply(FieldCopyWithData({
-        if (type != null) #type: type,
-        if (duration != $none) #duration: duration,
-        if (delay != $none) #delay: delay,
-        if (curve != $none) #curve: curve
-      }));
-  @override
-  TransitionOptions $make(CopyWithData data) => TransitionOptions(
-      type: data.get(#type, or: $value.type),
-      duration: data.get(#duration, or: $value.duration),
-      delay: data.get(#delay, or: $value.delay),
-      curve: data.get(#curve, or: $value.curve));
-
-  @override
-  TransitionOptionsCopyWith<$R2, TransitionOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _TransitionOptionsCopyWithImpl($value, $cast, t);
-}
-
 class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {
   ReferenceDtoMapper._();
 
@@ -2694,7 +1774,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = SlideMapper._());
       SlideOptionsMapper.ensureInitialized();
-      SectionBlockDtoMapper.ensureInitialized();
+      SectionBlockMapper.ensureInitialized();
       SlideNoteMapper.ensureInitialized();
     }
     return _instance!;
@@ -2710,8 +1790,8 @@ class SlideMapper extends ClassMapperBase<Slide> {
       Field('options', _$options, opt: true);
   static String _$markdown(Slide v) => v.markdown;
   static const Field<Slide, String> _f$markdown = Field('markdown', _$markdown);
-  static List<SectionBlockDto> _$sections(Slide v) => v.sections;
-  static const Field<Slide, List<SectionBlockDto>> _f$sections =
+  static List<SectionBlock> _$sections(Slide v) => v.sections;
+  static const Field<Slide, List<SectionBlock>> _f$sections =
       Field('sections', _$sections, opt: true, def: const []);
   static List<SlideNote> _$notes(Slide v) => v.notes;
   static const Field<Slide, List<SlideNote>> _f$notes =
@@ -2784,16 +1864,15 @@ extension SlideValueCopy<$R, $Out> on ObjectCopyWith<$R, Slide, $Out> {
 abstract class SlideCopyWith<$R, $In extends Slide, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options;
-  ListCopyWith<$R, SectionBlockDto,
-          SectionBlockDtoCopyWith<$R, SectionBlockDto, SectionBlockDto>>
-      get sections;
+  ListCopyWith<$R, SectionBlock,
+      SectionBlockCopyWith<$R, SectionBlock, SectionBlock>> get sections;
   ListCopyWith<$R, SlideNote, SlideNoteCopyWith<$R, SlideNote, SlideNote>>
       get notes;
   $R call(
       {String? key,
       SlideOptions? options,
       String? markdown,
-      List<SectionBlockDto>? sections,
+      List<SectionBlock>? sections,
       List<SlideNote>? notes});
   SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -2808,8 +1887,8 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
   SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options =>
       $value.options?.copyWith.$chain((v) => call(options: v));
   @override
-  ListCopyWith<$R, SectionBlockDto,
-          SectionBlockDtoCopyWith<$R, SectionBlockDto, SectionBlockDto>>
+  ListCopyWith<$R, SectionBlock,
+          SectionBlockCopyWith<$R, SectionBlock, SectionBlock>>
       get sections => ListCopyWith($value.sections,
           (v, t) => v.copyWith.$chain(t), (v) => call(sections: v));
   @override
@@ -2821,7 +1900,7 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
           {String? key,
           Object? options = $none,
           String? markdown,
-          List<SectionBlockDto>? sections,
+          List<SectionBlock>? sections,
           List<SlideNote>? notes}) =>
       $apply(FieldCopyWithData({
         if (key != null) #key: key,

@@ -1,11 +1,11 @@
 config: {}
 slides: 
-  - key: 'MqLdan6B'
+  - key: '7jBlgJne'
     options: {}
     markdown: |-
       ## How can LLMs Understtand Your UI?
       
-      {@column}
+      {@column tag: image}
       ![structured_output](https://picsum.photos/800/300)
     sections: 
       - blocks: 
@@ -15,15 +15,15 @@ slides:
           - content: |-
               
               ![structured_output](https://picsum.photos/800/300)
-            options: null
+            options: 
+              tag: 'image'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
-  - key: '0TuA2JaL'
+  - key: 'WyToSNjt'
     options: {}
     markdown: |-
       ## Another image
-      {@column}
+      {@column tag: image}
       ![structured_output](https://picsum.photos/800/1400)
     sections: 
       - blocks: 
@@ -32,9 +32,9 @@ slides:
           - content: |-
               
               ![structured_output](https://picsum.photos/800/1400)
-            options: null
+            options: 
+              tag: 'image'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'JXYAv556'
     options: {}
@@ -58,7 +58,6 @@ slides:
               align: 'center'
               tag: 'heading'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'X2T13jp8'
     options: {}
@@ -100,7 +99,6 @@ slides:
             options: 
               align: 'center_left'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'OnZ1cviT'
     options: {}
@@ -132,7 +130,6 @@ slides:
           - content: ''
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'D4etKl0J'
     options: {}
@@ -166,7 +163,6 @@ slides:
             options: 
               flex: 2
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '4E2GOMRu'
     options: {}
@@ -189,7 +185,6 @@ slides:
               - GUIs are great at providing structured, interactive interfaces for user input and navigation
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '7qVeHjc5'
     options: {}
@@ -198,7 +193,6 @@ slides:
       - blocks: 
           - content: '# LLM ❤️ GUI'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'D6lTKmGt'
     options: {}
@@ -226,7 +220,6 @@ slides:
           - content: ''
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'hHrCdu5G'
     options: {}
@@ -245,7 +238,6 @@ slides:
               - Faster feedback loop between users and LLMs
               - Enhances efficiency and interaction
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'CsyEcFYH'
     options: {}
@@ -270,7 +262,6 @@ slides:
           - content: ''
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'RgyPgAWI'
     options: {}
@@ -290,7 +281,6 @@ slides:
             options: 
               tag: 'image'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '9jtc9i8W'
     options: {}
@@ -340,7 +330,6 @@ slides:
               ```
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'CtLOsx2s'
     options: {}
@@ -381,7 +370,6 @@ slides:
               
               ```
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '6EU2Xxrf'
     options: {}
@@ -409,7 +397,6 @@ slides:
               - Color for each corner of the palette
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'qek7UrZY'
     options: {}
@@ -515,7 +502,6 @@ slides:
               ```
             options: null
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '8DDlBdti'
     options: 
@@ -543,7 +529,6 @@ slides:
                 - 'cyberpunk'
             content: ''
             type: 'widget'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'm7QWZujG'
     options: 
@@ -571,7 +556,6 @@ slides:
                 - 'cyberpunk'
             content: ''
             type: 'widget'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'H0jUl8Aj'
     options: {}
@@ -580,7 +564,6 @@ slides:
       - blocks: 
           - content: '## LLMs Orchestrate APIs'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'srY9Srz1'
     options: {}
@@ -611,7 +594,6 @@ slides:
               align: 'center_right'
               tag: 'heading'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '85oPyLzH'
     options: 
@@ -641,7 +623,6 @@ slides:
                 - 'Max brightness'
             content: ''
             type: 'widget'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'GzbYzNYH'
     options: {}
@@ -679,7 +660,6 @@ slides:
               flex: 4
               tag: 'image'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'pTufGpKn'
     options: {}
@@ -711,7 +691,6 @@ slides:
               flex: 3
               tag: 'image'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '3eFdrtdl'
     options: 
@@ -741,7 +720,6 @@ slides:
                 - 'Max brightness'
             content: ''
             type: 'widget'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'pNxPyfLK'
     options: {}
@@ -750,7 +728,6 @@ slides:
       - blocks: 
           - content: '## What if the tool to use is a widget schema?'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: '5cGNbsJx'
     options: {}
@@ -803,7 +780,6 @@ slides:
               
               ```
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'J6DNhZau'
     options: 
@@ -829,7 +805,6 @@ slides:
                 - 'Change everything'
             content: ''
             type: 'widget'
-        type: 'SectionBlockDto'
     notes: []
   - key: '3kW1wOHd'
     options: {}
@@ -838,7 +813,6 @@ slides:
       - blocks: 
           - content: '## The future of UI might be orchestrating user experiences rather than creating it.'
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
   - key: 'UqCN11cB'
     options: {}
@@ -857,6 +831,5 @@ slides:
               @leoafarias
               (GitHub, Twitter/X)
             type: 'column'
-        type: 'SectionBlockDto'
     notes: []
 assets: []

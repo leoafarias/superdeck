@@ -3,13 +3,13 @@ import 'package:mix/mix.dart';
 
 import '../../../superdeck.dart';
 import '../../modules/common/helpers/measure_size.dart';
-import '../../modules/thumbnail/slide_capture_provider.dart';
+import '../../modules/common/helpers/utils.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/hero_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
-class BlockWidget<T extends SubSectionBlockDto> extends StatelessWidget {
+class BlockWidget<T extends ContentBlock> extends StatelessWidget {
   const BlockWidget(this.block, {super.key});
 
   final T block;
@@ -18,75 +18,100 @@ class BlockWidget<T extends SubSectionBlockDto> extends StatelessWidget {
   Widget build(context) {
     final configuration = SlideConfiguration.of(context);
     return SpecBuilder(
-      style: configuration.slideStyle.applyVariant(Variant(block.type.name)),
-      builder: (context) {
-        return switch (block) {
-          (ImageBlockDto p) => _ImageBlockWidget(p),
-          (ColumnBlockDto p) => _ColumnBlockWidget(p),
-          (WidgetBlockDto p) => _WidgetBlockWidget(p),
-          (GistBlockDto p) => _GistBlockWidget(p),
-          (SectionBlockDto p) => SectionBlockWidget(p),
-        };
-      },
-    );
+        style: configuration.style.applyVariant(
+          Variant(block.type.name),
+        ),
+        builder: (context) {
+          final spec = SlideSpec.of(context);
+          return MeasureSizeBuilder(
+            builder: (size) {
+              return BlockConfiguration(
+                size: getSizeWithoutSpacing(size, spec),
+                spec: spec,
+                data: block,
+                isCapturing: SlideConfiguration.isCapturing(context),
+                child: switch (block) {
+                  (ImageBlock p) => _ImageBlockWidget(p),
+                  (ColumnBlock p) => _ColumnBlockWidget(p),
+                  (WidgetBlock p) => _WidgetBlockWidget(p),
+                  (DartPadBlock p) => _DartPadBlockWidget(p),
+                  (SectionBlock p) => SectionBlockWidget(p),
+                },
+              );
+            },
+          );
+        });
   }
 }
 
-class BlockProvider extends InheritedWidget {
-  const BlockProvider({
+enum _BlockConfigurationAspect {
+  size,
+  spec,
+}
+
+class BlockConfiguration<T extends Block>
+    extends InheritedModel<_BlockConfigurationAspect> {
+  const BlockConfiguration({
+    required this.size,
     super.key,
+    required this.spec,
     required this.data,
     required super.child,
+    required this.isCapturing,
   });
 
-  final BlockConfiguration data;
-
-  @override
-  bool updateShouldNotify(BlockProvider oldWidget) {
-    return data != oldWidget.data;
-  }
-}
-
-class BlockConfiguration {
-  const BlockConfiguration({required this.size});
-
   final Size size;
+  final T data;
+  final SlideSpec spec;
+  final bool isCapturing;
 
-  static BlockConfiguration of(BuildContext context) {
-    final provider =
-        context.dependOnInheritedWidgetOfExactType<BlockProvider>();
-    return provider!.data;
+  static BlockConfiguration of(BuildContext context,
+      [_BlockConfigurationAspect? aspect]) {
+    return InheritedModel.inheritFrom<BlockConfiguration>(
+      context,
+      aspect: aspect,
+    )!;
+  }
+
+  static Size sizeOf(BuildContext context) {
+    return of(context, _BlockConfigurationAspect.size).size;
+  }
+
+  static SlideSpec specOf(BuildContext context) {
+    return of(context, _BlockConfigurationAspect.spec).spec;
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is BlockConfiguration && other.size == size;
+  bool updateShouldNotify(BlockConfiguration oldWidget) {
+    return size != oldWidget.size;
   }
 
   @override
-  int get hashCode => size.hashCode;
+  bool updateShouldNotifyDependent(
+    BlockConfiguration oldWidget,
+    Set<Object> dependencies,
+  ) {
+    return dependencies.contains(_BlockConfigurationAspect.size) &&
+        size != oldWidget.size;
+  }
 }
 
-class SectionBlockWidget extends StatelessWidget {
-  const SectionBlockWidget(this.section, {super.key});
-
-  final SectionBlockDto section;
+class SectionBlockWidget extends _BlockWidget<SectionBlock> {
+  const SectionBlockWidget(super.block, {super.key});
 
   @override
-  Widget build(context) {
-    final options = section.options;
-    final sectionFlex = section.options?.flex ?? 1;
-    final alignment = options?.align ?? ContentAlignment.center;
+  Widget build(context, configuration) {
+    final options = configuration.data;
+    final sectionFlex = options.flex ?? 1;
+    final alignment = options.align ?? ContentAlignment.center;
 
     final (mainAxis, crossAxis) = toRowAlignment(alignment);
 
-    final children = section.blocks.map((block) {
+    final children = options.blocks.map((block) {
       final alignment = toAlignment(
-        block.options?.align,
+        block.align,
       );
-      final flex = block.options?.flex ?? 1;
+      final flex = block.flex ?? 1;
       return Expanded(
         flex: flex,
         child: Align(
@@ -107,20 +132,59 @@ class SectionBlockWidget extends StatelessWidget {
   }
 }
 
-class _ColumnBlockWidget extends StatelessWidget {
-  const _ColumnBlockWidget(this.block);
+abstract class _BlockWidget<T extends Block> extends StatefulWidget {
+  const _BlockWidget(this.block, {super.key});
 
-  final ColumnBlockDto block;
+  final T block;
+
+  Widget build(BuildContext context, BlockConfiguration<T> configuration);
 
   @override
-  Widget build(context) {
-    final isCapturing = SnapshotProvider.isCapturingOf(context);
-    final options = block.options;
-    final content = block.content;
-    final alignment = options?.align ?? ContentAlignment.center;
-    final hasTag = options?.tag != null;
+  State<_BlockWidget> createState() => _BlockWidgetState();
+}
 
-    final spec = SlideSpec.of(context);
+class _BlockWidgetState extends State<_BlockWidget> {
+  @override
+  Widget build(context) {
+    final configuration = SlideConfiguration.of(context);
+    return SpecBuilder(
+      style: configuration.style.applyVariant(
+        Variant(widget.block.type.name),
+      ),
+      builder: (context) {
+        final spec = SlideSpec.of(context);
+        return MeasureSizeBuilder(
+          builder: (size) {
+            return BlockConfiguration(
+              size: getSizeWithoutSpacing(size, spec),
+              spec: spec,
+              data: widget.block,
+              isCapturing: SlideConfiguration.isCapturing(context),
+              child: Builder(builder: (context) {
+                final configuration = BlockConfiguration.of(context);
+                return widget.build(context, configuration);
+              }),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
+  const _ColumnBlockWidget(super.block);
+
+  @override
+  Widget build(context, configuration) {
+    final isCapturing = configuration.isCapturing;
+    final options = configuration.data;
+
+    final content = block.content;
+    final alignment = options.align ?? ContentAlignment.center;
+    final hasTag = options.tag != null;
+
+    final spec = BlockConfiguration.specOf(context);
 
     Widget child = spec.contentBlock(
       child: MarkdownViewer(
@@ -139,7 +203,7 @@ class _ColumnBlockWidget extends StatelessWidget {
 
     if (hasTag) {
       child = BlockHero(
-        tag: options!.tag!,
+        tag: options.tag!,
         child: child,
       );
     }
@@ -159,14 +223,12 @@ class _ColumnBlockWidget extends StatelessWidget {
   }
 }
 
-class _ImageBlockWidget extends StatelessWidget {
-  const _ImageBlockWidget(this.block);
-
-  final ImageBlockDto block;
+class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
+  const _ImageBlockWidget(super.block);
 
   @override
-  Widget build(context) {
-    final options = block.options;
+  Widget build(context, configuration) {
+    final options = configuration.data;
     final tag = options.tag;
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
@@ -185,14 +247,12 @@ class _ImageBlockWidget extends StatelessWidget {
   }
 }
 
-class _WidgetBlockWidget extends StatelessWidget {
-  const _WidgetBlockWidget(this.block);
-
-  final WidgetBlockDto block;
+class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
+  const _WidgetBlockWidget(super.block);
 
   @override
-  Widget build(context) {
-    final options = block.options;
+  Widget build(context, configuration) {
+    final options = configuration.data;
     final controller = DeckController.of(context);
 
     final widgetBuilder = controller.getWidget(options.name);
@@ -201,7 +261,7 @@ class _WidgetBlockWidget extends StatelessWidget {
       return Container(
         color: Colors.red,
         child: Center(
-          child: Text('Widget not found: ${options.name}'),
+          child: Text('Widget not found: ${options.type}'),
         ),
       );
     }
@@ -222,7 +282,7 @@ class _WidgetBlockWidget extends StatelessWidget {
           return Container(
             color: Colors.red,
             child: Center(
-              child: Text('Error building widget: ${options.name}\n$e'),
+              child: Text('Error building widget: ${options.type}\n$e'),
             ),
           );
         }
@@ -336,15 +396,14 @@ Alignment toAlignment(ContentAlignment? alignment) {
   };
 }
 
-class _GistBlockWidget extends StatelessWidget {
-  const _GistBlockWidget(this.block);
+class _DartPadBlockWidget extends StatelessWidget {
+  const _DartPadBlockWidget(this.block);
 
-  final GistBlockDto block;
+  final DartPadBlock block;
 
   @override
   Widget build(context) {
-    final options = block.options;
-    final DartPadOptions(:id, :theme, :embed) = options;
+    final DartPadBlock(:id, :theme, :embed) = block;
 
     final themeName = theme?.name ?? DartPadTheme.dark.name;
 

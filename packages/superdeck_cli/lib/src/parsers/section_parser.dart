@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-List<SectionBlockDto> parseSections(String markdown) {
+List<SectionBlock> parseSections(String markdown) {
   final lines = LineSplitter().convert(markdown);
-  var sections = <SectionBlockDto>[];
+  var sections = <SectionBlock>[];
 
-  SectionBlockDto? currentSection;
+  SectionBlock? currentSection;
   var index = 0;
 
   while (index < lines.length) {
@@ -27,20 +27,22 @@ List<SectionBlockDto> parseSections(String markdown) {
 
       // Process the tagContent
       final tagData = extractTagsFromLine(tagContent);
-      final blocks = tagData.map(_decodeBlock).toList();
+      final blocks = tagData.map(
+        (data) => Block.parse(data.blockType, data.options),
+      );
 
       for (final block in blocks) {
-        if (block is SectionBlockDto) {
+        if (block is SectionBlock) {
           // Add the previous section to the list
           if (currentSection != null) {
             sections.add(currentSection);
           }
           // Start a new section
           currentSection = block;
-        } else if (block is SubSectionBlockDto) {
+        } else if (block is ContentBlock) {
           // Add a new subsection to the current section
-          currentSection ??= SectionBlockDto();
-          currentSection = currentSection.appendSubsection(block);
+          currentSection ??= SectionBlock();
+          currentSection = currentSection.appendContent(block);
         }
       }
     } else {
@@ -48,8 +50,8 @@ List<SectionBlockDto> parseSections(String markdown) {
       if (currentSection != null) {
         currentSection = currentSection.appendLine(line);
       } else {
-        currentSection = SectionBlockDto(
-          blocks: [ColumnBlockDto(content: line)],
+        currentSection = SectionBlock(
+          blocks: [ColumnBlock(content: line)],
         );
       }
     }
@@ -62,22 +64,6 @@ List<SectionBlockDto> parseSections(String markdown) {
   }
 
   return sections;
-}
-
-BlockDto? _decodeBlock(SyntaxTagData tagData) {
-  final (:blockType, :options) = tagData;
-
-  final payload = {
-    'options': options,
-  };
-
-  return switch (blockType) {
-    BlockType.column => ColumnBlockDto.parse(payload),
-    BlockType.image => ImageBlockDto.parse(payload),
-    BlockType.widget => WidgetBlockDto.parse(payload),
-    BlockType.section => SectionBlockDto.parse(payload),
-    BlockType.gist => GistBlockDto.parse(payload),
-  };
 }
 
 typedef SyntaxTagData = ({

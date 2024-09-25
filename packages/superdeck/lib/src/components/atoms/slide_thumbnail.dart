@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/helpers/constants.dart';
+import '../../modules/slide/slide_configuration.dart';
 import '../../modules/thumbnail/thumbnail_controller.dart';
 import 'cache_image_widget.dart';
 import 'loading_indicator.dart';
@@ -22,7 +22,7 @@ enum _PopMenuAction {
 class SlideThumbnail extends StatefulWidget {
   final VoidCallback onTap;
   final bool selected;
-  final Slide slide;
+  final SlideConfiguration slide;
   final int page;
 
   const SlideThumbnail({

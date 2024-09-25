@@ -4,10 +4,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../common/helpers/async_value.dart';
 import '../common/helpers/constants.dart';
+import '../slide/slide_configuration.dart';
 import 'slide_capture_service.dart';
 
 class ThumbnailController with ChangeNotifier {
@@ -15,7 +15,7 @@ class ThumbnailController with ChangeNotifier {
 
   ThumbnailController();
 
-  Future<void> load(Slide slide) async {
+  Future<void> load(SlideConfiguration slide) async {
     try {
       final result = kCanRunProcess
           ? await _generateThumbnail(slide)
@@ -42,7 +42,7 @@ class ThumbnailController with ChangeNotifier {
 
   bool get isRefreshing => _asyncData.isRefreshing;
 
-  Future<void> refresh(Slide slide) async {
+  Future<void> refresh(SlideConfiguration slide) async {
     _asyncData = _asyncData.copyWith(status: AsyncStatus.loading);
     notifyListeners();
 
@@ -61,7 +61,8 @@ class ThumbnailController with ChangeNotifier {
   }
 }
 
-Future<File> _generateThumbnail(Slide slide, {bool force = false}) async {
+Future<File> _generateThumbnail(SlideConfiguration slide,
+    {bool force = false}) async {
   final thumbnailFile = slide.thumbnailFile;
 
   if (await thumbnailFile.exists() && !force) {

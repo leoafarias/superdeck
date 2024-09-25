@@ -2,13 +2,13 @@
 ---
 ## How can LLMs Understtand Your UI?
 
-{@column}
+{@column tag: image}
 ![structured_output](https://picsum.photos/800/300)
 
 ---
 ---
 ## Another image
-{@column}
+{@column tag: image}
 ![structured_output](https://picsum.photos/800/1400)
 
 ---

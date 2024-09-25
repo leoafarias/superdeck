@@ -11,7 +11,7 @@ class HeaderPart extends FixedSlidePart {
 
   @override
   Widget build(context, configuration) {
-    final slide = configuration.slide;
+    final slide = configuration;
     final index = configuration.slideIndex;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),

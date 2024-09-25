@@ -1,8 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../navigation/navigation_hooks.dart';
+import '../slide/slide_configuration.dart';
 import 'deck_controller.dart';
 
 DeckController _useController() {
@@ -18,54 +17,22 @@ T _useSelectController<T>(T Function(DeckController) selector) {
   return selector(controller);
 }
 
-List<Slide> useSlides() {
+List<SlideConfiguration> useSlides() {
   return _useSelectController((controller) => controller.slides);
 }
 
-Slide useGetSlide(int index) {
+SlideConfiguration useSlideConfiguration(int index) {
   return _useSelectController((controller) => controller.slides[index]);
-}
-
-int useGetSlideIndex(Slide slide) {
-  return _useSelectController((controller) => controller.slides.indexOf(slide));
 }
 
 List<SlideAsset> useAssets() {
   return _useSelectController((controller) => controller.assets);
 }
 
-// ({SlidePart? header, SlidePart? footer}) useGetParts() {
-//   return _useSelectController(
-//     (controller) => (
-//       header: controller.header,
-//       footer: controller.footer,
-//     ),
-//   );
+// SlideConfiguration useCurrentSlide() {
+//   final index = useCurrentSlideIndex();
+//   return useSlideConfiguration(index);
 // }
-
-Style useGetSlideStyle(Slide slide) {
-  return _useSelectController(
-    (controller) => controller.getStyle(
-      slide.options?.style,
-    ),
-  );
-}
-
-Slide useCurrentSlide() {
-  final index = useCurrentSlideIndex();
-  return useGetSlide(index);
-}
-
-Slide? useNextSlide() {
-  final totalSlides = useSlides().length;
-  final index = useCurrentSlideIndex();
-
-  if (index + 1 >= totalSlides) {
-    return null;
-  }
-
-  return useGetSlide(index + 1);
-}
 
 WidgetBuilderWithOptions? useDeckExamples(String name) {
   return _useSelectController(

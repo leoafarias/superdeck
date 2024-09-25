@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../molecules/block_widget.dart';
+import 'package:mix/mix.dart';
 
 class BlockHero extends StatelessWidget {
   const BlockHero({
@@ -20,16 +19,15 @@ class BlockHero extends StatelessWidget {
         animation,
         flightDirection,
         fromHeroContext,
-        BuildContext toHeroContext,
+        toHeroContext,
       ) {
-        Widget current = _flightShuttleBlockProvider(
+        return _flightShuttleBlockProvider(
           animation,
+          context,
           fromHeroContext,
           toHeroContext,
           child,
         );
-
-        return current;
       },
       tag: tag,
       child: child,
@@ -39,23 +37,24 @@ class BlockHero extends StatelessWidget {
 
 Widget _flightShuttleBlockProvider(
   Animation<double> animation,
+  BuildContext context,
   BuildContext fromHeroContext,
   BuildContext toHeroContext,
   Widget child,
 ) {
-  final toSize = BlockConfiguration.of(toHeroContext).size;
-  final fromSize = BlockConfiguration.of(fromHeroContext).size;
+  // final toSize = BlockConfiguration.of(toHeroContext).size;
+  // final fromSize = BlockConfiguration.of(fromHeroContext).size;
 
-  return AnimatedBuilder(
-    animation: animation,
-    child: child,
-    builder: (context, child) {
-      final interpolatedSize = Size.lerp(fromSize, toSize, animation.value)!;
+  return Mix(
+    data: Mix.of(context),
+    child: AnimatedBuilder(
+      animation: animation,
+      child: child,
+      builder: (context, child) {
+        // final interpolatedSize = Size.lerp(fromSize, toSize, animation.value)!;
 
-      return BlockProvider(
-        data: BlockConfiguration(size: interpolatedSize),
-        child: child!,
-      );
-    },
+        return child!;
+      },
+    ),
   );
 }

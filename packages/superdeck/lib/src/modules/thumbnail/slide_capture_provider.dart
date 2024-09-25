@@ -17,26 +17,3 @@ class SnapshotRef {
     return _context!;
   }
 }
-
-class SnapshotProvider extends InheritedWidget {
-  final bool isCapturing;
-
-  const SnapshotProvider({
-    required this.isCapturing,
-    required super.child,
-    super.key,
-  });
-
-  static SnapshotProvider? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SnapshotProvider>();
-  }
-
-  @override
-  bool updateShouldNotify(covariant SnapshotProvider oldWidget) {
-    return oldWidget.isCapturing != isCapturing;
-  }
-
-  static bool isCapturingOf(BuildContext context) {
-    return of(context)?.isCapturing ?? false;
-  }
-}

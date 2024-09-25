@@ -12,11 +12,12 @@ class DeckController extends ChangeNotifier {
   final _referenceService = DeckReferenceService();
   Map<String, DeckStyle> _styles = {};
   Map<String, WidgetBuilderWithOptions> _widgets = {};
+
   DeckStyle _baseStyle = DeckStyle();
   FixedSlidePart? _header;
   FixedSlidePart? _footer;
   SlidePart? _background;
-  late List<Slide> _slides;
+  late List<SlideConfiguration> _slides;
   late List<SlideAsset> _assets;
 
   AsyncValue<ReferenceDto> asyncData = const AsyncValue.loading();
@@ -29,8 +30,6 @@ class DeckController extends ChangeNotifier {
   DeckController({
     required Map<String, DeckStyle> styles,
     required DeckStyle baseStyle,
-    List<Slide> initialSlides = const [],
-    List<SlideAsset> initialAssets = const [],
     required Map<String, WidgetBuilderWithOptions> widgets,
     FixedSlidePart? header,
     FixedSlidePart? footer,
@@ -39,8 +38,6 @@ class DeckController extends ChangeNotifier {
         _header = header,
         _background = background {
     _styles = styles;
-    _slides = initialSlides;
-    _assets = initialAssets;
 
     _baseStyle = baseStyle;
     _widgets = widgets;
@@ -57,37 +54,42 @@ class DeckController extends ChangeNotifier {
     FixedSlidePart? header,
     FixedSlidePart? footer,
     SlidePart? background,
-    List<Slide>? slides,
   }) {
-    if (baseStyle != null) {
+    bool hasChanged = false;
+
+    if (baseStyle != null && _baseStyle != baseStyle) {
       _baseStyle = baseStyle;
+      hasChanged = true;
     }
 
-    if (header != null) {
+    if (header != null && _header != header) {
       _header = header;
+      hasChanged = true;
     }
 
-    if (footer != null) {
+    if (footer != null && _footer != footer) {
       _footer = footer;
+      hasChanged = true;
     }
 
-    if (styles != null) {
+    if (styles != null && _styles != styles) {
       _styles = styles;
+      hasChanged = true;
     }
 
-    if (examples != null) {
+    if (examples != null && _widgets != examples) {
       _widgets = examples;
+      hasChanged = true;
     }
 
-    if (slides != null) {
-      _slides = slides;
-    }
-
-    if (background != null) {
+    if (background != null && _background != background) {
       _background = background;
+      hasChanged = true;
     }
 
-    notifyListeners();
+    if (hasChanged) {
+      notifyListeners();
+    }
   }
 
   double get totalPartsHeight {
@@ -107,10 +109,6 @@ class DeckController extends ChangeNotifier {
     return provider!.controller;
   }
 
-  Widget buildBackground() {
-    return _background ?? const SizedBox();
-  }
-
   /// Whether reference data is currently being loaded.
   bool get isLoading => asyncData.isLoading;
 
@@ -124,17 +122,17 @@ class DeckController extends ChangeNotifier {
   bool get hasData => asyncData.hasValue;
 
   /// The list of slides in the loaded reference data.
-  List<Slide> get slides => _slides;
+  List<SlideConfiguration> get slides => _slides;
 
   /// The list of assets in the loaded reference data.
   List<SlideAsset> get assets => _assets;
 
-  Slide getSlide(int index) => slides[index];
+  SlideConfiguration getSlide(int index) => slides[index];
 
   /// Retrieves the [Style] registered with the given [name].
   ///
   /// If no match is found, returns the default [_baseStyle].
-  Style getStyle(String? name) {
+  Style _buildSlideStyle(String? name) {
     final style = _baseStyle.build().merge(_styles[name]?.build());
     return _isDebug ? style.applyVariant(const Variant('debug')) : style;
   }
@@ -167,8 +165,23 @@ class DeckController extends ChangeNotifier {
         data: data,
       );
 
-      _slides = data.slides;
       _assets = data.assets;
+      final slides = <SlideConfiguration>[];
+      for (var i = 0; i < data.slides.length; i++) {
+        final slide = data.slides[i];
+        final slideStyle = slide.options?.style;
+        final configuration = SlideConfiguration(
+          slide: slide,
+          slideIndex: i,
+          header: _header,
+          footer: _footer,
+          background: _background,
+          style: _buildSlideStyle(slideStyle),
+        );
+
+        slides.add(configuration);
+      }
+      _slides = slides;
     } catch (error, stackTrace) {
       asyncData = AsyncValue.error(error, stackTrace);
     } finally {
@@ -186,7 +199,7 @@ class DeckController extends ChangeNotifier {
 
 typedef WidgetBuilderWithOptions = Widget Function(
   BuildContext context,
-  WidgetOptions options,
+  WidgetBlock options,
 );
 
 /// An inherited notifier that provides access to a [DeckController].
@@ -203,50 +216,4 @@ class DeckControllerProvider extends InheritedNotifier<DeckController> {
 
   /// The [DeckController] instance associated with this inherited notifier.
   final DeckController controller;
-}
-
-abstract class SlidePart extends StatefulWidget {
-  const SlidePart({
-    super.key,
-  });
-
-  Widget build(BuildContext context, SlideConfiguration configuration);
-
-  @override
-  _SlidePartState<SlidePart> createState() => SlidePartState<SlidePart>();
-}
-
-class SlidePartState<T extends SlidePart> extends _SlidePartState<T> {
-  @override
-  Widget build(BuildContext context) {
-    final configuration = SlideConfiguration.of(context);
-    return widget.build(context, configuration);
-  }
-}
-
-class _FixedSlidePartState extends _SlidePartState<FixedSlidePart> {
-  @override
-  Widget build(BuildContext context) {
-    final configuration = SlideConfiguration.of(context);
-    return SizedBox(
-      height: widget.height,
-      child: Builder(builder: (context) {
-        return widget.build(context, configuration);
-      }),
-    );
-  }
-}
-
-abstract class _SlidePartState<T extends SlidePart> extends State<T> {
-  @override
-  Widget build(BuildContext context);
-}
-
-abstract class FixedSlidePart extends SlidePart {
-  const FixedSlidePart({super.key});
-
-  double get height;
-
-  @override
-  _FixedSlidePartState createState() => _FixedSlidePartState();
 }
