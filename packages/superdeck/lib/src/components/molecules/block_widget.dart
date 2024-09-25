@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
 import '../../../superdeck.dart';
 import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/thumbnail/slide_capture_provider.dart';
 import '../atoms/cache_image_widget.dart';
+import '../atoms/hero_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
@@ -14,70 +16,18 @@ class BlockWidget<T extends SubSectionBlockDto> extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return MeasureSizeBuilder(
-      duration: Durations.medium1,
-      builder: (size) {
-        return BlockProvider(
-          data: BlockConfiguration(size: size),
-          child: switch (block) {
-            (ImageBlockDto p) => _ImageBlockWidget(p),
-            (ColumnBlockDto p) => _ContentBlockWidget(p),
-            (WidgetBlockDto p) => _WidgetBlockWidget(p),
-            (GistBlockDto p) => _GistBlockWidget(p),
-          },
-        );
+    final configuration = SlideConfiguration.of(context);
+    return SpecBuilder(
+      style: configuration.slideStyle.applyVariant(Variant(block.type.name)),
+      builder: (context) {
+        return switch (block) {
+          (ImageBlockDto p) => _ImageBlockWidget(p),
+          (ColumnBlockDto p) => _ColumnBlockWidget(p),
+          (WidgetBlockDto p) => _WidgetBlockWidget(p),
+          (GistBlockDto p) => _GistBlockWidget(p),
+          (SectionBlockDto p) => SectionBlockWidget(p),
+        };
       },
-    );
-  }
-}
-
-class BlockConfiguration {
-  const BlockConfiguration({required this.size});
-
-  final Size size;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is BlockConfiguration && other.size == size;
-  }
-
-  @override
-  int get hashCode => size.hashCode;
-}
-
-class BlockHero extends StatelessWidget {
-  const BlockHero({
-    super.key,
-    required this.tag,
-    required this.child,
-  });
-
-  final String tag;
-  final Widget child;
-
-  @override
-  Widget build(context) {
-    return Hero(
-      flightShuttleBuilder: (
-        flightContext,
-        animation,
-        flightDirection,
-        fromHeroContext,
-        BuildContext toHeroContext,
-      ) {
-        Widget current = _flightShuttleBlockProvider(
-          animation,
-          fromHeroContext,
-          toHeroContext,
-          child,
-        );
-
-        return current;
-      },
-      tag: tag,
-      child: child,
     );
   }
 }
@@ -91,6 +41,17 @@ class BlockProvider extends InheritedWidget {
 
   final BlockConfiguration data;
 
+  @override
+  bool updateShouldNotify(BlockProvider oldWidget) {
+    return data != oldWidget.data;
+  }
+}
+
+class BlockConfiguration {
+  const BlockConfiguration({required this.size});
+
+  final Size size;
+
   static BlockConfiguration of(BuildContext context) {
     final provider =
         context.dependOnInheritedWidgetOfExactType<BlockProvider>();
@@ -98,36 +59,56 @@ class BlockProvider extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(BlockProvider oldWidget) {
-    return data != oldWidget.data;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BlockConfiguration && other.size == size;
+  }
+
+  @override
+  int get hashCode => size.hashCode;
+}
+
+class SectionBlockWidget extends StatelessWidget {
+  const SectionBlockWidget(this.section, {super.key});
+
+  final SectionBlockDto section;
+
+  @override
+  Widget build(context) {
+    final options = section.options;
+    final sectionFlex = section.options?.flex ?? 1;
+    final alignment = options?.align ?? ContentAlignment.center;
+
+    final (mainAxis, crossAxis) = toRowAlignment(alignment);
+
+    final children = section.blocks.map((block) {
+      final alignment = toAlignment(
+        block.options?.align,
+      );
+      final flex = block.options?.flex ?? 1;
+      return Expanded(
+        flex: flex,
+        child: Align(
+          alignment: alignment,
+          child: BlockWidget(block),
+        ),
+      );
+    }).toList();
+
+    return Expanded(
+      flex: sectionFlex,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        // crossAxisAlignment: crossAxis,
+        children: children,
+      ),
+    );
   }
 }
 
-Widget _flightShuttleBlockProvider(
-  Animation<double> animation,
-  BuildContext fromHeroContext,
-  BuildContext toHeroContext,
-  Widget child,
-) {
-  final toSize = BlockProvider.of(toHeroContext).size;
-  final fromSize = BlockProvider.of(fromHeroContext).size;
-
-  return AnimatedBuilder(
-    animation: animation,
-    child: child,
-    builder: (context, child) {
-      final interpolatedSize = Size.lerp(fromSize, toSize, animation.value)!;
-
-      return BlockProvider(
-        data: BlockConfiguration(size: interpolatedSize),
-        child: child!,
-      );
-    },
-  );
-}
-
-class _ContentBlockWidget extends StatelessWidget {
-  const _ContentBlockWidget(this.block);
+class _ColumnBlockWidget extends StatelessWidget {
+  const _ColumnBlockWidget(this.block);
 
   final ColumnBlockDto block;
 
@@ -141,7 +122,7 @@ class _ContentBlockWidget extends StatelessWidget {
 
     final spec = SlideSpec.of(context);
 
-    Widget child = spec.contentContainer(
+    Widget child = spec.contentBlock(
       child: MarkdownViewer(
         content: content,
         spec: spec,
@@ -190,18 +171,15 @@ class _ImageBlockWidget extends StatelessWidget {
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
 
-    Widget widget = CacheDecorationImage(
-      uri: Uri.parse(options.src),
-      fit: toBoxFit(imageFit),
-      alignment: toAlignment(alignment),
+    Widget widget = MeasureSizeBuilder(
+      builder: (size) {
+        return CacheDecorationImage(
+          uri: Uri.parse(options.src),
+          fit: toBoxFit(imageFit),
+          alignment: toAlignment(alignment),
+        );
+      },
     );
-
-    if (tag != null) {
-      widget = BlockHero(
-        tag: tag,
-        child: widget,
-      );
-    }
 
     return widget;
   }
@@ -230,26 +208,24 @@ class _WidgetBlockWidget extends StatelessWidget {
 
     return Builder(
       builder: (context) {
-        Widget widget;
         try {
-          widget = widgetBuilder(context, options);
+          final widget = widgetBuilder(context, options);
+          if (options.tag != null) {
+            return BlockHero(
+              tag: options.tag!,
+              child: Container(child: widget),
+            );
+          }
+
+          return widget;
         } catch (e) {
-          widget = Container(
+          return Container(
             color: Colors.red,
             child: Center(
               child: Text('Error building widget: ${options.name}\n$e'),
             ),
           );
         }
-
-        if (options.tag != null) {
-          return BlockHero(
-            tag: options.tag!,
-            child: Container(child: widget),
-          );
-        }
-
-        return widget;
       },
     );
   }
@@ -267,7 +243,10 @@ BoxFit toBoxFit(ImageFit fit) {
   };
 }
 
-Alignment toAlignment(ContentAlignment alignment) {
+Alignment toAlignment(ContentAlignment? alignment) {
+  if (alignment == null) {
+    return Alignment.center;
+  }
   return switch (alignment) {
     ContentAlignment.topLeft => Alignment.topLeft,
     ContentAlignment.topCenter => Alignment.topCenter,

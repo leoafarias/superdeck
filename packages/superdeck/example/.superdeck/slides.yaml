@@ -1,5 +1,41 @@
 config: {}
 slides: 
+  - key: 'MqLdan6B'
+    options: {}
+    markdown: |-
+      ## How can LLMs Understtand Your UI?
+      
+      {@column}
+      ![structured_output](https://picsum.photos/800/300)
+    sections: 
+      - blocks: 
+          - content: |
+              ## How can LLMs Understtand Your UI?
+            type: 'column'
+          - content: |-
+              
+              ![structured_output](https://picsum.photos/800/300)
+            options: null
+            type: 'column'
+        type: 'SectionBlockDto'
+    notes: []
+  - key: '0TuA2JaL'
+    options: {}
+    markdown: |-
+      ## Another image
+      {@column}
+      ![structured_output](https://picsum.photos/800/1400)
+    sections: 
+      - blocks: 
+          - content: '## Another image'
+            type: 'column'
+          - content: |-
+              
+              ![structured_output](https://picsum.photos/800/1400)
+            options: null
+            type: 'column'
+        type: 'SectionBlockDto'
+    notes: []
   - key: 'JXYAv556'
     options: {}
     markdown: |-
@@ -13,7 +49,7 @@ slides:
     sections: 
       - options: 
           flex: 2
-        sub_sections: 
+        blocks: 
           - content: |-
               
               # Generative UI
@@ -22,6 +58,7 @@ slides:
               align: 'center'
               tag: 'heading'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'X2T13jp8'
     options: {}
@@ -43,7 +80,7 @@ slides:
       - Flutter & Dart GDE
       - Passionate about UI/UX/DX
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               
               
@@ -63,6 +100,7 @@ slides:
             options: 
               align: 'center_left'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'OnZ1cviT'
     options: {}
@@ -78,7 +116,7 @@ slides:
       
       {@column}
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               
             options: null
@@ -94,6 +132,7 @@ slides:
           - content: ''
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'D4etKl0J'
     options: {}
@@ -108,7 +147,7 @@ slides:
       {@column flex: 2}
       ### AI Assisted Code Generation
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               
               ### Generative UI
@@ -127,6 +166,7 @@ slides:
             options: 
               flex: 2
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '4E2GOMRu'
     options: {}
@@ -138,7 +178,7 @@ slides:
       - LLMs are great at generating content based on context
       - GUIs are great at providing structured, interactive interfaces for user input and navigation
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               ### What is Generative UI?
             type: 'column'
@@ -149,14 +189,16 @@ slides:
               - GUIs are great at providing structured, interactive interfaces for user input and navigation
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '7qVeHjc5'
     options: {}
     markdown: '# LLM ❤️ GUI'
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: '# LLM ❤️ GUI'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'D6lTKmGt'
     options: {}
@@ -170,7 +212,7 @@ slides:
       
       {@column}
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: ''
             options: null
             type: 'column'
@@ -184,6 +226,7 @@ slides:
           - content: ''
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'hHrCdu5G'
     options: {}
@@ -194,7 +237,7 @@ slides:
       - Faster feedback loop between users and LLMs
       - Enhances efficiency and interaction
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               ### Benefits of UI over Chat
               
@@ -202,6 +245,7 @@ slides:
               - Faster feedback loop between users and LLMs
               - Enhances efficiency and interaction
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'CsyEcFYH'
     options: {}
@@ -214,7 +258,7 @@ slides:
       Built for any screen: Ideal for generating<br>adaptive UIs across devices and platforms.
       {@column}
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               
               ### Flutter is Well-Suited <br>for Generative UI
@@ -226,6 +270,7 @@ slides:
           - content: ''
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'RgyPgAWI'
     options: {}
@@ -235,7 +280,7 @@ slides:
       {@column tag: image}
       ![structured_output](assets/structured_output.png)
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               ## How can LLMs Understtand Your UI?
             type: 'column'
@@ -245,6 +290,7 @@ slides:
             options: 
               tag: 'image'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '9jtc9i8W'
     options: {}
@@ -269,7 +315,7 @@ slides:
       );
       ```
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               
               
@@ -294,8 +340,9 @@ slides:
               ```
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
-  - key: 'wvZOvQz1'
+  - key: 'CtLOsx2s'
     options: {}
     markdown: |-
       {@section}
@@ -316,7 +363,7 @@ slides:
       ```
     sections: 
       - options: null
-        sub_sections: 
+        blocks: 
           - content: |-
               ```dart
               
@@ -334,6 +381,7 @@ slides:
               
               ```
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '6EU2Xxrf'
     options: {}
@@ -348,7 +396,7 @@ slides:
       - Font color
       - Color for each corner of the palette
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               
               ### Color Palette Generator
@@ -361,6 +409,7 @@ slides:
               - Color for each corner of the palette
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'qek7UrZY'
     options: {}
@@ -414,7 +463,7 @@ slides:
       
       ```
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               
               ```dart
@@ -466,6 +515,7 @@ slides:
               ```
             options: null
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '8DDlBdti'
     options: 
@@ -481,7 +531,7 @@ slides:
           - cyberpunk
       }
     sections: 
-      - sub_sections: 
+      - blocks: 
           - options: 
               name: 'colorPalette'
               type: 'schema'
@@ -493,6 +543,7 @@ slides:
                 - 'cyberpunk'
             content: ''
             type: 'widget'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'm7QWZujG'
     options: 
@@ -508,7 +559,7 @@ slides:
           - cyberpunk
       }
     sections: 
-      - sub_sections: 
+      - blocks: 
           - options: 
               name: 'colorPalette'
               type: 'widget'
@@ -520,14 +571,16 @@ slides:
                 - 'cyberpunk'
             content: ''
             type: 'widget'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'H0jUl8Aj'
     options: {}
     markdown: '## LLMs Orchestrate APIs'
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: '## LLMs Orchestrate APIs'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'srY9Srz1'
     options: {}
@@ -544,7 +597,7 @@ slides:
       
       ![llm tools](assets/llm_tools.png){.cover}
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               
               
@@ -558,6 +611,7 @@ slides:
               align: 'center_right'
               tag: 'heading'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '85oPyLzH'
     options: 
@@ -574,7 +628,7 @@ slides:
           - Max brightness
       }
     sections: 
-      - sub_sections: 
+      - blocks: 
           - options: 
               name: 'lightControl'
               type: 'schema'
@@ -587,6 +641,7 @@ slides:
                 - 'Max brightness'
             content: ''
             type: 'widget'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'GzbYzNYH'
     options: {}
@@ -606,7 +661,7 @@ slides:
       }
       ![llm response](assets/llm_interaction.png)
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               
               
@@ -624,6 +679,7 @@ slides:
               flex: 4
               tag: 'image'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'pTufGpKn'
     options: {}
@@ -640,7 +696,7 @@ slides:
       }
       ![widget_response](assets/widget_response.png)
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |
               
               ### Widget Response
@@ -655,6 +711,7 @@ slides:
               flex: 3
               tag: 'image'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '3eFdrtdl'
     options: 
@@ -671,7 +728,7 @@ slides:
           - Max brightness
       }
     sections: 
-      - sub_sections: 
+      - blocks: 
           - options: 
               name: 'lightControl'
               type: 'widget'
@@ -684,14 +741,16 @@ slides:
                 - 'Max brightness'
             content: ''
             type: 'widget'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'pNxPyfLK'
     options: {}
     markdown: '## What if the tool to use is a widget schema?'
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: '## What if the tool to use is a widget schema?'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: '5cGNbsJx'
     options: {}
@@ -719,7 +778,7 @@ slides:
       
       ```
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               ### Experimental
               
@@ -744,6 +803,7 @@ slides:
               
               ```
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'J6DNhZau'
     options: 
@@ -758,7 +818,7 @@ slides:
           - Change everything
       }
     sections: 
-      - sub_sections: 
+      - blocks: 
           - options: 
               name: 'widgetSchema'
               type: 'widget'
@@ -769,14 +829,16 @@ slides:
                 - 'Change everything'
             content: ''
             type: 'widget'
+        type: 'SectionBlockDto'
     notes: []
   - key: '3kW1wOHd'
     options: {}
     markdown: '## The future of UI might be orchestrating user experiences rather than creating it.'
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: '## The future of UI might be orchestrating user experiences rather than creating it.'
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
   - key: 'UqCN11cB'
     options: {}
@@ -787,7 +849,7 @@ slides:
       @leoafarias
       (GitHub, Twitter/X)
     sections: 
-      - sub_sections: 
+      - blocks: 
           - content: |-
               ### Thank you
               
@@ -795,5 +857,6 @@ slides:
               @leoafarias
               (GitHub, Twitter/X)
             type: 'column'
+        type: 'SectionBlockDto'
     notes: []
 assets: []

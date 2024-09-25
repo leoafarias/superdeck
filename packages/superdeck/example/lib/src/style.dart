@@ -53,7 +53,7 @@ class CoverStyle extends DeckStyle {
             $.h1.chain
               ..style.as(GoogleFonts.poppins())
               ..style.fontSize(100),
-            $.contentContainer.gradient.linear(
+            $.contentBlock.gradient.linear(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
@@ -82,7 +82,7 @@ class AnnouncementStyle extends DeckStyle {
               ..style.fontSize(60)
               ..style.color(Colors.white)
               ..style.fontWeight(FontWeight.w100),
-            $.contentContainer.gradient.linear(
+            $.contentBlock.gradient.linear(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [

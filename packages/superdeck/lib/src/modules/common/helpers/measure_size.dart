@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'constants.dart';
+
 typedef OnWidgetSizeChange = void Function(Size newSize);
 
 class MeasureSizeRenderObject extends RenderProxyBox {
@@ -16,11 +18,25 @@ class MeasureSizeRenderObject extends RenderProxyBox {
     Size newSize = child!.size;
 
     if (oldSize != newSize) {
-      // Directly invoke the callback with both old and new size during layout
+      oldSize = newSize;
+
       onChange(newSize);
-      oldSize = newSize; // Update the old size to the new size
     }
   }
+}
+
+class MeasureSizeBuilder extends StatefulWidget {
+  final Widget Function(Size size) builder;
+  final Duration duration;
+
+  const MeasureSizeBuilder({
+    super.key,
+    required this.builder,
+    this.duration = Durations.medium1,
+  });
+
+  @override
+  State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
 }
 
 class MeasureSize extends SingleChildRenderObjectWidget {
@@ -36,47 +52,43 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   RenderObject createRenderObject(BuildContext context) {
     return MeasureSizeRenderObject(onChange);
   }
-}
-
-class MeasureSizeBuilder extends StatefulWidget {
-  final Widget Function(Size size) builder;
-  final Duration duration;
-  const MeasureSizeBuilder({
-    super.key,
-    required this.builder,
-    required this.duration,
-  });
 
   @override
-  State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
+  void updateRenderObject(
+      BuildContext context, MeasureSizeRenderObject renderObject) {
+    renderObject.onChange = onChange;
+  }
 }
 
 class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
   Size? _size;
+
+  void _onSizeChange(Size size) {
+    if (_size != null) return;
+    if (size.width <= 0 ||
+        size.height <= 0 ||
+        size.width == double.infinity ||
+        size.height == double.infinity) {
+      return;
+    }
+
+    if (size == _size) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        print('size: $size');
+        _size = size;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MeasureSize(
-      onChange: (size) {
-        widget.builder(size);
-      },
+      onChange: _onSizeChange,
       child: AnimatedSize(
         duration: widget.duration,
         curve: Curves.easeInOut,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            Widget current = widget.builder(_size ?? constraints.biggest);
-
-            if (_size != null) {
-              current = SizedBox(
-                width: _size!.width,
-                height: _size!.height,
-                child: current,
-              );
-            }
-
-            return current;
-          },
-        ),
+        child: widget.builder(_size ?? kResolution),
       ),
     );
   }

@@ -1,16 +1,32 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
 import '../styles/style_spec.dart';
 
-BoxConstraints calculateConstraints(Size size, SlideSpec spec) {
+Offset calculateSpecOffset(SlideSpec spec) {
   // final outerContainer = spec.outerContainer;
   // final innerContainer = spec.innerContainer;
-  final contentContainer = spec.contentContainer;
+  final contentBlock = spec.contentBlock;
+  final image = spec.image;
+
+  final modifiers = spec.modifiers?.value ?? [];
 
   double horizontalSpacing = 0.0;
   double verticalSpacing = 0.0;
 
-  for (final container in [contentContainer]) {
+  ({double horizontal, double vertical}) getTotalModifierSpacing(Spec spec) {
+    final padding = modifiers.firstWhereOrNull(
+      (element) => element is PaddingModifierSpec,
+    ) as PaddingModifierSpec?;
+
+    return (
+      horizontal: padding?.padding.horizontal ?? 0.0,
+      vertical: padding?.padding.vertical ?? 0.0,
+    );
+  }
+
+  for (final container in [contentBlock]) {
     final padding = container.padding ?? EdgeInsets.zero;
     final margin = container.margin ?? EdgeInsets.zero;
 
@@ -25,14 +41,19 @@ BoxConstraints calculateConstraints(Size size, SlideSpec spec) {
       }
     }
 
-    horizontalSpacing +=
-        padding.horizontal + margin.horizontal + horizontalBorder;
-    verticalSpacing += padding.vertical + margin.vertical + verticalBorder;
+    final modifier = getTotalModifierSpacing(container);
+
+    horizontalSpacing += padding.horizontal +
+        margin.horizontal +
+        horizontalBorder +
+        modifier.horizontal;
+    verticalSpacing +=
+        padding.vertical + margin.vertical + verticalBorder + modifier.vertical;
   }
 
-  return BoxConstraints(
-    maxHeight: size.height - verticalSpacing,
-    maxWidth: size.width - horizontalSpacing,
+  return Offset(
+    horizontalSpacing,
+    verticalSpacing,
   );
 }
 

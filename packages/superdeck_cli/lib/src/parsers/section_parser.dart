@@ -49,7 +49,7 @@ List<SectionBlockDto> parseSections(String markdown) {
         currentSection = currentSection.appendLine(line);
       } else {
         currentSection = SectionBlockDto(
-          subSections: [ColumnBlockDto(content: line)],
+          blocks: [ColumnBlockDto(content: line)],
         );
       }
     }

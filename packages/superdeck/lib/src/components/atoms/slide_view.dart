@@ -57,43 +57,8 @@ class SlideView extends HookWidget {
                     ),
                     spec.slideContainer(
                       child: Column(
-                        children: slide.sections.map((section) {
-                          final sectionFlex = section.options?.flex ?? 1;
-                          final sectionAlignment =
-                              section.options?.align ?? ContentAlignment.center;
-
-                          return Expanded(
-                            flex: sectionFlex,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: section.subSections.map(
-                                (subSection) {
-                                  final subSectionFlex =
-                                      subSection.options?.flex ?? 1;
-                                  final subSectionAlignment =
-                                      subSection.options?.align ??
-                                          ContentAlignment.center;
-                                  return SpecBuilder(
-                                    style: style.applyVariant(Variant(
-                                      subSection.type.name,
-                                    )),
-                                    builder: (context) {
-                                      return Expanded(
-                                        flex: subSectionFlex,
-                                        child: Align(
-                                          alignment: toAlignment(
-                                            subSectionAlignment,
-                                          ),
-                                          child: BlockWidget(subSection),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ).toList(),
-                            ),
-                          );
-                        }).toList(),
+                        children:
+                            slide.sections.map(SectionBlockWidget.new).toList(),
                       ),
                     ),
                   ],

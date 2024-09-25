@@ -1,5 +1,18 @@
 ---
 ---
+## How can LLMs Understtand Your UI?
+
+{@column}
+![structured_output](https://picsum.photos/800/300)
+
+---
+---
+## Another image
+{@column}
+![structured_output](https://picsum.photos/800/1400)
+
+---
+---
 {@section flex: 2}
 {@column
   align: center

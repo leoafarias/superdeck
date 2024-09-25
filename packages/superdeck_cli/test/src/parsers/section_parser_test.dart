@@ -20,11 +20,11 @@ content column 2.
 
         final sections = parseSections(markdown);
         expect(sections.length, equals(1));
-        expect(sections[0].subSections.length, equals(3));
+        expect(sections[0].blocks.length, equals(3));
 
-        expect(sections[0].subSections[0].content.trim(), '# Title');
-        expect(sections[0].subSections[1].content.trim(), 'content column 1.');
-        expect(sections[0].subSections[2].content.trim(), 'content column 2.');
+        expect(sections[0].blocks[0].content.trim(), '# Title');
+        expect(sections[0].blocks[1].content.trim(), 'content column 1.');
+        expect(sections[0].blocks[2].content.trim(), 'content column 2.');
       });
 
       test('Only columns without sections', () {
@@ -39,9 +39,9 @@ Content column 2.
 
         final sections = parseSections(markdown);
         expect(sections.length, equals(1));
-        expect(sections[0].subSections.length, equals(2));
-        expect(sections[0].subSections[0].content.trim(), 'Content column 1.');
-        expect(sections[0].subSections[1].content.trim(), 'Content column 2.');
+        expect(sections[0].blocks.length, equals(2));
+        expect(sections[0].blocks[0].content.trim(), 'Content column 1.');
+        expect(sections[0].blocks[1].content.trim(), 'Content column 2.');
       });
 
       test('Columns then sections', () {
@@ -59,14 +59,14 @@ Content inside the header.
 
         final sections = parseSections(markdown);
         expect(sections.length, equals(2));
-        expect(sections[0].subSections.length, equals(1));
-        expect(sections[1].subSections.length, equals(2));
+        expect(sections[0].blocks.length, equals(1));
+        expect(sections[1].blocks.length, equals(2));
 
-        expect(sections[0].subSections[0].content.trim(),
+        expect(sections[0].blocks[0].content.trim(),
             '# Regular Markdown\n\nThis is some regular markdown content.');
-        expect(sections[1].subSections[0].content.trim(), '## Header Title');
-        expect(sections[1].subSections[1].content.trim(),
-            'Content inside the header.');
+        expect(sections[1].blocks[0].content.trim(), '## Header Title');
+        expect(
+            sections[1].blocks[1].content.trim(), 'Content inside the header.');
       });
 
       test('Header, body, and footer with columns', () {
@@ -93,18 +93,14 @@ Footer content column.
         final sections = parseSections(markdown);
 
         expect(sections.length, equals(3));
-        expect(sections[0].subSections.length, equals(2));
-        expect(sections[1].subSections.length, equals(2));
-        expect(sections[2].subSections.length, equals(1));
-        expect(sections[0].subSections[0].content.trim(), '# Header Title');
-        expect(sections[0].subSections[1].content.trim(),
-            'Header content column.');
-        expect(sections[1].subSections[0].content.trim(),
-            'Body content column 1.');
-        expect(sections[1].subSections[1].content.trim(),
-            'Body content column 2.');
-        expect(sections[2].subSections[0].content.trim(),
-            'Footer content column.');
+        expect(sections[0].blocks.length, equals(2));
+        expect(sections[1].blocks.length, equals(2));
+        expect(sections[2].blocks.length, equals(1));
+        expect(sections[0].blocks[0].content.trim(), '# Header Title');
+        expect(sections[0].blocks[1].content.trim(), 'Header content column.');
+        expect(sections[1].blocks[0].content.trim(), 'Body content column 1.');
+        expect(sections[1].blocks[1].content.trim(), 'Body content column 2.');
+        expect(sections[2].blocks[0].content.trim(), 'Footer content column.');
       });
     });
   });
@@ -127,15 +123,13 @@ Header content column 2.
       final sections = parseSections(markdown);
 
       expect(sections.length, equals(1));
-      expect(sections[0].subSections.length, equals(2));
+      expect(sections[0].blocks.length, equals(2));
 
-      expect(sections[0].subSections[0].content.trim(),
-          'Header content column 1.');
-      expect(sections[0].subSections[1].content.trim(),
-          'Header content column 2.');
+      expect(sections[0].blocks[0].content.trim(), 'Header content column 1.');
+      expect(sections[0].blocks[1].content.trim(), 'Header content column 2.');
 
-      expect(sections[0].subSections[0].columnOptions?.flex, equals(1));
-      expect(sections[0].subSections[1].columnOptions?.flex, equals(2));
+      expect(sections[0].blocks[0].columnOptions?.flex, equals(1));
+      expect(sections[0].blocks[1].columnOptions?.flex, equals(2));
     });
 
     test('Section with columns and alignment attribute in snake case', () {
@@ -155,16 +149,14 @@ Body content column 2.
       final sections = parseSections(markdown);
 
       expect(sections.length, equals(1));
-      expect(sections[0].subSections.length, equals(2));
+      expect(sections[0].blocks.length, equals(2));
 
-      expect(
-          sections[0].subSections[0].content.trim(), 'Body content column 1.');
-      expect(
-          sections[0].subSections[1].content.trim(), 'Body content column 2.');
+      expect(sections[0].blocks[0].content.trim(), 'Body content column 1.');
+      expect(sections[0].blocks[1].content.trim(), 'Body content column 2.');
 
-      expect(sections[0].subSections[0].columnOptions?.align,
+      expect(sections[0].blocks[0].columnOptions?.align,
           equals(ContentAlignment.center));
-      expect(sections[0].subSections[1].columnOptions?.align,
+      expect(sections[0].blocks[1].columnOptions?.align,
           equals(ContentAlignment.bottomRight));
     });
 
@@ -187,19 +179,17 @@ Footer content column 2.
       final sections = parseSections(markdown);
 
       expect(sections.length, equals(1));
-      expect(sections[0].subSections.length, equals(2));
+      expect(sections[0].blocks.length, equals(2));
 
-      expect(sections[0].subSections[0].content.trim(),
-          'Footer content column 1.');
-      expect(sections[0].subSections[1].content.trim(),
-          'Footer content column 2.');
+      expect(sections[0].blocks[0].content.trim(), 'Footer content column 1.');
+      expect(sections[0].blocks[1].content.trim(), 'Footer content column 2.');
 
-      expect(sections[0].subSections[0].columnOptions?.flex, equals(3));
-      expect(sections[0].subSections[0].columnOptions?.align,
+      expect(sections[0].blocks[0].columnOptions?.flex, equals(3));
+      expect(sections[0].blocks[0].columnOptions?.align,
           equals(ContentAlignment.topLeft));
 
-      expect(sections[0].subSections[1].columnOptions?.flex, equals(1));
-      expect(sections[0].subSections[1].columnOptions?.align,
+      expect(sections[0].blocks[1].columnOptions?.flex, equals(1));
+      expect(sections[0].blocks[1].columnOptions?.align,
           equals(ContentAlignment.centerRight));
     });
 
@@ -237,30 +227,28 @@ Footer content.
       final sections = parseSections(markdown);
 
       expect(sections.length, equals(3));
-      expect(sections[0].subSections.length, equals(1));
-      expect(sections[1].subSections.length, equals(2));
-      expect(sections[2].subSections.length, equals(1));
+      expect(sections[0].blocks.length, equals(1));
+      expect(sections[1].blocks.length, equals(2));
+      expect(sections[2].blocks.length, equals(1));
 
-      expect(sections[0].subSections[0].content.trim(), 'Header content.');
-      expect(sections[0].subSections[0].columnOptions?.flex, equals(1));
-      expect(sections[0].subSections[0].columnOptions?.align,
+      expect(sections[0].blocks[0].content.trim(), 'Header content.');
+      expect(sections[0].blocks[0].columnOptions?.flex, equals(1));
+      expect(sections[0].blocks[0].columnOptions?.align,
           equals(ContentAlignment.center));
 
-      expect(
-          sections[1].subSections[0].content.trim(), 'Body content column 1.');
-      expect(sections[1].subSections[0].columnOptions?.flex, equals(2));
-      expect(sections[1].subSections[0].columnOptions?.align,
+      expect(sections[1].blocks[0].content.trim(), 'Body content column 1.');
+      expect(sections[1].blocks[0].columnOptions?.flex, equals(2));
+      expect(sections[1].blocks[0].columnOptions?.align,
           equals(ContentAlignment.centerLeft));
 
-      expect(
-          sections[1].subSections[1].content.trim(), 'Body content column 2.');
-      expect(sections[1].subSections[1].columnOptions?.flex, equals(1));
-      expect(sections[1].subSections[1].columnOptions?.align,
+      expect(sections[1].blocks[1].content.trim(), 'Body content column 2.');
+      expect(sections[1].blocks[1].columnOptions?.flex, equals(1));
+      expect(sections[1].blocks[1].columnOptions?.align,
           equals(ContentAlignment.centerRight));
 
-      expect(sections[2].subSections[0].content.trim(), 'Footer content.');
-      expect(sections[2].subSections[0].columnOptions?.flex, equals(1));
-      expect(sections[2].subSections[0].columnOptions?.align,
+      expect(sections[2].blocks[0].content.trim(), 'Footer content.');
+      expect(sections[2].blocks[0].columnOptions?.flex, equals(1));
+      expect(sections[2].blocks[0].columnOptions?.align,
           equals(ContentAlignment.bottomCenter));
     });
   });
@@ -319,18 +307,18 @@ Footer content.
       final sections = parseSections(markdown);
 
       expect(sections.length, equals(3));
-      expect(sections[0].subSections.length, equals(1));
-      expect(sections[1].subSections.length, equals(1));
-      expect(sections[2].subSections.length, equals(1));
+      expect(sections[0].blocks.length, equals(1));
+      expect(sections[1].blocks.length, equals(1));
+      expect(sections[2].blocks.length, equals(1));
 
-      expect(sections[0].subSections[0].content.trim(), 'Header content.');
+      expect(sections[0].blocks[0].content.trim(), 'Header content.');
       expect(sections[0].options?.align, equals(ContentAlignment.center));
 
-      expect(sections[1].subSections[0].content.trim(), 'Body content.');
+      expect(sections[1].blocks[0].content.trim(), 'Body content.');
       expect(sections[1].options?.align, equals(ContentAlignment.topLeft));
-      expect(sections[1].subSections[0].columnOptions?.flex, equals(3));
+      expect(sections[1].blocks[0].columnOptions?.flex, equals(3));
 
-      expect(sections[2].subSections[0].content.trim(), 'Footer content.');
+      expect(sections[2].blocks[0].content.trim(), 'Footer content.');
       expect(sections[2].options?.align, equals(ContentAlignment.bottomRight));
       expect(sections[2].options?.flex, equals(1));
     });
@@ -557,6 +545,6 @@ Footer content.
   });
 }
 
-extension on SubSectionBlockDto {
+extension on BlockDto {
   BlockOptions? get columnOptions => (this as ColumnBlockDto).options;
 }

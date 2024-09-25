@@ -3,10 +3,12 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:mix/mix.dart';
 
+import '../../../superdeck.dart';
+import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/common/helpers/syntax_highlighter.dart';
+import '../../modules/common/helpers/utils.dart';
 import '../../modules/common/styles/style_spec.dart';
 import '../markdown/alert_block_syntax.dart';
-import '../molecules/block_widget.dart';
 import 'cache_image_widget.dart';
 
 class MarkdownViewer extends ImplicitlyAnimatedWidget {
@@ -59,18 +61,15 @@ class _MarkdownBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-      child: MarkdownBody(
-        data: content,
-        extensionSet: md.ExtensionSet.gitHubWeb,
-        builders: _markdownBuilders(spec),
-        paddingBuilders: _markdownPaddingBuilders(spec),
-        checkboxBuilder: _markdownCheckboxBuilder(spec),
-        bulletBuilder: _markdownBulletBuilder(spec),
-        blockSyntaxes: const [AlertBlockSyntax()],
-        styleSheet: spec.toStyle(),
-      ),
+    return MarkdownBody(
+      data: content,
+      extensionSet: md.ExtensionSet.gitHubWeb,
+      builders: _markdownBuilders(spec),
+      paddingBuilders: _markdownPaddingBuilders(spec),
+      checkboxBuilder: _markdownCheckboxBuilder(spec),
+      bulletBuilder: _markdownBulletBuilder(spec),
+      blockSyntaxes: const [AlertBlockSyntax()],
+      styleSheet: spec.toStyle(),
     );
   }
 }
@@ -191,18 +190,20 @@ class ImageElementBuilder extends MarkdownElementBuilder {
     final uri = Uri.parse(element.attributes['src']!);
 
     return Builder(builder: (context) {
-      final size = BlockProvider.of(context).size;
-
-      return ConstrainedBox(
-        constraints: BoxConstraints.tight(size),
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: CacheImage(
-            uri: uri,
-            spec: spec ?? const ImageSpec(),
+      final slideSpec = SlideSpec.of(context);
+      final spacingSize = calculateSpecOffset(slideSpec);
+      return MeasureSizeBuilder(builder: (size) {
+        return ConstrainedBox(
+          constraints: BoxConstraints.tight((size - spacingSize) as Size),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: CacheImage(
+              uri: uri,
+              spec: spec ?? const ImageSpec(),
+            ),
           ),
-        ),
-      );
+        );
+      });
     });
   }
 }

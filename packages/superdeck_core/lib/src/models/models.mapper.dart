@@ -210,24 +210,22 @@ class SectionBlockDtoMapper extends ClassMapperBase<SectionBlockDto> {
   static BlockOptions? _$options(SectionBlockDto v) => v.options;
   static const Field<SectionBlockDto, BlockOptions> _f$options =
       Field('options', _$options, opt: true);
-  static List<SubSectionBlockDto<BlockOptions>> _$subSections(
-          SectionBlockDto v) =>
-      v.subSections;
+  static List<SubSectionBlockDto<BlockOptions>> _$blocks(SectionBlockDto v) =>
+      v.blocks;
   static const Field<SectionBlockDto, List<SubSectionBlockDto<BlockOptions>>>
-      _f$subSections = Field('subSections', _$subSections,
-          key: 'sub_sections', opt: true, def: const []);
+      _f$blocks = Field('blocks', _$blocks, opt: true, def: const []);
 
   @override
   final MappableFields<SectionBlockDto> fields = const {
     #options: _f$options,
-    #subSections: _f$subSections,
+    #blocks: _f$blocks,
   };
   @override
   final bool ignoreNull = true;
 
   static SectionBlockDto _instantiate(DecodingData data) {
     return SectionBlockDto(
-        options: data.dec(_f$options), subSections: data.dec(_f$subSections));
+        options: data.dec(_f$options), blocks: data.dec(_f$blocks));
   }
 
   @override
@@ -288,10 +286,9 @@ abstract class SectionBlockDtoCopyWith<$R, $In extends SectionBlockDto, $Out>
       $R,
       SubSectionBlockDto<BlockOptions>,
       SubSectionBlockDtoCopyWith<$R, SubSectionBlockDto<BlockOptions>,
-          SubSectionBlockDto<BlockOptions>, BlockOptions>> get subSections;
+          SubSectionBlockDto<BlockOptions>, BlockOptions>> get blocks;
   $R call(
-      {BlockOptions? options,
-      List<SubSectionBlockDto<BlockOptions>>? subSections});
+      {BlockOptions? options, List<SubSectionBlockDto<BlockOptions>>? blocks});
   SectionBlockDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -311,22 +308,24 @@ class _SectionBlockDtoCopyWithImpl<$R, $Out>
   ListCopyWith<
       $R,
       SubSectionBlockDto<BlockOptions>,
-      SubSectionBlockDtoCopyWith<$R, SubSectionBlockDto<BlockOptions>,
-          SubSectionBlockDto<BlockOptions>, BlockOptions>> get subSections =>
-      ListCopyWith($value.subSections, (v, t) => v.copyWith.$chain(t),
-          (v) => call(subSections: v));
+      SubSectionBlockDtoCopyWith<
+          $R,
+          SubSectionBlockDto<BlockOptions>,
+          SubSectionBlockDto<BlockOptions>,
+          BlockOptions>> get blocks => ListCopyWith(
+      $value.blocks, (v, t) => v.copyWith.$chain(t), (v) => call(blocks: v));
   @override
   $R call(
           {Object? options = $none,
-          List<SubSectionBlockDto<BlockOptions>>? subSections}) =>
+          List<SubSectionBlockDto<BlockOptions>>? blocks}) =>
       $apply(FieldCopyWithData({
         if (options != $none) #options: options,
-        if (subSections != null) #subSections: subSections
+        if (blocks != null) #blocks: blocks
       }));
   @override
   SectionBlockDto $make(CopyWithData data) => SectionBlockDto(
       options: data.get(#options, or: $value.options),
-      subSections: data.get(#subSections, or: $value.subSections));
+      blocks: data.get(#blocks, or: $value.blocks));
 
   @override
   SectionBlockDtoCopyWith<$R2, SectionBlockDto, $Out2> $chain<$R2, $Out2>(

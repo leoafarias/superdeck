@@ -19,11 +19,11 @@ abstract class BlockDto<T extends BlockOptions> {
 )
 class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
   final BlockOptions? options;
-  final List<SubSectionBlockDto> subSections;
+  final List<SubSectionBlockDto> blocks;
 
   SectionBlockDto({
     this.options,
-    this.subSections = const [],
+    this.blocks = const [],
   });
 
   static SectionBlockDto parse(Map<String, dynamic> map) {
@@ -36,8 +36,8 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
   });
 
   SectionBlockDto appendLine(String content) {
-    final lastPart = subSections.lastOrNull;
-    final subSectionsCopy = [...subSections];
+    final lastPart = blocks.lastOrNull;
+    final subSectionsCopy = [...blocks];
 
     if (lastPart is ColumnBlockDto) {
       subSectionsCopy.last = lastPart.copyWith(
@@ -49,11 +49,11 @@ class SectionBlockDto extends BlockDto with SectionBlockDtoMappable {
       ));
     }
 
-    return copyWith(subSections: subSectionsCopy);
+    return copyWith(blocks: subSectionsCopy);
   }
 
   SectionBlockDto appendSubsection(SubSectionBlockDto part) {
-    return copyWith(subSections: [...subSections, part]);
+    return copyWith(blocks: [...blocks, part]);
   }
 }
 

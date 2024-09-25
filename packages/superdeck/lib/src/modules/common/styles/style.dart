@@ -21,16 +21,16 @@ class DeckStyle {
     final containers = [
       // $.blockSpacing.padding.horizontal(40),
       $.slideContainer.chain..color.transparent(),
-      $.contentContainer.padding.all(40),
+      $.contentBlock.padding.all(40),
       $.section.image(
-        $.contentContainer.padding.all(0),
+        $.contentBlock.padding.all(0),
       ),
       $.debug(
         $.slideContainer.border.color(Colors.yellow),
-        $.contentContainer.border.color(Colors.blue),
+        $.contentBlock.border.color(Colors.blue),
       ),
       $.section.gist(
-        $.contentContainer.chain
+        $.contentBlock.chain
           ..margin.all(0)
           ..padding.all(0),
       ),
@@ -195,33 +195,33 @@ extension SlideSpecUtilityX<T extends Attribute> on SlideSpecUtility<T> {
     );
   }
 
-  PaddingModifierSpecUtility<T> get blockSpacing {
-    return PaddingModifierSpecUtility((value) {
-      final modifier = WidgetModifiersDataDto([value]);
-      return only(
-        h1: TextSpecAttribute(modifiers: modifier),
-        h2: TextSpecAttribute(modifiers: modifier),
-        h3: TextSpecAttribute(modifiers: modifier),
-        h4: TextSpecAttribute(modifiers: modifier),
-        h5: TextSpecAttribute(modifiers: modifier),
-        h6: TextSpecAttribute(modifiers: modifier),
-        p: TextSpecAttribute(modifiers: modifier),
-        list: MarkdownListSpecAttribute(
-          bullet: TextSpecAttribute(modifiers: modifier),
-        ),
-        blockquote: MarkdownBlockquoteSpecAttribute(
-          modifiers: modifier,
-        ),
-        image: ImageSpecAttribute(modifiers: modifier),
-        code: MarkdownCodeblockSpecAttribute(
-          modifiers: modifier,
-        ),
-        table: MarkdownTableSpecAttribute(
-          modifiers: modifier,
-        ),
-      );
-    });
-  }
+  // PaddingModifierSpecUtility<T> get blockSpacing {
+  //   return PaddingModifierSpecUtility((value) {
+  //     final modifier = WidgetModifiersDataDto([value]);
+  //     return only(
+  //       h1: TextSpecAttribute(modifiers: modifier),
+  //       h2: TextSpecAttribute(modifiers: modifier),
+  //       h3: TextSpecAttribute(modifiers: modifier),
+  //       h4: TextSpecAttribute(modifiers: modifier),
+  //       h5: TextSpecAttribute(modifiers: modifier),
+  //       h6: TextSpecAttribute(modifiers: modifier),
+  //       p: TextSpecAttribute(modifiers: modifier),
+  //       list: MarkdownListSpecAttribute(
+  //         bullet: TextSpecAttribute(modifiers: modifier),
+  //       ),
+  //       blockquote: MarkdownBlockquoteSpecAttribute(
+  //         modifiers: modifier,
+  //       ),
+  //       image: ImageSpecAttribute(modifiers: modifier),
+  //       code: MarkdownCodeblockSpecAttribute(
+  //         modifiers: modifier,
+  //       ),
+  //       table: MarkdownTableSpecAttribute(
+  //         modifiers: modifier,
+  //       ),
+  //     );
+  //   });
+  // }
 
   SlideSpecSectionsUtility get section => const SlideSpecSectionsUtility();
 

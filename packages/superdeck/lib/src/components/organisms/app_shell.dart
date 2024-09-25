@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
-import '../molecules/block_widget.dart';
 import '../molecules/bottom_bar.dart';
 import '../molecules/scaled_app.dart';
 import 'note_panel.dart';
@@ -131,10 +129,7 @@ class SplitView extends HookWidget {
                 child: const SdBottomBar(),
               ),
               body: Center(
-                child: BlockProvider(
-                  data: const BlockConfiguration(size: kResolution),
-                  child: ScaledWidget(child: child),
-                ),
+                child: ScaledWidget(child: child),
               ),
             ),
           )

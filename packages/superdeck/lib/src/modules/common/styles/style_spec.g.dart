@@ -2035,7 +2035,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     BoxDecoration? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
     BoxSpec? slideContainer,
-    BoxSpec? contentContainer,
+    BoxSpec? contentBlock,
     ImageSpec? image,
     MarkdownAlertSpec? alert,
     WidgetModifiersData? modifiers,
@@ -2064,7 +2064,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
           horizontalRuleDecoration ?? _$this.horizontalRuleDecoration,
       textScaleFactor: textScaleFactor ?? _$this.textScaleFactor,
       slideContainer: slideContainer ?? _$this.slideContainer,
-      contentContainer: contentContainer ?? _$this.contentContainer,
+      contentBlock: contentBlock ?? _$this.contentBlock,
       image: image ?? _$this.image,
       alert: alert ?? _$this.alert,
       modifiers: modifiers ?? _$this.modifiers,
@@ -2086,7 +2086,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// - [TextSpec.lerp] for [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [p].
   /// - [MixHelpers.lerpTextStyle] for [link] and [a] and [em] and [strong] and [del] and [img].
   /// - [BoxDecoration.lerp] for [horizontalRuleDecoration].
-  /// - [BoxSpec.lerp] for [slideContainer] and [contentContainer].
+  /// - [BoxSpec.lerp] for [slideContainer] and [contentBlock].
   /// - [ImageSpec.lerp] for [image].
 
   /// For [blockquote] and [list] and [table] and [checkbox] and [code] and [textScaleFactor] and [alert] and [modifiers] and [animated], the interpolation is performed using a step function.
@@ -2123,7 +2123,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
           _$this.horizontalRuleDecoration, other.horizontalRuleDecoration, t),
       textScaleFactor: t < 0.5 ? _$this.textScaleFactor : other.textScaleFactor,
       slideContainer: _$this.slideContainer.lerp(other.slideContainer, t),
-      contentContainer: _$this.contentContainer.lerp(other.contentContainer, t),
+      contentBlock: _$this.contentBlock.lerp(other.contentBlock, t),
       image: _$this.image.lerp(other.image, t),
       alert: _$this.alert.lerp(other.alert, t),
       modifiers: other.modifiers,
@@ -2158,7 +2158,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.horizontalRuleDecoration,
         _$this.textScaleFactor,
         _$this.slideContainer,
-        _$this.contentContainer,
+        _$this.contentBlock,
         _$this.image,
         _$this.alert,
         _$this.modifiers,
@@ -2197,7 +2197,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   final BoxDecorationDto? horizontalRuleDecoration;
   final TextScaler? textScaleFactor;
   final BoxSpecAttribute? slideContainer;
-  final BoxSpecAttribute? contentContainer;
+  final BoxSpecAttribute? contentBlock;
   final ImageSpecAttribute? image;
   final MarkdownAlertSpecAttribute? alert;
 
@@ -2223,7 +2223,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.horizontalRuleDecoration,
     this.textScaleFactor,
     this.slideContainer,
-    this.contentContainer,
+    this.contentBlock,
     this.image,
     this.alert,
     super.modifiers,
@@ -2262,7 +2262,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       horizontalRuleDecoration: horizontalRuleDecoration?.resolve(mix),
       textScaleFactor: textScaleFactor,
       slideContainer: slideContainer?.resolve(mix),
-      contentContainer: contentContainer?.resolve(mix),
+      contentBlock: contentBlock?.resolve(mix),
       image: image?.resolve(mix),
       alert: alert?.resolve(mix),
       modifiers: modifiers?.resolve(mix),
@@ -2307,8 +2307,8 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       textScaleFactor: other.textScaleFactor ?? textScaleFactor,
       slideContainer:
           slideContainer?.merge(other.slideContainer) ?? other.slideContainer,
-      contentContainer: contentContainer?.merge(other.contentContainer) ??
-          other.contentContainer,
+      contentBlock:
+          contentBlock?.merge(other.contentBlock) ?? other.contentBlock,
       image: image?.merge(other.image) ?? other.image,
       alert: alert?.merge(other.alert) ?? other.alert,
       modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
@@ -2343,7 +2343,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         horizontalRuleDecoration,
         textScaleFactor,
         slideContainer,
-        contentContainer,
+        contentBlock,
         image,
         alert,
         modifiers,
@@ -2423,9 +2423,8 @@ class SlideSpecUtility<T extends Attribute>
   /// Utility for defining [SlideSpecAttribute.slideContainer]
   late final slideContainer = BoxSpecUtility((v) => only(slideContainer: v));
 
-  /// Utility for defining [SlideSpecAttribute.contentContainer]
-  late final contentContainer =
-      BoxSpecUtility((v) => only(contentContainer: v));
+  /// Utility for defining [SlideSpecAttribute.contentBlock]
+  late final contentBlock = BoxSpecUtility((v) => only(contentBlock: v));
 
   /// Utility for defining [SlideSpecAttribute.image]
   late final image = ImageSpecUtility((v) => only(image: v));
@@ -2471,7 +2470,7 @@ class SlideSpecUtility<T extends Attribute>
     BoxDecorationDto? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
     BoxSpecAttribute? slideContainer,
-    BoxSpecAttribute? contentContainer,
+    BoxSpecAttribute? contentBlock,
     ImageSpecAttribute? image,
     MarkdownAlertSpecAttribute? alert,
     WidgetModifiersDataDto? modifiers,
@@ -2499,7 +2498,7 @@ class SlideSpecUtility<T extends Attribute>
       horizontalRuleDecoration: horizontalRuleDecoration,
       textScaleFactor: textScaleFactor,
       slideContainer: slideContainer,
-      contentContainer: contentContainer,
+      contentBlock: contentBlock,
       image: image,
       alert: alert,
       modifiers: modifiers,
