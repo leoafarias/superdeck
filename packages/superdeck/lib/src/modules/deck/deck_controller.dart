@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
 import '../common/helpers/async_value.dart';
@@ -17,8 +18,8 @@ class DeckController extends ChangeNotifier {
   FixedSlidePart? _header;
   FixedSlidePart? _footer;
   SlidePart? _background;
-  late List<SlideConfiguration> _slides;
-  late List<SlideAsset> _assets;
+  late List<SlideConfiguration> _slides = [];
+  late List<SlideAsset> _assets = [];
 
   AsyncValue<ReferenceDto> asyncData = const AsyncValue.loading();
 
@@ -36,12 +37,10 @@ class DeckController extends ChangeNotifier {
     SlidePart? background,
   })  : _footer = footer,
         _header = header,
-        _background = background {
-    _styles = styles;
-
-    _baseStyle = baseStyle;
-    _widgets = widgets;
-
+        _background = background,
+        _styles = styles,
+        _baseStyle = baseStyle,
+        _widgets = widgets {
     loadReferences();
 
     _referenceService.listen(loadReferences);
@@ -99,10 +98,6 @@ class DeckController extends ChangeNotifier {
     return headerHeight + footerHeight;
   }
 
-  SlidePart? get header => _header;
-
-  SlidePart? get footer => _footer;
-
   static DeckController of(BuildContext context) {
     final provider =
         context.dependOnInheritedWidgetOfExactType<DeckControllerProvider>();
@@ -119,15 +114,13 @@ class DeckController extends ChangeNotifier {
   bool get hasError => asyncData.hasError;
 
   /// Whether reference data has been successfully loaded.
-  bool get hasData => asyncData.hasValue;
+  bool get hasData => _slides.isNotEmpty;
 
   /// The list of slides in the loaded reference data.
   List<SlideConfiguration> get slides => _slides;
 
   /// The list of assets in the loaded reference data.
   List<SlideAsset> get assets => _assets;
-
-  SlideConfiguration getSlide(int index) => slides[index];
 
   /// Retrieves the [Style] registered with the given [name].
   ///

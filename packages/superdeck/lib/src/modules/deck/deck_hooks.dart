@@ -1,6 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../navigation/navigation_hooks.dart';
 import '../slide/slide_configuration.dart';
 import 'deck_controller.dart';
 
@@ -21,7 +22,8 @@ List<SlideConfiguration> useSlides() {
   return _useSelectController((controller) => controller.slides);
 }
 
-SlideConfiguration useSlideConfiguration(int index) {
+SlideConfiguration useCurrentSlide() {
+  final index = useCurrentSlideIndex();
   return _useSelectController((controller) => controller.slides[index]);
 }
 

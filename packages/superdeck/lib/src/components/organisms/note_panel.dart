@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../modules/slide/slide_configuration.dart';
+import '../../modules/deck/deck_hooks.dart';
 
-class NotePanel extends StatelessWidget {
+class NotePanel extends HookWidget {
   const NotePanel({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final slide = SlideConfiguration.of(context);
+    final slide = useCurrentSlide();
 
     final notes =
         slide.notes.isEmpty ? [SlideNote(content: 'No notes')] : slide.notes;

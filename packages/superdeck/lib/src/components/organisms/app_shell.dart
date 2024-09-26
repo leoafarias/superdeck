@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../../../superdeck.dart';
 import '../../modules/common/helpers/hooks.dart';
-import '../../modules/deck/deck_hooks.dart';
 import '../../modules/navigation/navigation_hooks.dart';
 import '../molecules/bottom_bar.dart';
 import '../molecules/scaled_app.dart';
@@ -74,13 +72,6 @@ class SplitView extends HookWidget {
   Widget build(BuildContext context) {
     final isPresenterMenuOpen = useIsPresenterMenuOpen();
     final navigationActions = useNavigationActions();
-    final slideIndex = useCurrentSlideIndex();
-    final slides = useSlides();
-
-    final activeConfiguration = useMemoized(
-      () => slides[slideIndex],
-      [slideIndex, slides],
-    );
 
     final bottomAnimation = useAnimationController(
       duration: _duration,
@@ -95,56 +86,53 @@ class SplitView extends HookWidget {
       }
     }, [isPresenterMenuOpen]);
 
-    return SlideConfigurationProvider(
-      configuration: activeConfiguration,
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 9, 9, 9),
-        key: kScaffoldKey,
-        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-        floatingActionButton: !isPresenterMenuOpen
-            ? IconButton(
-                onPressed: navigationActions.openPresenterMenu,
-                icon: const Icon(Icons.menu),
-              )
-            : null,
-        body: Row(
-          children: [
-            SizeTransition(
-              axis: Axis.horizontal,
-              sizeFactor: CurvedAnimation(
-                parent: bottomAnimation,
-                curve: Curves.easeInOut,
-              ),
-              child: SizedBox(
-                width: _thumbnailWidth,
-                child: const Column(
-                  children: [
-                    // Expanded(flex: 3, child: ThumbnailPanel()),
-                    Expanded(
-                      flex: 1,
-                      child: NotePanel(),
-                    ),
-                  ],
-                ),
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 9, 9, 9),
+      key: kScaffoldKey,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      floatingActionButton: !isPresenterMenuOpen
+          ? IconButton(
+              onPressed: navigationActions.openPresenterMenu,
+              icon: const Icon(Icons.menu),
+            )
+          : null,
+      body: Row(
+        children: [
+          SizeTransition(
+            axis: Axis.horizontal,
+            sizeFactor: CurvedAnimation(
+              parent: bottomAnimation,
+              curve: Curves.easeInOut,
+            ),
+            child: SizedBox(
+              width: _thumbnailWidth,
+              child: const Column(
+                children: [
+                  // Expanded(flex: 3, child: ThumbnailPanel()),
+                  Expanded(
+                    flex: 1,
+                    child: NotePanel(),
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              child: Scaffold(
-                bottomNavigationBar: SizeTransition(
-                  sizeFactor: CurvedAnimation(
-                    parent: bottomAnimation,
-                    curve: Curves.easeInOut,
-                  ),
-                  axis: Axis.vertical,
-                  child: const SdBottomBar(),
+          ),
+          Expanded(
+            child: Scaffold(
+              bottomNavigationBar: SizeTransition(
+                sizeFactor: CurvedAnimation(
+                  parent: bottomAnimation,
+                  curve: Curves.easeInOut,
                 ),
-                body: Center(
-                  child: ScaledWidget(child: child),
-                ),
+                axis: Axis.vertical,
+                child: const SdBottomBar(),
               ),
-            )
-          ],
-        ),
+              body: Center(
+                child: ScaledWidget(child: child),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

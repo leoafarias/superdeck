@@ -4,133 +4,7 @@
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
-part of 'models.dart';
-
-class SlideAssetMapper extends ClassMapperBase<SlideAsset> {
-  SlideAssetMapper._();
-
-  static SlideAssetMapper? _instance;
-  static SlideAssetMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SlideAssetMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'SlideAsset';
-
-  static String _$path(SlideAsset v) => v.path;
-  static const Field<SlideAsset, String> _f$path = Field('path', _$path);
-  static int _$width(SlideAsset v) => v.width;
-  static const Field<SlideAsset, int> _f$width = Field('width', _$width);
-  static int _$height(SlideAsset v) => v.height;
-  static const Field<SlideAsset, int> _f$height = Field('height', _$height);
-  static String? _$reference(SlideAsset v) => v.reference;
-  static const Field<SlideAsset, String> _f$reference =
-      Field('reference', _$reference);
-
-  @override
-  final MappableFields<SlideAsset> fields = const {
-    #path: _f$path,
-    #width: _f$width,
-    #height: _f$height,
-    #reference: _f$reference,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static SlideAsset _instantiate(DecodingData data) {
-    return SlideAsset(
-        path: data.dec(_f$path),
-        width: data.dec(_f$width),
-        height: data.dec(_f$height),
-        reference: data.dec(_f$reference));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static SlideAsset fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SlideAsset>(map);
-  }
-
-  static SlideAsset fromJson(String json) {
-    return ensureInitialized().decodeJson<SlideAsset>(json);
-  }
-}
-
-mixin SlideAssetMappable {
-  String toJson() {
-    return SlideAssetMapper.ensureInitialized()
-        .encodeJson<SlideAsset>(this as SlideAsset);
-  }
-
-  Map<String, dynamic> toMap() {
-    return SlideAssetMapper.ensureInitialized()
-        .encodeMap<SlideAsset>(this as SlideAsset);
-  }
-
-  SlideAssetCopyWith<SlideAsset, SlideAsset, SlideAsset> get copyWith =>
-      _SlideAssetCopyWithImpl(this as SlideAsset, $identity, $identity);
-  @override
-  String toString() {
-    return SlideAssetMapper.ensureInitialized()
-        .stringifyValue(this as SlideAsset);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return SlideAssetMapper.ensureInitialized()
-        .equalsValue(this as SlideAsset, other);
-  }
-
-  @override
-  int get hashCode {
-    return SlideAssetMapper.ensureInitialized().hashValue(this as SlideAsset);
-  }
-}
-
-extension SlideAssetValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, SlideAsset, $Out> {
-  SlideAssetCopyWith<$R, SlideAsset, $Out> get $asSlideAsset =>
-      $base.as((v, t, t2) => _SlideAssetCopyWithImpl(v, t, t2));
-}
-
-abstract class SlideAssetCopyWith<$R, $In extends SlideAsset, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? path, int? width, int? height, String? reference});
-  SlideAssetCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _SlideAssetCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SlideAsset, $Out>
-    implements SlideAssetCopyWith<$R, SlideAsset, $Out> {
-  _SlideAssetCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<SlideAsset> $mapper =
-      SlideAssetMapper.ensureInitialized();
-  @override
-  $R call({String? path, int? width, int? height, Object? reference = $none}) =>
-      $apply(FieldCopyWithData({
-        if (path != null) #path: path,
-        if (width != null) #width: width,
-        if (height != null) #height: height,
-        if (reference != $none) #reference: reference
-      }));
-  @override
-  SlideAsset $make(CopyWithData data) => SlideAsset(
-      path: data.get(#path, or: $value.path),
-      width: data.get(#width, or: $value.width),
-      height: data.get(#height, or: $value.height),
-      reference: data.get(#reference, or: $value.reference));
-
-  @override
-  SlideAssetCopyWith<$R2, SlideAsset, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SlideAssetCopyWithImpl($value, $cast, t);
-}
+part of 'block_model.dart';
 
 class BlockTypeMapper extends EnumMapper<BlockType> {
   BlockTypeMapper._();
@@ -491,7 +365,7 @@ class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'SectionBlock';
+  final dynamic discriminatorValue = 'section';
   @override
   late final ClassMapperBase superMapper = BlockMapper.ensureInitialized();
 
@@ -625,9 +499,9 @@ class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
   @override
   final String id = 'ContentBlock';
 
-  static String _$content(ContentBlock v) => v.content;
-  static const Field<ContentBlock, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
+  static String? _$_content(ContentBlock v) => v._content;
+  static const Field<ContentBlock, String> _f$_content =
+      Field('_content', _$_content, key: 'content', opt: true);
   static int? _$flex(ContentBlock v) => v.flex;
   static const Field<ContentBlock, int> _f$flex =
       Field('flex', _$flex, opt: true);
@@ -642,7 +516,7 @@ class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
 
   @override
   final MappableFields<ContentBlock> fields = const {
-    #content: _f$content,
+    #_content: _f$_content,
     #flex: _f$flex,
     #align: _f$align,
     #tag: _f$tag,
@@ -713,9 +587,9 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
   static String? _$tag(ColumnBlock v) => v.tag;
   static const Field<ColumnBlock, String> _f$tag =
       Field('tag', _$tag, opt: true);
-  static String _$content(ColumnBlock v) => v.content;
-  static const Field<ColumnBlock, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
+  static String? _$_content(ColumnBlock v) => v._content;
+  static const Field<ColumnBlock, String> _f$_content =
+      Field('_content', _$_content, key: 'content', opt: true);
   static BlockType _$type(ColumnBlock v) => v.type;
   static const Field<ColumnBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
@@ -725,7 +599,7 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
     #flex: _f$flex,
     #align: _f$align,
     #tag: _f$tag,
-    #content: _f$content,
+    #_content: _f$_content,
     #type: _f$type,
   };
   @override
@@ -734,7 +608,7 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
   @override
   final String discriminatorKey = 'type';
   @override
-  final dynamic discriminatorValue = 'column';
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
   @override
   late final ClassMapperBase superMapper =
       ContentBlockMapper.ensureInitialized();
@@ -744,7 +618,7 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
         tag: data.dec(_f$tag),
-        content: data.dec(_f$content));
+        content: data.dec(_f$_content));
   }
 
   @override
@@ -816,19 +690,19 @@ class _ColumnBlockCopyWithImpl<$R, $Out>
           {Object? flex = $none,
           Object? align = $none,
           Object? tag = $none,
-          String? content}) =>
+          Object? content = $none}) =>
       $apply(FieldCopyWithData({
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
         if (tag != $none) #tag: tag,
-        if (content != null) #content: content
+        if (content != $none) #content: content
       }));
   @override
   ColumnBlock $make(CopyWithData data) => ColumnBlock(
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
       tag: data.get(#tag, or: $value.tag),
-      content: data.get(#content, or: $value.content));
+      content: data.get(#content, or: $value._content));
 
   @override
   ColumnBlockCopyWith<$R2, ColumnBlock, $Out2> $chain<$R2, $Out2>(
@@ -867,9 +741,9 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
   static String? _$tag(ImageBlock v) => v.tag;
   static const Field<ImageBlock, String> _f$tag =
       Field('tag', _$tag, opt: true);
-  static String _$content(ImageBlock v) => v.content;
-  static const Field<ImageBlock, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
+  static String? _$_content(ImageBlock v) => v._content;
+  static const Field<ImageBlock, String> _f$_content =
+      Field('_content', _$_content, key: 'content', opt: true);
   static BlockType _$type(ImageBlock v) => v.type;
   static const Field<ImageBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
@@ -881,7 +755,7 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
     #flex: _f$flex,
     #align: _f$align,
     #tag: _f$tag,
-    #content: _f$content,
+    #_content: _f$_content,
     #type: _f$type,
   };
   @override
@@ -902,7 +776,7 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
         tag: data.dec(_f$tag),
-        content: data.dec(_f$content));
+        content: data.dec(_f$_content));
   }
 
   @override
@@ -982,14 +856,14 @@ class _ImageBlockCopyWithImpl<$R, $Out>
           Object? flex = $none,
           Object? align = $none,
           Object? tag = $none,
-          String? content}) =>
+          Object? content = $none}) =>
       $apply(FieldCopyWithData({
         if (src != null) #src: src,
         if (fit != $none) #fit: fit,
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
         if (tag != $none) #tag: tag,
-        if (content != null) #content: content
+        if (content != $none) #content: content
       }));
   @override
   ImageBlock $make(CopyWithData data) => ImageBlock(
@@ -998,7 +872,7 @@ class _ImageBlockCopyWithImpl<$R, $Out>
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
       tag: data.get(#tag, or: $value.tag),
-      content: data.get(#content, or: $value.content));
+      content: data.get(#content, or: $value._content));
 
   @override
   ImageBlockCopyWith<$R2, ImageBlock, $Out2> $chain<$R2, $Out2>(
@@ -1036,9 +910,9 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
   static String? _$tag(WidgetBlock v) => v.tag;
   static const Field<WidgetBlock, String> _f$tag =
       Field('tag', _$tag, opt: true);
-  static String _$content(WidgetBlock v) => v.content;
-  static const Field<WidgetBlock, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
+  static String? _$_content(WidgetBlock v) => v._content;
+  static const Field<WidgetBlock, String> _f$_content =
+      Field('_content', _$_content, key: 'content', opt: true);
   static BlockType _$type(WidgetBlock v) => v.type;
   static const Field<WidgetBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
@@ -1050,7 +924,7 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
     #flex: _f$flex,
     #align: _f$align,
     #tag: _f$tag,
-    #content: _f$content,
+    #_content: _f$_content,
     #type: _f$type,
   };
   @override
@@ -1073,7 +947,7 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
         tag: data.dec(_f$tag),
-        content: data.dec(_f$content));
+        content: data.dec(_f$_content));
   }
 
   @override
@@ -1159,14 +1033,14 @@ class _WidgetBlockCopyWithImpl<$R, $Out>
           Object? flex = $none,
           Object? align = $none,
           Object? tag = $none,
-          String? content}) =>
+          Object? content = $none}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
         if (tag != $none) #tag: tag,
-        if (content != null) #content: content
+        if (content != $none) #content: content
       }));
   @override
   WidgetBlock $make(CopyWithData data) => WidgetBlock(
@@ -1175,7 +1049,7 @@ class _WidgetBlockCopyWithImpl<$R, $Out>
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
       tag: data.get(#tag, or: $value.tag),
-      content: data.get(#content, or: $value.content));
+      content: data.get(#content, or: $value._content));
 
   @override
   WidgetBlockCopyWith<$R2, WidgetBlock, $Out2> $chain<$R2, $Out2>(
@@ -1211,9 +1085,9 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
   static String? _$tag(DartPadBlock v) => v.tag;
   static const Field<DartPadBlock, String> _f$tag =
       Field('tag', _$tag, opt: true);
-  static String _$content(DartPadBlock v) => v.content;
-  static const Field<DartPadBlock, String> _f$content =
-      Field('content', _$content, opt: true, def: '');
+  static String? _$_content(DartPadBlock v) => v._content;
+  static const Field<DartPadBlock, String> _f$_content =
+      Field('_content', _$_content, key: 'content', opt: true);
   static ContentAlignment? _$align(DartPadBlock v) => v.align;
   static const Field<DartPadBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
@@ -1230,7 +1104,7 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
     #theme: _f$theme,
     #flex: _f$flex,
     #tag: _f$tag,
-    #content: _f$content,
+    #_content: _f$_content,
     #align: _f$align,
     #embed: _f$embed,
     #type: _f$type,
@@ -1252,7 +1126,7 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
         theme: data.dec(_f$theme),
         flex: data.dec(_f$flex),
         tag: data.dec(_f$tag),
-        content: data.dec(_f$content),
+        content: data.dec(_f$_content),
         align: data.dec(_f$align),
         embed: data.dec(_f$embed));
   }
@@ -1335,7 +1209,7 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
           Object? theme = $none,
           Object? flex = $none,
           Object? tag = $none,
-          String? content,
+          Object? content = $none,
           Object? align = $none,
           bool? embed}) =>
       $apply(FieldCopyWithData({
@@ -1343,7 +1217,7 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
         if (theme != $none) #theme: theme,
         if (flex != $none) #flex: flex,
         if (tag != $none) #tag: tag,
-        if (content != null) #content: content,
+        if (content != $none) #content: content,
         if (align != $none) #align: align,
         if (embed != null) #embed: embed
       }));
@@ -1353,7 +1227,7 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
       theme: data.get(#theme, or: $value.theme),
       flex: data.get(#flex, or: $value.flex),
       tag: data.get(#tag, or: $value.tag),
-      content: data.get(#content, or: $value.content),
+      content: data.get(#content, or: $value._content),
       align: data.get(#align, or: $value.align),
       embed: data.get(#embed, or: $value.embed));
 
@@ -1361,667 +1235,4 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
   DartPadBlockCopyWith<$R2, DartPadBlock, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _DartPadBlockCopyWithImpl($value, $cast, t);
-}
-
-class SlideOptionsMapper extends ClassMapperBase<SlideOptions> {
-  SlideOptionsMapper._();
-
-  static SlideOptionsMapper? _instance;
-  static SlideOptionsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SlideOptionsMapper._());
-      ConfigMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'SlideOptions';
-
-  static String? _$title(SlideOptions v) => v.title;
-  static const Field<SlideOptions, String> _f$title =
-      Field('title', _$title, opt: true);
-  static String? _$background(SlideOptions v) => v.background;
-  static const Field<SlideOptions, String> _f$background =
-      Field('background', _$background, opt: true);
-  static String? _$style(SlideOptions v) => v.style;
-  static const Field<SlideOptions, String> _f$style =
-      Field('style', _$style, opt: true);
-  static Map<String, Object?> _$args(SlideOptions v) => v.args;
-  static const Field<SlideOptions, Map<String, Object?>> _f$args =
-      Field('args', _$args, opt: true, def: const {});
-
-  @override
-  final MappableFields<SlideOptions> fields = const {
-    #title: _f$title,
-    #background: _f$background,
-    #style: _f$style,
-    #args: _f$args,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final MappingHook hook = const UnmappedPropertiesHook('args');
-  static SlideOptions _instantiate(DecodingData data) {
-    return SlideOptions(
-        title: data.dec(_f$title),
-        background: data.dec(_f$background),
-        style: data.dec(_f$style),
-        args: data.dec(_f$args));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static SlideOptions fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SlideOptions>(map);
-  }
-
-  static SlideOptions fromJson(String json) {
-    return ensureInitialized().decodeJson<SlideOptions>(json);
-  }
-}
-
-mixin SlideOptionsMappable {
-  String toJson() {
-    return SlideOptionsMapper.ensureInitialized()
-        .encodeJson<SlideOptions>(this as SlideOptions);
-  }
-
-  Map<String, dynamic> toMap() {
-    return SlideOptionsMapper.ensureInitialized()
-        .encodeMap<SlideOptions>(this as SlideOptions);
-  }
-
-  SlideOptionsCopyWith<SlideOptions, SlideOptions, SlideOptions> get copyWith =>
-      _SlideOptionsCopyWithImpl(this as SlideOptions, $identity, $identity);
-  @override
-  String toString() {
-    return SlideOptionsMapper.ensureInitialized()
-        .stringifyValue(this as SlideOptions);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return SlideOptionsMapper.ensureInitialized()
-        .equalsValue(this as SlideOptions, other);
-  }
-
-  @override
-  int get hashCode {
-    return SlideOptionsMapper.ensureInitialized()
-        .hashValue(this as SlideOptions);
-  }
-}
-
-extension SlideOptionsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, SlideOptions, $Out> {
-  SlideOptionsCopyWith<$R, SlideOptions, $Out> get $asSlideOptions =>
-      $base.as((v, t, t2) => _SlideOptionsCopyWithImpl(v, t, t2));
-}
-
-abstract class SlideOptionsCopyWith<$R, $In extends SlideOptions, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? background, String? style});
-  SlideOptionsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _SlideOptionsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SlideOptions, $Out>
-    implements SlideOptionsCopyWith<$R, SlideOptions, $Out> {
-  _SlideOptionsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<SlideOptions> $mapper =
-      SlideOptionsMapper.ensureInitialized();
-  @override
-  $R call({Object? background = $none, Object? style = $none}) =>
-      $apply(FieldCopyWithData({
-        if (background != $none) #background: background,
-        if (style != $none) #style: style
-      }));
-  @override
-  SlideOptions $make(CopyWithData data) => SlideOptions(
-      title: data.get(#title, or: $value.title),
-      background: data.get(#background, or: $value.background),
-      style: data.get(#style, or: $value.style),
-      args: data.get(#args, or: $value.args));
-
-  @override
-  SlideOptionsCopyWith<$R2, SlideOptions, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SlideOptionsCopyWithImpl($value, $cast, t);
-}
-
-class ConfigMapper extends ClassMapperBase<Config> {
-  ConfigMapper._();
-
-  static ConfigMapper? _instance;
-  static ConfigMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ConfigMapper._());
-      SlideOptionsMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'Config';
-
-  static String? _$background(Config v) => v.background;
-  static const Field<Config, String> _f$background =
-      Field('background', _$background);
-  static String? _$style(Config v) => v.style;
-  static const Field<Config, String> _f$style = Field('style', _$style);
-  static bool? _$cacheRemoteAssets(Config v) => v.cacheRemoteAssets;
-  static const Field<Config, bool> _f$cacheRemoteAssets = Field(
-      'cacheRemoteAssets', _$cacheRemoteAssets,
-      key: 'cache_remote_assets', opt: true);
-  static String? _$title(Config v) => v.title;
-  static const Field<Config, String> _f$title =
-      Field('title', _$title, mode: FieldMode.member);
-  static Map<String, Object?> _$args(Config v) => v.args;
-  static const Field<Config, Map<String, Object?>> _f$args =
-      Field('args', _$args, mode: FieldMode.member);
-
-  @override
-  final MappableFields<Config> fields = const {
-    #background: _f$background,
-    #style: _f$style,
-    #cacheRemoteAssets: _f$cacheRemoteAssets,
-    #title: _f$title,
-    #args: _f$args,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final MappingHook superHook = const UnmappedPropertiesHook('args');
-
-  static Config _instantiate(DecodingData data) {
-    return Config(
-        background: data.dec(_f$background),
-        style: data.dec(_f$style),
-        cacheRemoteAssets: data.dec(_f$cacheRemoteAssets));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Config fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<Config>(map);
-  }
-
-  static Config fromJson(String json) {
-    return ensureInitialized().decodeJson<Config>(json);
-  }
-}
-
-mixin ConfigMappable {
-  String toJson() {
-    return ConfigMapper.ensureInitialized().encodeJson<Config>(this as Config);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ConfigMapper.ensureInitialized().encodeMap<Config>(this as Config);
-  }
-
-  ConfigCopyWith<Config, Config, Config> get copyWith =>
-      _ConfigCopyWithImpl(this as Config, $identity, $identity);
-  @override
-  String toString() {
-    return ConfigMapper.ensureInitialized().stringifyValue(this as Config);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return ConfigMapper.ensureInitialized().equalsValue(this as Config, other);
-  }
-
-  @override
-  int get hashCode {
-    return ConfigMapper.ensureInitialized().hashValue(this as Config);
-  }
-}
-
-extension ConfigValueCopy<$R, $Out> on ObjectCopyWith<$R, Config, $Out> {
-  ConfigCopyWith<$R, Config, $Out> get $asConfig =>
-      $base.as((v, t, t2) => _ConfigCopyWithImpl(v, t, t2));
-}
-
-abstract class ConfigCopyWith<$R, $In extends Config, $Out>
-    implements SlideOptionsCopyWith<$R, $In, $Out> {
-  @override
-  $R call({String? background, String? style, bool? cacheRemoteAssets});
-  ConfigCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ConfigCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Config, $Out>
-    implements ConfigCopyWith<$R, Config, $Out> {
-  _ConfigCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Config> $mapper = ConfigMapper.ensureInitialized();
-  @override
-  $R call(
-          {Object? background = $none,
-          Object? style = $none,
-          Object? cacheRemoteAssets = $none}) =>
-      $apply(FieldCopyWithData({
-        if (background != $none) #background: background,
-        if (style != $none) #style: style,
-        if (cacheRemoteAssets != $none) #cacheRemoteAssets: cacheRemoteAssets
-      }));
-  @override
-  Config $make(CopyWithData data) => Config(
-      background: data.get(#background, or: $value.background),
-      style: data.get(#style, or: $value.style),
-      cacheRemoteAssets:
-          data.get(#cacheRemoteAssets, or: $value.cacheRemoteAssets));
-
-  @override
-  ConfigCopyWith<$R2, Config, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _ConfigCopyWithImpl($value, $cast, t);
-}
-
-class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {
-  ReferenceDtoMapper._();
-
-  static ReferenceDtoMapper? _instance;
-  static ReferenceDtoMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = ReferenceDtoMapper._());
-      ConfigMapper.ensureInitialized();
-      SlideMapper.ensureInitialized();
-      SlideAssetMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'ReferenceDto';
-
-  static Config _$config(ReferenceDto v) => v.config;
-  static const Field<ReferenceDto, Config> _f$config =
-      Field('config', _$config);
-  static List<Slide> _$slides(ReferenceDto v) => v.slides;
-  static const Field<ReferenceDto, List<Slide>> _f$slides =
-      Field('slides', _$slides);
-  static List<SlideAsset> _$assets(ReferenceDto v) => v.assets;
-  static const Field<ReferenceDto, List<SlideAsset>> _f$assets =
-      Field('assets', _$assets);
-
-  @override
-  final MappableFields<ReferenceDto> fields = const {
-    #config: _f$config,
-    #slides: _f$slides,
-    #assets: _f$assets,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static ReferenceDto _instantiate(DecodingData data) {
-    return ReferenceDto(
-        config: data.dec(_f$config),
-        slides: data.dec(_f$slides),
-        assets: data.dec(_f$assets));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static ReferenceDto fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<ReferenceDto>(map);
-  }
-
-  static ReferenceDto fromJson(String json) {
-    return ensureInitialized().decodeJson<ReferenceDto>(json);
-  }
-}
-
-mixin ReferenceDtoMappable {
-  String toJson() {
-    return ReferenceDtoMapper.ensureInitialized()
-        .encodeJson<ReferenceDto>(this as ReferenceDto);
-  }
-
-  Map<String, dynamic> toMap() {
-    return ReferenceDtoMapper.ensureInitialized()
-        .encodeMap<ReferenceDto>(this as ReferenceDto);
-  }
-
-  ReferenceDtoCopyWith<ReferenceDto, ReferenceDto, ReferenceDto> get copyWith =>
-      _ReferenceDtoCopyWithImpl(this as ReferenceDto, $identity, $identity);
-  @override
-  String toString() {
-    return ReferenceDtoMapper.ensureInitialized()
-        .stringifyValue(this as ReferenceDto);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return ReferenceDtoMapper.ensureInitialized()
-        .equalsValue(this as ReferenceDto, other);
-  }
-
-  @override
-  int get hashCode {
-    return ReferenceDtoMapper.ensureInitialized()
-        .hashValue(this as ReferenceDto);
-  }
-}
-
-extension ReferenceDtoValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, ReferenceDto, $Out> {
-  ReferenceDtoCopyWith<$R, ReferenceDto, $Out> get $asReferenceDto =>
-      $base.as((v, t, t2) => _ReferenceDtoCopyWithImpl(v, t, t2));
-}
-
-abstract class ReferenceDtoCopyWith<$R, $In extends ReferenceDto, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  ConfigCopyWith<$R, Config, Config> get config;
-  ListCopyWith<$R, Slide, SlideCopyWith<$R, Slide, Slide>> get slides;
-  ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
-      get assets;
-  $R call({Config? config, List<Slide>? slides, List<SlideAsset>? assets});
-  ReferenceDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _ReferenceDtoCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, ReferenceDto, $Out>
-    implements ReferenceDtoCopyWith<$R, ReferenceDto, $Out> {
-  _ReferenceDtoCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<ReferenceDto> $mapper =
-      ReferenceDtoMapper.ensureInitialized();
-  @override
-  ConfigCopyWith<$R, Config, Config> get config =>
-      $value.config.copyWith.$chain((v) => call(config: v));
-  @override
-  ListCopyWith<$R, Slide, SlideCopyWith<$R, Slide, Slide>> get slides =>
-      ListCopyWith($value.slides, (v, t) => v.copyWith.$chain(t),
-          (v) => call(slides: v));
-  @override
-  ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
-      get assets => ListCopyWith($value.assets, (v, t) => v.copyWith.$chain(t),
-          (v) => call(assets: v));
-  @override
-  $R call({Config? config, List<Slide>? slides, List<SlideAsset>? assets}) =>
-      $apply(FieldCopyWithData({
-        if (config != null) #config: config,
-        if (slides != null) #slides: slides,
-        if (assets != null) #assets: assets
-      }));
-  @override
-  ReferenceDto $make(CopyWithData data) => ReferenceDto(
-      config: data.get(#config, or: $value.config),
-      slides: data.get(#slides, or: $value.slides),
-      assets: data.get(#assets, or: $value.assets));
-
-  @override
-  ReferenceDtoCopyWith<$R2, ReferenceDto, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _ReferenceDtoCopyWithImpl($value, $cast, t);
-}
-
-class SlideMapper extends ClassMapperBase<Slide> {
-  SlideMapper._();
-
-  static SlideMapper? _instance;
-  static SlideMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SlideMapper._());
-      SlideOptionsMapper.ensureInitialized();
-      SectionBlockMapper.ensureInitialized();
-      SlideNoteMapper.ensureInitialized();
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'Slide';
-
-  static String _$key(Slide v) => v.key;
-  static const Field<Slide, String> _f$key = Field('key', _$key);
-  static SlideOptions? _$options(Slide v) => v.options;
-  static const Field<Slide, SlideOptions> _f$options =
-      Field('options', _$options, opt: true);
-  static String _$markdown(Slide v) => v.markdown;
-  static const Field<Slide, String> _f$markdown = Field('markdown', _$markdown);
-  static List<SectionBlock> _$sections(Slide v) => v.sections;
-  static const Field<Slide, List<SectionBlock>> _f$sections =
-      Field('sections', _$sections, opt: true, def: const []);
-  static List<SlideNote> _$notes(Slide v) => v.notes;
-  static const Field<Slide, List<SlideNote>> _f$notes =
-      Field('notes', _$notes, opt: true, def: const []);
-
-  @override
-  final MappableFields<Slide> fields = const {
-    #key: _f$key,
-    #options: _f$options,
-    #markdown: _f$markdown,
-    #sections: _f$sections,
-    #notes: _f$notes,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static Slide _instantiate(DecodingData data) {
-    return Slide(
-        key: data.dec(_f$key),
-        options: data.dec(_f$options),
-        markdown: data.dec(_f$markdown),
-        sections: data.dec(_f$sections),
-        notes: data.dec(_f$notes));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static Slide fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<Slide>(map);
-  }
-
-  static Slide fromJson(String json) {
-    return ensureInitialized().decodeJson<Slide>(json);
-  }
-}
-
-mixin SlideMappable {
-  String toJson() {
-    return SlideMapper.ensureInitialized().encodeJson<Slide>(this as Slide);
-  }
-
-  Map<String, dynamic> toMap() {
-    return SlideMapper.ensureInitialized().encodeMap<Slide>(this as Slide);
-  }
-
-  SlideCopyWith<Slide, Slide, Slide> get copyWith =>
-      _SlideCopyWithImpl(this as Slide, $identity, $identity);
-  @override
-  String toString() {
-    return SlideMapper.ensureInitialized().stringifyValue(this as Slide);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return SlideMapper.ensureInitialized().equalsValue(this as Slide, other);
-  }
-
-  @override
-  int get hashCode {
-    return SlideMapper.ensureInitialized().hashValue(this as Slide);
-  }
-}
-
-extension SlideValueCopy<$R, $Out> on ObjectCopyWith<$R, Slide, $Out> {
-  SlideCopyWith<$R, Slide, $Out> get $asSlide =>
-      $base.as((v, t, t2) => _SlideCopyWithImpl(v, t, t2));
-}
-
-abstract class SlideCopyWith<$R, $In extends Slide, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options;
-  ListCopyWith<$R, SectionBlock,
-      SectionBlockCopyWith<$R, SectionBlock, SectionBlock>> get sections;
-  ListCopyWith<$R, SlideNote, SlideNoteCopyWith<$R, SlideNote, SlideNote>>
-      get notes;
-  $R call(
-      {String? key,
-      SlideOptions? options,
-      String? markdown,
-      List<SectionBlock>? sections,
-      List<SlideNote>? notes});
-  SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
-    implements SlideCopyWith<$R, Slide, $Out> {
-  _SlideCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<Slide> $mapper = SlideMapper.ensureInitialized();
-  @override
-  SlideOptionsCopyWith<$R, SlideOptions, SlideOptions>? get options =>
-      $value.options?.copyWith.$chain((v) => call(options: v));
-  @override
-  ListCopyWith<$R, SectionBlock,
-          SectionBlockCopyWith<$R, SectionBlock, SectionBlock>>
-      get sections => ListCopyWith($value.sections,
-          (v, t) => v.copyWith.$chain(t), (v) => call(sections: v));
-  @override
-  ListCopyWith<$R, SlideNote, SlideNoteCopyWith<$R, SlideNote, SlideNote>>
-      get notes => ListCopyWith(
-          $value.notes, (v, t) => v.copyWith.$chain(t), (v) => call(notes: v));
-  @override
-  $R call(
-          {String? key,
-          Object? options = $none,
-          String? markdown,
-          List<SectionBlock>? sections,
-          List<SlideNote>? notes}) =>
-      $apply(FieldCopyWithData({
-        if (key != null) #key: key,
-        if (options != $none) #options: options,
-        if (markdown != null) #markdown: markdown,
-        if (sections != null) #sections: sections,
-        if (notes != null) #notes: notes
-      }));
-  @override
-  Slide $make(CopyWithData data) => Slide(
-      key: data.get(#key, or: $value.key),
-      options: data.get(#options, or: $value.options),
-      markdown: data.get(#markdown, or: $value.markdown),
-      sections: data.get(#sections, or: $value.sections),
-      notes: data.get(#notes, or: $value.notes));
-
-  @override
-  SlideCopyWith<$R2, Slide, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-      _SlideCopyWithImpl($value, $cast, t);
-}
-
-class SlideNoteMapper extends ClassMapperBase<SlideNote> {
-  SlideNoteMapper._();
-
-  static SlideNoteMapper? _instance;
-  static SlideNoteMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals.use(_instance = SlideNoteMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'SlideNote';
-
-  static String _$content(SlideNote v) => v.content;
-  static const Field<SlideNote, String> _f$content =
-      Field('content', _$content);
-
-  @override
-  final MappableFields<SlideNote> fields = const {
-    #content: _f$content,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  static SlideNote _instantiate(DecodingData data) {
-    return SlideNote(content: data.dec(_f$content));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static SlideNote fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<SlideNote>(map);
-  }
-
-  static SlideNote fromJson(String json) {
-    return ensureInitialized().decodeJson<SlideNote>(json);
-  }
-}
-
-mixin SlideNoteMappable {
-  String toJson() {
-    return SlideNoteMapper.ensureInitialized()
-        .encodeJson<SlideNote>(this as SlideNote);
-  }
-
-  Map<String, dynamic> toMap() {
-    return SlideNoteMapper.ensureInitialized()
-        .encodeMap<SlideNote>(this as SlideNote);
-  }
-
-  SlideNoteCopyWith<SlideNote, SlideNote, SlideNote> get copyWith =>
-      _SlideNoteCopyWithImpl(this as SlideNote, $identity, $identity);
-  @override
-  String toString() {
-    return SlideNoteMapper.ensureInitialized()
-        .stringifyValue(this as SlideNote);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return SlideNoteMapper.ensureInitialized()
-        .equalsValue(this as SlideNote, other);
-  }
-
-  @override
-  int get hashCode {
-    return SlideNoteMapper.ensureInitialized().hashValue(this as SlideNote);
-  }
-}
-
-extension SlideNoteValueCopy<$R, $Out> on ObjectCopyWith<$R, SlideNote, $Out> {
-  SlideNoteCopyWith<$R, SlideNote, $Out> get $asSlideNote =>
-      $base.as((v, t, t2) => _SlideNoteCopyWithImpl(v, t, t2));
-}
-
-abstract class SlideNoteCopyWith<$R, $In extends SlideNote, $Out>
-    implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? content});
-  SlideNoteCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
-}
-
-class _SlideNoteCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, SlideNote, $Out>
-    implements SlideNoteCopyWith<$R, SlideNote, $Out> {
-  _SlideNoteCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<SlideNote> $mapper =
-      SlideNoteMapper.ensureInitialized();
-  @override
-  $R call({String? content}) =>
-      $apply(FieldCopyWithData({if (content != null) #content: content}));
-  @override
-  SlideNote $make(CopyWithData data) =>
-      SlideNote(content: data.get(#content, or: $value.content));
-
-  @override
-  SlideNoteCopyWith<$R2, SlideNote, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _SlideNoteCopyWithImpl($value, $cast, t);
 }

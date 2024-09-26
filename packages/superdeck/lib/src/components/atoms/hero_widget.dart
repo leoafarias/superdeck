@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
+
+import '../../modules/common/helpers/controller.dart';
+import '../molecules/block_widget.dart';
 
 class BlockHero extends StatelessWidget {
   const BlockHero({
@@ -8,7 +10,7 @@ class BlockHero extends StatelessWidget {
     required this.child,
   });
 
-  final String tag;
+  final Object tag;
   final Widget child;
 
   @override
@@ -23,7 +25,6 @@ class BlockHero extends StatelessWidget {
       ) {
         return _flightShuttleBlockProvider(
           animation,
-          context,
           fromHeroContext,
           toHeroContext,
           child,
@@ -37,24 +38,27 @@ class BlockHero extends StatelessWidget {
 
 Widget _flightShuttleBlockProvider(
   Animation<double> animation,
-  BuildContext context,
   BuildContext fromHeroContext,
   BuildContext toHeroContext,
   Widget child,
 ) {
-  // final toSize = BlockConfiguration.of(toHeroContext).size;
-  // final fromSize = BlockConfiguration.of(fromHeroContext).size;
-
-  return Mix(
-    data: Mix.of(context),
-    child: AnimatedBuilder(
+  final fromConfiguration = Provider.ofType<BlockController>(fromHeroContext);
+  final toConfiguration = Provider.ofType<BlockController>(toHeroContext);
+  return AnimatedBuilder(
       animation: animation,
-      child: child,
-      builder: (context, child) {
-        // final interpolatedSize = Size.lerp(fromSize, toSize, animation.value)!;
+      builder: (context, _) {
+        final interpolatedSize = Size.lerp(
+            fromConfiguration.size, toConfiguration.size, animation.value)!;
+        final interpolatedSpec =
+            fromConfiguration.spec.lerp(toConfiguration.spec, animation.value);
 
-        return child!;
-      },
-    ),
-  );
+        return Provider(
+          controller: BlockController(
+            size: interpolatedSize,
+            spec: interpolatedSpec,
+            isCapturing: true,
+          ),
+          child: child,
+        );
+      });
 }

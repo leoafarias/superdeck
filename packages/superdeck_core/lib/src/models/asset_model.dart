@@ -1,4 +1,7 @@
-part of 'models.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:path/path.dart' as p;
+
+part 'asset_model.mapper.dart';
 
 @MappableClass()
 final class SlideAsset with SlideAssetMappable {

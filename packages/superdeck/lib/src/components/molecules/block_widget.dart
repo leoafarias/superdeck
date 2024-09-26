@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
+import '../../modules/common/helpers/controller.dart';
 import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/common/helpers/utils.dart';
 import '../atoms/cache_image_widget.dart';
@@ -9,105 +11,32 @@ import '../atoms/hero_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
-class BlockWidget<T extends ContentBlock> extends StatelessWidget {
-  const BlockWidget(this.block, {super.key});
-
-  final T block;
-
-  @override
-  Widget build(context) {
-    final configuration = SlideConfiguration.of(context);
-    return SpecBuilder(
-        style: configuration.style.applyVariant(
-          Variant(block.type.name),
-        ),
-        builder: (context) {
-          final spec = SlideSpec.of(context);
-          return MeasureSizeBuilder(
-            builder: (size) {
-              return BlockConfiguration(
-                size: getSizeWithoutSpacing(size, spec),
-                spec: spec,
-                data: block,
-                isCapturing: SlideConfiguration.isCapturing(context),
-                child: switch (block) {
-                  (ImageBlock p) => _ImageBlockWidget(p),
-                  (ColumnBlock p) => _ColumnBlockWidget(p),
-                  (WidgetBlock p) => _WidgetBlockWidget(p),
-                  (DartPadBlock p) => _DartPadBlockWidget(p),
-                  (SectionBlock p) => SectionBlockWidget(p),
-                },
-              );
-            },
-          );
-        });
-  }
-}
-
-enum _BlockConfigurationAspect {
-  size,
-  spec,
-}
-
-class BlockConfiguration<T extends Block>
-    extends InheritedModel<_BlockConfigurationAspect> {
-  const BlockConfiguration({
+class BlockController extends Controller {
+  BlockController({
     required this.size,
-    super.key,
     required this.spec,
-    required this.data,
-    required super.child,
     required this.isCapturing,
   });
 
   final Size size;
-  final T data;
+
   final SlideSpec spec;
   final bool isCapturing;
-
-  static BlockConfiguration of(BuildContext context,
-      [_BlockConfigurationAspect? aspect]) {
-    return InheritedModel.inheritFrom<BlockConfiguration>(
-      context,
-      aspect: aspect,
-    )!;
-  }
-
-  static Size sizeOf(BuildContext context) {
-    return of(context, _BlockConfigurationAspect.size).size;
-  }
-
-  static SlideSpec specOf(BuildContext context) {
-    return of(context, _BlockConfigurationAspect.spec).spec;
-  }
-
-  @override
-  bool updateShouldNotify(BlockConfiguration oldWidget) {
-    return size != oldWidget.size;
-  }
-
-  @override
-  bool updateShouldNotifyDependent(
-    BlockConfiguration oldWidget,
-    Set<Object> dependencies,
-  ) {
-    return dependencies.contains(_BlockConfigurationAspect.size) &&
-        size != oldWidget.size;
-  }
 }
 
-class SectionBlockWidget extends _BlockWidget<SectionBlock> {
-  const SectionBlockWidget(super.block, {super.key});
+class SectionBlockWidget extends StatelessWidget {
+  const SectionBlockWidget(this.section, {super.key});
+
+  final SectionBlock section;
 
   @override
-  Widget build(context, configuration) {
-    final options = configuration.data;
-    final sectionFlex = options.flex ?? 1;
-    final alignment = options.align ?? ContentAlignment.center;
+  Widget build(context) {
+    final sectionFlex = section.flex ?? 1;
+    final alignment = section.align ?? ContentAlignment.center;
 
     final (mainAxis, crossAxis) = toRowAlignment(alignment);
 
-    final children = options.blocks.map((block) {
+    final children = section.blocks.map((block) {
       final alignment = toAlignment(
         block.align,
       );
@@ -116,7 +45,12 @@ class SectionBlockWidget extends _BlockWidget<SectionBlock> {
         flex: flex,
         child: Align(
           alignment: alignment,
-          child: BlockWidget(block),
+          child: switch (block) {
+            ColumnBlock block => _ColumnBlockWidget(block),
+            ImageBlock block => _ImageBlockWidget(block),
+            WidgetBlock block => _WidgetBlockWidget(block),
+            DartPadBlock block => _DartPadBlockWidget(block),
+          },
         ),
       );
     }).toList();
@@ -132,18 +66,18 @@ class SectionBlockWidget extends _BlockWidget<SectionBlock> {
   }
 }
 
-abstract class _BlockWidget<T extends Block> extends StatefulWidget {
+abstract class _BlockWidget<T extends ContentBlock> extends StatefulWidget {
   const _BlockWidget(this.block, {super.key});
 
   final T block;
 
-  Widget build(BuildContext context, BlockConfiguration<T> configuration);
+  Widget build(BuildContext context, BlockController configuration);
 
   @override
-  State<_BlockWidget> createState() => _BlockWidgetState();
+  State<_BlockWidget<T>> createState() => _BlockWidgetState<T>();
 }
 
-class _BlockWidgetState extends State<_BlockWidget> {
+class _BlockWidgetState<T extends ContentBlock> extends State<_BlockWidget<T>> {
   @override
   Widget build(context) {
     final configuration = SlideConfiguration.of(context);
@@ -152,16 +86,17 @@ class _BlockWidgetState extends State<_BlockWidget> {
         Variant(widget.block.type.name),
       ),
       builder: (context) {
-        final spec = SlideSpec.of(context);
         return MeasureSizeBuilder(
           builder: (size) {
-            return BlockConfiguration(
+            final spec = SlideSpec.of(context);
+            final configuration = BlockController(
               size: getSizeWithoutSpacing(size, spec),
               spec: spec,
-              data: widget.block,
               isCapturing: SlideConfiguration.isCapturing(context),
+            );
+            return Provider(
+              controller: configuration,
               child: Builder(builder: (context) {
-                final configuration = BlockConfiguration.of(context);
                 return widget.build(context, configuration);
               }),
             );
@@ -178,13 +113,12 @@ class _ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
   @override
   Widget build(context, configuration) {
     final isCapturing = configuration.isCapturing;
-    final options = configuration.data;
 
     final content = block.content;
-    final alignment = options.align ?? ContentAlignment.center;
-    final hasTag = options.tag != null;
+    final alignment = block.align ?? ContentAlignment.center;
+    final tag = block.tag;
 
-    final spec = BlockConfiguration.specOf(context);
+    final spec = configuration.spec;
 
     Widget child = spec.contentBlock(
       child: MarkdownViewer(
@@ -201,9 +135,9 @@ class _ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
       ],
     );
 
-    if (hasTag) {
+    if (tag != null) {
       child = BlockHero(
-        tag: options.tag!,
+        tag: tag,
         child: child,
       );
     }
@@ -228,7 +162,7 @@ class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
 
   @override
   Widget build(context, configuration) {
-    final options = configuration.data;
+    final options = block;
     final tag = options.tag;
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
@@ -252,16 +186,15 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
 
   @override
   Widget build(context, configuration) {
-    final options = configuration.data;
     final controller = DeckController.of(context);
 
-    final widgetBuilder = controller.getWidget(options.name);
+    final widgetBuilder = controller.getWidget(block.name);
 
     if (widgetBuilder == null) {
       return Container(
         color: Colors.red,
         child: Center(
-          child: Text('Widget not found: ${options.type}'),
+          child: Text('Widget not found: ${block.type}'),
         ),
       );
     }
@@ -269,10 +202,10 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
     return Builder(
       builder: (context) {
         try {
-          final widget = widgetBuilder(context, options);
-          if (options.tag != null) {
+          final widget = widgetBuilder(context, block);
+          if (block.tag != null) {
             return BlockHero(
-              tag: options.tag!,
+              tag: configuration,
               child: Container(child: widget),
             );
           }
@@ -282,7 +215,7 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
           return Container(
             color: Colors.red,
             child: Center(
-              child: Text('Error building widget: ${options.type}\n$e'),
+              child: Text('Error building widget: ${block.type}\n$e'),
             ),
           );
         }

@@ -4,7 +4,6 @@ import 'package:superdeck/src/components/atoms/slide_view.dart';
 import 'package:superdeck/src/modules/common/styles/style.dart';
 import 'package:superdeck/src/modules/deck/deck_controller.dart';
 import 'package:superdeck/src/modules/slide/slide_configuration.dart';
-import 'package:superdeck/src/modules/thumbnail/slide_capture_provider.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 extension WidgetTesterX on WidgetTester {
@@ -25,7 +24,8 @@ extension WidgetTesterX on WidgetTester {
       widgets: widgets,
     );
     return pumpWithScaffold(
-      SnapshotProvider(
+      SlideConfigurationProvider(
+        configuration: slide,
         isCapturing: isSnapshot,
         child: DeckControllerProvider(
           controller: controller,

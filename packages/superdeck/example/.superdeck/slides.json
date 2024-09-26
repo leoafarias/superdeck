@@ -13,13 +13,12 @@
               "type": "column"
             },
             {
-              "content": "\n![structured_output](https://picsum.photos/800/300)",
-              "options": {
-                "tag": "image"
-              },
+              "tag": "image",
+              "content": "![structured_output](https://picsum.photos/800/300)",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -36,13 +35,12 @@
               "type": "column"
             },
             {
-              "content": "\n![structured_output](https://picsum.photos/800/1400)",
-              "options": {
-                "tag": "image"
-              },
+              "tag": "image",
+              "content": "![structured_output](https://picsum.photos/800/1400)",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -53,19 +51,16 @@
       "markdown": "{@section flex: 2}\n{@column\n  align: center\n  tag: heading\n}\n# Generative UI\n# with Flutter",
       "sections": [
         {
-          "options": {
-            "flex": 2
-          },
           "blocks": [
             {
-              "content": "\n# Generative UI\n# with Flutter",
-              "options": {
-                "align": "center",
-                "tag": "heading"
-              },
+              "align": "center",
+              "tag": "heading",
+              "content": "# Generative UI\n# with Flutter",
               "type": "column"
             }
-          ]
+          ],
+          "flex": 2,
+          "type": "section"
         }
       ],
       "notes": []
@@ -78,20 +73,17 @@
         {
           "blocks": [
             {
-              "content": "\n\n#### Leo Farias\n@leoafarias\n\n",
-              "options": {
-                "align": "center_right"
-              },
+              "align": "center_right",
+              "content": "#### Leo Farias\n@leoafarias\n\n",
               "type": "column"
             },
             {
-              "content": "\n\n- Founder/CEO/CTO\n- Open Source Contributor\n- Flutter & Dart GDE\n- Passionate about UI/UX/DX",
-              "options": {
-                "align": "center_left"
-              },
+              "align": "center_left",
+              "content": "- Founder/CEO/CTO\n- Open Source Contributor\n- Flutter & Dart GDE\n- Passionate about UI/UX/DX",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -104,24 +96,20 @@
         {
           "blocks": [
             {
-              "content": "\n",
-              "options": null,
-              "type": "column"
-            },
-            {
-              "content": "\n> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.\n",
-              "options": {
-                "flex": 2,
-                "align": "center_left"
-              },
-              "type": "column"
-            },
-            {
               "content": "",
-              "options": null,
+              "type": "column"
+            },
+            {
+              "flex": 2,
+              "align": "center_left",
+              "content": "> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.\n",
+              "type": "column"
+            },
+            {
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -134,26 +122,22 @@
         {
           "blocks": [
             {
-              "content": "\n### Generative UI",
-              "options": {
-                "flex": 2,
-                "align": "center_right"
-              },
+              "flex": 2,
+              "align": "center_right",
+              "content": "### Generative UI",
               "type": "column"
             },
             {
-              "content": "\n## VS",
-              "options": null,
+              "content": "## VS",
               "type": "column"
             },
             {
-              "content": "\n### AI Assisted Code Generation",
-              "options": {
-                "flex": 2
-              },
+              "flex": 2,
+              "content": "### AI Assisted Code Generation",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -170,11 +154,11 @@
               "type": "column"
             },
             {
-              "content": "\n\n- LLMs are great at generating content based on context\n- GUIs are great at providing structured, interactive interfaces for user input and navigation",
-              "options": null,
+              "content": "- LLMs are great at generating content based on context\n- GUIs are great at providing structured, interactive interfaces for user input and navigation",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -190,7 +174,8 @@
               "content": "# LLM ❤️ GUI",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -203,24 +188,19 @@
         {
           "blocks": [
             {
-              "content": "",
-              "options": null,
               "type": "column"
             },
             {
-              "content": "\nCreates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.\n",
-              "options": {
-                "flex": 2,
-                "align": "center"
-              },
+              "flex": 2,
+              "align": "center",
+              "content": "Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.\n",
               "type": "column"
             },
             {
-              "content": "",
-              "options": null,
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -236,7 +216,8 @@
               "content": "### Benefits of UI over Chat\n\n- More intuitive and user-friendly, especially for complex tasks\n- Faster feedback loop between users and LLMs\n- Enhances efficiency and interaction",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -249,19 +230,16 @@
         {
           "blocks": [
             {
-              "content": "\n### Flutter is Well-Suited <br>for Generative UI\nBuilt for any screen: Ideal for generating<br>adaptive UIs across devices and platforms.",
-              "options": {
-                "flex": 3,
-                "align": "center"
-              },
+              "flex": 3,
+              "align": "center",
+              "content": "### Flutter is Well-Suited <br>for Generative UI\nBuilt for any screen: Ideal for generating<br>adaptive UIs across devices and platforms.",
               "type": "column"
             },
             {
-              "content": "",
-              "options": null,
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -278,13 +256,12 @@
               "type": "column"
             },
             {
-              "content": "\n![structured_output](assets/structured_output.png)",
-              "options": {
-                "tag": "image"
-              },
+              "tag": "image",
+              "content": "![structured_output](assets/structured_output.png)",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -297,16 +274,15 @@
         {
           "blocks": [
             {
-              "content": "\n\n### Structured Output\n",
-              "options": null,
+              "content": "### Structured Output\n",
               "type": "column"
             },
             {
-              "content": "\n```dart\nfinal schema = Schema.array(\n  description: 'List of recipes',\n  items: Schema.object(\n    properties: {\n      'recipeName': Schema.string(\n        description: 'Name of the recipe.',\n        nullable: false,\n      ),\n    },\n    requiredProperties: ['recipeName'],\n  ),\n);\n```",
-              "options": null,
+              "content": "```dart\nfinal schema = Schema.array(\n  description: 'List of recipes',\n  items: Schema.object(\n    properties: {\n      'recipeName': Schema.string(\n        description: 'Name of the recipe.',\n        nullable: false,\n      ),\n    },\n    requiredProperties: ['recipeName'],\n  ),\n);\n```",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -317,13 +293,13 @@
       "markdown": "{@section}\n```dart\n\nfinal model = GenerativeModel(\n  model: 'gemini-1.5-pro',\n  apiKey: apiKey,\n  generationConfig: GenerationConfig(\n    responseMimeType: 'application/json',\n    responseSchema: schema,\n  ),\n);\n\nfinal prompt = 'List a few popular cookie recipes.';\nfinal response = await model.generateContent([Content.text(prompt)]);\n\n```",
       "sections": [
         {
-          "options": null,
           "blocks": [
             {
               "content": "```dart\n\nfinal model = GenerativeModel(\n  model: 'gemini-1.5-pro',\n  apiKey: apiKey,\n  generationConfig: GenerationConfig(\n    responseMimeType: 'application/json',\n    responseSchema: schema,\n  ),\n);\n\nfinal prompt = 'List a few popular cookie recipes.';\nfinal response = await model.generateContent([Content.text(prompt)]);\n\n```",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -336,11 +312,11 @@
         {
           "blocks": [
             {
-              "content": "\n### Color Palette Generator\n\nGenerate a color palette based on a given text.\n\n- Name of the palette\n- Font family\n- Font color\n- Color for each corner of the palette",
-              "options": null,
+              "content": "### Color Palette Generator\n\nGenerate a color palette based on a given text.\n\n- Name of the palette\n- Font family\n- Font color\n- Color for each corner of the palette",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -353,11 +329,11 @@
         {
           "blocks": [
             {
-              "content": "\n```dart\nfinal schema = Schema.object(properties: {\n  'name': Schema.string(\n    description:\n        'The text content to display on color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'font': Schema.enumString(\n    enumValues: ColorPaletteFontFamily.enumString,\n    description: 'The font to use for the poster text.',\n    nullable: false,\n  ),\n  'fontColor': Schema.string(\n    description: 'The hex color value of the poster text. Format: #FF0000',\n    nullable: false,\n  ),\n  'topLeftColor': Schema.string(\n    description:\n        'The hex color value top left corner of color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'topRightColor': Schema.string(\n    description:\n        'The hex color value top right corner of color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'bottomLeftColor': Schema.string(\n    description:\n        'The hex color value bottom left corner of color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'bottomRightColor': Schema.string(\n    description:\n        'The hex color value bottom right corner of color palette. Format: #FF0000',\n    nullable: false,\n  )\n}, requiredProperties: [\n  'name',\n  'font',\n  'fontColor',\n  'topLeftColor',\n  'topRightColor',\n  'bottomLeftColor',\n  'bottomRightColor',\n]);\n\n```",
-              "options": null,
+              "content": "```dart\nfinal schema = Schema.object(properties: {\n  'name': Schema.string(\n    description:\n        'The text content to display on color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'font': Schema.enumString(\n    enumValues: ColorPaletteFontFamily.enumString,\n    description: 'The font to use for the poster text.',\n    nullable: false,\n  ),\n  'fontColor': Schema.string(\n    description: 'The hex color value of the poster text. Format: #FF0000',\n    nullable: false,\n  ),\n  'topLeftColor': Schema.string(\n    description:\n        'The hex color value top left corner of color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'topRightColor': Schema.string(\n    description:\n        'The hex color value top right corner of color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'bottomLeftColor': Schema.string(\n    description:\n        'The hex color value bottom left corner of color palette. Format: #FF0000',\n    nullable: false,\n  ),\n  'bottomRightColor': Schema.string(\n    description:\n        'The hex color value bottom right corner of color palette. Format: #FF0000',\n    nullable: false,\n  )\n}, requiredProperties: [\n  'name',\n  'font',\n  'fontColor',\n  'topLeftColor',\n  'topRightColor',\n  'bottomLeftColor',\n  'bottomRightColor',\n]);\n\n```",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -372,21 +348,18 @@
         {
           "blocks": [
             {
-              "options": {
-                "name": "colorPalette",
-                "type": "schema",
-                "prompts": [
-                  "tropical",
-                  "vibrant",
-                  "pastel",
-                  "chocolatey pink unicorn",
-                  "cyberpunk"
-                ]
-              },
-              "content": "",
-              "type": "widget"
+              "name": "colorPalette",
+              "type": "schema",
+              "prompts": [
+                "tropical",
+                "vibrant",
+                "pastel",
+                "chocolatey pink unicorn",
+                "cyberpunk"
+              ]
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -401,21 +374,18 @@
         {
           "blocks": [
             {
-              "options": {
-                "name": "colorPalette",
-                "type": "widget",
-                "prompts": [
-                  "tropical",
-                  "vibrant",
-                  "pastel",
-                  "chocolatey pink unicorn",
-                  "cyberpunk"
-                ]
-              },
-              "content": "",
-              "type": "widget"
+              "name": "colorPalette",
+              "type": "widget",
+              "prompts": [
+                "tropical",
+                "vibrant",
+                "pastel",
+                "chocolatey pink unicorn",
+                "cyberpunk"
+              ]
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -431,7 +401,8 @@
               "content": "## LLMs Orchestrate APIs",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -444,15 +415,14 @@
         {
           "blocks": [
             {
-              "content": "\n\n### Gemini Function Calling\nThe Function Calling feature is in Beta release\n\n\n![llm tools](assets/llm_tools.png){.cover}",
-              "options": {
-                "flex": 3,
-                "align": "center_right",
-                "tag": "heading"
-              },
+              "flex": 3,
+              "align": "center_right",
+              "tag": "heading",
+              "content": "### Gemini Function Calling\nThe Function Calling feature is in Beta release\n\n\n![llm tools](assets/llm_tools.png){.cover}",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -467,22 +437,19 @@
         {
           "blocks": [
             {
-              "options": {
-                "name": "lightControl",
-                "type": "schema",
-                "prompts": [
-                  "Dim the lights by 20",
-                  "Increase by 35",
-                  "Turn off the lights",
-                  "Set it to 80",
-                  "Lower by half",
-                  "Max brightness"
-                ]
-              },
-              "content": "",
-              "type": "widget"
+              "name": "lightControl",
+              "type": "schema",
+              "prompts": [
+                "Dim the lights by 20",
+                "Increase by 35",
+                "Turn off the lights",
+                "Set it to 80",
+                "Lower by half",
+                "Max brightness"
+              ]
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -495,23 +462,20 @@
         {
           "blocks": [
             {
-              "content": "\n\n### User Interaction\nNatural Language way to interact with an LLM\n",
-              "options": {
-                "flex": 2,
-                "align": "bottom_right",
-                "tag": "heading"
-              },
+              "flex": 2,
+              "align": "bottom_right",
+              "tag": "heading",
+              "content": "### User Interaction\nNatural Language way to interact with an LLM\n",
               "type": "column"
             },
             {
-              "content": "\n![llm response](assets/llm_interaction.png)",
-              "options": {
-                "flex": 4,
-                "tag": "image"
-              },
+              "flex": 4,
+              "tag": "image",
+              "content": "![llm response](assets/llm_interaction.png)",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -524,22 +488,19 @@
         {
           "blocks": [
             {
-              "content": "\n### Widget Response\n",
-              "options": {
-                "align": "center_left",
-                "tag": "heading"
-              },
+              "align": "center_left",
+              "tag": "heading",
+              "content": "### Widget Response\n",
               "type": "column"
             },
             {
-              "content": "\n![widget_response](assets/widget_response.png)",
-              "options": {
-                "flex": 3,
-                "tag": "image"
-              },
+              "flex": 3,
+              "tag": "image",
+              "content": "![widget_response](assets/widget_response.png)",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -554,22 +515,19 @@
         {
           "blocks": [
             {
-              "options": {
-                "name": "lightControl",
-                "type": "widget",
-                "prompts": [
-                  "Dim the lights by 20",
-                  "Increase by 35",
-                  "Turn off the lights",
-                  "Set it to 80",
-                  "Lower by half",
-                  "Max brightness"
-                ]
-              },
-              "content": "",
-              "type": "widget"
+              "name": "lightControl",
+              "type": "widget",
+              "prompts": [
+                "Dim the lights by 20",
+                "Increase by 35",
+                "Turn off the lights",
+                "Set it to 80",
+                "Lower by half",
+                "Max brightness"
+              ]
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -585,7 +543,8 @@
               "content": "## What if the tool to use is a widget schema?",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -601,7 +560,8 @@
               "content": "### Experimental\n\n```dart\nfinal schema = Schema.object(properties: {\n  'textFields': Schema.array(\n    description: 'A list of text fields',\n    items: TextFieldSchemaDto.schema,\n    nullable: true,\n  ),\n  'dropdowns': Schema.array(\n    description: 'A list of dropdowns',\n    items: DropdownSchemaDto.schema,\n    nullable: true,\n  ),\n  'colorPickers': Schema.array(\n    description: 'A list of colors pickers',\n    items: ColorPickerDtoSchema.schema,\n    nullable: true,\n  ),\n});\n\n```",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -616,20 +576,17 @@
         {
           "blocks": [
             {
-              "options": {
-                "name": "widgetSchema",
-                "type": "widget",
-                "prompts": [
-                  "Change top colors",
-                  "Change font",
-                  "Change all colors",
-                  "Change everything"
-                ]
-              },
-              "content": "",
-              "type": "widget"
+              "name": "widgetSchema",
+              "type": "widget",
+              "prompts": [
+                "Change top colors",
+                "Change font",
+                "Change all colors",
+                "Change everything"
+              ]
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -645,7 +602,8 @@
               "content": "## The future of UI might be orchestrating user experiences rather than creating it.",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []
@@ -661,7 +619,8 @@
               "content": "### Thank you\n\nLeo Farias\n@leoafarias\n(GitHub, Twitter/X)",
               "type": "column"
             }
-          ]
+          ],
+          "type": "section"
         }
       ],
       "notes": []

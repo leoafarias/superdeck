@@ -8,6 +8,5 @@ export 'package:superdeck/src/modules/common/styles/style_spec.dart';
 export 'package:superdeck/src/modules/deck/deck_controller.dart';
 export 'package:superdeck/src/modules/slide/slide_configuration.dart';
 export 'package:superdeck/src/modules/slide/slide_parts.dart';
-export 'package:superdeck_core/src/models/models.dart';
 
 export 'src/components/organisms/app_shell.dart';

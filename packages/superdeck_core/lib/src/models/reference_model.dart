@@ -1,4 +1,13 @@
-part of 'models.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:superdeck_core/src/models/asset_model.dart';
+import 'package:superdeck_core/src/models/config_model.dart';
+import 'package:superdeck_core/src/models/slide_model.dart';
+import 'package:yaml/yaml.dart' as yaml;
+
+part 'reference_model.mapper.dart';
 
 @MappableClass()
 class ReferenceDto with ReferenceDtoMappable {

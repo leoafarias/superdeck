@@ -2,15 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 void main() {
-  group('ContentOptions', () {
+  group('ColumnBlock', () {
     test('merge returns original instance when other is null', () {
-      const options = Block();
+      const options = ColumnBlock();
       expect(options.merge(null), same(options));
     });
 
     test('merge returns new instance with merged values', () {
-      const options1 = Block(flex: 2, align: ContentAlignment.topLeft);
-      const options2 = Block(align: ContentAlignment.bottomRight);
+      const options1 = ColumnBlock(flex: 2, align: ContentAlignment.topLeft);
+      const options2 = ColumnBlock(align: ContentAlignment.bottomRight);
       final merged = options1.merge(options2);
       expect(merged.flex, options1.flex);
       expect(merged.align, options2.align);
@@ -34,7 +34,7 @@ void main() {
   group('WidgetOptions', () {
     test('constructor sets properties correctly', () {
       const options = WidgetBlock(
-        type: 'MyWidget',
+        name: 'MyWidget',
         args: {'key': 'value'},
         flex: 2,
         align: ContentAlignment.topCenter,

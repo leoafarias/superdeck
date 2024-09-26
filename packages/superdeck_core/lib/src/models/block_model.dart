@@ -1,4 +1,8 @@
-part of 'models.dart';
+import 'package:collection/collection.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:superdeck_core/superdeck_core.dart';
+
+part 'block_model.mapper.dart';
 
 @MappableEnum()
 enum BlockType {
@@ -64,6 +68,7 @@ class NullIfEmptyBlock extends SimpleMapper<Block> {
 }
 
 @MappableClass(
+  discriminatorValue: 'section',
   includeCustomMappers: [NullIfEmptyBlock()],
 )
 class SectionBlock extends Block with SectionBlockMappable {
@@ -82,7 +87,9 @@ class SectionBlock extends Block with SectionBlockMappable {
 
     if (lastPart is ColumnBlock) {
       blocksCopy.last = lastPart.copyWith(
-        content: '${lastPart.content}\n$content',
+        content: lastPart.content.isEmpty
+            ? content
+            : '${lastPart.content}\n$content',
       );
     } else {
       blocksCopy.add(
@@ -111,18 +118,20 @@ class SectionBlock extends Block with SectionBlockMappable {
 
 @MappableClass(discriminatorKey: 'type')
 sealed class ContentBlock extends Block with ContentBlockMappable {
-  final String content;
+  final String? _content;
 
   const ContentBlock({
-    this.content = '',
+    String? content,
     super.flex,
     super.align,
     super.tag,
     required super.type,
-  });
+  }) : _content = content;
+
+  String get content => _content ?? '';
 
   static final schema = Block.schema.extend({
-    'content': Schema.string.required(),
+    'content': Schema.string.optional(),
   });
 
   static final typeSchema = DiscriminatorSchema(
@@ -137,7 +146,7 @@ sealed class ContentBlock extends Block with ContentBlockMappable {
   );
 }
 
-@MappableClass(discriminatorValue: 'column')
+@MappableClass(discriminatorValue: MappableClass.useAsDefault)
 class ColumnBlock extends ContentBlock with ColumnBlockMappable {
   const ColumnBlock({
     super.flex,

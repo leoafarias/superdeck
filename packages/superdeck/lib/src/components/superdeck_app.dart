@@ -10,7 +10,6 @@ import '../modules/common/helpers/routes.dart';
 import '../modules/common/helpers/syntax_highlighter.dart';
 import '../modules/common/helpers/theme.dart';
 import '../modules/navigation/navigation_controller.dart';
-import '../modules/slide/slide_parts.dart';
 import 'atoms/conditional_widget.dart';
 import 'atoms/loading_indicator.dart';
 

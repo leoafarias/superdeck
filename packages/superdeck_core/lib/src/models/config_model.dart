@@ -1,4 +1,9 @@
-part of 'models.dart';
+import 'dart:io';
+
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:superdeck_core/superdeck_core.dart';
+
+part 'config_model.mapper.dart';
 
 @MappableClass(
   hook: UnmappedPropertiesHook('args'),

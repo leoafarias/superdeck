@@ -61,7 +61,7 @@ class DeckReferenceService {
   Future<ReferenceDto> loadReference() async {
     final slidesJson = await loadString(_slideRef.path);
     try {
-      return compute(ReferenceDto.fromJson, slidesJson);
+      return await compute(ReferenceDto.fromJson, slidesJson);
     } catch (e) {
       log('Error loading deck: $e');
       return const ReferenceDto.empty();

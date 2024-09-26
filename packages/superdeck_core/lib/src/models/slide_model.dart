@@ -1,4 +1,12 @@
-part of 'models.dart';
+import 'dart:io';
+
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:path/path.dart' as p;
+import 'package:superdeck_core/src/models/block_model.dart';
+import 'package:superdeck_core/src/models/config_model.dart';
+import 'package:superdeck_core/superdeck_core.dart';
+
+part 'slide_model.mapper.dart';
 
 @MappableClass()
 class Slide with SlideMappable {
