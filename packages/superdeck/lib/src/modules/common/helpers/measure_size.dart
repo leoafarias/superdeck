@@ -25,20 +25,6 @@ class MeasureSizeRenderObject extends RenderProxyBox {
   }
 }
 
-class MeasureSizeBuilder extends StatefulWidget {
-  final Widget Function(Size? size) builder;
-  final Duration duration;
-
-  const MeasureSizeBuilder({
-    super.key,
-    required this.builder,
-    this.duration = Durations.medium1,
-  });
-
-  @override
-  State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
-}
-
 class MeasureSize extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 

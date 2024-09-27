@@ -4,7 +4,6 @@ import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
 import '../../modules/common/helpers/constants.dart';
-import '../../modules/common/helpers/controller.dart';
 import '../../modules/common/helpers/converters.dart';
 import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/common/helpers/utils.dart';
@@ -27,7 +26,7 @@ class BlockController extends Controller {
   SlideSpec _spec;
   ContentBlock _block;
 
-  Size get size => getBlockSpecSizeWithoutSpacing(_size, spec.contentBlock);
+  Size get size => getSizeWithoutSpacing(_size, spec.contentBlock);
 
   set size(Size size) {
     _size = size;
@@ -58,7 +57,6 @@ class SectionBlockWidget extends StatelessWidget {
   Widget build(context) {
     final sectionFlex = section.flex ?? 1;
     final alignment = section.align ?? ContentAlignment.center;
-    final configuration = SlideConfiguration.of(context);
 
     final (mainAxis, crossAxis) = ConverterHelper.toRowAlignment(alignment);
 
@@ -93,14 +91,12 @@ class SectionBlockWidget extends StatelessWidget {
 }
 
 abstract class _BlockWidget<T extends ContentBlock> extends StatefulWidget {
-  const _BlockWidget({
-    required this.block,
-    required this.spec,
+  const _BlockWidget(
+    this.block, {
     super.key,
   });
 
   final T block;
-  final SlideSpec spec;
 
   Widget build(BuildContext context);
 
@@ -109,30 +105,6 @@ abstract class _BlockWidget<T extends ContentBlock> extends StatefulWidget {
 }
 
 class _BlockWidgetState<T extends ContentBlock> extends State<_BlockWidget<T>> {
-  late final BlockController _controller;
-
-  @override
-  @override
-  void initState() {
-    super.initState();
-    _controller = BlockController(
-      size: kResolution,
-      spec: widget.spec,
-      block: widget.block,
-    );
-  }
-
-  @override
-  void didUpdateWidget(oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.block != oldWidget.block) {
-      _controller.block = widget.block;
-    }
-    if (widget.spec != oldWidget.spec) {
-      _controller.spec = widget.spec;
-    }
-  }
-
   @override
   Widget build(context) {
     final configuration = Controller.of<SlideController>(context);
@@ -200,7 +172,7 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
 }
 
 class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
-  const _ImageBlockWidget({required super.block, required super.spec});
+  const _ImageBlockWidget(super.block);
 
   @override
   Widget build(context) {
@@ -218,7 +190,7 @@ class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
 }
 
 class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
-  const _WidgetBlockWidget({required super.block, required super.spec});
+  const _WidgetBlockWidget(super.block);
 
   @override
   Widget build(context) {
@@ -241,7 +213,7 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
           final widget = widgetBuilder(context, block);
           if (block.hero != null) {
             return BlockHero(
-              tag: block.hero!,
+              block: block,
               child: Container(child: widget),
             );
           }
@@ -261,7 +233,7 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
 }
 
 class _DartPadBlockWidget extends _BlockWidget<DartPadBlock> {
-  const _DartPadBlockWidget({required super.block, required super.spec});
+  const _DartPadBlockWidget(super.block);
 
   @override
   Widget build(context) {

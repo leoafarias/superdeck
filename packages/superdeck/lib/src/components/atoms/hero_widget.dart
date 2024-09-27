@@ -63,7 +63,7 @@ Widget markdownFlightBuilder({
         final interpolatedSize = Size.lerp(
             fromConfiguration.size, toConfiguration.size, animation.value)!;
         final interpolatedSpec =
-            toConfiguration.spec.lerp(toConfiguration.spec, animation.value);
+            fromConfiguration.spec.lerp(toConfiguration.spec, animation.value);
         final interpolateAlign = Alignment.lerp(
           ConverterHelper.toAlignment(fromConfiguration.block.align),
           ConverterHelper.toAlignment(toConfiguration.block.align),

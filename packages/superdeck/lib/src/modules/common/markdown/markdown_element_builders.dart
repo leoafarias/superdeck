@@ -4,9 +4,10 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:mix/mix.dart';
 
 import '../../../components/atoms/cache_image_widget.dart';
-import '../../../components/molecules/block_widget.dart';
-import '../helpers/controller.dart';
+import '../helpers/constants.dart';
+import '../helpers/measure_size.dart';
 import '../helpers/syntax_highlighter.dart';
+import '../helpers/utils.dart';
 import '../styles/style_spec.dart';
 import 'alert_block_syntax.dart';
 
@@ -132,8 +133,10 @@ class ImageElementBuilder extends MarkdownElementBuilder {
         cacheKey: Key(uri.toString() + spec.toString()),
         builder: (size) {
           return Builder(builder: (context) {
-            final finalSize =
-                getSizeWithoutSpacing(size ?? kResolution, spec.contentBlock);
+            final finalSize = getSizeWithoutSpacing(
+              size ?? kResolution,
+              spec.contentBlock,
+            );
             return ConstrainedBox(
               constraints: BoxConstraints.tight(finalSize),
               child: FittedBox(
