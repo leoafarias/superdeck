@@ -39,8 +39,9 @@ class BackgroundPart extends SlidePart {
   });
 
   @override
-  Widget build(BuildContext context, configuration) {
-    final controller = DeckController.of(context);
+  Widget build(BuildContext context) {
+    final controller = Controller.of<DeckController>(context);
+    final configuration = Controller.of<SlideController>(context);
     final previousIndex = configuration.slideIndex > 0 &&
             configuration.slideIndex < controller.slides.length - 1
         ? configuration.slideIndex - 1

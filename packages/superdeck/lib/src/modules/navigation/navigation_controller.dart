@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
 import 'package:localstorage/localstorage.dart';
+
+import '../common/helpers/controller.dart';
 
 const _isPresenterMenuOpenKey = 'isPresenterMenuOpen';
 const _showNotesKey = 'showNotes';
 
-class NavigationController extends ChangeNotifier {
+class NavigationController extends Controller {
   late bool isPresenterMenuOpen;
   late bool showNotes;
 
@@ -20,12 +21,6 @@ class NavigationController extends ChangeNotifier {
       _set(_isPresenterMenuOpenKey, isPresenterMenuOpen);
       _set(_showNotesKey, showNotes);
     });
-  }
-
-  static NavigationController of(BuildContext context) {
-    final provider =
-        context.dependOnInheritedWidgetOfExactType<NavigationProvider>();
-    return provider!.controller;
   }
 
   void togglePresenterMenu() {
@@ -56,14 +51,4 @@ class NavigationController extends ChangeNotifier {
   static void _set<T>(String key, T value) {
     localStorage.setItem(key, jsonEncode(value));
   }
-}
-
-class NavigationProvider extends InheritedNotifier<NavigationController> {
-  const NavigationProvider({
-    super.key,
-    required this.controller,
-    required super.child,
-  });
-
-  final NavigationController controller;
 }

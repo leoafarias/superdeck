@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:superdeck/src/components/atoms/slide_view.dart';
+import 'package:superdeck/src/modules/common/helpers/controller.dart';
 import 'package:superdeck/src/modules/common/styles/style.dart';
 import 'package:superdeck/src/modules/deck/deck_controller.dart';
 import 'package:superdeck/src/modules/slide/slide_configuration.dart';
@@ -12,7 +13,7 @@ extension WidgetTesterX on WidgetTester {
   }
 
   Future<void> pumpSlide(
-    SlideConfiguration slide, {
+    SlideController slide, {
     bool isSnapshot = false,
     DeckStyle? style,
     Map<String, WidgetBuilderWithOptions> widgets = const {},
@@ -24,10 +25,9 @@ extension WidgetTesterX on WidgetTester {
       widgets: widgets,
     );
     return pumpWithScaffold(
-      SlideConfigurationProvider(
-        configuration: slide,
-        isCapturing: isSnapshot,
-        child: DeckControllerProvider(
+      Provider(
+        controller: slide,
+        child: Provider(
           controller: controller,
           child: SlideView(slide),
         ),

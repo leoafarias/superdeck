@@ -10,9 +10,10 @@ class HeaderPart extends FixedSlidePart {
   double get height => 0;
 
   @override
-  Widget build(context, configuration) {
-    final slide = configuration;
-    final index = configuration.slideIndex;
+  Widget build(context) {
+    final slide = Controller.of<SlideController>(context);
+
+    final index = slide.slideIndex;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(

@@ -4,9 +4,9 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:mix/mix.dart';
 
 import '../../../components/atoms/cache_image_widget.dart';
-import '../helpers/measure_size.dart';
+import '../../../components/molecules/block_widget.dart';
+import '../helpers/controller.dart';
 import '../helpers/syntax_highlighter.dart';
-import '../helpers/utils.dart';
 import '../styles/style_spec.dart';
 import 'alert_block_syntax.dart';
 
@@ -128,21 +128,24 @@ class ImageElementBuilder extends MarkdownElementBuilder {
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     final uri = Uri.parse(element.attributes['src']!);
 
-    return Builder(builder: (context) {
-      final spacingSize = calculateSpecOffset(spec);
-      return MeasureSizeBuilder(builder: (size) {
-        return ConstrainedBox(
-          constraints: BoxConstraints.tight((size - spacingSize) as Size),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: CacheImage(
-              uri: uri,
-              spec: spec.image,
-            ),
-          ),
-        );
-      });
-    });
+    return MeasureSizeBuilder(
+        cacheKey: Key(uri.toString() + spec.toString()),
+        builder: (size) {
+          return Builder(builder: (context) {
+            final finalSize =
+                getSizeWithoutSpacing(size ?? kResolution, spec.contentBlock);
+            return ConstrainedBox(
+              constraints: BoxConstraints.tight(finalSize),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: CacheImage(
+                  uri: uri,
+                  spec: spec.image,
+                ),
+              ),
+            );
+          });
+        });
   }
 }
 

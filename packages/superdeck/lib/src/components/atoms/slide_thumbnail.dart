@@ -22,7 +22,7 @@ enum _PopMenuAction {
 class SlideThumbnail extends StatefulWidget {
   final VoidCallback onTap;
   final bool selected;
-  final SlideConfiguration slide;
+  final SlideController slide;
   final int page;
 
   const SlideThumbnail({

@@ -10,7 +10,7 @@ class FooterPart extends FixedSlidePart {
   double get height => 0;
 
   @override
-  Widget build(context, configuration) {
+  Widget build(context) {
     return const Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(

@@ -1,22 +1,30 @@
 ---
 ---
+{@column hero: heading}
 ## How can LLMs Understtand Your UI?
 
-{@column tag: image}
+{@column hero: image}
 ![structured_output](https://picsum.photos/800/300)
 
 ---
 ---
-## Another image
-{@column tag: image}
+{@column
+  hero: image
+  flex: 2
+  align: bottom_left
+}
+
 ![structured_output](https://picsum.photos/800/1400)
+
+{@column hero: heading}
+## Another image
 
 ---
 ---
-{@section flex: 2}
+{@section}
 {@column
   align: center
-  tag: heading
+  hero: heading
 }
 # Generative UI
 # with Flutter
@@ -111,7 +119,7 @@ Built for any screen: Ideal for generating<br>adaptive UIs across devices and pl
 ---
 ## How can LLMs Understtand Your UI?
 
-{@column tag: image}
+{@column hero: image}
 ![structured_output](assets/structured_output.png)
 
 ---
@@ -252,7 +260,7 @@ style: 'demo'
 ---
 {@column 
   align: center_right
-  tag: heading
+  hero: heading
   flex: 3
 } 
 
@@ -280,7 +288,7 @@ style: 'demo'
 ---
 {@column 
   align: bottom_right
-  tag: heading
+  hero: heading
   flex: 2
 }
 
@@ -288,7 +296,7 @@ style: 'demo'
 Natural Language way to interact with an LLM
 
 {@column
-  tag: image
+  hero: image
   flex: 4
 }
 ![llm response](assets/llm_interaction.png)
@@ -297,13 +305,13 @@ Natural Language way to interact with an LLM
 ---
 {@column
   align: center_left
-  tag: heading
+  hero: heading
 }
 ### Widget Response
 
 {@column 
   flex: 3
-  tag: image
+  hero: image
 }
 ![widget_response](assets/widget_response.png)
 

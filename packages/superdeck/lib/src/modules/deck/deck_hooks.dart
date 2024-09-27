@@ -1,28 +1,20 @@
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../common/helpers/controller.dart';
 import '../navigation/navigation_hooks.dart';
 import '../slide/slide_configuration.dart';
 import 'deck_controller.dart';
 
-DeckController _useController() {
-  final context = useContext();
-
-  final controller = DeckController.of(context);
-
-  return useListenable(controller);
-}
-
 T _useSelectController<T>(T Function(DeckController) selector) {
-  final controller = _useController();
+  final controller = useController<DeckController>();
   return selector(controller);
 }
 
-List<SlideConfiguration> useSlides() {
+List<SlideController> useSlides() {
   return _useSelectController((controller) => controller.slides);
 }
 
-SlideConfiguration useCurrentSlide() {
+SlideController useCurrentSlide() {
   final index = useCurrentSlideIndex();
   return _useSelectController((controller) => controller.slides[index]);
 }

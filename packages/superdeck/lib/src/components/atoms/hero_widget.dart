@@ -1,16 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/helpers/controller.dart';
+import '../../modules/common/helpers/converters.dart';
+import '../../modules/slide/slide_configuration.dart';
 import '../molecules/block_widget.dart';
 
 class BlockHero extends StatelessWidget {
   const BlockHero({
     super.key,
-    required this.tag,
+    required this.block,
     required this.child,
   });
 
-  final Object tag;
+  final ContentBlock block;
   final Widget child;
 
   @override
@@ -23,42 +28,95 @@ class BlockHero extends StatelessWidget {
         fromHeroContext,
         toHeroContext,
       ) {
-        return _flightShuttleBlockProvider(
-          animation,
-          fromHeroContext,
-          toHeroContext,
-          child,
+        return markdownFlightBuilder(
+          context: context,
+          child: child,
+          animation: animation,
+          flightDirection: flightDirection,
+          fromHeroContext: fromHeroContext,
+          toHeroContext: toHeroContext,
         );
       },
-      tag: tag,
+      tag: block.hero!,
       child: child,
     );
   }
 }
 
-Widget _flightShuttleBlockProvider(
-  Animation<double> animation,
-  BuildContext fromHeroContext,
-  BuildContext toHeroContext,
-  Widget child,
-) {
-  final fromConfiguration = Provider.ofType<BlockController>(fromHeroContext);
-  final toConfiguration = Provider.ofType<BlockController>(toHeroContext);
+Widget markdownFlightBuilder({
+  required BuildContext context,
+  required Widget child,
+  required Animation<double> animation,
+  required HeroFlightDirection flightDirection,
+  required BuildContext fromHeroContext,
+  required BuildContext toHeroContext,
+}) {
+  final fromConfiguration = Controller.of<BlockController>(fromHeroContext);
+  final toConfiguration = Controller.of<BlockController>(toHeroContext);
+
+  final fromSlide = Controller.of<SlideController>(fromHeroContext);
+  final toSlide = Controller.of<SlideController>(toHeroContext);
+
   return AnimatedBuilder(
       animation: animation,
       builder: (context, _) {
         final interpolatedSize = Size.lerp(
             fromConfiguration.size, toConfiguration.size, animation.value)!;
         final interpolatedSpec =
-            fromConfiguration.spec.lerp(toConfiguration.spec, animation.value);
+            toConfiguration.spec.lerp(toConfiguration.spec, animation.value);
+        final interpolateAlign = Alignment.lerp(
+          ConverterHelper.toAlignment(fromConfiguration.block.align),
+          ConverterHelper.toAlignment(toConfiguration.block.align),
+          animation.value,
+        )!;
 
         return Provider(
           controller: BlockController(
             size: interpolatedSize,
             spec: interpolatedSpec,
-            isCapturing: true,
+            block: toConfiguration.block,
           ),
-          child: child,
+          child: Align(
+            alignment: interpolateAlign,
+            child: child,
+          ),
         );
       });
+}
+
+String lerpString(String start, String end, double t) {
+  int maxLength = max(start.length, end.length);
+  StringBuffer result = StringBuffer();
+  Random rnd = Random();
+
+  for (int i = 0; i < maxLength; i++) {
+    double charProgress = (t * maxLength) - i;
+
+    if (charProgress <= 0) {
+      // Use character from the start string
+      if (i < start.length) {
+        result.write(start[i]);
+      } else {
+        result.write(' ');
+      }
+    } else if (charProgress > 0 && charProgress < 1) {
+      // Use a scrambled character
+      result.write(_getRandomCharacter(rnd));
+    } else {
+      // Use character from the end string
+      if (i < end.length) {
+        result.write(end[i]);
+      } else {
+        result.write(' ');
+      }
+    }
+  }
+
+  return result.toString();
+}
+
+String _getRandomCharacter(Random rnd) {
+  const chars =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  return chars[rnd.nextInt(chars.length)];
 }

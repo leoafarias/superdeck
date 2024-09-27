@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
+import '../common/helpers/controller.dart';
 import '../navigation/navigation_controller.dart';
 
 enum SlideCaptureQuality {
@@ -35,7 +36,7 @@ class SlideCaptureService {
 
   Future<Uint8List> generate({
     SlideCaptureQuality quality = SlideCaptureQuality.low,
-    required SlideConfiguration slide,
+    required SlideController slide,
   }) async {
     final queueKey = shortHash(slide.key + quality.name);
     try {
@@ -92,13 +93,13 @@ class SlideCaptureService {
     Size? targetSize,
   }) async {
     try {
-      final controller = DeckController.of(context);
-      final navigation = NavigationController.of(context);
+      final controller = Controller.of<DeckController>(context);
+      final navigation = Controller.of<NavigationController>(context);
       final child = InheritedTheme.captureAll(
           context,
-          NavigationProvider(
+          Provider(
             controller: navigation,
-            child: DeckControllerProvider(
+            child: Provider(
               controller: controller,
               child: MediaQuery(
                 data: MediaQuery.of(context),

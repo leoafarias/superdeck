@@ -14,7 +14,7 @@ class MarkdownViewer extends ImplicitlyAnimatedWidget {
     super.key,
     required this.content,
     required this.spec,
-    required super.duration,
+    super.duration = Durations.medium1,
     super.curve = Curves.linear,
   });
 

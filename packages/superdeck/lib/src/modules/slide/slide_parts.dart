@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'slide_configuration.dart';
-
 abstract class SlidePart extends StatefulWidget {
   const SlidePart({
     super.key,
   });
 
-  Widget build(BuildContext context, SlideConfiguration slide);
+  Widget build(BuildContext context);
 
   @override
   _SlidePartState<SlidePart> createState() => SlidePartState<SlidePart>();
@@ -16,20 +14,16 @@ abstract class SlidePart extends StatefulWidget {
 class SlidePartState<T extends SlidePart> extends _SlidePartState<T> {
   @override
   Widget build(BuildContext context) {
-    final configuration = SlideConfiguration.of(context);
-    return widget.build(context, configuration);
+    return widget.build(context);
   }
 }
 
 class _FixedSlidePartState extends _SlidePartState<FixedSlidePart> {
   @override
   Widget build(BuildContext context) {
-    final configuration = SlideConfiguration.of(context);
     return SizedBox(
       height: widget.height,
-      child: Builder(builder: (context) {
-        return widget.build(context, configuration);
-      }),
+      child: Builder(builder: widget.build),
     );
   }
 }

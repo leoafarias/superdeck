@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../components/molecules/slide_screen.dart';
 import '../common/helpers/constants.dart';
+import '../slide/slide_configuration.dart';
 import '../thumbnail/slide_capture_service.dart';
 
 enum PdfExportStatus {
@@ -28,12 +28,12 @@ class PdfExportController extends ChangeNotifier {
   /// Create a map for keys and GlobalKey for each slide
   Map<String, GlobalKey> _slideKeys = {};
 
-  late final List<Slide> _slides;
+  late final List<SlideController> _slides;
 
   bool get isComplete => _status == PdfExportStatus.complete;
 
   PdfExportController({
-    required List<Slide> slides,
+    required List<SlideController> slides,
     required int initialIndex,
   }) : _slides = slides {
     _slideKeys = {for (var slide in _slides) slide.key: GlobalKey()};
@@ -182,7 +182,7 @@ class PdfExportController extends ChangeNotifier {
 }
 
 PdfExportController usePdfExportController({
-  required List<Slide> slides,
+  required List<SlideController> slides,
   required int slideIndex,
 }) {
   return use(_PdfExportControllerHook(
@@ -197,7 +197,7 @@ class _PdfExportControllerHook extends Hook<PdfExportController> {
     required this.initialSlideIndex,
   });
 
-  final List<Slide> slides;
+  final List<SlideController> slides;
   final int initialSlideIndex;
 
   @override

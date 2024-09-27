@@ -1,65 +1,38 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../common/helpers/controller.dart';
 import 'slide_parts.dart';
 
-class SlideConfiguration extends Slide {
+class SlideController extends Controller {
   final int slideIndex;
-
   final FixedSlidePart? header;
   final FixedSlidePart? footer;
   final SlidePart? background;
-
   final Style style;
+  final Slide slide;
 
-  const SlideConfiguration._({
-    required super.key,
-    required super.options,
-    required super.markdown,
-    required super.sections,
-    required super.notes,
+  SlideController({
     required this.slideIndex,
-    required this.header,
-    required this.footer,
-    required this.background,
+    this.header,
+    this.footer,
+    this.background,
     required this.style,
+    required this.slide,
   });
 
-  factory SlideConfiguration({
-    required Slide slide,
-    required int slideIndex,
-    required Style style,
-    FixedSlidePart? header,
-    FixedSlidePart? footer,
-    SlidePart? background,
-  }) {
-    return SlideConfiguration._(
-      key: slide.key,
-      options: slide.options,
-      markdown: slide.markdown,
-      sections: slide.sections,
-      notes: slide.notes,
-      slideIndex: slideIndex,
-      header: header,
-      footer: footer,
-      background: background,
-      style: style,
-    );
-  }
+  String get key => slide.key;
 
-  static SlideConfigurationProvider _of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<SlideConfigurationProvider>()!;
-  }
+  List<SectionBlock> get sections => slide.sections;
 
-  static SlideConfiguration of(BuildContext context) {
-    return _of(context).configuration;
-  }
+  List<SlideNote> get notes => slide.notes;
 
-  static bool isCapturing(BuildContext context) {
-    return _of(context).isCapturing;
-  }
+  File get thumbnailFile => slide.thumbnailFile;
+
+  SlideOptions? get options => slide.options;
 
   Widget buildHeader() {
     return _PartBuilder(header);
@@ -71,23 +44,6 @@ class SlideConfiguration extends Slide {
 
   Widget buildBackground() {
     return background ?? const SizedBox.shrink();
-  }
-}
-
-class SlideConfigurationProvider extends InheritedWidget {
-  final SlideConfiguration configuration;
-  final bool isCapturing;
-
-  const SlideConfigurationProvider({
-    super.key,
-    required this.configuration,
-    required super.child,
-    this.isCapturing = false,
-  });
-
-  @override
-  bool updateShouldNotify(SlideConfigurationProvider oldWidget) {
-    return configuration != oldWidget.configuration;
   }
 }
 

@@ -3,7 +3,9 @@ import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
+import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/controller.dart';
+import '../../modules/common/helpers/converters.dart';
 import '../../modules/common/helpers/measure_size.dart';
 import '../../modules/common/helpers/utils.dart';
 import '../atoms/cache_image_widget.dart';
@@ -13,15 +15,38 @@ import '../organisms/webview_wrapper.dart';
 
 class BlockController extends Controller {
   BlockController({
-    required this.size,
-    required this.spec,
-    required this.isCapturing,
-  });
+    required Size size,
+    required SlideSpec spec,
+    required ContentBlock block,
+  })  : _size = size,
+        _spec = spec,
+        _block = block;
 
-  final Size size;
+  Size _size;
 
-  final SlideSpec spec;
-  final bool isCapturing;
+  SlideSpec _spec;
+  ContentBlock _block;
+
+  Size get size => getBlockSpecSizeWithoutSpacing(_size, spec.contentBlock);
+
+  set size(Size size) {
+    _size = size;
+    notifyListeners();
+  }
+
+  SlideSpec get spec => _spec;
+
+  ContentBlock get block => _block;
+
+  set spec(SlideSpec spec) {
+    _spec = spec;
+    notifyListeners();
+  }
+
+  set block(ContentBlock block) {
+    _block = block;
+    notifyListeners();
+  }
 }
 
 class SectionBlockWidget extends StatelessWidget {
@@ -33,11 +58,12 @@ class SectionBlockWidget extends StatelessWidget {
   Widget build(context) {
     final sectionFlex = section.flex ?? 1;
     final alignment = section.align ?? ContentAlignment.center;
+    final configuration = SlideConfiguration.of(context);
 
-    final (mainAxis, crossAxis) = toRowAlignment(alignment);
+    final (mainAxis, crossAxis) = ConverterHelper.toRowAlignment(alignment);
 
     final children = section.blocks.map((block) {
-      final alignment = toAlignment(
+      final alignment = ConverterHelper.toAlignment(
         block.align,
       );
       final flex = block.flex ?? 1;
@@ -46,7 +72,7 @@ class SectionBlockWidget extends StatelessWidget {
         child: Align(
           alignment: alignment,
           child: switch (block) {
-            ColumnBlock block => _ColumnBlockWidget(block),
+            ColumnBlock block => ColumnBlockWidget(block),
             ImageBlock block => _ImageBlockWidget(block),
             WidgetBlock block => _WidgetBlockWidget(block),
             DartPadBlock block => _DartPadBlockWidget(block),
@@ -67,89 +93,105 @@ class SectionBlockWidget extends StatelessWidget {
 }
 
 abstract class _BlockWidget<T extends ContentBlock> extends StatefulWidget {
-  const _BlockWidget(this.block, {super.key});
+  const _BlockWidget({
+    required this.block,
+    required this.spec,
+    super.key,
+  });
 
   final T block;
+  final SlideSpec spec;
 
-  Widget build(BuildContext context, BlockController configuration);
+  Widget build(BuildContext context);
 
   @override
   State<_BlockWidget<T>> createState() => _BlockWidgetState<T>();
 }
 
 class _BlockWidgetState<T extends ContentBlock> extends State<_BlockWidget<T>> {
+  late final BlockController _controller;
+
+  @override
+  @override
+  void initState() {
+    super.initState();
+    _controller = BlockController(
+      size: kResolution,
+      spec: widget.spec,
+      block: widget.block,
+    );
+  }
+
+  @override
+  void didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.block != oldWidget.block) {
+      _controller.block = widget.block;
+    }
+    if (widget.spec != oldWidget.spec) {
+      _controller.spec = widget.spec;
+    }
+  }
+
   @override
   Widget build(context) {
-    final configuration = SlideConfiguration.of(context);
+    final configuration = Controller.of<SlideController>(context);
     return SpecBuilder(
-      style: configuration.style.applyVariant(
-        Variant(widget.block.type.name),
-      ),
-      builder: (context) {
-        return MeasureSizeBuilder(
-          builder: (size) {
-            final spec = SlideSpec.of(context);
-            final configuration = BlockController(
-              size: getSizeWithoutSpacing(size, spec),
-              spec: spec,
-              isCapturing: SlideConfiguration.isCapturing(context),
-            );
-            return Provider(
-              controller: configuration,
-              child: Builder(builder: (context) {
-                return widget.build(context, configuration);
-              }),
-            );
-          },
-        );
-      },
-    );
+        style: configuration.style.applyVariant(
+          Variant(widget.block.type.name),
+        ),
+        builder: (context) {
+          final spec = SlideSpec.of(context);
+          return spec.contentBlock(
+            child: MeasureSizeBuilder(
+                cacheKey: Key('${widget.block}-$spec'),
+                builder: (size) {
+                  return Provider(
+                    controller: BlockController(
+                      size: size ?? kResolution,
+                      spec: spec,
+                      block: widget.block,
+                    ),
+                    child: widget.build(context),
+                  );
+                }),
+          );
+        });
   }
 }
 
-class _ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
-  const _ColumnBlockWidget(super.block);
+class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
+  const ColumnBlockWidget(super.block, {super.key});
 
   @override
-  Widget build(context, configuration) {
-    final isCapturing = configuration.isCapturing;
-
+  Widget build(context) {
     final content = block.content;
     final alignment = block.align ?? ContentAlignment.center;
-    final tag = block.tag;
+    final tag = block.hero;
 
-    final spec = configuration.spec;
-
-    Widget child = spec.contentBlock(
-      child: MarkdownViewer(
-        content: content,
-        spec: spec,
-        duration: Durations.medium1,
-      ),
-    );
-
-    child = Wrap(
+    Widget child = Wrap(
       clipBehavior: Clip.hardEdge,
       children: [
-        child,
+        MarkdownViewer(
+          content: content,
+          spec: SlideSpec.of(context),
+        ),
       ],
     );
 
     if (tag != null) {
       child = BlockHero(
-        tag: tag,
+        block: block,
         child: child,
       );
     }
 
-    if (!isCapturing) {
-      child = SingleChildScrollView(
-        child: child,
-      );
-    }
+    child = SingleChildScrollView(
+      child: child,
+    );
 
     child = Align(
-      alignment: toAlignment(alignment),
+      alignment: ConverterHelper.toAlignment(alignment),
       child: child,
     );
 
@@ -158,35 +200,29 @@ class _ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
 }
 
 class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
-  const _ImageBlockWidget(super.block);
+  const _ImageBlockWidget({required super.block, required super.spec});
 
   @override
-  Widget build(context, configuration) {
+  Widget build(context) {
     final options = block;
-    final tag = options.tag;
+    final tag = options.hero;
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
 
-    Widget widget = MeasureSizeBuilder(
-      builder: (size) {
-        return CacheDecorationImage(
-          uri: Uri.parse(options.src),
-          fit: toBoxFit(imageFit),
-          alignment: toAlignment(alignment),
-        );
-      },
+    return CacheDecorationImage(
+      uri: Uri.parse(options.src),
+      fit: ConverterHelper.toBoxFit(imageFit),
+      alignment: ConverterHelper.toAlignment(alignment),
     );
-
-    return widget;
   }
 }
 
 class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
-  const _WidgetBlockWidget(super.block);
+  const _WidgetBlockWidget({required super.block, required super.spec});
 
   @override
-  Widget build(context, configuration) {
-    final controller = DeckController.of(context);
+  Widget build(context) {
+    final controller = Controller.of<DeckController>(context);
 
     final widgetBuilder = controller.getWidget(block.name);
 
@@ -203,9 +239,9 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
       builder: (context) {
         try {
           final widget = widgetBuilder(context, block);
-          if (block.tag != null) {
+          if (block.hero != null) {
             return BlockHero(
-              tag: configuration,
+              tag: block.hero!,
               child: Container(child: widget),
             );
           }
@@ -224,115 +260,8 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
   }
 }
 
-BoxFit toBoxFit(ImageFit fit) {
-  return switch (fit) {
-    ImageFit.fill => BoxFit.fill,
-    ImageFit.contain => BoxFit.contain,
-    ImageFit.cover => BoxFit.cover,
-    ImageFit.fitWidth => BoxFit.fitWidth,
-    ImageFit.fitHeight => BoxFit.fitHeight,
-    ImageFit.none => BoxFit.none,
-    ImageFit.scaleDown => BoxFit.scaleDown,
-  };
-}
-
-Alignment toAlignment(ContentAlignment? alignment) {
-  if (alignment == null) {
-    return Alignment.center;
-  }
-  return switch (alignment) {
-    ContentAlignment.topLeft => Alignment.topLeft,
-    ContentAlignment.topCenter => Alignment.topCenter,
-    ContentAlignment.topRight => Alignment.topRight,
-    ContentAlignment.centerLeft => Alignment.centerLeft,
-    ContentAlignment.center => Alignment.center,
-    ContentAlignment.centerRight => Alignment.centerRight,
-    ContentAlignment.bottomLeft => Alignment.bottomLeft,
-    ContentAlignment.bottomCenter => Alignment.bottomCenter,
-    ContentAlignment.bottomRight => Alignment.bottomRight,
-  };
-}
-
-(MainAxisAlignment mainAxis, CrossAxisAlignment crossAxis) toFlexAlignment(
-    Axis axis, ContentAlignment alignment) {
-  final isHorizontal = axis == Axis.horizontal;
-  final (mainStart, mainCenter, mainEnd) = isHorizontal
-      ? (
-          MainAxisAlignment.start,
-          MainAxisAlignment.center,
-          MainAxisAlignment.end
-        )
-      : (
-          MainAxisAlignment.end,
-          MainAxisAlignment.center,
-          MainAxisAlignment.start
-        );
-
-  final (crossStart, crossCenter, crossEnd) = (
-    CrossAxisAlignment.start,
-    CrossAxisAlignment.center,
-    CrossAxisAlignment.end
-  );
-
-  return switch (alignment) {
-    ContentAlignment.topLeft => (mainStart, crossStart),
-    ContentAlignment.topCenter => (mainStart, crossCenter),
-    ContentAlignment.topRight => (mainStart, crossEnd),
-    ContentAlignment.centerLeft => (mainCenter, crossStart),
-    ContentAlignment.center => (mainCenter, crossCenter),
-    ContentAlignment.centerRight => (mainCenter, crossEnd),
-    ContentAlignment.bottomLeft => (mainEnd, crossStart),
-    ContentAlignment.bottomCenter => (mainEnd, crossCenter),
-    ContentAlignment.bottomRight => (mainEnd, crossEnd),
-  };
-}
-
-(MainAxisAlignment mainAxis, CrossAxisAlignment crossAxis) toRowAlignment(
-    ContentAlignment alignment) {
-  return switch (alignment) {
-    ContentAlignment.topLeft => (
-        MainAxisAlignment.start,
-        CrossAxisAlignment.start
-      ),
-    ContentAlignment.topCenter => (
-        MainAxisAlignment.start,
-        CrossAxisAlignment.center
-      ),
-    ContentAlignment.topRight => (
-        MainAxisAlignment.start,
-        CrossAxisAlignment.end
-      ),
-    ContentAlignment.centerLeft => (
-        MainAxisAlignment.center,
-        CrossAxisAlignment.start
-      ),
-    ContentAlignment.center => (
-        MainAxisAlignment.center,
-        CrossAxisAlignment.center
-      ),
-    ContentAlignment.centerRight => (
-        MainAxisAlignment.center,
-        CrossAxisAlignment.end
-      ),
-    ContentAlignment.bottomLeft => (
-        MainAxisAlignment.end,
-        CrossAxisAlignment.start
-      ),
-    ContentAlignment.bottomCenter => (
-        MainAxisAlignment.end,
-        CrossAxisAlignment.center
-      ),
-    ContentAlignment.bottomRight => (
-        MainAxisAlignment.end,
-        CrossAxisAlignment.end
-      ),
-  };
-}
-
-class _DartPadBlockWidget extends StatelessWidget {
-  const _DartPadBlockWidget(this.block);
-
-  final DartPadBlock block;
+class _DartPadBlockWidget extends _BlockWidget<DartPadBlock> {
+  const _DartPadBlockWidget({required super.block, required super.spec});
 
   @override
   Widget build(context) {

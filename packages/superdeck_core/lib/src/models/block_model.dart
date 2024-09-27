@@ -17,13 +17,13 @@ enum BlockType {
 sealed class Block with BlockMappable {
   final ContentAlignment? align;
   final int? flex;
-  final String? tag;
+  final String? hero;
   final BlockType type;
 
   const Block({
     this.flex,
     this.align,
-    this.tag,
+    this.hero,
     required this.type,
   });
 
@@ -45,7 +45,7 @@ sealed class Block with BlockMappable {
   static final schema = SchemaShape({
     "align": ContentAlignment.schema.optional(),
     "flex": Schema.integer.optional(),
-    "tag": Schema.string.optional(),
+    "hero": Schema.string.optional(),
   });
 }
 
@@ -78,7 +78,7 @@ class SectionBlock extends Block with SectionBlockMappable {
     this.blocks = const [],
     super.flex,
     super.align,
-    super.tag,
+    super.hero,
   }) : super(type: BlockType.section);
 
   SectionBlock appendLine(String content) {
@@ -124,7 +124,7 @@ sealed class ContentBlock extends Block with ContentBlockMappable {
     String? content,
     super.flex,
     super.align,
-    super.tag,
+    super.hero,
     required super.type,
   }) : _content = content;
 
@@ -151,7 +151,7 @@ class ColumnBlock extends ContentBlock with ColumnBlockMappable {
   const ColumnBlock({
     super.flex,
     super.align,
-    super.tag,
+    super.hero,
     super.content,
   }) : super(type: BlockType.column);
 
@@ -173,7 +173,7 @@ class ImageBlock extends ContentBlock with ImageBlockMappable {
     this.fit,
     super.flex,
     super.align,
-    super.tag,
+    super.hero,
     super.content,
   }) : super(type: BlockType.image);
 
@@ -202,7 +202,7 @@ class WidgetBlock extends ContentBlock with WidgetBlockMappable {
     this.args = const {},
     super.flex,
     super.align,
-    super.tag,
+    super.hero,
     super.content,
   }) : super(type: BlockType.widget);
 
@@ -235,7 +235,7 @@ class DartPadBlock extends ContentBlock with DartPadBlockMappable {
     required this.id,
     this.theme,
     super.flex,
-    super.tag,
+    super.hero,
     super.content,
     super.align,
     this.embed = true,

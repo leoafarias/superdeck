@@ -3,22 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
+import '../common/helpers/controller.dart';
 import '../common/helpers/routes.dart';
 import '../deck/deck_hooks.dart';
 import 'navigation_controller.dart';
-
-NavigationController _useController() {
-  final context = useContext();
-
-  return useListenable(
-    NavigationController.of(context),
-  );
-}
-
-T _useSelectController<T>(T Function(NavigationController) selector) {
-  final controller = _useController();
-  return selector(controller);
-}
 
 typedef NavigationControllerState = ({
   bool isPresenterMenuOpen,
@@ -26,7 +14,7 @@ typedef NavigationControllerState = ({
 });
 
 NavigationControllerState useNavigationState() {
-  return _useSelectController(
+  return useSelector<NavigationController, NavigationControllerState>(
     (c) => (
       isPresenterMenuOpen: c.isPresenterMenuOpen,
       showNotes: c.showNotes,
@@ -46,14 +34,7 @@ typedef NavigationActions = ({
 
 GoRouterState _useGoRouterState() {
   final context = useContext();
-  final routerState = GoRouterState.of(context);
-  final state = useState(routerState);
-
-  useEffect(() {
-    state.value = routerState;
-  }, [routerState]);
-
-  return state.value;
+  return GoRouterState.of(context);
 }
 
 // Get the currentSlide index from the current path
@@ -66,7 +47,7 @@ int useCurrentSlideIndex() {
 
 NavigationActions useNavigationActions() {
   final context = useContext();
-  final controller = _useController();
+  final controller = useController<NavigationController>();
   final slides = useSlides();
   final currentIndex = useCurrentSlideIndex();
 
@@ -101,8 +82,4 @@ NavigationActions useNavigationActions() {
     goToSlide: goToSlide,
     toggleShowNotes: controller.toggleShowNotes,
   );
-}
-
-bool useIsPresenterMenuOpen() {
-  return _useSelectController((c) => c.isPresenterMenuOpen);
 }

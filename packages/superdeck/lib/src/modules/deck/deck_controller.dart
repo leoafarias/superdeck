@@ -5,11 +5,12 @@ import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
 import '../common/helpers/async_value.dart';
+import '../common/helpers/controller.dart';
 import 'deck_service.dart';
 
 bool _isDebug = true;
 
-class DeckController extends ChangeNotifier {
+class DeckController extends Controller {
   final _referenceService = DeckReferenceService();
   Map<String, DeckStyle> _styles = {};
   Map<String, WidgetBuilderWithOptions> _widgets = {};
@@ -18,7 +19,7 @@ class DeckController extends ChangeNotifier {
   FixedSlidePart? _header;
   FixedSlidePart? _footer;
   SlidePart? _background;
-  late List<SlideConfiguration> _slides = [];
+  late List<SlideController> _slides = [];
   late List<SlideAsset> _assets = [];
 
   AsyncValue<ReferenceDto> asyncData = const AsyncValue.loading();
@@ -98,12 +99,6 @@ class DeckController extends ChangeNotifier {
     return headerHeight + footerHeight;
   }
 
-  static DeckController of(BuildContext context) {
-    final provider =
-        context.dependOnInheritedWidgetOfExactType<DeckControllerProvider>();
-    return provider!.controller;
-  }
-
   /// Whether reference data is currently being loaded.
   bool get isLoading => asyncData.isLoading;
 
@@ -117,7 +112,7 @@ class DeckController extends ChangeNotifier {
   bool get hasData => _slides.isNotEmpty;
 
   /// The list of slides in the loaded reference data.
-  List<SlideConfiguration> get slides => _slides;
+  List<SlideController> get slides => _slides;
 
   /// The list of assets in the loaded reference data.
   List<SlideAsset> get assets => _assets;
@@ -159,11 +154,11 @@ class DeckController extends ChangeNotifier {
       );
 
       _assets = data.assets;
-      final slides = <SlideConfiguration>[];
+      final slides = <SlideController>[];
       for (var i = 0; i < data.slides.length; i++) {
         final slide = data.slides[i];
         final slideStyle = slide.options?.style;
-        final configuration = SlideConfiguration(
+        final configuration = SlideController(
           slide: slide,
           slideIndex: i,
           header: _header,
@@ -194,19 +189,3 @@ typedef WidgetBuilderWithOptions = Widget Function(
   BuildContext context,
   WidgetBlock options,
 );
-
-/// An inherited notifier that provides access to a [DeckController].
-///
-/// This class is used internally by [DeckControllerProvider] to propagate the
-/// [DeckController] down the widget tree.
-class DeckControllerProvider extends InheritedNotifier<DeckController> {
-  /// Creates a [DeckControllerProvider] with the given [controller] and [child].
-  const DeckControllerProvider({
-    super.key,
-    required this.controller,
-    required super.child,
-  });
-
-  /// The [DeckController] instance associated with this inherited notifier.
-  final DeckController controller;
-}

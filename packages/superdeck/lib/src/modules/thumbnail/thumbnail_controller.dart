@@ -15,7 +15,7 @@ class ThumbnailController with ChangeNotifier {
 
   ThumbnailController();
 
-  Future<void> load(SlideConfiguration slide) async {
+  Future<void> load(SlideController slide) async {
     try {
       final result = kCanRunProcess
           ? await _generateThumbnail(slide)
@@ -42,7 +42,7 @@ class ThumbnailController with ChangeNotifier {
 
   bool get isRefreshing => _asyncData.isRefreshing;
 
-  Future<void> refresh(SlideConfiguration slide) async {
+  Future<void> refresh(SlideController slide) async {
     _asyncData = _asyncData.copyWith(status: AsyncStatus.loading);
     notifyListeners();
 
@@ -61,7 +61,7 @@ class ThumbnailController with ChangeNotifier {
   }
 }
 
-Future<File> _generateThumbnail(SlideConfiguration slide,
+Future<File> _generateThumbnail(SlideController slide,
     {bool force = false}) async {
   final thumbnailFile = slide.thumbnailFile;
 

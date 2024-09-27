@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
+import '../../modules/common/helpers/controller.dart';
 import '../../modules/common/styles/style_spec.dart';
 import '../../modules/slide/slide_configuration.dart';
 import '../molecules/block_widget.dart';
 
 class SlideView extends StatelessWidget {
-  final SlideConfiguration slide;
+  final SlideController slide;
   const SlideView(
     this.slide, {
     super.key,
@@ -17,9 +18,8 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SlideConfigurationProvider(
-      configuration: slide,
-      isCapturing: isCapturing,
+    return Provider(
+      controller: slide,
       child: SpecBuilder(
         style: slide.style,
         builder: (context) {

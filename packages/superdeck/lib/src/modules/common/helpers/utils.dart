@@ -2,10 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-import '../styles/style_spec.dart';
-
-Size getSizeWithoutSpacing(Size size, SlideSpec spec) {
-  final offset = calculateSpecOffset(spec);
+Size getSizeWithoutSpacing(Size size, BoxSpec spec) {
+  final offset = _calculateBlockOffset(spec);
 
   return Size(
     size.width - offset.dx,
@@ -13,27 +11,34 @@ Size getSizeWithoutSpacing(Size size, SlideSpec spec) {
   );
 }
 
-Offset calculateSpecOffset(SlideSpec spec) {
+Size getImageSizeWithoutSpacing(Size size, ImageSpec spec) {
+  final offset = getTotalModifierSpacing(spec);
+
+  return Size(
+    size.width - offset.horizontal,
+    size.height - offset.vertical,
+  );
+}
+
+({double horizontal, double vertical}) getTotalModifierSpacing(Spec spec) {
+  final modifiers = spec.modifiers?.value ?? [];
+  final padding = modifiers.firstWhereOrNull(
+    (element) => element is PaddingModifierSpec,
+  ) as PaddingModifierSpec?;
+
+  return (
+    horizontal: padding?.padding.horizontal ?? 0.0,
+    vertical: padding?.padding.vertical ?? 0.0,
+  );
+}
+
+Offset _calculateBlockOffset(BoxSpec spec) {
   // final outerContainer = spec.outerContainer;
   // final innerContainer = spec.innerContainer;
-  final contentBlock = spec.contentBlock;
-  final image = spec.image;
-
-  final modifiers = spec.modifiers?.value ?? [];
+  final contentBlock = spec;
 
   double horizontalSpacing = 0.0;
   double verticalSpacing = 0.0;
-
-  ({double horizontal, double vertical}) getTotalModifierSpacing(Spec spec) {
-    final padding = modifiers.firstWhereOrNull(
-      (element) => element is PaddingModifierSpec,
-    ) as PaddingModifierSpec?;
-
-    return (
-      horizontal: padding?.padding.horizontal ?? 0.0,
-      vertical: padding?.padding.vertical ?? 0.0,
-    );
-  }
 
   for (final container in [contentBlock]) {
     final padding = container.padding ?? EdgeInsets.zero;

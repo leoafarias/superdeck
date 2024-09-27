@@ -70,27 +70,27 @@ class SplitView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPresenterMenuOpen = useIsPresenterMenuOpen();
+    final state = useNavigationState();
     final navigationActions = useNavigationActions();
 
     final bottomAnimation = useAnimationController(
       duration: _duration,
-      initialValue: isPresenterMenuOpen ? 1.0 : 0.0,
+      initialValue: state.isPresenterMenuOpen ? 1.0 : 0.0,
     );
 
     usePostFrameEffect(() {
-      if (isPresenterMenuOpen) {
+      if (state.isPresenterMenuOpen) {
         bottomAnimation.forward();
       } else {
         bottomAnimation.reverse();
       }
-    }, [isPresenterMenuOpen]);
+    }, [state.isPresenterMenuOpen]);
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 9, 9, 9),
       key: kScaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      floatingActionButton: !isPresenterMenuOpen
+      floatingActionButton: !state.isPresenterMenuOpen
           ? IconButton(
               onPressed: navigationActions.openPresenterMenu,
               icon: const Icon(Icons.menu),

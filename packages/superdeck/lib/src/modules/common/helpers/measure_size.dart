@@ -26,7 +26,7 @@ class MeasureSizeRenderObject extends RenderProxyBox {
 }
 
 class MeasureSizeBuilder extends StatefulWidget {
-  final Widget Function(Size size) builder;
+  final Widget Function(Size? size) builder;
   final Duration duration;
 
   const MeasureSizeBuilder({
@@ -60,8 +60,33 @@ class MeasureSize extends SingleChildRenderObjectWidget {
   }
 }
 
+class MeasureSizeBuilder extends StatefulWidget {
+  final Widget Function(Size? size) builder;
+  final Duration duration;
+
+  const MeasureSizeBuilder({
+    super.key,
+    required this.builder,
+    required this.cacheKey,
+    this.duration = Durations.medium1,
+  });
+
+  final Key cacheKey;
+
+  @override
+  State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
+}
+
 class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
   Size? _size;
+
+  static final Map<Key, Size> _cacheSizes = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _size = _cacheSizes[widget.cacheKey];
+  }
 
   void _onSizeChange(Size size) {
     if (_size != null) return;
@@ -73,9 +98,9 @@ class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
     }
 
     if (size == _size) return;
+    _cacheSizes[widget.cacheKey] = size;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        print('size: $size');
         _size = size;
       });
     });
@@ -83,6 +108,9 @@ class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    if (_size != null) {
+      return widget.builder(_size);
+    }
     return MeasureSize(
       onChange: _onSizeChange,
       child: AnimatedSize(

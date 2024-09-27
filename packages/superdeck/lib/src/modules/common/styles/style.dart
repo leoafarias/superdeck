@@ -155,7 +155,7 @@ class DeckStyle {
       blockquoteStyle,
       // divider
       $.divider.border(width: 2, color: Colors.grey),
-      $.image.fit.cover(),
+      // $.image.fit.cover(),
     ]);
   }
 }

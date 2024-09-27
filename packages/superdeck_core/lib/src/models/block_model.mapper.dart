@@ -273,8 +273,8 @@ class BlockMapper extends ClassMapperBase<Block> {
   static ContentAlignment? _$align(Block v) => v.align;
   static const Field<Block, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static String? _$tag(Block v) => v.tag;
-  static const Field<Block, String> _f$tag = Field('tag', _$tag, opt: true);
+  static String? _$hero(Block v) => v.hero;
+  static const Field<Block, String> _f$hero = Field('hero', _$hero, opt: true);
   static BlockType _$type(Block v) => v.type;
   static const Field<Block, BlockType> _f$type = Field('type', _$type);
 
@@ -282,7 +282,7 @@ class BlockMapper extends ClassMapperBase<Block> {
   final MappableFields<Block> fields = const {
     #flex: _f$flex,
     #align: _f$align,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #type: _f$type,
   };
   @override
@@ -313,7 +313,7 @@ mixin BlockMappable {
 
 abstract class BlockCopyWith<$R, $In extends Block, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? flex, ContentAlignment? align, String? tag});
+  $R call({int? flex, ContentAlignment? align, String? hero});
   BlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -344,9 +344,9 @@ class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
   static ContentAlignment? _$align(SectionBlock v) => v.align;
   static const Field<SectionBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static String? _$tag(SectionBlock v) => v.tag;
-  static const Field<SectionBlock, String> _f$tag =
-      Field('tag', _$tag, opt: true);
+  static String? _$hero(SectionBlock v) => v.hero;
+  static const Field<SectionBlock, String> _f$hero =
+      Field('hero', _$hero, opt: true);
   static BlockType _$type(SectionBlock v) => v.type;
   static const Field<SectionBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
@@ -356,7 +356,7 @@ class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
     #blocks: _f$blocks,
     #flex: _f$flex,
     #align: _f$align,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #type: _f$type,
   };
   @override
@@ -374,7 +374,7 @@ class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
         blocks: data.dec(_f$blocks),
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
-        tag: data.dec(_f$tag));
+        hero: data.dec(_f$hero));
   }
 
   @override
@@ -436,7 +436,7 @@ abstract class SectionBlockCopyWith<$R, $In extends SectionBlock, $Out>
       {List<ContentBlock>? blocks,
       int? flex,
       ContentAlignment? align,
-      String? tag});
+      String? hero});
   SectionBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -458,19 +458,19 @@ class _SectionBlockCopyWithImpl<$R, $Out>
           {List<ContentBlock>? blocks,
           Object? flex = $none,
           Object? align = $none,
-          Object? tag = $none}) =>
+          Object? hero = $none}) =>
       $apply(FieldCopyWithData({
         if (blocks != null) #blocks: blocks,
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
-        if (tag != $none) #tag: tag
+        if (hero != $none) #hero: hero
       }));
   @override
   SectionBlock $make(CopyWithData data) => SectionBlock(
       blocks: data.get(#blocks, or: $value.blocks),
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag));
+      hero: data.get(#hero, or: $value.hero));
 
   @override
   SectionBlockCopyWith<$R2, SectionBlock, $Out2> $chain<$R2, $Out2>(
@@ -508,9 +508,9 @@ class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
   static ContentAlignment? _$align(ContentBlock v) => v.align;
   static const Field<ContentBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static String? _$tag(ContentBlock v) => v.tag;
-  static const Field<ContentBlock, String> _f$tag =
-      Field('tag', _$tag, opt: true);
+  static String? _$hero(ContentBlock v) => v.hero;
+  static const Field<ContentBlock, String> _f$hero =
+      Field('hero', _$hero, opt: true);
   static BlockType _$type(ContentBlock v) => v.type;
   static const Field<ContentBlock, BlockType> _f$type = Field('type', _$type);
 
@@ -519,7 +519,7 @@ class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
     #_content: _f$_content,
     #flex: _f$flex,
     #align: _f$align,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #type: _f$type,
   };
   @override
@@ -558,7 +558,7 @@ mixin ContentBlockMappable {
 abstract class ContentBlockCopyWith<$R, $In extends ContentBlock, $Out>
     implements BlockCopyWith<$R, $In, $Out> {
   @override
-  $R call({String? content, int? flex, ContentAlignment? align, String? tag});
+  $R call({String? content, int? flex, ContentAlignment? align, String? hero});
   ContentBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -584,9 +584,9 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
   static ContentAlignment? _$align(ColumnBlock v) => v.align;
   static const Field<ColumnBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static String? _$tag(ColumnBlock v) => v.tag;
-  static const Field<ColumnBlock, String> _f$tag =
-      Field('tag', _$tag, opt: true);
+  static String? _$hero(ColumnBlock v) => v.hero;
+  static const Field<ColumnBlock, String> _f$hero =
+      Field('hero', _$hero, opt: true);
   static String? _$_content(ColumnBlock v) => v._content;
   static const Field<ColumnBlock, String> _f$_content =
       Field('_content', _$_content, key: 'content', opt: true);
@@ -598,7 +598,7 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
   final MappableFields<ColumnBlock> fields = const {
     #flex: _f$flex,
     #align: _f$align,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #_content: _f$_content,
     #type: _f$type,
   };
@@ -617,7 +617,7 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
     return ColumnBlock(
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
-        tag: data.dec(_f$tag),
+        hero: data.dec(_f$hero),
         content: data.dec(_f$_content));
   }
 
@@ -673,7 +673,7 @@ extension ColumnBlockValueCopy<$R, $Out>
 abstract class ColumnBlockCopyWith<$R, $In extends ColumnBlock, $Out>
     implements ContentBlockCopyWith<$R, $In, $Out> {
   @override
-  $R call({int? flex, ContentAlignment? align, String? tag, String? content});
+  $R call({int? flex, ContentAlignment? align, String? hero, String? content});
   ColumnBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -689,19 +689,19 @@ class _ColumnBlockCopyWithImpl<$R, $Out>
   $R call(
           {Object? flex = $none,
           Object? align = $none,
-          Object? tag = $none,
+          Object? hero = $none,
           Object? content = $none}) =>
       $apply(FieldCopyWithData({
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
-        if (tag != $none) #tag: tag,
+        if (hero != $none) #hero: hero,
         if (content != $none) #content: content
       }));
   @override
   ColumnBlock $make(CopyWithData data) => ColumnBlock(
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag),
+      hero: data.get(#hero, or: $value.hero),
       content: data.get(#content, or: $value._content));
 
   @override
@@ -738,9 +738,9 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
   static ContentAlignment? _$align(ImageBlock v) => v.align;
   static const Field<ImageBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static String? _$tag(ImageBlock v) => v.tag;
-  static const Field<ImageBlock, String> _f$tag =
-      Field('tag', _$tag, opt: true);
+  static String? _$hero(ImageBlock v) => v.hero;
+  static const Field<ImageBlock, String> _f$hero =
+      Field('hero', _$hero, opt: true);
   static String? _$_content(ImageBlock v) => v._content;
   static const Field<ImageBlock, String> _f$_content =
       Field('_content', _$_content, key: 'content', opt: true);
@@ -754,7 +754,7 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
     #fit: _f$fit,
     #flex: _f$flex,
     #align: _f$align,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #_content: _f$_content,
     #type: _f$type,
   };
@@ -775,7 +775,7 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
         fit: data.dec(_f$fit),
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
-        tag: data.dec(_f$tag),
+        hero: data.dec(_f$hero),
         content: data.dec(_f$_content));
   }
 
@@ -836,7 +836,7 @@ abstract class ImageBlockCopyWith<$R, $In extends ImageBlock, $Out>
       ImageFit? fit,
       int? flex,
       ContentAlignment? align,
-      String? tag,
+      String? hero,
       String? content});
   ImageBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -855,14 +855,14 @@ class _ImageBlockCopyWithImpl<$R, $Out>
           Object? fit = $none,
           Object? flex = $none,
           Object? align = $none,
-          Object? tag = $none,
+          Object? hero = $none,
           Object? content = $none}) =>
       $apply(FieldCopyWithData({
         if (src != null) #src: src,
         if (fit != $none) #fit: fit,
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
-        if (tag != $none) #tag: tag,
+        if (hero != $none) #hero: hero,
         if (content != $none) #content: content
       }));
   @override
@@ -871,7 +871,7 @@ class _ImageBlockCopyWithImpl<$R, $Out>
       fit: data.get(#fit, or: $value.fit),
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag),
+      hero: data.get(#hero, or: $value.hero),
       content: data.get(#content, or: $value._content));
 
   @override
@@ -907,9 +907,9 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
   static ContentAlignment? _$align(WidgetBlock v) => v.align;
   static const Field<WidgetBlock, ContentAlignment> _f$align =
       Field('align', _$align, opt: true);
-  static String? _$tag(WidgetBlock v) => v.tag;
-  static const Field<WidgetBlock, String> _f$tag =
-      Field('tag', _$tag, opt: true);
+  static String? _$hero(WidgetBlock v) => v.hero;
+  static const Field<WidgetBlock, String> _f$hero =
+      Field('hero', _$hero, opt: true);
   static String? _$_content(WidgetBlock v) => v._content;
   static const Field<WidgetBlock, String> _f$_content =
       Field('_content', _$_content, key: 'content', opt: true);
@@ -923,7 +923,7 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
     #args: _f$args,
     #flex: _f$flex,
     #align: _f$align,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #_content: _f$_content,
     #type: _f$type,
   };
@@ -946,7 +946,7 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
         args: data.dec(_f$args),
         flex: data.dec(_f$flex),
         align: data.dec(_f$align),
-        tag: data.dec(_f$tag),
+        hero: data.dec(_f$hero),
         content: data.dec(_f$_content));
   }
 
@@ -1009,7 +1009,7 @@ abstract class WidgetBlockCopyWith<$R, $In extends WidgetBlock, $Out>
       Map<String, dynamic>? args,
       int? flex,
       ContentAlignment? align,
-      String? tag,
+      String? hero,
       String? content});
   WidgetBlockCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -1032,14 +1032,14 @@ class _WidgetBlockCopyWithImpl<$R, $Out>
           Map<String, dynamic>? args,
           Object? flex = $none,
           Object? align = $none,
-          Object? tag = $none,
+          Object? hero = $none,
           Object? content = $none}) =>
       $apply(FieldCopyWithData({
         if (name != null) #name: name,
         if (args != null) #args: args,
         if (flex != $none) #flex: flex,
         if (align != $none) #align: align,
-        if (tag != $none) #tag: tag,
+        if (hero != $none) #hero: hero,
         if (content != $none) #content: content
       }));
   @override
@@ -1048,7 +1048,7 @@ class _WidgetBlockCopyWithImpl<$R, $Out>
       args: data.get(#args, or: $value.args),
       flex: data.get(#flex, or: $value.flex),
       align: data.get(#align, or: $value.align),
-      tag: data.get(#tag, or: $value.tag),
+      hero: data.get(#hero, or: $value.hero),
       content: data.get(#content, or: $value._content));
 
   @override
@@ -1082,9 +1082,9 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
   static int? _$flex(DartPadBlock v) => v.flex;
   static const Field<DartPadBlock, int> _f$flex =
       Field('flex', _$flex, opt: true);
-  static String? _$tag(DartPadBlock v) => v.tag;
-  static const Field<DartPadBlock, String> _f$tag =
-      Field('tag', _$tag, opt: true);
+  static String? _$hero(DartPadBlock v) => v.hero;
+  static const Field<DartPadBlock, String> _f$hero =
+      Field('hero', _$hero, opt: true);
   static String? _$_content(DartPadBlock v) => v._content;
   static const Field<DartPadBlock, String> _f$_content =
       Field('_content', _$_content, key: 'content', opt: true);
@@ -1103,7 +1103,7 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
     #id: _f$id,
     #theme: _f$theme,
     #flex: _f$flex,
-    #tag: _f$tag,
+    #hero: _f$hero,
     #_content: _f$_content,
     #align: _f$align,
     #embed: _f$embed,
@@ -1125,7 +1125,7 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
         id: data.dec(_f$id),
         theme: data.dec(_f$theme),
         flex: data.dec(_f$flex),
-        tag: data.dec(_f$tag),
+        hero: data.dec(_f$hero),
         content: data.dec(_f$_content),
         align: data.dec(_f$align),
         embed: data.dec(_f$embed));
@@ -1188,7 +1188,7 @@ abstract class DartPadBlockCopyWith<$R, $In extends DartPadBlock, $Out>
       {String? id,
       DartPadTheme? theme,
       int? flex,
-      String? tag,
+      String? hero,
       String? content,
       ContentAlignment? align,
       bool? embed});
@@ -1208,7 +1208,7 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
           {String? id,
           Object? theme = $none,
           Object? flex = $none,
-          Object? tag = $none,
+          Object? hero = $none,
           Object? content = $none,
           Object? align = $none,
           bool? embed}) =>
@@ -1216,7 +1216,7 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
         if (id != null) #id: id,
         if (theme != $none) #theme: theme,
         if (flex != $none) #flex: flex,
-        if (tag != $none) #tag: tag,
+        if (hero != $none) #hero: hero,
         if (content != $none) #content: content,
         if (align != $none) #align: align,
         if (embed != null) #embed: embed
@@ -1226,7 +1226,7 @@ class _DartPadBlockCopyWithImpl<$R, $Out>
       id: data.get(#id, or: $value.id),
       theme: data.get(#theme, or: $value.theme),
       flex: data.get(#flex, or: $value.flex),
-      tag: data.get(#tag, or: $value.tag),
+      hero: data.get(#hero, or: $value.hero),
       content: data.get(#content, or: $value._content),
       align: data.get(#align, or: $value.align),
       embed: data.get(#embed, or: $value.embed));
