@@ -3,35 +3,20 @@ import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
-import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/converters.dart';
-import '../../modules/common/helpers/measure_size.dart';
-import '../../modules/common/helpers/utils.dart';
 import '../atoms/cache_image_widget.dart';
-import '../atoms/hero_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
 class BlockController extends Controller {
   BlockController({
-    required Size size,
     required SlideSpec spec,
     required ContentBlock block,
-  })  : _size = size,
-        _spec = spec,
+  })  : _spec = spec,
         _block = block;
-
-  Size _size;
 
   SlideSpec _spec;
   ContentBlock _block;
-
-  Size get size => getSizeWithoutSpacing(_size, spec.contentBlock);
-
-  set size(Size size) {
-    _size = size;
-    notifyListeners();
-  }
 
   SlideSpec get spec => _spec;
 
@@ -115,19 +100,13 @@ class _BlockWidgetState<T extends ContentBlock> extends State<_BlockWidget<T>> {
         builder: (context) {
           final spec = SlideSpec.of(context);
           return spec.contentBlock(
-            child: MeasureSizeBuilder(
-                cacheKey: Key('${widget.block}-$spec'),
-                builder: (size) {
-                  return Provider(
-                    controller: BlockController(
-                      size: size ?? kResolution,
-                      spec: spec,
-                      block: widget.block,
-                    ),
-                    child: widget.build(context),
-                  );
-                }),
-          );
+              child: Provider(
+            controller: BlockController(
+              spec: spec,
+              block: widget.block,
+            ),
+            child: widget.build(context),
+          ));
         });
   }
 }
@@ -150,13 +129,6 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
         ),
       ],
     );
-
-    if (tag != null) {
-      child = BlockHero(
-        block: block,
-        child: child,
-      );
-    }
 
     child = SingleChildScrollView(
       child: child,
@@ -211,12 +183,6 @@ class _WidgetBlockWidget extends _BlockWidget<WidgetBlock> {
       builder: (context) {
         try {
           final widget = widgetBuilder(context, block);
-          if (block.hero != null) {
-            return BlockHero(
-              block: block,
-              child: Container(child: widget),
-            );
-          }
 
           return widget;
         } catch (e) {

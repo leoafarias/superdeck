@@ -60,8 +60,6 @@ Widget markdownFlightBuilder({
   return AnimatedBuilder(
       animation: animation,
       builder: (context, _) {
-        final interpolatedSize = Size.lerp(
-            fromConfiguration.size, toConfiguration.size, animation.value)!;
         final interpolatedSpec =
             fromConfiguration.spec.lerp(toConfiguration.spec, animation.value);
         final interpolateAlign = Alignment.lerp(
@@ -72,7 +70,6 @@ Widget markdownFlightBuilder({
 
         return Provider(
           controller: BlockController(
-            size: interpolatedSize,
             spec: interpolatedSpec,
             block: toConfiguration.block,
           ),

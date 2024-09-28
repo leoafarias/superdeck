@@ -1,62 +1,57 @@
 config: {}
 slides: 
-  - key: 'UERX7Z0D'
+  - key: 'eLo9GgOT'
     options: {}
     markdown: |-
-      {@column hero: heading}
-      ## How can LLMs Understtand Your UI?
+      {@column}
+      ## How can LLMs Understtand Your UI? {.here}
       
-      {@column hero: image}
-      ![structured_output](https://picsum.photos/800/300)
+      {@column}
+      ![structuref_output](https://picsum.photos/800/300){.cover}
     sections: 
       - blocks: 
-          - hero: 'heading'
-            content: |
-              ## How can LLMs Understtand Your UI?
-          - hero: 'image'
-            content: '![structured_output](https://picsum.photos/800/300)'
+          - content: |
+              ## How can LLMs Understtand Your UI? {.here}
+          - content: '![structuref_output](https://picsum.photos/800/300){.cover}'
         type: 'section'
     notes: []
-  - key: 'npubxSZJ'
+  - key: 'kcaS7JNr'
     options: {}
     markdown: |-
       {@column
-        hero: image
-        flex: 2
+        flex: 1
         align: bottom_left
       }
       
-      ![structured_output](https://picsum.photos/800/1400)
+      ## Another image{.here}
+      ![structured_output](https://picsum.photos/800/1400) {.cover}
       
-      {@column hero: heading}
-      ## Another image
+      {@column}
+      ## Another image{.doidt}
     sections: 
       - blocks: 
-          - flex: 2
+          - flex: 1
             align: 'bottom_left'
-            hero: 'image'
             content: |
-              ![structured_output](https://picsum.photos/800/1400)
-          - hero: 'heading'
-            content: '## Another image'
+              ## Another image{.here}
+              ![structured_output](https://picsum.photos/800/1400) {.cover}
+          - content: '## Another image{.doidt}'
         type: 'section'
     notes: []
-  - key: '6EMXmHle'
+  - key: 'Af1Oeyck'
     options: {}
     markdown: |-
       {@section}
       {@column
         align: center
-        hero: heading
       }
-      # Generative UI
+      # Generative UI{.doit}
       # with Flutter
     sections: 
       - blocks: 
           - align: 'center'
-            hero: 'heading'
             content: |-
-              # Generative UI
+              # Generative UI{.doit}
               # with Flutter
         type: 'section'
     notes: []
@@ -225,19 +220,20 @@ slides:
           - {}
         type: 'section'
     notes: []
-  - key: '4VmZuDzn'
+  - key: 'rHHS9FIs'
     options: {}
     markdown: |-
       ## How can LLMs Understtand Your UI?
       
-      {@column hero: image}
+      {@colum}
       ![structured_output](assets/structured_output.png)
     sections: 
       - blocks: 
           - content: |
               ## How can LLMs Understtand Your UI?
-          - hero: 'image'
-            content: '![structured_output](assets/structured_output.png)'
+          - name: 'colum'
+            type: 'widget'
+          - content: '![structured_output](assets/structured_output.png)'
         type: 'section'
     notes: []
   - key: '9jtc9i8W'
@@ -562,7 +558,7 @@ slides:
               - 'Max brightness'
         type: 'section'
     notes: []
-  - key: 'WJ90wKAB'
+  - key: '6QKVeZgI'
     options: {}
     markdown: |-
       {@column 
@@ -575,7 +571,6 @@ slides:
       Natural Language way to interact with an LLM
       
       {@column
-        hero: image
         flex: 4
       }
       ![llm response](assets/llm_interaction.png)
@@ -588,7 +583,6 @@ slides:
               ### User Interaction
               Natural Language way to interact with an LLM
           - flex: 4
-            hero: 'image'
             content: '![llm response](assets/llm_interaction.png)'
         type: 'section'
     notes: []

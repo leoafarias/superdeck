@@ -3,7 +3,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../../../superdeck.dart';
-import '../../modules/common/markdown/alert_block_syntax.dart';
 import '../../modules/common/markdown/markdown_element_builders.dart';
 
 class MarkdownViewer extends ImplicitlyAnimatedWidget {
@@ -64,7 +63,8 @@ class _MarkdownBuilder extends StatelessWidget {
       paddingBuilders: builders.paddingBuilders,
       checkboxBuilder: builders.checkboxBuilder,
       bulletBuilder: builders.bulletBuilder,
-      blockSyntaxes: const [AlertBlockSyntax()],
+      blockSyntaxes: builders.blockSyntaxes,
+      inlineSyntaxes: builders.inlineSyntaxes,
       styleSheet: spec.toStyle(),
     );
   }

@@ -94,9 +94,6 @@ class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    if (_size != null) {
-      return widget.builder(_size);
-    }
     return MeasureSize(
       onChange: _onSizeChange,
       child: AnimatedSize(
