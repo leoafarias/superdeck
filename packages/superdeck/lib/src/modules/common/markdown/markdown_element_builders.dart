@@ -152,20 +152,48 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
 class ImageElementBuilder extends MarkdownElementBuilder {
   final SlideSpec spec;
+
   ImageElementBuilder(this.spec);
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final uri = Uri.parse(element.attributes['src']!);
-
+    final src = element.attributes['src'];
     final heroTag = element.attributes['hero'];
 
-    Widget imageWidget = MeasureSizeBuilder(
-        cacheKey: Key(uri.toString()),
-        builder: (size) {
-          return Builder(builder: (context) {
+    if (src == null) {
+      // Handle missing 'src' attribute, e.g., return an error widget or placeholder
+      return null;
+    }
+
+    final uri = Uri.parse(src);
+    final imageWidget = _buildImageWidget(uri);
+
+    if (heroTag != null) {
+      return Hero(
+          flightShuttleBuilder: (flightContext, animation, flightDirection,
+              fromHeroContext, toHeroContext) {
+            return AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                return _buildImageWidget(uri);
+              },
+            );
+          },
+          tag: heroTag,
+          child: imageWidget);
+    }
+
+    return imageWidget;
+  }
+
+  Widget _buildImageWidget(Uri uri) {
+    return MeasureSizeBuilder(
+      cacheKey: const Key('ImageElementBuilder'),
+      builder: (measuredSize) {
+        return Builder(
+          builder: (context) {
             final finalSize = getSizeWithoutSpacing(
-              size ?? kResolution,
+              measuredSize ?? kResolution,
               spec.contentBlock,
             );
             return ConstrainedBox(
@@ -178,14 +206,10 @@ class ImageElementBuilder extends MarkdownElementBuilder {
                 ),
               ),
             );
-          });
-        });
-
-    if (heroTag != null) {
-      return Hero(tag: heroTag, child: imageWidget);
-    }
-
-    return imageWidget;
+          },
+        );
+      },
+    );
   }
 }
 
@@ -218,7 +242,6 @@ class CustomHeaderSyntax extends md.HeaderSyntax {
   @override
   md.Node parse(md.BlockParser parser) {
     final element = super.parse(parser) as md.Element;
-    element.generatedId = md.BlockSyntax.generateAnchorHash(element);
 
     final tag = _getTagAndContent(parser.lines.first.content).tag;
     if (tag != null) {
@@ -251,53 +274,3 @@ class CustomImageSyntax extends md.InlineSyntax {
     return true;
   }
 }
-
-extension on md.Document {
-  md.Document copyWith({
-    bool? encodeHtml,
-    md.Node? Function(String, [String?])? imageLinkResolver,
-    md.Node? Function(String, [String?])? linkResolver,
-    Set<md.BlockSyntax>? blockSyntaxes,
-    Set<md.InlineSyntax>? inlineSyntaxes,
-    bool? withDefaultBlockSyntaxes,
-    bool? withDefaultInlineSyntaxes,
-  }) {
-    return md.Document(
-      encodeHtml: encodeHtml ?? this.encodeHtml,
-      imageLinkResolver: imageLinkResolver ?? this.imageLinkResolver,
-      linkResolver: linkResolver ?? this.linkResolver,
-      blockSyntaxes: blockSyntaxes ?? this.blockSyntaxes,
-      inlineSyntaxes: inlineSyntaxes ?? this.inlineSyntaxes,
-      withDefaultBlockSyntaxes:
-          withDefaultBlockSyntaxes ?? this.withDefaultBlockSyntaxes,
-      withDefaultInlineSyntaxes:
-          withDefaultInlineSyntaxes ?? this.withDefaultInlineSyntaxes,
-    );
-  }
-}
-
-// class ElementClassSyntax extends md.InlineSyntax {
-//   ElementClassSyntax() : super(r'{\.(.*?)}');
-
-//   @override
-//   bool onMatch(md.InlineParser parser, Match match) {
-//     final (:tag, :content) = _getTagAndContent(match.input);
-//     // final (:tag, :content) = _getTagAndContent(match.input);
-//     final nestedNodes = md.InlineParser(content, parser.document).parse();
-//     final blockNodes = md.BlockParser(nestedNodes, parser.document).parse();
-//     final node = nestedNodes.first;
-//     md.Node element;
-//     if (tag != null) {
-//       if (node is md.Text) {
-//         element = md.Element.text(node.t, node.text);
-//       } else if (node is md.Element) {
-//         element = node;
-//       } else {
-//         throw Exception('Invalid node type');
-//       }
-//       element.attributes['hero'] = tag;
-//     }
-//     parser.addNode(element);
-//     return true;
-//   }
-// }
