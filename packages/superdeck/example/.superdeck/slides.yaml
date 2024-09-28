@@ -16,7 +16,7 @@ slides:
           - content: '![structuref_output](https://picsum.photos/800/300){.cover}'
         type: 'section'
     notes: []
-  - key: 'UDmwuXd7'
+  - key: 'XaTloKN7'
     options: {}
     markdown: |-
       {@column
@@ -28,30 +28,30 @@ slides:
       ![structured_output](https://picsum.photos/800/1400) {.cover}
       
       {@column}
-      ## Another image{.doidt}
+      ## Another image{.here}
     sections: 
       - blocks: 
           - flex: 1
             align: 'bottom_left'
             content: |
               ![structured_output](https://picsum.photos/800/1400) {.cover}
-          - content: '## Another image{.doidt}'
+          - content: '## Another image{.here}'
         type: 'section'
     notes: []
-  - key: 'Af1Oeyck'
+  - key: 'Msl2nZ6o'
     options: {}
     markdown: |-
       {@section}
       {@column
         align: center
       }
-      # Generative UI{.doit}
+      # Generative UI{.here}
       # with Flutter
     sections: 
       - blocks: 
           - align: 'center'
             content: |-
-              # Generative UI{.doit}
+              # Generative UI{.here}
               # with Flutter
         type: 'section'
     notes: []
@@ -504,7 +504,7 @@ slides:
           - content: '## LLMs Orchestrate APIs'
         type: 'section'
     notes: []
-  - key: 'FMit8Ax0'
+  - key: 'rQjAc48l'
     options: {}
     markdown: |-
       {@section 
@@ -514,20 +514,19 @@ slides:
       ### Gemini Function Calling
       The Function Calling feature is in Beta release
       
-      {@section flex: 3}
       
       
-      ![llm tools](assets/llm_tools.png )
+      ![llm tools](assets/llm_tools.png)
     sections: 
       - blocks: 
-          - content: |
+          - content: |-
               ### Gemini Function Calling
               The Function Calling feature is in Beta release
+              
+              
+              
+              ![llm tools](assets/llm_tools.png)
         align: 'center_right'
-        type: 'section'
-      - blocks: 
-          - content: '![llm tools](assets/llm_tools.png )'
-        flex: 3
         type: 'section'
     notes: []
   - key: '85oPyLzH'
@@ -557,7 +556,7 @@ slides:
               - 'Max brightness'
         type: 'section'
     notes: []
-  - key: '6QKVeZgI'
+  - key: 'ftKc28Xq'
     options: {}
     markdown: |-
       {@column 
@@ -566,7 +565,7 @@ slides:
         flex: 2
       }
       
-      ### User Interaction
+      ### User Interaction{.heading}
       Natural Language way to interact with an LLM
       
       {@column
@@ -579,20 +578,20 @@ slides:
             align: 'bottom_right'
             hero: 'heading'
             content: |
-              ### User Interaction
+              ### User Interaction{.heading}
               Natural Language way to interact with an LLM
           - flex: 4
             content: '![llm response](assets/llm_interaction.png)'
         type: 'section'
     notes: []
-  - key: 'Iuz9gj51'
+  - key: 'xHBG5RJ1'
     options: {}
     markdown: |-
       {@column
         align: center_left
         hero: heading
       }
-      ### Widget Response
+      ### Widget Response{.heading}
       
       {@column 
         flex: 3
@@ -604,7 +603,7 @@ slides:
           - align: 'center_left'
             hero: 'heading'
             content: |
-              ### Widget Response
+              ### Widget Response{.heading}
           - flex: 3
             hero: 'image'
             content: '![widget_response](assets/widget_response.png)'

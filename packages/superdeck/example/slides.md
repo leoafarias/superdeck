@@ -18,7 +18,7 @@
 ![structured_output](https://picsum.photos/800/1400) {.cover}
 
 {@column}
-## Another image{.doidt}
+## Another image{.here}
 
 ---
 
@@ -26,7 +26,7 @@
 {@column
   align: center
 }
-# Generative UI{.doit}
+# Generative UI{.here}
 # with Flutter
 
 ---
@@ -274,10 +274,9 @@ style: demo
 ### Gemini Function Calling
 The Function Calling feature is in Beta release
 
-{@section flex: 3}
 
 
-![llm tools](assets/llm_tools.png )
+![llm tools](assets/llm_tools.png)
 
 
 
@@ -304,7 +303,7 @@ style: demo
   flex: 2
 }
 
-### User Interaction
+### User Interaction{.heading}
 Natural Language way to interact with an LLM
 
 {@column
@@ -320,7 +319,7 @@ Natural Language way to interact with an LLM
   align: center_left
   hero: heading
 }
-### Widget Response
+### Widget Response{.heading}
 
 {@column 
   flex: 3

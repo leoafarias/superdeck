@@ -5,7 +5,10 @@ import 'package:mix/mix.dart';
 
 import '../../../components/atoms/cache_image_widget.dart';
 import '../helpers/constants.dart';
+import '../helpers/controller.dart';
+import '../helpers/measure_size.dart';
 import '../helpers/syntax_highlighter.dart';
+import '../helpers/utils.dart';
 import '../styles/style_spec.dart';
 import 'alert_block_syntax.dart';
 
@@ -84,17 +87,50 @@ class TextBuilder extends MarkdownElementBuilder {
   Widget? visitText(md.Text text, TextStyle? preferredStyle) {
     final (:tag, :content) = _getTagAndContent(text.text);
 
-    final textWidget = TextSpecWidget(
+    Widget textWidget = TextSpecWidget(
       _transformLineBreaks(content),
       spec: spec,
     );
 
     if (tag != null) {
-      return Hero(tag: tag, child: textWidget);
+      textWidget = Hero(
+        flightShuttleBuilder: (
+          context,
+          animation,
+          flightDirection,
+          fromHeroContext,
+          toHeroContext,
+        ) {
+          final fromBlock = Controller.of<_ElementController>(fromHeroContext);
+          final toBlock = Controller.of<_ElementController>(toHeroContext);
+
+          return AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) {
+              return TextSpecWidget(
+                lerpString(fromBlock.text, toBlock.text, animation.value),
+                spec: fromBlock.spec!.lerp(toBlock.spec, animation.value),
+              );
+            },
+          );
+        },
+        tag: tag,
+        child: textWidget,
+      );
     }
 
-    return textWidget;
+    return Provider(
+      controller: _ElementController(content, spec),
+      child: textWidget,
+    );
   }
+}
+
+class _ElementController extends Controller {
+  final String text;
+  final TextSpec? spec;
+
+  _ElementController(this.text, this.spec);
 }
 
 ({
@@ -168,36 +204,35 @@ class ImageElementBuilder extends MarkdownElementBuilder {
 
     if (heroTag != null) {
       return Hero(
-          // flightShuttleBuilder: (flightContext, animation, flightDirection,
-          //     fromHeroContext, toHeroContext) {
-          //   return AnimatedBuilder(
-          //     animation: animation,
-          //     builder: (context, child) {
-          //       return _buildImageWidget(uri);
-          //     },
-          //   );
-          // },
-          tag: heroTag,
-          child: imageWidget);
+        tag: heroTag,
+        child: imageWidget,
+      );
     }
 
     return imageWidget;
   }
 
   Widget _buildImageWidget(Uri uri) {
-    return ConstrainedBox(
-      constraints: BoxConstraints.tight(kResolution),
-      child: Column(
-        children: [
-          Expanded(
-            child: CacheDecorationImage(
-              uri: uri,
-              fit: BoxFit.contain,
-              spec: spec.image,
-            ),
-          ),
-        ],
-      ),
+    return MeasureSizeBuilder(
+      cacheKey: Key('image_${uri.toString()}'),
+      builder: (measuredSize) {
+        return Builder(
+          builder: (context) {
+            final finalSize = getSizeWithoutSpacing(
+              measuredSize ?? kResolution,
+              spec.contentBlock,
+            );
+            return ConstrainedBox(
+              constraints: BoxConstraints.tight(finalSize),
+              child: CacheDecorationImage(
+                uri: uri,
+                fit: BoxFit.contain,
+                spec: spec.image,
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -262,4 +297,36 @@ class CustomImageSyntax extends md.InlineSyntax {
     parser.addNode(element);
     return true;
   }
+}
+
+String lerpString(String start, String end, double t) {
+  // Clamp t between 0 and 1
+  t = t.clamp(0.0, 1.0);
+
+  StringBuffer result = StringBuffer();
+
+  if (t <= 0.5) {
+    // First half: reduce start string to empty
+    double progress = t / 0.5; // Normalize t to range [0,1] over [0,0.5]
+    int startLength = start.length;
+    int numCharsToShow = ((1 - progress) * startLength).round();
+
+    // Take the first numCharsToShow characters from start string
+    if (numCharsToShow > 0) {
+      result.write(start.substring(0, numCharsToShow));
+    }
+  } else {
+    // Second half: build up end string from empty
+    double progress =
+        (t - 0.5) / 0.5; // Normalize t to range [0,1] over [0.5,1]
+    int endLength = end.length;
+    int numCharsToShow = (progress * endLength).round();
+
+    // Take the first numCharsToShow characters from end string
+    if (numCharsToShow > 0) {
+      result.write(end.substring(0, numCharsToShow));
+    }
+  }
+
+  return result.toString();
 }

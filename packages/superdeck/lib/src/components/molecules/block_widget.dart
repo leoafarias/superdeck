@@ -54,12 +54,18 @@ class SectionBlockWidget extends StatelessWidget {
         flex: flex,
         child: Align(
           alignment: alignment,
-          child: switch (block) {
-            ColumnBlock block => ColumnBlockWidget(block),
-            ImageBlock block => _ImageBlockWidget(block),
-            WidgetBlock block => _WidgetBlockWidget(block),
-            DartPadBlock block => _DartPadBlockWidget(block),
-          },
+          child: Provider(
+            controller: BlockController(
+              spec: SlideSpec.of(context),
+              block: block,
+            ),
+            child: switch (block) {
+              ColumnBlock block => ColumnBlockWidget(block),
+              ImageBlock block => _ImageBlockWidget(block),
+              WidgetBlock block => _WidgetBlockWidget(block),
+              DartPadBlock block => _DartPadBlockWidget(block),
+            },
+          ),
         ),
       );
     }).toList();
