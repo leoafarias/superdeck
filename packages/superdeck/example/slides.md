@@ -4,6 +4,7 @@
 ## How can LLMs Understtand Your UI? {.here}
 
 {@column}
+
 ![structuref_output](https://picsum.photos/800/300){.cover}
 
 ---
@@ -13,7 +14,7 @@
   align: bottom_left
 }
 
-## Another image{.here}
+
 ![structured_output](https://picsum.photos/800/1400) {.cover}
 
 {@column}
@@ -266,17 +267,17 @@ style: demo
 
 ---
 
-{@column 
+{@section 
   align: center_right
-  hero: heading
-  flex: 3
 } 
 
 ### Gemini Function Calling
 The Function Calling feature is in Beta release
 
+{@section flex: 3}
 
-![llm tools](assets/llm_tools.png){.cover}
+
+![llm tools](assets/llm_tools.png )
 
 
 

@@ -37,9 +37,11 @@ class _MarkdownViewerState extends AnimatedWidgetBaseState<MarkdownViewer> {
   @override
   Widget build(BuildContext context) {
     final spec = _styleTween!.evaluate(animation) ?? const SlideSpec();
-    return _MarkdownBuilder(
-      content: widget.content,
-      spec: spec,
+    return spec.contentBlock(
+      child: _MarkdownBuilder(
+        content: widget.content,
+        spec: spec,
+      ),
     );
   }
 }

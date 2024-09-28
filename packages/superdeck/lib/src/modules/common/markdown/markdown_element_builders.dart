@@ -5,9 +5,7 @@ import 'package:mix/mix.dart';
 
 import '../../../components/atoms/cache_image_widget.dart';
 import '../helpers/constants.dart';
-import '../helpers/measure_size.dart';
 import '../helpers/syntax_highlighter.dart';
-import '../helpers/utils.dart';
 import '../styles/style_spec.dart';
 import 'alert_block_syntax.dart';
 
@@ -170,15 +168,15 @@ class ImageElementBuilder extends MarkdownElementBuilder {
 
     if (heroTag != null) {
       return Hero(
-          flightShuttleBuilder: (flightContext, animation, flightDirection,
-              fromHeroContext, toHeroContext) {
-            return AnimatedBuilder(
-              animation: animation,
-              builder: (context, child) {
-                return _buildImageWidget(uri);
-              },
-            );
-          },
+          // flightShuttleBuilder: (flightContext, animation, flightDirection,
+          //     fromHeroContext, toHeroContext) {
+          //   return AnimatedBuilder(
+          //     animation: animation,
+          //     builder: (context, child) {
+          //       return _buildImageWidget(uri);
+          //     },
+          //   );
+          // },
           tag: heroTag,
           child: imageWidget);
     }
@@ -187,28 +185,19 @@ class ImageElementBuilder extends MarkdownElementBuilder {
   }
 
   Widget _buildImageWidget(Uri uri) {
-    return MeasureSizeBuilder(
-      cacheKey: const Key('ImageElementBuilder'),
-      builder: (measuredSize) {
-        return Builder(
-          builder: (context) {
-            final finalSize = getSizeWithoutSpacing(
-              measuredSize ?? kResolution,
-              spec.contentBlock,
-            );
-            return ConstrainedBox(
-              constraints: BoxConstraints.tight(finalSize),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: CacheImage(
-                  uri: uri,
-                  spec: spec.image,
-                ),
-              ),
-            );
-          },
-        );
-      },
+    return ConstrainedBox(
+      constraints: BoxConstraints.tight(kResolution),
+      child: Column(
+        children: [
+          Expanded(
+            child: CacheDecorationImage(
+              uri: uri,
+              fit: BoxFit.contain,
+              spec: spec.image,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

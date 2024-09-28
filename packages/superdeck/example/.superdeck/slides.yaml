@@ -1,12 +1,13 @@
 config: {}
 slides: 
-  - key: 'eLo9GgOT'
+  - key: 'eYPrlvMi'
     options: {}
     markdown: |-
       {@column}
       ## How can LLMs Understtand Your UI? {.here}
       
       {@column}
+      
       ![structuref_output](https://picsum.photos/800/300){.cover}
     sections: 
       - blocks: 
@@ -15,7 +16,7 @@ slides:
           - content: '![structuref_output](https://picsum.photos/800/300){.cover}'
         type: 'section'
     notes: []
-  - key: 'kcaS7JNr'
+  - key: 'UDmwuXd7'
     options: {}
     markdown: |-
       {@column
@@ -23,7 +24,7 @@ slides:
         align: bottom_left
       }
       
-      ## Another image{.here}
+      
       ![structured_output](https://picsum.photos/800/1400) {.cover}
       
       {@column}
@@ -33,7 +34,6 @@ slides:
           - flex: 1
             align: 'bottom_left'
             content: |
-              ## Another image{.here}
               ![structured_output](https://picsum.photos/800/1400) {.cover}
           - content: '## Another image{.doidt}'
         type: 'section'
@@ -504,31 +504,30 @@ slides:
           - content: '## LLMs Orchestrate APIs'
         type: 'section'
     notes: []
-  - key: 'EgfNMv4y'
+  - key: 'FMit8Ax0'
     options: {}
     markdown: |-
-      {@column 
+      {@section 
         align: center_right
-        hero: heading
-        flex: 3
       } 
       
       ### Gemini Function Calling
       The Function Calling feature is in Beta release
       
+      {@section flex: 3}
       
-      ![llm tools](assets/llm_tools.png){.cover}
+      
+      ![llm tools](assets/llm_tools.png )
     sections: 
       - blocks: 
-          - flex: 3
-            align: 'center_right'
-            hero: 'heading'
-            content: |-
+          - content: |
               ### Gemini Function Calling
               The Function Calling feature is in Beta release
-              
-              
-              ![llm tools](assets/llm_tools.png){.cover}
+        align: 'center_right'
+        type: 'section'
+      - blocks: 
+          - content: '![llm tools](assets/llm_tools.png )'
+        flex: 3
         type: 'section'
     notes: []
   - key: '85oPyLzH'

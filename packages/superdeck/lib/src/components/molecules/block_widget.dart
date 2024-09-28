@@ -98,15 +98,7 @@ class _BlockWidgetState<T extends ContentBlock> extends State<_BlockWidget<T>> {
           Variant(widget.block.type.name),
         ),
         builder: (context) {
-          final spec = SlideSpec.of(context);
-          return spec.contentBlock(
-              child: Provider(
-            controller: BlockController(
-              spec: spec,
-              block: widget.block,
-            ),
-            child: widget.build(context),
-          ));
+          return widget.build(context);
         });
   }
 }
@@ -130,8 +122,10 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
       ],
     );
 
-    child = SingleChildScrollView(
-      child: child,
+    child = Center(
+      child: SingleChildScrollView(
+        child: child,
+      ),
     );
 
     child = Align(

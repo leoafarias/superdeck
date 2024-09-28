@@ -2,9 +2,9 @@
   "config": {},
   "slides": [
     {
-      "key": "eLo9GgOT",
+      "key": "eYPrlvMi",
       "options": {},
-      "markdown": "{@column}\n## How can LLMs Understtand Your UI? {.here}\n\n{@column}\n![structuref_output](https://picsum.photos/800/300){.cover}",
+      "markdown": "{@column}\n## How can LLMs Understtand Your UI? {.here}\n\n{@column}\n\n![structuref_output](https://picsum.photos/800/300){.cover}",
       "sections": [
         {
           "blocks": [
@@ -21,16 +21,16 @@
       "notes": []
     },
     {
-      "key": "kcaS7JNr",
+      "key": "UDmwuXd7",
       "options": {},
-      "markdown": "{@column\n  flex: 1\n  align: bottom_left\n}\n\n## Another image{.here}\n![structured_output](https://picsum.photos/800/1400) {.cover}\n\n{@column}\n## Another image{.doidt}",
+      "markdown": "{@column\n  flex: 1\n  align: bottom_left\n}\n\n\n![structured_output](https://picsum.photos/800/1400) {.cover}\n\n{@column}\n## Another image{.doidt}",
       "sections": [
         {
           "blocks": [
             {
               "flex": 1,
               "align": "bottom_left",
-              "content": "## Another image{.here}\n![structured_output](https://picsum.photos/800/1400) {.cover}\n"
+              "content": "![structured_output](https://picsum.photos/800/1400) {.cover}\n"
             },
             {
               "content": "## Another image{.doidt}"
@@ -375,19 +375,26 @@
       "notes": []
     },
     {
-      "key": "EgfNMv4y",
+      "key": "FMit8Ax0",
       "options": {},
-      "markdown": "{@column \n  align: center_right\n  hero: heading\n  flex: 3\n} \n\n### Gemini Function Calling\nThe Function Calling feature is in Beta release\n\n\n![llm tools](assets/llm_tools.png){.cover}",
+      "markdown": "{@section \n  align: center_right\n} \n\n### Gemini Function Calling\nThe Function Calling feature is in Beta release\n\n{@section flex: 3}\n\n\n![llm tools](assets/llm_tools.png )",
       "sections": [
         {
           "blocks": [
             {
-              "flex": 3,
-              "align": "center_right",
-              "hero": "heading",
-              "content": "### Gemini Function Calling\nThe Function Calling feature is in Beta release\n\n\n![llm tools](assets/llm_tools.png){.cover}"
+              "content": "### Gemini Function Calling\nThe Function Calling feature is in Beta release\n"
             }
           ],
+          "align": "center_right",
+          "type": "section"
+        },
+        {
+          "blocks": [
+            {
+              "content": "![llm tools](assets/llm_tools.png )"
+            }
+          ],
+          "flex": 3,
           "type": "section"
         }
       ],
