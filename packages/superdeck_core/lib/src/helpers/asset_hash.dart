@@ -8,7 +8,7 @@
 /// [valueToHash] is the string input that you want to convert into a hash ID.
 ///
 /// Returns an 8-character string that represents the hashed ID.
-String shortHashId(String valueToHash) {
+String assetHash(String valueToHash) {
   const characters =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 

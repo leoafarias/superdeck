@@ -5,10 +5,8 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
-import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
-import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
 import 'package:superdeck_cli/src/parsers/slide_parser.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 import 'package:yaml_writer/yaml_writer.dart';
@@ -18,47 +16,32 @@ typedef PipelineResult = ({
   List<SlideAsset> neededAssets,
 });
 
-class TaskController {
+class TaskContext {
   final int index;
-  final Slide slide;
-  final List<SlideAsset> _assets;
-  final TaskPipeline pipeline;
+  Slide slide;
 
-  TaskController._({
+  TaskContext({
     required this.slide,
     required this.index,
-    required List<SlideAsset> assets,
-    required this.pipeline,
-  }) : _assets = assets;
+  });
 
-  TaskController({
-    required this.index,
-    required this.slide,
-    required this.pipeline,
-    required List<SlideAsset> assets,
-  }) : _assets = assets;
+  final List<SlideAsset> _neededAssets = [];
 
-  List<SlideAsset> neededAssets = [];
-
-  SlideAsset? checkAssetExists(String assetName) {
-    return _assets.firstWhereOrNull(
+  bool assetExists(String assetName) {
+    final asset = slide.assets.firstWhereOrNull(
       (element) => element.path.contains(assetName),
     );
+
+    if (asset == null) {
+      return false;
+    }
+
+    _neededAssets.add(asset);
+
+    return true;
   }
 
-  TaskController copyWith({
-    Slide? slide,
-    List<SlideAsset>? assets,
-  }) {
-    return TaskController._(
-      index: index,
-      slide: slide ?? this.slide,
-      pipeline: pipeline,
-      assets: assets ?? _assets,
-    )..neededAssets = neededAssets;
-  }
-
-  Future<void> markFileAsNeeded(File file, [String? reference]) async {
+  Future<void> saveAsAsset(File file, [String? reference]) async {
     final image = await img.decodeImageFile(file.path);
 
     if (image == null) {
@@ -71,82 +54,73 @@ class TaskController {
       height: image.height,
       reference: reference,
     );
-    markNeeded(asset);
+    _neededAssets.add(asset);
   }
 
-  void markNeeded(SlideAsset asset) {
-    neededAssets.add(asset);
+  Slide finalize() {
+    return slide.copyWith(
+      assets: _neededAssets,
+    );
   }
 }
 
 class TaskPipeline {
-  final List<Task> builders;
-
-  Browser? _browser;
+  final List<Task> tasks;
 
   TaskPipeline(
-    this.builders,
+    this.tasks,
   );
 
-  Future<Browser> getBrowser() async {
-    _browser ??= await puppeteer.launch();
-    return _browser!;
-  }
-
-  Future<TaskController> _runEachSlide(
-    TaskController controller,
+  Future<TaskContext> _runEachSlide(
+    TaskContext context,
   ) async {
-    for (var task in builders) {
-      controller = await task.build(controller);
+    for (var task in tasks) {
+      try {
+        await task.run(context);
+      } on Exception catch (e) {
+        throw SdTaskException(task.name, context, e);
+      }
     }
-    return controller;
+
+    return context;
   }
 
   Future<ReferenceDto> run() async {
     await kMarkdownFile.ensureExists();
     await kGeneratedAssetsDir.ensureExists();
     await kReferenceFile.ensureExists();
-    final markdownRaw = kMarkdownFile.readAsStringSync();
+    final markdownRaw = await kMarkdownFile.readAsString();
 
     // final loadedReference = SuperDeckReference.loadYaml(kReferenceFileYaml);
     final loadedReference = ReferenceDto.loadFile(kReferenceFile);
 
     final slides = parseSlides(markdownRaw);
 
-    final futures = <Future<TaskController>>[];
+    final futures = <Future<TaskContext>>[];
 
     for (var i = 0; i < slides.length; i++) {
-      final controller = TaskController(
+      final controller = TaskContext(
         index: i,
         slide: slides[i],
-        assets: loadedReference.assets,
-        pipeline: this,
       );
       futures.add(_runEachSlide(controller));
     }
 
-    final controllers = await Future.wait(futures);
+    final contexts = await Future.wait(futures);
 
-    List<Slide> modifiedSlides = [];
-    List<SlideAsset> neededAssets = [];
+    final finalizedSlides = contexts.map((context) => context.finalize());
 
-    for (var controller in controllers) {
-      modifiedSlides.add(controller.slide);
-      neededAssets.addAll(controller.neededAssets);
-    }
+    final neededAssets = finalizedSlides.expand((slide) => slide.assets);
 
     await _cleanupGeneratedFiles(neededAssets);
 
-    for (var builder in builders) {
-      await builder.dispose();
+    for (var task in tasks) {
+      await task.dispose();
     }
-
-    _browser?.close();
 
     final reference = ReferenceDto(
       config: Config.loadFile(kProjectConfigFile),
-      slides: modifiedSlides,
-      assets: neededAssets,
+      slides: finalizedSlides.toList(),
     );
 
     await kReferenceFile.writeAsString(prettyJson(reference.toMap()));
@@ -158,11 +132,12 @@ class TaskPipeline {
   }
 }
 
-Future<void> _cleanupGeneratedFiles(List<SlideAsset> assets) async {
+Future<void> _cleanupGeneratedFiles(Iterable<SlideAsset> assets) async {
   final files = await _loadGeneratedFiles();
+  final neededPaths = assets.map((asset) => asset.path).toSet();
 
   for (var file in files) {
-    if (!assets.any((element) => element.path == file.path)) {
+    if (!neededPaths.contains(file.path)) {
       if (await file.exists()) {
         await file.delete();
       }
@@ -171,24 +146,10 @@ Future<void> _cleanupGeneratedFiles(List<SlideAsset> assets) async {
 }
 
 abstract class Task {
-  final String taskName;
-  const Task(this.taskName);
+  final String name;
+  const Task(this.name);
 
-  FutureOr<TaskController> run(
-    TaskController controller,
-  );
-
-  FutureOr<TaskController> build(TaskController controller) {
-    try {
-      return run(controller);
-    } on Exception catch (e) {
-      throw SdTaskException(taskName, controller, e);
-    }
-  }
-
-  String buildReferenceName(String content) {
-    return shortHashId(content);
-  }
+  FutureOr<void> run(TaskContext context);
 
   Future<String> dartProcess(String code) async {
     final process = await Process.start('dart', ['format', '--fix'],
@@ -215,7 +176,7 @@ abstract class Task {
     if (!extension.startsWith('.')) {
       extension = '.$extension';
     }
-    final updatedFileName = ('${taskName}_$assetName$extension');
+    final updatedFileName = ('${name}_$assetName$extension');
     return File(p.join(kGeneratedAssetsDir.path, updatedFileName));
   }
 
@@ -238,38 +199,4 @@ Future<List<File>> _loadGeneratedFiles() async {
   }
 
   return files;
-}
-
-extension on Slide {
-  String toMarkdown() {
-    final buffer = StringBuffer();
-
-    final options = this.options?.toMap();
-
-    buffer.writeln('---');
-    if (options != null && options.isNotEmpty) {
-      buffer.write(YamlWriter().write(options));
-    }
-    buffer.writeln('---');
-
-    buffer.writeln(markdown);
-
-    // for (var section in sections) {
-    //   buffer.writeln(section.toMarkdown());
-    // }
-
-    return buffer.toString();
-  }
-}
-
-extension on ReferenceDto {
-  String toMarkdown() {
-    final buffer = StringBuffer();
-
-    for (var slide in slides) {
-      buffer.writeln(slide.toMarkdown());
-    }
-
-    return buffer.toString();
-  }
 }

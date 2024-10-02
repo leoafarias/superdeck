@@ -3,13 +3,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:mix/mix.dart';
 
+import '../../../../superdeck.dart';
 import '../../../components/atoms/cache_image_widget.dart';
-import '../helpers/constants.dart';
-import '../helpers/controller.dart';
-import '../helpers/measure_size.dart';
 import '../helpers/syntax_highlighter.dart';
 import '../helpers/utils.dart';
-import '../styles/style_spec.dart';
 import 'alert_block_syntax.dart';
 
 class SpecMarkdownBuilders {
@@ -101,14 +98,14 @@ class TextBuilder extends MarkdownElementBuilder {
           fromHeroContext,
           toHeroContext,
         ) {
-          final fromBlock = Controller.of<_ElementController>(fromHeroContext);
-          final toBlock = Controller.of<_ElementController>(toHeroContext);
+          final fromBlock = _TextElementMdeol.of(fromHeroContext);
+          final toBlock = _TextElementMdeol.of(toHeroContext);
 
           return AnimatedBuilder(
             animation: animation,
             builder: (context, child) {
               return TextSpecWidget(
-                lerpString(fromBlock.text, toBlock.text, animation.value),
+                _lerpString(fromBlock.text, toBlock.text, animation.value),
                 spec: fromBlock.spec!.lerp(toBlock.spec, animation.value),
               );
             },
@@ -119,18 +116,82 @@ class TextBuilder extends MarkdownElementBuilder {
       );
     }
 
-    return Provider(
-      controller: _ElementController(content, spec),
+    return _TextElementMdeol(
+      text: content,
+      spec: spec,
       child: textWidget,
     );
   }
 }
 
-class _ElementController extends Controller {
+class _TextElementMdeol extends InheritedModel<String> {
   final String text;
   final TextSpec? spec;
 
-  _ElementController(this.text, this.spec);
+  const _TextElementMdeol({
+    required this.text,
+    required this.spec,
+    required super.child,
+  });
+
+  static _TextElementMdeol of(BuildContext context) {
+    final inherited = InheritedModel.inheritFrom<_TextElementMdeol>(context);
+
+    assert(inherited != null, 'No _TextElementMdeol found in context');
+
+    return inherited!;
+  }
+
+  @override
+  bool updateShouldNotify(covariant _TextElementMdeol oldWidget) {
+    return text != oldWidget.text || spec != oldWidget.spec;
+  }
+
+  @override
+  bool updateShouldNotifyDependent(
+    covariant _TextElementMdeol oldWidget,
+    Set dependencies,
+  ) {
+    return text != oldWidget.text || spec != oldWidget.spec;
+  }
+}
+
+class _ImageElementModel extends InheritedModel<String> {
+  final ImageSpec? spec;
+  final Size size;
+  final Uri uri;
+
+  const _ImageElementModel({
+    required this.size,
+    required this.spec,
+    required this.uri,
+    required super.child,
+  });
+
+  static _ImageElementModel of(BuildContext context) {
+    final inherited = InheritedModel.inheritFrom<_ImageElementModel>(context);
+
+    assert(inherited != null, 'No _ImageElementModel found in context');
+
+    return inherited!;
+  }
+
+  @override
+  bool updateShouldNotify(covariant _ImageElementModel oldWidget) {
+    return size != oldWidget.size ||
+        spec != oldWidget.spec ||
+        uri != oldWidget.uri;
+  }
+
+  @override
+  bool updateShouldNotifyDependent(
+    covariant _ImageElementModel oldWidget,
+    Set dependencies,
+  ) {
+    return size != oldWidget.size ||
+        spec != oldWidget.spec ||
+        uri != oldWidget.uri;
+  }
 }
 
 ({
@@ -163,24 +224,40 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
-    return Row(
-      children: [
-        Expanded(
-          child: BoxSpecWidget(
-            spec: spec?.container,
-            child: RichText(
-              text: TextSpan(
-                style: spec?.textStyle,
-                children: SyntaxHighlight.render(
-                  element.textContent.trim(),
-                  language,
+
+    return Builder(builder: (context) {
+      if (language == 'mermaid') {
+        final asset = Controller.of<SlideController>(context)
+            .getAssetByReference(element.textContent);
+
+        if (asset != null) {
+          final element = md.Element.empty('img');
+          element.attributes['src'] = asset.path;
+
+          return ImageElementBuilder(const SlideSpec())
+                  .visitElementAfter(element, preferredStyle) ??
+              const SizedBox();
+        }
+      }
+      return Row(
+        children: [
+          Expanded(
+            child: BoxSpecWidget(
+              spec: spec?.container,
+              child: RichText(
+                text: TextSpan(
+                  style: spec?.textStyle,
+                  children: SyntaxHighlight.render(
+                    element.textContent.trim(),
+                    language,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 
@@ -189,51 +266,59 @@ class ImageElementBuilder extends MarkdownElementBuilder {
 
   ImageElementBuilder(this.spec);
 
+  HeroFlightShuttleBuilder get _flightShuttleBuilder => (
+        flightContext,
+        animation,
+        flightDirection,
+        fromHeroContext,
+        toHeroContext,
+      ) {
+        final fromBlock = _ImageElementModel.of(fromHeroContext);
+        final toBlock = _ImageElementModel.of(toHeroContext);
+
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) {
+            final interpolatedSize = Size.lerp(
+              fromBlock.size,
+              toBlock.size,
+              animation.value,
+            )!;
+
+            final interpolatedSpec =
+                fromBlock.spec!.lerp(toBlock.spec, animation.value);
+
+            final finalSize = getSizeWithoutSpacing(
+              interpolatedSize,
+              spec.contentBlock,
+            );
+
+            return SizeTransition(sizeFactor: animation, child: child);
+          },
+        );
+      };
+
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final src = element.attributes['src'];
+    final src = element.attributes['src']!;
     final heroTag = element.attributes['hero'];
 
-    if (src == null) {
-      // Handle missing 'src' attribute, e.g., return an error widget or placeholder
-      return null;
-    }
-
     final uri = Uri.parse(src);
-    final imageWidget = _buildImageWidget(uri);
+
+    Widget widget = CachedImage(
+      uri: uri,
+      fit: BoxFit.contain,
+      spec: spec.image,
+    );
 
     if (heroTag != null) {
-      return Hero(
+      widget = Hero(
         tag: heroTag,
-        child: imageWidget,
+        child: widget,
       );
     }
 
-    return imageWidget;
-  }
-
-  Widget _buildImageWidget(Uri uri) {
-    return MeasureSizeBuilder(
-      cacheKey: Key('image_${uri.toString()}'),
-      builder: (measuredSize) {
-        return Builder(
-          builder: (context) {
-            final finalSize = getSizeWithoutSpacing(
-              measuredSize ?? kResolution,
-              spec.contentBlock,
-            );
-            return ConstrainedBox(
-              constraints: BoxConstraints.tight(finalSize),
-              child: CacheDecorationImage(
-                uri: uri,
-                fit: BoxFit.contain,
-                spec: spec.image,
-              ),
-            );
-          },
-        );
-      },
-    );
+    return widget;
   }
 }
 
@@ -299,7 +384,7 @@ class CustomImageSyntax extends md.InlineSyntax {
   }
 }
 
-String lerpString(String start, String end, double t) {
+String _lerpString(String start, String end, double t) {
   // Clamp t between 0 and 1
   t = t.clamp(0.0, 1.0);
 
@@ -330,3 +415,11 @@ String lerpString(String start, String end, double t) {
 
   return result.toString();
 }
+
+typedef HeroFlightShuttleBuilder = Widget Function(
+  BuildContext flightContext,
+  Animation<double> animation,
+  HeroFlightDirection flightDirection,
+  BuildContext fromHeroContext,
+  BuildContext toHeroContext,
+);

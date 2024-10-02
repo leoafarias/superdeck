@@ -7,11 +7,9 @@ class BuildSectionsTask extends Task {
   const BuildSectionsTask() : super('build_sections_task');
 
   @override
-  Future<TaskController> run(controller) async {
-    return controller.copyWith(
-      slide: controller.slide.copyWith(
-        sections: parseSections(controller.slide.markdown),
-      ),
+  void run(context) {
+    context.slide = context.slide.copyWith(
+      sections: parseSections(context.slide.markdown),
     );
   }
 }

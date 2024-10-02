@@ -80,7 +80,7 @@ class _SlideThumbnailState extends State<SlideThumbnail> {
                         data: (file) {
                           return Image(
                             gaplessPlayback: true,
-                            image: getImageProvider(context, file.uri),
+                            image: getImageProvider(file.uri),
                           );
                         },
                         loading: () => const IsometricLoading(),

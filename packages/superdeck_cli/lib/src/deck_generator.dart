@@ -44,7 +44,7 @@ class SlidesLoader {
     final progress = logger.progress('Generating slides...');
 
     final pipeline = TaskPipeline([
-      const MermaidConverterTask(),
+      MermaidConverterTask(),
       const DartFormatterTask(),
       const SlideThumbnailTask(),
       // const ImageCachingTask(),

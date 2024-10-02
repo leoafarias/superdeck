@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:superdeck_core/superdeck_core.dart';
+import 'package:yaml_writer/yaml_writer.dart';
+
 extension FileExt on File {
   Future<void> ensureWrite(String content) async {
     if (!await exists()) {
@@ -21,5 +24,35 @@ extension DirectoryExt on Directory {
     if (!await exists()) {
       await create(recursive: true);
     }
+  }
+}
+
+extension SlideX on Slide {
+  String toMarkdown() {
+    final buffer = StringBuffer();
+
+    final options = this.options?.toMap();
+
+    buffer.writeln('---');
+    if (options != null && options.isNotEmpty) {
+      buffer.write(YamlWriter().write(options));
+    }
+    buffer.writeln('---');
+
+    buffer.writeln(markdown);
+
+    return buffer.toString();
+  }
+}
+
+extension ReferenceDtoX on ReferenceDto {
+  String toMarkdown() {
+    final buffer = StringBuffer();
+
+    for (var slide in slides) {
+      buffer.writeln(slide.toMarkdown());
+    }
+
+    return buffer.toString();
   }
 }

@@ -2,9 +2,9 @@
   "config": {},
   "slides": [
     {
-      "key": "eYPrlvMi",
+      "key": "BHLFH0d9",
       "options": {},
-      "markdown": "{@column}\n## How can LLMs Understtand Your UI? {.here}\n\n{@column}\n\n![structuref_output](https://picsum.photos/800/300){.cover}",
+      "markdown": "{@column}\n## How can LLMs Understtand Your UI? {.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/300) {.cover}",
       "sections": [
         {
           "blocks": [
@@ -12,18 +12,19 @@
               "content": "## How can LLMs Understtand Your UI? {.here}\n"
             },
             {
-              "content": "![structuref_output](https://picsum.photos/800/300){.cover}"
+              "content": "![structured_output](https://picsum.photos/800/300) {.cover}"
             }
           ],
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "XaTloKN7",
+      "key": "tFQtJYuu",
       "options": {},
-      "markdown": "{@column\n  flex: 1\n  align: bottom_left\n}\n\n\n![structured_output](https://picsum.photos/800/1400) {.cover}\n\n{@column}\n## Another image{.here}",
+      "markdown": "{@column\n  flex: 1\n  align: bottom_left\n}\n\n\n\n![structured_output](https://picsum.photos/800/1400) {.cover}\n\n{@column}\n## Another image{.here}",
       "sections": [
         {
           "blocks": [
@@ -39,7 +40,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "Msl2nZ6o",
@@ -56,18 +58,19 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "X2T13jp8",
+      "key": "P6nguqAy",
       "options": {},
-      "markdown": "{@column\n    align: center_right\n}\n\n#### Leo Farias\n@leoafarias\n\n\n{@column\n    align: center_left\n}\n\n- Founder/CEO/CTO\n- Open Source Contributor\n- Flutter & Dart GDE\n- Passionate about UI/UX/DX",
+      "markdown": "{@column\n    align: center_right\n}\n\n#### Leo Farias\n@leoafarias{.here}\n\n\n{@column\n    align: center_left\n}\n\n- Founder/CEO/CTO\n- Open Source Contributor\n- Flutter & Dart GDE\n- Passionate about UI/UX/DX",
       "sections": [
         {
           "blocks": [
             {
               "align": "center_right",
-              "content": "#### Leo Farias\n@leoafarias\n\n"
+              "content": "#### Leo Farias\n@leoafarias{.here}\n\n"
             },
             {
               "align": "center_left",
@@ -77,12 +80,13 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "OnZ1cviT",
+      "key": "htEZFxsa",
       "options": {},
-      "markdown": "{@column}\n\n{@column \n  align: center_left \n  flex: 2\n}\n> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.\n\n{@column}",
+      "markdown": "{@column}\n\n{@column \n  align: center_left \n  flex: 2\n}\n> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration. \n\n{@column}",
       "sections": [
         {
           "blocks": [
@@ -92,14 +96,15 @@
             {
               "flex": 2,
               "align": "center_left",
-              "content": "> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.\n"
+              "content": "> [!WARNING]  \n> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration. \n"
             },
             {}
           ],
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "D4etKl0J",
@@ -124,17 +129,18 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "4E2GOMRu",
+      "key": "A8nJ3H8k",
       "options": {},
-      "markdown": "### What is Generative UI?\n\n{@column}\n\n- LLMs are great at generating content based on context\n- GUIs are great at providing structured, interactive interfaces for user input and navigation",
+      "markdown": "### What is Generative UI?{.animate}\n\n{@column}\n\n- LLMs are great at generating content based on context\n- GUIs are great at providing structured, interactive interfaces for user input and navigation",
       "sections": [
         {
           "blocks": [
             {
-              "content": "### What is Generative UI?\n"
+              "content": "### What is Generative UI?{.animate}\n"
             },
             {
               "content": "- LLMs are great at generating content based on context\n- GUIs are great at providing structured, interactive interfaces for user input and navigation"
@@ -143,28 +149,30 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "7qVeHjc5",
+      "key": "9mHDFwa9",
       "options": {},
-      "markdown": "# LLM ❤️ GUI",
+      "markdown": "# LLM ❤️ GUI{.animate}",
       "sections": [
         {
           "blocks": [
             {
-              "content": "# LLM ❤️ GUI"
+              "content": "# LLM ❤️ GUI{.animate}"
             }
           ],
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "D6lTKmGt",
+      "key": "bsXHyPoa",
       "options": {},
-      "markdown": "{@column}\n{@column\n  flex: 2\n  align: center\n}\nCreates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.\n\n{@column}",
+      "markdown": "{@column}\n{@column\n  flex: 2\n  align: center\n}\nCreates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.{.animate}\n\n{@column}",
       "sections": [
         {
           "blocks": [
@@ -172,30 +180,32 @@
             {
               "flex": 2,
               "align": "center",
-              "content": "Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.\n"
+              "content": "Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.{.animate}\n"
             },
             {}
           ],
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
-      "key": "hHrCdu5G",
+      "key": "3sLdrfsM",
       "options": {},
-      "markdown": "### Benefits of UI over Chat\n\n- More intuitive and user-friendly, especially for complex tasks\n- Faster feedback loop between users and LLMs\n- Enhances efficiency and interaction",
+      "markdown": "### Benefits of UI over Chat{.animate}\n\n- More intuitive and user-friendly, especially for complex tasks\n- Faster feedback loop between users and LLMs\n- Enhances efficiency and interaction",
       "sections": [
         {
           "blocks": [
             {
-              "content": "### Benefits of UI over Chat\n\n- More intuitive and user-friendly, especially for complex tasks\n- Faster feedback loop between users and LLMs\n- Enhances efficiency and interaction"
+              "content": "### Benefits of UI over Chat{.animate}\n\n- More intuitive and user-friendly, especially for complex tasks\n- Faster feedback loop between users and LLMs\n- Enhances efficiency and interaction"
             }
           ],
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "CsyEcFYH",
@@ -214,7 +224,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "rHHS9FIs",
@@ -237,7 +248,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "9jtc9i8W",
@@ -256,7 +268,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "CtLOsx2s",
@@ -272,7 +285,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "6EU2Xxrf",
@@ -288,7 +302,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "qek7UrZY",
@@ -304,7 +319,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "8DDlBdti",
@@ -330,7 +346,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "m7QWZujG",
@@ -356,7 +373,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "H0jUl8Aj",
@@ -372,7 +390,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "rQjAc48l",
@@ -389,7 +408,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "85oPyLzH",
@@ -416,7 +436,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "ftKc28Xq",
@@ -439,7 +460,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "xHBG5RJ1",
@@ -462,7 +484,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "3eFdrtdl",
@@ -489,7 +512,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "pNxPyfLK",
@@ -505,7 +529,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "5cGNbsJx",
@@ -521,7 +546,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "J6DNhZau",
@@ -546,7 +572,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "3kW1wOHd",
@@ -562,7 +589,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     },
     {
       "key": "UqCN11cB",
@@ -578,8 +606,8 @@
           "type": "section"
         }
       ],
-      "notes": []
+      "notes": [],
+      "assets": []
     }
-  ],
-  "assets": []
+  ]
 }

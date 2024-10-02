@@ -37,7 +37,6 @@ void main() {
       expect(deckReference, isNotNull);
       expect(deckReference.config, isNotNull);
       expect(deckReference.slides, isNotEmpty);
-      expect(deckReference.assets, isNotEmpty);
     });
   });
 }

@@ -1,6 +1,6 @@
 config: {}
 slides: 
-  - key: 'eYPrlvMi'
+  - key: 'BHLFH0d9'
     options: {}
     markdown: |-
       {@column}
@@ -8,21 +8,23 @@ slides:
       
       {@column}
       
-      ![structuref_output](https://picsum.photos/800/300){.cover}
+      ![structured_output](https://picsum.photos/800/300) {.cover}
     sections: 
       - blocks: 
           - content: |
               ## How can LLMs Understtand Your UI? {.here}
-          - content: '![structuref_output](https://picsum.photos/800/300){.cover}'
+          - content: '![structured_output](https://picsum.photos/800/300) {.cover}'
         type: 'section'
     notes: []
-  - key: 'XaTloKN7'
+    assets: []
+  - key: 'tFQtJYuu'
     options: {}
     markdown: |-
       {@column
         flex: 1
         align: bottom_left
       }
+      
       
       
       ![structured_output](https://picsum.photos/800/1400) {.cover}
@@ -38,6 +40,7 @@ slides:
           - content: '## Another image{.here}'
         type: 'section'
     notes: []
+    assets: []
   - key: 'Msl2nZ6o'
     options: {}
     markdown: |-
@@ -55,7 +58,8 @@ slides:
               # with Flutter
         type: 'section'
     notes: []
-  - key: 'X2T13jp8'
+    assets: []
+  - key: 'P6nguqAy'
     options: {}
     markdown: |-
       {@column
@@ -63,7 +67,7 @@ slides:
       }
       
       #### Leo Farias
-      @leoafarias
+      @leoafarias{.here}
       
       
       {@column
@@ -79,7 +83,7 @@ slides:
           - align: 'center_right'
             content: |
               #### Leo Farias
-              @leoafarias
+              @leoafarias{.here}
               
           - align: 'center_left'
             content: |-
@@ -89,7 +93,8 @@ slides:
               - Passionate about UI/UX/DX
         type: 'section'
     notes: []
-  - key: 'OnZ1cviT'
+    assets: []
+  - key: 'htEZFxsa'
     options: {}
     markdown: |-
       {@column}
@@ -99,7 +104,7 @@ slides:
         flex: 2
       }
       > [!WARNING]  
-      > This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.
+      > This presentation contains live AI-generated content. Unexpected things may occur during the demonstration. 
       
       {@column}
     sections: 
@@ -109,10 +114,11 @@ slides:
             align: 'center_left'
             content: |
               > [!WARNING]  
-              > This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.
+              > This presentation contains live AI-generated content. Unexpected things may occur during the demonstration. 
           - {}
         type: 'section'
     notes: []
+    assets: []
   - key: 'D4etKl0J'
     options: {}
     markdown: |-
@@ -135,10 +141,11 @@ slides:
             content: '### AI Assisted Code Generation'
         type: 'section'
     notes: []
-  - key: '4E2GOMRu'
+    assets: []
+  - key: 'A8nJ3H8k'
     options: {}
     markdown: |-
-      ### What is Generative UI?
+      ### What is Generative UI?{.animate}
       
       {@column}
       
@@ -147,21 +154,23 @@ slides:
     sections: 
       - blocks: 
           - content: |
-              ### What is Generative UI?
+              ### What is Generative UI?{.animate}
           - content: |-
               - LLMs are great at generating content based on context
               - GUIs are great at providing structured, interactive interfaces for user input and navigation
         type: 'section'
     notes: []
-  - key: '7qVeHjc5'
+    assets: []
+  - key: '9mHDFwa9'
     options: {}
-    markdown: '# LLM ❤️ GUI'
+    markdown: '# LLM ❤️ GUI{.animate}'
     sections: 
       - blocks: 
-          - content: '# LLM ❤️ GUI'
+          - content: '# LLM ❤️ GUI{.animate}'
         type: 'section'
     notes: []
-  - key: 'D6lTKmGt'
+    assets: []
+  - key: 'bsXHyPoa'
     options: {}
     markdown: |-
       {@column}
@@ -169,7 +178,7 @@ slides:
         flex: 2
         align: center
       }
-      Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.
+      Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.{.animate}
       
       {@column}
     sections: 
@@ -178,14 +187,15 @@ slides:
           - flex: 2
             align: 'center'
             content: |
-              Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.
+              Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.{.animate}
           - {}
         type: 'section'
     notes: []
-  - key: 'hHrCdu5G'
+    assets: []
+  - key: '3sLdrfsM'
     options: {}
     markdown: |-
-      ### Benefits of UI over Chat
+      ### Benefits of UI over Chat{.animate}
       
       - More intuitive and user-friendly, especially for complex tasks
       - Faster feedback loop between users and LLMs
@@ -193,13 +203,14 @@ slides:
     sections: 
       - blocks: 
           - content: |-
-              ### Benefits of UI over Chat
+              ### Benefits of UI over Chat{.animate}
               
               - More intuitive and user-friendly, especially for complex tasks
               - Faster feedback loop between users and LLMs
               - Enhances efficiency and interaction
         type: 'section'
     notes: []
+    assets: []
   - key: 'CsyEcFYH'
     options: {}
     markdown: |-
@@ -220,6 +231,7 @@ slides:
           - {}
         type: 'section'
     notes: []
+    assets: []
   - key: 'rHHS9FIs'
     options: {}
     markdown: |-
@@ -236,6 +248,7 @@ slides:
           - content: '![structured_output](assets/structured_output.png)'
         type: 'section'
     notes: []
+    assets: []
   - key: '9jtc9i8W'
     options: {}
     markdown: |-
@@ -279,6 +292,7 @@ slides:
               ```
         type: 'section'
     notes: []
+    assets: []
   - key: 'CtLOsx2s'
     options: {}
     markdown: |-
@@ -318,6 +332,7 @@ slides:
               ```
         type: 'section'
     notes: []
+    assets: []
   - key: '6EU2Xxrf'
     options: {}
     markdown: |-
@@ -343,6 +358,7 @@ slides:
               - Color for each corner of the palette
         type: 'section'
     notes: []
+    assets: []
   - key: 'qek7UrZY'
     options: {}
     markdown: |-
@@ -446,6 +462,7 @@ slides:
               ```
         type: 'section'
     notes: []
+    assets: []
   - key: '8DDlBdti'
     options: 
       style: 'demo'
@@ -471,6 +488,7 @@ slides:
               - 'cyberpunk'
         type: 'section'
     notes: []
+    assets: []
   - key: 'm7QWZujG'
     options: 
       style: 'demo'
@@ -496,6 +514,7 @@ slides:
               - 'cyberpunk'
         type: 'section'
     notes: []
+    assets: []
   - key: 'H0jUl8Aj'
     options: {}
     markdown: '## LLMs Orchestrate APIs'
@@ -504,6 +523,7 @@ slides:
           - content: '## LLMs Orchestrate APIs'
         type: 'section'
     notes: []
+    assets: []
   - key: 'rQjAc48l'
     options: {}
     markdown: |-
@@ -529,6 +549,7 @@ slides:
         align: 'center_right'
         type: 'section'
     notes: []
+    assets: []
   - key: '85oPyLzH'
     options: 
       style: 'demo'
@@ -556,6 +577,7 @@ slides:
               - 'Max brightness'
         type: 'section'
     notes: []
+    assets: []
   - key: 'ftKc28Xq'
     options: {}
     markdown: |-
@@ -584,6 +606,7 @@ slides:
             content: '![llm response](assets/llm_interaction.png)'
         type: 'section'
     notes: []
+    assets: []
   - key: 'xHBG5RJ1'
     options: {}
     markdown: |-
@@ -609,6 +632,7 @@ slides:
             content: '![widget_response](assets/widget_response.png)'
         type: 'section'
     notes: []
+    assets: []
   - key: '3eFdrtdl'
     options: 
       style: 'demo'
@@ -636,6 +660,7 @@ slides:
               - 'Max brightness'
         type: 'section'
     notes: []
+    assets: []
   - key: 'pNxPyfLK'
     options: {}
     markdown: '## What if the tool to use is a widget schema?'
@@ -644,6 +669,7 @@ slides:
           - content: '## What if the tool to use is a widget schema?'
         type: 'section'
     notes: []
+    assets: []
   - key: '5cGNbsJx'
     options: {}
     markdown: |-
@@ -696,6 +722,7 @@ slides:
               ```
         type: 'section'
     notes: []
+    assets: []
   - key: 'J6DNhZau'
     options: 
       style: 'demo'
@@ -719,6 +746,7 @@ slides:
               - 'Change everything'
         type: 'section'
     notes: []
+    assets: []
   - key: '3kW1wOHd'
     options: {}
     markdown: '## The future of UI might be orchestrating user experiences rather than creating it.'
@@ -727,6 +755,7 @@ slides:
           - content: '## The future of UI might be orchestrating user experiences rather than creating it.'
         type: 'section'
     notes: []
+    assets: []
   - key: 'UqCN11cB'
     options: {}
     markdown: |-
@@ -745,4 +774,4 @@ slides:
               (GitHub, Twitter/X)
         type: 'section'
     notes: []
-assets: []
+    assets: []

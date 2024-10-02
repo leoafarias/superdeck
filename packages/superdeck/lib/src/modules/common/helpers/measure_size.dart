@@ -48,16 +48,11 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 
 class MeasureSizeBuilder extends StatefulWidget {
   final Widget Function(Size? size) builder;
-  final Duration duration;
 
   const MeasureSizeBuilder({
     super.key,
     required this.builder,
-    required this.cacheKey,
-    this.duration = Durations.medium1,
   });
-
-  final Key cacheKey;
 
   @override
   State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
@@ -65,13 +60,15 @@ class MeasureSizeBuilder extends StatefulWidget {
 
 class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
   Size? _size;
+  late final Key _key;
 
   static final Map<Key, Size> _cacheSizes = {};
 
   @override
   void initState() {
     super.initState();
-    _size = _cacheSizes[widget.cacheKey];
+    _key = widget.key ?? UniqueKey();
+    _size = _cacheSizes[_key];
   }
 
   void _onSizeChange(Size size) {
@@ -84,7 +81,7 @@ class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
     }
 
     if (size == _size) return;
-    _cacheSizes[widget.cacheKey] = size;
+    _cacheSizes[_key] = size;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _size = size;
@@ -94,11 +91,10 @@ class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return MeasureSize(
-      onChange: _onSizeChange,
-      child: AnimatedSize(
-        duration: widget.duration,
-        curve: Curves.easeInOut,
+    return Container(
+      constraints: BoxConstraints.loose(kResolution),
+      child: MeasureSize(
+        onChange: _onSizeChange,
         child: widget.builder(_size ?? kResolution),
       ),
     );

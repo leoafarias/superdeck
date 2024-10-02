@@ -4,14 +4,7 @@ import 'dart:developer';
 import 'package:puppeteer/puppeteer.dart';
 import 'package:superdeck_cli/src/generator_pipeline.dart';
 import 'package:superdeck_cli/src/helpers/logger.dart';
-
-// ---
-// title: Hello Title
-// config:
-//   theme: base
-//   themeVariables:
-//     primaryColor: "#00ff00"
-// ---
+import 'package:superdeck_core/superdeck_core.dart';
 
 Future<String> _generateMermaidGraph(
   Browser browser,
@@ -166,17 +159,29 @@ Future<List<int>> generateRoughMermaidGraph(
 }
 
 class MermaidConverterTask extends Task {
-  const MermaidConverterTask() : super('mermaid');
+  MermaidConverterTask() : super('mermaid');
+  Browser? _browser;
+
+  Future<Browser> _getBrowser() async {
+    _browser ??= await puppeteer.launch();
+    return _browser!;
+  }
 
   @override
-  FutureOr<TaskController> run(controller) async {
+  void dispose() {
+    _browser?.close();
+    _browser = null;
+  }
+
+  @override
+  Future<void> run(context) async {
     final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
-    final slide = controller.slide;
+    final slide = context.slide;
 
     final matches = mermaidBlockRegex.allMatches(slide.markdown);
 
-    if (matches.isEmpty) return controller;
-    final replacements = <({int start, int end, String markdown})>[];
+    if (matches.isEmpty) return;
+    // final replacements = <({int start, int end, String markdown})>[];
 
     for (final Match match in matches) {
       final mermaidSyntax = match.group(1);
@@ -184,12 +189,12 @@ class MermaidConverterTask extends Task {
       if (mermaidSyntax == null) continue;
 
       final mermaidFile = buildAssetFile(
-        buildReferenceName(mermaidSyntax),
+        assetHash(mermaidSyntax),
         'png',
       );
 
       if (!await mermaidFile.exists()) {
-        final browser = await controller.pipeline.getBrowser();
+        final browser = await _getBrowser();
 
         final imageData =
             await generateRoughMermaidGraph(browser, mermaidSyntax);
@@ -199,31 +204,8 @@ class MermaidConverterTask extends Task {
 
       // If file existeed or was create it then replace it
       if (await mermaidFile.exists()) {
-        await controller.markFileAsNeeded(mermaidFile);
-
-        replacements.add((
-          start: match.start,
-          end: match.end,
-          markdown: '![Mermaid Diagram](${mermaidFile.path})',
-        ));
+        await context.saveAsAsset(mermaidFile);
       }
     }
-
-    var replacedData = slide.markdown;
-
-    // Apply replacements in reverse order
-    for (var replacement in replacements.reversed) {
-      final (
-        :start,
-        :end,
-        :markdown,
-      ) = replacement;
-
-      replacedData = replacedData.replaceRange(start, end, markdown);
-    }
-
-    return controller.copyWith(
-      slide: slide.copyWith(markdown: replacedData),
-    );
   }
 }

@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:path/path.dart' as p;
-import 'package:superdeck_core/src/models/block_model.dart';
-import 'package:superdeck_core/src/models/config_model.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 part 'slide_model.mapper.dart';
@@ -15,6 +13,7 @@ class Slide with SlideMappable {
   final String markdown;
   final List<SectionBlock> sections;
   final List<SlideNote> notes;
+  final List<SlideAsset> assets;
 
   const Slide({
     required this.key,
@@ -22,6 +21,7 @@ class Slide with SlideMappable {
     required this.markdown,
     this.sections = const [],
     this.notes = const [],
+    this.assets = const [],
   });
 
   File get thumbnailFile => File(
@@ -43,6 +43,7 @@ class Slide with SlideMappable {
       'options': SlideOptions.schema.optional(),
       'sections': SchemaList(SectionBlock.schema).optional(),
       'notes': SchemaList(Schema.string).optional(),
+      'assets': SchemaList(SlideAsset.schema).optional(),
     },
     additionalProperties: false,
   );

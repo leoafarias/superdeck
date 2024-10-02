@@ -15,7 +15,6 @@ class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {
       MapperContainer.globals.use(_instance = ReferenceDtoMapper._());
       ConfigMapper.ensureInitialized();
       SlideMapper.ensureInitialized();
-      SlideAssetMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -29,24 +28,18 @@ class ReferenceDtoMapper extends ClassMapperBase<ReferenceDto> {
   static List<Slide> _$slides(ReferenceDto v) => v.slides;
   static const Field<ReferenceDto, List<Slide>> _f$slides =
       Field('slides', _$slides);
-  static List<SlideAsset> _$assets(ReferenceDto v) => v.assets;
-  static const Field<ReferenceDto, List<SlideAsset>> _f$assets =
-      Field('assets', _$assets);
 
   @override
   final MappableFields<ReferenceDto> fields = const {
     #config: _f$config,
     #slides: _f$slides,
-    #assets: _f$assets,
   };
   @override
   final bool ignoreNull = true;
 
   static ReferenceDto _instantiate(DecodingData data) {
     return ReferenceDto(
-        config: data.dec(_f$config),
-        slides: data.dec(_f$slides),
-        assets: data.dec(_f$assets));
+        config: data.dec(_f$config), slides: data.dec(_f$slides));
   }
 
   @override
@@ -103,9 +96,7 @@ abstract class ReferenceDtoCopyWith<$R, $In extends ReferenceDto, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ConfigCopyWith<$R, Config, Config> get config;
   ListCopyWith<$R, Slide, SlideCopyWith<$R, Slide, Slide>> get slides;
-  ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
-      get assets;
-  $R call({Config? config, List<Slide>? slides, List<SlideAsset>? assets});
+  $R call({Config? config, List<Slide>? slides});
   ReferenceDtoCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -125,21 +116,14 @@ class _ReferenceDtoCopyWithImpl<$R, $Out>
       ListCopyWith($value.slides, (v, t) => v.copyWith.$chain(t),
           (v) => call(slides: v));
   @override
-  ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
-      get assets => ListCopyWith($value.assets, (v, t) => v.copyWith.$chain(t),
-          (v) => call(assets: v));
-  @override
-  $R call({Config? config, List<Slide>? slides, List<SlideAsset>? assets}) =>
-      $apply(FieldCopyWithData({
+  $R call({Config? config, List<Slide>? slides}) => $apply(FieldCopyWithData({
         if (config != null) #config: config,
-        if (slides != null) #slides: slides,
-        if (assets != null) #assets: assets
+        if (slides != null) #slides: slides
       }));
   @override
   ReferenceDto $make(CopyWithData data) => ReferenceDto(
       config: data.get(#config, or: $value.config),
-      slides: data.get(#slides, or: $value.slides),
-      assets: data.get(#assets, or: $value.assets));
+      slides: data.get(#slides, or: $value.slides));
 
   @override
   ReferenceDtoCopyWith<$R2, ReferenceDto, $Out2> $chain<$R2, $Out2>(

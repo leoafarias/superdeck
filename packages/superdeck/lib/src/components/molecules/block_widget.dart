@@ -116,30 +116,19 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
   Widget build(context) {
     final content = block.content;
     final alignment = block.align ?? ContentAlignment.center;
-    final tag = block.hero;
 
-    Widget child = Wrap(
-      clipBehavior: Clip.hardEdge,
-      children: [
-        MarkdownViewer(
-          content: content,
-          spec: SlideSpec.of(context),
-        ),
-      ],
-    );
-
-    child = Center(
-      child: SingleChildScrollView(
-        child: child,
+    return Align(
+      alignment: ConverterHelper.toAlignment(alignment),
+      child: Wrap(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          MarkdownViewer(
+            content: content,
+            spec: SlideSpec.of(context),
+          ),
+        ],
       ),
     );
-
-    child = Align(
-      alignment: ConverterHelper.toAlignment(alignment),
-      child: child,
-    );
-
-    return child;
   }
 }
 
@@ -149,11 +138,11 @@ class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
   @override
   Widget build(context) {
     final options = block;
-    final tag = options.hero;
+
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
 
-    return CacheDecorationImage(
+    return CachedImage(
       uri: Uri.parse(options.src),
       fit: ConverterHelper.toBoxFit(imageFit),
       alignment: ConverterHelper.toAlignment(alignment),

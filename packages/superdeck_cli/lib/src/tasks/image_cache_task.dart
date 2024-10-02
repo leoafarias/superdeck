@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:superdeck_cli/src/generator_pipeline.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 class ImageCachingTask extends Task {
   const ImageCachingTask() : super('image_caching');
 
   @override
-  Future<TaskController> run(controller) async {
-    final slide = controller.slide;
+  Future<TaskContext> run(context) async {
+    final slide = context.slide;
 
     var content = slide.markdown;
     final slideData = slide.toMap();
@@ -26,11 +27,9 @@ class ImageCachingTask extends Task {
       if (isAssetFile(File(url))) return;
 
       try {
-        final refName = buildReferenceName(url);
-        final asset = controller.checkAssetExists(refName);
+        final refName = assetHash(url);
 
-        if (asset != null) {
-          controller.markNeeded(asset);
+        if (context.assetExists(refName)) {
           return;
         }
 
@@ -68,7 +67,7 @@ class ImageCachingTask extends Task {
           // Write the image data to the file
           await file.writeAsBytes(response.bodyBytes);
 
-          await controller.markFileAsNeeded(file, url);
+          await context.saveAsAsset(file, url);
         } else {}
       } catch (e) {
         print('Error: $e');
@@ -90,6 +89,6 @@ class ImageCachingTask extends Task {
       await saveAsset(backgroundOption);
     }
 
-    return controller;
+    return context;
   }
 }

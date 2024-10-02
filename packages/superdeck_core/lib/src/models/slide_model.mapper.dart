@@ -16,6 +16,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
       SlideOptionsMapper.ensureInitialized();
       SectionBlockMapper.ensureInitialized();
       SlideNoteMapper.ensureInitialized();
+      SlideAssetMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -36,6 +37,9 @@ class SlideMapper extends ClassMapperBase<Slide> {
   static List<SlideNote> _$notes(Slide v) => v.notes;
   static const Field<Slide, List<SlideNote>> _f$notes =
       Field('notes', _$notes, opt: true, def: const []);
+  static List<SlideAsset> _$assets(Slide v) => v.assets;
+  static const Field<Slide, List<SlideAsset>> _f$assets =
+      Field('assets', _$assets, opt: true, def: const []);
 
   @override
   final MappableFields<Slide> fields = const {
@@ -44,6 +48,7 @@ class SlideMapper extends ClassMapperBase<Slide> {
     #markdown: _f$markdown,
     #sections: _f$sections,
     #notes: _f$notes,
+    #assets: _f$assets,
   };
   @override
   final bool ignoreNull = true;
@@ -54,7 +59,8 @@ class SlideMapper extends ClassMapperBase<Slide> {
         options: data.dec(_f$options),
         markdown: data.dec(_f$markdown),
         sections: data.dec(_f$sections),
-        notes: data.dec(_f$notes));
+        notes: data.dec(_f$notes),
+        assets: data.dec(_f$assets));
   }
 
   @override
@@ -108,12 +114,15 @@ abstract class SlideCopyWith<$R, $In extends Slide, $Out>
       SectionBlockCopyWith<$R, SectionBlock, SectionBlock>> get sections;
   ListCopyWith<$R, SlideNote, SlideNoteCopyWith<$R, SlideNote, SlideNote>>
       get notes;
+  ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
+      get assets;
   $R call(
       {String? key,
       SlideOptions? options,
       String? markdown,
       List<SectionBlock>? sections,
-      List<SlideNote>? notes});
+      List<SlideNote>? notes,
+      List<SlideAsset>? assets});
   SlideCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -136,18 +145,24 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
       get notes => ListCopyWith(
           $value.notes, (v, t) => v.copyWith.$chain(t), (v) => call(notes: v));
   @override
+  ListCopyWith<$R, SlideAsset, SlideAssetCopyWith<$R, SlideAsset, SlideAsset>>
+      get assets => ListCopyWith($value.assets, (v, t) => v.copyWith.$chain(t),
+          (v) => call(assets: v));
+  @override
   $R call(
           {String? key,
           Object? options = $none,
           String? markdown,
           List<SectionBlock>? sections,
-          List<SlideNote>? notes}) =>
+          List<SlideNote>? notes,
+          List<SlideAsset>? assets}) =>
       $apply(FieldCopyWithData({
         if (key != null) #key: key,
         if (options != $none) #options: options,
         if (markdown != null) #markdown: markdown,
         if (sections != null) #sections: sections,
-        if (notes != null) #notes: notes
+        if (notes != null) #notes: notes,
+        if (assets != null) #assets: assets
       }));
   @override
   Slide $make(CopyWithData data) => Slide(
@@ -155,7 +170,8 @@ class _SlideCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Slide, $Out>
       options: data.get(#options, or: $value.options),
       markdown: data.get(#markdown, or: $value.markdown),
       sections: data.get(#sections, or: $value.sections),
-      notes: data.get(#notes, or: $value.notes));
+      notes: data.get(#notes, or: $value.notes),
+      assets: data.get(#assets, or: $value.assets));
 
   @override
   SlideCopyWith<$R2, Slide, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>

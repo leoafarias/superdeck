@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 import 'package:yaml/yaml.dart';
 
 typedef MarkdownExtraction = ({
@@ -11,7 +11,7 @@ typedef MarkdownExtraction = ({
 
 // Extracts the YAML frontmatter from a markdown string
 MarkdownExtraction extractYamlFrontmatter(String markdown) {
-  final key = shortHashId(markdown);
+  final key = assetHash(markdown);
   final regex = RegExp(
     r'^---.*\r?\n([\s\S]*?)---',
     multiLine: true,

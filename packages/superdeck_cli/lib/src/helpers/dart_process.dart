@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
-import 'package:superdeck_cli/src/helpers/short_hash_id.dart';
+import 'package:superdeck_core/superdeck_core.dart';
 
 class DartProcess {
   // static Future<Process> _run(List<String> args) async {
@@ -15,7 +15,7 @@ class DartProcess {
   }
 
   static String format(String code) {
-    final hash = shortHashId(code); // Generate a hash for the code
+    final hash = assetHash(code); // Generate a hash for the code
     final tempFile = File('${Directory.systemTemp.path}/$hash.dart');
     try {
       tempFile.createSync(recursive: true);

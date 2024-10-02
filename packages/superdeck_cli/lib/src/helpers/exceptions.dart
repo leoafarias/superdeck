@@ -16,7 +16,7 @@ class SdMarkdownParsingException implements Exception {
 
 class SdTaskException implements Exception {
   final String taskName;
-  final TaskController controller;
+  final TaskContext controller;
   final Exception exception;
 
   SdTaskException(

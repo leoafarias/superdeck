@@ -104,9 +104,7 @@ CustomTransitionPage<void> _getPageTransition(
   return CustomTransitionPage<void>(
     key: state.pageKey,
     maintainState: true,
-    transitionDuration: isBack
-        ? const Duration(milliseconds: 00)
-        : const Duration(milliseconds: 1000),
+    transitionDuration: const Duration(milliseconds: 1000),
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(

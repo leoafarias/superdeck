@@ -5,7 +5,7 @@
 
 {@column}
 
-![structuref_output](https://picsum.photos/800/300){.cover}
+![structured_output](https://picsum.photos/800/300) {.cover}
 
 ---
 ---
@@ -13,6 +13,7 @@
   flex: 1
   align: bottom_left
 }
+
 
 
 ![structured_output](https://picsum.photos/800/1400) {.cover}
@@ -36,7 +37,7 @@
 }
 
 #### Leo Farias
-@leoafarias
+@leoafarias{.here}
 
 
 {@column
@@ -57,7 +58,7 @@
   flex: 2
 }
 > [!WARNING]  
-> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration.
+> This presentation contains live AI-generated content. Unexpected things may occur during the demonstration. 
 
 {@column}
 
@@ -75,7 +76,7 @@
 
 ---
 ---
-### What is Generative UI?
+### What is Generative UI?{.animate}
 
 {@column}
 
@@ -84,7 +85,7 @@
 
 ---
 ---
-# LLM ❤️ GUI
+# LLM ❤️ GUI{.animate}
 
 ---
 ---
@@ -93,13 +94,13 @@
   flex: 2
   align: center
 }
-Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.
+Creates dynamic, context-aware UIs by interpreting actions and maintaining state with LLMs for fluid, interactive responses.{.animate}
 
 {@column}
 
 ---
 ---
-### Benefits of UI over Chat
+### Benefits of UI over Chat{.animate}
 
 - More intuitive and user-friendly, especially for complex tasks
 - Faster feedback loop between users and LLMs

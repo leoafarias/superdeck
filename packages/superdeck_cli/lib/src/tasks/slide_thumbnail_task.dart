@@ -8,11 +8,11 @@ class SlideThumbnailTask extends Task {
   const SlideThumbnailTask() : super('thumbnail');
 
   @override
-  FutureOr<TaskController> run(controller) async {
+  FutureOr<TaskContext> run(controller) async {
     final file = controller.slide.thumbnailFile;
 
     if (await file.exists()) {
-      await controller.markFileAsNeeded(file);
+      await controller.saveAsAsset(file);
     }
     return controller;
   }

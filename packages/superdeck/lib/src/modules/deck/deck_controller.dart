@@ -1,11 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../../superdeck.dart';
 import '../common/helpers/async_value.dart';
-import '../common/helpers/controller.dart';
 import 'deck_service.dart';
 
 bool _isDebug = true;
@@ -20,7 +18,7 @@ class DeckController extends Controller {
   FixedSlidePart? _footer;
   SlidePart? _background;
   late List<SlideController> _slides = [];
-  late List<SlideAsset> _assets = [];
+  late final List<SlideAsset> _assets = [];
 
   AsyncValue<ReferenceDto> asyncData = const AsyncValue.loading();
 
@@ -114,9 +112,6 @@ class DeckController extends Controller {
   /// The list of slides in the loaded reference data.
   List<SlideController> get slides => _slides;
 
-  /// The list of assets in the loaded reference data.
-  List<SlideAsset> get assets => _assets;
-
   /// Retrieves the [Style] registered with the given [name].
   ///
   /// If no match is found, returns the default [_baseStyle].
@@ -132,17 +127,6 @@ class DeckController extends Controller {
     return _widgets[name];
   }
 
-  /// Retrieves the [SlideAsset] that matches the given [uri].
-  ///
-  /// The [targetSize] can be used to find an asset variant of a specific size.
-  /// If no match is found, returns null.
-  SlideAsset? getImageAsset(
-    Uri uri, {
-    Size? targetSize,
-  }) {
-    return assets.firstWhereOrNull((f) => f.matches(uri.toString()));
-  }
-
   Future<void> loadReferences() async {
     try {
       asyncData = asyncData.copyWith(status: AsyncStatus.loading);
@@ -153,7 +137,6 @@ class DeckController extends Controller {
         data: data,
       );
 
-      _assets = data.assets;
       final slides = <SlideController>[];
       for (var i = 0; i < data.slides.length; i++) {
         final slide = data.slides[i];

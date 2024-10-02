@@ -1,142 +1,170 @@
+import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
-import 'package:superdeck_core/superdeck_core.dart';
 
 import '../../modules/common/helpers/constants.dart';
-import '../../modules/common/helpers/controller.dart';
-import '../../modules/deck/deck_controller.dart';
+import '../../modules/common/helpers/measure_size.dart';
 
-class CacheImage extends StatelessWidget {
+ImageProvider getImageProvider(Uri uri) {
+  switch (uri.scheme) {
+    case 'http':
+    case 'https':
+      return CachedNetworkImageProvider(uri.toString());
+    default:
+      if (kCanRunProcess) {
+        return FileImage(File.fromUri(uri));
+      } else {
+        return AssetImage(uri.path);
+      }
+  }
+}
+
+class CachedImage extends StatefulWidget {
   final Uri uri;
   final BoxFit? fit;
   final ImageSpec spec;
   final Alignment? alignment;
 
-  const CacheImage({
+  const CachedImage({
+    super.key,
     required this.uri,
-    this.fit = BoxFit.cover,
+    this.fit = BoxFit.contain,
     this.alignment = Alignment.center,
     this.spec = const ImageSpec(),
-    super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final imageProvider = getImageProvider(context, uri);
+  _CachedImageState createState() => _CachedImageState();
+}
 
-    return AnimatedImageSpecWidget(
-      image: imageProvider,
-      errorBuilder: (context, error, stackTrace) {
-        // display a red background with an error message
-        return Container(
-          color: Colors.red,
-          child: Center(
-            child: Text('Error loading image: $uri'),
+class _CachedImageState extends State<CachedImage> {
+  Size? imageSize;
+  late final ImageProvider<Object> imageProvider;
+
+  ImageStream? _imageStream;
+  late final ImageStreamListener _imageStreamListener;
+
+  @override
+  void initState() {
+    super.initState();
+    imageProvider = getImageProvider(widget.uri);
+    _getImageSize(imageProvider);
+  }
+
+  void _getImageSize(ImageProvider imageProvider) {
+    _imageStream = imageProvider.resolve(const ImageConfiguration());
+    _imageStreamListener = ImageStreamListener(
+      (ImageInfo info, bool synchronousCall) {
+        final myImage = info.image;
+        imageSize = Size(
+          myImage.width.toDouble(),
+          myImage.height.toDouble(),
+        );
+        if (mounted && !synchronousCall) {
+          setState(() {});
+        }
+      },
+      onError: (error, stackTrace) {
+        log('Error loading image: $error');
+      },
+    );
+    _imageStream!.addListener(_imageStreamListener);
+  }
+
+  @override
+  void dispose() {
+    if (_imageStream != null) {
+      _imageStream!.removeListener(_imageStreamListener);
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MeasureSizeBuilder(
+      builder: (size) {
+        final imageSize = this.imageSize;
+        final isReady = imageSize != null && size != null;
+
+        if (!isReady) {
+          return Container(
+            constraints: BoxConstraints.loose(kResolution),
+            child: const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
+        }
+
+        // Compute the aspect ratio to fit the image within the container
+        final widthScale = size.width / imageSize.width;
+        final heightScale = size.height / imageSize.height;
+        final scale = widthScale < heightScale ? widthScale : heightScale;
+
+        final finalSize = Size(
+          imageSize.width * scale,
+          imageSize.height * scale,
+        );
+        // Now that we have the final size, we can display the resized image
+        return AnimatedImageSpecWidget(
+          image: imageProvider,
+          spec: widget.spec.copyWith(
+            fit: widget.fit,
+            alignment: widget.alignment,
           ),
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+            return Container(
+              constraints: BoxConstraints.loose(finalSize),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: Colors.red,
+              child: Center(
+                child: Text('Error loading image: ${widget.uri}'),
+              ),
+            );
+          },
         );
       },
-      spec: spec.copyWith(
-        fit: fit,
-        alignment: alignment,
-      ),
     );
   }
 }
 
-class CacheDecorationImage extends StatelessWidget {
-  final Uri uri;
-  final BoxFit? fit;
-  final ImageSpec spec;
-  final Alignment? alignment;
+// Size _calculateImageSize(Size size, SlideAsset? asset) {
+//   int? cacheWidth;
+//   int? cacheHeight;
+//   //  check if height or asset is larger
+//   if (asset != null) {
+//     // cache the smallest dimension of the image
+//     // So set the other dimension to null
+//     if (asset.isPortrait) {
+//       cacheHeight = math.min(size.height, asset.height).toInt();
+//     } else {
+//       cacheWidth = math.min(size.width, asset.width).toInt();
+//     }
+//   } else {
+//     // If no asset is available, set both cacheWidth and cacheHeight
+//     final ifHeightIsBigger = size.height > size.width;
 
-  const CacheDecorationImage({
-    required this.uri,
-    this.fit = BoxFit.cover,
-    this.alignment = Alignment.center,
-    this.spec = const ImageSpec(),
-    super.key,
-  });
+// // cache the smallest
+//     if (ifHeightIsBigger) {
+//       cacheWidth = size.width.toInt();
+//     } else {
+//       cacheHeight = size.height.toInt();
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final imageProvider = getImageProvider(context, uri);
-
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: imageProvider,
-          fit: fit ?? BoxFit.cover,
-          alignment: alignment ?? Alignment.center,
-        ),
-      ),
-    );
-  }
-}
-
-Size calculateImageSize(Size size, SlideAsset? asset) {
-  int? cacheWidth;
-  int? cacheHeight;
-  //  check if height or asset is larger
-  if (asset != null) {
-    // cache the smallest dimension of the image
-    // So set the other dimension to null
-    if (asset.isPortrait) {
-      cacheHeight = min(size.height, asset.height).toInt();
-    } else {
-      cacheWidth = min(size.width, asset.width).toInt();
-    }
-  } else {
-    // If no asset is available, set both cacheWidth and cacheHeight
-    final ifHeightIsBigger = size.height > size.width;
-
-// cache the smallest
-    if (ifHeightIsBigger) {
-      cacheWidth = size.width.toInt();
-    } else {
-      cacheHeight = size.height.toInt();
-    }
-  }
-
-  return Size(
-    cacheWidth?.toDouble() ?? size.width,
-    cacheHeight?.toDouble() ?? size.height,
-  );
-}
-
-ImageProvider getImageProvider(
-  BuildContext context,
-  Uri uri, {
-  Size? targetSize,
-}) {
-  final asset = Controller.of<DeckController>(context).getImageAsset(uri);
-
-  if (asset == null) {
-    return _getProvider(uri.toString());
-  }
-
-  final provider = _getProvider(asset.path);
-
-  final size = calculateImageSize(targetSize ?? kResolution, asset);
-
-  return ResizeImage.resizeIfNeeded(
-    size.width.toInt(),
-    size.height.toInt(),
-    provider,
-  );
-}
-
-ImageProvider _getProvider(String url) {
-  if (url.startsWith('http')) {
-    return CachedNetworkImageProvider(url);
-  } else {
-    if (kCanRunProcess) {
-      return FileImage(File(url));
-    } else {
-      return AssetImage(url);
-    }
-  }
-}
+//   return Size(
+//     cacheWidth?.toDouble() ?? size.width,
+//     cacheHeight?.toDouble() ?? size.height,
+//   );
+// }

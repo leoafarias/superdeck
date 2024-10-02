@@ -1,5 +1,3 @@
-import 'package:superdeck_core/superdeck_core.dart';
-
 import '../common/helpers/controller.dart';
 import '../navigation/navigation_hooks.dart';
 import '../slide/slide_configuration.dart';
@@ -17,10 +15,6 @@ List<SlideController> useSlides() {
 SlideController useCurrentSlide() {
   final index = useCurrentSlideIndex();
   return _useSelectController((controller) => controller.slides[index]);
-}
-
-List<SlideAsset> useAssets() {
-  return _useSelectController((controller) => controller.assets);
 }
 
 // SlideConfiguration useCurrentSlide() {

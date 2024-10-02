@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
@@ -33,6 +34,13 @@ class SlideController extends Controller {
   File get thumbnailFile => slide.thumbnailFile;
 
   SlideOptions? get options => slide.options;
+
+  SlideAsset? getAssetByReference(String contents) {
+    final reference = assetHash(contents);
+
+    return slide.assets
+        .firstWhereOrNull((asset) => asset.reference == reference);
+  }
 
   Widget buildHeader() {
     return _PartBuilder(header);
