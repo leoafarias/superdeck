@@ -38,7 +38,7 @@ class SpecMarkdownBuilders {
       'alert': AlertElementBuilder(spec.alert),
       'p': TextBuilder(spec.p),
       'code': CodeElementBuilder(spec.code),
-      'img': ImageElementBuilder(spec),
+      'img': ImageElementBuilder(spec.image),
       'li': TextBuilder(spec.list?.text),
     };
   }
@@ -90,33 +90,47 @@ class TextBuilder extends MarkdownElementBuilder {
     );
 
     if (tag != null) {
-      textWidget = Hero(
-        flightShuttleBuilder: (
-          context,
-          animation,
-          flightDirection,
-          fromHeroContext,
-          toHeroContext,
-        ) {
-          final fromBlock = _TextElementMdeol.of(fromHeroContext);
-          final toBlock = _TextElementMdeol.of(toHeroContext);
+      textWidget = Provider(
+        data: _TextElementData(
+          text: content,
+          spec: spec ?? const TextSpec(),
+          size: Size.zero,
+        ),
+        child: Hero(
+          flightShuttleBuilder: (
+            context,
+            animation,
+            flightDirection,
+            fromHeroContext,
+            toHeroContext,
+          ) {
+            final fromBlock = Provider.of<_TextElementData>(fromHeroContext);
+            final toBlock = Provider.of<_TextElementData>(toHeroContext);
 
-          return AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              return TextSpecWidget(
-                _lerpString(fromBlock.text, toBlock.text, animation.value),
-                spec: fromBlock.spec!.lerp(toBlock.spec, animation.value),
-              );
-            },
-          );
-        },
-        tag: tag,
-        child: textWidget,
+            return AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) {
+                return TextSpecWidget(
+                  _lerpString(
+                    fromBlock.text,
+                    toBlock.text,
+                    animation.value,
+                  ),
+                  spec: fromBlock.spec.lerp(
+                    toBlock.spec,
+                    animation.value,
+                  ),
+                );
+              },
+            );
+          },
+          tag: tag,
+          child: textWidget,
+        ),
       );
     }
 
-    return _TextElementMdeol(
+    return _TextElementData(
       text: content,
       spec: spec,
       child: textWidget,
@@ -124,74 +138,99 @@ class TextBuilder extends MarkdownElementBuilder {
   }
 }
 
-class _TextElementMdeol extends InheritedModel<String> {
+class _TextElementData {
   final String text;
-  final TextSpec? spec;
+  final TextSpec spec;
+  final Size size;
 
-  const _TextElementMdeol({
+  const _TextElementData({
     required this.text,
     required this.spec,
-    required super.child,
+    required this.size,
   });
 
-  static _TextElementMdeol of(BuildContext context) {
-    final inherited = InheritedModel.inheritFrom<_TextElementMdeol>(context);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    assert(inherited != null, 'No _TextElementMdeol found in context');
-
-    return inherited!;
+    return other is _TextElementData &&
+        other.text == text &&
+        other.spec == spec &&
+        other.size == size;
   }
 
   @override
-  bool updateShouldNotify(covariant _TextElementMdeol oldWidget) {
-    return text != oldWidget.text || spec != oldWidget.spec;
-  }
+  int get hashCode => text.hashCode ^ spec.hashCode ^ size.hashCode;
+}
+
+class ImageElementBuilder extends MarkdownElementBuilder {
+  final ImageSpec spec;
+
+  ImageElementBuilder(this.spec);
 
   @override
-  bool updateShouldNotifyDependent(
-    covariant _TextElementMdeol oldWidget,
-    Set dependencies,
-  ) {
-    return text != oldWidget.text || spec != oldWidget.spec;
+  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    final src = element.attributes['src']!;
+    final heroTag = element.attributes['hero'];
+
+    final uri = Uri.parse(src);
+
+    final widget = Builder(builder: (context) {
+      final block = Provider.of<BlockData>(context);
+      final contentOffset = getSizeWithoutSpacing(block.spec.contentBlock);
+      final imageOffset = getTotalModifierSpacing(block.spec.image);
+
+      final totalSize = Size(
+        block.size.width - contentOffset.dx - imageOffset.dx,
+        block.size.height - contentOffset.dy - imageOffset.dy,
+      );
+      return AnimatedContainer(
+        duration: Durations.medium1,
+        constraints: BoxConstraints.tight(totalSize),
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: CachedImage(
+            uri: uri,
+            spec: block.spec.image,
+          ),
+        ),
+      );
+    });
+
+    if (heroTag != null) {
+      return Hero(
+        tag: heroTag,
+        child: widget,
+      );
+    }
+
+    return widget;
   }
 }
 
-class _ImageElementModel extends InheritedModel<String> {
-  final ImageSpec? spec;
+class _ImageElementData {
+  final SlideSpec spec;
   final Size size;
   final Uri uri;
 
-  const _ImageElementModel({
+  const _ImageElementData({
     required this.size,
     required this.spec,
     required this.uri,
-    required super.child,
   });
 
-  static _ImageElementModel of(BuildContext context) {
-    final inherited = InheritedModel.inheritFrom<_ImageElementModel>(context);
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    assert(inherited != null, 'No _ImageElementModel found in context');
-
-    return inherited!;
+    return other is _ImageElementData &&
+        other.spec == spec &&
+        other.size == size &&
+        other.uri == uri;
   }
 
   @override
-  bool updateShouldNotify(covariant _ImageElementModel oldWidget) {
-    return size != oldWidget.size ||
-        spec != oldWidget.spec ||
-        uri != oldWidget.uri;
-  }
-
-  @override
-  bool updateShouldNotifyDependent(
-    covariant _ImageElementModel oldWidget,
-    Set dependencies,
-  ) {
-    return size != oldWidget.size ||
-        spec != oldWidget.spec ||
-        uri != oldWidget.uri;
-  }
+  int get hashCode => spec.hashCode ^ size.hashCode ^ uri.hashCode;
 }
 
 ({
@@ -225,100 +264,24 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
 
-    return Builder(builder: (context) {
-      if (language == 'mermaid') {
-        final asset = Controller.of<SlideController>(context)
-            .getAssetByReference(element.textContent);
-
-        if (asset != null) {
-          final element = md.Element.empty('img');
-          element.attributes['src'] = asset.path;
-
-          return ImageElementBuilder(const SlideSpec())
-                  .visitElementAfter(element, preferredStyle) ??
-              const SizedBox();
-        }
-      }
-      return Row(
-        children: [
-          Expanded(
-            child: BoxSpecWidget(
-              spec: spec?.container,
-              child: RichText(
-                text: TextSpan(
-                  style: spec?.textStyle,
-                  children: SyntaxHighlight.render(
-                    element.textContent.trim(),
-                    language,
-                  ),
+    return Row(
+      children: [
+        Expanded(
+          child: BoxSpecWidget(
+            spec: spec?.container,
+            child: RichText(
+              text: TextSpan(
+                style: spec?.textStyle,
+                children: SyntaxHighlight.render(
+                  element.textContent.trim(),
+                  language,
                 ),
               ),
             ),
           ),
-        ],
-      );
-    });
-  }
-}
-
-class ImageElementBuilder extends MarkdownElementBuilder {
-  final SlideSpec spec;
-
-  ImageElementBuilder(this.spec);
-
-  HeroFlightShuttleBuilder get _flightShuttleBuilder => (
-        flightContext,
-        animation,
-        flightDirection,
-        fromHeroContext,
-        toHeroContext,
-      ) {
-        final fromBlock = _ImageElementModel.of(fromHeroContext);
-        final toBlock = _ImageElementModel.of(toHeroContext);
-
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) {
-            final interpolatedSize = Size.lerp(
-              fromBlock.size,
-              toBlock.size,
-              animation.value,
-            )!;
-
-            final interpolatedSpec =
-                fromBlock.spec!.lerp(toBlock.spec, animation.value);
-
-            final finalSize = getSizeWithoutSpacing(
-              interpolatedSize,
-              spec.contentBlock,
-            );
-
-            return SizeTransition(sizeFactor: animation, child: child);
-          },
-        );
-      };
-
-  @override
-  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final src = element.attributes['src']!;
-    final heroTag = element.attributes['hero'];
-
-    final uri = Uri.parse(src);
-
-    Widget widget = CachedImage(
-      uri: uri,
-      fit: BoxFit.contain,
-      spec: spec.image,
+        ),
+      ],
     );
-
-    if (heroTag != null) {
-      widget = Hero(
-        tag: heroTag,
-        child: widget,
-      );
-    }
-
-    return widget;
   }
 }
 
@@ -417,9 +380,8 @@ String _lerpString(String start, String end, double t) {
 }
 
 typedef HeroFlightShuttleBuilder = Widget Function(
-  BuildContext flightContext,
   Animation<double> animation,
-  HeroFlightDirection flightDirection,
   BuildContext fromHeroContext,
   BuildContext toHeroContext,
+  Widget child,
 );

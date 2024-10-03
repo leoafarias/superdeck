@@ -17,13 +17,11 @@ enum BlockType {
 sealed class Block with BlockMappable {
   final ContentAlignment? align;
   final int? flex;
-  final String? hero;
   final BlockType type;
 
   const Block({
     this.flex,
     this.align,
-    this.hero,
     required this.type,
   });
 
@@ -45,7 +43,7 @@ sealed class Block with BlockMappable {
   static final schema = SchemaShape({
     "align": ContentAlignment.schema.optional(),
     "flex": Schema.integer.optional(),
-    "hero": Schema.string.optional(),
+    "scrollable": Schema.boolean.optional(),
   });
 }
 
@@ -78,7 +76,6 @@ class SectionBlock extends Block with SectionBlockMappable {
     this.blocks = const [],
     super.flex,
     super.align,
-    super.hero,
   }) : super(type: BlockType.section);
 
   SectionBlock appendLine(String content) {
@@ -119,19 +116,21 @@ class SectionBlock extends Block with SectionBlockMappable {
 @MappableClass(discriminatorKey: 'type')
 sealed class ContentBlock extends Block with ContentBlockMappable {
   final String? _content;
+  final bool scrollable;
 
   const ContentBlock({
     String? content,
     super.flex,
     super.align,
-    super.hero,
     required super.type,
+    this.scrollable = false,
   }) : _content = content;
 
   String get content => _content ?? '';
 
   static final schema = Block.schema.extend({
     'content': Schema.string.optional(),
+    'scrollable': Schema.boolean.optional(),
   });
 
   static final typeSchema = DiscriminatorSchema(
@@ -151,8 +150,8 @@ class ColumnBlock extends ContentBlock with ColumnBlockMappable {
   const ColumnBlock({
     super.flex,
     super.align,
-    super.hero,
     super.content,
+    super.scrollable,
   }) : super(type: BlockType.column);
 
   static final schema = ContentBlock.schema;
@@ -167,24 +166,31 @@ class ColumnBlock extends ContentBlock with ColumnBlockMappable {
 class ImageBlock extends ContentBlock with ImageBlockMappable {
   final String src;
   final ImageFit? fit;
+  final double? width;
+  final double? height;
 
   const ImageBlock({
     required this.src,
     this.fit,
+    this.width,
+    this.height,
     super.flex,
     super.align,
-    super.hero,
     super.content,
+    super.scrollable,
   }) : super(type: BlockType.image);
 
   static ImageBlock parse(Map<String, dynamic> map) {
     schema.validateOrThrow(map);
+    print(map);
     return ImageBlockMapper.fromMap(map);
   }
 
   static final schema = ContentBlock.schema.extend({
     "fit": ImageFit.schema,
     "src": Schema.string.required(),
+    "width": Schema.double.optional(),
+    "height": Schema.double.optional(),
   });
 }
 
@@ -202,8 +208,8 @@ class WidgetBlock extends ContentBlock with WidgetBlockMappable {
     this.args = const {},
     super.flex,
     super.align,
-    super.hero,
     super.content,
+    super.scrollable,
   }) : super(type: BlockType.widget);
 
   static WidgetBlock parse(Map<String, dynamic> map) {
@@ -235,10 +241,10 @@ class DartPadBlock extends ContentBlock with DartPadBlockMappable {
     required this.id,
     this.theme,
     super.flex,
-    super.hero,
     super.content,
     super.align,
     this.embed = true,
+    super.scrollable,
   }) : super(type: BlockType.dartpad);
 
   static DartPadBlock parse(Map<String, dynamic> map) {

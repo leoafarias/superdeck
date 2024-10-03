@@ -6,7 +6,6 @@ import 'package:window_manager/window_manager.dart';
 
 import '../../../superdeck.dart';
 import '../modules/common/helpers/constants.dart';
-import '../modules/common/helpers/controller.dart';
 import '../modules/common/helpers/routes.dart';
 import '../modules/common/helpers/syntax_highlighter.dart';
 import '../modules/common/helpers/theme.dart';
@@ -137,9 +136,9 @@ class _SuperDeckProviderState extends State<SuperDeckProvider> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ControllerProvider(
       controller: _navigation,
-      child: Provider(
+      child: ControllerProvider(
         controller: _controller,
         child: ListenableBuilder(
             listenable: Listenable.merge([_controller, _navigation]),

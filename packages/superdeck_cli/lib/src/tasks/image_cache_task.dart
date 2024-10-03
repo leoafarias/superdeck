@@ -12,7 +12,6 @@ class ImageCachingTask extends Task {
     final slide = context.slide;
 
     var content = slide.markdown;
-    final slideData = slide.toMap();
 
     // Do not cache remot edata if cacheRemoteAssets is false
 
@@ -24,7 +23,13 @@ class ImageCachingTask extends Task {
     final matches = imageRegex.allMatches(content);
 
     Future<void> saveAsset(String url) async {
-      if (isAssetFile(File(url))) return;
+      if (!url.startsWith('http')) {
+        final localFile = File(url);
+        if (await localFile.exists()) {
+          await context.saveAsAsset(localFile, url);
+        }
+        return;
+      }
 
       try {
         final refName = assetHash(url);
@@ -79,14 +84,6 @@ class ImageCachingTask extends Task {
       if (assetUri == null) continue;
 
       await saveAsset(assetUri);
-    }
-
-    final slideOptions = slideData['options'];
-    final backgroundOption =
-        slideOptions != null ? slideOptions['background'] : null;
-
-    if (backgroundOption != null) {
-      await saveAsset(backgroundOption);
     }
 
     return context;

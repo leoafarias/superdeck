@@ -46,14 +46,9 @@ List<SectionBlock> parseSections(String markdown) {
         }
       }
     } else {
-      // Regular content line
-      if (currentSection != null) {
-        currentSection = currentSection.appendLine(line);
-      } else {
-        currentSection = SectionBlock(
-          blocks: [ColumnBlock(content: line)],
-        );
-      }
+      currentSection ??= SectionBlock();
+
+      currentSection = currentSection.appendLine(line);
     }
     index++;
   }
@@ -72,6 +67,7 @@ typedef SyntaxTagData = ({
 });
 
 List<SyntaxTagData> extractTagsFromLine(String tagContent) {
+  // Parse tags from the line
   final tagRegex = RegExp(r'{@(\w+)(.*?)}', dotAll: true);
   final matches = tagRegex.allMatches(tagContent);
 
@@ -101,3 +97,19 @@ BlockType? _getBlockType(String blockTypeStr) {
     (e) => e.name == blockTypeStr,
   );
 }
+
+// final _imageMarkdownRegex =
+//     RegExp(r'!\[(.*?)\]\((.*?)\)(?:\s*\{\.([^\}]+)\})?');
+
+// ImageBlock? parseImageBlock(String markdown) {
+//   final match = _imageMarkdownRegex.firstMatch(markdown);
+//   if (match == null) {
+//     return null;
+//   }
+
+//   final url = match.group(2)!;
+
+//   return ImageBlock(
+//     src: url,
+//   );
+// }

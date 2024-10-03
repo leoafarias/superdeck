@@ -180,11 +180,6 @@ abstract class Task {
     return File(p.join(kGeneratedAssetsDir.path, updatedFileName));
   }
 
-  bool isAssetFile(File file) {
-    // check if file name starts with sd_
-    return file.path.contains(kGeneratedAssetsDir.path);
-  }
-
   // Dispose or anything here
   FutureOr<void> dispose() {}
 }

@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
 import '../common/helpers/constants.dart';
-import '../common/helpers/controller.dart';
 import '../navigation/navigation_controller.dart';
 
 enum SlideCaptureQuality {
@@ -97,9 +96,9 @@ class SlideCaptureService {
       final navigation = Controller.of<NavigationController>(context);
       final child = InheritedTheme.captureAll(
           context,
-          Provider(
+          ControllerProvider(
             controller: navigation,
-            child: Provider(
+            child: ControllerProvider(
               controller: controller,
               child: MediaQuery(
                 data: MediaQuery.of(context),

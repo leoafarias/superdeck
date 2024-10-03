@@ -1,64 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
+import '../styles/style_spec.dart';
 import 'constants.dart';
 
-typedef OnWidgetSizeChange = void Function(Size newSize);
+typedef OnWidgetSizeChange = void Function(Size size);
 
-class MeasureSizeRenderObject extends RenderProxyBox {
-  Size? oldSize;
-  OnWidgetSizeChange onChange;
-
-  MeasureSizeRenderObject(this.onChange);
-
-  @override
-  void performLayout() {
-    super.performLayout();
-
-    Size newSize = child!.size;
-
-    if (oldSize != newSize) {
-      oldSize = newSize;
-
-      onChange(newSize);
-    }
-  }
-}
-
-class MeasureSize extends SingleChildRenderObjectWidget {
+class MeasureSize extends StatefulWidget {
+  final Widget child;
   final OnWidgetSizeChange onChange;
 
   const MeasureSize({
     super.key,
     required this.onChange,
-    required Widget super.child,
+    required this.child,
   });
 
   @override
-  RenderObject createRenderObject(BuildContext context) {
-    return MeasureSizeRenderObject(onChange);
-  }
+  _MeasureSizeState createState() => _MeasureSizeState();
+}
+
+class _MeasureSizeState extends State<MeasureSize> {
+  final GlobalKey _widgetKey = GlobalKey();
 
   @override
-  void updateRenderObject(
-      BuildContext context, MeasureSizeRenderObject renderObject) {
-    renderObject.onChange = onChange;
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    return Container(
+      key: _widgetKey,
+      child: widget.child,
+    );
+  }
+
+  void _afterLayout(Duration timeStamp) {
+    final context = _widgetKey.currentContext;
+    if (context == null) return;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox != null && renderBox.hasSize) {
+      widget.onChange(renderBox.size);
+    }
   }
 }
 
-class MeasureSizeBuilder extends StatefulWidget {
-  final Widget Function(Size? size) builder;
+class SizeLayoutBuilder extends StatefulWidget {
+  final Widget Function(BuildContext context, Size size) builder;
+  final SlideSpec spec;
 
-  const MeasureSizeBuilder({
+  const SizeLayoutBuilder({
     super.key,
     required this.builder,
+    this.spec = const SlideSpec(),
   });
 
   @override
-  State<MeasureSizeBuilder> createState() => _MeasureSizeBuilderState();
+  State<SizeLayoutBuilder> createState() => _SizeLayoutBuilderState();
 }
 
-class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
+class _SizeLayoutBuilderState extends State<SizeLayoutBuilder> {
   Size? _size;
   late final Key _key;
 
@@ -67,36 +64,37 @@ class _MeasureSizeBuilderState extends State<MeasureSizeBuilder> {
   @override
   void initState() {
     super.initState();
-    _key = widget.key ?? UniqueKey();
+    _key = widget.key ?? GlobalKey();
     _size = _cacheSizes[_key];
   }
 
-  void _onSizeChange(Size size) {
+  void _updateSize(Size size) {
     if (_size != null) return;
+    // Ignore invalid sizes
     if (size.width <= 0 ||
         size.height <= 0 ||
         size.width == double.infinity ||
         size.height == double.infinity) {
       return;
     }
+    if (_size != null) return;
+    if (size != _size) {
+      _cacheSizes[_key] = size;
 
-    if (size == _size) return;
-    _cacheSizes[_key] = size;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         _size = size;
+        print('SizeLayoutBuilder: $_size');
       });
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints.loose(kResolution),
-      child: MeasureSize(
-        onChange: _onSizeChange,
-        child: widget.builder(_size ?? kResolution),
-      ),
+    final size = _size ?? kResolution;
+
+    return MeasureSize(
+      onChange: _updateSize,
+      child: widget.builder(context, size),
     );
   }
 }

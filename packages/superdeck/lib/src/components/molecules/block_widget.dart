@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../../../superdeck.dart';
+import '../../modules/common/helpers/controller.dart';
 import '../../modules/common/helpers/converters.dart';
+import '../../modules/common/helpers/measure_size.dart';
+import '../../modules/common/styles/style_spec.dart';
+import '../../modules/deck/deck_controller.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
 
-class BlockController extends Controller {
-  BlockController({
-    required SlideSpec spec,
-    required ContentBlock block,
-  })  : _spec = spec,
-        _block = block;
+class BlockData {
+  BlockData({
+    required this.spec,
+    required this.block,
+    required this.size,
+  });
 
-  SlideSpec _spec;
-  ContentBlock _block;
+  final SlideSpec spec;
+  final ContentBlock block;
+  final Size size;
 
-  SlideSpec get spec => _spec;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-  ContentBlock get block => _block;
-
-  set spec(SlideSpec spec) {
-    _spec = spec;
-    notifyListeners();
+    return other is BlockData &&
+        other.spec == spec &&
+        other.block == block &&
+        other.size == size;
   }
 
-  set block(ContentBlock block) {
-    _block = block;
-    notifyListeners();
-  }
+  @override
+  int get hashCode => spec.hashCode ^ block.hashCode ^ size.hashCode;
 }
 
 class SectionBlockWidget extends StatelessWidget {
@@ -54,18 +56,21 @@ class SectionBlockWidget extends StatelessWidget {
         flex: flex,
         child: Align(
           alignment: alignment,
-          child: Provider(
-            controller: BlockController(
-              spec: SlideSpec.of(context),
-              block: block,
-            ),
-            child: switch (block) {
-              ColumnBlock block => ColumnBlockWidget(block),
-              ImageBlock block => _ImageBlockWidget(block),
-              WidgetBlock block => _WidgetBlockWidget(block),
-              DartPadBlock block => _DartPadBlockWidget(block),
-            },
-          ),
+          child: SizeLayoutBuilder(builder: (context, size) {
+            return Provider(
+              data: BlockData(
+                block: block,
+                spec: SlideSpec.of(context),
+                size: size,
+              ),
+              child: switch (block) {
+                ColumnBlock block => ColumnBlockWidget(block),
+                ImageBlock block => _ImageBlockWidget(block),
+                WidgetBlock block => _WidgetBlockWidget(block),
+                DartPadBlock block => _DartPadBlockWidget(block),
+              },
+            );
+          }),
         ),
       );
     }).toList();
@@ -81,32 +86,13 @@ class SectionBlockWidget extends StatelessWidget {
   }
 }
 
-abstract class _BlockWidget<T extends ContentBlock> extends StatefulWidget {
+abstract class _BlockWidget<T extends ContentBlock> extends StatelessWidget {
   const _BlockWidget(
     this.block, {
     super.key,
   });
 
   final T block;
-
-  Widget build(BuildContext context);
-
-  @override
-  State<_BlockWidget<T>> createState() => _BlockWidgetState<T>();
-}
-
-class _BlockWidgetState<T extends ContentBlock> extends State<_BlockWidget<T>> {
-  @override
-  Widget build(context) {
-    final configuration = Controller.of<SlideController>(context);
-    return SpecBuilder(
-        style: configuration.style.applyVariant(
-          Variant(widget.block.type.name),
-        ),
-        builder: (context) {
-          return widget.build(context);
-        });
-  }
 }
 
 class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
@@ -122,9 +108,11 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
       child: Wrap(
         clipBehavior: Clip.hardEdge,
         children: [
-          MarkdownViewer(
-            content: content,
-            spec: SlideSpec.of(context),
+          SingleChildScrollView(
+            child: MarkdownViewer(
+              content: content,
+              spec: SlideSpec.of(context),
+            ),
           ),
         ],
       ),
@@ -141,11 +129,14 @@ class _ImageBlockWidget extends _BlockWidget<ImageBlock> {
 
     final alignment = options.align ?? ContentAlignment.center;
     final imageFit = options.fit ?? ImageFit.cover;
+    final spec = SlideSpec.of(context);
 
     return CachedImage(
       uri: Uri.parse(options.src),
-      fit: ConverterHelper.toBoxFit(imageFit),
-      alignment: ConverterHelper.toAlignment(alignment),
+      spec: spec.image.copyWith(
+        fit: ConverterHelper.toBoxFit(imageFit),
+        alignment: ConverterHelper.toAlignment(alignment),
+      ),
     );
   }
 }

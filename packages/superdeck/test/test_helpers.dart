@@ -25,9 +25,9 @@ extension WidgetTesterX on WidgetTester {
       widgets: widgets,
     );
     return pumpWithScaffold(
-      Provider(
+      ControllerProvider(
         controller: slide,
-        child: Provider(
+        child: ControllerProvider(
           controller: controller,
           child: SlideView(slide),
         ),

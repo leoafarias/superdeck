@@ -59,6 +59,7 @@ class _MarkdownBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final builders = SpecMarkdownBuilders(spec);
     return MarkdownBody(
+      shrinkWrap: true,
       data: content,
       extensionSet: md.ExtensionSet.gitHubWeb,
       builders: builders.builders,

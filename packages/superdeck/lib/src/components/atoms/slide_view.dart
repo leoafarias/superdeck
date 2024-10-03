@@ -18,7 +18,7 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return ControllerProvider(
       controller: slide,
       child: SpecBuilder(
         style: slide.style,

@@ -38,8 +38,10 @@ class SlideController extends Controller {
   SlideAsset? getAssetByReference(String contents) {
     final reference = assetHash(contents);
 
-    return slide.assets
-        .firstWhereOrNull((asset) => asset.reference == reference);
+    return slide.assets.firstWhereOrNull((asset) =>
+        asset.path == contents ||
+        asset.reference == contents ||
+        asset.reference == reference);
   }
 
   Widget buildHeader() {

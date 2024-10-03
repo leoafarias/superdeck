@@ -2,33 +2,19 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
-Size getSizeWithoutSpacing(Size size, BoxSpec spec) {
-  final offset = _calculateBlockOffset(spec);
-
-  return Size(
-    size.width - offset.dx,
-    size.height - offset.dy,
-  );
+Offset getSizeWithoutSpacing(BoxSpec spec) {
+  return _calculateBlockOffset(spec);
 }
 
-Size getImageSizeWithoutSpacing(Size size, ImageSpec spec) {
-  final offset = getTotalModifierSpacing(spec);
-
-  return Size(
-    size.width - offset.horizontal,
-    size.height - offset.vertical,
-  );
-}
-
-({double horizontal, double vertical}) getTotalModifierSpacing(Spec spec) {
+Offset getTotalModifierSpacing(Spec spec) {
   final modifiers = spec.modifiers?.value ?? [];
   final padding = modifiers.firstWhereOrNull(
     (element) => element is PaddingModifierSpec,
   ) as PaddingModifierSpec?;
 
-  return (
-    horizontal: padding?.padding.horizontal ?? 0.0,
-    vertical: padding?.padding.vertical ?? 0.0,
+  return Offset(
+    padding?.padding.horizontal ?? 0.0,
+    padding?.padding.vertical ?? 0.0,
   );
 }
 
@@ -57,12 +43,10 @@ Offset _calculateBlockOffset(BoxSpec spec) {
 
     final modifier = getTotalModifierSpacing(container);
 
-    horizontalSpacing += padding.horizontal +
-        margin.horizontal +
-        horizontalBorder +
-        modifier.horizontal;
+    horizontalSpacing +=
+        padding.horizontal + margin.horizontal + horizontalBorder + modifier.dx;
     verticalSpacing +=
-        padding.vertical + margin.vertical + verticalBorder + modifier.vertical;
+        padding.vertical + margin.vertical + verticalBorder + modifier.dy;
   }
 
   return Offset(

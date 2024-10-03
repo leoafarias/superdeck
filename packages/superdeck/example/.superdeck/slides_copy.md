@@ -1,6 +1,20 @@
 ---
 ---
+{@section}
+{@section}
+{@column
+  align: center
+}
+# Generative UI{.here}
+# with Flutter
+
 {@column}
+![structured_output](https://picsum.photos/800/1400) {.cover}
+
+---
+---
+{@column}
+
 ## How can LLMs Understtand Your UI? {.here}
 
 {@column}
@@ -9,26 +23,12 @@
 
 ---
 ---
-{@column
-  flex: 1
-  align: bottom_left
-}
-
-
+{@column}
 
 ![structured_output](https://picsum.photos/800/1400) {.cover}
 
 {@column}
 ## Another image{.here}
-
----
----
-{@section}
-{@column
-  align: center
-}
-# Generative UI{.here}
-# with Flutter
 
 ---
 ---
@@ -288,7 +288,6 @@ style: 'demo'
 ---
 {@column 
   align: bottom_right
-  hero: heading
   flex: 2
 }
 
@@ -304,13 +303,11 @@ Natural Language way to interact with an LLM
 ---
 {@column
   align: center_left
-  hero: heading
 }
 ### Widget Response{.heading}
 
 {@column 
   flex: 3
-  hero: image
 }
 ![widget_response](assets/widget_response.png)
 
