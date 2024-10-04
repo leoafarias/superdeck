@@ -6,17 +6,39 @@
 
 {@column}
 
-![structured_output](https://picsum.photos/800/1400) {.cover}
+
+
+```mermaid
+graph TD
+    A[Start] --> B[Input]
+    B --> C[Process]
+    C --> D[Output]
+    D --> E[End]
+``` {.code}
 
 ---
 ---
 {@section}
-{@section}
+{@section flex: 2}
 {@column
   align: center
+  flex: 2
 }
 
-# Gen UI <br>with Flutter{.here}
+
+```dart
+Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: spans.map((span) {
+    return RichText(
+      text: TextSpan(
+        style: interpolatedSpec.textStyle,
+        children: [span],
+      ),
+    );
+  }).toList(),
+)
+```{.code}
 
 {@column}
 

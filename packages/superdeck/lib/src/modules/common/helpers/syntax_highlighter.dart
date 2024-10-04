@@ -35,9 +35,92 @@ class SyntaxHighlight {
 
   static List<TextSpan> render(String source, String? language) {
     final highlighter = Highlighter(language: language!, theme: _theme);
-    return [highlighter.highlight(source)];
+    final code = highlighter.highlight(source);
+    return splitTextSpansByLines([code]);
   }
 }
+
+/// Splits a list of TextSpans into separate lines based on line breaks.
+/// Each returned TextSpan represents one line with preserved styling.
+List<TextSpan> splitTextSpansByLines(List<TextSpan> spans) {
+  // This will hold lists of TextSpans, each list representing a line.
+  List<List<TextSpan>> lines = [[]];
+
+  /// Recursively processes a TextSpan and splits it into lines.
+  void processSpan(TextSpan span) {
+    if (span.children != null && span.children!.isNotEmpty) {
+      // If the span has children, create a new span with the same style.
+      final newSpan = TextSpan(style: span.style, children: const []);
+      // Add this new span to the current line.
+      lines.last.add(newSpan);
+      // Recursively process each child.
+      for (var child in span.children!) {
+        if (child is TextSpan) {
+          processSpan(child);
+        }
+      }
+    } else if (span.text != null) {
+      // Split the text by line breaks.
+      List<String> parts = span.text!.split('\n');
+      for (int i = 0; i < parts.length; i++) {
+        if (i > 0) {
+          // For each new line after the first, add a new empty list.
+          lines.add([]);
+        }
+        if (parts[i].isNotEmpty) {
+          // Add the text part to the current line with the same style.
+          lines.last.add(TextSpan(text: parts[i], style: span.style));
+        }
+      }
+    }
+  }
+
+  // Process each top-level TextSpan.
+  for (var span in spans) {
+    processSpan(span);
+  }
+
+  // Convert each line's list of TextSpans into a single TextSpan.
+  return lines.map((lineSpans) => TextSpan(children: lineSpans)).toList();
+}
+
+// /// Splits a list of TextSpans into separate TextSpans for each line.
+// /// Line breaks are preserved as separate TextSpans.
+// List<TextSpan> splitTextSpansByLines(List<TextSpan> spans) {
+//   List<TextSpan> result = [];
+
+//   /// Recursively processes a TextSpan and splits it into lines.
+//   void processSpan(TextSpan span) {
+//     if (span.children != null && span.children!.isNotEmpty) {
+//       // If the span has children, process each child.
+//       for (var child in span.children!) {
+//         if (child is TextSpan) {
+//           processSpan(child);
+//         }
+//       }
+//     } else if (span.text != null) {
+//       // Split the text by line breaks.
+//       List<String> parts = span.text!.split('\n');
+//       for (int i = 0; i < parts.length; i++) {
+//         // Add the text part if it's not empty.
+//         if (parts[i].isNotEmpty) {
+//           result.add(TextSpan(text: parts[i], style: span.style));
+//         }
+//         // If it's not the last part, add a line break TextSpan.
+//         if (i < parts.length - 1) {
+//           result.add(const TextSpan(text: '\n'));
+//         }
+//       }
+//     }
+//   }
+
+//   // Process each top-level TextSpan.
+//   for (var span in spans) {
+//     processSpan(span);
+//   }
+
+//   return result;
+// }
 
 List<int> parseLineNumbers(String input) {
   // Regular expression to find the content within the curly braces

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -265,7 +267,9 @@ class _ImageElementData {
 
   final tag = match?.group(1);
 
-  final content = text.replaceAll(regExp, '').trim();
+  String content = text.replaceAll(regExp, '').trim();
+  // TODO: Remove this for code element after
+  content = content.replaceAll('```', '');
 
   return (
     tag: tag,
@@ -275,58 +279,184 @@ class _ImageElementData {
 
 class CodeElementBuilder extends MarkdownElementBuilder {
   final MarkdownCodeblockSpec? spec;
+
   CodeElementBuilder(this.spec);
+
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
+    final spec = this.spec ?? const MarkdownCodeblockSpec();
+    // Extract language from the class attribute, default to 'dart'
     var language = 'dart';
-
     if (element.attributes['class'] != null) {
       String lg = element.attributes['class'] as String;
-      language = lg.substring(9);
+      if (lg.startsWith('language-')) {
+        language = lg.substring(9);
+      }
     }
 
-    return Row(
+    // Extract hero tag if present
+    final tagAndContent = _getTagAndContent(element.textContent);
+    final heroTag = tagAndContent.tag;
+
+    final spans = SyntaxHighlight.render(
+      tagAndContent.content.trim(),
+      language,
+    );
+
+    // Build the code widget
+    Widget codeWidget = Row(
       children: [
         Expanded(
           child: BoxSpecWidget(
-            spec: spec?.container,
-            child: RichText(
-              text: TextSpan(
-                style: spec?.textStyle,
-                children: SyntaxHighlight.render(
-                  element.textContent.trim(),
-                  language,
-                ),
-              ),
+            spec: spec.container,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: spans.map((span) {
+                return RichText(
+                  text: TextSpan(
+                    style: spec.textStyle,
+                    children: [span],
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
       ],
     );
+
+    // If a hero tag is present, wrap the widget in a Hero
+    if (heroTag != null) {
+      codeWidget = Hero(
+        tag: heroTag,
+        flightShuttleBuilder: _heroFlightShuttleBuilder,
+        child: codeWidget,
+      );
+    }
+
+    // Provide _CodeElementData for Hero animations
+    return Builder(builder: (context) {
+      final block = Provider.of<BlockData>(context);
+
+      final codeOffset = getTotalModifierSpacing(spec);
+
+      final totalSize = Size(
+        block.size.width - codeOffset.dx,
+        block.size.height - codeOffset.dy,
+      );
+
+      return Provider(
+        data: _CodeElementData(
+          text: tagAndContent.content.trim(),
+          language: language,
+          spec: spec,
+          size: totalSize,
+        ),
+        child: codeWidget,
+      );
+    });
+  }
+
+  Widget _heroFlightShuttleBuilder(
+    BuildContext flightContext,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
+    final fromBlock = Provider.of<_CodeElementData>(fromHeroContext);
+    final toBlock = Provider.of<_CodeElementData>(toHeroContext);
+
+    // final fromSpans = SyntaxHighlight.render(
+    //   fromBlock.text,
+    //   fromBlock.language,
+    // );
+    // final toSpans = SyntaxHighlight.render(
+    //   toBlock.text,
+    //   toBlock.language,
+    // );
+
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        final interpolatedSpec =
+            fromBlock.spec.lerp(toBlock.spec, animation.value);
+        final interpolatedSize =
+            Size.lerp(fromBlock.size, toBlock.size, animation.value)!;
+
+        // final spans = _lerpTextSpans(
+        //   fromSpans,
+        //   toSpans,
+        //   animation.value,
+        // );
+
+        final interpolatedText = _lerpString(
+          fromBlock.text,
+          toBlock.text,
+          animation.value,
+        );
+
+        final spans = SyntaxHighlight.render(
+          interpolatedText,
+          toBlock.language,
+        );
+
+        return ConstrainedBox(
+          constraints: BoxConstraints.loose(interpolatedSize),
+          child: BoxSpecWidget(
+            spec: interpolatedSpec.container,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: spans.map((span) {
+                return RichText(
+                  text: TextSpan(
+                    style: interpolatedSpec.textStyle,
+                    children: [span],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
+class _CodeElementData {
+  final String text;
+  final MarkdownCodeblockSpec spec;
+  final Size size;
+  final String language;
+
+  const _CodeElementData({
+    required this.text,
+    required this.spec,
+    required this.size,
+    required this.language,
+  });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is _CodeElementData &&
+        other.text == text &&
+        other.spec == spec &&
+        other.size == size &&
+        other.language == language;
+  }
+
+  @override
+  int get hashCode =>
+      text.hashCode ^ spec.hashCode ^ size.hashCode ^ language.hashCode;
+}
+
 final _kBlockTags = <String>[
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-  'ul',
-  'ol',
-  'li',
-  'blockquote',
-  'pre',
-  'ol',
-  'ul',
-  'hr',
-  'table',
-  'thead',
-  'tbody',
-  'tr',
-  'section',
+  'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', //
+  'ul', 'ol', 'li', 'blockquote', //
+  'pre', 'ol', 'ul', 'hr', 'table', //
+  'thead', 'tbody', 'tr', 'section'
 ];
 
 class CustomHeaderSyntax extends md.HeaderSyntax {
@@ -400,9 +530,47 @@ String _lerpString(String start, String end, double t) {
   return result.toString();
 }
 
-typedef HeroFlightShuttleBuilder = Widget Function(
-  Animation<double> animation,
-  BuildContext fromHeroContext,
-  BuildContext toHeroContext,
-  Widget child,
-);
+List<TextSpan> _lerpTextSpans(
+  List<TextSpan> start,
+  List<TextSpan> end,
+  double t,
+) {
+  final maxLines = math.max(start.length, end.length);
+  List<TextSpan> interpolatedSpans = [];
+
+  for (int i = 0; i < maxLines; i++) {
+    final startSpan = i < start.length ? start[i] : const TextSpan(text: '');
+    final endSpan = i < end.length ? end[i] : const TextSpan(text: '');
+
+    if (startSpan.text == null && endSpan.text == null) {
+      // if chilrens are not null recursive
+      if (startSpan.children != null && endSpan.children != null) {
+        if (startSpan.children!.isEmpty && endSpan.children!.isEmpty) {
+          continue;
+        }
+        final children = _lerpTextSpans(
+          startSpan.children! as List<TextSpan>,
+          endSpan.children! as List<TextSpan>,
+          t,
+        );
+        final interpolatedSpan = TextSpan(
+          children: children,
+          style: TextStyle.lerp(startSpan.style, endSpan.style, t),
+        );
+        interpolatedSpans.add(interpolatedSpan);
+        continue;
+      }
+    }
+
+    final interpolatedText =
+        _lerpString(startSpan.text ?? '', endSpan.text ?? '', t);
+    final interpolatedStyle = TextStyle.lerp(startSpan.style, endSpan.style, t);
+
+    final interpolatedSpan =
+        TextSpan(text: interpolatedText, style: interpolatedStyle);
+
+    interpolatedSpans.add(interpolatedSpan);
+  }
+
+  return interpolatedSpans;
+}

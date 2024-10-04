@@ -1,6 +1,6 @@
 config: {}
 slides: 
-  - key: 'khtxPwY3'
+  - key: 'w2wlREdN'
     options: {}
     markdown: |-
       {@column}
@@ -9,27 +9,59 @@ slides:
       
       {@column}
       
-      ![structured_output](https://picsum.photos/800/1400) {.cover}
+      
+      
+      ```mermaid
+      graph TD
+          A[Start] --> B[Input]
+          B --> C[Process]
+          C --> D[Output]
+          D --> E[End]
+      ``` {.code}
     sections: 
       - blocks: 
           - content: |
               ## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}
             scrollable: false
-          - content: '![structured_output](https://picsum.photos/800/1400) {.cover}'
+          - content: |-
+              ```mermaid
+              graph TD
+                  A[Start] --> B[Input]
+                  B --> C[Process]
+                  C --> D[Output]
+                  D --> E[End]
+              ``` {.code}
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
-  - key: 'HR4Fb0tS'
+    assets: 
+      - path: '.superdeck/generated/mermaid_wgsvOvJJ.png'
+        width: 168
+        height: 768
+  - key: '4OPpCLpy'
     options: {}
     markdown: |-
       {@section}
-      {@section}
+      {@section flex: 2}
       {@column
         align: center
+        flex: 2
       }
       
-      # Gen UI <br>with Flutter{.here}
+      
+      ```dart
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: spans.map((span) {
+          return RichText(
+            text: TextSpan(
+              style: interpolatedSpec.textStyle,
+              children: [span],
+            ),
+          );
+        }).toList(),
+      )
+      ```{.code}
       
       {@column}
       
@@ -38,12 +70,26 @@ slides:
       - blocks: []
         type: 'section'
       - blocks: 
-          - align: 'center'
+          - flex: 2
+            align: 'center'
             content: |
-              # Gen UI <br>with Flutter{.here}
+              ```dart
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: spans.map((span) {
+                  return RichText(
+                    text: TextSpan(
+                      style: interpolatedSpec.textStyle,
+                      children: [span],
+                    ),
+                  );
+                }).toList(),
+              )
+              ```{.code}
             scrollable: false
           - content: '![structured_output](https://picsum.photos/800/1400) {.cover}'
             scrollable: false
+        flex: 2
         type: 'section'
     notes: []
     assets: []

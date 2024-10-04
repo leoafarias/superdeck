@@ -2,9 +2,9 @@
   "config": {},
   "slides": [
     {
-      "key": "khtxPwY3",
+      "key": "w2wlREdN",
       "options": {},
-      "markdown": "{@column}\n\n## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}",
+      "markdown": "{@column}\n\n## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}\n\n{@column}\n\n\n\n```mermaid\ngraph TD\n    A[Start] --> B[Input]\n    B --> C[Process]\n    C --> D[Output]\n    D --> E[End]\n``` {.code}",
       "sections": [
         {
           "blocks": [
@@ -13,7 +13,7 @@
               "scrollable": false
             },
             {
-              "content": "![structured_output](https://picsum.photos/800/1400) {.cover}",
+              "content": "```mermaid\ngraph TD\n    A[Start] --> B[Input]\n    B --> C[Process]\n    C --> D[Output]\n    D --> E[End]\n``` {.code}",
               "scrollable": false
             }
           ],
@@ -21,12 +21,18 @@
         }
       ],
       "notes": [],
-      "assets": []
+      "assets": [
+        {
+          "path": ".superdeck/generated/mermaid_wgsvOvJJ.png",
+          "width": 168,
+          "height": 768
+        }
+      ]
     },
     {
-      "key": "HR4Fb0tS",
+      "key": "4OPpCLpy",
       "options": {},
-      "markdown": "{@section}\n{@section}\n{@column\n  align: center\n}\n\n# Gen UI <br>with Flutter{.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}",
+      "markdown": "{@section}\n{@section flex: 2}\n{@column\n  align: center\n  flex: 2\n}\n\n\n```dart\nColumn(\n  crossAxisAlignment: CrossAxisAlignment.start,\n  children: spans.map((span) {\n    return RichText(\n      text: TextSpan(\n        style: interpolatedSpec.textStyle,\n        children: [span],\n      ),\n    );\n  }).toList(),\n)\n```{.code}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}",
       "sections": [
         {
           "blocks": [],
@@ -35,8 +41,9 @@
         {
           "blocks": [
             {
+              "flex": 2,
               "align": "center",
-              "content": "# Gen UI <br>with Flutter{.here}\n",
+              "content": "```dart\nColumn(\n  crossAxisAlignment: CrossAxisAlignment.start,\n  children: spans.map((span) {\n    return RichText(\n      text: TextSpan(\n        style: interpolatedSpec.textStyle,\n        children: [span],\n      ),\n    );\n  }).toList(),\n)\n```{.code}\n",
               "scrollable": false
             },
             {
@@ -44,6 +51,7 @@
               "scrollable": false
             }
           ],
+          "flex": 2,
           "type": "section"
         }
       ],

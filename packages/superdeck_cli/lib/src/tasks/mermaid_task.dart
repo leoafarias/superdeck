@@ -175,7 +175,7 @@ class MermaidConverterTask extends Task {
 
   @override
   Future<void> run(context) async {
-    final mermaidBlockRegex = RegExp(r'```mermaid([\s\S]*?)```');
+    final mermaidBlockRegex = RegExp(r'```mermaid.*?([\s\S]*?)```');
     final slide = context.slide;
 
     final matches = mermaidBlockRegex.allMatches(slide.markdown);
