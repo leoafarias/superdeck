@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:image/image.dart' as img;
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:superdeck_cli/src/helpers/exceptions.dart';
 import 'package:superdeck_cli/src/helpers/extensions.dart';
@@ -19,16 +20,21 @@ typedef PipelineResult = ({
 class TaskContext {
   final int index;
   Slide slide;
+  List<SlideAsset> assets;
 
   TaskContext({
     required this.slide,
     required this.index,
+    required this.assets,
   });
 
   final List<SlideAsset> _neededAssets = [];
 
   bool assetExists(String assetName) {
-    final asset = slide.assets.firstWhereOrNull(
+    for (var element in assets) {
+      print('Checking asset: ${element.path}');
+    }
+    final asset = assets.firstWhereOrNull(
       (element) => element.path.contains(assetName),
     );
 
@@ -95,6 +101,12 @@ class TaskPipeline {
     final loadedReference = ReferenceDto.loadFile(kReferenceFile);
 
     final slides = parseSlides(markdownRaw);
+    final assets = loadedReference.slides
+        .map((e) => e.assets)
+        .expand((e) => e)
+        .toList()
+        .where((element) => File(element.path).existsSync())
+        .toList();
 
     final futures = <Future<TaskContext>>[];
 
@@ -102,6 +114,7 @@ class TaskPipeline {
       final controller = TaskContext(
         index: i,
         slide: slides[i],
+        assets: assets,
       );
       futures.add(_runEachSlide(controller));
     }
@@ -147,9 +160,11 @@ Future<void> _cleanupGeneratedFiles(Iterable<SlideAsset> assets) async {
 
 abstract class Task {
   final String name;
-  const Task(this.name);
+  Task(this.name);
 
   FutureOr<void> run(TaskContext context);
+
+  late final logger = Logger('Task: $name');
 
   Future<String> dartProcess(String code) async {
     final process = await Process.start('dart', ['format', '--fix'],

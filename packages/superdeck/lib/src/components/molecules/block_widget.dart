@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+import '../../modules/common/helpers/constants.dart';
 import '../../modules/common/helpers/controller.dart';
 import '../../modules/common/helpers/converters.dart';
-import '../../modules/common/helpers/measure_size.dart';
+import '../../modules/common/helpers/utils.dart';
 import '../../modules/common/styles/style_spec.dart';
 import '../../modules/deck/deck_controller.dart';
+import '../../modules/slide/slide_configuration.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
@@ -36,52 +39,88 @@ class BlockData {
 }
 
 class SectionBlockWidget extends StatelessWidget {
-  const SectionBlockWidget(this.section, {super.key});
+  const SectionBlockWidget(
+    this.section, {
+    super.key,
+    required this.heightPercentage,
+  });
 
   final SectionBlock section;
+  final double heightPercentage;
 
   @override
   Widget build(context) {
-    final sectionFlex = section.flex ?? 1;
-    final alignment = section.align ?? ContentAlignment.center;
-
-    final (mainAxis, crossAxis) = ConverterHelper.toRowAlignment(alignment);
+    final slide = Provider.of<SlideData>(context);
 
     final children = section.blocks.map((block) {
-      final alignment = ConverterHelper.toAlignment(
-        block.align,
-      );
       final flex = block.flex ?? 1;
+      final alignment = ConverterHelper.toColumnAlignment(
+        block.align ?? ContentAlignment.center,
+      );
+      final totalFlex =
+          section.blocks.map((b) => b.flex ?? 1).reduce((a, b) => a + b);
+
+      final widthPercentage = flex / totalFlex;
+
       return Expanded(
         flex: flex,
-        child: Align(
-          alignment: alignment,
-          child: SizeLayoutBuilder(builder: (context, size) {
-            return Provider(
-              data: BlockData(
-                block: block,
-                spec: SlideSpec.of(context),
-                size: size,
-              ),
-              child: switch (block) {
-                ColumnBlock block => ColumnBlockWidget(block),
-                ImageBlock block => _ImageBlockWidget(block),
-                WidgetBlock block => _WidgetBlockWidget(block),
-                DartPadBlock block => _DartPadBlockWidget(block),
-              },
+        child: SpecBuilder(
+          style: slide.style.applyVariant(Variant(block.type.name)),
+          builder: (context) {
+            final spec = SlideSpec.of(context);
+
+            final size = Size(
+              kResolution.width * widthPercentage,
+              kResolution.height * heightPercentage,
             );
-          }),
+
+            final sizeOffset = getSizeWithoutSpacing(spec.blockContainer);
+
+            return spec.blockContainer(
+              child: Provider(
+                data: BlockData(
+                  block: block,
+                  spec: spec,
+                  size: (size - sizeOffset) as Size,
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: alignment.$2,
+                              mainAxisAlignment: alignment.$1,
+                              children: [
+                                switch (block) {
+                                  ColumnBlock block => ColumnBlockWidget(block),
+                                  ImageBlock block => _ImageBlockWidget(block),
+                                  WidgetBlock block =>
+                                    _WidgetBlockWidget(block),
+                                  DartPadBlock block =>
+                                    _DartPadBlockWidget(block),
+                                },
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       );
     }).toList();
 
-    return Expanded(
-      flex: sectionFlex,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: crossAxis,
-        children: children,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      // crossAxisAlignment: crossAxis,
+      children: children,
     );
   }
 }
@@ -101,20 +140,17 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
   @override
   Widget build(context) {
     final content = block.content;
-    final alignment = block.align ?? ContentAlignment.center;
 
-    return Align(
-      alignment: ConverterHelper.toAlignment(alignment),
-      child: Wrap(
-        clipBehavior: Clip.hardEdge,
-        children: [
-          SingleChildScrollView(
-            child: MarkdownViewer(
-              content: content,
-              spec: SlideSpec.of(context),
-            ),
-          ),
-        ],
+    final blockData = Provider.of<BlockData>(context);
+
+    return ConstrainedBox(
+      constraints:
+          BoxConstraints.loose(blockData.size - const Offset(0, 0) as Size),
+      child: SingleChildScrollView(
+        child: MarkdownViewer(
+          content: content,
+          spec: SlideSpec.of(context),
+        ),
       ),
     );
   }

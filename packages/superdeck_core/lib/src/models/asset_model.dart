@@ -34,6 +34,8 @@ final class SlideAsset with SlideAssetMappable {
 
   bool get isLandscape => !isPortrait;
 
+  double get aspectRatio => width / height;
+
   static const fromMap = SlideAssetMapper.fromMap;
   static const fromJson = SlideAssetMapper.fromJson;
 }

@@ -5,10 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:mix/mix.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
-import '../common/helpers/controller.dart';
 import 'slide_parts.dart';
 
-class SlideController extends Controller {
+class SlideData {
   final int slideIndex;
   final FixedSlidePart? header;
   final FixedSlidePart? footer;
@@ -16,7 +15,7 @@ class SlideController extends Controller {
   final Style style;
   final Slide slide;
 
-  SlideController({
+  SlideData({
     required this.slideIndex,
     this.header,
     this.footer,
@@ -54,6 +53,29 @@ class SlideController extends Controller {
 
   Widget buildBackground() {
     return background ?? const SizedBox.shrink();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SlideData &&
+        other.slideIndex == slideIndex &&
+        other.header == header &&
+        other.footer == footer &&
+        other.background == background &&
+        other.style == style &&
+        other.slide == slide;
+  }
+
+  @override
+  int get hashCode {
+    return slideIndex.hashCode ^
+        header.hashCode ^
+        footer.hashCode ^
+        background.hashCode ^
+        style.hashCode ^
+        slide.hashCode;
   }
 }
 

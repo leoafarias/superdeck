@@ -12,36 +12,30 @@ import 'alert_block_syntax.dart';
 class SpecMarkdownBuilders {
   final SlideSpec spec;
 
-  const SpecMarkdownBuilders(this.spec);
+  SpecMarkdownBuilders(this.spec);
 
-  List<md.BlockSyntax> get blockSyntaxes {
-    return [
-      const CustomHeaderSyntax(),
-      const AlertBlockSyntax(),
-    ];
-  }
+  final List<md.BlockSyntax> blockSyntaxes = [
+    const CustomHeaderSyntax(),
+    const AlertBlockSyntax(),
+  ];
 
-  List<md.InlineSyntax> get inlineSyntaxes {
-    return [
-      CustomImageSyntax(),
-    ];
-  }
+  final List<md.InlineSyntax> inlineSyntaxes = [
+    CustomImageSyntax(),
+  ];
 
-  Map<String, MarkdownElementBuilder> get builders {
-    return {
-      'h1': TextBuilder(spec.h1),
-      'h2': TextBuilder(spec.h2),
-      'h3': TextBuilder(spec.h3),
-      'h4': TextBuilder(spec.h4),
-      'h5': TextBuilder(spec.h5),
-      'h6': TextBuilder(spec.h6),
-      'alert': AlertElementBuilder(spec.alert),
-      'p': TextBuilder(spec.p),
-      'code': CodeElementBuilder(spec.code),
-      'img': ImageElementBuilder(spec.image),
-      'li': TextBuilder(spec.list?.text),
-    };
-  }
+  late final Map<String, MarkdownElementBuilder> builders = {
+    'h1': TextBuilder(spec.h1),
+    'h2': TextBuilder(spec.h2),
+    'h3': TextBuilder(spec.h3),
+    'h4': TextBuilder(spec.h4),
+    'h5': TextBuilder(spec.h5),
+    'h6': TextBuilder(spec.h6),
+    'alert': AlertElementBuilder(spec.alert),
+    'p': TextBuilder(spec.p),
+    'code': CodeElementBuilder(spec.code),
+    'img': ImageElementBuilder(spec.image),
+    'li': TextBuilder(spec.list?.text),
+  };
 
   Map<String, MarkdownPaddingBuilder> get paddingBuilders {
     return _kBlockTags.fold(
@@ -84,56 +78,51 @@ class TextBuilder extends MarkdownElementBuilder {
   Widget? visitText(md.Text text, TextStyle? preferredStyle) {
     final (:tag, :content) = _getTagAndContent(text.text);
 
-    Widget textWidget = TextSpecWidget(
+    Widget current = TextSpecWidget(
       _transformLineBreaks(content),
       spec: spec,
     );
 
     if (tag != null) {
-      textWidget = Provider(
-        data: _TextElementData(
-          text: content,
-          spec: spec ?? const TextSpec(),
-          size: Size.zero,
-        ),
-        child: Hero(
-          flightShuttleBuilder: (
-            context,
-            animation,
-            flightDirection,
-            fromHeroContext,
-            toHeroContext,
-          ) {
-            final fromBlock = Provider.of<_TextElementData>(fromHeroContext);
-            final toBlock = Provider.of<_TextElementData>(toHeroContext);
-
-            return AnimatedBuilder(
-              animation: animation,
-              builder: (context, child) {
-                return TextSpecWidget(
-                  _lerpString(
-                    fromBlock.text,
-                    toBlock.text,
-                    animation.value,
-                  ),
-                  spec: fromBlock.spec.lerp(
-                    toBlock.spec,
-                    animation.value,
-                  ),
-                );
-              },
-            );
-          },
-          tag: tag,
-          child: textWidget,
-        ),
+      current = Hero(
+        flightShuttleBuilder: _heroFlightShuttleBuilder,
+        tag: tag,
+        child: current,
       );
     }
 
-    return _TextElementData(
-      text: content,
-      spec: spec,
-      child: textWidget,
+    return Builder(builder: (context) {
+      final block = Provider.of<BlockData>(context);
+      final contentOffset = getTotalModifierSpacing(spec ?? const TextSpec());
+      return Provider(
+        data: _TextElementData(
+          text: _transformLineBreaks(content),
+          spec: spec ?? const TextSpec(),
+          size: (block.size - contentOffset) as Size,
+        ),
+        child: current,
+      );
+    });
+  }
+
+  Widget _heroFlightShuttleBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
+    final fromBlock = Provider.of<_TextElementData>(fromHeroContext);
+    final toBlock = Provider.of<_TextElementData>(toHeroContext);
+
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return TextSpecWidget(
+          _lerpString(fromBlock.text, toBlock.text, animation.value),
+          spec: fromBlock.spec.lerp(toBlock.spec, animation.value),
+        );
+      },
     );
   }
 }
@@ -175,41 +164,73 @@ class ImageElementBuilder extends MarkdownElementBuilder {
 
     final uri = Uri.parse(src);
 
-    final widget = Builder(builder: (context) {
+    return Builder(builder: (context) {
       final block = Provider.of<BlockData>(context);
-      final contentOffset = getSizeWithoutSpacing(block.spec.contentBlock);
-      final imageOffset = getTotalModifierSpacing(block.spec.image);
+
+      final contentOffset = getTotalModifierSpacing(spec);
 
       final totalSize = Size(
-        block.size.width - contentOffset.dx - imageOffset.dx,
-        block.size.height - contentOffset.dy - imageOffset.dy,
+        block.size.width - contentOffset.dx,
+        block.size.height - contentOffset.dy,
       );
-      return AnimatedContainer(
+      Widget current = AnimatedContainer(
         duration: Durations.medium1,
         constraints: BoxConstraints.tight(totalSize),
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: CachedImage(
-            uri: uri,
-            spec: block.spec.image,
-          ),
+        child: CachedImage(
+          uri: uri,
+          spec: spec,
         ),
       );
-    });
 
-    if (heroTag != null) {
-      return Hero(
-        tag: heroTag,
-        child: widget,
+      if (heroTag != null) {
+        current = Hero(
+          tag: heroTag,
+          flightShuttleBuilder: _heroFlightShuttleBuilder,
+          child: current,
+        );
+      }
+
+      return Provider(
+        data: _ImageElementData(
+          size: totalSize,
+          spec: spec,
+          uri: uri,
+        ),
+        child: current,
       );
-    }
+    });
+  }
 
-    return widget;
+  Widget _heroFlightShuttleBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
+    final fromBlock = Provider.of<_ImageElementData>(fromHeroContext);
+    final toBlock = Provider.of<_ImageElementData>(toHeroContext);
+
+    final interpolatedSize =
+        Size.lerp(fromBlock.size, toBlock.size, animation.value)!;
+
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Container(
+          constraints: BoxConstraints.tight(interpolatedSize),
+          child: CachedImage(
+            uri: animation.value < 0.5 ? fromBlock.uri : toBlock.uri,
+            spec: fromBlock.spec.lerp(toBlock.spec, animation.value),
+          ),
+        );
+      },
+    );
   }
 }
 
 class _ImageElementData {
-  final SlideSpec spec;
+  final ImageSpec spec;
   final Size size;
   final Uri uri;
 

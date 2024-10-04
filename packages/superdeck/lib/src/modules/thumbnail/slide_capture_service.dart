@@ -35,7 +35,7 @@ class SlideCaptureService {
 
   Future<Uint8List> generate({
     SlideCaptureQuality quality = SlideCaptureQuality.low,
-    required SlideController slide,
+    required SlideData slide,
   }) async {
     final queueKey = shortHash(slide.key + quality.name);
     try {

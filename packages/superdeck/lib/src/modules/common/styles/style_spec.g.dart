@@ -2034,8 +2034,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
     TextStyle? img,
     BoxDecoration? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
-    BoxSpec? slideContainer,
-    BoxSpec? contentBlock,
+    BoxSpec? blockContainer,
     ImageSpec? image,
     MarkdownAlertSpec? alert,
     WidgetModifiersData? modifiers,
@@ -2063,8 +2062,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       horizontalRuleDecoration:
           horizontalRuleDecoration ?? _$this.horizontalRuleDecoration,
       textScaleFactor: textScaleFactor ?? _$this.textScaleFactor,
-      slideContainer: slideContainer ?? _$this.slideContainer,
-      contentBlock: contentBlock ?? _$this.contentBlock,
+      blockContainer: blockContainer ?? _$this.blockContainer,
       image: image ?? _$this.image,
       alert: alert ?? _$this.alert,
       modifiers: modifiers ?? _$this.modifiers,
@@ -2086,7 +2084,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
   /// - [TextSpec.lerp] for [h1] and [h2] and [h3] and [h4] and [h5] and [h6] and [p].
   /// - [MixHelpers.lerpTextStyle] for [link] and [a] and [em] and [strong] and [del] and [img].
   /// - [BoxDecoration.lerp] for [horizontalRuleDecoration].
-  /// - [BoxSpec.lerp] for [slideContainer] and [contentBlock].
+  /// - [BoxSpec.lerp] for [blockContainer].
   /// - [ImageSpec.lerp] for [image].
 
   /// For [blockquote] and [list] and [table] and [checkbox] and [code] and [textScaleFactor] and [alert] and [modifiers] and [animated], the interpolation is performed using a step function.
@@ -2122,8 +2120,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
       horizontalRuleDecoration: BoxDecoration.lerp(
           _$this.horizontalRuleDecoration, other.horizontalRuleDecoration, t),
       textScaleFactor: t < 0.5 ? _$this.textScaleFactor : other.textScaleFactor,
-      slideContainer: _$this.slideContainer.lerp(other.slideContainer, t),
-      contentBlock: _$this.contentBlock.lerp(other.contentBlock, t),
+      blockContainer: _$this.blockContainer.lerp(other.blockContainer, t),
       image: _$this.image.lerp(other.image, t),
       alert: _$this.alert.lerp(other.alert, t),
       modifiers: other.modifiers,
@@ -2157,8 +2154,7 @@ mixin _$SlideSpec on Spec<SlideSpec> {
         _$this.img,
         _$this.horizontalRuleDecoration,
         _$this.textScaleFactor,
-        _$this.slideContainer,
-        _$this.contentBlock,
+        _$this.blockContainer,
         _$this.image,
         _$this.alert,
         _$this.modifiers,
@@ -2196,8 +2192,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
   final TextStyleDto? img;
   final BoxDecorationDto? horizontalRuleDecoration;
   final TextScaler? textScaleFactor;
-  final BoxSpecAttribute? slideContainer;
-  final BoxSpecAttribute? contentBlock;
+  final BoxSpecAttribute? blockContainer;
   final ImageSpecAttribute? image;
   final MarkdownAlertSpecAttribute? alert;
 
@@ -2222,8 +2217,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
     this.img,
     this.horizontalRuleDecoration,
     this.textScaleFactor,
-    this.slideContainer,
-    this.contentBlock,
+    this.blockContainer,
     this.image,
     this.alert,
     super.modifiers,
@@ -2261,8 +2255,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
       img: img?.resolve(mix),
       horizontalRuleDecoration: horizontalRuleDecoration?.resolve(mix),
       textScaleFactor: textScaleFactor,
-      slideContainer: slideContainer?.resolve(mix),
-      contentBlock: contentBlock?.resolve(mix),
+      blockContainer: blockContainer?.resolve(mix),
       image: image?.resolve(mix),
       alert: alert?.resolve(mix),
       modifiers: modifiers?.resolve(mix),
@@ -2305,10 +2298,8 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
           horizontalRuleDecoration?.merge(other.horizontalRuleDecoration) ??
               other.horizontalRuleDecoration,
       textScaleFactor: other.textScaleFactor ?? textScaleFactor,
-      slideContainer:
-          slideContainer?.merge(other.slideContainer) ?? other.slideContainer,
-      contentBlock:
-          contentBlock?.merge(other.contentBlock) ?? other.contentBlock,
+      blockContainer:
+          blockContainer?.merge(other.blockContainer) ?? other.blockContainer,
       image: image?.merge(other.image) ?? other.image,
       alert: alert?.merge(other.alert) ?? other.alert,
       modifiers: modifiers?.merge(other.modifiers) ?? other.modifiers,
@@ -2342,8 +2333,7 @@ final class SlideSpecAttribute extends SpecAttribute<SlideSpec> {
         img,
         horizontalRuleDecoration,
         textScaleFactor,
-        slideContainer,
-        contentBlock,
+        blockContainer,
         image,
         alert,
         modifiers,
@@ -2420,11 +2410,8 @@ class SlideSpecUtility<T extends Attribute>
   late final textScaleFactor =
       TextScalerUtility((v) => only(textScaleFactor: v));
 
-  /// Utility for defining [SlideSpecAttribute.slideContainer]
-  late final slideContainer = BoxSpecUtility((v) => only(slideContainer: v));
-
-  /// Utility for defining [SlideSpecAttribute.contentBlock]
-  late final contentBlock = BoxSpecUtility((v) => only(contentBlock: v));
+  /// Utility for defining [SlideSpecAttribute.blockContainer]
+  late final blockContainer = BoxSpecUtility((v) => only(blockContainer: v));
 
   /// Utility for defining [SlideSpecAttribute.image]
   late final image = ImageSpecUtility((v) => only(image: v));
@@ -2469,8 +2456,7 @@ class SlideSpecUtility<T extends Attribute>
     TextStyleDto? img,
     BoxDecorationDto? horizontalRuleDecoration,
     TextScaler? textScaleFactor,
-    BoxSpecAttribute? slideContainer,
-    BoxSpecAttribute? contentBlock,
+    BoxSpecAttribute? blockContainer,
     ImageSpecAttribute? image,
     MarkdownAlertSpecAttribute? alert,
     WidgetModifiersDataDto? modifiers,
@@ -2497,8 +2483,7 @@ class SlideSpecUtility<T extends Attribute>
       img: img,
       horizontalRuleDecoration: horizontalRuleDecoration,
       textScaleFactor: textScaleFactor,
-      slideContainer: slideContainer,
-      contentBlock: contentBlock,
+      blockContainer: blockContainer,
       image: image,
       alert: alert,
       modifiers: modifiers,

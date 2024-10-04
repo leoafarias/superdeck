@@ -12,7 +12,7 @@ void main() {
 # Hello
 ''';
     const slide = Slide(markdown: rawMarkdown, key: 'simple-slide');
-    final config = SlideController(
+    final config = SlideData(
       slide: slide,
       slideIndex: 0,
       style: Style(),

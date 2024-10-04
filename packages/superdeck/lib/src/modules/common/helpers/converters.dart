@@ -67,43 +67,11 @@ class ConverterHelper {
 
   static (MainAxisAlignment mainAxis, CrossAxisAlignment crossAxis)
       toRowAlignment(ContentAlignment alignment) {
-    return switch (alignment) {
-      ContentAlignment.topLeft => (
-          MainAxisAlignment.start,
-          CrossAxisAlignment.start
-        ),
-      ContentAlignment.topCenter => (
-          MainAxisAlignment.start,
-          CrossAxisAlignment.center
-        ),
-      ContentAlignment.topRight => (
-          MainAxisAlignment.start,
-          CrossAxisAlignment.end
-        ),
-      ContentAlignment.centerLeft => (
-          MainAxisAlignment.center,
-          CrossAxisAlignment.start
-        ),
-      ContentAlignment.center => (
-          MainAxisAlignment.center,
-          CrossAxisAlignment.center
-        ),
-      ContentAlignment.centerRight => (
-          MainAxisAlignment.center,
-          CrossAxisAlignment.end
-        ),
-      ContentAlignment.bottomLeft => (
-          MainAxisAlignment.end,
-          CrossAxisAlignment.start
-        ),
-      ContentAlignment.bottomCenter => (
-          MainAxisAlignment.end,
-          CrossAxisAlignment.center
-        ),
-      ContentAlignment.bottomRight => (
-          MainAxisAlignment.end,
-          CrossAxisAlignment.end
-        ),
-    };
+    return toFlexAlignment(Axis.horizontal, alignment);
+  }
+
+  static (MainAxisAlignment mainAxis, CrossAxisAlignment crossAxis)
+      toColumnAlignment(ContentAlignment alignment) {
+    return toFlexAlignment(Axis.vertical, alignment);
   }
 }

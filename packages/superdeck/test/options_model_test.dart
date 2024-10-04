@@ -4,13 +4,13 @@ import 'package:superdeck_core/superdeck_core.dart';
 void main() {
   group('ColumnBlock', () {
     test('merge returns original instance when other is null', () {
-      const options = ColumnBlock();
+      final options = ColumnBlock();
       expect(options.merge(null), same(options));
     });
 
     test('merge returns new instance with merged values', () {
-      const options1 = ColumnBlock(flex: 2, align: ContentAlignment.topLeft);
-      const options2 = ColumnBlock(align: ContentAlignment.bottomRight);
+      final options1 = ColumnBlock(flex: 2, align: ContentAlignment.topLeft);
+      final options2 = ColumnBlock(align: ContentAlignment.bottomRight);
       final merged = options1.merge(options2);
       expect(merged.flex, options1.flex);
       expect(merged.align, options2.align);
@@ -19,7 +19,7 @@ void main() {
 
   group('ImageOptions', () {
     test('constructor sets properties correctly', () {
-      const options = ImageBlock(
+      final options = ImageBlock(
           src: 'image.png',
           fit: ImageFit.cover,
           flex: 3,
@@ -33,7 +33,7 @@ void main() {
 
   group('WidgetOptions', () {
     test('constructor sets properties correctly', () {
-      const options = WidgetBlock(
+      final options = WidgetBlock(
         name: 'MyWidget',
         args: {'key': 'value'},
         flex: 2,

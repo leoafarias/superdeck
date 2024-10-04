@@ -18,7 +18,6 @@ void main() async {
           styles: {
             'announcement': AnnouncementStyle(),
             'quote': QuoteStyle(),
-            'show_sections': ShowSectionsStyle(),
           },
           background: const BackgroundPart(),
           header: const HeaderPart(),

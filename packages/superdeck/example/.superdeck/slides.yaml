@@ -1,6 +1,26 @@
 config: {}
 slides: 
-  - key: 'Qsp3h0TX'
+  - key: 'khtxPwY3'
+    options: {}
+    markdown: |-
+      {@column}
+      
+      ## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}
+      
+      {@column}
+      
+      ![structured_output](https://picsum.photos/800/1400) {.cover}
+    sections: 
+      - blocks: 
+          - content: |
+              ## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}
+            scrollable: false
+          - content: '![structured_output](https://picsum.photos/800/1400) {.cover}'
+            scrollable: false
+        type: 'section'
+    notes: []
+    assets: []
+  - key: 'HR4Fb0tS'
     options: {}
     markdown: |-
       {@section}
@@ -8,10 +28,11 @@ slides:
       {@column
         align: center
       }
-      # Generative UI{.here}
-      # with Flutter
+      
+      # Gen UI <br>with Flutter{.here}
       
       {@column}
+      
       ![structured_output](https://picsum.photos/800/1400) {.cover}
     sections: 
       - blocks: []
@@ -19,43 +40,34 @@ slides:
       - blocks: 
           - align: 'center'
             content: |
-              # Generative UI{.here}
-              # with Flutter
+              # Gen UI <br>with Flutter{.here}
             scrollable: false
           - content: '![structured_output](https://picsum.photos/800/1400) {.cover}'
             scrollable: false
         type: 'section'
     notes: []
-    assets: 
-      - path: '.superdeck/generated/image_caching_lNEW6843.jpeg'
-        width: 800
-        height: 1400
-        reference: 'https://picsum.photos/800/1400'
-  - key: 'DUv12f5a'
+    assets: []
+  - key: 'rPTQlMdP'
     options: {}
     markdown: |-
       {@column}
       
-      ## How can LLMs Understtand Your UI? {.here}
+      ## Another image{.here}
       
       {@column}
       
-      ![structured_output](https://picsum.photos/800/300) {.cover}
+      ![structured_output](https://picsum.photos/800/1400) {.cover}
     sections: 
       - blocks: 
           - content: |
-              ## How can LLMs Understtand Your UI? {.here}
+              ## Another image{.here}
             scrollable: false
-          - content: '![structured_output](https://picsum.photos/800/300) {.cover}'
+          - content: '![structured_output](https://picsum.photos/800/1400) {.cover}'
             scrollable: false
         type: 'section'
     notes: []
-    assets: 
-      - path: '.superdeck/generated/image_caching_xWpKxOmA.jpeg'
-        width: 800
-        height: 300
-        reference: 'https://picsum.photos/800/300'
-  - key: 'UKTp7eAH'
+    assets: []
+  - key: 'ECisD4gC'
     options: {}
     markdown: |-
       {@column}
@@ -63,6 +75,7 @@ slides:
       ![structured_output](https://picsum.photos/800/1400) {.cover}
       
       {@column}
+      
       ## Another image{.here}
     sections: 
       - blocks: 
@@ -73,11 +86,7 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: 
-      - path: '.superdeck/generated/image_caching_lNEW6843.jpeg'
-        width: 800
-        height: 1400
-        reference: 'https://picsum.photos/800/1400'
+    assets: []
   - key: 'P6nguqAy'
     options: {}
     markdown: |-
@@ -283,11 +292,7 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: 
-      - path: 'assets/structured_output.png'
-        width: 2038
-        height: 2340
-        reference: 'assets/structured_output.png'
+    assets: []
   - key: '9jtc9i8W'
     options: {}
     markdown: |-
@@ -597,11 +602,7 @@ slides:
         align: 'center_right'
         type: 'section'
     notes: []
-    assets: 
-      - path: 'assets/llm_tools.png'
-        width: 3776
-        height: 1480
-        reference: 'assets/llm_tools.png'
+    assets: []
   - key: '85oPyLzH'
     options: 
       style: 'demo'
@@ -659,11 +660,7 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: 
-      - path: 'assets/llm_interaction.png'
-        width: 2900
-        height: 1396
-        reference: 'assets/llm_interaction.png'
+    assets: []
   - key: 'aY8Y9HBu'
     options: {}
     markdown: |-
@@ -687,11 +684,7 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: 
-      - path: 'assets/widget_response.png'
-        width: 3142
-        height: 2460
-        reference: 'assets/widget_response.png'
+    assets: []
   - key: '3eFdrtdl'
     options: 
       style: 'demo'

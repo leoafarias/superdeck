@@ -46,10 +46,10 @@ class SlidesLoader {
 
     final pipeline = TaskPipeline([
       MermaidConverterTask(),
-      const DartFormatterTask(),
-      const SlideThumbnailTask(),
-      const ImageCachingTask(),
-      const BuildSectionsTask(),
+      DartFormatterTask(),
+      SlideThumbnailTask(),
+      ImageCachingTask(),
+      BuildSectionsTask(),
     ]);
     try {
       final references = await pipeline.run();

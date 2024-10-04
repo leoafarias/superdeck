@@ -53,7 +53,7 @@ class CoverStyle extends DeckStyle {
             $.h1.chain
               ..style.as(GoogleFonts.poppins())
               ..style.fontSize(100),
-            $.contentBlock.gradient.linear(
+            $.blockContainer.gradient.linear(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
@@ -82,7 +82,7 @@ class AnnouncementStyle extends DeckStyle {
               ..style.fontSize(60)
               ..style.color(Colors.white)
               ..style.fontWeight(FontWeight.w100),
-            $.contentBlock.gradient.linear(
+            $.blockContainer.gradient.linear(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
@@ -111,23 +111,6 @@ class QuoteStyle extends DeckStyle {
             $.h6.chain
               ..style.as(GoogleFonts.notoSerif())
               ..style.fontSize(20),
-          ),
-        );
-  }
-}
-
-class ShowSectionsStyle extends DeckStyle {
-  ShowSectionsStyle();
-  @override
-  Style build() {
-    return super.build().merge(
-          Style(
-            $.slideContainer.chain
-              ..borderRadius(10)
-              ..border.all(
-                color: Colors.blue,
-                width: 2,
-              ),
           ),
         );
   }

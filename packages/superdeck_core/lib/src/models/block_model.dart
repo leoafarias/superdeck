@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:superdeck_core/src/helpers/uuid_v4.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 part 'block_model.mapper.dart';
@@ -18,12 +19,14 @@ sealed class Block with BlockMappable {
   final ContentAlignment? align;
   final int? flex;
   final BlockType type;
-
-  const Block({
+  late final String key;
+  Block({
     this.flex,
     this.align,
     required this.type,
-  });
+  }) {
+    key = uuidV4();
+  }
 
   Block merge(Block? other) {
     if (other == null) return this;
@@ -72,7 +75,7 @@ class NullIfEmptyBlock extends SimpleMapper<Block> {
 class SectionBlock extends Block with SectionBlockMappable {
   final List<ContentBlock> blocks;
 
-  const SectionBlock({
+  SectionBlock({
     this.blocks = const [],
     super.flex,
     super.align,
@@ -118,7 +121,7 @@ sealed class ContentBlock extends Block with ContentBlockMappable {
   final String? _content;
   final bool scrollable;
 
-  const ContentBlock({
+  ContentBlock({
     String? content,
     super.flex,
     super.align,
@@ -147,7 +150,7 @@ sealed class ContentBlock extends Block with ContentBlockMappable {
 
 @MappableClass(discriminatorValue: MappableClass.useAsDefault)
 class ColumnBlock extends ContentBlock with ColumnBlockMappable {
-  const ColumnBlock({
+  ColumnBlock({
     super.flex,
     super.align,
     super.content,
@@ -169,7 +172,7 @@ class ImageBlock extends ContentBlock with ImageBlockMappable {
   final double? width;
   final double? height;
 
-  const ImageBlock({
+  ImageBlock({
     required this.src,
     this.fit,
     this.width,
@@ -203,7 +206,7 @@ class WidgetBlock extends ContentBlock with WidgetBlockMappable {
   final Map<String, dynamic> args;
 
   @override
-  const WidgetBlock({
+  WidgetBlock({
     required this.name,
     this.args = const {},
     super.flex,

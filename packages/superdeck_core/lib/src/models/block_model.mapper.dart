@@ -275,12 +275,16 @@ class BlockMapper extends ClassMapperBase<Block> {
       Field('align', _$align, opt: true);
   static BlockType _$type(Block v) => v.type;
   static const Field<Block, BlockType> _f$type = Field('type', _$type);
+  static String _$key(Block v) => v.key;
+  static const Field<Block, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<Block> fields = const {
     #flex: _f$flex,
     #align: _f$align,
     #type: _f$type,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -344,6 +348,9 @@ class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
   static BlockType _$type(SectionBlock v) => v.type;
   static const Field<SectionBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
+  static String _$key(SectionBlock v) => v.key;
+  static const Field<SectionBlock, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<SectionBlock> fields = const {
@@ -351,6 +358,7 @@ class SectionBlockMapper extends SubClassMapperBase<SectionBlock> {
     #flex: _f$flex,
     #align: _f$align,
     #type: _f$type,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -498,6 +506,9 @@ class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
   static bool _$scrollable(ContentBlock v) => v.scrollable;
   static const Field<ContentBlock, bool> _f$scrollable =
       Field('scrollable', _$scrollable, opt: true, def: false);
+  static String _$key(ContentBlock v) => v.key;
+  static const Field<ContentBlock, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<ContentBlock> fields = const {
@@ -506,6 +517,7 @@ class ContentBlockMapper extends SubClassMapperBase<ContentBlock> {
     #align: _f$align,
     #type: _f$type,
     #scrollable: _f$scrollable,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -579,6 +591,9 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
   static BlockType _$type(ColumnBlock v) => v.type;
   static const Field<ColumnBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
+  static String _$key(ColumnBlock v) => v.key;
+  static const Field<ColumnBlock, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<ColumnBlock> fields = const {
@@ -587,6 +602,7 @@ class ColumnBlockMapper extends SubClassMapperBase<ColumnBlock> {
     #_content: _f$_content,
     #scrollable: _f$scrollable,
     #type: _f$type,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -740,6 +756,9 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
   static BlockType _$type(ImageBlock v) => v.type;
   static const Field<ImageBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
+  static String _$key(ImageBlock v) => v.key;
+  static const Field<ImageBlock, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<ImageBlock> fields = const {
@@ -752,6 +771,7 @@ class ImageBlockMapper extends SubClassMapperBase<ImageBlock> {
     #_content: _f$_content,
     #scrollable: _f$scrollable,
     #type: _f$type,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -921,6 +941,9 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
   static BlockType _$type(WidgetBlock v) => v.type;
   static const Field<WidgetBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
+  static String _$key(WidgetBlock v) => v.key;
+  static const Field<WidgetBlock, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<WidgetBlock> fields = const {
@@ -931,6 +954,7 @@ class WidgetBlockMapper extends SubClassMapperBase<WidgetBlock> {
     #_content: _f$_content,
     #scrollable: _f$scrollable,
     #type: _f$type,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;
@@ -1102,6 +1126,9 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
   static BlockType _$type(DartPadBlock v) => v.type;
   static const Field<DartPadBlock, BlockType> _f$type =
       Field('type', _$type, mode: FieldMode.member);
+  static String _$key(DartPadBlock v) => v.key;
+  static const Field<DartPadBlock, String> _f$key =
+      Field('key', _$key, mode: FieldMode.member);
 
   @override
   final MappableFields<DartPadBlock> fields = const {
@@ -1113,6 +1140,7 @@ class DartPadBlockMapper extends SubClassMapperBase<DartPadBlock> {
     #embed: _f$embed,
     #scrollable: _f$scrollable,
     #type: _f$type,
+    #key: _f$key,
   };
   @override
   final bool ignoreNull = true;

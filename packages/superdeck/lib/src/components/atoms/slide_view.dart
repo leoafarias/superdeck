@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
 import '../../modules/common/helpers/controller.dart';
-import '../../modules/common/styles/style_spec.dart';
 import '../../modules/slide/slide_configuration.dart';
 import '../molecules/block_widget.dart';
 
 class SlideView extends StatelessWidget {
-  final SlideController slide;
+  final SlideData slide;
   const SlideView(
     this.slide, {
     super.key,
@@ -18,12 +17,14 @@ class SlideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ControllerProvider(
-      controller: slide,
+    final totalFlex = slide.sections
+        .map((e) => e.flex ?? 1)
+        .reduce((value, element) => value + element);
+    return Provider(
+      data: slide,
       child: SpecBuilder(
         style: slide.style,
         builder: (context) {
-          final spec = SlideSpec.of(context);
           return Column(
             children: [
               Expanded(
@@ -32,11 +33,16 @@ class SlideView extends StatelessWidget {
                     Positioned.fill(
                       child: slide.buildBackground(),
                     ),
-                    spec.slideContainer(
-                      child: Column(
-                        children:
-                            slide.sections.map(SectionBlockWidget.new).toList(),
-                      ),
+                    Column(
+                      children: slide.sections
+                          .map(
+                            (e) => Expanded(
+                              flex: e.flex ?? 1,
+                              child: SectionBlockWidget(e,
+                                  heightPercentage: (e.flex ?? 1) / totalFlex),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ],
                 ),

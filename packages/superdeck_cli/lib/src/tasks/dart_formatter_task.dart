@@ -4,7 +4,7 @@ import 'package:superdeck_cli/src/generator_pipeline.dart';
 import 'package:superdeck_cli/src/helpers/dart_process.dart';
 
 class DartFormatterTask extends Task {
-  const DartFormatterTask() : super('dart_formatter');
+  DartFormatterTask() : super('dart_formatter');
 
   @override
   FutureOr<void> run(context) async {

@@ -1,25 +1,36 @@
 ---
 ---
+{@column}
+
+## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}
+
+{@column}
+
+![structured_output](https://picsum.photos/800/1400) {.cover}
+
+---
+---
 {@section}
 {@section}
 {@column
   align: center
 }
-# Generative UI{.here}
-# with Flutter
+
+# Gen UI <br>with Flutter{.here}
 
 {@column}
+
 ![structured_output](https://picsum.photos/800/1400) {.cover}
 
 ---
 ---
 {@column}
 
-## How can LLMs Understtand Your UI? {.here}
+## Another image{.here}
 
 {@column}
 
-![structured_output](https://picsum.photos/800/300) {.cover}
+![structured_output](https://picsum.photos/800/1400) {.cover}
 
 ---
 ---
@@ -28,6 +39,7 @@
 ![structured_output](https://picsum.photos/800/1400) {.cover}
 
 {@column}
+
 ## Another image{.here}
 
 ---

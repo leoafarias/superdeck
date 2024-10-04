@@ -13,7 +13,7 @@ extension WidgetTesterX on WidgetTester {
   }
 
   Future<void> pumpSlide(
-    SlideController slide, {
+    SlideData slide, {
     bool isSnapshot = false,
     DeckStyle? style,
     Map<String, WidgetBuilderWithOptions> widgets = const {},
@@ -25,8 +25,8 @@ extension WidgetTesterX on WidgetTester {
       widgets: widgets,
     );
     return pumpWithScaffold(
-      ControllerProvider(
-        controller: slide,
+      Provider(
+        data: slide,
         child: ControllerProvider(
           controller: controller,
           child: SlideView(slide),

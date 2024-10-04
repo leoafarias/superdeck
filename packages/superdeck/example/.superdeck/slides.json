@@ -2,19 +2,14 @@
   "config": {},
   "slides": [
     {
-      "key": "Qsp3h0TX",
+      "key": "khtxPwY3",
       "options": {},
-      "markdown": "{@section}\n{@section}\n{@column\n  align: center\n}\n# Generative UI{.here}\n# with Flutter\n\n{@column}\n![structured_output](https://picsum.photos/800/1400) {.cover}",
+      "markdown": "{@column}\n\n## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}",
       "sections": [
-        {
-          "blocks": [],
-          "type": "section"
-        },
         {
           "blocks": [
             {
-              "align": "center",
-              "content": "# Generative UI{.here}\n# with Flutter\n",
+              "content": "## Another image Another image Another image Another image Another image Another image Another image Another image Another image Another image {.here}\n",
               "scrollable": false
             },
             {
@@ -26,28 +21,26 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": ".superdeck/generated/image_caching_lNEW6843.jpeg",
-          "width": 800,
-          "height": 1400,
-          "reference": "https://picsum.photos/800/1400"
-        }
-      ]
+      "assets": []
     },
     {
-      "key": "DUv12f5a",
+      "key": "HR4Fb0tS",
       "options": {},
-      "markdown": "{@column}\n\n## How can LLMs Understtand Your UI? {.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/300) {.cover}",
+      "markdown": "{@section}\n{@section}\n{@column\n  align: center\n}\n\n# Gen UI <br>with Flutter{.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}",
       "sections": [
+        {
+          "blocks": [],
+          "type": "section"
+        },
         {
           "blocks": [
             {
-              "content": "## How can LLMs Understtand Your UI? {.here}\n",
+              "align": "center",
+              "content": "# Gen UI <br>with Flutter{.here}\n",
               "scrollable": false
             },
             {
-              "content": "![structured_output](https://picsum.photos/800/300) {.cover}",
+              "content": "![structured_output](https://picsum.photos/800/1400) {.cover}",
               "scrollable": false
             }
           ],
@@ -55,19 +48,34 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": ".superdeck/generated/image_caching_xWpKxOmA.jpeg",
-          "width": 800,
-          "height": 300,
-          "reference": "https://picsum.photos/800/300"
-        }
-      ]
+      "assets": []
     },
     {
-      "key": "UKTp7eAH",
+      "key": "rPTQlMdP",
       "options": {},
-      "markdown": "{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}\n\n{@column}\n## Another image{.here}",
+      "markdown": "{@column}\n\n## Another image{.here}\n\n{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}",
+      "sections": [
+        {
+          "blocks": [
+            {
+              "content": "## Another image{.here}\n",
+              "scrollable": false
+            },
+            {
+              "content": "![structured_output](https://picsum.photos/800/1400) {.cover}",
+              "scrollable": false
+            }
+          ],
+          "type": "section"
+        }
+      ],
+      "notes": [],
+      "assets": []
+    },
+    {
+      "key": "ECisD4gC",
+      "options": {},
+      "markdown": "{@column}\n\n![structured_output](https://picsum.photos/800/1400) {.cover}\n\n{@column}\n\n## Another image{.here}",
       "sections": [
         {
           "blocks": [
@@ -84,14 +92,7 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": ".superdeck/generated/image_caching_lNEW6843.jpeg",
-          "width": 800,
-          "height": 1400,
-          "reference": "https://picsum.photos/800/1400"
-        }
-      ]
+      "assets": []
     },
     {
       "key": "P6nguqAy",
@@ -305,14 +306,7 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": "assets/structured_output.png",
-          "width": 2038,
-          "height": 2340,
-          "reference": "assets/structured_output.png"
-        }
-      ]
+      "assets": []
     },
     {
       "key": "9jtc9i8W",
@@ -481,14 +475,7 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": "assets/llm_tools.png",
-          "width": 3776,
-          "height": 1480,
-          "reference": "assets/llm_tools.png"
-        }
-      ]
+      "assets": []
     },
     {
       "key": "85oPyLzH",
@@ -542,14 +529,7 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": "assets/llm_interaction.png",
-          "width": 2900,
-          "height": 1396,
-          "reference": "assets/llm_interaction.png"
-        }
-      ]
+      "assets": []
     },
     {
       "key": "aY8Y9HBu",
@@ -573,14 +553,7 @@
         }
       ],
       "notes": [],
-      "assets": [
-        {
-          "path": "assets/widget_response.png",
-          "width": 3142,
-          "height": 2460,
-          "reference": "assets/widget_response.png"
-        }
-      ]
+      "assets": []
     },
     {
       "key": "3eFdrtdl",

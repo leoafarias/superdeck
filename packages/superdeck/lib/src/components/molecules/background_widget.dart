@@ -7,7 +7,7 @@ class BackgroundWidget extends HookWidget {
   const BackgroundWidget(this.configuration,
       {required this.background, super.key});
 
-  final SlideController configuration;
+  final SlideData configuration;
   final Widget? background;
 
   @override

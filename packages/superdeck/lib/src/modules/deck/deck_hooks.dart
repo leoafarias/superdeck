@@ -8,11 +8,11 @@ T _useSelectController<T>(T Function(DeckController) selector) {
   return selector(controller);
 }
 
-List<SlideController> useSlides() {
+List<SlideData> useSlides() {
   return _useSelectController((controller) => controller.slides);
 }
 
-SlideController useCurrentSlide() {
+SlideData useCurrentSlide() {
   final index = useCurrentSlideIndex();
   return _useSelectController((controller) => controller.slides[index]);
 }

@@ -19,18 +19,15 @@ class DeckStyle {
 
   Style build() {
     final containers = [
-      // $.blockSpacing.padding.horizontal(40),
-      $.slideContainer.chain..color.transparent(),
-      $.contentBlock.padding.all(40),
+      $.blockContainer.padding.all(40),
       $.section.image(
-        $.contentBlock.padding.all(0),
+        $.blockContainer.padding.all(0),
       ),
       $.debug(
-        $.slideContainer.border.color(Colors.yellow),
-        $.contentBlock.border.color(Colors.blue),
+        $.blockContainer.border.color(Colors.blue),
       ),
       $.section.gist(
-        $.contentBlock.chain
+        $.blockContainer.chain
           ..margin.all(0)
           ..padding.all(0),
       ),

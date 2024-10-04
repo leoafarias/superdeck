@@ -17,7 +17,7 @@ class DeckController extends Controller {
   FixedSlidePart? _header;
   FixedSlidePart? _footer;
   SlidePart? _background;
-  late List<SlideController> _slides = [];
+  late List<SlideData> _slides = [];
   late final List<SlideAsset> _assets = [];
 
   AsyncValue<ReferenceDto> asyncData = const AsyncValue.loading();
@@ -110,7 +110,7 @@ class DeckController extends Controller {
   bool get hasData => _slides.isNotEmpty;
 
   /// The list of slides in the loaded reference data.
-  List<SlideController> get slides => _slides;
+  List<SlideData> get slides => _slides;
 
   /// Retrieves the [Style] registered with the given [name].
   ///
@@ -137,11 +137,11 @@ class DeckController extends Controller {
         data: data,
       );
 
-      final slides = <SlideController>[];
+      final slides = <SlideData>[];
       for (var i = 0; i < data.slides.length; i++) {
         final slide = data.slides[i];
         final slideStyle = slide.options?.style;
-        final configuration = SlideController(
+        final configuration = SlideData(
           slide: slide,
           slideIndex: i,
           header: _header,

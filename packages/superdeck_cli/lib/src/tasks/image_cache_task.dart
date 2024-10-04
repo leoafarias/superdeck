@@ -1,89 +1,97 @@
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
+import 'package:markdown/markdown.dart' as md;
 import 'package:superdeck_cli/src/generator_pipeline.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
+/// A task responsible for caching images referenced in markdown slides.
 class ImageCachingTask extends Task {
-  const ImageCachingTask() : super('image_caching');
+  /// Constructs an [ImageCachingTask] with the name 'image_caching'.
+  ImageCachingTask() : super('image_caching');
+
+  /// A set to track assets currently being processed to prevent duplicate downloads.
+  static final Set<String> _executingAssets = {};
+
+  /// HTTP client used for downloading images.
+  static final http.Client _httpClient = http.Client();
 
   @override
-  Future<TaskContext> run(context) async {
+  Future<TaskContext> run(TaskContext context) async {
     final slide = context.slide;
+    final content = slide.markdown;
 
-    var content = slide.markdown;
+    // Parse the markdown content to extract image URLs.
+    final document = md.Document();
+    final nodes = document.parseInline(content);
+    final Set<String> assets = {};
 
-    // Do not cache remot edata if cacheRemoteAssets is false
-
-    // Get any url of images that are in the markdown
-    // Save it the local path on the device
-    // and replace the url with the local path
-    final imageRegex = RegExp(r'!\[.*?\]\((.*?)\)');
-
-    final matches = imageRegex.allMatches(content);
-
-    Future<void> saveAsset(String url) async {
-      if (!url.startsWith('http')) {
-        final localFile = File(url);
-        if (await localFile.exists()) {
-          await context.saveAsAsset(localFile, url);
+    for (final node in nodes) {
+      if (node is md.Element && node.tag == 'img') {
+        final src = node.attributes['src'];
+        if (src != null && src.startsWith('http')) {
+          assets.add(src);
         }
+      }
+    }
+
+    // Function to download and save a single asset.
+    Future<void> saveAsset(String url) async {
+      final String refName = assetHash(url);
+
+      // Check if the asset is already cached.
+      if (context.assetExists(refName)) {
+        logger.fine('Asset already cached: $url');
         return;
       }
 
       try {
-        final refName = assetHash(url);
+        logger.info('Downloading asset: $url');
+        final response = await _httpClient.get(Uri.parse(url));
 
-        if (context.assetExists(refName)) {
-          return;
-        }
-
-        final checkFileType = await http.get(Uri.parse(url));
-        final contentType = checkFileType.headers['content-type'];
-
-        if (contentType == null) {
-          return;
-        }
-
-        if (!contentType.startsWith('image/')) {
-          return;
-        }
-
-        final commonRenderableFormats = ['jpeg', 'png', 'gif', 'webp'];
-        final extension = contentType.split('/').last;
-        if (!commonRenderableFormats.contains(extension)) {
-          print('Not a renderable format: $url');
-          return;
-        }
-        final response = await http.get(Uri.parse(url));
-
-        if (response.statusCode == 200) {
-          // Get the extension from the Content-Type header
-          final contentType = response.headers['content-type'];
-
-          final extension = contentType?.split('/').last;
-
-          // Create a file with the appropriate extension
-          final file = buildAssetFile(
-            refName,
-            extension ?? 'jpg',
+        // Verify successful response.
+        if (response.statusCode != 200) {
+          logger.warning(
+            'Failed to download $url: Status ${response.statusCode}',
           );
+          return;
+        }
 
-          // Write the image data to the file
-          await file.writeAsBytes(response.bodyBytes);
+        final String? contentType = response.headers['content-type'];
+        // Validate content type.
+        if (contentType == null || !contentType.startsWith('image/')) {
+          logger.warning('Invalid content type for $url: $contentType');
+          return;
+        }
 
-          await context.saveAsAsset(file, url);
-        } else {}
-      } catch (e) {
-        print('Error: $e');
+        // Define supported image formats.
+        const List<String> supportedFormats = ['jpeg', 'png', 'gif', 'webp'];
+        final String extension = contentType.split('/').last.toLowerCase();
+
+        // Check if the image format is supported.
+        if (!supportedFormats.contains(extension)) {
+          logger.warning('Unsupported image format for $url: $extension');
+          return;
+        }
+
+        // Build the asset file and write the downloaded bytes.
+        final file = buildAssetFile(refName, extension);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Save the asset in the context.
+        await context.saveAsAsset(file, url);
+      } catch (e, stackTrace) {
+        logger.severe('Error downloading asset $url: $e', e, stackTrace);
       }
     }
 
-    for (final Match match in matches) {
-      final assetUri = match.group(1);
-      if (assetUri == null) continue;
-
-      await saveAsset(assetUri);
+    // Iterate over each asset and process if not already executing.
+    for (final String asset in assets) {
+      if (_executingAssets.contains(asset)) {
+        continue; // Skip if the asset is already being processed.
+      }
+      _executingAssets.add(asset);
+      await saveAsset(asset);
+      // Optionally, remove the asset from _executingAssets after processing.
+      // _executingAssets.remove(asset);
     }
 
     return context;

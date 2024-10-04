@@ -247,8 +247,7 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
   @MixableProperty(dto: _mdCode)
   final MarkdownCodeblockSpec? code;
 
-  final BoxSpec slideContainer;
-  final BoxSpec contentBlock;
+  final BoxSpec blockContainer;
   final ImageSpec image;
 
   @MixableProperty(dto: _mdCheckbox)
@@ -278,14 +277,12 @@ final class SlideSpec extends Spec<SlideSpec> with _$SlideSpec {
     this.img,
     this.horizontalRuleDecoration,
     this.textScaleFactor,
-    BoxSpec? slideContainer,
-    BoxSpec? contentBlock,
+    BoxSpec? blockContainer,
     ImageSpec? image,
     MarkdownAlertSpec? alert,
     super.modifiers,
     super.animated,
-  })  : slideContainer = slideContainer ?? const BoxSpec(),
-        contentBlock = contentBlock ?? const BoxSpec(),
+  })  : blockContainer = blockContainer ?? const BoxSpec(),
         image = image ?? const ImageSpec(),
         alert = alert ?? const MarkdownAlertSpec();
 
