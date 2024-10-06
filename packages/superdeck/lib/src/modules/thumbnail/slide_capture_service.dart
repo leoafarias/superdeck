@@ -7,10 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../../../superdeck.dart';
 import '../../components/atoms/slide_view.dart';
+import '../../components/organisms/app_shell.dart';
 import '../common/helpers/constants.dart';
+import '../common/helpers/controller.dart';
+import '../deck/deck_controller.dart';
 import '../navigation/navigation_controller.dart';
+import '../slide/slide_configuration.dart';
 
 enum SlideCaptureQuality {
   low(0.4),
