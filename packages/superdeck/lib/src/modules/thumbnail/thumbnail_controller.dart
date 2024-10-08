@@ -12,6 +12,7 @@ import 'slide_capture_service.dart';
 
 class ThumbnailController with ChangeNotifier {
   late AsyncValue<File> _asyncData = const AsyncValue.loading();
+  bool _disposed = false;
 
   ThumbnailController();
 
@@ -24,7 +25,9 @@ class ThumbnailController with ChangeNotifier {
     } catch (e, stackTrace) {
       _asyncData = AsyncValue.error(e, stackTrace);
     } finally {
-      notifyListeners();
+      if (!_disposed) {
+        notifyListeners();
+      }
     }
   }
 
@@ -58,6 +61,12 @@ class ThumbnailController with ChangeNotifier {
     } finally {
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _disposed = true;
   }
 }
 

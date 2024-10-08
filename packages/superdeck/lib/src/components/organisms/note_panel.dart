@@ -16,6 +16,8 @@ class NotePanel extends HookWidget {
     final notes =
         slide.notes.isEmpty ? [SlideNote(content: 'No notes')] : slide.notes;
 
+    if (slide.notes.isEmpty) return const SizedBox.shrink();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

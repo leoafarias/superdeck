@@ -76,7 +76,7 @@ class _CachedImageState extends State<CachedImage> {
         return Container(
           color: Colors.red,
           child: Center(
-            child: Text('Error loading image: ${widget.uri}'),
+            child: Text('Error loading image: ${widget.uri} '),
           ),
         );
       },

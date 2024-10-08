@@ -367,28 +367,18 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     final fromBlock = Provider.of<_CodeElementData>(fromHeroContext);
     final toBlock = Provider.of<_CodeElementData>(toHeroContext);
 
-    // final fromSpans = SyntaxHighlight.render(
-    //   fromBlock.text,
-    //   fromBlock.language,
-    // );
-    // final toSpans = SyntaxHighlight.render(
-    //   toBlock.text,
-    //   toBlock.language,
-    // );
-
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
-        final interpolatedSpec =
-            fromBlock.spec.lerp(toBlock.spec, animation.value);
-        final interpolatedSize =
-            Size.lerp(fromBlock.size, toBlock.size, animation.value)!;
-
-        // final spans = _lerpTextSpans(
-        //   fromSpans,
-        //   toSpans,
-        //   animation.value,
-        // );
+        final interpolatedSpec = fromBlock.spec.lerp(
+          toBlock.spec,
+          animation.value,
+        );
+        final interpolatedSize = Size.lerp(
+          fromBlock.size,
+          toBlock.size,
+          animation.value,
+        )!;
 
         final interpolatedText = _lerpString(
           fromBlock.text,
@@ -401,22 +391,24 @@ class CodeElementBuilder extends MarkdownElementBuilder {
           toBlock.language,
         );
 
-        return ConstrainedBox(
-          constraints: BoxConstraints.loose(interpolatedSize),
-          child: BoxSpecWidget(
-            spec: interpolatedSpec.container,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: spans.map((span) {
-                return RichText(
-                  text: TextSpan(
-                    style: interpolatedSpec.textStyle,
-                    children: [span],
-                  ),
-                );
-              }).toList(),
+        return Wrap(
+          clipBehavior: Clip.hardEdge,
+          children: [
+            BoxSpecWidget(
+              spec: interpolatedSpec.container,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: spans.map((span) {
+                  return RichText(
+                    text: TextSpan(
+                      style: interpolatedSpec.textStyle,
+                      children: [span],
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
+          ],
         );
       },
     );

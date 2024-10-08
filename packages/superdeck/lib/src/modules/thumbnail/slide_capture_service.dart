@@ -14,6 +14,7 @@ import '../common/helpers/controller.dart';
 import '../deck/deck_controller.dart';
 import '../navigation/navigation_controller.dart';
 import '../slide/slide_configuration.dart';
+import 'slide_capture_provider.dart';
 
 enum SlideCaptureQuality {
   low(0.4),
@@ -49,7 +50,7 @@ class SlideCaptureService {
       _generationQueue.add(queueKey);
 
       final image = await _fromWidgetToImage(
-        SlideView(slide, isCapturing: true),
+        SlideView(slide),
         context: kScaffoldKey.currentContext!,
         pixelRatio: quality.pixelRatio,
         targetSize: kResolution,
@@ -103,12 +104,15 @@ class SlideCaptureService {
             controller: navigation,
             child: ControllerProvider(
               controller: controller,
-              child: MediaQuery(
-                data: MediaQuery.of(context),
-                child: MaterialApp(
-                  theme: Theme.of(context),
-                  debugShowCheckedModeBanner: false,
-                  home: Scaffold(body: widget),
+              child: Provider(
+                data: CapturingData(true),
+                child: MediaQuery(
+                  data: MediaQuery.of(context),
+                  child: MaterialApp(
+                    theme: Theme.of(context),
+                    debugShowCheckedModeBanner: false,
+                    home: Scaffold(body: widget),
+                  ),
                 ),
               ),
             ),
@@ -178,9 +182,9 @@ class SlideCaptureService {
           ..flushCompositingBits()
           ..flushPaint();
 
-        await Future.delayed(const Duration(milliseconds: 250));
+        await Future.delayed(const Duration(milliseconds: 100));
 
-        await waitForImageProviders(rootElement);
+        // await waitForImageProviders(rootElement);
 
         if (!isDirty) {
           log('Image generation completed.');

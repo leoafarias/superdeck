@@ -38,6 +38,9 @@ slides:
       - path: '.superdeck/generated/mermaid_wgsvOvJJ.png'
         width: 168
         height: 768
+      - path: '.superdeck/generated/thumbnail_w2wlREdN.png'
+        width: 512
+        height: 288
   - key: '4OPpCLpy'
     options: {}
     markdown: |-
@@ -92,7 +95,10 @@ slides:
         flex: 2
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_4OPpCLpy.png'
+        width: 512
+        height: 288
   - key: 'rPTQlMdP'
     options: {}
     markdown: |-
@@ -112,7 +118,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_rPTQlMdP.png'
+        width: 512
+        height: 288
   - key: 'ECisD4gC'
     options: {}
     markdown: |-
@@ -132,7 +141,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_ECisD4gC.png'
+        width: 512
+        height: 288
   - key: 'P6nguqAy'
     options: {}
     markdown: |-
@@ -169,7 +181,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_P6nguqAy.png'
+        width: 512
+        height: 288
   - key: 'htEZFxsa'
     options: {}
     markdown: |-
@@ -196,7 +211,10 @@ slides:
           - scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_htEZFxsa.png'
+        width: 512
+        height: 288
   - key: 'D4etKl0J'
     options: {}
     markdown: |-
@@ -222,7 +240,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_D4etKl0J.png'
+        width: 512
+        height: 288
   - key: 'A8nJ3H8k'
     options: {}
     markdown: |-
@@ -243,7 +264,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_A8nJ3H8k.png'
+        width: 512
+        height: 288
   - key: '9mHDFwa9'
     options: {}
     markdown: '# LLM ❤️ GUI{.animate}'
@@ -253,7 +277,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_9mHDFwa9.png'
+        width: 512
+        height: 288
   - key: 'bsXHyPoa'
     options: {}
     markdown: |-
@@ -276,7 +303,10 @@ slides:
           - scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_bsXHyPoa.png'
+        width: 512
+        height: 288
   - key: '3sLdrfsM'
     options: {}
     markdown: |-
@@ -296,7 +326,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_3sLdrfsM.png'
+        width: 512
+        height: 288
   - key: 'CsyEcFYH'
     options: {}
     markdown: |-
@@ -318,7 +351,10 @@ slides:
           - scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_CsyEcFYH.png'
+        width: 512
+        height: 288
   - key: 'rHHS9FIs'
     options: {}
     markdown: |-
@@ -338,7 +374,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_rHHS9FIs.png'
+        width: 512
+        height: 288
   - key: '9jtc9i8W'
     options: {}
     markdown: |-
@@ -384,7 +423,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_9jtc9i8W.png'
+        width: 512
+        height: 288
   - key: 'CtLOsx2s'
     options: {}
     markdown: |-
@@ -425,7 +467,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_CtLOsx2s.png'
+        width: 512
+        height: 288
   - key: '6EU2Xxrf'
     options: {}
     markdown: |-
@@ -452,7 +497,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_6EU2Xxrf.png'
+        width: 512
+        height: 288
   - key: 'qek7UrZY'
     options: {}
     markdown: |-
@@ -557,7 +605,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_qek7UrZY.png'
+        width: 512
+        height: 288
   - key: '8DDlBdti'
     options: 
       style: 'demo'
@@ -584,7 +635,10 @@ slides:
               - 'cyberpunk'
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_8DDlBdti.png'
+        width: 512
+        height: 288
   - key: 'm7QWZujG'
     options: 
       style: 'demo'
@@ -611,7 +665,10 @@ slides:
               - 'cyberpunk'
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_m7QWZujG.png'
+        width: 512
+        height: 288
   - key: 'H0jUl8Aj'
     options: {}
     markdown: '## LLMs Orchestrate APIs'
@@ -621,31 +678,37 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
-  - key: 'rQjAc48l'
+    assets: 
+      - path: '.superdeck/generated/thumbnail_H0jUl8Aj.png'
+        width: 512
+        height: 288
+  - key: '5rmJo1pB'
     options: {}
     markdown: |-
       {@section 
         align: center_right
+        flex: 2
       } 
       
       ### Gemini Function Calling
       The Function Calling feature is in Beta release
       
-      
+      {@section flex: 5}
       
       ![llm tools](assets/llm_tools.png)
     sections: 
       - blocks: 
-          - content: |-
+          - content: |
               ### Gemini Function Calling
               The Function Calling feature is in Beta release
-              
-              
-              
-              ![llm tools](assets/llm_tools.png)
             scrollable: false
+        flex: 2
         align: 'center_right'
+        type: 'section'
+      - blocks: 
+          - content: '![llm tools](assets/llm_tools.png)'
+            scrollable: false
+        flex: 5
         type: 'section'
     notes: []
     assets: []
@@ -677,7 +740,10 @@ slides:
               - 'Max brightness'
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_85oPyLzH.png'
+        width: 512
+        height: 288
   - key: 'Zn801w4G'
     options: {}
     markdown: |-
@@ -706,7 +772,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_Zn801w4G.png'
+        width: 512
+        height: 288
   - key: 'aY8Y9HBu'
     options: {}
     markdown: |-
@@ -730,7 +799,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_aY8Y9HBu.png'
+        width: 512
+        height: 288
   - key: '3eFdrtdl'
     options: 
       style: 'demo'
@@ -759,7 +831,10 @@ slides:
               - 'Max brightness'
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_3eFdrtdl.png'
+        width: 512
+        height: 288
   - key: 'pNxPyfLK'
     options: {}
     markdown: '## What if the tool to use is a widget schema?'
@@ -769,7 +844,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_pNxPyfLK.png'
+        width: 512
+        height: 288
   - key: '5cGNbsJx'
     options: {}
     markdown: |-
@@ -823,7 +901,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_5cGNbsJx.png'
+        width: 512
+        height: 288
   - key: 'J6DNhZau'
     options: 
       style: 'demo'
@@ -848,7 +929,10 @@ slides:
               - 'Change everything'
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_J6DNhZau.png'
+        width: 512
+        height: 288
   - key: '3kW1wOHd'
     options: {}
     markdown: '## The future of UI might be orchestrating user experiences rather than creating it.'
@@ -858,7 +942,10 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_3kW1wOHd.png'
+        width: 512
+        height: 288
   - key: 'UqCN11cB'
     options: {}
     markdown: |-
@@ -878,4 +965,7 @@ slides:
             scrollable: false
         type: 'section'
     notes: []
-    assets: []
+    assets: 
+      - path: '.superdeck/generated/thumbnail_UqCN11cB.png'
+        width: 512
+        height: 288

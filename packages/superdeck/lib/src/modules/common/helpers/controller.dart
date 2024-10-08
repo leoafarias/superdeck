@@ -79,4 +79,10 @@ class Provider<T> extends InheritedWidget {
     }
     return provider.data;
   }
+
+  static T? maybeOf<T>(BuildContext context) {
+    final provider = context.dependOnInheritedWidgetOfExactType<Provider<T>>();
+
+    return provider?.data;
+  }
 }

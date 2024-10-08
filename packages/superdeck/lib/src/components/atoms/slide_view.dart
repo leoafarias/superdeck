@@ -10,10 +10,7 @@ class SlideView extends StatelessWidget {
   const SlideView(
     this.slide, {
     super.key,
-    this.isCapturing = false,
   });
-
-  final bool isCapturing;
 
   @override
   Widget build(BuildContext context) {

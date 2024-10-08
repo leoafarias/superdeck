@@ -9,6 +9,7 @@ import '../../modules/common/helpers/utils.dart';
 import '../../modules/common/styles/style_spec.dart';
 import '../../modules/deck/deck_controller.dart';
 import '../../modules/slide/slide_configuration.dart';
+import '../../modules/thumbnail/slide_capture_provider.dart';
 import '../atoms/cache_image_widget.dart';
 import '../atoms/markdown_viewer.dart';
 import '../organisms/webview_wrapper.dart';
@@ -142,16 +143,29 @@ class ColumnBlockWidget extends _BlockWidget<ColumnBlock> {
     final content = block.content;
 
     final blockData = Provider.of<BlockData>(context);
+    final capturing =
+        Provider.maybeOf<CapturingData>(context)?.isCapturing == true;
+
+    Widget current = MarkdownViewer(
+      content: content,
+      spec: SlideSpec.of(context),
+    );
+
+    if (capturing) {
+      current = Wrap(
+        clipBehavior: Clip.hardEdge,
+        children: [current],
+      );
+    } else {
+      current = SingleChildScrollView(
+        child: current,
+      );
+    }
 
     return ConstrainedBox(
       constraints:
           BoxConstraints.loose(blockData.size - const Offset(0, 0) as Size),
-      child: SingleChildScrollView(
-        child: MarkdownViewer(
-          content: content,
-          spec: SlideSpec.of(context),
-        ),
-      ),
+      child: current,
     );
   }
 }

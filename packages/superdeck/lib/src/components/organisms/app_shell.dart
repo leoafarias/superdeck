@@ -7,6 +7,7 @@ import '../../modules/navigation/navigation_hooks.dart';
 import '../molecules/bottom_bar.dart';
 import '../molecules/scaled_app.dart';
 import 'note_panel.dart';
+import 'thumbnail_panel.dart';
 
 final kScaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -65,7 +66,7 @@ class SplitView extends HookWidget {
     required this.child,
   });
 
-  final _thumbnailWidth = 0.0;
+  final _thumbnailWidth = 300.0;
   final _duration = const Duration(milliseconds: 200);
 
   @override
@@ -108,9 +109,8 @@ class SplitView extends HookWidget {
               width: _thumbnailWidth,
               child: const Column(
                 children: [
-                  // Expanded(flex: 3, child: ThumbnailPanel()),
-                  Expanded(
-                    flex: 1,
+                  Expanded(flex: 3, child: ThumbnailPanel()),
+                  IntrinsicHeight(
                     child: NotePanel(),
                   ),
                 ],

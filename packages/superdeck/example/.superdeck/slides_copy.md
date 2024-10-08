@@ -295,12 +295,13 @@ style: 'demo'
 ---
 {@section 
   align: center_right
+  flex: 2
 } 
 
 ### Gemini Function Calling
 The Function Calling feature is in Beta release
 
-
+{@section flex: 5}
 
 ![llm tools](assets/llm_tools.png)
 
