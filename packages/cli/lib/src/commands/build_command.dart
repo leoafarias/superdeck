@@ -72,7 +72,8 @@ class BuildCommand extends SuperDeckCommand {
   /// Runs the build process with proper error handling and progress reporting.
   ///
   /// Uses the provided [builder] for the build, or creates a new one if not
-  /// provided.
+  /// provided. The builder owns the build status, so this method only reports
+  /// the failure to the console.
   Future<bool> _runBuild(
     DeckBuildStore store,
     DeckWorkspace workspace, {
@@ -113,31 +114,16 @@ class BuildCommand extends SuperDeckCommand {
       progress.fail('Build failed');
       logger.err('File system error: ${e.message}');
       logger.err('Path: ${e.path ?? 'Unknown'}');
-      await store.saveBuildStatus(
-        phase: .failure,
-        error: e,
-        stackTrace: .current,
-      );
 
       return false;
     } on FormatException catch (e) {
       progress.fail('Format error');
       logger.err(e.message);
-      await store.saveBuildStatus(
-        phase: .failure,
-        error: e,
-        stackTrace: .current,
-      );
 
       return false;
     } catch (e, stackTrace) {
       progress.fail('Build failed');
       _logBuildFailure(e, stackTrace);
-      await store.saveBuildStatus(
-        phase: .failure,
-        error: e,
-        stackTrace: stackTrace,
-      );
 
       return false;
     } finally {
@@ -284,6 +270,8 @@ class BuildCommand extends SuperDeckCommand {
 
       return ExitCode.success.code;
     } catch (e, stackTrace) {
+      // Only failures raised before a builder runs are reported here. Once a
+      // builder exists it publishes its own failure status.
       logger.err('Build failed before the deck could be generated.');
       _logBuildFailure(e, stackTrace);
       await store?.saveBuildStatus(

@@ -52,7 +52,6 @@ Always work inside the FVM-provided SDK (`.fvm/flutter_sdk`) to avoid toolchain 
 fvm dart run melos run analyze          # Run dart analyze + DCM analysis
 fvm dart run melos run analyze:all      # Full analysis including unused code/files
 fvm dart run melos run fix              # Apply dart fix + DCM autofixes
-fvm dart run melos run custom_lint_analyze  # Run custom lint rules
 ```
 
 ### Code Generation
@@ -60,13 +59,36 @@ fvm dart run melos run custom_lint_analyze  # Run custom lint rules
 fvm dart run melos run build_runner:build   # Generate code (run before tests)
 fvm dart run melos run build_runner:watch   # Watch mode for development
 fvm dart run melos run build_runner:clean   # Clean generated files
+fvm dart run melos run brb                  # Alias for build_runner:build
+fvm dart run melos run brbc                 # Alias for build_runner:clean
 ```
 
 ### Testing
+
+Each command covers one layer. No single command covers every layer.
+
 ```bash
-fvm dart run melos run test             # Run all tests
-fvm dart run melos run test:coverage    # Run tests with coverage
-fvm flutter test <path>    # Run specific test file
+fvm dart run melos run test               # Package unit and widget tests
+fvm dart run melos run test:integration   # Desktop integration tests (Linux)
+fvm dart run melos run test:integration:macos  # Desktop integration tests (macOS)
+fvm dart run melos run test:e2e:web       # Browser smoke tests (Chromium, WebKit)
+fvm dart run melos run test:e2e           # Desktop integration + browser smoke
+fvm dart run melos run test:all           # Package tests + Linux integration tests
+fvm dart run melos run test:coverage      # Package tests with coverage
+fvm flutter test <path>                   # One test file
+```
+
+`melos run test` excludes `ci-excluded` suites, and no melos command runs the
+live generation tests. Run those from `packages/playground`:
+
+```bash
+# Deterministic checkpoint, no provider call.
+fvm flutter test test_live/ai_generation/ai_generation_smoke_test.dart \
+  --dart-define=LIVE_FAKE_CHECKPOINT=true --reporter expanded
+
+# Live 10-slide smoke test. Skips when GOOGLE_AI_API_KEY is absent.
+fvm flutter test test_live/ai_generation/ai_generation_smoke_test.dart \
+  --dart-define-from-file=../../.env --reporter expanded
 ```
 
 ### Running Apps & Live Debugging
@@ -219,6 +241,8 @@ Styles are defined in Dart through `SlideStyler`, `DeckOptions.baseStyle`, and `
 | Bootstrap workspace | `fvm dart run melos bootstrap` |
 | Run all analysis | `fvm dart run melos run analyze` |
 | Generate code | `fvm dart run melos run build_runner:build` |
-| Run tests | `fvm dart run melos run test` |
+| Run package tests | `fvm dart run melos run test` |
+| Run desktop integration tests | `fvm dart run melos run test:integration:macos` |
+| Run browser smoke tests | `fvm dart run melos run test:e2e:web` |
 | Apply fixes | `fvm dart run melos run fix` |
 | Clean workspace | `fvm dart run melos run clean` |

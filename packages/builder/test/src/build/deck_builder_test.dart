@@ -496,6 +496,90 @@ Discuss release plan.
       );
     });
 
+    test('publishes failure status for a direct build', () async {
+      const markdown = '# First Slide\n\nOriginal content';
+      final builder = DeckBuilder(
+        workspace: workspace,
+        store: store,
+        plugins: [
+          _TransformPlugin(
+            id: 'test.direct-failure',
+            transform: (_, _) => throw StateError('transform failed'),
+          ),
+        ],
+      );
+
+      await workspace.slidesFile.writeAsString(markdown);
+      await expectLater(() => builder.build(), throwsA(isA<Exception>()));
+
+      final status = await _readBuildStatus(workspace);
+      expect(status.phase, DeckBuildPhase.failure);
+      expect(status.error?.message, contains('transform failed'));
+    });
+
+    test('a later successful build replaces the failure status', () async {
+      const markdown = '# First Slide\n\nOriginal content';
+      var shouldFail = true;
+      final builder = DeckBuilder(
+        workspace: workspace,
+        store: store,
+        plugins: [
+          _TransformPlugin(
+            id: 'test.recovering',
+            transform: (block, _) {
+              if (shouldFail) throw StateError('transform failed');
+
+              return block;
+            },
+          ),
+        ],
+      );
+
+      await workspace.slidesFile.writeAsString(markdown);
+      await expectLater(() => builder.build(), throwsA(isA<Exception>()));
+      expect((await _readBuildStatus(workspace)).phase, DeckBuildPhase.failure);
+
+      shouldFail = false;
+      await builder.build();
+
+      final status = await _readBuildStatus(workspace);
+      expect(status.phase, DeckBuildPhase.success);
+      expect(status.slideCount, 1);
+      expect(status.error, isNull);
+    });
+
+    test('keeps the build error when the status write also fails', () async {
+      const markdown = '# First Slide\n\nOriginal content';
+      final failingStore = _FailingStatusStore(
+        workspace: workspace,
+        failOn: DeckBuildPhase.failure,
+      );
+      final builder = DeckBuilder(
+        workspace: workspace,
+        store: failingStore,
+        plugins: [
+          _TransformPlugin(
+            id: 'test.status-write-failure',
+            transform: (_, _) => throw StateError('transform failed'),
+          ),
+        ],
+      );
+
+      await workspace.slidesFile.writeAsString(markdown);
+
+      await expectLater(
+        () => builder.build(),
+        throwsA(
+          isA<Exception>().having(
+            (error) => error.toString(),
+            'message',
+            contains('transform failed'),
+          ),
+        ),
+      );
+      expect(failingStore.failureWriteAttempts, 1);
+    });
+
     test('preserves DeckFormatException thrown by plugins', () async {
       const markdown = '# First Slide\n\nOriginal content';
       final builder = DeckBuilder(
@@ -641,5 +725,41 @@ final class _FailingReferenceStore extends DeckBuildStore {
   @override
   Future<void> saveReferences(List<Slide> slides) async {
     await onSaveReferences();
+  }
+}
+
+Future<DeckBuildStatus> _readBuildStatus(DeckWorkspace workspace) async {
+  final decoded =
+      jsonDecode(await workspace.buildStatusJson.readAsString())
+          as Map<String, dynamic>;
+
+  return DeckBuildStatus.fromJson(decoded);
+}
+
+/// Store that refuses to record one build phase.
+final class _FailingStatusStore extends DeckBuildStore {
+  _FailingStatusStore({required super.workspace, required this.failOn});
+
+  final DeckBuildPhase failOn;
+  var failureWriteAttempts = 0;
+
+  @override
+  Future<void> saveBuildStatus({
+    required DeckBuildPhase phase,
+    int? slideCount,
+    Object? error,
+    StackTrace? stackTrace,
+  }) async {
+    if (phase == failOn) {
+      failureWriteAttempts++;
+      throw const FileSystemException('Cannot write the build status.');
+    }
+
+    return super.saveBuildStatus(
+      phase: phase,
+      slideCount: slideCount,
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 }
