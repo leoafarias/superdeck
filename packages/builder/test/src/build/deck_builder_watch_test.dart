@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:superdeck_builder/src/build/build_event.dart';
@@ -71,6 +72,25 @@ void main() {
           isNotNull,
         ),
       );
+    });
+
+    test('publishes failure status for a watch build', () async {
+      await workspace.slidesFile.writeAsString('# Slide\n\n@column\n');
+
+      final builder = DeckBuilder(workspace: workspace, store: store);
+      final iterator = StreamIterator(builder.watchAndBuild());
+      addTearDown(iterator.cancel);
+
+      await _nextEvent(iterator);
+      expect(await _nextEvent(iterator), isA<BuildFailed>());
+
+      final decoded =
+          jsonDecode(await workspace.buildStatusJson.readAsString())
+              as Map<String, dynamic>;
+      final status = DeckBuildStatus.fromJson(decoded);
+
+      expect(status.phase, DeckBuildPhase.failure);
+      expect(status.error, isNotNull);
     });
 
     test('emits started and completed for a rebuild cycle', () async {

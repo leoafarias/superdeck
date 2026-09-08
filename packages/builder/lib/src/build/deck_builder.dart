@@ -81,11 +81,7 @@ class DeckBuilder {
       final slides = await build();
       yield BuildCompleted(slides.toList());
     } catch (e, stackTrace) {
-      await store.saveBuildStatus(
-        phase: DeckBuildPhase.failure,
-        error: e,
-        stackTrace: stackTrace,
-      );
+      // [build] already published the failure status for this build.
       yield BuildFailed(e, stackTrace);
     }
   }
@@ -103,7 +99,37 @@ class DeckBuilder {
     return buildFuture;
   }
 
+  /// Runs one build and publishes its status.
+  ///
+  /// This is the single owner of the build status, so a direct build and a
+  /// watch build report a failure the same way. The original build error
+  /// always reaches the caller, even when the status write fails too.
   Future<Iterable<Slide>> _build() async {
+    try {
+      return await _runBuild();
+    } catch (error, stackTrace) {
+      await _publishBuildFailure(error, stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<void> _publishBuildFailure(Object error, StackTrace stackTrace) async {
+    try {
+      await store.saveBuildStatus(
+        phase: DeckBuildPhase.failure,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    } catch (statusError, statusStackTrace) {
+      _logger.warning(
+        'Could not record the failed build status.',
+        statusError,
+        statusStackTrace,
+      );
+    }
+  }
+
+  Future<Iterable<Slide>> _runBuild() async {
     _logger.info('Starting build...');
     await store.initialize();
     await store.saveBuildStatus(phase: DeckBuildPhase.building);

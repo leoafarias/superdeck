@@ -9,7 +9,7 @@ This file provides guidance to Claude Code and other AI assistants working on th
 SuperDeck is a Flutter presentation framework that renders slides written in Markdown. Users write slides in a `slides.md` file using Markdown syntax with custom block annotations, and SuperDeck renders them as a Flutter application.
 
 - **Live demo**: https://superdeck-dev.web.app
-- **Repository**: https://github.com/btwld/superdeck
+- **Repository**: https://github.com/conceptadev/superdeck
 
 ## Project Structure
 
@@ -17,20 +17,24 @@ This is a Melos monorepo with the following packages:
 
 ```
 packages/
-  core/       # Rendering primitives, Markdown parsing, schema validation (Dart-only)
+  core/       # Shared deck models, schemas, Markdown utilities, storage contracts (Dart-only)
   superdeck/  # Flutter widgets and presentation components
-  cli/        # superdeck CLI tool (setup, build, publish, version)
-  builder/    # Code generators and build_runner integration
+  cli/        # superdeck CLI tool (setup, build/watch, version)
+  builder/    # Deck parsing, serialization, and build/watch pipeline (Dart-only)
+  playground/ # Flutter authoring app, editor, and AI generation
+  plugins/pdf/ # PDF export plugin
 demo/         # Sample presentation app
 docs/         # User-facing documentation (MDX format)
 ```
 
 ### Key Package Responsibilities
 
-- **core**: Markdown processing, slide/block configuration, shared model/schema validation, YAML utilities (no Flutter dependency)
+- **core**: Shared Markdown utilities, slide/block configuration, model/schema validation, storage contracts, and YAML utilities (no Flutter dependency)
 - **superdeck**: Flutter widgets, DeckController, navigation, thumbnail/capture services, theme system
 - **cli**: CLI commands for project setup and building slides
-- **builder**: build_runner generators for code generation
+- **builder**: Markdown deck parsing, serialization, build/watch orchestration, and build plugins
+- **playground**: Deck authoring, editor/file sessions, AI generation, and theme customization
+- **plugins/pdf**: PDF capture and export UI
 
 ## Environment Setup
 
@@ -52,7 +56,6 @@ Always work inside the FVM-provided SDK (`.fvm/flutter_sdk`) to avoid toolchain 
 fvm dart run melos run analyze          # Run dart analyze + DCM analysis
 fvm dart run melos run analyze:all      # Full analysis including unused code/files
 fvm dart run melos run fix              # Apply dart fix + DCM autofixes
-fvm dart run melos run custom_lint_analyze  # Run custom lint rules
 ```
 
 ### Code Generation
@@ -60,14 +63,43 @@ fvm dart run melos run custom_lint_analyze  # Run custom lint rules
 fvm dart run melos run build_runner:build   # Generate code (run before tests)
 fvm dart run melos run build_runner:watch   # Watch mode for development
 fvm dart run melos run build_runner:clean   # Clean generated files
+fvm dart run melos run brb                  # Alias for build_runner:build
+fvm dart run melos run brbc                 # Alias for build_runner:clean
 ```
 
 ### Testing
+
+Each command covers one layer. No single command covers every layer.
+
 ```bash
-fvm dart run melos run test             # Run all tests
-fvm dart run melos run test:coverage    # Run tests with coverage
-fvm flutter test <path>    # Run specific test file
+fvm dart run melos run test               # Package unit and widget tests
+fvm dart run melos run test:integration   # Desktop integration tests (Linux)
+fvm dart run melos run test:integration:macos  # Desktop integration tests (macOS)
+fvm dart run melos run test:e2e:web       # Browser smoke tests (Chromium, WebKit)
+fvm dart run melos run test:e2e           # Linux integration + browser smoke
+fvm dart run melos run test:all           # Package tests + Linux integration tests
+fvm dart run melos run test:coverage      # Package tests with coverage
+fvm flutter test <path>                   # One test file
 ```
+
+`melos run test` excludes `ci-excluded` suites; `test:coverage` includes them.
+No melos command runs the live generation tests. Run those from
+`packages/playground`:
+
+```bash
+# Deterministic checkpoint, no provider call.
+fvm flutter test test_live/ai_generation/ai_generation_smoke_test.dart \
+  --dart-define=LIVE_FAKE_CHECKPOINT=true --reporter expanded
+
+# Live 10-slide smoke test; requires the repository-root .env file.
+fvm flutter test test_live/ai_generation/ai_generation_smoke_test.dart \
+  --dart-define=LIVE_FIXTURE=superdeck_demo_10 \
+  --dart-define-from-file=../../.env --reporter expanded
+```
+
+The live cases skip when the supplied defines contain no `GOOGLE_AI_API_KEY`.
+A missing define file fails before the tests start. Omitting `LIVE_FIXTURE`
+selects the default small-fixture suite rather than the 10-slide checkpoint.
 
 ### Running Apps & Live Debugging
 ```bash
@@ -104,7 +136,7 @@ fvm dart run melos run clean            # Clean all Flutter build artifacts
 - Two-space Dart indentation
 - `snake_case.dart` filenames
 - Prefer relative imports over package imports
-- Avoid exporting from entry-point files
+- Avoid importing the package's own entry-point file internally; import the defining file
 - Keep widgets focused; colocate private helpers with their widget
 - Run `melos run fix` before committing
 
@@ -159,7 +191,7 @@ lib/src/
 - Unit tests live under each package's `test/` directory
 - Always regenerate code before running tests
 - Add regression tests with bug fixes
-- CI blocks merges on failing analyze/test jobs
+- Require passing analysis and relevant test checks before merging
 
 ## Commit Guidelines
 
@@ -219,6 +251,8 @@ Styles are defined in Dart through `SlideStyler`, `DeckOptions.baseStyle`, and `
 | Bootstrap workspace | `fvm dart run melos bootstrap` |
 | Run all analysis | `fvm dart run melos run analyze` |
 | Generate code | `fvm dart run melos run build_runner:build` |
-| Run tests | `fvm dart run melos run test` |
+| Run package tests | `fvm dart run melos run test` |
+| Run desktop integration tests | `fvm dart run melos run test:integration:macos` |
+| Run browser smoke tests | `fvm dart run melos run test:e2e:web` |
 | Apply fixes | `fvm dart run melos run fix` |
 | Clean workspace | `fvm dart run melos run clean` |

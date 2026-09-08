@@ -62,14 +62,18 @@ class FileDeckLoader extends DeckLoader {
     return _statusFile.readAsString();
   }
 
-  Future<void> _processStatus(Completer<void> cancel) async {
-    if (!await _statusFile.exists()) {
+  /// Emits the events for one already-read status snapshot.
+  ///
+  /// The caller passes the snapshot it compares later, so the loader cannot
+  /// process content that the build replaced after that comparison started.
+  Future<void> _processStatus(String? snapshot, Completer<void> cancel) async {
+    if (snapshot == null) {
       _emitMissingBuildOutput(cancel);
       return;
     }
 
     try {
-      final decoded = jsonDecode(await _statusFile.readAsString());
+      final decoded = jsonDecode(snapshot);
       if (decoded is! Map) {
         _emit(
           SlidesErrorEvent(
@@ -187,7 +191,7 @@ class FileDeckLoader extends DeckLoader {
       }
 
       final statusAtStart = await _readStatusSnapshot();
-      await _processStatus(cancel);
+      await _processStatus(statusAtStart, cancel);
       if (!_isCycleActive(cancel)) return;
 
       final changed = await _waitForStatusChange(

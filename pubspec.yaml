@@ -115,17 +115,24 @@ melos:
 
     test:
       run: fvm dart run melos exec -c 1 -- fvm flutter test --exclude-tags ci-excluded
-      description: Run flutter tests excluding explicit golden and flaky suites.
+      description: >-
+        Run the package unit and widget tests. Excludes `ci-excluded` suites,
+        desktop integration tests, browser smoke tests, and live generation
+        tests.
       packageFilters:
         dirExists: test
 
     test:integration:
       run: cd demo && fvm dart run superdeck_cli:main build && fvm flutter test integration_test/all_tests.dart -d linux --fail-fast --timeout 2m
-      description: Run flutter integration tests on Linux (CI default)
+      description: >-
+        Run the demo desktop integration tests on Linux, which is the CI
+        default device.
 
     test:integration:macos:
       run: cd demo && fvm dart run superdeck_cli:main build && fvm flutter test integration_test/all_tests.dart -d macos --fail-fast --timeout 2m
-      description: Run flutter integration tests on macOS (local)
+      description: >-
+        Run the demo desktop integration tests on macOS, which is the local
+        default device.
 
     test:e2e:web:prepare:
       run: cd demo && fvm dart run superdeck_cli:main build && fvm flutter build web --release
@@ -133,15 +140,19 @@ melos:
 
     test:e2e:web:
       run: fvm dart run melos run test:e2e:web:prepare && cd demo/e2e && npm ci && npx playwright install --with-deps chromium webkit && npm run test:smoke
-      description: Run Playwright smoke tests for the demo web build on Chromium and WebKit.
+      description: >-
+        Run the browser smoke tests for the demo web build on Chromium and
+        WebKit.
 
     test:e2e:
       run: fvm dart run melos run test:integration && fvm dart run melos run test:e2e:web
-      description: Run full desktop integration and web smoke E2E coverage.
+      description: Run the desktop integration tests and the browser smoke tests.
 
     test:all:
       run: fvm dart run melos run test && fvm dart run melos run test:integration
-      description: Run all tests (unit + integration)
+      description: >-
+        Run the package tests and the Linux desktop integration tests. Does not
+        run the browser smoke tests or the live generation tests.
 
     test:coverage:
       run: fvm dart run melos exec -- fvm flutter test --coverage
@@ -154,10 +165,9 @@ melos:
       description: Clean all packages
 
     brb:
-      run: fvm dart run melos run gen:build:superdeck
+      run: fvm dart run melos run build_runner:build
+      description: Short alias for `build_runner:build`.
 
     brbc:
-      run: fvm dart run melos run gen:clean
-
-    custom_lint_analyze:
-      run: fvm dart run melos exec --depends-on=mix_lint -- fvm dart run custom_lint
+      run: fvm dart run melos run build_runner:clean
+      description: Short alias for `build_runner:clean`.
