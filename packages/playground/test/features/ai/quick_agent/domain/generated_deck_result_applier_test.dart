@@ -110,10 +110,13 @@ void main() {
 
     final publishedMarkdown = host.documentStore.markdown;
     final publishedTheme = host.appliedTheme;
+    final previewEvents = <SlidesEvent>[];
+    final subscription = host._loader.load().listen(previewEvents.add);
+    addTearDown(subscription.cancel);
     var valid = true;
     cache.blockNextWrite = true;
     final application = host.applier.apply(
-      _result(stagedAssetKey),
+      _result(stagedAssetKey, themeId: 'bold-product'),
       isValid: () => valid,
     );
     await cache.writeStarted.future;
@@ -126,7 +129,71 @@ void main() {
     expect(await cache.resolve(committedAssetKey), isNotNull);
     expect(host.documentStore.markdown, publishedMarkdown);
     expect(host.appliedTheme, publishedTheme);
+    expect(previewEvents, isEmpty);
   });
+
+  test(
+    'a write failure cleans staged assets and allows a later application',
+    () async {
+      const committedKey = 'wizard-committed.png';
+      const stagedKey = 'wizard-staged.png';
+      const failedKey = 'wizard-failed.png';
+      const nextKey = 'wizard-next.png';
+      final cache = _BlockingAssetCacheStore();
+      final host = _ApplierHost(cache);
+      addTearDown(host.dispose);
+
+      await host.applier.apply(_result(committedKey), isValid: _always);
+      final publishedMarkdown = host.documentStore.markdown;
+      final publishedTheme = host.appliedTheme;
+      final previewEvents = <SlidesEvent>[];
+      final subscription = host._loader.load().listen(previewEvents.add);
+      addTearDown(subscription.cancel);
+      cache.failWriteFor = failedKey;
+
+      await expectLater(
+        host.applier.apply(
+          _result(
+            stagedKey,
+            themeId: 'bold-product',
+            additionalImages: [
+              GeneratedImageAsset.success(
+                assetKey: failedKey,
+                bytes: [4, 5, 6],
+              ),
+            ],
+          ),
+          isValid: _always,
+        ),
+        throwsA(
+          isA<StateError>().having(
+            (error) => error.message,
+            'message',
+            contains(failedKey),
+          ),
+        ),
+      );
+
+      expect(host.documentStore.markdown, publishedMarkdown);
+      expect(host.appliedTheme, publishedTheme);
+      expect(previewEvents, isEmpty);
+      expect(await cache.resolve(committedKey), isNotNull);
+      expect(await cache.resolve(stagedKey), isNull);
+      expect(await cache.resolve(failedKey), isNull);
+
+      final application = await host.applier.apply(
+        _result(nextKey, themeId: 'bold-product'),
+        isValid: _always,
+      );
+
+      expect(application.published, isTrue);
+      expect(host.documentStore.markdown, contains(nextKey));
+      expect(host.appliedTheme, isNot(publishedTheme));
+      expect(previewEvents.whereType<SlidesLoadedEvent>(), hasLength(1));
+      expect(await cache.resolve(nextKey), isNotNull);
+      expect(await cache.resolve(committedKey), isNull);
+    },
+  );
 
   test('keeps the committed deck when its own artwork is reused', () async {
     const assetKey = 'wizard-reused-slide-01-opening.png';
@@ -276,7 +343,7 @@ final class _ApplierHost {
   }
 }
 
-/// Asset cache that can hold one write open and fail one delete.
+/// Asset cache that can hold one write open and fail selected writes or deletes.
 final class _BlockingAssetCacheStore implements AssetCacheStore {
   final _store = MemoryAssetCacheStore();
   final writes = <String>[];
@@ -284,6 +351,7 @@ final class _BlockingAssetCacheStore implements AssetCacheStore {
   var writeStarted = Completer<void>();
   Completer<void>? _writeGate;
   bool blockNextWrite = false;
+  String? failWriteFor;
   String? failDeleteFor;
 
   void releaseWrite() {
@@ -297,6 +365,9 @@ final class _BlockingAssetCacheStore implements AssetCacheStore {
   @override
   Future<Uri?> write(String assetKey, List<int> bytes) async {
     writes.add(assetKey);
+    if (assetKey == failWriteFor) {
+      throw StateError('Cannot write $assetKey.');
+    }
     if (blockNextWrite) {
       blockNextWrite = false;
       final gate = _writeGate = Completer<void>();
@@ -318,12 +389,17 @@ final class _BlockingAssetCacheStore implements AssetCacheStore {
   }
 }
 
-DeckGenerationResult _result(String assetKey) => DeckGenerationResult.success(
+DeckGenerationResult _result(
+  String assetKey, {
+  String themeId = 'technical-paper',
+  List<GeneratedImageAsset> additionalImages = const [],
+}) => DeckGenerationResult.success(
   slides: [_generatedSlide(assetKey)],
-  plan: _plan(assetKey),
-  theme: _resolvedTheme(),
+  plan: _plan(assetKey, themeId: themeId),
+  theme: _resolvedTheme(themeId),
   generatedImages: [
     GeneratedImageAsset.success(assetKey: assetKey, bytes: [1, 2, 3]),
+    ...additionalImages,
   ],
 );
 
@@ -344,44 +420,50 @@ Slide _generatedSlide(String assetKey) => Slide.parse({
   ],
 });
 
-DeckPlan _plan(String assetKey) => DeckPlan.parse({
-  'topic': 'Generated artwork',
-  'story': 'One image supports one clear point.',
-  'theme': {'id': 'technical-paper', 'version': 1, 'density': 'balanced'},
-  'sections': [
-    {
-      'key': 'main',
-      'title': 'Main',
-      'purpose': 'Introduce the idea.',
-      'transition': 'Close clearly.',
-      'slideKeys': ['opening'],
-    },
-  ],
-  'slides': [
-    {
-      'key': 'opening',
-      'title': 'Opening',
-      'purpose': 'Introduce the idea.',
-      'sectionKey': 'main',
-      'assertion': 'The visual makes the idea tangible.',
-      'contentUnits': ['One focused supporting statement.'],
-      'narrativeRole': 'opening',
-      'contentBrief': 'Open with one clear idea.',
-      'continuity': 'Lead into the story.',
-      'composition': 'imageFullBleed',
-      'treatment': 'visual',
-      'density': 'balanced',
-      'elements': [
-        {'type': 'image', 'purpose': 'Anchor the story.', 'source': assetKey},
+DeckPlan _plan(String assetKey, {String themeId = 'technical-paper'}) =>
+    DeckPlan.parse({
+      'topic': 'Generated artwork',
+      'story': 'One image supports one clear point.',
+      'theme': {'id': themeId, 'version': 1, 'density': 'balanced'},
+      'sections': [
+        {
+          'key': 'main',
+          'title': 'Main',
+          'purpose': 'Introduce the idea.',
+          'transition': 'Close clearly.',
+          'slideKeys': ['opening'],
+        },
       ],
-    },
-  ],
-});
+      'slides': [
+        {
+          'key': 'opening',
+          'title': 'Opening',
+          'purpose': 'Introduce the idea.',
+          'sectionKey': 'main',
+          'assertion': 'The visual makes the idea tangible.',
+          'contentUnits': ['One focused supporting statement.'],
+          'narrativeRole': 'opening',
+          'contentBrief': 'Open with one clear idea.',
+          'continuity': 'Lead into the story.',
+          'composition': 'imageFullBleed',
+          'treatment': 'visual',
+          'density': 'balanced',
+          'elements': [
+            {
+              'type': 'image',
+              'purpose': 'Anchor the story.',
+              'source': assetKey,
+            },
+          ],
+        },
+      ],
+    });
 
-ResolvedPresentationTheme _resolvedTheme() =>
-    PresentationThemeCatalog.withDefaults().resolve(
-      id: 'technical-paper',
-      version: 1,
-      density: 'balanced',
-      typographyCatalog: PresentationTypographyCatalog.withDefaults(),
-    );
+ResolvedPresentationTheme _resolvedTheme([
+  String themeId = 'technical-paper',
+]) => PresentationThemeCatalog.withDefaults().resolve(
+  id: themeId,
+  version: 1,
+  density: 'balanced',
+  typographyCatalog: PresentationTypographyCatalog.withDefaults(),
+);

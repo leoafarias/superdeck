@@ -137,25 +137,30 @@ class _NoticeBanner extends StatelessWidget {
           .width(double.infinity)
           .color($accent().withValues(alpha: 0.12))
           .padding(.horizontal(16).vertical(8)),
-      child: RowBox(
-        style: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+      child: Row(
+        spacing: 8,
         children: [
           Icon(
             CupertinoIcons.sparkles,
             size: 14,
             color: $accent.resolve(context),
           ),
-          StyledText(
-            message,
-            style: TextStyler().color($accent()).style($labelSmall.mix()),
+          Expanded(
+            child: StyledText(
+              message,
+              style: TextStyler().color($accent()).style($labelSmall.mix()),
+            ),
           ),
           SizedBox(
             width: 28,
-            child: HeroIconButton(
-              variant: .ghost,
-              size: .sm,
-              icon: CupertinoIcons.xmark,
-              onPressed: onDismiss,
+            child: Semantics(
+              label: 'Dismiss generation notice',
+              child: HeroIconButton(
+                variant: .ghost,
+                size: .sm,
+                icon: CupertinoIcons.xmark,
+                onPressed: onDismiss,
+              ),
             ),
           ),
         ],

@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 
 /// Shared editor navigation state: which slide the caret currently sits in.
 ///
-/// Pure domain state with no super_editor coupling. The document itself lives in
-/// the presentation-layer `TextEditorController`, which keeps this in sync with
-/// the caret and reacts when it's set from outside the editor (e.g. a preview
-/// tap) by scrolling the caret to that slide.
+/// Pure domain state with no super_editor coupling. `DeckDocumentStore` owns
+/// the document. The presentation-layer `TextEditorController` keeps this store
+/// in sync with the caret and scrolls to the selected slide when a preview tap
+/// changes the active index.
 class EditorStore extends ChangeNotifier {
   static const double minPreviewSidebarWidth = 160;
   static const double maxPreviewSidebarWidth = 480;
