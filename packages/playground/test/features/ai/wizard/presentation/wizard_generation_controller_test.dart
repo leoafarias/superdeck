@@ -8,6 +8,7 @@ import 'package:playground/features/ai/quick_agent/core/engine/services/deck_gen
 import 'package:playground/features/ai/quick_agent/core/engine/services/deck_generator_service.dart';
 import 'package:playground/features/ai/quick_agent/core/engine/services/deck_theme_resolution.dart';
 import 'package:playground/features/ai/quick_agent/core/engine/services/generation_validation_issue.dart';
+import 'package:playground/features/ai/quick_agent/domain/generated_deck_result_applier.dart';
 import 'package:playground/features/ai/wizard/presentation/wizard_generation_controller.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
@@ -19,10 +20,10 @@ void main() {
       themeId: 'technical-paper',
     );
     final service = _FakeWizardGenerationService(_plan(request));
-    DeckGenerationResult? appliedResult;
+    final applier = _RecordingApplier();
     final controller = WizardGenerationController(
       service: service,
-      applyResult: (result) => appliedResult = result,
+      applyResult: applier.apply,
     );
     addTearDown(controller.dispose);
 
@@ -51,8 +52,9 @@ void main() {
       service.approvedPlan!.slides.single.assertion,
       'Small urban gardens create city-scale resilience.',
     );
-    expect(appliedResult, isNotNull);
-    expect(controller.result, same(appliedResult));
+    expect(applier.applied, hasLength(1));
+    expect(controller.result, same(applier.applied.single));
+    expect(controller.applyNotice, isNull);
   });
 
   test(
@@ -69,7 +71,7 @@ void main() {
       );
       final controller = WizardGenerationController(
         service: service,
-        applyResult: (_) {},
+        applyResult: _RecordingApplier().apply,
       );
       addTearDown(controller.dispose);
 
@@ -96,10 +98,10 @@ void main() {
       _plan(request, slideKeys: const ['opening', 'evidence']),
       partialComposition: true,
     );
-    final applied = <DeckGenerationResult>[];
+    final applier = _RecordingApplier();
     final controller = WizardGenerationController(
       service: service,
-      applyResult: applied.add,
+      applyResult: applier.apply,
     );
     addTearDown(controller.dispose);
 
@@ -119,7 +121,7 @@ void main() {
       'evidence',
     ]);
     expect(service.retryCalls, 1);
-    expect(applied, hasLength(2));
+    expect(applier.applied, hasLength(2));
   });
 
   test('cancels immediately and ignores the late planning result', () async {
@@ -133,7 +135,7 @@ void main() {
       ..pendingPlanning = pending;
     final controller = WizardGenerationController(
       service: service,
-      applyResult: (_) {},
+      applyResult: _RecordingApplier().apply,
     );
     addTearDown(controller.dispose);
 
@@ -158,13 +160,12 @@ void main() {
     final service = _FakeWizardGenerationService(_plan(request));
     final applicationStarted = Completer<void>();
     final pendingApplication = Completer<void>();
+    final applier = _RecordingApplier()
+      ..started = applicationStarted
+      ..pending = pendingApplication;
     final controller = WizardGenerationController(
       service: service,
-      applyResult: (_) {
-        applicationStarted.complete();
-
-        return pendingApplication.future;
-      },
+      applyResult: applier.apply,
     );
     addTearDown(controller.dispose);
 
@@ -180,6 +181,73 @@ void main() {
 
     expect(controller.stage, WizardGenerationStage.outlineReview);
     expect(controller.result, isNull);
+    expect(applier.applied, isEmpty);
+  });
+
+  test('reports a cleanup failure without failing the generation', () async {
+    const request = DeckGenerationRequest(
+      userIntent: 'Urban gardens',
+      slideCount: 1,
+      themeId: 'technical-paper',
+    );
+    final service = _FakeWizardGenerationService(_plan(request));
+    final applier = _RecordingApplier()
+      ..cleanupError = StateError('artwork is locked');
+    final controller = WizardGenerationController(
+      service: service,
+      applyResult: applier.apply,
+    );
+    addTearDown(controller.dispose);
+
+    await controller.createOutline(request);
+    await controller.generateSlides();
+
+    expect(controller.stage, WizardGenerationStage.completed);
+    expect(controller.errorMessage, isNull);
+    expect(controller.result, isNotNull);
+    expect(controller.applyNotice, contains('could not be removed'));
+  });
+
+  test('a superseded run does not stop the current run clock', () async {
+    const request = DeckGenerationRequest(
+      userIntent: 'Urban gardens',
+      slideCount: 1,
+      themeId: 'technical-paper',
+    );
+    final superseded = Completer<DeckPlanningResult>();
+    final current = Completer<DeckPlanningResult>();
+    final service = _FakeWizardGenerationService(_plan(request))
+      ..pendingPlanning = superseded;
+    final controller = WizardGenerationController(
+      service: service,
+      applyResult: _RecordingApplier().apply,
+    );
+    addTearDown(controller.dispose);
+
+    final first = controller.createOutline(request);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+    controller.cancel();
+
+    service.pendingPlanning = current;
+    final second = controller.createOutline(request);
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+    expect(controller.stage, WizardGenerationStage.planning);
+
+    // The superseded run finishes while the current run is still planning.
+    superseded.complete(DeckPlanningResult.success(_plan(request)));
+    await first;
+
+    final before = controller.elapsed;
+    await Future<void>.delayed(const Duration(milliseconds: 30));
+    final after = controller.elapsed;
+    expect(
+      after - before,
+      greaterThanOrEqualTo(const Duration(milliseconds: 20)),
+    );
+
+    current.complete(DeckPlanningResult.success(_plan(request)));
+    await second;
+    expect(controller.stage, WizardGenerationStage.outlineReview);
   });
 
   testWidgets('keeps composing after the 30-second performance target', (
@@ -195,7 +263,7 @@ void main() {
       ..pendingComposition = pending;
     final controller = WizardGenerationController(
       service: service,
-      applyResult: (_) {},
+      applyResult: _RecordingApplier().apply,
     );
     addTearDown(controller.dispose);
 
@@ -224,7 +292,7 @@ void main() {
     final service = _FakeWizardGenerationService(_plan(request));
     final controller = WizardGenerationController(
       service: service,
-      applyResult: (_) {},
+      applyResult: _RecordingApplier().apply,
     );
     addTearDown(controller.dispose);
 
@@ -407,3 +475,28 @@ Slide _generatedSlide(String key) => Slide.parse({
     },
   ],
 });
+
+/// Test double for [GeneratedDeckResultApplier] that honours the guard the
+/// controller passes, exactly as the real applier does after its async work.
+final class _RecordingApplier {
+  final applied = <DeckGenerationResult>[];
+
+  Completer<void>? started;
+  Completer<void>? pending;
+  Object? cleanupError;
+
+  Future<GeneratedDeckApplication> apply(
+    DeckGenerationResult result, {
+    required GeneratedDeckApplicationGuard isValid,
+  }) async {
+    started?.complete();
+    if (pending case final pending?) await pending.future;
+    if (!isValid()) return const GeneratedDeckApplication(published: false);
+    applied.add(result);
+
+    return GeneratedDeckApplication(
+      published: true,
+      cleanupError: cleanupError,
+    );
+  }
+}

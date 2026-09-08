@@ -177,7 +177,10 @@ class _WizardExperience extends StatelessWidget {
       .completed => _CenteredScrollable(
         child: WizardGenerationStatus(
           kind: .completed,
-          noticeMessage: _completionNotice(controller.result),
+          noticeMessage: _completionNotice(
+            controller.result,
+            controller.applyNotice,
+          ),
           slideCount: controller.result?.slides.length,
           failedSlideCount: controller.result?.slideFailures.length ?? 0,
           artworkCount: controller.result?.generatedImageCount ?? 0,
@@ -241,9 +244,9 @@ class _WizardExperience extends StatelessWidget {
   }
 }
 
-String? _completionNotice(DeckGenerationResult? result) {
+String? _completionNotice(DeckGenerationResult? result, String? applyNotice) {
   if (result == null) return null;
-  final messages = <String>[];
+  final messages = <String>[?applyNotice];
   if (result.isPartial) {
     final failed = result.slideFailures.length;
     messages.add(

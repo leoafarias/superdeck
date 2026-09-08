@@ -8,6 +8,7 @@ import '../../quick_agent/core/engine/services/deck_generator_service.dart';
 import '../../quick_agent/core/engine/services/deck_plan_validator.dart';
 import '../../quick_agent/core/engine/services/generation_progress.dart';
 import '../../quick_agent/core/engine/services/generation_validation_issue.dart';
+import '../../quick_agent/domain/generated_deck_result_applier.dart';
 
 enum WizardGenerationStage {
   setup,
@@ -21,7 +22,10 @@ enum WizardGenerationStage {
 enum WizardGenerationPhase { planning, composition }
 
 typedef ApplyWizardDeckResult =
-    FutureOr<void> Function(DeckGenerationResult result);
+    Future<GeneratedDeckApplication> Function(
+      DeckGenerationResult result, {
+      required GeneratedDeckApplicationGuard isValid,
+    });
 
 /// Owns the deterministic plan → review → compose lifecycle for the Wizard.
 final class WizardGenerationController extends ChangeNotifier {
@@ -42,6 +46,7 @@ final class WizardGenerationController extends ChangeNotifier {
   DeckPlan? _plan;
   DeckGenerationResult? _result;
   String? _errorMessage;
+  String? _applyNotice;
   GenerationProgress _progress = const GenerationProgress(.idle);
   Duration _elapsed = .zero;
   DateTime? _stageStartedAt;
@@ -71,6 +76,7 @@ final class WizardGenerationController extends ChangeNotifier {
     _result = null;
     _errorMessage = null;
     _failedPhase = null;
+    _applyNotice = null;
     _cancelled = false;
     _beginStage(.planning);
     _progress = const GenerationProgress(.generatingOutline);
@@ -84,13 +90,13 @@ final class WizardGenerationController extends ChangeNotifier {
         isCancelled: () => _isOperationCancelled(operation),
       );
     } catch (error) {
-      _finishTiming();
+      _finishTiming(operation);
       if (!_isCurrentOperation(operation)) return;
       _fail(.planning, 'Could not create the outline: $error');
 
       return;
     }
-    _finishTiming();
+    _finishTiming(operation);
     if (!_isCurrentOperation(operation) || _disposed) return;
     if (_cancelled) return;
     if (!planning.success || planning.plan == null) {
@@ -111,7 +117,16 @@ final class WizardGenerationController extends ChangeNotifier {
     _stageStartedAt = DateTime.now();
   }
 
-  void _finishTiming() {
+  /// Records elapsed time only for the operation that still owns the stage.
+  ///
+  /// A superseded run must not add its duration to, or clear the start of,
+  /// the run that replaced it.
+  void _finishTiming(int operation) {
+    if (!_isCurrentOperation(operation)) return;
+    _finishStageTiming();
+  }
+
+  void _finishStageTiming() {
     final startedAt = _stageStartedAt;
     if (startedAt != null) {
       final duration = DateTime.now().difference(startedAt);
@@ -141,8 +156,12 @@ final class WizardGenerationController extends ChangeNotifier {
     int operation,
     DeckGenerationResult generated,
   ) async {
+    final GeneratedDeckApplication application;
     try {
-      await _applyResult(generated);
+      application = await _applyResult(
+        generated,
+        isValid: () => !_isOperationCancelled(operation) && !_disposed,
+      );
     } catch (error) {
       if (_isOperationCancelled(operation) || _disposed) return;
       _fail(
@@ -153,6 +172,13 @@ final class WizardGenerationController extends ChangeNotifier {
       return;
     }
     if (_isOperationCancelled(operation) || _disposed) return;
+    // The applier stops when a newer run replaced this one, so the run that
+    // owns the state keeps it.
+    if (!application.published) return;
+    if (application.cleanupError != null) {
+      _applyNotice =
+          'Some artwork from the previous deck could not be removed.';
+    }
     _result = generated;
     _stage = .completed;
     _progress = const GenerationProgress(.idle);
@@ -174,6 +200,12 @@ final class WizardGenerationController extends ChangeNotifier {
   DeckGenerationResult? get result => _result;
 
   String? get errorMessage => _errorMessage;
+
+  /// Non-blocking detail about applying the last published deck.
+  ///
+  /// Publication succeeded when this is set; only the cleanup of the replaced
+  /// deck's artwork did not.
+  String? get applyNotice => _applyNotice;
 
   GenerationProgress get progress => _progress;
 
@@ -246,6 +278,7 @@ final class WizardGenerationController extends ChangeNotifier {
     _result = null;
     _errorMessage = null;
     _failedPhase = null;
+    _applyNotice = null;
     _cancelled = false;
     _beginStage(.composing);
     _progress = const GenerationProgress(.composingSlides);
@@ -260,13 +293,13 @@ final class WizardGenerationController extends ChangeNotifier {
         isCancelled: () => _isOperationCancelled(operation),
       );
     } catch (error) {
-      _finishTiming();
+      _finishTiming(operation);
       if (!_isCurrentOperation(operation)) return;
       _fail(.composition, 'Could not compose the slides: $error');
 
       return;
     }
-    _finishTiming();
+    _finishTiming(operation);
     if (!_isCurrentOperation(operation) || _disposed || _cancelled) return;
     if ((!generated.success && !generated.isPartial) ||
         generated.slides.isEmpty) {
@@ -292,6 +325,7 @@ final class WizardGenerationController extends ChangeNotifier {
     final operation = ++_operationEpoch;
     _errorMessage = null;
     _failedPhase = null;
+    _applyNotice = null;
     _cancelled = false;
     _beginStage(.composing);
     _progress = const GenerationProgress(.composingSlides);
@@ -306,13 +340,13 @@ final class WizardGenerationController extends ChangeNotifier {
         isCancelled: () => _isOperationCancelled(operation),
       );
     } catch (error) {
-      _finishTiming();
+      _finishTiming(operation);
       if (!_isCurrentOperation(operation)) return;
       _fail(.composition, 'Could not retry the unresolved slides: $error');
 
       return;
     }
-    _finishTiming();
+    _finishTiming(operation);
     if (!_isCurrentOperation(operation) || _disposed || _cancelled) return;
     if ((!generated.success && !generated.isPartial) ||
         generated.slides.isEmpty) {
@@ -368,6 +402,7 @@ final class WizardGenerationController extends ChangeNotifier {
     _planRevision = 0;
     _result = null;
     _errorMessage = null;
+    _applyNotice = null;
     _failedPhase = null;
     _progress = const GenerationProgress(.idle);
     _elapsed = .zero;
@@ -380,7 +415,7 @@ final class WizardGenerationController extends ChangeNotifier {
     if (!isBusy || _cancelled) return;
     _cancelled = true;
     _operationEpoch++;
-    _finishTiming();
+    _finishStageTiming();
     _stage = _result?.isPartial == true
         ? .completed
         : _plan == null
