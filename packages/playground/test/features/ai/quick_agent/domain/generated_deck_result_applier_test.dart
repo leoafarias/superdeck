@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart' show Color;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:playground/core/data/data_sources/memory_asset_cache_store.dart';
@@ -13,6 +14,7 @@ import 'package:playground/features/ai/quick_agent/core/engine/services/deck_gen
 import 'package:playground/features/ai/quick_agent/domain/generated_deck_result_applier.dart';
 import 'package:playground/features/editor/domain/stores/deck_document_store.dart';
 import 'package:superdeck/superdeck.dart';
+import 'package:superdeck_builder/superdeck_builder.dart';
 import 'package:superdeck_core/superdeck_core.dart';
 
 void main() {
@@ -107,6 +109,7 @@ void main() {
     expect(await cache.resolve(committedAssetKey), isNotNull);
 
     final publishedMarkdown = host.documentStore.markdown;
+    final publishedTheme = host.appliedTheme;
     var valid = true;
     cache.blockNextWrite = true;
     final application = host.applier.apply(
@@ -122,6 +125,7 @@ void main() {
     expect(await cache.resolve(stagedAssetKey), isNull);
     expect(await cache.resolve(committedAssetKey), isNotNull);
     expect(host.documentStore.markdown, publishedMarkdown);
+    expect(host.appliedTheme, publishedTheme);
   });
 
   test('keeps the committed deck when its own artwork is reused', () async {
@@ -193,6 +197,31 @@ void main() {
     expect(host.documentStore.markdown, contains(secondAssetKey));
     expect(await cache.resolve(firstAssetKey), isNull);
   });
+
+  test(
+    'publishes the document, preview, theme, and artwork together',
+    () async {
+      const assetKey = 'wizard-published-slide-01-opening.png';
+      final cache = _BlockingAssetCacheStore();
+      final host = _ApplierHost(cache);
+      addTearDown(host.dispose);
+
+      final previewMarkdown = host.previewMarkdown;
+      final themeBefore = host.appliedTheme;
+
+      final application = await host.applier.apply(
+        _result(assetKey),
+        isValid: _always,
+      );
+
+      expect(application.published, isTrue);
+      expect(host.documentStore.markdown, contains(assetKey));
+      expect(await previewMarkdown, contains(assetKey));
+      expect(host.appliedTheme, isNot(themeBefore));
+      expect(host.appliedTheme.headlineFamily, 'Space Grotesk');
+      expect(await cache.resolve(assetKey), isNotNull);
+    },
+  );
 }
 
 bool _always() => true;
@@ -208,12 +237,12 @@ final class _ApplierHost {
       options: DeckOptions(),
       assetCacheStore: _cache,
     );
-    _customizationStore = DeckCustomizationStore(_deckController);
+    customizationStore = DeckCustomizationStore(_deckController);
     applier = GeneratedDeckResultApplier(
       documentStore: documentStore,
       deckLoader: _loader,
       assetCacheStore: _cache,
-      customizationStore: _customizationStore,
+      customizationStore: customizationStore,
     );
   }
 
@@ -221,11 +250,26 @@ final class _ApplierHost {
   final MemoryDeckLoader _loader;
   final AssetCacheStore _cache;
   late final DeckController _deckController;
-  late final DeckCustomizationStore _customizationStore;
+  late final DeckCustomizationStore customizationStore;
   late final GeneratedDeckResultApplier applier;
 
+  /// The theme state a published result must change, and an abandoned one
+  /// must leave alone.
+  ({Color background, String headlineFamily}) get appliedTheme => (
+    background: customizationStore.background,
+    headlineFamily: customizationStore.level(TextLevel.h1).family,
+  );
+
+  /// The markdown the preview loader receives next.
+  Future<String> get previewMarkdown => _loader
+      .load()
+      .where((event) => event is SlidesLoadedEvent)
+      .cast<SlidesLoadedEvent>()
+      .first
+      .then((event) => const SlideSerializer().serialize(event.slides));
+
   void dispose() {
-    _customizationStore.dispose();
+    customizationStore.dispose();
     _deckController.dispose();
     unawaited(_loader.dispose());
     documentStore.dispose();
