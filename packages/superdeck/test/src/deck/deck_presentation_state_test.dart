@@ -114,6 +114,117 @@ void main() {
       expect(service.receivedCacheKeys.last, equals({'slide-0'}));
     });
 
+    testWidgets('slide removal disposes stale thumbnails without warmup', (
+      tester,
+    ) async {
+      final slides = signal<List<SlideConfiguration>>(createTestSlides(2));
+      addTearDown(slides.dispose);
+
+      final service = _RecordingThumbnailService();
+      final state = DeckPresentationState(
+        thumbnailService: service,
+        slides: slides,
+        transitionDuration: Duration.zero,
+      );
+      addTearDown(state.dispose);
+
+      final context = await _pumpContext(tester);
+      state.generateThumbnails(context, slides.value);
+      final staleThumbnail = service.trackedThumbnails['slide-1']!;
+      final callsBeforeRemoval = service.callCount;
+
+      slides.value = [slides.value.first];
+
+      expect(service.callCount, callsBeforeRemoval);
+      expect(staleThumbnail.disposed, isTrue);
+      expect(state.getThumbnail('slide-0'), isNotNull);
+      expect(state.getThumbnail('slide-1'), isNull);
+    });
+
+    testWidgets('an empty slide collection disposes every thumbnail', (
+      tester,
+    ) async {
+      final slides = signal<List<SlideConfiguration>>(createTestSlides(2));
+      addTearDown(slides.dispose);
+
+      final service = _RecordingThumbnailService();
+      final state = DeckPresentationState(
+        thumbnailService: service,
+        slides: slides,
+        transitionDuration: Duration.zero,
+      );
+      addTearDown(state.dispose);
+
+      final context = await _pumpContext(tester);
+      state.generateThumbnails(context, slides.value);
+      final slide0 = service.trackedThumbnails['slide-0']!;
+      final slide1 = service.trackedThumbnails['slide-1']!;
+
+      slides.value = const <SlideConfiguration>[];
+
+      expect(slide0.disposed, isTrue);
+      expect(slide1.disposed, isTrue);
+      expect(state.getThumbnail('slide-0'), isNull);
+      expect(state.getThumbnail('slide-1'), isNull);
+    });
+
+    testWidgets('an empty warmup list disposes every thumbnail', (
+      tester,
+    ) async {
+      final slides = signal<List<SlideConfiguration>>(createTestSlides(2));
+      addTearDown(slides.dispose);
+
+      final service = _RecordingThumbnailService();
+      final state = DeckPresentationState(
+        thumbnailService: service,
+        slides: slides,
+        transitionDuration: Duration.zero,
+      );
+      addTearDown(state.dispose);
+
+      final context = await _pumpContext(tester);
+      state.generateThumbnails(context, slides.value);
+      final slide0 = service.trackedThumbnails['slide-0']!;
+      final slide1 = service.trackedThumbnails['slide-1']!;
+
+      state.generateThumbnails(context, const <SlideConfiguration>[]);
+
+      expect(slide0.disposed, isTrue);
+      expect(slide1.disposed, isTrue);
+      expect(state.getThumbnail('slide-0'), isNull);
+      expect(state.getThumbnail('slide-1'), isNull);
+    });
+
+    testWidgets('a superseded transition keeps the latest transition open', (
+      tester,
+    ) async {
+      const transitionDuration = Duration(milliseconds: 300);
+      final slides = signal<List<SlideConfiguration>>(createTestSlides(3));
+      addTearDown(slides.dispose);
+
+      final service = _RecordingThumbnailService();
+      final state = DeckPresentationState(
+        thumbnailService: service,
+        slides: slides,
+        transitionDuration: transitionDuration,
+      );
+      addTearDown(state.dispose);
+
+      final first = state.goToSlide(1);
+      await tester.pump(const Duration(milliseconds: 200));
+      final second = state.goToSlide(2);
+
+      // The first transition's delay elapses while the second one is running.
+      await tester.pump(const Duration(milliseconds: 150));
+      expect(state.isTransitioning.value, isTrue);
+
+      await tester.pump(const Duration(milliseconds: 200));
+      await first;
+      await second;
+
+      expect(state.isTransitioning.value, isFalse);
+    });
+
     testWidgets('deleteAllThumbnails disposes cache and clears getThumbnail', (
       tester,
     ) async {
