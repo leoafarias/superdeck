@@ -85,6 +85,7 @@ class _EditorBootstrapState extends State<EditorBootstrap> {
             customizationStore: ctx.read<DeckCustomizationStore>(),
             deckLoader: ctx.read<MemoryDeckLoader>(),
             assetCacheStore: ctx.read(),
+            bindingRevision: () => fileSession.bindingRevision,
           ),
           dispose: (_, command) => command.dispose(),
         ),

@@ -473,6 +473,23 @@ void main() {
       expect(repository.accessStarts, [picked]);
     });
 
+    test('changes the binding revision for identical content', () async {
+      const picked = DeckFileReference(path: '/elsewhere/same.md');
+      final repository = FakeDeckFileRepository()
+        ..files[picked.path] = kStarterDeckMarkdown
+        ..pickResult = picked;
+      final scope = newSession(repository);
+      final documentRevision = scope.document.revision;
+      final bindingRevision = scope.session.bindingRevision;
+
+      await scope.session.openDeck();
+
+      expect(scope.session.boundPath, picked.path);
+      // The two decks hold identical Markdown, so only the binding moved.
+      expect(scope.document.revision, documentRevision);
+      expect(scope.session.bindingRevision, isNot(bindingRevision));
+    });
+
     test('releases the previous bookmark after replacement', () async {
       const previous = DeckFileReference(
         path: '/outside/previous.md',

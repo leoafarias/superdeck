@@ -345,6 +345,33 @@ class DeckGeneratorService {
     );
   }
 
+  /// Runs one generation entry point against a fresh model client.
+  ///
+  /// Creates the client, builds its call executor, loads the prompts, and
+  /// closes the client when [body] completes or throws. Every entry point uses
+  /// this helper so they share one setup and one disposal path.
+  Future<T> _withModelSession<T>(
+    DeckGenerationRequest request, {
+    required GenerationTraceEmitter trace,
+    required bool Function() isCancelled,
+    required Future<T> Function(GenerationModelCallExecutor executor) body,
+  }) async {
+    final client = _modelClientFactory(apiKey);
+    try {
+      final executor = _createExecutor(
+        client: client,
+        trace: trace,
+        request: request,
+        isCancelled: isCancelled,
+      );
+      await _promptProvider.load();
+
+      return await body(executor);
+    } finally {
+      client.close();
+    }
+  }
+
   /// Generates and validates the shared deck plan without composing slides.
   Future<DeckPlanningResult> plan(
     DeckGenerationRequest request, {
@@ -369,36 +396,33 @@ class DeckGeneratorService {
     final pipelineStart = DateTime.now();
     final trace = GenerationTraceEmitter(onTrace);
     bool generationCancelled() => isCancelled?.call() ?? false;
-    GenerationModelClient? client;
-
     try {
-      client = _modelClientFactory(apiKey);
-      final executor = _createExecutor(
-        client: client,
+      return await _withModelSession(
+        request,
         trace: trace,
-        request: request,
         isCancelled: generationCancelled,
-      );
-      await _promptProvider.load();
-      final outline = await _runOutlinePhase(
-        this,
-        executor: executor,
-        prompt: modelInput,
-        request: request,
-        themeCandidates: themeCandidates,
-        onProgress: onProgress,
-        trace: trace,
-      );
-      if (generationCancelled()) {
-        return const DeckPlanningResult.failure('Generation cancelled.');
-      }
-      if (outline == null) {
-        return const DeckPlanningResult.failure(
-          'Failed to generate presentation outline. Please try again.',
-        );
-      }
+        body: (executor) async {
+          final outline = await _runOutlinePhase(
+            this,
+            executor: executor,
+            prompt: modelInput,
+            request: request,
+            themeCandidates: themeCandidates,
+            onProgress: onProgress,
+            trace: trace,
+          );
+          if (generationCancelled()) {
+            return const DeckPlanningResult.failure('Generation cancelled.');
+          }
+          if (outline == null) {
+            return const DeckPlanningResult.failure(
+              'Failed to generate presentation outline. Please try again.',
+            );
+          }
 
-      return DeckPlanningResult.success(outline);
+          return DeckPlanningResult.success(outline);
+        },
+      );
     } on GenerationCancelledException {
       return const DeckPlanningResult.failure('Generation cancelled.');
     } on GenerationBudgetExceededException catch (error, stack) {
@@ -421,8 +445,6 @@ class DeckGeneratorService {
       return DeckPlanningResult.failure(
         const ErrorClassifier().getUserMessage(error),
       );
-    } finally {
-      client?.close();
     }
   }
 
@@ -455,56 +477,53 @@ class DeckGeneratorService {
     final pipelineStart = DateTime.now();
     final trace = GenerationTraceEmitter(onTrace);
     bool generationCancelled() => isCancelled?.call() ?? false;
-    GenerationModelClient? client;
-
     try {
-      client = _modelClientFactory(apiKey);
-      final executor = _createExecutor(
-        client: client,
-        trace: trace,
-        request: request,
-        isCancelled: generationCancelled,
-      );
-      await _promptProvider.load();
-      final images = await _runImagePhase(
-        this,
-        plan: approvedPlan,
-        request: request,
-        onProgress: onProgress,
+      return await _withModelSession(
+        request,
         trace: trace,
         isCancelled: generationCancelled,
-      );
-      if (generationCancelled()) {
-        return DeckGenerationResult.failure('Generation cancelled.');
-      }
-      final composition = await _runSlideCompositionPhase(
-        this,
-        executor: executor,
-        prompt: modelInput,
-        request: request,
-        outline: images.plan,
-        onProgress: onProgress,
-        trace: trace,
-        isCancelled: isCancelled,
-      );
-      if (generationCancelled()) {
-        return DeckGenerationResult.failure('Generation cancelled.');
-      }
-      if (composition == null) {
-        return DeckGenerationResult.failure(
-          'Failed while composing presentation slides. Please try again.',
-        );
-      }
+        body: (executor) async {
+          final images = await _runImagePhase(
+            this,
+            plan: approvedPlan,
+            request: request,
+            onProgress: onProgress,
+            trace: trace,
+            isCancelled: generationCancelled,
+          );
+          if (generationCancelled()) {
+            return DeckGenerationResult.failure('Generation cancelled.');
+          }
+          final composition = await _runSlideCompositionPhase(
+            this,
+            executor: executor,
+            prompt: modelInput,
+            request: request,
+            outline: images.plan,
+            onProgress: onProgress,
+            trace: trace,
+            isCancelled: isCancelled,
+          );
+          if (generationCancelled()) {
+            return DeckGenerationResult.failure('Generation cancelled.');
+          }
+          if (composition == null) {
+            return DeckGenerationResult.failure(
+              'Failed while composing presentation slides. Please try again.',
+            );
+          }
 
-      return _finalizeDeck(
-        this,
-        composition: composition,
-        plan: images.plan,
-        generatedImages: images.assets,
-        pipelineStart: pipelineStart,
-        onProgress: onProgress,
-        isCancelled: isCancelled,
-        trace: trace,
+          return _finalizeDeck(
+            this,
+            composition: composition,
+            plan: images.plan,
+            generatedImages: images.assets,
+            pipelineStart: pipelineStart,
+            onProgress: onProgress,
+            isCancelled: isCancelled,
+            trace: trace,
+          );
+        },
       );
     } on GenerationCancelledException {
       return DeckGenerationResult.failure('Generation cancelled.');
@@ -527,8 +546,6 @@ class DeckGeneratorService {
       return DeckGenerationResult.failure(
         const ErrorClassifier().getUserMessage(error),
       );
-    } finally {
-      client?.close();
     }
   }
 
@@ -580,68 +597,65 @@ class DeckGeneratorService {
     final pipelineStart = DateTime.now();
     final trace = GenerationTraceEmitter(onTrace);
     bool generationCancelled() => isCancelled?.call() ?? false;
-    GenerationModelClient? client;
-
     try {
-      client = _modelClientFactory(apiKey);
-      final executor = _createExecutor(
-        client: client,
-        trace: trace,
-        request: request,
-        isCancelled: generationCancelled,
-      );
-      await _promptProvider.load();
-      onProgress?.call(const GenerationProgress(.composingSlides));
-      final existingSlidesByKey = {
-        for (final slide in partialResult.slides)
-          slide.key: Map<String, dynamic>.of(slide.toJson()),
-      };
-      final retried = await _composeSlidesSequentially(
-        executor,
-        modelInput,
-        plan,
+      return await _withModelSession(
         request,
-        trace,
-        onProgress,
-        generationCancelled,
-        targetSlideKeys: retryableKeys,
-        existingSlidesByKey: existingSlidesByKey,
-      );
-      if (generationCancelled()) {
-        return DeckGenerationResult.failure('Generation cancelled.');
-      }
-      if (retried == null) {
-        return DeckGenerationResult.failure(
-          'Failed while retrying unresolved slides. Please try again.',
-        );
-      }
-
-      final mergedByKey = <String, Map<String, dynamic>>{
-        ...existingSlidesByKey,
-        for (final slide in retried.slides) slide['key']! as String: slide,
-      };
-      final remainingFailures = [
-        for (final failure in partialResult.slideFailures)
-          if (!failure.retryable) failure,
-        ...retried.failures,
-      ];
-      final merged = _SlideCompositionResult(
-        slides: List.unmodifiable([
-          for (final plannedSlide in plan.slides)
-            ?mergedByKey[plannedSlide.key],
-        ]),
-        failures: List.unmodifiable(remainingFailures),
-      );
-
-      return _finalizeDeck(
-        this,
-        composition: merged,
-        plan: plan,
-        generatedImages: partialResult.generatedImages,
-        pipelineStart: pipelineStart,
-        onProgress: onProgress,
-        isCancelled: generationCancelled,
         trace: trace,
+        isCancelled: generationCancelled,
+        body: (executor) async {
+          onProgress?.call(const GenerationProgress(.composingSlides));
+          final existingSlidesByKey = {
+            for (final slide in partialResult.slides)
+              slide.key: Map<String, dynamic>.of(slide.toJson()),
+          };
+          final retried = await _composeSlidesSequentially(
+            executor,
+            modelInput,
+            plan,
+            request,
+            trace,
+            onProgress,
+            generationCancelled,
+            targetSlideKeys: retryableKeys,
+            existingSlidesByKey: existingSlidesByKey,
+          );
+          if (generationCancelled()) {
+            return DeckGenerationResult.failure('Generation cancelled.');
+          }
+          if (retried == null) {
+            return DeckGenerationResult.failure(
+              'Failed while retrying unresolved slides. Please try again.',
+            );
+          }
+
+          final mergedByKey = <String, Map<String, dynamic>>{
+            ...existingSlidesByKey,
+            for (final slide in retried.slides) slide['key']! as String: slide,
+          };
+          final remainingFailures = [
+            for (final failure in partialResult.slideFailures)
+              if (!failure.retryable) failure,
+            ...retried.failures,
+          ];
+          final merged = _SlideCompositionResult(
+            slides: List.unmodifiable([
+              for (final plannedSlide in plan.slides)
+                ?mergedByKey[plannedSlide.key],
+            ]),
+            failures: List.unmodifiable(remainingFailures),
+          );
+
+          return _finalizeDeck(
+            this,
+            composition: merged,
+            plan: plan,
+            generatedImages: partialResult.generatedImages,
+            pipelineStart: pipelineStart,
+            onProgress: onProgress,
+            isCancelled: generationCancelled,
+            trace: trace,
+          );
+        },
       );
     } on GenerationCancelledException {
       return DeckGenerationResult.failure('Generation cancelled.');
@@ -664,8 +678,6 @@ class DeckGeneratorService {
       return DeckGenerationResult.failure(
         const ErrorClassifier().getUserMessage(error),
       );
-    } finally {
-      client?.close();
     }
   }
 
@@ -706,76 +718,72 @@ class DeckGeneratorService {
     bool generationCancelled() => isCancelled?.call() ?? false;
     DeckGenerationResult cancelledResult() =>
         DeckGenerationResult.failure('Generation cancelled.');
-    GenerationModelClient? client;
-
     try {
-      client = _modelClientFactory(apiKey);
-      final executor = _createExecutor(
-        client: client,
-        trace: trace,
-        request: request,
-        isCancelled: generationCancelled,
-      );
-      await _promptProvider.load();
-
-      final outline = await _runOutlinePhase(
-        this,
-        executor: executor,
-        prompt: modelInput,
-        request: request,
-        themeCandidates: themeCandidates,
-        onProgress: onProgress,
-        trace: trace,
-      );
-      if (generationCancelled()) {
-        return cancelledResult();
-      }
-      if (outline == null) {
-        return DeckGenerationResult.failure(
-          'Failed to generate presentation outline. Please try again.',
-        );
-      }
-
-      final images = await _runImagePhase(
-        this,
-        plan: outline,
-        request: request,
-        onProgress: onProgress,
+      return await _withModelSession(
+        request,
         trace: trace,
         isCancelled: generationCancelled,
-      );
-      if (generationCancelled()) {
-        return cancelledResult();
-      }
-      final composition = await _runSlideCompositionPhase(
-        this,
-        executor: executor,
-        prompt: modelInput,
-        request: request,
-        outline: images.plan,
-        onProgress: onProgress,
-        trace: trace,
-        isCancelled: isCancelled,
-      );
-      if (generationCancelled()) {
-        return cancelledResult();
-      }
+        body: (executor) async {
+          final outline = await _runOutlinePhase(
+            this,
+            executor: executor,
+            prompt: modelInput,
+            request: request,
+            themeCandidates: themeCandidates,
+            onProgress: onProgress,
+            trace: trace,
+          );
+          if (generationCancelled()) {
+            return cancelledResult();
+          }
+          if (outline == null) {
+            return DeckGenerationResult.failure(
+              'Failed to generate presentation outline. Please try again.',
+            );
+          }
 
-      if (composition == null) {
-        return DeckGenerationResult.failure(
-          'Failed while composing presentation slides. Please try again.',
-        );
-      }
+          final images = await _runImagePhase(
+            this,
+            plan: outline,
+            request: request,
+            onProgress: onProgress,
+            trace: trace,
+            isCancelled: generationCancelled,
+          );
+          if (generationCancelled()) {
+            return cancelledResult();
+          }
+          final composition = await _runSlideCompositionPhase(
+            this,
+            executor: executor,
+            prompt: modelInput,
+            request: request,
+            outline: images.plan,
+            onProgress: onProgress,
+            trace: trace,
+            isCancelled: isCancelled,
+          );
+          if (generationCancelled()) {
+            return cancelledResult();
+          }
 
-      return _finalizeDeck(
-        this,
-        composition: composition,
-        plan: images.plan,
-        generatedImages: images.assets,
-        pipelineStart: pipelineStart,
-        onProgress: onProgress,
-        isCancelled: isCancelled,
-        trace: trace,
+          if (composition == null) {
+            return DeckGenerationResult.failure(
+              'Failed while composing presentation slides. Please try again.',
+            );
+          }
+
+          return _finalizeDeck(
+            this,
+            composition: composition,
+            plan: images.plan,
+            generatedImages: images.assets,
+            pipelineStart: pipelineStart,
+            onProgress: onProgress,
+            isCancelled: isCancelled,
+            trace: trace,
+          );
+        },
       );
     } on GenerationCancelledException {
       return cancelledResult();
@@ -796,8 +804,6 @@ class DeckGeneratorService {
       );
       final userMessage = const ErrorClassifier().getUserMessage(e);
       return DeckGenerationResult.failure(userMessage);
-    } finally {
-      client?.close();
     }
   }
 }

@@ -29,9 +29,16 @@ class GenerationException implements Exception {
 /// intermediate progress, which the base command's binary running state doesn't
 /// model. On success it serializes the slides to Markdown and replaces the
 /// shared [DeckDocumentStore].
+///
+/// A run is bound to the document revision and the file binding it started
+/// from. Editing the document or switching decks discards the generated deck
+/// and leaves [completionNotice] for the editor to show, because the panel
+/// that started the run may already be closed.
 class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
   final GeneratedDeckResultApplier _resultApplier;
 
+  final DeckDocumentStore _documentStore;
+  final int Function()? _bindingRevision;
   final DeckGeneratorService? _service;
   GenerationProgress _progress = const GenerationProgress(GenerationPhase.idle);
 
@@ -44,12 +51,15 @@ class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
     MemoryDeckLoader? deckLoader,
     MemoryAssetCacheStore? assetCacheStore,
     DeckGeneratorService? service,
+    int Function()? bindingRevision,
   }) : _resultApplier = GeneratedDeckResultApplier(
          documentStore: documentStore,
          deckLoader: deckLoader,
          assetCacheStore: assetCacheStore,
          customizationStore: customizationStore,
        ),
+       _documentStore = documentStore,
+       _bindingRevision = bindingRevision,
        _service = service;
 
   void _onProgress(GenerationProgress progress) {
@@ -63,8 +73,18 @@ class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
 
   GenerationProgress get progress => _progress;
 
-  /// Non-blocking detail for a completed partial generation.
+  /// Non-blocking detail for a completed, partial, or discarded generation.
+  ///
+  /// The editor keeps showing it after the generation panel closes. Call
+  /// [dismissNotice] once the reader has seen it.
   String? get completionNotice => _completionNotice;
+
+  /// Clears the notice the editor shows.
+  void dismissNotice() {
+    if (_completionNotice == null) return;
+    _completionNotice = null;
+    notifyListeners();
+  }
 
   @override
   Future<Result<void>> action(DeckGenerationRequest request) async {
@@ -81,6 +101,14 @@ class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
     _completionNotice = null;
     _progress = const GenerationProgress(GenerationPhase.generatingOutline);
     notifyListeners();
+
+    final startDocumentRevision = _documentStore.revision;
+    final startBindingRevision = _bindingRevision?.call();
+    bool isCurrentDeck() =>
+        !_cancelled &&
+        !_disposed &&
+        _documentStore.revision == startDocumentRevision &&
+        _bindingRevision?.call() == startBindingRevision;
 
     try {
       final service =
@@ -105,7 +133,23 @@ class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
         return const Result.error(GenerationException('Generation cancelled.'));
       }
 
-      await _resultApplier.apply(result);
+      final application = await _resultApplier.apply(
+        result,
+        isValid: isCurrentDeck,
+      );
+      if (!application.published) {
+        _completionNotice =
+            'The generated deck was discarded because the document changed '
+            'while it was being created.';
+        debugLog.log(
+          'GENERATE_DECK',
+          'Discarded ${result.slides.length} generated slides; '
+              'the editor moved on to newer work.',
+        );
+
+        return const Result.ok(null);
+      }
+
       if (result.isPartial) {
         _completionNotice = result.error;
       } else if (result.hasImageFailures) {
@@ -113,6 +157,19 @@ class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
             'Created ${result.generatedImageCount} of '
             '${result.generatedImages.length} planned artworks; '
             '${result.failedImageCount} used a text-first fallback.';
+      }
+      if (application.cleanupError case final cleanupError?) {
+        // The deck is published. Removing the artwork it replaced is a
+        // separate, non-blocking problem.
+        debugLog.error(
+          'GENERATE_DECK',
+          'Could not remove replaced artwork: $cleanupError',
+          .current,
+        );
+        _completionNotice = [
+          ?_completionNotice,
+          'Some artwork from the previous deck could not be removed.',
+        ].join(' ');
       }
       debugLog.log(
         'GENERATE_DECK',
@@ -134,12 +191,6 @@ class GenerateDeckCommand extends Command1<void, DeckGenerationRequest> {
       _progress = const GenerationProgress(GenerationPhase.idle);
       notifyListeners();
     }
-  }
-
-  @override
-  void clearResult() {
-    _completionNotice = null;
-    super.clearResult();
   }
 
   @override

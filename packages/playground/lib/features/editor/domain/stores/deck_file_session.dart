@@ -78,6 +78,13 @@ class DeckFileSession extends ChangeNotifier {
   /// Current persistence binding state.
   DeckBindingStatus get status => _status;
 
+  /// Counts the changes of the file this document is bound to.
+  ///
+  /// The value changes when the session binds another deck and when the bound
+  /// file is lost. It therefore separates two decks that hold identical
+  /// content, which the document revision alone cannot do.
+  int get bindingRevision => _bindingEpoch;
+
   /// Whether local document changes are currently auto-saved.
   bool get isBound => _status == DeckBindingStatus.bound;
 

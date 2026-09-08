@@ -3,12 +3,16 @@ import 'package:hero_ui/hero_ui.dart';
 import 'package:mix/mix.dart';
 import 'package:provider/provider.dart';
 
+import '../../../ai/quick_agent/domain/commands/generate_deck_command.dart';
 import '../../domain/stores/deck_file_session.dart';
 import 'new_deck_dialog.dart';
 
 /// Bar sitting on top of the text editor: the `New` / `Open` actions on the
 /// left, followed by the bound deck's filename. When the bound file is lost
 /// (deleted/moved) it also surfaces the controller's warning as a banner.
+///
+/// Generation reports its own non-blocking notice here, because the panel that
+/// started the run can be closed before the deck arrives.
 class EditorHeader extends StatelessWidget {
   const EditorHeader({super.key});
 
@@ -16,6 +20,8 @@ class EditorHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final session = context.watch<DeckFileSession>();
     final warning = session.warning;
+    final generation = context.watch<GenerateDeckCommand>();
+    final notice = generation.completionNotice;
 
     return ColumnBox(
       style: FlexBoxStyler().mainAxisSize(.min),
@@ -53,6 +59,8 @@ class EditorHeader extends StatelessWidget {
           ),
         ),
         if (warning != null) _WarningBanner(message: warning),
+        if (notice != null)
+          _NoticeBanner(message: notice, onDismiss: generation.dismissNotice),
       ],
     );
   }
@@ -109,6 +117,46 @@ class _WarningBanner extends StatelessWidget {
           StyledText(
             message,
             style: TextStyler().color($warning()).style($labelSmall.mix()),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NoticeBanner extends StatelessWidget {
+  const _NoticeBanner({required this.message, required this.onDismiss});
+
+  final String message;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    return Box(
+      style: BoxStyler()
+          .width(double.infinity)
+          .color($accent().withValues(alpha: 0.12))
+          .padding(.horizontal(16).vertical(8)),
+      child: RowBox(
+        style: FlexBoxStyler().spacing(8).crossAxisAlignment(.center),
+        children: [
+          Icon(
+            CupertinoIcons.sparkles,
+            size: 14,
+            color: $accent.resolve(context),
+          ),
+          StyledText(
+            message,
+            style: TextStyler().color($accent()).style($labelSmall.mix()),
+          ),
+          SizedBox(
+            width: 28,
+            child: HeroIconButton(
+              variant: .ghost,
+              size: .sm,
+              icon: CupertinoIcons.xmark,
+              onPressed: onDismiss,
+            ),
           ),
         ],
       ),

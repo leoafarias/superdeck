@@ -5,13 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:superdeck/superdeck.dart';
-import 'package:superdeck_builder/superdeck_builder.dart';
 
 import '../../../../../core/data/data_sources/memory_asset_cache_store.dart';
-import '../../../../../core/data/data_sources/memory_deck_loader.dart';
 import '../../../../../core/domain/design/presentation_image_style_catalog.dart';
 import '../../../../../core/domain/design/presentation_theme_catalog.dart';
-import '../../../../../core/domain/stores/deck_customization_store.dart';
+import '../../../../editor/domain/stores/deck_document_store.dart';
 import '../../../image_generation/image_generator.dart';
 import '../../core/engine/schemas/outline_schema.dart';
 import '../../core/engine/services/deck_generation_request.dart';
@@ -19,7 +17,7 @@ import '../../core/engine/services/deck_generator_service.dart';
 import '../../core/engine/services/generation_progress.dart';
 import '../../core/engine/services/generation_trace.dart';
 import '../../core/env_config.dart';
-import '../../domain/generated_deck_style_mapper.dart';
+import '../../domain/generated_deck_result_applier.dart';
 
 /// Debug-only harness for iterating on planning, artwork, and composition
 /// without repeating the conversational Wizard intake.
@@ -44,6 +42,12 @@ class _GenerationLabPageState extends State<GenerationLabPage> {
   final _compositionTraces = <GenerationTraceEvent>[];
 
   late final DeckGeneratorService? _service;
+
+  /// The lab keeps its own document, so experiments never publish into the
+  /// editor's document or its file binding.
+  final _documentStore = DeckDocumentStore(markdown: '');
+
+  GeneratedDeckResultApplier? _resultApplier;
   _GenerationPreset _preset = _presets.first;
   GenerationProgress _progress = const GenerationProgress(GenerationPhase.idle);
   DeckPlan? _plan;
@@ -71,6 +75,17 @@ class _GenerationLabPageState extends State<GenerationLabPage> {
                 ),
               )
             : null);
+  }
+
+  /// Resolves the shared applier on first use, so a lab screen without an
+  /// application host still renders its configuration guidance.
+  GeneratedDeckResultApplier _applier() {
+    return _resultApplier ??= GeneratedDeckResultApplier(
+      documentStore: _documentStore,
+      deckLoader: context.read(),
+      assetCacheStore: context.read<MemoryAssetCacheStore>(),
+      customizationStore: context.read(),
+    );
   }
 
   void _selectPreset(_GenerationPreset preset) {
@@ -204,17 +219,7 @@ class _GenerationLabPageState extends State<GenerationLabPage> {
   }
 
   Future<void> _applyResult(DeckGenerationResult result) async {
-    final cache = context.read<MemoryAssetCacheStore>();
-    final customization = context.read<DeckCustomizationStore>();
-    final deckLoader = context.read<MemoryDeckLoader>();
-    for (final asset in result.generatedImages) {
-      final bytes = asset.bytes;
-      if (bytes != null && bytes.isNotEmpty) {
-        await cache.write(asset.assetKey, bytes);
-      }
-    }
-    customization.applyGeneratedStyle(result.theme!.toGeneratedDeckStyle());
-    deckLoader.updateMarkdown(const SlideSerializer().serialize(result.slides));
+    await _applier().apply(result, isValid: () => mounted && !_cancelled);
   }
 
   bool _finishCancelled(_GenerationLabStage stage, Duration duration) {
@@ -259,6 +264,7 @@ class _GenerationLabPageState extends State<GenerationLabPage> {
   @override
   void dispose() {
     _cancelled = true;
+    _documentStore.dispose();
     super.dispose();
   }
 
