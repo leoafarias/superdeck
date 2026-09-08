@@ -206,19 +206,33 @@ class SlideCaptureService {
   }
 
   Future<Uint8List> _imageToUint8List(ui.Image image) async {
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    image.dispose();
-    return byteData!.buffer.asUint8List();
+    try {
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+      return byteData!.buffer.asUint8List();
+    } finally {
+      image.dispose();
+    }
   }
 
   /// Converts a Flutter widget to a [ui.Image] via an isolated render pipeline.
   ///
   /// Sets up a complete render context (theme, media query, material app),
   /// drives a bounded settle loop for async/delayed widgets, then rasterises.
+  /// Releases the temporary element, render, and focus resources on success,
+  /// on the settle limit, and on failure.
   Future<ui.Image> _fromWidgetToImage(
     Widget widget,
     RenderConfig config,
   ) async {
+    RenderRepaintBoundary? repaintBoundary;
+    RenderPositionedBox? rootBox;
+    RenderView? renderView;
+    PipelineOwner? pipelineOwner;
+    FocusManager? focusManager;
+    BuildOwner? buildOwner;
+    RenderObjectToWidgetElement<RenderBox>? rootElement;
+
     try {
       final mixScope = MixScope.maybeOf(config.context);
       final readiness = SlideCaptureReadiness();
@@ -242,7 +256,11 @@ class SlideCaptureService {
         ),
       );
 
-      final repaintBoundary = RenderRepaintBoundary();
+      repaintBoundary = RenderRepaintBoundary();
+      rootBox = RenderPositionedBox(
+        alignment: Alignment.center,
+        child: repaintBoundary,
+      );
       final platformDispatcher = WidgetsBinding.instance.platformDispatcher;
 
       final view =
@@ -251,12 +269,9 @@ class SlideCaptureService {
           config.targetSize ?? view.physicalSize / view.devicePixelRatio;
       final physicalSize = logicalSize * config.pixelRatio;
 
-      final renderView = RenderView(
+      renderView = RenderView(
         view: view,
-        child: RenderPositionedBox(
-          alignment: Alignment.center,
-          child: repaintBoundary,
-        ),
+        child: rootBox,
         configuration: ViewConfiguration(
           logicalConstraints: BoxConstraints.tight(logicalSize),
           physicalConstraints: BoxConstraints.tight(physicalSize),
@@ -265,18 +280,17 @@ class SlideCaptureService {
       );
 
       var isDirty = false;
-      final pipelineOwner = PipelineOwner(
-        onNeedVisualUpdate: () => isDirty = true,
-      );
-      final buildOwner = BuildOwner(
-        focusManager: FocusManager(),
+      pipelineOwner = PipelineOwner(onNeedVisualUpdate: () => isDirty = true);
+      focusManager = FocusManager();
+      buildOwner = BuildOwner(
+        focusManager: focusManager,
         onBuildScheduled: () => isDirty = true,
       );
 
       pipelineOwner.rootNode = renderView;
       renderView.prepareInitialFrame();
 
-      final rootElement = RenderObjectToWidgetAdapter<RenderBox>(
+      rootElement = RenderObjectToWidgetAdapter<RenderBox>(
         container: repaintBoundary,
         child: Directionality(textDirection: TextDirection.ltr, child: child),
       ).attachToRenderTree(buildOwner);
@@ -331,6 +345,61 @@ class SlideCaptureService {
     } catch (e) {
       log('Error finalizing tree: $e');
       rethrow;
+    } finally {
+      _releaseCaptureTree(
+        buildOwner: buildOwner,
+        rootElement: rootElement,
+        repaintBoundary: repaintBoundary,
+        rootBox: rootBox,
+        renderView: renderView,
+        pipelineOwner: pipelineOwner,
+        focusManager: focusManager,
+      );
+    }
+  }
+
+  /// Unmounts the temporary capture subtree and releases its owned resources.
+  ///
+  /// Rebuilding the root adapter without a child deactivates the captured
+  /// widgets, and [BuildOwner.finalizeTree] then unmounts them so their
+  /// [State.dispose] and render object disposal run. The render pipeline,
+  /// the render objects this service created, and the focus manager are
+  /// released afterwards.
+  void _releaseCaptureTree({
+    required BuildOwner? buildOwner,
+    required RenderObjectToWidgetElement<RenderBox>? rootElement,
+    required RenderRepaintBoundary? repaintBoundary,
+    required RenderPositionedBox? rootBox,
+    required RenderView? renderView,
+    required PipelineOwner? pipelineOwner,
+    required FocusManager? focusManager,
+  }) {
+    if (buildOwner != null && rootElement != null && repaintBoundary != null) {
+      try {
+        RenderObjectToWidgetAdapter<RenderBox>(
+          container: repaintBoundary,
+        ).attachToRenderTree(buildOwner, rootElement);
+        buildOwner
+          ..buildScope(rootElement)
+          ..finalizeTree();
+      } catch (e, stackTrace) {
+        log('Error unmounting capture tree: $e', stackTrace: stackTrace);
+      }
+    }
+
+    if (pipelineOwner != null) {
+      pipelineOwner.rootNode = null;
+      pipelineOwner.dispose();
+    }
+
+    repaintBoundary?.dispose();
+    rootBox?.dispose();
+    renderView?.dispose();
+
+    if (focusManager != null) {
+      // Unmounting focus nodes schedules a focus update microtask. Disposing
+      // in a later microtask lets that update run against a live manager.
+      scheduleMicrotask(focusManager.dispose);
     }
   }
 }

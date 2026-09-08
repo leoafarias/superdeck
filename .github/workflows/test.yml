@@ -5,7 +5,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 concurrency:
   group: test-${{ github.ref }}
@@ -17,13 +16,13 @@ jobs:
     name: Test
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install FVM
         shell: bash
         run: |
           curl -fsSL https://fvm.app/install.sh | bash
-          echo "/home/runner/fvm/bin" >> $GITHUB_PATH
+          echo "/home/runner/fvm/bin" >> "$GITHUB_PATH"
 
       - uses: kuhnroyal/flutter-fvm-config-action@v2
         id: fvm-config-action
@@ -71,7 +70,7 @@ jobs:
     name: Integration Tests
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install Linux Desktop Dependencies
         timeout-minutes: 8
@@ -87,7 +86,7 @@ jobs:
         shell: bash
         run: |
           curl -fsSL https://fvm.app/install.sh | bash
-          echo "/home/runner/fvm/bin" >> $GITHUB_PATH
+          echo "/home/runner/fvm/bin" >> "$GITHUB_PATH"
 
       - uses: kuhnroyal/flutter-fvm-config-action@v2
         id: fvm-config-action
@@ -137,7 +136,7 @@ jobs:
         shell: bash
         run: |
           curl -fsSL https://fvm.app/install.sh | bash
-          echo "/home/runner/fvm/bin" >> $GITHUB_PATH
+          echo "/home/runner/fvm/bin" >> "$GITHUB_PATH"
 
       - uses: kuhnroyal/flutter-fvm-config-action@v2
         id: fvm-config-action

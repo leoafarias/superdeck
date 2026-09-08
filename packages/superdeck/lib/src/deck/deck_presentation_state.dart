@@ -19,6 +19,8 @@ final class DeckPresentationState {
   final _thumbnails = signal<Map<String, AsyncThumbnail>>({});
 
   EffectCleanup? _indexClampEffect;
+  EffectCleanup? _thumbnailPruneEffect;
+  int _transitionOperation = 0;
   bool _disposed = false;
 
   late final GoRouter router = GoRouter(
@@ -56,6 +58,11 @@ final class DeckPresentationState {
       if (currentIdx != clamped) {
         _currentIndex.value = clamped;
       }
+    });
+    // Thumbnail cleanup follows the slide collection, not thumbnail warmup,
+    // so obsolete handles are released even when the deck becomes empty.
+    _thumbnailPruneEffect = effect(() {
+      _pruneThumbnails(_slideKeys(_slides.value));
     });
   }
 
@@ -96,10 +103,13 @@ final class DeckPresentationState {
 
   Future<void> goToSlide(int index) async {
     if (_disposed || index < 0 || index >= _slides.value.length) return;
+    // Only the latest transition may clear the transitioning state, so an
+    // earlier delay cannot end a transition that started after it.
+    final operation = ++_transitionOperation;
     _isTransitioning.value = true;
     router.go('/slides/$index');
     await Future<void>.delayed(_transitionDuration);
-    if (_disposed) return;
+    if (_disposed || operation != _transitionOperation) return;
     _isTransitioning.value = false;
   }
 
@@ -121,28 +131,14 @@ final class DeckPresentationState {
     bool force = false,
   }) {
     if (_disposed) return;
+
+    _pruneThumbnails(_slideKeys(slides));
     if (slides.isEmpty) return;
-
-    final validKeys = slides.map((s) => s.key).toSet();
-    final current = _thumbnails.value;
-    final staleKeys = current.keys
-        .where((k) => !validKeys.contains(k))
-        .toList(growable: false);
-    final cache = staleKeys.isEmpty
-        ? current
-        : Map<String, AsyncThumbnail>.from(current);
-
-    for (final key in staleKeys) {
-      cache.remove(key)?.dispose();
-    }
-    if (staleKeys.isNotEmpty) {
-      _thumbnails.value = cache;
-    }
 
     _thumbnailService.generateThumbnails(
       slides: slides,
       context: context,
-      cache: cache,
+      cache: _thumbnails.peek(),
       onCacheUpdate: (updated) {
         if (_disposed) return;
         _thumbnails.value = updated;
@@ -174,6 +170,7 @@ final class DeckPresentationState {
   void dispose() {
     _disposed = true;
     _indexClampEffect?.call();
+    _thumbnailPruneEffect?.call();
     router.routeInformationProvider.removeListener(_syncCurrentIndexFromRouter);
     router.dispose();
     for (final thumbnail in _thumbnails.value.values) {
@@ -190,6 +187,23 @@ final class DeckPresentationState {
     currentSlide.dispose();
   }
 
+  /// Disposes and drops every thumbnail whose slide is no longer present.
+  void _pruneThumbnails(Set<String> validKeys) {
+    if (_disposed) return;
+
+    final current = _thumbnails.peek();
+    final staleKeys = current.keys
+        .where((key) => !validKeys.contains(key))
+        .toList(growable: false);
+    if (staleKeys.isEmpty) return;
+
+    final cache = Map<String, AsyncThumbnail>.from(current);
+    for (final key in staleKeys) {
+      cache.remove(key)?.dispose();
+    }
+    _thumbnails.value = cache;
+  }
+
   void _syncCurrentIndexFromRouter() {
     if (_disposed) return;
     final path = router.routeInformationProvider.value.uri.path;
@@ -204,6 +218,9 @@ final class DeckPresentationState {
       _currentIndex.value = clamped;
     }
   }
+
+  static Set<String> _slideKeys(List<SlideConfiguration> slides) =>
+      slides.map((slide) => slide.key).toSet();
 
   static int _clampIndex(int index, int totalSlides) {
     final maxIndex = totalSlides > 0 ? totalSlides - 1 : 0;
